@@ -2,6 +2,8 @@
 
 namespace S2lowLegacy\Class;
 
+use Monolog\Handler\TestHandler;
+use RuntimeException;
 use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
 use S2lowLegacy\Class\actes\ActesImapProperties;
 use S2lowLegacy\Class\actes\ActesMinistereProperties;
@@ -48,19 +50,204 @@ class LegacyObjectsManager
      */
     public static function setLegacyObjectInstancier(): void
     {
-        if (TESTING_ENVIRONNEMENT) {
-            $sqlQuery = new SQLQuery(DB_DATABASE_TEST);
-            $sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST);
-            $sqlQuery->setDatabaseHost(DB_HOST_TEST);
-        } else {
-            $sqlQuery = new SQLQuery(DB_DATABASE);
-            $sqlQuery->setDatabaseHost(DB_HOST);
-            $sqlQuery->setCredential(DB_USER, DB_PASSWORD);
+        if (ObjectInstancierFactory::issetObjectInstancier()) {
+            throw new \Exception("ObjectInstancier already set");
         }
 
         $objectInstancier = new ObjectInstancier();
         ObjectInstancierFactory::setObjectInstancier($objectInstancier);
 
+        $objectInstancier->set('helios_counter_file', HELIOS_COUNTER_FILE);
+        $objectInstancier->set('database_json_definition_filepath', __DIR__ . "/../db/s2low.sql.json");
+        $objectInstancier->set('database_sql_definition_filepath', __DIR__ . "/../db/s2low.sql");
+
+        $objectInstancier->set('rgs_validca_path', RGS_VALIDCA_PATH);
+        $objectInstancier->set('extended_validca_path', EXTENDED_VALIDCA_PATH);
+
+        $objectInstancier->set('openssl_path', OPENSSL_PATH);
+
+        $objectInstancier->set('trustore_path', TRUSTSTORE_PATH);
+
+        if (TESTING_ENVIRONNEMENT) {
+            $sqlQuery = new SQLQuery(DB_DATABASE_TEST);
+            $sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST);
+            $sqlQuery->setDatabaseHost(DB_HOST_TEST);
+
+            self::setTestLogger($objectInstancier);
+
+            $objectInstancier->set('helios_files_upload_root', "/tmp");
+            $objectInstancier->set('schema_pes_path', HELIOS_XSD_PATH);
+            $objectInstancier->set('actes_files_upload_root', sys_get_temp_dir());
+
+            $objectInstancier->set("website", "http://s2low");
+            $objectInstancier->set("website_ssl", "https://s2low");
+
+            $objectInstancier->set('use_prod_notifications', false);
+
+            $objectInstancier->set('convert_api_logins_from_iso', false);
+
+            self::setTestOpenstackConfig($objectInstancier);
+
+            $objectInstancier->set("actes_appli_trigramme", "SLO");
+            $objectInstancier->set("actes_appli_quadrigramme", "EACT");
+            $objectInstancier->set("actes_ministere_acronyme", "MI");
+
+            $objectInstancier->set("actes_dont_valid_signing_certificate", false);
+
+            $objectInstancier->set("beanstalkd_server", false);
+            $objectInstancier->set("beanstalkd_port", false);
+            $objectInstancier->set('antivirus_command', 'ls');
+            $objectInstancier->set('pades_valid_url', 'https://s2low');
+            $objectInstancier->set('pdf_stamp_url', 'pdf_stamp_url');
+            $objectInstancier->set('image_for_stamp', SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg");
+            $objectInstancier->set('redis_server', 'localhost');
+            $objectInstancier->set('redis_port', 6379);
+
+
+            $_GET = array();
+            $_POST = array();
+            $_SESSION = array();
+            $_SERVER['SSL_CLIENT_VERIFY'] = "";
+            $_SERVER['SSL_CLIENT_S_DN'] = "";
+            $_SERVER['SSL_CLIENT_I_DN'] = "";
+            $_SERVER['SSL_CLIENT_CERT'] = "";
+            $_SERVER["QUERY_STRING"] = "";
+
+            $get = array();
+            $post = array();
+            $request = array();
+            $session = array();
+            $server = array();
+
+            $objectInstancier->set(Environnement::class, new Environnement($get, $post, $request, $session, $server));
+            $objectInstancier->set(SessionWrapper::class, $objectInstancier->get(Environnement::class)->session());
+        } else {
+            $sqlQuery = new SQLQuery(DB_DATABASE);
+            $sqlQuery->setDatabaseHost(DB_HOST);
+            $sqlQuery->setCredential(DB_USER, DB_PASSWORD);
+
+            self::setProdLogger($objectInstancier);
+
+            $objectInstancier->set("helios_files_upload_root", HELIOS_FILES_UPLOAD_ROOT);
+            $objectInstancier->set("repertoirePesAllerSansTransaction", HELIOS_PESALLER_SANSTRANSACTION);
+            $objectInstancier->set("helios_responses_root", HELIOS_RESPONSES_ROOT);
+            $objectInstancier->set("helios_responses_error_path", HELIOS_RESPONSES_ERROR_PATH);
+            $objectInstancier->set('helios_ftp_response_tmp_local_path', HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH);
+            $objectInstancier->set('helios_retention_fichiers_nb_jours', HELIOS_RETENTION_FICHIERS_NB_JOURS);
+            $objectInstancier->set("schema_pes_path", HELIOS_XSD_PATH);
+
+            $objectInstancier->set("actes_files_upload_root", ACTES_FILES_UPLOAD_ROOT);
+            $objectInstancier->set('actes_response_tmp_local_path', ACTES_RESPONSE_TMP_LOCAL_PATH);
+            $objectInstancier->set('actes_response_error_path', ACTES_RESPONSE_ERROR_PATH);
+
+            $objectInstancier->set('mail_files_upload_root', MAIL_FILES_UPLOAD_ROOT);
+
+            $objectInstancier->set("website_ssl", WEBSITE_SSL);
+            $objectInstancier->set("website", WEBSITE);
+            $objectInstancier->set("website_mail", WEBSITE_MAIL);
+
+            $objectInstancier->set("use_prod_notifications", USE_PROD_NOTIFICATIONS);
+
+            $objectInstancier->set('convert_api_logins_from_iso', CONVERT_API_LOGINS_FROM_ISO);
+
+            self::setProdOpenstackConfig($objectInstancier);
+
+            $objectInstancier->set("actes_appli_trigramme", ACTES_APPLI_TRIGRAMME);
+            $objectInstancier->set("actes_appli_quadrigramme", ACTES_APPLI_QUADRIGRAMME);
+            $objectInstancier->set("actes_ministere_acronyme", ACTES_MINISTERE_ACRONYME);
+
+            $objectInstancier->set("actes_dont_valid_signing_certificate", ACTES_DONT_VALID_SIGNING_CERTIFICATE);
+
+            $objectInstancier->set('beanstalkd_server', BEANSTAKLD_SERVER);
+            $objectInstancier->set('beanstalkd_port', BEANSTAKLD_PORT);
+            $objectInstancier->set('antivirus_command', ANTIVIRUS_COMMAND);
+            $objectInstancier->set('pades_valid_url', PADES_VALID_URL);
+            $objectInstancier->set('pdf_stamp_url', PDF_STAMP_URL);
+            $objectInstancier->set('image_for_stamp', IMAGE_FOR_STAMP);
+            $objectInstancier->set('redis_server', REDIS_SERVER);
+            $objectInstancier->set('redis_port', REDIS_PORT);
+
+            self::setProdActesMinistereProperties($objectInstancier);
+
+            self::setProdActesImapProperties($objectInstancier);
+
+            $objectInstancier->set('email_admin_technique', EMAIL_ADMIN_TECHNIQUE);
+            $objectInstancier->set('tdt_from_email', TDT_FROM_EMAIL);
+            $objectInstancier->set('log_level', LOG_LEVEL);
+
+            $objectInstancier->set('old_timestamp_token_directory', OLD_TIMESTAMP_TOKEN_DIRECTORY);
+            $objectInstancier->set('timestamp_token_retention_nb_days', TIMESTAMP_TOKEN_RETENTION_NB_DAYS);
+
+            if (isset($_SESSION)) {
+                $objectInstancier->set(SessionWrapper::class, new SessionWrapper($_SESSION));
+                $environnement = new Environnement($_GET, $_POST, $_REQUEST, $_SESSION, $_SERVER);
+            } else {
+                $session = array();
+                $objectInstancier->set(SessionWrapper::class, new SessionWrapper($session));
+                $environnement = new Environnement($_GET, $_POST, $_REQUEST, $session, $_SERVER);
+            }
+            $objectInstancier->set(Environnement::class, $environnement);
+
+            if (php_sapi_name() === 'cli') { // pcntl n'est actif qu'en mode CLI
+                $objectInstancier->set(SigTermHandler::class, SigTermHandler::getInstance());
+            }
+
+            if (USE_LEGACY_BORDEREAU_MODEL) {
+                $objectInstancier->set(
+                    IActesPdf::class,
+                    new ActesPdfLegacy(SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg")
+                );
+            } else {
+                $objectInstancier->set(
+                    IActesPdf::class,
+                    new ActesPdf(SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg")
+                );
+            }
+
+            if (USE_LEGACY_SECURE_MAIL_FIELDS) {
+                $objectInstancier->set(
+                    MailHeader::class,
+                    new MailHeaderLegacy(MAIL_MESSAGE, MAIL_TEDETIS_FROM, MAIL_SECURE_DESCRIPTION)
+                );
+            } else {
+                $objectInstancier->set(
+                    MailHeader::class,
+                    new MailHeader(MAIL_MESSAGE, MAIL_TEDETIS_FROM, MAIL_SECURE_DESCRIPTION)
+                );
+            }
+
+            $objectInstancier->set('cachePath', "/var/run/htmlpurifier");
+
+            $objectInstancier->set('html', '');
+        }
+
+        $objectInstancier->{SQLQuery::class} = $sqlQuery;  //WARNING !! Pas certain de la manip
+
+        $objectInstancier->set(Database::class, DatabasePool::getInstance());
+    }
+
+    public static function resetObjectInstancier()
+    {
+        ObjectInstancierFactory::resetObjectInstancier();
+    }
+
+    /**
+     * Utilisé pour l'injection de dépendances Symfony
+     */
+    public static function getObject(string $className)
+    {
+        if (!ObjectInstancierFactory::issetObjectInstancier()) {
+            throw new RuntimeException("ObjectInstancier not test");
+        }
+        return ObjectInstancierFactory::getObjetInstancier()->get($className);
+    }
+
+    /**
+     * @param \S2lowLegacy\Lib\ObjectInstancier $objectInstancier
+     * @return \Monolog\Logger
+     */
+    private static function setProdLogger(ObjectInstancier $objectInstancier): Logger
+    {
         $logger = new Logger("S2LOW");
         $logger->pushHandler(new StreamHandler(LOG_FILE, LOG_LEVEL));
         $logger->pushProcessor(function ($record) {
@@ -80,33 +267,32 @@ class LegacyObjectsManager
 
 
         $objectInstancier->set(Logger::class, $logger);
+        return $logger;
+    }
 
-        $objectInstancier->set('convert_api_logins_from_iso', CONVERT_API_LOGINS_FROM_ISO);
+    /**
+     * @param \S2lowLegacy\Lib\ObjectInstancier $objectInstancier
+     * @return void
+     */
+    private static function setTestLogger(ObjectInstancier $objectInstancier): void
+    {
+        $monologLogger = new  Logger('PHPUNIT');
+        $objectInstancier->set(Logger::class, $monologLogger);
+        // WARNING : PAS SUR DE LA MANIP
+        $objectInstancier->set(S2lowLogger::class, new  S2lowLogger($monologLogger));
 
-        $objectInstancier->{SQLQuery::class} = $sqlQuery;  //WARNING !! Pas certain de la manip
+        $testHandler = new TestHandler();
+        // Y a-t-il des effets de bord du test Handler ?
+        $objectInstancier->set(TestHandler::class, $testHandler);
+        $objectInstancier->get(Logger::class)->pushHandler($testHandler);
+    }
 
-        $objectInstancier->set(Database::class, DatabasePool::getInstance());
-
-        if (isset($_SESSION)) {
-            $objectInstancier->set(SessionWrapper::class, new SessionWrapper($_SESSION));
-            $environnement = new Environnement($_GET, $_POST, $_REQUEST, $_SESSION, $_SERVER);
-        } else {
-            $session = array();
-            $objectInstancier->set(SessionWrapper::class, new SessionWrapper($session));
-            $environnement = new Environnement($_GET, $_POST, $_REQUEST, $session, $_SERVER);
-        }
-        $objectInstancier->set(Environnement::class, $environnement);
-        $objectInstancier->set("website_ssl", WEBSITE_SSL);
-        $objectInstancier->set("website", WEBSITE);
-        $objectInstancier->set("website_mail", WEBSITE_MAIL);
-
-        $objectInstancier->set("use_prod_notifications", USE_PROD_NOTIFICATIONS);
-
-        $objectInstancier->set('database_json_definition_filepath', __DIR__ . "/../db/s2low.sql.json");
-        $objectInstancier->set('database_sql_definition_filepath', __DIR__ . "/../db/s2low.sql");
-
-        $objectInstancier->set('helios_counter_file', HELIOS_COUNTER_FILE);
-
+    /**
+     * @param \S2lowLegacy\Lib\ObjectInstancier $objectInstancier
+     * @return void
+     */
+    private static function setProdOpenstackConfig(ObjectInstancier $objectInstancier): void
+    {
         $openStackConfigActes = new OpenStackConfig();
         $openStackConfigActes->openstack_authentication_url_v3 = ACTES_OPENSTACK_AUTHENTICATION_URL_V3;
         $openStackConfigActes->openstack_username = ACTES_OPENSTACK_USERNAME;
@@ -149,8 +335,7 @@ class LegacyObjectsManager
         $openStackConfigMailsec->openstack_region = MAILSEC_OPENSTACK_REGION;
         $openStackConfigMailsec->openstack_swift_container_prefix = MAILSEC_OPENSTACK_SWIFT_CONTAINER_PREFIX;
 
-        $openStackContainerWrapperFactory = new OpenStackContainerWrapperFactory($logger);
-        $openStackContainerStore = new OpenStackContainerStore($openStackContainerWrapperFactory);
+        $openStackContainerStore = $objectInstancier->get(OpenStackContainerStore::class);
 
         $openStackContainerStore->addConfiguration(ActesEnvelopeStorage::CONTAINER_NAME, $openStackConfigActes);
         $openStackContainerStore->addConfiguration(PesAllerStorage::CONTAINER_NAME, $openStackConfigHelios);
@@ -159,25 +344,28 @@ class LegacyObjectsManager
         $openStackContainerStore->addConfiguration(MailIncludedFilesCloudStorage::CONTAINER_NAME, $openStackConfigMailsec);
 
         $objectInstancier->set(OpenStackContainerStore::class, $openStackContainerStore);
+    }
 
+    /**
+     * @param \S2lowLegacy\Lib\ObjectInstancier $objectInstancier
+     * @return void
+     */
+    private static function setTestOpenstackConfig(ObjectInstancier $objectInstancier): void
+    {
+        $objectInstancier->set("openstack_authentication_url_v2", "");
+        $objectInstancier->set("openstack_username", "a");
+        $objectInstancier->set("openstack_password", "a");
+        $objectInstancier->set("openstack_tenant", "a");
+        $objectInstancier->set("openstack_region", "a");
+        $objectInstancier->set("openstack_swift_container_prefix", "a");
+    }
 
-        $objectInstancier->set("helios_files_upload_root", HELIOS_FILES_UPLOAD_ROOT);
-        $objectInstancier->set("repertoirePesAllerSansTransaction", HELIOS_PESALLER_SANSTRANSACTION);
-        $objectInstancier->set("helios_responses_root", HELIOS_RESPONSES_ROOT);
-        $objectInstancier->set("helios_responses_error_path", HELIOS_RESPONSES_ERROR_PATH);
-        $objectInstancier->set("schema_pes_path", HELIOS_XSD_PATH);
-
-        $objectInstancier->set("helios_responses_root", HELIOS_RESPONSES_ROOT);
-
-
-        $objectInstancier->set("actes_files_upload_root", ACTES_FILES_UPLOAD_ROOT);
-        $objectInstancier->set("actes_appli_trigramme", ACTES_APPLI_TRIGRAMME);
-        $objectInstancier->set("actes_appli_quadrigramme", ACTES_APPLI_QUADRIGRAMME);
-
-        $objectInstancier->set("actes_ministere_acronyme", ACTES_MINISTERE_ACRONYME);
-
-        $objectInstancier->set("actes_dont_valid_signing_certificate", ACTES_DONT_VALID_SIGNING_CERTIFICATE);
-
+    /**
+     * @param \S2lowLegacy\Lib\ObjectInstancier $objectInstancier
+     * @return void
+     */
+    private static function setProdActesMinistereProperties(ObjectInstancier $objectInstancier): void
+    {
         $actesMinistereProperties = new ActesMinistereProperties();
 
         $actesMinistereProperties->url = ACTES_MINISTERE_URL;
@@ -191,7 +379,14 @@ class LegacyObjectsManager
         $actesMinistereProperties->server_certificate_path = ACTES_MINISTERE_SERVER_CERTIFICATE_PATH;
         $actesMinistereProperties->adapt_protocol = ACTES_MINISTERE_ADAPT_PROTOCOL;
         $objectInstancier->set(ActesMinistereProperties::class, $actesMinistereProperties);
+    }
 
+    /**
+     * @param \S2lowLegacy\Lib\ObjectInstancier $objectInstancier
+     * @return void
+     */
+    private static function setProdActesImapProperties(ObjectInstancier $objectInstancier): void
+    {
         $actesImapProperties = new ActesImapProperties();
         $actesImapProperties->host = ACTES_IMAP_HOST;
         $actesImapProperties->port = ACTES_IMAP_PORT;
@@ -199,86 +394,5 @@ class LegacyObjectsManager
         $actesImapProperties->password = ACTES_IMAP_PASSWORD;
         $actesImapProperties->imap_options = ACTES_IMAP_OPTIONS;
         $objectInstancier->set(ActesImapProperties::class, $actesImapProperties);
-
-        $objectInstancier->set('actes_response_tmp_local_path', ACTES_RESPONSE_TMP_LOCAL_PATH);
-        $objectInstancier->set('actes_response_error_path', ACTES_RESPONSE_ERROR_PATH);
-
-        $objectInstancier->set('mail_files_upload_root', MAIL_FILES_UPLOAD_ROOT);
-
-        $objectInstancier->set('pades_valid_url', PADES_VALID_URL);
-        $objectInstancier->set('pdf_stamp_url', PDF_STAMP_URL);
-        $objectInstancier->set('image_for_stamp', IMAGE_FOR_STAMP);
-
-        $objectInstancier->set('rgs_validca_path', RGS_VALIDCA_PATH);
-
-        $objectInstancier->set('beanstalkd_server', BEANSTAKLD_SERVER);
-        $objectInstancier->set('beanstalkd_port', BEANSTAKLD_PORT);
-        $objectInstancier->set('antivirus_command', ANTIVIRUS_COMMAND);
-        $objectInstancier->set('openssl_path', OPENSSL_PATH);
-        $objectInstancier->set('extended_validca_path', EXTENDED_VALIDCA_PATH);
-        $objectInstancier->set('trustore_path', TRUSTSTORE_PATH);
-
-        $objectInstancier->set('email_admin_technique', EMAIL_ADMIN_TECHNIQUE);
-        $objectInstancier->set('tdt_from_email', TDT_FROM_EMAIL);
-        $objectInstancier->set('log_level', LOG_LEVEL);
-
-        $objectInstancier->set('redis_server', REDIS_SERVER);
-        $objectInstancier->set('redis_port', REDIS_PORT);
-
-        $objectInstancier->set('helios_ftp_response_tmp_local_path', HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH);
-
-        $objectInstancier->set('helios_retention_fichiers_nb_jours', HELIOS_RETENTION_FICHIERS_NB_JOURS);
-
-        $objectInstancier->set('old_timestamp_token_directory', OLD_TIMESTAMP_TOKEN_DIRECTORY);
-        $objectInstancier->set('timestamp_token_retention_nb_days', TIMESTAMP_TOKEN_RETENTION_NB_DAYS);
-
-
-        if (php_sapi_name() === 'cli') { // pcntl n'est actif qu'en mode CLI
-            $objectInstancier->set(SigTermHandler::class, SigTermHandler::getInstance());
-        }
-
-        if (USE_LEGACY_BORDEREAU_MODEL) {
-            $objectInstancier->set(
-                IActesPdf::class,
-                new ActesPdfLegacy(SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg")
-            );
-        } else {
-            $objectInstancier->set(
-                IActesPdf::class,
-                new ActesPdf(SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg")
-            );
-        }
-
-        if (USE_LEGACY_SECURE_MAIL_FIELDS) {
-            $objectInstancier->set(
-                MailHeader::class,
-                new MailHeaderLegacy(MAIL_MESSAGE, MAIL_TEDETIS_FROM, MAIL_SECURE_DESCRIPTION)
-            );
-        } else {
-            $objectInstancier->set(
-                MailHeader::class,
-                new MailHeader(MAIL_MESSAGE, MAIL_TEDETIS_FROM, MAIL_SECURE_DESCRIPTION)
-            );
-        }
-
-        $objectInstancier->set('cachePath', "/var/run/htmlpurifier");
-
-        $objectInstancier->set('html', '');
-    }
-
-    public static function resetObjectInstancier()
-    {
-        ObjectInstancierFactory::resetObjectInstancier();
-    }
-
-    /**
-     * Utilisé pour l'injection de dépendances Symfony
-     */
-    public static function getObject(string $className)
-    {
-        if (!ObjectInstancierFactory::issetObjectInstancier()) {
-            throw new RuntimeException("ObjectInstancier not test");
-        }
-        return ObjectInstancierFactory::getObjetInstancier()->get($className);
     }
 }

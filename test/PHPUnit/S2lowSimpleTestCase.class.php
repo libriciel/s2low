@@ -16,6 +16,12 @@ class S2lowSimpleTestCase extends TestCase
         $this->getObjectInstancier()->get(Monolog\Logger::class)->pushHandler($testHandler);
     }
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        \S2lowLegacy\Lib\ObjectInstancierFactory::resetObjectInstancier();
+    }
+
     public function getObjectInstancier()
     {
         return \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();

@@ -2,37 +2,42 @@
 
 namespace S2low\Tests\Base;
 
+use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\Test;
+use PHPUnit\Framework\TestListener;
+use PHPUnit\Framework\TestSuite;
+use PHPUnit\Framework\Warning;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Controller\PostgreSQLController;
 use Throwable;
 
-class S2lowTestListener implements \PHPUnit\Framework\TestListener
+class S2lowTestListener implements TestListener
 {
-    public function addError(\PHPUnit\Framework\Test $test, Throwable $t, float $time): void
+    public function addError(Test $test, Throwable $t, float $time): void
     {
     }
 
-    public function addWarning(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\Warning $e, float $time): void
+    public function addWarning(Test $test, Warning $e, float $time): void
     {
     }
 
-    public function addFailure(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\AssertionFailedError $e, float $time): void
+    public function addFailure(Test $test, AssertionFailedError $e, float $time): void
     {
     }
 
-    public function addIncompleteTest(\PHPUnit\Framework\Test $test, Throwable $t, float $time): void
+    public function addIncompleteTest(Test $test, Throwable $t, float $time): void
     {
     }
 
-    public function addRiskyTest(\PHPUnit\Framework\Test $test, Throwable $t, float $time): void
+    public function addRiskyTest(Test $test, Throwable $t, float $time): void
     {
     }
 
-    public function addSkippedTest(\PHPUnit\Framework\Test $test, Throwable $t, float $time): void
+    public function addSkippedTest(Test $test, Throwable $t, float $time): void
     {
     }
 
-    public function startTestSuite(\PHPUnit\Framework\TestSuite $suite): void
+    public function startTestSuite(TestSuite $suite): void
     {
         if ($suite->getName() === "S2low_integration") {
             \S2lowLegacy\Class\LegacyObjectsManager::resetObjectInstancier();
@@ -48,15 +53,15 @@ class S2lowTestListener implements \PHPUnit\Framework\TestListener
         }
     }
 
-    public function endTestSuite(\PHPUnit\Framework\TestSuite $suite): void
+    public function endTestSuite(TestSuite $suite): void
     {
     }
 
-    public function startTest(\PHPUnit\Framework\Test $test): void
+    public function startTest(Test $test): void
     {
     }
 
-    public function endTest(\PHPUnit\Framework\Test $test, float $time): void
+    public function endTest(Test $test, float $time): void
     {
     }
 }

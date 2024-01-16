@@ -11,6 +11,11 @@ use Symfony\Component\Console\Command\Command;
 
 class NotifyActesCommandTest extends KernelTestCase
 {
+    public function tearDown(): void
+    {
+        \S2lowLegacy\Class\LegacyObjectsManager::resetObjectInstancier();
+        parent::tearDown();
+    }
     public function testExecute()
     {
         \S2lowLegacy\Class\LegacyObjectsManager::resetObjectInstancier();

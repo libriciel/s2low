@@ -3,6 +3,7 @@
 namespace S2low\Tests;
 
 use Exception;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -26,6 +27,15 @@ abstract class S2lowSymfonyWebTestCase extends WebTestCase
 
         $this->testEnvironnementManager = new TestEnvironmentManager();
         $this->testEnvironnementManager->setUp();
+    }
+
+    /**
+     * This method is called after each test.
+     */
+    protected function tearDown(): void
+    {
+        LegacyObjectsManager::resetObjectInstancier();
+        parent::tearDown();
     }
 
     /**

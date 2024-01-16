@@ -19,6 +19,8 @@ class TestEnvironmentManager
 
     public function setUp()
     {
+        // A priori nécessaire, mais je ne comprend pas pquoi !
+        // Sinon, on a des messages de type "trop d'utilisateurs connectés"
         $this->getConnection();
 
         $this->getSQLQuery()->exec($this->getSQLContent());
@@ -27,67 +29,7 @@ class TestEnvironmentManager
         $this->getSQLQuery()->query("SELECT SETVAL('authorities_id_seq', (SELECT MAX(id)+1 FROM authorities))");
         $this->getSQLQuery()->query("SELECT SETVAL('authority_groups_id_seq', (SELECT MAX(id)+1 FROM authority_groups))");
 
-
-        $_GET = array();
-        $_POST = array();
-        $_SESSION = array();
-        $_SERVER['SSL_CLIENT_VERIFY'] = "";
-        $_SERVER['SSL_CLIENT_S_DN'] = "";
-        $_SERVER['SSL_CLIENT_I_DN'] = "";
-        $_SERVER['SSL_CLIENT_CERT'] = "";
-        $_SERVER["QUERY_STRING"] = "";
-
-        \S2lowLegacy\Lib\ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());
         $this->getObjectInstancier()->__set(SQLQuery::class, $this->getSQLQuery());
-        $this->getObjectInstancier()->set('helios_files_upload_root', "/tmp");
-        $this->getObjectInstancier()->set('actes_files_upload_root', sys_get_temp_dir());
-
-        $this->getObjectInstancier()->set('use_prod_notifications', false);
-
-        $this->getObjectInstancier()->set("openstack_authentication_url_v2", "");
-        $this->getObjectInstancier()->set("openstack_username", "a");
-        $this->getObjectInstancier()->set("openstack_password", "a");
-        $this->getObjectInstancier()->set("openstack_tenant", "a");
-        $this->getObjectInstancier()->set("openstack_region", "a");
-        $this->getObjectInstancier()->set("openstack_swift_container_prefix", "a");
-        $this->getObjectInstancier()->set("website", "http://s2low");
-        $this->getObjectInstancier()->set("website_ssl", "https://s2low");
-        $this->getObjectInstancier()->set("actes_appli_trigramme", "SLO");
-        $this->getObjectInstancier()->set("actes_appli_quadrigramme", "EACT");
-        $this->getObjectInstancier()->set("actes_ministere_acronyme", "MI");
-        $this->getObjectInstancier()->set("actes_dont_valid_signing_certificate", false);
-        $this->getObjectInstancier()->set("beanstalkd_server", false);
-        $this->getObjectInstancier()->set("beanstalkd_port", false);
-        $this->getObjectInstancier()->set('antivirus_command', 'ls');
-        $this->getObjectInstancier()->set('pades_valid_url', 'https://s2low');
-        $this->getObjectInstancier()->set('openssl_path', OPENSSL_PATH);
-        $this->getObjectInstancier()->set('rgs_validca_path', RGS_VALIDCA_PATH);
-        $this->getObjectInstancier()->set('extended_validca_path', EXTENDED_VALIDCA_PATH);
-        $this->getObjectInstancier()->set('trustore_path', TRUSTSTORE_PATH);
-        $this->getObjectInstancier()->set('schema_pes_path', HELIOS_XSD_PATH);
-        $this->getObjectInstancier()->set('redis_server', 'localhost');
-        $this->getObjectInstancier()->set('redis_port', 6379);
-
-        $get = array();
-        $post = array();
-        $request = array();
-        $session = array();
-        $server = array();
-
-        $this->getObjectInstancier()->set(Environnement::class, new Environnement($get, $post, $request, $session, $server));
-        $this->getObjectInstancier()->set(SessionWrapper::class, $this->getObjectInstancier()->get(Environnement::class)->session());
-        $monologLogger = new  Logger('PHPUNIT');
-        $this->getObjectInstancier()->set(Logger::class, $monologLogger);
-        $testHandler = new TestHandler();
-        $this->getObjectInstancier()->set(TestHandler::class, $testHandler);
-        $this->getObjectInstancier()->get(Logger::class)->pushHandler($testHandler);
-
-        $this->getObjectInstancier()->set('convert_api_logins_from_iso', CONVERT_API_LOGINS_FROM_ISO);
-
-        // WARNING : PAS SUR DE LA MANIP
-        $this->getObjectInstancier()->set(S2lowLogger::class, new  S2lowLogger($monologLogger));
-
-        $this->getObjectInstancier()->set('image_for_stamp', SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg");
     }
 
     public function getConnection()

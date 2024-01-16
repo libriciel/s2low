@@ -1,7 +1,12 @@
 <?php
 
+use S2lowLegacy\Class\HttpsConnexion;
+use S2lowLegacy\Class\LegacyObjectsManager;
+use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\ObjectInstancierFactory;
 use S2lowLegacy\Lib\PemCertificateFactory;
+use S2lowLegacy\Lib\SessionWrapper;
 use S2lowLegacy\Lib\SQLQuery;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -20,16 +25,15 @@ class MailIntegrationTest extends WebTestCase
     public function setUp(): void
     {
         parent::setUp();
-        \S2lowLegacy\Class\LegacyObjectsManager::resetObjectInstancier();
         $_SESSION = [];
-        \S2lowLegacy\Lib\ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());    //DatabasePool utilise ObjectInstancier
+        ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());    //DatabasePool utilise ObjectInstancier
         $this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);            // On en crée un le temps de MàJ la BDD
         $this->sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST); // On le ressettera ensuite
         $this->sqlQuery->setDatabaseHost(DB_HOST_TEST);
-        \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->set(SQLQuery::class, $this->sqlQuery);
+        ObjectInstancierFactory::getObjetInstancier()->set(SQLQuery::class, $this->sqlQuery);
         $this->pemCertificateFactory = new PemCertificateFactory();
         $this->sqlQuery->exec(utf8_encode(file_get_contents(__DIR__ . "/fixtures/s2low-test-init.sql")));
-        \S2lowLegacy\Lib\ObjectInstancierFactory::resetObjectInstancier(new ObjectInstancier());    //DatabasePool utilise ObjectInstancier
+        ObjectInstancierFactory::resetObjectInstancier();    //DatabasePool utilise ObjectInstancier
     }
 
     /**
@@ -63,13 +67,32 @@ class MailIntegrationTest extends WebTestCase
             'HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION' => $certificatSansBegin
 
         );
-        foreach ($serverVariables as $key => $value) {
-            $_SERVER[$key] = $value;         // Le client Symfony ne set pas la session, utilisée par l'appli...
-        }
-        return static::createClient(
+
+        $kernelBrowser = static::createClient(
             array(),
             $serverVariables
         );
+
+        foreach ($serverVariables as $key => $value) {
+            $_SERVER[$key] = $value;         // Le LegacyObjectsManager resette
+                                            // $_SERVER['SSL_CLIENT_VERIFY'] = "";
+                                            // $_SERVER['SSL_CLIENT_S_DN'] = "";
+                                            // $_SERVER['SSL_CLIENT_I_DN'] = "";
+                                            // $_SERVER['SSL_CLIENT_CERT'] = "";
+                                            // $_SERVER["QUERY_STRING"] = "";
+                                            //TODO : rendre cette initialisation plus cohérente
+                                            // En permettant de setter ces variables sans qu'elles puissent être reset
+        }
+
+        $_GET = array();
+        $_POST = array();
+        $_SESSION = array();
+
+        $environnement = new Environnement($_GET, $_POST, $_REQUEST, $_SESSION, $_SERVER);
+        LegacyObjectsManager::getLegacyObjectInstancier()->set(SessionWrapper::class, new SessionWrapper($_SESSION));
+        LegacyObjectsManager::getLegacyObjectInstancier()->set(Environnement::class, $environnement);
+
+        return $kernelBrowser;
     }
 
     /**
@@ -84,7 +107,6 @@ class MailIntegrationTest extends WebTestCase
         $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
         $client = $this->setUpClient($certificatePem->getContent(), $certificatePem->getContentStrippedFromBegin());                                                           // 2/ Le client ne modifie pas la variable _SERVER
 
-        \S2lowLegacy\Lib\ObjectInstancierFactory::resetObjectInstancier();
         $crawler = $client->request('GET', '/index.php');
         $this->assertMatchesRegularExpression(
             "#<title>Tiers de téléransmission multiprotocoles</title>#",
@@ -107,8 +129,6 @@ class MailIntegrationTest extends WebTestCase
         );
 
         $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
-
-        \S2lowLegacy\Lib\ObjectInstancierFactory::resetObjectInstancier();
 
         $client = $this->setUpClient(
             $wrongCertificatePem->getContent(),
@@ -134,7 +154,6 @@ class MailIntegrationTest extends WebTestCase
 
         $client = $this->setUpClient($certificatePem->getContent(), $certificatePem->getContentStrippedFromBegin());                                                           // 2/ Le client ne modifie pas la variable _SERVER
 
-        \S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
         $crawler = $client->request('GET', '/admin/utilities/admin_send_global_message.php');
 
         $this->assertMatchesRegularExpression(
@@ -166,7 +185,7 @@ class MailIntegrationTest extends WebTestCase
 
         $this->assertMatchesRegularExpression(
             "#eric@sigmalis.com#",
-            \S2lowLegacy\Class\LegacyObjectsManager::getObject(\S2lowLegacy\Lib\Environnement::class)->session()->get("error")
+            LegacyObjectsManager::getObject(\S2lowLegacy\Lib\Environnement::class)->session()->get("error")
         );
         $this->assertResponseRedirects("/admin/utilities/index.php");
     }

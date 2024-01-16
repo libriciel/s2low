@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
@@ -17,9 +18,15 @@ abstract class S2lowTestCase extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
+        LegacyObjectsManager::setLegacyObjectInstancier();
         $this->testEnvironmentManager = new TestEnvironmentManager();
         $this->testEnvironmentManager->setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        LegacyObjectsManager::resetObjectInstancier();
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace S2low\Tests\Command;
 
+use PHPUnit\Framework\TestCase;
 use S2low\Kernel;
 use S2lowLegacy\Model\LogsHistoriqueSQL;
 use S2low\Command\ExtractAndDeleteTimestampTokenCommand;
@@ -10,15 +11,8 @@ use S2lowTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class ExtractAndDeleteTimestampTokenCommandTest extends S2lowTestCase
+class ExtractAndDeleteTimestampTokenCommandTest extends TestCase
 {
-    use LogsHistoriqueSQLTrait;
-
-    public function getLogHistoriqueSQL(): LogsHistoriqueSQL
-    {
-        return $this->getObjectInstancier()->get(LogsHistoriqueSQL::class);
-    }
-
     public function testCommand()
     {
         $kernel = new Kernel('test', true);
