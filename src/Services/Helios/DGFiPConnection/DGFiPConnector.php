@@ -1,7 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace S2low\Services\Helios\DGFiPConnection;
 
+/**
+ * Abstracts the particular connection protocol to the DGFiP
+ */
 interface DGFiPConnector
 {
     /**
@@ -16,6 +21,7 @@ interface DGFiPConnector
      * @param string $tmp_file  chemin du fichier local
      * @param string $file chemin du fichier distant
      * @return bool
+     * @throws \Exception
      */
     public function retrieveFile(string $tmp_file, string $file): bool;
 

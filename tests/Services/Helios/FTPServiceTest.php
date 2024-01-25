@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace S2low\Tests\Services\Helios;
 
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
+use S2low\Services\FilesAndDirectoriesUtils\DirectoryManagerFactory;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnection;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionBuilder;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionConfiguration;
@@ -30,7 +33,7 @@ class FTPServiceTest extends S2lowTestCase
      */
     private SftpServiceWrapper|MockObject $sftpServiceWrapperMock;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|(\S2low\Services\Helios\DGFiPConnection\FTPConnection&\PHPUnit\Framework\MockObject\MockObject)
+     * @var MockObject|FTPConnection
      */
     private MockObject|FTPConnection $ftpConnectionMock;
 
@@ -52,7 +55,7 @@ class FTPServiceTest extends S2lowTestCase
     /**
      * @param bool $isPassive
      * @param string $PasstransMode
-     * @return \S2low\Services\Helios\DGFiPConnection\DGFiPConnection
+     * @return DGFiPConnection
      */
     public function getDGFiPConnection(bool $isPassive, string $PasstransMode): DGFiPConnection
     {
@@ -70,7 +73,8 @@ class FTPServiceTest extends S2lowTestCase
         return ( new DGFiPConnectionBuilder(
             $this->ftpServiceWrapperMock,
             $this->sftpServiceWrapperMock,
-            $this->getObjectInstancier()->get(S2lowLogger::class)
+            $this->getObjectInstancier()->get(S2lowLogger::class),
+            $this->getObjectInstancier()->get(DirectoryManagerFactory::class)
         ) )->get(
             $configuration
         );
@@ -93,7 +97,7 @@ class FTPServiceTest extends S2lowTestCase
      * @param $heliosFtpPasstransMode
      * @param $connectFunction
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function testConnect($heliosFtpPasstransMode, $connectFunction)
     {
@@ -111,10 +115,13 @@ class FTPServiceTest extends S2lowTestCase
         $connection->connect();
     }
 
+    /**
+     * @return void
+     */
     public function testURL()
     {
         $connection = $this->getDGFiPConnection(false, DGFiPConnectionMode::SIMULATEUR);
-        $this->assertEquals(
+        static::assertEquals(
             'FTP://helios_ftp_login:helios_ftp_password@helios_ftp_server [Actif].[MODE DEMO]',
             $connection->getURL()
         );
@@ -134,7 +141,7 @@ class FTPServiceTest extends S2lowTestCase
      * @dataProvider passiveProvider
      * @param $isPasv
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function testSetPassive($isPasv)
     {
@@ -159,7 +166,7 @@ class FTPServiceTest extends S2lowTestCase
 
     /**
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function testImpossibleToConnect()
     {
@@ -229,7 +236,7 @@ class FTPServiceTest extends S2lowTestCase
 
         $connection = $this->getDGFiPConnection(false, $heliosFtpPasstransMode);
         $connection->connect();
-        $this->assertEquals(
+        static::assertEquals(
             ['file1', 'file2'],
             $connection->getFileNames()
         );
@@ -253,7 +260,7 @@ class FTPServiceTest extends S2lowTestCase
 
     /**
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function testGetError1()
     {
@@ -296,17 +303,20 @@ class FTPServiceTest extends S2lowTestCase
         $connection->getFileNames();
     }
 
-    public function demoProvider2()
+    /**
+     * @return array[]
+     */
+    public function DGFiPConnectionMode(): array
     {
         return [
-            [ DGFiPConnectionMode::SIMULATEUR , self::once()],          // En mode demo, c'est s2low qui demande la suppression du fichier
+            [ DGFiPConnectionMode::SIMULATEUR , self::once()],     // En mode demo s2low qui demande la suppression du fichier
             [DGFiPConnectionMode::GATEWAY, self::never()]         // Sinon, c'est le serveur DGFip qui supprime après téléchargement
         ];
     }
     /**
-     * @dataProvider demoProvider2
+     * @dataProvider DGFiPConnectionMode
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function testRetrieveFile($heliosFtpPasstransMode, $numberOfDeleteCalls)
     {
@@ -316,7 +326,7 @@ class FTPServiceTest extends S2lowTestCase
             ->expects(self::once())
             ->method('get')
             ->willReturnCallback(function ($ftp, $tmp_file, $remoteFile) {
-                $content = 'file contents';
+                $content = 'le fichier telecharge';
                 $fp = fopen("$tmp_file", 'wb');
                 fwrite($fp, $content);
                 fclose($fp);
@@ -332,19 +342,141 @@ class FTPServiceTest extends S2lowTestCase
         $connection->connect();
 
         $tmpFolder = new TmpFolder();
-        $tmpDir = $tmpFolder->create();
+        $tmpFolderDir = $tmpFolder->create();
+        $localFolderDir = $tmpFolder->create();
 
-        $this->assertTrue(
-            $connection->retrieveFile('file', "$tmpDir/")
-        );
-        $this->assertEquals(
-            'file contents',
-            file_get_contents("$tmpDir/file")
+        $connection->retrieveFile(
+            'file',
+            "$localFolderDir/",
+            '',
+            $tmpFolderDir
         );
 
-        $tmpFolder->delete($tmpDir);
+        static::assertEquals(2, count(scandir($tmpFolderDir)));   // Plus de fichier dans le répertoire temporaire
+        static::assertEquals(3, count(scandir($localFolderDir))); // Un fichier en plus dans le répertoire local
+
+        static::assertEquals(                                            // Et en plus, ce fichier est nommé file
+            'le fichier telecharge',                            // Et son contenu correspond à ce qui est attendu
+            file_get_contents("$localFolderDir/file")
+        );
+
+        $tmpFolder->delete($tmpFolderDir);
+        $tmpFolder->delete($localFolderDir);
     }
 
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function testRetrieveFileWithFileWithSameNameInLocalPath()
+    {
+        $this->setupConnection();
+
+        $this->ftpServiceWrapperMock
+            ->expects(self::once())
+            ->method('get')
+            ->willReturnCallback(function ($ftp, $tmp_file, $remoteFile) {
+                $content = 'le fichier telecharge';
+                $fp = fopen("$tmp_file", 'wb');
+                fwrite($fp, $content);
+                fclose($fp);
+                return true;
+            });
+
+        $connection = $this->getDGFiPConnection(false, DGFiPConnectionMode::GATEWAY);
+        $connection->connect();
+
+        $tmpFolder = new TmpFolder();
+        $tmpFolderDir = $tmpFolder->create();
+        $localFolderDir = $tmpFolder->create();
+        $errorFolderDir = $tmpFolder->create();
+
+        file_put_contents("$localFolderDir/file", 'le fichier deja existant');
+
+        $connection->retrieveFile(
+            'file',
+            "$localFolderDir/",
+            "$errorFolderDir/",
+            $tmpFolderDir
+        );
+
+        static::assertEquals(2, count(scandir($tmpFolderDir)));   // Plus de fichier dans le répertoire temporaire
+        static::assertEquals(3, count(scandir($localFolderDir))); // Toujours un fichier dans le répertoire local
+        static::assertEquals(3, count(scandir($errorFolderDir))); // Le nouveau fichier dans le répertoire erreur
+
+        static::assertEquals(               // C'est bien l'ancien fichier dans le répertoire local
+            'le fichier deja existant',
+            file_get_contents("$localFolderDir/file")
+        );
+
+        static::assertEquals(               // C'est bien le fichier téléchargé dans le répertoire erreur
+            'le fichier telecharge',
+            file_get_contents("$errorFolderDir/file")
+        );
+
+        $tmpFolder->delete($tmpFolderDir);
+        $tmpFolder->delete($localFolderDir);
+        $tmpFolder->delete($errorFolderDir);
+    }
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function testRetrieveFileWithSameFileInLocalPath()
+    {
+        $this->setupConnection();
+
+        $this->ftpServiceWrapperMock
+            ->expects(self::once())
+            ->method('get')
+            ->willReturnCallback(function ($ftp, $tmp_file, $remoteFile) {
+                $content = 'Le fichier qui a deja ete telecharge';
+                $fp = fopen("$tmp_file", 'wb');
+                fwrite($fp, $content);
+                fclose($fp);
+                return true;
+            });
+
+        $connection = $this->getDGFiPConnection(false, DGFiPConnectionMode::GATEWAY);
+        $connection->connect();
+
+        $tmpFolder = new TmpFolder();
+        $tmpFolderDir = $tmpFolder->create();
+        $localFolderDir = $tmpFolder->create();
+        $errorFolderDir = $tmpFolder->create();
+
+        file_put_contents("$localFolderDir/file", 'Le fichier qui a deja ete telecharge');
+
+        static::assertEquals(               // On n'a pas touché à ce qui existait déjà
+            'Le fichier qui a deja ete telecharge',
+            file_get_contents("$localFolderDir/file")
+        );
+
+        $connection->retrieveFile(
+            'file',
+            "$localFolderDir/",
+            "$errorFolderDir/",
+            $tmpFolderDir
+        );
+
+        static::assertEquals(2, count(scandir($tmpFolderDir)));   // Plus de fichier dans le répertoire temporaire
+        static::assertEquals(3, count(scandir($localFolderDir))); // Un seul fichier dans le répertoire local
+        static::assertEquals(2, count(scandir($errorFolderDir))); // Pas de fichier dans le répertoire erreur
+
+        static::assertEquals(               // On n'a pas touché à ce qui existait déjà
+            'Le fichier qui a deja ete telecharge',
+            file_get_contents("$localFolderDir/file")
+        );
+
+        $tmpFolder->delete($tmpFolderDir);
+        $tmpFolder->delete($localFolderDir);
+        $tmpFolder->delete($errorFolderDir);
+    }
+
+    /**
+     * @return void
+     */
     public function testDisconnect()
     {
         $this->setupConnection();
@@ -359,6 +491,9 @@ class FTPServiceTest extends S2lowTestCase
         $connection->disconnect();
     }
 
+    /**
+     * @return void
+     */
     public function testSendRawCommand()
     {
         $this->setupConnection();
@@ -373,7 +508,7 @@ class FTPServiceTest extends S2lowTestCase
             ->willReturn([200, 'Yay']);
         $this->ftpServiceWrapperMock
             ->expects(self::once())
-            ->method("put")
+            ->method('put')
             ->with($this->ftpConnectionMock, 'sending_destinationfile_to_send', 'file_to_send', FTP_BINARY)
             ->willReturn(true);
 
@@ -382,6 +517,9 @@ class FTPServiceTest extends S2lowTestCase
         $connection->sendOneFileWithProperties('p_dest', 'p_msg', 'file_to_send');
     }
 
+    /**
+     * @return void
+     */
     public function testSendRawCommandWithErrorDemoMode()
     {
         $this->setupConnection();
@@ -407,6 +545,9 @@ class FTPServiceTest extends S2lowTestCase
         $connection->sendOneFileWithProperties('p_dest', 'p_msg', 'file_to_send');
     }
 
+    /**
+     * @return void
+     */
     public function testSendRawCommandWithError()
     {
         $this->setupConnection();
@@ -429,6 +570,9 @@ I'm a teapot
         $connection->sendOneFileWithProperties('p_dest', 'p_msg', 'file_to_send');
     }
 
+    /**
+     * @return void
+     */
     public function testSendOneFile()
     {
         $this->setupConnection();
@@ -441,11 +585,11 @@ I'm a teapot
                 [$this->ftpConnectionMock, 'site P_APPLI p_appli'],
                 [$this->ftpConnectionMock, 'site P_MSG p_msg']
             )
-            ->willReturn([200,"Yay"]);
+            ->willReturn([200, 'Yay']);
 
         $this->ftpServiceWrapperMock
             ->expects(self::once())
-            ->method("put")
+            ->method('put')
             ->with($this->ftpConnectionMock, 'sending_destinationfile_path', 'file_path', FTP_BINARY)
             ->willReturn(true);
 
@@ -454,6 +598,9 @@ I'm a teapot
         $connection->sendOneFileWithProperties('p_dest', 'p_msg', 'file_path');
     }
 
+    /**
+     * @return void
+     */
     public function testSendOneFileWithError()  //TODO
     {
         $this->setupConnection();
@@ -466,7 +613,7 @@ I'm a teapot
                 [$this->ftpConnectionMock, 'site P_APPLI p_appli'],
                 [$this->ftpConnectionMock, 'site P_MSG p_msg']
             )
-            ->willReturn([200,"Yay"]);
+            ->willReturn([200, 'Yay']);
 
         $this->ftpServiceWrapperMock
             ->expects(self::once())
@@ -482,6 +629,9 @@ I'm a teapot
         $connection->sendOneFileWithProperties('p_dest', 'p_msg', 'file_path');
     }
 
+    /**
+     * @return void
+     */
     public function testConfigureFilePropertiesPasstrans()  //TODO
     {
         //TODO : ne configurer Passtrans que lors de la création du service...
@@ -503,14 +653,21 @@ I'm a teapot
         $connection->sendOneFileWithProperties('p_dest', 'p_msg', 'file_path');
     }
 
+    /**
+     * @return void
+     */
     public function testConfigureFilePropertiesNotPasstrans()   //TODO
     {
         //TODO : ne configurer Passtrans que lors de la création du service...
         $this->setupConnection();
         $this->ftpServiceWrapperMock
-            ->expects($this->exactly(3))
+            ->expects(static::exactly(3))
             ->method('raw')
-            ->withConsecutive([$this->ftpConnectionMock, 'site P_DEST p_dest'], [$this->ftpConnectionMock,"site P_APPLI p_appli"], [$this->ftpConnectionMock,"site P_MSG p_msg"])
+            ->withConsecutive(
+                [$this->ftpConnectionMock, 'site P_DEST p_dest'],
+                [$this->ftpConnectionMock, 'site P_APPLI p_appli'],
+                [$this->ftpConnectionMock, 'site P_MSG p_msg']
+            )
             ->willReturn(['200', 'cool cool cool']);
 
         $this->ftpServiceWrapperMock
@@ -523,6 +680,10 @@ I'm a teapot
         $connection->connect();
         $connection->sendOneFileWithProperties('p_dest', 'p_msg', 'file_path');
     }
+
+    /**
+     * @return void
+     */
     public function testsendFileOnUniqueConnection()
     {
         $this->setupConnection();
@@ -531,7 +692,7 @@ I'm a teapot
             ->expects(self::once())
             ->method('connect');
         $this->ftpServiceWrapperMock
-            ->expects($this->exactly(3))
+            ->expects(static::exactly(3))
             ->method('raw')
             ->withConsecutive([$this->ftpConnectionMock, 'site P_DEST p_dest'], [$this->ftpConnectionMock,'site P_APPLI p_appli'], [$this->ftpConnectionMock,'site P_MSG p_msg'])
             ->willReturn(['200', 'cool cool cool']);

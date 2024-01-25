@@ -9,10 +9,11 @@
 - Correction des statistiques Helios pour l'administrateur de groupe #1119
 - Correction de la chaîne d'intégration continue #1133
 - Mise à jour d'un certificat utilisé par les tests unitaires #1132
+- Remonter plus finement les erreurs de récupération de flux depuis le serveur DGFiP #1130
 
 ### Évolutions
 
-- Ajout des étapes code_quality et container_scanning dans la CI  
+- Ajout des étapes code_quality et container_scanning dans la CI #1135
 
 ### Sécurité
 
