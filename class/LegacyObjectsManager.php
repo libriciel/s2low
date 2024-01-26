@@ -164,6 +164,7 @@ class LegacyObjectsManager
         $objectInstancier->set("helios_files_upload_root", HELIOS_FILES_UPLOAD_ROOT);
         $objectInstancier->set("repertoirePesAllerSansTransaction", HELIOS_PESALLER_SANSTRANSACTION);
         $objectInstancier->set("helios_responses_root", HELIOS_RESPONSES_ROOT);
+        $objectInstancier->set("helios_responses_error_path", HELIOS_RESPONSES_ERROR_PATH);
         $objectInstancier->set("schema_pes_path", HELIOS_XSD_PATH);
 
         $objectInstancier->set("helios_responses_root", HELIOS_RESPONSES_ROOT);

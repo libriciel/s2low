@@ -18,6 +18,7 @@ parameters:
   app.helios_ftp_password: '%env(HELIOS_FTP_PASSWORD)%'
   app.helios_ftp_response_server_path: '%env(HELIOS_FTP_RESPONSE_SERVER_PATH)%'
   app.helios_ftp_response_tmp_local_path: '/data/tdt-workspace/helios/response_tmp/'
+  app.helios_responses_error_path: '/data/tdt-workspace/helios/response_error/'
   app.helios_sending_destination: '%env(HELIOS_SENDING_DESTINATION)%'
   app.helios_passtrans_server: '%env(HELIOS_PASSTRANS_SERVER)%'
   app.helios_passtrans_port: '%env(HELIOS_PASSTRANS_PORT)%'
@@ -57,6 +58,7 @@ services:
   S2low\Services\Helios\FTPHeliosReceiverFactory:
     arguments:
       $helios_ftp_response_tmp_local_path: "%app.helios_ftp_response_tmp_local_path%"
+      $helios_responses_error_path: "%app.helios_responses_error_path%"
 
   S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager:
     arguments:

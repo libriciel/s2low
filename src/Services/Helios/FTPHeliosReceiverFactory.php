@@ -26,7 +26,8 @@ class FTPHeliosReceiverFactory
     public function __construct(
         S2lowLogger $s2lowLogger,
         DGFiPConnectionsManager $connectionsConfigurationManager,
-        $helios_ftp_response_tmp_local_path
+        $helios_ftp_response_tmp_local_path,
+        $helios_responses_error_path
     ) {
         $this->s2lowLogger = $s2lowLogger;
         $this->connectionsConfigurationManager = $connectionsConfigurationManager;
