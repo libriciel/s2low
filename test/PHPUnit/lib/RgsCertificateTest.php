@@ -43,7 +43,7 @@ class RgsCertificateTest extends TestCase
 
     public function testIsRgsConnexionAutosignedRoot()
     {
-        $x509_pem_certificate = file_get_contents(__DIR__ . "/../core/fixtures/CertAutosignedRoot/test-s2low-demo-s2low.pem");
+        $x509_pem_certificate = file_get_contents(__DIR__ . "/../core/fixtures/CertAutosignedRoot/s2low-test-u.pem");
         $x509_ca_certificate = file_get_contents(__DIR__ . "/../core/fixtures/CertAutosignedRoot/AC_LIBRICIEL_RACINE_G1_CHAIN.pem");
         $x509_intermediate_certificate = file_get_contents(__DIR__ . "/../core/fixtures/CertAutosignedRoot/AC_LIBRICIEL_PERSONNEL_G2_CHAIN.pem");
 
@@ -58,7 +58,7 @@ class RgsCertificateTest extends TestCase
      */
     public function testIsRgsConnexionAutosignedRootInCA()
     {
-        $x509_pem_certificate = file_get_contents(__DIR__ . "/../core/fixtures/CertAutosignedRoot/test-s2low-demo-s2low.pem");
+        $x509_pem_certificate = file_get_contents(__DIR__ . "/../core/fixtures/CertAutosignedRoot/s2low-test-u.pem");
         $x509_ca_certificate = file_get_contents(__DIR__ . "/../core/fixtures/CertAutosignedRoot/AC_LIBRICIEL_RACINE_G1_CHAIN.pem");
         $x509_intermediate_certificate = file_get_contents(__DIR__ . "/../core/fixtures/CertAutosignedRoot/AC_LIBRICIEL_PERSONNEL_G2_CHAIN.pem");
 
