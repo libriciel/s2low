@@ -36,7 +36,7 @@ class OpenStackStateManager
 
     public function declareException(Exception $e)
     {
-        $this->unsuccessfullConsecutiveAttempts ++;
+        $this->unsuccessfullConsecutiveAttempts++;
         $message = $this->processException($e);
         $this->logger->error(
             "[Openstack][$this->unsuccessfullConsecutiveAttempts] $message"
