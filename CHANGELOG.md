@@ -8,6 +8,7 @@
 - Installer Libersign par défaut #1078
 - Correction des statistiques Helios pour l'administrateur de groupe #1119
 - Correction de la chaîne d'intégration continue #1133
+- Mise à jour d'un certificat utilisé par les tests unitaires #1132
 
 ## 5.0.26 - 2023-12-11
 
