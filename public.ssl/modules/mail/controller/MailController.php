@@ -361,7 +361,7 @@ class MailController
                // donc il y aura de trou entre les nombre.
                 if (defined('MAIL_DEBUG')) {
                       echo "filenumber=" . $i;
-                      echo "filename=" . $_FILES['uploadFile' . $i]['name'];
+                      hecho("filename=" . $_FILES['uploadFile' . $i]['name']);
                 }
                 if (!  empty($_FILES['uploadFile' . $i]['name'])) {
                      $InputFileName[] = 'uploadFile' . $i;
