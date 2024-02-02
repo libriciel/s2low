@@ -10,6 +10,10 @@
 - Correction de la chaîne d'intégration continue #1133
 - Mise à jour d'un certificat utilisé par les tests unitaires #1132
 
+### Évolutions
+
+- Ajout des étapes code_quality et container_scanning dans la CI  
+
 ## 5.0.26 - 2023-12-11
 
 ### Évolutions
