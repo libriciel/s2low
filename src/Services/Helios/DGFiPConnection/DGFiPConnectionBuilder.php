@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace S2low\Services\Helios\DGFiPConnection;
 
+use S2low\Services\FilesAndDirectoriesUtils\DirectoryManagerFactory;
 use S2low\Services\Helios\DGFiPConnection\Protocols\FtpServiceWrapper;
 use S2low\Services\Helios\DGFiPConnection\Protocols\SftpServiceWrapper;
 use S2lowLegacy\Class\S2lowLogger;
@@ -23,20 +26,27 @@ class DGFiPConnectionBuilder
      * @var \S2lowLegacy\Class\S2lowLogger
      */
     private S2lowLogger $s2lowLogger;
+    /**
+     * @var DirectoryManagerFactory
+     */
+    private DirectoryManagerFactory $directoryManagerFactory;
 
     /**
      * @param \S2low\Services\Helios\DGFiPConnection\Protocols\FtpServiceWrapper $ftpServiceWrapper
      * @param \S2low\Services\Helios\DGFiPConnection\Protocols\SftpServiceWrapper $sftpServiceWrapper
      * @param \S2lowLegacy\Class\S2lowLogger $s2lowLogger
+     * @param \S2low\Services\FilesAndDirectoriesUtils\DirectoryManagerFactory $directoryManagerFactory
      */
     public function __construct(
         FtpServiceWrapper $ftpServiceWrapper,
         SftpServiceWrapper $sftpServiceWrapper,
-        S2lowLogger $s2lowLogger
+        S2lowLogger $s2lowLogger,
+        DirectoryManagerFactory $directoryManagerFactory
     ) {
         $this->ftpServiceWrapper = $ftpServiceWrapper;
         $this->sftpServiceWrapper = $sftpServiceWrapper;
         $this->s2lowLogger = $s2lowLogger;
+        $this->directoryManagerFactory = $directoryManagerFactory;
     }
 
     /**
@@ -50,6 +60,7 @@ class DGFiPConnectionBuilder
         return new DGFiPConnection(
             $this->s2lowLogger,
             $DGFiPConnector,
+            $this->directoryManagerFactory,
             $configuration->getResponseServerPath(),
             $configuration->getSendingDestination(),
             $configuration->getHeliosFtpAppli()

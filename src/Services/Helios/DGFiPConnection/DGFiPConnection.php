@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace S2low\Services\Helios\DGFiPConnection;
 
 use Exception;
+use S2low\Services\FilesAndDirectoriesUtils\DirectoryManagerFactory;
 use S2lowLegacy\Class\S2lowLogger;
+use SplFileInfo;
 
 /**
  *
@@ -11,7 +15,7 @@ use S2lowLegacy\Class\S2lowLogger;
 class DGFiPConnection
 {
     /**
-     * @var \S2low\Services\Helios\DGFiPConnection\DGFiPConnector
+     * @var DGFiPConnector
      */
     private DGFiPConnector $serverProtocol;
     private string $sending_destination;
@@ -21,10 +25,15 @@ class DGFiPConnection
      */
     private S2lowLogger $logger;
     private string $pAppli;
+    /**
+     * @var DirectoryManagerFactory
+     */
+    private DirectoryManagerFactory $directoryManagerFactory;
 
     /**
      * @param S2lowLogger $logger
      * @param DGFiPConnector $serverProtocolConfiguration
+     * @param DirectoryManagerFactory $directoryManagerFactory
      * @param string $response_server_path
      * @param string $sending_destination
      * @param string $helios_ftp_p_appli
@@ -32,6 +41,7 @@ class DGFiPConnection
     public function __construct(
         S2lowLogger $logger,
         DGFiPConnector $serverProtocolConfiguration,
+        DirectoryManagerFactory $directoryManagerFactory,
         string $response_server_path,
         string $sending_destination,
         string $helios_ftp_p_appli
@@ -40,6 +50,7 @@ class DGFiPConnection
         $this->response_server_path = $response_server_path;
         $this->sending_destination = $sending_destination;
         $this->serverProtocol = $serverProtocolConfiguration;
+        $this->directoryManagerFactory = $directoryManagerFactory;
         $this->pAppli = $helios_ftp_p_appli;
     }
 
@@ -70,46 +81,51 @@ class DGFiPConnection
         $this->logger->info("Remote_path : $this->response_server_path");
         $all_file = $this->serverProtocol->getFileNames($this->response_server_path);
 
-        $message = 'Il y a ' . count($all_file) . " fichiers en attente dans le repertoire distant $this->response_server_path...";
+        $nbFiles = count($all_file);
+        $message = "Il y a $nbFiles fichiers en attente dans le repertoire distant $this->response_server_path...";
         $this->logger->info($message);
 
         return $all_file;
     }
 
     /**
-     * @param $file
+     * @param $fileNameOnFTP
      * @param $local_path
-     * @return bool
+     * @param $helios_responses_error_path
+     * @param string $tmp_path
+     * @return void
      * @throws Exception
      */
-    public function retrieveFile($file, $local_path): bool
+    public function retrieveFile($fileNameOnFTP, $local_path, $helios_responses_error_path, string $tmp_path): void
     {
-        $tmp_file = $this->createTmpFile($local_path);
-        $ftp_get_result =  $this->serverProtocol->retrieveFile($tmp_file, $file);
+        $tmpDirectoryManager = $this->directoryManagerFactory->get($tmp_path);
+        $tmpDirectoryManager->check();
+        $localDirectoryManager = $this->directoryManagerFactory->get($local_path);
+        $localDirectoryManager->check();
 
-        $rename_result = rename($tmp_file, "$local_path/$file");
-        if (!$rename_result) {
-            throw new Exception("Impossible de déplacer le fichier $tmp_file vers $local_path/$file");
+        $tmp_file = $tmpDirectoryManager->getTmpFile('/s2low_helios_ftp_retrieve_');
+
+        $this->retrieveToTmpFile($tmp_file, $fileNameOnFTP);
+
+        if ($localDirectoryManager->fileWithOutputNameExistsAndHasSameContent($tmp_file, $fileNameOnFTP)) {
+            $this->logger->error("Fichier $fileNameOnFTP déjà téléchargé");
+            unlink($tmp_file->getPathname());
+            return;     //Rien d'autre à faire pour ce fichier
         }
-
-        $this->serverProtocol->deleteIfNeedBe($file);
-
-        return $ftp_get_result;
-    }
-
-    /**
-     * @param $localPath
-     * @return string
-     * @throws Exception
-     */
-    private function createTmpFile($localPath): string
-    {
-        $tmp_file = sys_get_temp_dir() . '/s2low_helios_ftp_retrieve_' . mt_rand(0, mt_getrandmax());
-
-        if (disk_free_space($localPath) < 1000000 || disk_free_space(dirname($tmp_file)) < 1000000) {
-            throw new Exception("Il ne reste pas assez d'espace sur le disque pour créer le fichier dans $localPath !");
+        try {
+            $localDirectoryManager->moveFileInDir($tmp_file, $fileNameOnFTP);
+            return; // Le fichier est rapatrié, My job here is done
+        } catch (Exception $exception) {
+            $this->logger->error(
+                "Impossible de déplacer $tmp_file vers $local_path/$fileNameOnFTP :" . $exception->getMessage()
+            );
         }
-        return $tmp_file;
+        // On est du coup dans un cas d'erreur ou le fichier a été récupéré depuis le FTP, mais n'a pas pu être copié
+        // dans le local path ...
+        $errorDirectoryManager = $this->directoryManagerFactory->get($helios_responses_error_path);
+        $errorDirectoryManager->check();
+
+        $errorDirectoryManager->moveFileInDirWithRename($tmp_file, $fileNameOnFTP);
     }
 
     /**
@@ -148,5 +164,35 @@ class DGFiPConnection
         $this->connect();
         $this->sendOneFileWithProperties($p_dest, $p_msg, $file_to_send);
         $this->disconnect();
+    }
+
+    /**
+     * @param SplFileInfo $tmp_file
+     * @param $file
+     * @return void
+     * @throws Exception
+     */
+    public function retrieveToTmpFile(SplFileInfo $tmp_file, $file): void
+    {
+        $ftp_get_result = $this->serverProtocol->retrieveFile($tmp_file->getPathname(), $file);
+
+        if (!$ftp_get_result) {
+            throw new Exception("Erreur lors de la récupération de $file vers $tmp_file");
+        }
+
+        if (!file_exists($tmp_file->getPathname())) {
+            throw new Exception(
+                "Erreur lors de la récupération de $file vers $tmp_file : fichier non existant"
+            );
+        }
+
+        if (filesize($tmp_file->getPathname()) == 0) {
+            throw new Exception(
+                "Erreur lors de la récupération de $file vers $tmp_file : fichier vide"
+            );
+        }
+        $this->serverProtocol->deleteIfNeedBe($file);   // On pourrait détruire une fois qu'on est sûrs que le fichier
+        // est copié dans un répertoire autre que tmp... Mais comme ce n'est utilisé que dans les protocoles de test,
+        // on ne se donne pas cette peine.
     }
 }
