@@ -367,18 +367,18 @@ ob_start();
     Pas de transaction trouvée correspondant aux critères de filtrage.
 <?php else : ?>
     <form id="div_chck" onsubmit="return afficheWarning();" action="<?php echo Helpers::getLink("/modules/helios/helios_transac_close.php"); ?>" method="post">
-        <table class="transactions_list">
+        <table class="transactions_list" role="presentation">
             <table id="transaction-list" class="data-table table table-striped" summary="Ce tableau présente respectivement le nom de fichier, la date, le statut, l'auteur et un lien vers les actions disponibles de chaque fichier Helios posté">
                 <caption>Liste des fichiers Helios postés en fonction des choix de filtrage</caption>
                 <thead>
                     <tr>
-                        <th>Sél.</th>
+                        <th scope="col">Sél.</th>
                         <th id="filename">Nom de fichier</th>
                         <th id="date">Date de postage</th>
                         <th id="status">Etat actuel</th>
                         <th id="authority-name">Suivie par</th>
                         <?php if ($me->isGroupAdminOrSuper()) : ?>
-                            <th>Collectivité</th>
+                            <th scope="col">Collectivité</th>
                         <?php endif; ?>
                         <th id="action">Actions</th>
                     </tr>

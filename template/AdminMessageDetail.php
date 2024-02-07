@@ -21,39 +21,39 @@ use S2lowLegacy\Model\MessageAdmin;
 
     <table class="data-table table table-striped">
         <tr>
-            <th>Numéro du message</th>
+            <th scope="row">Numéro du message</th>
             <td><?php hecho($messageAdmin->message_id) ?></td>
         </tr>
         <tr>
-            <th>État</th>
+            <th scope="row">État</th>
             <td><?php $messageAdmin->displayEtatLabel() ?></td>
         </tr>
         <tr>
-            <th>Dernier rédacteur</th>
+            <th scope="row">Dernier rédacteur</th>
             <td><?php hecho($messageAdmin->user_name) ?></td>
         </tr>
         <tr>
-            <th>Message</th>
+            <th scope="row">Message</th>
             <td>
                 <?php $messageAdmin->displayMessage() ?>
             </td>
         </tr>
         <?php if ($messageAdmin->getEtat() != MessageAdmin::ETAT_EN_COURS_DE_REDACTION) : ?>
             <tr>
-                <th>Date de publication</th>
+                <th scope="row">Date de publication</th>
                 <td><?php echo $fancyDate->getDateHeureFrancais($messageAdmin->date_publication)?></td>
             </tr>
             <tr>
-                <th>Publieur</th>
+                <th scope="row">Publieur</th>
                 <td><?php hecho($messageAdmin->user_publieur_name)?></td>
             </tr>
             <?php if ($messageAdmin->getEtat() == MessageAdmin::ETAT_RETIRE) : ?>
                 <tr>
-                    <th>Date de retrait</th>
+                    <th scope="row">Date de retrait</th>
                     <td><?php echo $fancyDate->getDateHeureFrancais($messageAdmin->date_retrait)?></td>
                 </tr>
                 <tr>
-                    <th>Utilisateur ayant retirer le message</th>
+                    <th scope="row">Utilisateur ayant retirer le message</th>
                     <td><?php hecho($messageAdmin->user_retireur_name)?></td>
                 </tr>
             <?php endif; ?>

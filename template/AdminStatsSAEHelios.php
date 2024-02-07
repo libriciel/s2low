@@ -16,16 +16,16 @@ use S2lowLegacy\Class\helios\HeliosStatusSQL;
 <table class="data-table table table-striped ">
 
     <tr>
-        <th>Collectivités</th>
+        <th scope="col">Collectivités</th>
         <?php foreach ($status_list as $status_id) : ?>
-            <th>
+            <th scope="col">
                 <?php hecho(HeliosStatusSQL::getStatusLibelle($status_id));?>
             </th>
         <?php endforeach; ?>
     </tr>
     <?php foreach ($info_list as $authority_id => $authority_info) :?>
     <tr>
-        <th>
+        <th scope="col">
             <a href="/admin/authorities/admin_authority_sae_statistiques.php?id=<?php echo $authority_id?>">
                 <?php hecho($authority_info['name']) ?>
             </a>

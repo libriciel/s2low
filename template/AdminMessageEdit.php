@@ -19,13 +19,13 @@ use S2lowLegacy\Model\MessageAdmin;
     <input type="hidden" name="message_id" value="<?php hecho($messageAdmin->message_id)?>"/>
     <table class="data-table table table-striped">
         <tr>
-            <th><label for="titre">Titre</label></th>
+            <th scope="row"><label for="titre">Titre</label></th>
             <td>
                 <input id="titre" name="titre" class="form-control" value="<?php hecho($messageAdmin->titre) ?>" />
             </td>
         </tr>
         <tr>
-            <th><label for="niveau">Niveau</label></th>
+            <th scope="row"><label for="niveau">Niveau</label></th>
             <td>
                 <select name="niveau" id="niveau">
                     <?php foreach ($messageAdmin->getLibelleNiveau() as $niveau => $libelle) :?>
@@ -38,13 +38,13 @@ use S2lowLegacy\Model\MessageAdmin;
             </td>
         </tr>
         <tr>
-            <th><label for="message">Message</label></th>
+            <th scope="row"><label for="message">Message</label></th>
             <td>
                 <textarea id="message" name="message" class="form-control" rows="20"><?php hecho($messageAdmin->message) ?></textarea>
             </td>
         </tr>
         <tr>
-            <th>&nbsp;</th>
+            <th scope="row">&nbsp;</th>
             <td><input type="submit" value="Enregistrer" class="btn btn-primary"/></td>
         </tr>
 

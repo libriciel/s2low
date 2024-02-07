@@ -23,14 +23,14 @@ use S2lowLegacy\Model\LogsRequestData;
     <table class="table table-stripped">
 
         <tr>
-            <th>Heure de la demande</th>
-            <th>Heure du traitement</th>
+            <th scope="col">Heure de la demande</th>
+            <th scope="col">Heure du traitement</th>
 
-            <th>Date début (journal)</th>
-            <th>Date fin (journal)</th>
+            <th scope="col">Date début (journal)</th>
+            <th scope="col">Date fin (journal)</th>
 
-            <th>Etat</th>
-            <th>Action</th>
+            <th scope="col">Etat</th>
+            <th scope="col">Action</th>
 
 
         </tr>

@@ -61,9 +61,9 @@ ob_start();
 
     <table class="data-table table table-striped">
         <tr>
-            <th>Nom du fichier</th>
-            <th>Date de récupération</th>
-            <th>Helios-Site destination</th>
+            <th scope="col">Nom du fichier</th>
+            <th scope="col">Date de récupération</th>
+            <th scope="col">Helios-Site destination</th>
         </tr>
         <?php
         foreach ($transactions_list as $transaction) :

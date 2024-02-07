@@ -29,9 +29,9 @@ try {
 
 <table border="1">
     <tr>
-        <th>Propriété</th>
-        <th>Attendu</th>
-        <th>Résultat</th>
+        <th scope="col">Propriété</th>
+        <th scope="col">Attendu</th>
+        <th scope="col">Résultat</th>
     </tr>
     <tr>
         <td>$_SERVER['SSL_CLIENT_VERIFY']</td>

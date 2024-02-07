@@ -49,8 +49,8 @@ ob_start();
 
     <table class="data-table table table-striped ">
         <tr>
-            <th>Groupe</th>
-            <th>Nombre de collectivités</th>
+            <th scope="col">Groupe</th>
+            <th scope="col">Nombre de collectivités</th>
 
         </tr>
         <?php foreach ($groups_list as $i => $group) : ?>

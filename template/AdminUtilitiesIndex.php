@@ -14,7 +14,7 @@
         <form action="/admin/utilities/admin_send_global_message.php" method="post" name="form" onsubmit="return confirm('Voulez-vous vraiment envoyer le message à tous les utilisateurs de ce module');">
             <table class="data-table table table-striped">
                 <tr>
-                    <th><label for="module">Module concerné</label></th>
+                    <th scope="row"><label for="module">Module concerné</label></th>
                     <td>
                         <select name="module" id="module" class="form-control">
                             <option value="">Choisissez</option>
@@ -25,7 +25,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th><label for="authority_group_id">Groupe concerné</label></th>
+                    <th scope="row"><label for="authority_group_id">Groupe concerné</label></th>
                     <td>
                         <select name="authority_group_id" id="authority_group_id" class="form-control">
                             <option value="">Tous les groupes</option>
@@ -37,19 +37,19 @@
                 </tr>
 
                 <tr>
-                    <th><label for="subject">Sujet du message</label></th>
+                    <th scope="row"><label for="subject">Sujet du message</label></th>
                     <td>
                         <input id="subject" name="subject" class="form-control" " size="50" maxlength="70"/>
                     </td>
                 </tr>
                 <tr>
-                    <th><label for="body">Message (texte brut)</label></th>
+                    <th scope="row"><label for="body">Message (texte brut)</label></th>
                     <td>
                         <textarea id="body" name="body" class="form-control" rows="20" cols="70" rows="16"></textarea>
                     </td>
                 </tr>
                 <tr>
-                    <th>&nbsp;</th>
+                    <th scope="row">&nbsp;</th>
                     <td><input type="submit" value="Envoyer le message" class="btn btn-primary"/></td>
                 </tr>
             </table>

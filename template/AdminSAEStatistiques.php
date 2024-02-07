@@ -15,7 +15,7 @@ use S2lowLegacy\Model\PastellProperties;
 
 <h2>Actes <?php echo $pastellProperties->actes_send_auto ? "(mode automatique)" : ""?></h2>
 
-<table class="data-table table table-striped ">
+<table class="data-table table table-striped " role="presentation">
 
 
     <tr class="<?php echo $actes_nb_en_retard ? "danger" : "success" ?>">
@@ -101,7 +101,7 @@ use S2lowLegacy\Model\PastellProperties;
 
 <h2>Helios <?php echo $pastellProperties->helios_send_auto ? "(mode automatique)" : ""?></h2>
 
-<table class="data-table table table-striped ">
+<table class="data-table table table-striped " role="presentation">
 
 
     <tr class="<?php echo $helios_nb_en_retard ? "danger" : "success" ?>">

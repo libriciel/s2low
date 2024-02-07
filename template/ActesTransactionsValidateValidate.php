@@ -14,11 +14,11 @@
 
 <table class="table table-bordered">
     <tr>
-        <th>Niveau</th>
-        <th>Code</th>
-        <th>Message</th>
-        <th>Ligne</th>
-        <th>Colonne</th>
+        <th scope="col">Niveau</th>
+        <th scope="col">Code</th>
+        <th scope="col">Message</th>
+        <th scope="col">Ligne</th>
+        <th scope="col">Colonne</th>
     </tr>
     <?php foreach ($error_xml as $i => $info) : ?>
         <tr>
@@ -43,11 +43,11 @@
 
 <table class="table table-bordered">
     <tr>
-        <th>Fichier</th>
-        <th>Signé ?</th>
-        <th>Signature valide</th>
-        <th>Message</th>
-        <th>pades-valid</th>
+        <th scope="col">Fichier</th>
+        <th scope="col">Signé ?</th>
+        <th scope="col">Signature valide</th>
+        <th scope="col">Message</th>
+        <th scope="col">pades-valid</th>
     </tr>
     <?php foreach ($pades_result as $filename => $info) : ?>
         <tr>

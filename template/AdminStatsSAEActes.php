@@ -15,7 +15,7 @@ use S2lowLegacy\Class\actes\ActesStatusSQL;
 <table class="data-table table table-striped ">
 
     <tr>
-        <th>Collectivités</th>
+        <th scope="col">Collectivités</th>
         <?php foreach ($status_list as $status_id) : ?>
             <th>
                 <?php hecho(ActesStatusSQL::getStatusLibelle($status_id));?>
@@ -24,7 +24,7 @@ use S2lowLegacy\Class\actes\ActesStatusSQL;
     </tr>
     <?php foreach ($info_list as $authority_id => $authority_info) :?>
     <tr>
-        <th>
+        <th scope="col">
             <a href="/admin/authorities/admin_authority_sae_statistiques.php?id=<?php echo $authority_id?>">
                 <?php hecho($authority_info['name']) ?>
             </a>

@@ -57,8 +57,8 @@ ob_start();
         <h2>Actes</h2>
         <table  class="data-table table table-striped ">
             <tr>
-                <th>Mois</th>
-                <th>Nombre de transactions</th>
+                <th scope="col">Mois</th>
+                <th scope="col">Nombre de transactions</th>
             </tr>
             <?php foreach ($nb_transactions_actes_list as $nb_transaction_info) : ?>
                 <tr>
@@ -71,8 +71,8 @@ ob_start();
         <h2>Hélios</h2>
         <table  class="data-table table table-striped ">
             <tr>
-                <th>Mois</th>
-                <th>Nombre de transactions</th>
+                <th scope="col">Mois</th>
+                <th scope="col">Nombre de transactions</th>
             </tr>
             <?php foreach ($nb_transactions_helios_list as $nb_transaction_info) : ?>
                 <tr>

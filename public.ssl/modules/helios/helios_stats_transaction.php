@@ -53,8 +53,8 @@ ob_start();
     <h2>Liste des status</h2>
 <table  class="data-table table table-striped ">
     <tr>
-        <th>Status</th>
-        <th>Nombre de transactions</th>
+        <th scope="col">Status</th>
+        <th scope="col">Nombre de transactions</th>
     </tr>
     <?php foreach ($result as $status_id => $nb) : ?>
         <tr>

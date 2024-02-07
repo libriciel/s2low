@@ -37,7 +37,7 @@ function is_valid_email($email)
     //http://stackoverflow.com/questions/19522092/should-i-use-filter-var-to-validate-email
     $email_list = explode(",", $email);
     foreach ($email_list as $mail) {
-        if (!!!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+        if (!(bool) filter_var($mail, FILTER_VALIDATE_EMAIL)) {
             return false;
         }
     }

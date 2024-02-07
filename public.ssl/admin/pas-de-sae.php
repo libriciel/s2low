@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\PagerHTML;
@@ -74,9 +75,9 @@ ob_start();
 </p>
 <table class="data-table table table-striped">
     <tr>
-        <th>Collectivité</th>
-        <th>Groupes</th>
-        <th>Email</th>
+        <th scope="col">Collectivité</th>
+        <th scope="col">Groupes</th>
+        <th scope="col">Email</th>
     </tr>
     <?php foreach ($user_list as $user_info) : ?>
         <tr>

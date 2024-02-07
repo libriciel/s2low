@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\User;
@@ -65,7 +66,7 @@ ob_start();
 
 <h2>Liste des certificats <?php echo $type == 'rgs' ? "RGS" : "étendus" ?></h2>
 
-<table class="data-table table table-striped ">
+<table class="data-table table table-striped " role="presentation">
 <?php foreach ($certificate_list as $i => $cert) : ?>
     <tr>
         <td><a href="/admin/utilities/certificate.php?type=<?php echo $type ?>&name=<?php echo basename($cert) ?>"><?php echo basename($cert) ?></a></td>
