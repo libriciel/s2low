@@ -59,7 +59,6 @@ class DirectoryManager
             if ($this->fileNamesHandler->areSameFiles($originFile, $possibleOutputFile)) {
                 return $possibleOutputFile;
             }
-            $attemptIndex++;
         }
         throw new Exception("Unable to find a filename for $outputFileName in " . $this->directoryName);
     }

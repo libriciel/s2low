@@ -152,7 +152,7 @@
              <dt><a href="#tedetis" onclick="toggle_mail_error(<?php echo $i; ?>);" id="expander_<?php echo $i; ?>" class="expander">+</a>
                 Adresse email : <?php echo $mailErrors[$i]['email']; ?> </dt>
              <dd id="mailError_<?php echo $i;  ?>" class="mailerror" style="display:none"> 
-             <table class="transactions_list">
+             <table class="transactions_list" role="presentation">
                 <td>Message retourné : </td>
                 <td><?php echo $mailErrors[$i]['message_retour']; ?> </td>
              </table>

@@ -79,7 +79,7 @@ ob_start();
 <form class="form-horizontal import-file-form form col-md-offset-1" method="POST" enctype="multipart/form-data" action="/modules/helios/helios_script_reception.php" >
     <table class="data-table table table-striped">
         <tr>
-            <th>
+            <th scope="col">
                 <label for="enveloppe" class="control-label">Fichier XML</label>
             </th>
             <td>
@@ -87,7 +87,7 @@ ob_start();
             </td>
         </tr>
         <tr>
-            <th>
+            <th scope="col">
                 <label for="must_signed" class="control-label">Signer le fichier PES avant de le télétransmettre</label>
             </th>
             <td>
@@ -95,7 +95,7 @@ ob_start();
             </td>
         </tr>
         <tr>
-            <th>&nbsp;</th>
+            <th scope="col">&nbsp;</th>
             <td>
                 <button class="btn btn-primary" type="submit" value="">Importer le fichier</button>
             </td>

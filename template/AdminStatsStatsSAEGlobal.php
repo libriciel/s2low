@@ -11,7 +11,7 @@ use S2lowLegacy\Class\helios\HeliosStatusSQL;
 <h2>@ctes - Mode automatique</h2>
 
 
-<table class="data-table table table-striped ">
+<table class="data-table table table-striped " role="presentation">
 
 
     <tr class="<?php
@@ -55,7 +55,7 @@ use S2lowLegacy\Class\helios\HeliosStatusSQL;
 
 <h2>Helios - Mode automatique</h2>
 
-<table class="data-table table table-striped ">
+<table class="data-table table table-striped " role="presentation">
     <tr class="<?php echo $helios_nb_en_retard ? "danger" : "success" ?>">
         <td>PES ALLER en retard</td>
         <td><span class="label label-<?php echo $helios_nb_en_retard ? "danger" : "success" ?>"><?php echo $helios_nb_en_retard ?></span></td>
@@ -85,7 +85,7 @@ use S2lowLegacy\Class\helios\HeliosStatusSQL;
 
 <h2>@ctes - Basé sur l'état</h2>
 
-<table class="data-table table table-striped ">
+<table class="data-table table table-striped " role="presentation">
 
     <tr class="<?php echo $actes_nb_en_attente_sae_4h ? "danger" : "success" ?>">
         <td>Actes en attente de transmission au SAE</td>
@@ -133,7 +133,7 @@ use S2lowLegacy\Class\helios\HeliosStatusSQL;
 
 <h2>Helios - Basé sur l'état</h2>
 
-<table class="data-table table table-striped ">
+<table class="data-table table table-striped " role="presentation">
     <tr class="<?php echo $helios_nb_en_attente_sae_4h ? "danger" : "success" ?>">
         <td>PES ALLER en attente de transmission au SAE</td>
         <td><span class="label label-<?php echo $helios_nb_en_attente_sae_4h ? "danger" : "success" ?>"><?php echo $helios_nb_en_attente_sae_4h ?></span></td>

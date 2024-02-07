@@ -25,10 +25,10 @@ use S2lowLegacy\Model\MessageAdmin;
     <table class="data-table table table-striped" summary="">
         <thead>
         <tr>
-            <th>Titre</th>
-            <th>Etat</th>
-            <th>Date de publication</th>
-            <th>Date de retrait</th>
+            <th scope="col">Titre</th>
+            <th scope="col">Etat</th>
+            <th scope="col">Date de publication</th>
+            <th scope="col">Date de retrait</th>
         </tr>
         </thead>
         <tbody>

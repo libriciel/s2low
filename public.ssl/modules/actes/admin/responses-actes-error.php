@@ -50,10 +50,10 @@ ob_start();
 
         <table class="data-table table table-striped">
             <tr>
-                <th>Nom du fichier</th>
-                <th>Date de récupération</th>
-                <th>Supprimer</th>
-                <th>Analyser à nouveau</th>
+                <th scope="col">Nom du fichier</th>
+                <th scope="col">Date de récupération</th>
+                <th scope="col">Supprimer</th>
+                <th scope="col">Analyser à nouveau</th>
             </tr>
             <?php
                 /** @var DirectoryIterator $errorFile */

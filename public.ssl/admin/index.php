@@ -87,9 +87,9 @@ ob_start();
         <h2>Actes : Nombre de transactions en cours</h2>
         <table  class="data-table table table-striped ">
             <tr>
-                <th>Type</th>
-                <th>Nombre de transactions</th>
-                <th>&nbsp;</th>
+                <th scope="col">Type</th>
+                <th scope="col">Nombre de transactions</th>
+                <th scope="col">&nbsp;</th>
             </tr>
             <?php foreach ($actes_nb_transaction_by_status as $status_id => $nb) : ?>
                 <tr>
@@ -130,9 +130,9 @@ ob_start();
         <h2>Helios : Nombre de transactions en cours</h2>
         <table  class="data-table table table-striped ">
             <tr>
-                <th>Type</th>
-                <th>Nombre de transactions</th>
-                <th>&nbsp;</th>
+                <th scope="col">Type</th>
+                <th scope="col">Nombre de transactions</th>
+                <th scope="col">&nbsp;</th>
             </tr>
             <?php foreach ($helios_nb_transaction_by_status as $status_id => $nb) : ?>
                 <tr>

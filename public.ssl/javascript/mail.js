@@ -51,7 +51,7 @@ function checkAllEmail(str)
     var mailArray = str.split(",");
 
     var returnValue = true;
-    for (i = 0; i < mailArray.length; i++) {
+    for (let i = 0; i < mailArray.length; i++) {
         str = mailArray[i];
         str = str.replace(" ","");
         str = str.replace("[","<");

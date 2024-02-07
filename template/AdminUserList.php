@@ -29,13 +29,13 @@ use S2lowLegacy\Class\Helpers;
 <div class="data_table">
     <table class="data-table table table-striped">
         <tr>
-            <th class="data">Login</th>
-            <th class="data">Nom</th>
-            <th class="data">Adresse électronique</th>
-            <th class="data">R&ocirc;le</th>
-            <th class="data">État</th>
-            <th class="data">Collectivit&eacute;</th>
-            <th class="data">Actions</th>
+            <th class="data" scope="col">Login</th>
+            <th class="data" scope="col">Nom</th>
+            <th class="data" scope="col">Adresse électronique</th>
+            <th class="data" scope="col">R&ocirc;le</th>
+            <th class="data" scope="col">État</th>
+            <th class="data" scope="col">Collectivit&eacute;</th>
+            <th class="data" scope="col">Actions</th>
         </tr>
         <?php foreach ($user_list as $i => $info) : ?>
             <tr >
@@ -66,19 +66,19 @@ use S2lowLegacy\Class\Helpers;
     <input type="hidden" name="user_id" value="<?php hecho($user_id)?>"/>
     <table class="data-table table table-striped">
         <tr>
-            <th><label for="certificat">Nouveau certificat (partie publique au format PEM)</label></th>
+            <th scope="row"><label for="certificat">Nouveau certificat (partie publique au format PEM)</label></th>
             <td>
                 <input type="file" id="certificat" name="certificat" class="form-control" />
             </td>
         </tr>
         <tr>
-            <th><label for="confirm">Êtes-vous sûr de vouloir effectuer cette opération ? (saisir OUI)</label></th>
+            <th scope="row"><label for="confirm">Êtes-vous sûr de vouloir effectuer cette opération ? (saisir OUI)</label></th>
             <td>
                 <input  id="confirm" name="confirm" class="form-control" />
             </td>
         </tr>
         <tr>
-            <th>&nbsp;</th>
+            <th scope="row">&nbsp;</th>
             <td><input type="submit" value="Modifier" class="btn btn-danger"/></td>
         </tr>
 

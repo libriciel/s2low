@@ -10,6 +10,7 @@
 - Correction de la chaîne d'intégration continue #1133
 - Mise à jour d'un certificat utilisé par les tests unitaires #1132
 - Remonter plus finement les erreurs de récupération de flux depuis le serveur DGFiP #1130
+- Correction d'erreurs remontées par la CI #1135
 
 ### Évolutions
 

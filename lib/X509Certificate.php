@@ -60,10 +60,7 @@ class X509Certificate
             if (is_array($val)) {
                 $val = legacy_encode_array($val);
                 $val = implode(",", $val);
-            } else {
-                $val = $val;
             }
-
             $result .= "/$key=$val";
         }
         return $result;
