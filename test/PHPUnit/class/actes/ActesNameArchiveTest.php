@@ -1,8 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\actes;
+
+use PHPUnit\Framework\TestCase;
+use Exception;
 use S2lowLegacy\Class\actes\ActesNameArchive;
 
-class ActesNameArchiveTest extends PHPUnit_Framework_TestCase
+class ActesNameArchiveTest extends TestCase
 {
     private const ARCHIVE_NAME = "abc-TACT--123456789--20150729-1.tar.gz";
     private const TRIGRAMME = "abc";
@@ -26,19 +32,22 @@ class ActesNameArchiveTest extends PHPUnit_Framework_TestCase
 
     public function testVerifNameBadName()
     {
-        $this->setExpectedException("Exception", "Le nom de l'archive n'est pas correct");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Le nom de l'archive n'est pas correct");
         $this->actesNameArchive->verifNameOK("foo");
     }
 
     public function testVerifNameBadTrigramme()
     {
-        $this->setExpectedException("Exception", "Le trigramme trouvé (def) ne correspond pas au trigramme attendu (abc)");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Le trigramme trouvé (def) ne correspond pas au trigramme attendu (abc)");
         $this->actesNameArchive->verifNameOK("def-TACT--123456789--20150729-1.tar.gz");
     }
 
     public function testVerifNameBadQuadrigramme()
     {
-        $this->setExpectedException("Exception", "Le quadrigramme trouvé (EACT) ne correspond pas au quadrigramme attendu (TACT)");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Le quadrigramme trouvé (EACT) ne correspond pas au quadrigramme attendu (TACT)");
         $this->actesNameArchive->verifNameOK("abc-EACT--123456789--20150729-1.tar.gz");
     }
 }

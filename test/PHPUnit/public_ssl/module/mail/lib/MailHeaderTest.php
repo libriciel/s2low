@@ -1,5 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\public_ssl\module\mail\lib;
+
+use MailHeader;
+use PHPUnit\S2lowTestCase;
+
 class MailHeaderTest extends S2lowTestCase
 {
     public function testDefaults()

@@ -1,5 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class;
+
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\PasswordHandler;
 use S2lowLegacy\Model\UserSQL;
 use PHPUnit\Framework\MockObject\MockObject;

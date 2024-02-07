@@ -1,5 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\actes;
+
+use Exception;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\actes\ActesEnvoiFichierWorker;
 use S2lowLegacy\Class\actes\ActesFileSender;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
@@ -102,7 +108,7 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
             ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,
             __DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz"
         );
-        /** @var PHPUnit_Framework_MockObject_MockObject $actesFileSender */
+        /** @var  $actesFileSender */
         $actesFileSender = $this->getObjectInstancier()->get(ActesFileSender::class);
 
         $actesFileSender->method("send")->willThrowException(new Exception("Erreur du mock"));

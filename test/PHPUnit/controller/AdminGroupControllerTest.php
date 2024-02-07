@@ -1,5 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\controller;
+
+use Exception;
+use org\bovigo\vfs\vfsStream;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Controller\AdminGroupController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Model\AuthorityGroupSirenSQL;
@@ -36,8 +43,8 @@ class AdminGroupControllerTest extends S2lowTestCase
     public function testDoEditAction()
     {
         $this->setSuperAdminAuthentication();
-        org\bovigo\vfs\vfsStream::setup('test');
-        $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
+        vfsStream::setup('test');
+        $testStreamUrl = vfsStream::url('test');
         $tmp_file = $testStreamUrl . "/test.text";
 
         $authorityGroupSirenSQL = new AuthorityGroupSirenSQL($this->getSQLQuery());

@@ -1,5 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\controller;
+
+use Exception;
+use PHPUnit\MailsecUtilitiesTestTrait;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Controller\MailsecDownloadController;
 use S2lowLegacy\Lib\Environnement;
@@ -12,7 +19,6 @@ class MailsecDownloadControllerTest extends S2lowTestCase
 
     /**
      * @throws RedirectException
-     * @throws UnrecoverableException
      * @throws Exception
      */
     public function testDonwload()

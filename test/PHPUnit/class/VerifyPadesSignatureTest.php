@@ -1,14 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class;
+
 // VerifyPadesSignature::validateSignature et VerifyPadesSignature::validateSignature :
 // - renvoient void si ok
 // - throw une exception sinon
 
+use DateTime;
+use Exception;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\VerifyPadesSignature;
 use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Lib\PemCertificate;
 use S2lowLegacy\Lib\PemCertificateFactory;
+use stdClass;
 
 class VerifyPadesSignatureTest extends S2lowTestCase
 {
@@ -16,7 +24,7 @@ class VerifyPadesSignatureTest extends S2lowTestCase
      * @var \PHPUnit\Framework\MockObject\MockObject|VerifyPemCertificate
      */
     private $verifyPemCertificateMock;
-    /** @var VerifyPadesSignature | PHPUnit\Framework\MockObject\  */
+    /** @var VerifyPadesSignature | \PHPUnit\Framework\MockObject\MockObject  */
     private $verifyPadesSignatureWithMock;
     /** @var VerifyPadesSignature  */
     private $verifyPadesSignature;

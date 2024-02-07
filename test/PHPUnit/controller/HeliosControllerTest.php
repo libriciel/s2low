@@ -1,6 +1,12 @@
 <?php
 
-use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu;
+declare(strict_types=1);
+
+namespace PHPUnit\controller;
+
+use Exception;
+use org\bovigo\vfs\vfsStream;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Controller\HeliosController;
 use S2lowLegacy\Model\AuthoritySiretSQL;
@@ -22,8 +28,8 @@ class HeliosControllerTest extends S2lowTestCase
     {
         parent::setUp();
 
-        org\bovigo\vfs\vfsStream::setup("test");
-        $this->testStreamUrl = org\bovigo\vfs\vfsStream::url("test");
+        vfsStream::setup("test");
+        $this->testStreamUrl = vfsStream::url("test");
 
         mkdir($this->testStreamUrl . "/helios");
 

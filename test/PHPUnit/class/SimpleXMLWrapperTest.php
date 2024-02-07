@@ -1,8 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class;
+
+use Exception;
+use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Class\SimpleXMLWrapper;
 
-class SimpleXMLWrapperTest extends PHPUnit_Framework_TestCase
+class SimpleXMLWrapperTest extends TestCase
 {
     /**
      * @var SimpleXMLWrapper
@@ -19,7 +26,8 @@ class SimpleXMLWrapperTest extends PHPUnit_Framework_TestCase
      */
     public function testLoadBadString()
     {
-        $this->setExpectedException("Exception", "XML incorrect");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("XML incorrect");
         $this->simpleXMLWrapper->loadString("foo");
     }
 
@@ -47,14 +55,15 @@ class SimpleXMLWrapperTest extends PHPUnit_Framework_TestCase
     public function testLoadBadFile()
     {
         $file_path = $this->getFilePath("foo");
-        $this->setExpectedException("Exception", "Le fichier vfs://test/fichier.xml n'est pas un XML correct");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Le fichier vfs://test/fichier.xml n'est pas un XML correct");
         $this->simpleXMLWrapper->loadFile($file_path);
     }
 
     private function getFilePath($file_content)
     {
-        org\bovigo\vfs\vfsStream::setup('test');
-        $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
+        vfsStream::setup('test');
+        $testStreamUrl = vfsStream::url('test');
         $file_path = $testStreamUrl . "/fichier.xml";
         file_put_contents($file_path, $file_content);
         return $file_path;

@@ -1,8 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class;
+
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Class\XSDValidation;
 
-class XSDValidationTest extends PHPUnit_Framework_TestCase
+class XSDValidationTest extends TestCase
 {
     /**
      * @var XSDValidation

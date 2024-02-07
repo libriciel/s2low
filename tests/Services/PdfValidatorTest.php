@@ -2,8 +2,8 @@
 
 namespace S2low\Tests\Services;
 
+use PHPUnit\S2lowTestCase;
 use S2low\Services\PdfValidator;
-use S2lowTestCase;
 use UnexpectedValueException;
 
 class PdfValidatorTest extends S2lowTestCase

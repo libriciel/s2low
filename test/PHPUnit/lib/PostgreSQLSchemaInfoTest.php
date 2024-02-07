@@ -1,5 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Lib\PostgreSQLSchemaInfo;
 
 class PostgreSQLSchemaInfoTest extends S2lowTestCase

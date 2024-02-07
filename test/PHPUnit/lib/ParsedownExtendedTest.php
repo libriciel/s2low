@@ -1,8 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Lib\ParsedownExtended;
 
-class ParsedownExtendedTest extends \PHPUnit\Framework\TestCase
+class ParsedownExtendedTest extends TestCase
 {
     public function testParsedown()
     {

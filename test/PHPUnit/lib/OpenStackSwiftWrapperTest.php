@@ -1,5 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use Exception;
+use Monolog\Handler\NullHandler;
 use S2lowLegacy\Class\CloudStorageException;
 use S2lowLegacy\Lib\OpenStackContainerStore;
 use S2lowLegacy\Lib\OpenStackContainerWrapper;
@@ -27,8 +33,8 @@ class OpenStackSwiftWrapperTest extends TestCase
             unlink(self::ABSENT_FILE_PATH);
         }
 
-        $this->logger = new Monolog\Logger("PHPUNIT");
-        $this->logger->pushHandler(new Monolog\Handler\NullHandler());
+        $this->logger = new Logger("PHPUNIT");
+        $this->logger->pushHandler(new NullHandler());
     }
 
     public function tearDown(): void
@@ -44,7 +50,7 @@ class OpenStackSwiftWrapperTest extends TestCase
     public function testSendFile()
     {
 
-        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | PHPUnit\Framework\MockObject\MockObject*/
+        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | \PHPUnit\Framework\MockObject\MockObject*/
         $openStackSwiftWrapper = $this->getMockBuilder(OpenStackContainerWrapper::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -59,7 +65,7 @@ class OpenStackSwiftWrapperTest extends TestCase
             ))
             ->willReturn(true);
 
-        /** @var  $openStackContainersStore OpenStackContainerStore | PHPUnit\Framework\MockObject\MockObject */
+        /** @var  $openStackContainersStore OpenStackContainerStore | \PHPUnit\Framework\MockObject\MockObject */
         $openStackContainersStore = $this->getMockBuilder(OpenStackContainerStore::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -88,7 +94,7 @@ class OpenStackSwiftWrapperTest extends TestCase
      */
     public function testSendFileWithDifferentName()
     {
-        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | PHPUnit\Framework\MockObject\MockObject*/
+        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | \PHPUnit\Framework\MockObject\MockObject*/
         $openStackSwiftWrapper = $this->getMockBuilder(OpenStackContainerWrapper::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -102,7 +108,7 @@ class OpenStackSwiftWrapperTest extends TestCase
                 }
             ));
 
-        /** @var  $openStackContainersStore OpenStackContainerStore | PHPUnit\Framework\MockObject\MockObject */
+        /** @var  $openStackContainersStore OpenStackContainerStore | \PHPUnit\Framework\MockObject\MockObject */
         $openStackContainersStore = $this->getMockBuilder(OpenStackContainerStore::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -132,7 +138,7 @@ class OpenStackSwiftWrapperTest extends TestCase
      */
     public function testSendNonexistentFile()
     {
-        /** @var  $openStackContainersStore OpenStackContainerStore | PHPUnit\Framework\MockObject\MockObject */
+        /** @var  $openStackContainersStore OpenStackContainerStore | \PHPUnit\Framework\MockObject\MockObject */
         $openStackContainersStore = $this->getMockBuilder(OpenStackContainerStore::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -162,7 +168,7 @@ class OpenStackSwiftWrapperTest extends TestCase
 
     public function testDeleteFile()
     {
-        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | PHPUnit\Framework\MockObject\MockObject*/
+        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | \PHPUnit\Framework\MockObject\MockObject*/
         $openStackSwiftWrapper = $this->getMockBuilder(OpenStackContainerWrapper::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -171,7 +177,7 @@ class OpenStackSwiftWrapperTest extends TestCase
             ->method('delete')
             ->with(self::ABSENT_FILE_NAME);
 
-        /** @var  $openStackContainersStore OpenStackContainerStore | PHPUnit\Framework\MockObject\MockObject */
+        /** @var  $openStackContainersStore OpenStackContainerStore | \PHPUnit\Framework\MockObject\MockObject */
         $openStackContainersStore = $this->getMockBuilder(OpenStackContainerStore::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -202,7 +208,7 @@ class OpenStackSwiftWrapperTest extends TestCase
 
     public function testRetrieveFileLocal()
     {
-        /** @var  $openStackContainersStore OpenStackContainerStore | PHPUnit\Framework\MockObject\MockObject */
+        /** @var  $openStackContainersStore OpenStackContainerStore | \PHPUnit\Framework\MockObject\MockObject */
         $openStackContainersStore = $this->getMockBuilder(OpenStackContainerStore::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -236,7 +242,7 @@ class OpenStackSwiftWrapperTest extends TestCase
     public function testRetrieveFile()
     {
 
-        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | PHPUnit\Framework\MockObject\MockObject*/
+        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | \PHPUnit\Framework\MockObject\MockObject*/
         $openStackSwiftWrapper = $this->getMockBuilder(OpenStackContainerWrapper::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -250,7 +256,7 @@ class OpenStackSwiftWrapperTest extends TestCase
             ->with(self::ABSENT_FILE_NAME)
             ->willReturn($stream);
 
-        /** @var  $openStackContainersStore OpenStackContainerStore | PHPUnit\Framework\MockObject\MockObject */
+        /** @var  $openStackContainersStore OpenStackContainerStore | \PHPUnit\Framework\MockObject\MockObject */
         $openStackContainersStore = $this->getMockBuilder(OpenStackContainerStore::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -277,7 +283,7 @@ class OpenStackSwiftWrapperTest extends TestCase
     public function testRetrieveFileReturnsEmptyFile()
     {
 
-        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | PHPUnit\Framework\MockObject\MockObject*/
+        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | \PHPUnit\Framework\MockObject\MockObject*/
         $openStackSwiftWrapper = $this->getMockBuilder(OpenStackContainerWrapper::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -291,7 +297,7 @@ class OpenStackSwiftWrapperTest extends TestCase
             ->with(self::ABSENT_FILE_NAME)
             ->willReturn($stream);
 
-        /** @var  $openStackContainersStore OpenStackContainerStore | PHPUnit\Framework\MockObject\MockObject */
+        /** @var  $openStackContainersStore OpenStackContainerStore | \PHPUnit\Framework\MockObject\MockObject */
         $openStackContainersStore = $this->getMockBuilder(OpenStackContainerStore::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -326,7 +332,7 @@ class OpenStackSwiftWrapperTest extends TestCase
     public function testRetrieveFileWithDoubleSlash()
     {
 
-        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | PHPUnit\Framework\MockObject\MockObject*/
+        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | \PHPUnit\Framework\MockObject\MockObject*/
         $openStackSwiftWrapper = $this->getMockBuilder(OpenStackContainerWrapper::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -341,7 +347,7 @@ class OpenStackSwiftWrapperTest extends TestCase
             ->with("//trop///de////double//////slash")
             ->willReturn("fileContent");
 
-        /** @var  $openStackContainersStore OpenStackContainerStore | PHPUnit\Framework\MockObject\MockObject */
+        /** @var  $openStackContainersStore OpenStackContainerStore | \PHPUnit\Framework\MockObject\MockObject */
         $openStackContainersStore = $this->getMockBuilder(OpenStackContainerStore::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -373,7 +379,7 @@ class OpenStackSwiftWrapperTest extends TestCase
     public function testRetrieveFileWithDoubleSlashStoredWithoutDoubleSlash()
     {
 
-        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | PHPUnit\Framework\MockObject\MockObject*/
+        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | \PHPUnit\Framework\MockObject\MockObject*/
         $openStackSwiftWrapper = $this->getMockBuilder(OpenStackContainerWrapper::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -388,7 +394,7 @@ class OpenStackSwiftWrapperTest extends TestCase
             ->with("/trop/de/double/slash")
             ->willReturn("fileContent");
 
-        /** @var  $openStackContainersStore OpenStackContainerStore | PHPUnit\Framework\MockObject\MockObject */
+        /** @var  $openStackContainersStore OpenStackContainerStore | \PHPUnit\Framework\MockObject\MockObject */
         $openStackContainersStore = $this->getMockBuilder(OpenStackContainerStore::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -420,7 +426,7 @@ class OpenStackSwiftWrapperTest extends TestCase
     public function testRetrieveAbsentFileWithDoubleSlash()
     {
 
-        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | PHPUnit\Framework\MockObject\MockObject*/
+        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | \PHPUnit\Framework\MockObject\MockObject*/
         $openStackSwiftWrapper = $this->getMockBuilder(OpenStackContainerWrapper::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -433,7 +439,7 @@ class OpenStackSwiftWrapperTest extends TestCase
         $openStackSwiftWrapper->expects($this->never())
             ->method('download');
 
-        /** @var OpenStackContainerStore | PHPUnit\Framework\MockObject\MockObject $openStackContainersStore */
+        /** @var OpenStackContainerStore | \PHPUnit\Framework\MockObject\MockObject $openStackContainersStore */
         $openStackContainersStore = $this->getMockBuilder(OpenStackContainerStore::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -468,7 +474,7 @@ class OpenStackSwiftWrapperTest extends TestCase
     public function testErrorCreateObject()
     {
 
-        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | PHPUnit\Framework\MockObject\MockObject*/
+        /** @var  $openStackSwiftWrapper OpenStackSwiftWrapper | \PHPUnit\Framework\MockObject\MockObject*/
         $openStackSwiftWrapper = $this->getMockBuilder(OpenStackContainerWrapper::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -477,7 +483,7 @@ class OpenStackSwiftWrapperTest extends TestCase
             ->method('createObject')
             ->willReturn(false);
 
-        /** @var  $openStackContainersStore OpenStackContainerStore | PHPUnit\Framework\MockObject\MockObject */
+        /** @var  $openStackContainersStore OpenStackContainerStore | \PHPUnit\Framework\MockObject\MockObject */
         $openStackContainersStore = $this->getMockBuilder(OpenStackContainerStore::class)
             ->disableOriginalConstructor()
             ->getMock();

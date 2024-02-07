@@ -1,5 +1,7 @@
 <?php
 
+namespace Docker;
+
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Controller\PostgreSQLController;
 use S2lowLegacy\Lib\SQLQuery;

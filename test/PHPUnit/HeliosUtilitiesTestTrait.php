@@ -1,5 +1,7 @@
 <?php
 
+namespace PHPUnit;
+
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 

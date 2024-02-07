@@ -1,5 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class;
+
+use Exception;
+use PDO;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\Database;
 use S2lowLegacy\Class\DatabasePool;
 

@@ -1,9 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Lib\PostgreSQLDifference;
 use S2lowLegacy\Lib\PostgreSQLDifferenceToSQL;
 
-class PostgreSQLDifferenceToSQLTest extends PHPUnit_Framework_TestCase
+class PostgreSQLDifferenceToSQLTest extends TestCase
 {
     /** @var  PostgreSQLDifferenceToSQL */
     private $postgreSQLDifferenceToSQL;

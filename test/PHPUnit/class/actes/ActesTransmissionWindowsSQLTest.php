@@ -1,5 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\actes;
+
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\actes\ActesTransmissionWindowsSQL;
 
 class ActesTransmissionWindowsSQLTest extends S2lowTestCase

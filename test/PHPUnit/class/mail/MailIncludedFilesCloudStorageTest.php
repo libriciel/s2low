@@ -1,5 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\mail;
+
+use Exception;
+use PHPUnit\MailsecUtilitiesTestTrait;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
 use S2lowLegacy\Class\TmpFolder;
 

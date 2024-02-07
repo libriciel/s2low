@@ -1,20 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPUnit\helios;
 
-use HeliosDirectoriesManager;
-use PHPUnit\Exception;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu;
 use S2lowLegacy\Class\helios\HeliosFilesFactory;
 use S2lowLegacy\Class\helios\HeliosPurge;
-use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Controller\HeliosController;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-class HeliosPurgeTest extends \S2lowTestCase
+class HeliosPurgeTest extends S2lowTestCase
 {
-    /** @var \HeliosDirectoriesManager */
+    /** @var HeliosDirectoriesManager */
     private HeliosDirectoriesManager $heliosUtils;
 
     public function __construct(?string $name = null, array $data = [], $dataName = '')

@@ -1,8 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use Exception;
+use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_TestCase;
 use S2lowLegacy\Lib\X509Certificate;
 
-class X509CertificateTest extends PHPUnit_Framework_TestCase
+class X509CertificateTest extends TestCase
 {
     /**
      * @var X509Certificate
@@ -26,7 +33,8 @@ class X509CertificateTest extends PHPUnit_Framework_TestCase
 
     public function testPemCleaningBadData()
     {
-        $this->setExpectedException("Exception", "Impossible de lire le certificat");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Impossible de lire le certificat");
         $this->x509Certificate->pemClean("not a pem file");
     }
 
@@ -95,7 +103,8 @@ class X509CertificateTest extends PHPUnit_Framework_TestCase
 
     public function testGetInfoFailed2()
     {
-        $this->setExpectedException("Exception", "Impossible de lire le certificat");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Impossible de lire le certificat");
         $this->x509Certificate->getInfo("toto");
     }
 

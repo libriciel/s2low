@@ -1,5 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\core;
+
+use Exception;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\Authentification;
 use S2lowLegacy\Class\HttpsConnexion;
 use S2lowLegacy\Class\PasswordHandler;

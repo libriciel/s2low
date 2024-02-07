@@ -1,8 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use Exception;
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Lib\SQLQuery;
 
-class SQLQueryTest extends PHPUnit_Framework_TestCase
+class SQLQueryTest extends TestCase
 {
     /**
      * @var SQLQuery
@@ -31,14 +37,15 @@ class SQLQueryTest extends PHPUnit_Framework_TestCase
     public function testBadQuery()
     {
         $sql = "NOT_SQL_WORD";
-        $this->setExpectedException("Exception", 'NOT_SQL_WORD');
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('NOT_SQL_WORD');
         $this->sqlQuery->query($sql);
     }
 
     public function testDisconnect()
     {
         $this->sqlQuery->disconnect();
-        $this->noAssertion();
+        $this->assertTrue(true);
     }
 
     public function testDisconnectAndReconnect()
@@ -52,7 +59,7 @@ class SQLQueryTest extends PHPUnit_Framework_TestCase
     public function testSleep()
     {
         $this->sqlQuery->sleep(0);
-        $this->noAssertion();
+        $this->assertTrue(true);
     }
 
     public function testQueryOne()
@@ -94,7 +101,8 @@ class SQLQueryTest extends PHPUnit_Framework_TestCase
     {
         $this->sqlQuery->setSlowQuery(0);
         $sql = "SELECT id FROM users ORDER BY id ";
-        $this->setExpectedException("Exception", "Requete lente");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Requete lente");
         $this->sqlQuery->queryOne($sql);
     }
 

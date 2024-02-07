@@ -1,8 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use Exception;
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Lib\ObjectInstancier;
 
-class ObjectInstancierTest extends PHPUnit_Framework_TestCase
+class ObjectInstancierTest extends TestCase
 {
     public function testRecupValue()
     {
@@ -24,7 +30,8 @@ class ObjectInstancierTest extends PHPUnit_Framework_TestCase
     {
         $objectInstancier = new ObjectInstancier();
         require_once(__DIR__ . "/fixtures/MockClassParam.class.php");
-        $this->setExpectedException("Exception", "Impossible d'instancier MockClassParam car le parametre param est manquant");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Impossible d'instancier MockClassParam car le parametre param est manquant");
         $mockClass = $objectInstancier->MockClassParam;
     }
 

@@ -1,5 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\helios;
+
+use Exception;
+use PHPUnit\HeliosUtilitiesTestTrait;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\helios\HeliosAPIController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\SQLQuery;

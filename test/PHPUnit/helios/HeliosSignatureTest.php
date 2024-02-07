@@ -1,8 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\helios;
+
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Class\helios\HeliosSignature;
 
-class HeliosSignatureTest extends PHPUnit_Framework_TestCase
+class HeliosSignatureTest extends TestCase
 {
     public function testGetInfoForSignature()
     {

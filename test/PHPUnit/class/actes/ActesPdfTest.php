@@ -1,5 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\actes;
+
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\actes\ActesPdf;
 use S2lowLegacy\Class\actes\BordereauPdfGenerator;
 use S2lowLegacy\Class\actes\IActesPdf;

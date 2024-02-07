@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\actes;
+
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 
@@ -19,7 +23,7 @@ class ActesCreator
     public function createTransaction($status, $archive_path, $tmp_dir)
     {
         if (is_null($archive_path)) {
-            $archive_name = uniqid(rand(), true);
+            $archive_name = uniqid((string) rand(), true);
         } else {
             $archive_name = basename($archive_path);
             copy($archive_path, $tmp_dir . "/$archive_name");

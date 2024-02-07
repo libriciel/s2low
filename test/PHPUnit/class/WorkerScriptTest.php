@@ -1,12 +1,13 @@
 <?php
 
-use malkusch\lock\mutex\PHPRedisMutex;
+declare(strict_types=1);
+
+namespace PHPUnit\class;
+
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\BeanstalkdWrapper;
 use S2lowLegacy\Class\IWorker;
-use S2lowLegacy\Class\RedisMutexWrapper;
-use S2lowLegacy\Class\SigTermHandlerFactory;
 use S2lowLegacy\Class\WorkerScript;
-use S2lowLegacy\Lib\SigTermHandler;
 
 class WorkerScriptTest extends S2lowTestCase
 {

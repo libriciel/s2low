@@ -1,5 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\helios;
+
+use PHPUnit\HeliosUtilitiesTestTrait;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\helios\HeliosTransactionsListe;
 
 class HeliosTransactionsListeTest extends S2lowTestCase

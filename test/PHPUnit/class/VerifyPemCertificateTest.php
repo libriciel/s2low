@@ -1,5 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class;
+
+use Exception;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 
@@ -47,7 +53,7 @@ class VerifyPemCertificateTest extends S2lowTestCase
             $verificator->checkCertificateWithOpenSSL(
                 self::BASE_CERTIFICATES_DIR . "/dateOk/fullchain.pem",
                 VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS,
-                mktime(16, 00, 55, 06, 11, 2025)
+                (string) mktime(16, 00, 55, 06, 11, 2025)
             )
         );
     }
@@ -62,7 +68,7 @@ class VerifyPemCertificateTest extends S2lowTestCase
         $verificator->checkCertificateWithOpenSSL(
             self::BASE_CERTIFICATES_DIR . "/dateOk/fullchain.pem",
             VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS,
-            mktime(16, 00, 57, 06, 11, 2025)
+            (string) mktime(16, 00, 57, 06, 11, 2025)
         );
     }
 

@@ -3,11 +3,11 @@
 namespace S2low\Tests\Services;
 
 use Exception;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Model\LogsHistoriqueSQL;
 use S2low\Services\LogTimestampTokenGarbage;
 use S2low\Tests\LogsHistoriqueSQLTrait;
-use S2lowTestCase;
 use S2lowLegacy\Class\TmpFolder;
 
 class LogTimestampTokenGarbageTest extends S2lowTestCase

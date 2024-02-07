@@ -1,5 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\model;
+
+use Exception;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 
 class AuthorityGroupSirenSQLTest extends S2lowTestCase

@@ -1,5 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class;
+
+use Exception;
+use PHPUnit\S2lowSimpleTestCase;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\ShellCommand;
 

@@ -6,6 +6,7 @@ namespace S2low\Tests\Services\Helios;
 
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\S2lowTestCase;
 use S2low\Services\FilesAndDirectoriesUtils\DirectoryManagerFactory;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnection;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionBuilder;
@@ -17,7 +18,6 @@ use S2low\Services\Helios\DGFiPConnection\Protocols\FtpServiceWrapper;
 use S2low\Services\Helios\DGFiPConnection\Protocols\SftpServiceWrapper;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
-use S2lowTestCase;
 
 /**
  *

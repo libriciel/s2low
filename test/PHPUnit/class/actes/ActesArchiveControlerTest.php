@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\actes;
+
+use Exception;
+use PHPUnit\ActesUtilitiesTestTrait;
+use PHPUnit\PastellConfigurationTestTrait;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\actes\ActesArchiveControler;
 use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;

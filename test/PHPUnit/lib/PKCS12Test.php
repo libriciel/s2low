@@ -1,8 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use Exception;
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Lib\PKCS12;
 
-class PKCS12Test extends PHPUnit_Framework_TestCase
+class PKCS12Test extends TestCase
 {
     /**
      * @var PKCS12
@@ -31,13 +37,15 @@ class PKCS12Test extends PHPUnit_Framework_TestCase
 
     public function testNotExists()
     {
-        $this->setExpectedException('Exception', "Le fichier foo n'existe pas");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Le fichier foo n'existe pas");
         $this->pkcs12->getAll('foo', 'bar');
     }
 
     public function testBasPassword()
     {
-        $this->setExpectedException('Exception', "Impossible de lire le certificat PKCS#12");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Impossible de lire le certificat PKCS#12");
         $this->pkcs12->getAll($this->p12_file_path, "bad password");
     }
 

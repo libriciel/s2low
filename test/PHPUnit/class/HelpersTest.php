@@ -1,7 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class;
+
+use org\bovigo\vfs\vfsStream;
 use S2lowLegacy\Class\Helpers;
 use PHPUnit\Framework\TestCase;
+use UnexpectedValueException;
 
 class HelpersTest extends TestCase
 {
@@ -205,8 +211,8 @@ class HelpersTest extends TestCase
 
     public function testCreateDirTree()
     {
-        org\bovigo\vfs\vfsStream::setup('test');
-        $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
+        vfsStream::setup('test');
+        $testStreamUrl = vfsStream::url('test');
         $dir_to_create = "foo/bar/baz";
         $this->assertTrue(Helpers::createDirTree($testStreamUrl . "/" . $dir_to_create, $testStreamUrl));
         $this->assertTrue(file_exists($testStreamUrl . "/" . $dir_to_create));
@@ -215,16 +221,16 @@ class HelpersTest extends TestCase
     public function testCreateDirTreeFailed()
     {
         $dir_to_create = "foo/bar/baz";
-        org\bovigo\vfs\vfsStream::setup('test');
-        $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
+        vfsStream::setup('test');
+        $testStreamUrl = vfsStream::url('test');
         $this->assertFalse(Helpers::createDirTree($dir_to_create, $testStreamUrl));
     }
 
     public function testCreateDirTreeFailedFileExist()
     {
         $dir_to_create = "foo/bar/baz";
-        org\bovigo\vfs\vfsStream::setup('test');
-        $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
+        vfsStream::setup('test');
+        $testStreamUrl = vfsStream::url('test');
         file_put_contents($testStreamUrl . "/foo", "foo");
         $this->assertFalse(Helpers::createDirTree($testStreamUrl . "/" . $dir_to_create, $testStreamUrl));
     }
@@ -232,8 +238,8 @@ class HelpersTest extends TestCase
     public function testCreateDirTreeFailedFileExist2()
     {
         $dir_to_create = "foo/bar/baz";
-        org\bovigo\vfs\vfsStream::setup('test');
-        $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
+        vfsStream::setup('test');
+        $testStreamUrl = vfsStream::url('test');
         mkdir($testStreamUrl . "/foo/bar", 0777, true);
         file_put_contents($testStreamUrl . "/foo/bar/baz", "baz");
         $this->assertFalse(Helpers::createDirTree($testStreamUrl . "/" . $dir_to_create, $testStreamUrl));
@@ -242,16 +248,16 @@ class HelpersTest extends TestCase
     public function testCreateDirTreeDirExist()
     {
         $dir_to_create = "foo/bar/baz";
-        org\bovigo\vfs\vfsStream::setup('test');
-        $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
+        vfsStream::setup('test');
+        $testStreamUrl = vfsStream::url('test');
         mkdir($testStreamUrl . "/" . $dir_to_create, 0777, true);
         $this->assertTrue(Helpers::createDirTree($testStreamUrl . "/" . $dir_to_create, $testStreamUrl));
     }
 
     public function testDeleteFromFS()
     {
-        org\bovigo\vfs\vfsStream::setup('test');
-        $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
+        vfsStream::setup('test');
+        $testStreamUrl = vfsStream::url('test');
         mkdir($testStreamUrl . "/foo");
         file_put_contents($testStreamUrl . "/bar", "bar");
         $this->assertTrue(Helpers::deleteFromFS($testStreamUrl . "/foo", $testStreamUrl . "/bar"));
@@ -259,23 +265,23 @@ class HelpersTest extends TestCase
 
     public function testDeleteFromFSFailed()
     {
-        org\bovigo\vfs\vfsStream::setup('test');
-        $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
+        vfsStream::setup('test');
+        $testStreamUrl = vfsStream::url('test');
         mkdir($testStreamUrl . "/foo/bar", 0777, true);
         $this->assertFalse(Helpers::deleteFromFS($testStreamUrl . "/foo", $testStreamUrl . "/bar"));
     }
 
     public function testFixPerms()
     {
-        org\bovigo\vfs\vfsStream::setup('test');
-        $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
+        vfsStream::setup('test');
+        $testStreamUrl = vfsStream::url('test');
         $this->assertFalse(Helpers::fixPerms($testStreamUrl . "/foo"));
     }
 
     public function testFixPermsFile()
     {
-        org\bovigo\vfs\vfsStream::setup('test');
-        $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
+        vfsStream::setup('test');
+        $testStreamUrl = vfsStream::url('test');
         file_put_contents($testStreamUrl . "/bar", "bar");
         $this->assertTrue(Helpers::fixPerms($testStreamUrl . "/bar"));
     }

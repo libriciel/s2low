@@ -1,5 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class;
+
+use Exception;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\CurlWrapper;
 use S2lowLegacy\Class\CurlWrapperFactory;
 use S2lowLegacy\Class\PadesValid;

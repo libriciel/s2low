@@ -1,5 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class;
+
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\HttpsConnexion;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\SessionWrapper;

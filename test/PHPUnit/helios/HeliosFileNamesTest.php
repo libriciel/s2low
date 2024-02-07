@@ -1,18 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPUnit\helios;
 
-use HeliosDirectoriesManager;
-use PHPUnit\Exception;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu;
 use S2lowLegacy\Class\helios\HeliosFilesFactory;
-use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Controller\HeliosController;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-class HeliosFileNamesTest extends \S2lowTestCase
+class HeliosFileNamesTest extends S2lowTestCase
 {
-    /** @var \HeliosDirectoriesManager */
+    /** @var HeliosDirectoriesManager */
     private HeliosDirectoriesManager $heliosDirectoriesManager;
 
     private HeliosAnalyseFichierRecu $heliosAnalyseFichierRecu;

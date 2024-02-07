@@ -1,10 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\FrontController;
 use S2lowLegacy\Lib\ObjectInstancier;
 
-class FrontControllerTest extends PHPUnit_Framework_TestCase
+class FrontControllerTest extends TestCase
 {
     public function testGo()
     {

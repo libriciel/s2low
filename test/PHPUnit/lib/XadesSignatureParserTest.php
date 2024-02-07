@@ -1,5 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use DateTimeZone;
+use Exception;
 use S2lowLegacy\Lib\XadesSignatureParser;
 use PHPUnit\Framework\TestCase;
 

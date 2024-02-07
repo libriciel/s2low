@@ -1,9 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
 //http://www.webozor.com/php/clef-de-luhn-ou-formule-de-luhn
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Lib\LuhnKey;
 
-class LuhnKeyTest extends PHPUnit_Framework_TestCase
+class LuhnKeyTest extends TestCase
 {
     /**
      * @var LuhnKey

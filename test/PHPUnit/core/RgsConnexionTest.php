@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\core;
+
 use S2lowLegacy\Class\RgsConnexion;
 use PHPUnit\Framework\TestCase;
 

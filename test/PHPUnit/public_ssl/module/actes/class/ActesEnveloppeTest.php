@@ -1,5 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\public_ssl\module\actes\class;
+
+use ActesEnvelope;
+use Exception;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\actes\ActesRetriever;
 use S2lowLegacy\Class\TmpFolder;
 

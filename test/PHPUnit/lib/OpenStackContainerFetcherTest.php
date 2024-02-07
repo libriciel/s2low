@@ -1,5 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use Exception;
 use S2lowLegacy\Lib\OpenStackContainerFetcher;
 use OpenStack\Identity\v3\Models\Token;
 use OpenStack\Identity\v3\Service;

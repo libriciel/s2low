@@ -1,8 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Class\ExtendPdf;
 
-class ExtendPDFTest extends PHPUnit_Framework_TestCase
+class ExtendPDFTest extends TestCase
 {
     /**
      * @var ExtendPDF
@@ -28,6 +33,6 @@ class ExtendPDFTest extends PHPUnit_Framework_TestCase
         $this->extendPDF->SetMyAligns(array(1,2,3));
         $this->extendPDF->setMyBorder("TBRL");
         $this->extendPDF->Footer();
-        $this->noAssertion();
+        $this->assertTrue(true);
     }
 }

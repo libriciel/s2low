@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use DateTime;
+use Exception;
+use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Class\helios\HeliosPESValidation;
 use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
@@ -12,12 +20,13 @@ use S2lowLegacy\Lib\XadesSignatureNoIDException;
 use S2lowLegacy\Lib\XadesSignatureParser;
 use S2lowLegacy\Lib\XadesSignatureProperties;
 
-class XadesSignatureTest extends PHPUnit_Framework_TestCase
+class XadesSignatureTest extends TestCase
 {
     public function testSignFileNotExists()
     {
         $tmp_file = sys_get_temp_dir() . "/" . uniqid("phpunit");
-        $this->setExpectedException("Exception", "failed to load external entity");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("failed to load external entity");
         $this->sign($tmp_file);
     }
 
@@ -107,7 +116,8 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase
 
     public function testSignWithoutDocumentElementId()
     {
-        $this->setExpectedException(XadesSignatureNoIDException::class, "Le document XML ne contient pas d'Id");
+        $this->expectException(XadesSignatureNoIDException::class);
+        $this->expectExceptionMessage("Le document XML ne contient pas d'Id");
         $this->sign(__DIR__ . "/fixtures/test-no-id.xml");
     }
 
@@ -115,7 +125,8 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase
     {
         $signed_file = sys_get_temp_dir() . "/" . uniqid("phpunit");
         $xadesSignature = $this->getXadesSignature();
-        $this->setExpectedException(Exception::class, "Impossible de lire le certificat PKCS#12");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Impossible de lire le certificat PKCS#12");
         $xadesSignature->sign(__DIR__ . "/fixtures/test.xml", __DIR__ . "/fixtures/robert_petitpoids.p12", "bad password", $signed_file, $this->getXadesSignatureProperties());
     }
 
@@ -133,9 +144,10 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase
      */
     public function testOutputFileNotWritable()
     {
-        $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
+        $testStreamUrl = vfsStream::url('test');
         $xadesSignature = $this->getXadesSignature();
-        $this->setExpectedException("Exception", "Erreur (1) lors de la signature technique");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Erreur (1) lors de la signature technique");
         $xadesSignature->sign(
             __DIR__ . "/fixtures/test.xml",
             __DIR__ . "/fixtures/robert_petitpoids.p12",

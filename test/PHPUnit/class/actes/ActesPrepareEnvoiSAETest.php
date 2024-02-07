@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\actes;
+
+use Exception;
+use PHPUnit\ActesUtilitiesTestTrait;
+use PHPUnit\PastellConfigurationTestTrait;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\actes\ActesPrepareEnvoiSAE;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\PastellProperties;

@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\helios;
+
+use Exception;
+use PHPUnit\HeliosUtilitiesTestTrait;
+use PHPUnit\PastellConfigurationTestTrait;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\helios\HeliosEnvoiSAE;
 use S2lowLegacy\Class\helios\HeliosPrepareEnvoiSAE;
 use S2lowLegacy\Class\TmpFolder;

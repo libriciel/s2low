@@ -1,5 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\controller;
+
+use Exception;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\actes\ActesConventions;
 use S2lowLegacy\Controller\AdminAuthorityController;
 use S2lowLegacy\Lib\Environnement;

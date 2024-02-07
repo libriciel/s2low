@@ -1,5 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\public_ssl\module\mail\lib;
+
+use GroupeMail;
+use PHPUnit\S2lowTestCase;
+
 class GroupeMailTest extends S2lowTestCase
 {
     /** @var \GroupeMail  */

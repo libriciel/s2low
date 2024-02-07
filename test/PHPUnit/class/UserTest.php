@@ -1,5 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class;
+
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\User;
 
 class UserTest extends S2lowTestCase

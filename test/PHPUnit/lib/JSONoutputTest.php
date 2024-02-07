@@ -1,8 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use Exception;
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Lib\JSONoutput;
 
-class JSONoutputTest extends PHPUnit_Framework_TestCase
+class JSONoutputTest extends TestCase
 {
     /**
      * @var JSONoutput
@@ -24,7 +30,8 @@ class JSONoutputTest extends PHPUnit_Framework_TestCase
     public function testDisplayErrorAndExit()
     {
         $this->expectOutputRegex('#\{"status":"error","error-message":"foo"\}#');
-        $this->setExpectedException("Exception", "Exit !");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Exit !");
         $this->jsonOutput->displayErrorAndExit("foo");
     }
 

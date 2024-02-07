@@ -1,10 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\Recuperateur;
 use S2lowLegacy\Lib\SessionWrapper;
 
-class EnvironnementTest extends PHPUnit_Framework_TestCase
+class EnvironnementTest extends TestCase
 {
     public function testAll()
     {

@@ -1,12 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\actes;
+
+use Exception;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\actes\ActesAntivirusWorker;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\TmpFolder;
-
-require_once __DIR__ . "/ActesCreator.php";
 
 class ActesAntivirusTest extends S2lowTestCase
 {

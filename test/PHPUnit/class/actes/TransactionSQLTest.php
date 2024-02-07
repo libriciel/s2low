@@ -1,5 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\actes;
+
+use PHPUnit\ActesUtilitiesTestTrait;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\actes\TransactionSQL;
 
 class TransactionSQLTest extends S2lowTestCase

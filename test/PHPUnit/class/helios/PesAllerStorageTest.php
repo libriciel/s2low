@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\helios;
+
+use Exception;
+use Monolog\Logger;
+use PHPUnit\HeliosUtilitiesTestTrait;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\helios\PesAllerStorage;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
@@ -98,7 +106,7 @@ class PesAllerStorageTest extends S2lowTestCase
             $this->getObjectInstancier()->get('helios_files_upload_root'),
             $this->getObjectInstancier()->get(HeliosTransactionsSQL::class),
             $openStackSwiftWrapper,
-            $this->getObjectInstancier()->get(Monolog\Logger::class),
+            $this->getObjectInstancier()->get(Logger::class),
             ''
         );
 
@@ -127,7 +135,7 @@ class PesAllerStorageTest extends S2lowTestCase
             $helios_files_upload_root,
             $this->getObjectInstancier()->get(HeliosTransactionsSQL::class),
             $openStackSwiftWrapper,
-            $this->getObjectInstancier()->get(Monolog\Logger::class),
+            $this->getObjectInstancier()->get(Logger::class),
             ''
         );
 

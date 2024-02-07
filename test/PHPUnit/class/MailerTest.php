@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class;
+
 use S2lowLegacy\Class\Mailer;
 use PHPUnit\Framework\TestCase;
 

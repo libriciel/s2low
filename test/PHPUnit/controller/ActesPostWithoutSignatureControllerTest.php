@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\controller;
+
+use Exception;
+use PHPUnit\ActesUtilitiesTestTrait;
+use PHPUnit\RgsConnexionTestTrait;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Controller\ActesPostWithoutSignatureController;

@@ -1,5 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use Exception;
+use BadMethodCallException;
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Lib\OpenStackContainerFetcher;
 use S2lowLegacy\Lib\OpenStackContainerWrapper;
 use S2lowLegacy\Lib\OpenStackStateManager;
@@ -11,7 +18,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\StreamInterface;
 use Psr\Log\NullLogger;
 
-class OpenStackContainerWrapperTest extends PHPUnit\Framework\TestCase
+class OpenStackContainerWrapperTest extends TestCase
 {
     /**
      * @var MockObject

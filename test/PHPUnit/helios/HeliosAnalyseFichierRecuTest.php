@@ -1,9 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\helios;
+
+use Exception;
+use PHPUnit\helios\HeliosDirectoriesManager;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Model\AuthoritySiretSQL;
-use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosRetourSQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 

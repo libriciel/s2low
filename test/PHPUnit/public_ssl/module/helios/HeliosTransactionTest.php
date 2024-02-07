@@ -2,6 +2,13 @@
 
 declare(strict_types=1);
 
+namespace PHPUnit\public_ssl\module\helios;
+
+use DateTime;
+use Exception;
+use DateInterval;
+use PHPUnit\HeliosUtilitiesTestTrait;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Model\GroupSQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;

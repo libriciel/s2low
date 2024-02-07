@@ -1,5 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use DateTime;
+use Exception;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Lib\PemCertificateFactory;
 
 class PemCertificateTest extends S2lowTestCase

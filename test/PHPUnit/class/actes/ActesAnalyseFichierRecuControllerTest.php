@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\actes;
+
+use Exception;
+use PHPUnit\S2lowTestCase;
+use PharData;
+use PharFileInfo;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierRecuController;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesRetriever;
@@ -330,7 +338,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
     public function testCourrierSimpleApres15JFichierPenible()
     {
         mkdir($this->actes_files_upload_root . "/000000000/", 0777, true);
-        file_put_contents($this->actes_files_upload_root . "/000000000/20170725A", "pouet", true);
+        file_put_contents($this->actes_files_upload_root . "/000000000/20170725A", "pouet", 1);
         $transaction_id_orig = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
         $this->mockGetBySirenAndNumeroInterne($transaction_id_orig);
         $this->copyDirectoryToAnalysePath(__DIR__ . "/../fixtures/test-courrier-simple");

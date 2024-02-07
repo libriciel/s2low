@@ -1,17 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class;
+
+use Exception;
+use Monolog\Handler\TestHandler;
+use Monolog\Logger;
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Class\CurlWrapper;
 use S2lowLegacy\Class\CurlWrapperFactory;
 use S2lowLegacy\Class\PastellWrapper;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Model\PastellProperties;
 
-class PastellWrapperTest extends PHPUnit_Framework_TestCase
+class PastellWrapperTest extends TestCase
 {
     private function getS2lowLogger()
     {
-        $testHandler = new Monolog\Handler\TestHandler();
-        $logger = new \Monolog\Logger('phpunit');
+        $testHandler = new TestHandler();
+        $logger = new Logger('phpunit');
         $logger->pushHandler($testHandler);
         return new S2lowLogger($logger);
     }
@@ -47,10 +55,8 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
         $pastellProperties->id_e = 34;
 
         $pastellWrapper = new PastellWrapper($pastellProperties, $curlWrapperFactory, $this->getS2lowLogger());
-        $this->setExpectedException(
-            Exception::class,
-            "Impossible de décoder les données reçu : not_in_json"
-        );
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Impossible de décoder les données reçu : not_in_json");
         $pastellWrapper->testConnexion();
     }
 
@@ -68,10 +74,8 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
         $pastellProperties->id_e = 34;
 
         $pastellWrapper = new PastellWrapper($pastellProperties, $curlWrapperFactory, $this->getS2lowLogger());
-        $this->setExpectedException(
-            Exception::class,
-            "Message de Pastell : Acces interdit id_e=1, droit=entite:lecture,id_u=15"
-        );
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Message de Pastell : Acces interdit id_e=1, droit=entite:lecture,id_u=15");
         $pastellWrapper->testConnexion();
     }
 
@@ -89,10 +93,8 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
         $pastellProperties->id_e = 34;
 
         $pastellWrapper = new PastellWrapper($pastellProperties, $curlWrapperFactory, $this->getS2lowLogger());
-        $this->setExpectedException(
-            Exception::class,
-            "curl_mock_last_error"
-        );
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("curl_mock_last_error");
         $pastellWrapper->testConnexion();
     }
 
@@ -195,7 +197,8 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
         $pastellProperties->login = "toto";
 
         $pastellWrapper = new PastellWrapper($pastellProperties, $curlWrapperFactory, $this->getS2lowLogger());
-        $this->setExpectedException(Exception::class, "Impossible de créer le document sur Pastell");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Impossible de créer le document sur Pastell");
 
         $pastellWrapper->createActes([
             'nature_code' => 4,
@@ -245,7 +248,8 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
         $pastellProperties->login = "toto";
 
         $pastellWrapper = new PastellWrapper($pastellProperties, $curlWrapperFactory, $this->getS2lowLogger());
-        $this->setExpectedException(Exception::class, "Impossible de créer le document sur Pastell");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Impossible de créer le document sur Pastell");
         $pastellWrapper->createHelios([
             'filename' => 'test',
             'id' => 12,
@@ -321,7 +325,8 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
         $pastellProperties->login = "toto";
 
         $pastellWrapper = new PastellWrapper($pastellProperties, $curlWrapperFactory, $this->getS2lowLogger());
-        $this->setExpectedException(Exception::class, "curl_mock_last_error");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("curl_mock_last_error");
         $pastellWrapper->getFile(42, 'aa');
     }
 

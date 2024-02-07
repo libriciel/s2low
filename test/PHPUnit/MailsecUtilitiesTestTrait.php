@@ -1,5 +1,7 @@
 <?php
 
+namespace PHPUnit;
+
 use S2lowLegacy\Controller\MailsecDownloadController;
 use S2lowLegacy\Lib\SQLQuery;
 

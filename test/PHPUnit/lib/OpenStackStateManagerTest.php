@@ -1,27 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use Exception;
 use GuzzleHttp\Exception\ConnectException;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\TestHandler;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Lib\OpenStackStateManager;
 use S2lowLegacy\Lib\PausingQueueException;
 use Monolog\Logger;
 use Psr\Http\Message\RequestInterface;
+use UnexpectedValueException;
 
 class OpenStackStateManagerTest extends S2lowTestCase
 {
     /**
      * @var Logger
      */
-    private $logger;
+    private Logger $logger;
     /**
      * @var \Monolog\Handler\StreamHandler
      */
-    private $handler;
+    private TestHandler|StreamHandler $handler;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->logger = new Logger("test");
-        $this->handler = new  Monolog\Handler\TestHandler();
+        $this->handler = new  TestHandler();
         $this->logger->pushHandler($this->handler);
     }
 
@@ -104,7 +113,7 @@ class OpenStackStateManagerTest extends S2lowTestCase
 
     public function buildExceptionRequestInterface()
     {
-        /** @var RequestInterface | PHPUnit\Framework\MockObject\ $requestInterfaceMock */
+        /** @var RequestInterface | \PHPUnit\Framework\MockObject\ $requestInterfaceMock */
         $requestInterfaceMock = $this->getMockBuilder(RequestInterface::class)
             ->disableOriginalConstructor()
             ->getMock();

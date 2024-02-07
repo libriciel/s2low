@@ -1,5 +1,7 @@
 <?php
 
+namespace PHPUnit;
+
 use S2lowLegacy\Class\PastellWrapper;
 use S2lowLegacy\Class\PastellWrapperFactory;
 use S2lowLegacy\Lib\ObjectInstancier;

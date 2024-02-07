@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\actes;
+
 use S2lowLegacy\Class\actes\ActesFilesForSAE;
 use PHPUnit\Framework\TestCase;
 

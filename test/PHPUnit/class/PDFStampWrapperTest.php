@@ -1,11 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class;
+
+use Exception;
+use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_TestCase;
 use S2lowLegacy\Class\CurlWrapper;
 use S2lowLegacy\Class\CurlWrapperFactory;
 use S2lowLegacy\Class\PDFStampData;
 use S2lowLegacy\Class\PDFStampWrapper;
 
-class PDFStampWrapperTest extends PHPUnit_Framework_TestCase
+class PDFStampWrapperTest extends TestCase
 {
     private function getCurlWrapperFactory($return_string)
     {

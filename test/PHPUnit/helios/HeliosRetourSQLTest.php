@@ -1,5 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\helios;
+
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Model\HeliosRetourSQL;
 
 class HeliosRetourSQLTest extends S2lowTestCase

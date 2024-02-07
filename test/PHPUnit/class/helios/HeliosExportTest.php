@@ -1,5 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\helios;
+
+use Exception;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\helios\HeliosExport;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\TmpFolder;

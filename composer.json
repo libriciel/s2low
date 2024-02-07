@@ -92,6 +92,10 @@
     "psr-4": {
       "S2low\\Tests\\": "tests/"
     },
+    "files": [
+      "test/PHPUnit/helios/HeliosDirectoriesManager.php",
+      "test/PHPUnit/class/actes/ActesCreator.php"
+    ],
     "classmap": [
       "test/PHPUnit"
     ]

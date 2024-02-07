@@ -1,5 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\public_ssl\module\actes;
+
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\actes\ActesClassificationCodesSQL;
 
 class ActesClassificationCodesSQLTest extends S2lowTestCase

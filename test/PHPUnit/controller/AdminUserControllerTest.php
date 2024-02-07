@@ -1,5 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\controller;
+
+use Exception;
+use org\bovigo\vfs\vfsStream;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Controller\AdminUserController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\FrontController;
@@ -19,8 +26,8 @@ class AdminUserControllerTest extends S2lowTestCase
         parent::setUp();
         $_FILES = array();
         $_POST = array();
-        org\bovigo\vfs\vfsStream::setup("test");
-        $this->testStreamUrl = org\bovigo\vfs\vfsStream::url("test");
+        vfsStream::setup("test");
+        $this->testStreamUrl = vfsStream::url("test");
         $this->adminUserController = new AdminUserController($this->getObjectInstancier());
     }
 

@@ -1,8 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Lib\Recuperateur;
 
-class RecuperateurTest extends PHPUnit_Framework_TestCase
+class RecuperateurTest extends TestCase
 {
     public function testGet()
     {

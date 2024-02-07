@@ -1,15 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class;
+
+use Exception;
 use malkusch\lock\mutex\PHPRedisMutex;
 use Pheanstalk\Job;
 use Pheanstalk\Pheanstalk;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\BeanstalkdWrapper;
 use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\RedisMutexWrapper;
 use S2lowLegacy\Class\SigTermHandlerFactory;
 use S2lowLegacy\Class\WorkerRunnerBuilder;
 use S2lowLegacy\Class\WorkerRunnerWithDataFromDB;
-use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\SigTermHandler;
 
 class WorkerRunnerBuilderTest extends S2lowTestCase

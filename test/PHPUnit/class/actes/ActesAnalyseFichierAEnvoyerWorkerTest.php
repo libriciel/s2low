@@ -1,5 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\actes;
+
+use Error;
+use Exception;
+use PHPUnit\S2lowTestCase;
 use S2low\Services\PdfValidator;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\actes\ActesScriptHelper;
@@ -14,8 +21,6 @@ use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Model\LogsSQL;
-
-require_once __DIR__ . "/ActesCreator.php";
 
 class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
 {

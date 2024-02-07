@@ -6,10 +6,10 @@ namespace S2low\Tests\Services\Helios;
 
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\S2lowTestCase;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnection;
 use S2low\Services\Helios\FTPHeliosReceiver;
 use S2lowLegacy\Class\S2lowLogger;
-use S2lowTestCase;
 
 /**
  *

@@ -1,8 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use Monolog\Test\TestCase;
+use org\bovigo\vfs\vfsStream;
 use S2lowLegacy\Lib\FileUploaderNG;
 
-class FileUploaderNGTest extends PHPUnit_Framework_TestCase
+class FileUploaderNGTest extends TestCase
 {
     private const FILE_CONTENT = "Hello World!";
 
@@ -15,8 +21,8 @@ class FileUploaderNGTest extends PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $this->fileUploader = new FileUploaderNG();
-        org\bovigo\vfs\vfsStream::setup('test');
-        $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
+        vfsStream::setup('test');
+        $testStreamUrl = vfsStream::url('test');
         $this->tmp_file = $testStreamUrl . "/test.text";
 
         file_put_contents($this->tmp_file, self::FILE_CONTENT);

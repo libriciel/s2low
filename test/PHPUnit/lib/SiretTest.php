@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Lib\LuhnKey;
-use S2lowLegacy\Lib\Siren;
 use S2lowLegacy\Lib\Siret;
 
-class SiretTest extends PHPUnit_Framework_TestCase
+class SiretTest extends TestCase
 {
     /**
      * @var Siret

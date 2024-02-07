@@ -1,5 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\actes;
+
+use Exception;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\actes\ActesMenageEnveloppeWorker;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackContainerStore;

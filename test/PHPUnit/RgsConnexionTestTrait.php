@@ -1,5 +1,7 @@
 <?php
 
+namespace PHPUnit;
+
 use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Lib\ObjectInstancier;
 

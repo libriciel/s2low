@@ -1,8 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\helios;
+
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Class\helios\HeliosPESValidation;
 
-class HeliosPESValidationTest extends PHPUnit_Framework_TestCase
+class HeliosPESValidationTest extends TestCase
 {
     public function testValidPesAller()
     {

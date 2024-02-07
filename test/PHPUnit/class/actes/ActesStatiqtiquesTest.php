@@ -1,5 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\actes;
+
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\actes\ActesStatistiques;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
@@ -44,7 +49,7 @@ class ActesStatiqtiquesTest extends S2lowTestCase
         /** @var ActesStatistiques $actesStatistiques */
         $actesStatistiques = $this->getObjectInstancier()->get(ActesStatistiques::class);
 
-        /** @var \ActesCreator $actesCreator */
+        /** @var ActesCreator $actesCreator */
         $actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
 
         $actesCreator->createTransaction(
@@ -87,7 +92,7 @@ class ActesStatiqtiquesTest extends S2lowTestCase
         /** @var ActesStatistiques $actesStatistiques */
         $actesStatistiques = $this->getObjectInstancier()->get(ActesStatistiques::class);
 
-        /** @var \ActesCreator $actesCreator */
+        /** @var ActesCreator $actesCreator */
         $actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
 
         /** @var ActesTransactionsSQL $actesTransactionsSQL */
@@ -136,7 +141,7 @@ class ActesStatiqtiquesTest extends S2lowTestCase
         $actesStatistiques = $this->getObjectInstancier()->get(ActesStatistiques::class);
         $actesStatistiques->setGroup(1);
 
-        /** @var \ActesCreator $actesCreator */
+        /** @var ActesCreator $actesCreator */
         $actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
 
         /** @var ActesTransactionsSQL $actesTransactionsSQL */
@@ -185,7 +190,7 @@ class ActesStatiqtiquesTest extends S2lowTestCase
         $actesStatistiques = $this->getObjectInstancier()->get(ActesStatistiques::class);
         $actesStatistiques->setGroup(2);
 
-        /** @var \ActesCreator $actesCreator */
+        /** @var ActesCreator $actesCreator */
         $actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
 
         /** @var ActesTransactionsSQL $actesTransactionsSQL */

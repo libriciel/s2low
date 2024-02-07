@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\public_ssl\module\actes\class;
+
+use ActesBatch;
+use Exception;
+use PHPUnit\S2lowTestCase;
+
 class ActesBatchTest extends S2lowTestCase
 {
     /**

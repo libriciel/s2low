@@ -1,8 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Lib\FancyDate;
 
-class FancyDateTest extends PHPUnit_Framework_TestCase
+class FancyDateTest extends TestCase
 {
     public function testGetDateFrancais()
     {

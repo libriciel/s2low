@@ -1,5 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\model;
+
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Model\NounceSQL;
 
 class NounceSQLTest extends S2lowTestCase

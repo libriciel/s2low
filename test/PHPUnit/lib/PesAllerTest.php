@@ -1,8 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use Exception;
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Lib\PesAller;
 
-class PesAllerTest extends PHPUnit_Framework_TestCase
+class PesAllerTest extends TestCase
 {
     private $pesAller;
 
@@ -21,7 +27,8 @@ class PesAllerTest extends PHPUnit_Framework_TestCase
     public function testGetPmsgBadPesAller()
     {
         $pes_aller_path = __DIR__ . "/fixtures/test.xml";
-        $this->setExpectedException("Exception", "La balise EnTetePES/CodCol n'est pas présente ou est vide");
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("La balise EnTetePES/CodCol n'est pas présente ou est vide");
         $this->pesAller->getP_MSG($pes_aller_path);
     }
 }

@@ -1,7 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit;
+
+use Docker\S2lowBootstrap;
 use PHPUnit\Framework\TestCase;
 
+/**
+ *
+ */
 class S2lowBootstrapTest extends TestCase
 {
     public function setUp(): void

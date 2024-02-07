@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class;
+
+use DateTime;
+use DateTimeZone;
+use Exception;
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\VerifyPKCS7Signature;

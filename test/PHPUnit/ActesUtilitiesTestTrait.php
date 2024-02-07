@@ -1,5 +1,7 @@
 <?php
 
+namespace PHPUnit;
+
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Controller\ActesAPIController;
 use S2lowLegacy\Lib\ObjectInstancier;

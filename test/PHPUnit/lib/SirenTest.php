@@ -1,10 +1,16 @@
 <?php
 
+//declare(strict_types=1);
+// Ainsi, on peut tester que SirenFactory fonctionne avec des int ET des entiers.
+// C'est moche, mais c'est ( peut-être) le cas dans le code actuellement.
+
+namespace PHPUnit\lib;
+
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Lib\LuhnKey;
-use S2lowLegacy\Lib\Siren;
 use S2lowLegacy\Lib\SirenFactory;
 
-class SirenTest extends PHPUnit_Framework_TestCase
+class SirenTest extends TestCase
 {
     /**
      * @var \S2lowLegacy\Lib\SirenFactory
@@ -35,7 +41,7 @@ class SirenTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider get_data
      */
-    public function testAllSiren($siren_to_test, $expected_result, $expectedValue = null)
+    public function testAllSiren($siren_to_test, bool $expected_result, $expectedValue = null)
     {
         $siren = $this->sirenFactory->get($siren_to_test);
         $this->assertEquals(

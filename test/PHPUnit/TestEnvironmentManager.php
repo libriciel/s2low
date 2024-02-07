@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
 use S2lowLegacy\Class\S2lowLogger;
@@ -10,6 +12,9 @@ use S2lowLegacy\Lib\SQLQuery;
 
 class TestEnvironmentManager
 {
+    /**
+     * @var string
+     */
     private static $sqlContentStatic;
 
     /**
@@ -133,8 +138,12 @@ class TestEnvironmentManager
         ]);
     }
 
-    public function getLogRecords()
+    /**
+     * @return array
+     */
+    public function getLogRecords(): array
     {
+        /** @var  TestHandler $testHandler */
         $testHandler = $this->getObjectInstancier()->get(TestHandler::class);
         return $testHandler->getRecords();
     }

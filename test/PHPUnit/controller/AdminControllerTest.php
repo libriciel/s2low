@@ -1,5 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\controller;
+
+use PHPUnit\S2lowTestCase;
 use S2lowLegacy\Controller\AdminController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\RedirectException;

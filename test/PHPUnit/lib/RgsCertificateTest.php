@@ -1,5 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\lib;
+
+use Exception;
 use S2lowLegacy\Lib\RgsCertificate;
 use PHPUnit\Framework\TestCase;
 
