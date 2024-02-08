@@ -1,11 +1,10 @@
 /*
-Icone "message" récupéré ici : http://subwaydesigns.net/mail-envelope-icon-email-icon/
-Icone "punaise", je ne sais plus ou je l'ai trouvé !
+Icone "message" rï¿½cupï¿½rï¿½ ici : http://subwaydesigns.net/mail-envelope-icon-email-icon/
+Icone "punaise", je ne sais plus ou je l'ai trouvï¿½ !
 */
 
 
 .lecture_mail {width:100%;background:url(ico_message.png) 0px 30px no-repeat #ffffff;}
-.lecture_mail .box_message {}
 
 .lecture_mail .col_gauche, .lecture_mail .col_gauche_info, .lecture_mail .col_gauche_pj  {
 float:left;
