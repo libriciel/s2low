@@ -1,6 +1,6 @@
  <h1> Mail - Système de mail sécurisé</h1>
 
- <?php use S2lowLegacy\Class\Helpers;
+ <?php use S2lowLegacy\Class\DatePicker;use S2lowLegacy\Class\Helpers;
 
  if (isset($_SESSION["last_message"])) : ?>
      <div class="alert alert-success" >
@@ -50,42 +50,11 @@
                 <div class="form-group">
                     <label for="send_date_from" class="col-md-2 control-label">Date d'envoi à partir du </label>
                     <div class="col-md-4 sub-date">
-                        <input id="send_date_from" name="SendDateFrom" type="hidden" value="<?php echo $SendDateFrom; ?>"/>
-                        <script type="text/javascript">
-                        //<![CDATA[
-                            obj_send_date_from=new DatePicker('send_date_from', 'fr');
-                            //]]>
-                        </script>
-                        <a href="#datepicker" id="datepicker_send_date_from_link" class="datepicker_link" onclick="javascript:obj_send_date_from.toggleDatePicker(); return false;">
-                                <?php
-                                if ($SendDateFrom) {
-                                    echo strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($SendDateFrom));
-                                } else {
-                                    echo "Choisir une date";
-                                }
-                                ?>
-                        </a>
-                        <div class="date_picker" style="display: none;" id="datepicker_send_date_from_calendar"></div>
+                        <?php echo (new DatePicker("SendDateFrom", $SendDateFrom))->show();?>
                     </div>
                     <label for="send_date_to" class="col-md-2 control-label">Date d'envoi jusqu'au</label>
                     <div class="col-md-4 sub-date">
-                        <input id="send_date_to" name="SendDateTo" type="hidden" value="<?php echo $SendDateTo; ?>"/>
-                        <script type="text/javascript">
-                        //<![CDATA[
-                            obj_send_date_to=new DatePicker('send_date_to', 'fr');
-                            //]]>
-                        </script>
-                        <a href="#datepicker" id="datepicker_send_date_to_link" class="datepicker_link" onclick="javascript:obj_send_date_to.toggleDatePicker(); return false;">
-                                <?php
-                                if ($SendDateTo) {
-                                    //setlocale(LC_TIME, "fr_FR.ISO-8859-15@euro");
-                                    echo strftime("%e %B %Y", Helpers :: ansiDateToTimestamp($SendDateTo));
-                                } else {
-                                    echo "Choisir une date";
-                                }
-                                ?>
-                            </a>
-                        <div class="date_picker" style="display: none;" id="datepicker_send_date_to_calendar"></div>
+                        <?php echo (new DatePicker("SendDateTo", $SendDateTo))->show();?>
                     </div>
                 </div>
                 <div class="form-group">

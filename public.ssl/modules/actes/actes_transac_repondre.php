@@ -61,8 +61,6 @@ $typeReponse = array(
 
 $doc = new HTMLLayout();
 
-$doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"" . Helpers::getLink("/custom/styles/date-picker.css\" />"));
-$doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/date-picker.js\" type=\"text/javascript\"></script>\n"));
 $doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 
 

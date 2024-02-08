@@ -1,15 +1,19 @@
 <?php
 
+use S2lowLegacy\Class\DatePicker;
 use S2lowLegacy\Class\Helpers;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 ?>
 
-<script src="/javascript/date-picker.js" type="text/javascript"></script>
 <script type="text/javascript" src="<?php echo Helpers::getLink("/jsmodules/jquery.js")?>"></script>
+<script type="text/javascript" src="<?php echo Helpers::getLink("/jsmodules/jqueryui.js")?>"></script>
 <script type="text/javascript" src="<?php echo Helpers::getLink("/jsmodules/select2.js")?>"></script>
 <script type="text/javascript" src="/javascript/zselect_s2low.js"></script>
-<link rel="stylesheet" type="text/css" href="/custom/styles/date-picker.css" />
 
+<?php $loader = new FilesystemLoader(__DIR__ . '/../templates');
+$twig = new Environment($loader); ?>
 
 <h1><?php hecho($title) ?></h1>
 
@@ -37,36 +41,17 @@ use S2lowLegacy\Class\Helpers;
         <div class="form-group">
             <label for="date_debut" class="col-md-3 control-label">Date de début</label>
             <div class="col-md-3">
-                <input id="date_debut" name="date_debut" type="hidden" value="<?php hecho($date_debut) ?>"/>
-                <script type="text/javascript">
-                    obj_date_debut = new DatePicker('date_debut', 'fr');
-                </script>
-                <a href="#datepicker" id="datepicker_date_debut_link" class="datepicker_link" onclick="javascript:obj_date_debut.toggleDatePicker(); return false;">
-                    <?php if ($date_debut) :?>
-                        <?php echo Helpers::TimestampToString(Helpers :: ansiDateToTimestamp($date_debut)); ?>
-                    <?php else : ?>
-                        Choisir une date
-                    <?php endif; ?>
-                </a>
-                <div class="date_picker" style="display: none;" id="datepicker_date_debut_calendar">
-                </div>
-
+            <?php
+            $datePickerDebut = new DatePicker("date_debut", $date_debut);
+            echo $datePickerDebut->show();
+            ?>
             </div>
             <label for="date-fin" class="col-md-3 control-label">Date de fin</label>
             <div class="col-md-3">
-                <input id="date_fin" name="date_fin" type="hidden" value="<?php hecho($date_fin) ?>"/>
-                <script type="text/javascript">
-                    obj_date_fin = new DatePicker('date_fin', 'fr');
-                </script>
-                <a href="#datepicker" id="datepicker_date_fin_link" class="datepicker_link" onclick="javascript:obj_date_fin.toggleDatePicker(); return false;">
-                    <?php if ($date_fin) :?>
-                        <?php echo Helpers ::TimestampToString(Helpers :: ansiDateToTimestamp($date_fin)); ?>
-                    <?php else : ?>
-                        Choisir une date
-                    <?php endif; ?>
-                </a>
-                <div class="date_picker" style="display: none;" id="datepicker_date_fin_calendar">
-                </div>
+            <?php
+            $datePickerFin = new DatePicker("date_fin", $date_debut);
+            echo $datePickerFin->show();
+            ?>
             </div>
         </div>
 

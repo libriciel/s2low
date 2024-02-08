@@ -60,8 +60,8 @@ class MailSecuriseController extends AbstractController
                     if (!$api) {
                         //pour list.php
                         $doc->addHeader("<script src=\"/javascript/mailList.js\" type=\"text/javascript\"></script>\n");
-                        $doc->addHeader("<script src=\"/javascript/date-picker.js\" type=\"text/javascript\"></script>\n");
-                        $doc->addHeader("<link rel=\"stylesheet\" type=\"text/css\" href=\"/custom/styles/date-picker.css\" />\n");
+                        $doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jquery.js") . '"></script>');
+                        $doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jqueryui.js") . '"></script>');
 
                         //pour create.php
                         $doc->addHeader("<script src=\"/javascript/mail.js\" type=\"text/javascript\"></script>\n");
