@@ -15,6 +15,7 @@
 - Correction d'erreurs css #1142
 - Correction d'erreurs html #1143
 - Correction d'erreurs javascript #1144
+- Correction du formatage des dates du bordereau d’acquittement des actes #1123
 
 ### Évolutions
 
