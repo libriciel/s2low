@@ -126,15 +126,6 @@ h2 > a {
 }
 
 .bs-callout {
-    border-left-color-ltr-source: physical;
-    border-left-color-rtl-source: physical;
-    border-left-color-value: #EEEEEE;
-    border-left-style-ltr-source: physical;
-    border-left-style-rtl-source: physical;
-    border-left-style-value: solid;
-    border-left-width-ltr-source: physical;
-    border-left-width-rtl-source: physical;
-    border-left-width-value: 5px;
     margin-bottom: 20px;
     margin-left: 0;
     margin-right: 0;
@@ -148,12 +139,6 @@ h2 > a {
 .bs-callout-info {
     background-color: #F0F7FD;
     border-bottom-color: #D0E3F0;
-    border-left-color-ltr-source: physical;
-    border-left-color-rtl-source: physical;
-    border-left-color-value: #D0E3F0;
-    border-right-color-ltr-source: physical;
-    border-right-color-rtl-source: physical;
-    border-right-color-value: #D0E3F0;
     border-top-color: #D0E3F0;
 }
 
@@ -317,7 +302,6 @@ span.form-control {
     border-radius: 100px;
     background-color: #666;
     padding-right: 10px;
-    color : #FFF;
 }
 
 .hidden-info {
