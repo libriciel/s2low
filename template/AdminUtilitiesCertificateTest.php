@@ -5,10 +5,10 @@
     </a><br>
 </p>
 
-<h2>Certificat à tester</h2>
+<h2 id="certificat_a_tester_desc">Certificat à tester</h2>
 
 <form action="/admin/utilities/do-test-certificate.php" method="POST" enctype="multipart/form-data">
-    <table class="data-table table table-striped" role="presentation">
+    <table class="data-table table table-striped" aria-describedby="certificat_a_tester_desc">
         <tr>
             <th scope="row"><label for="titre">Certificat (format PEM)</label></th>
             <td>

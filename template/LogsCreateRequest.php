@@ -10,10 +10,10 @@
         Votre demande concerne des transactions trop anciennes. Veuillez confirmer votre demande. Vous recevrez alors un email vous permettant de télécharger un fichier CSV contenant le résultat de la requête.
     </div>
 
-    <h2>Faire une demande</h2>
+    <h2 id = "faire_une_demande_desc">Faire une demande</h2>
 
     <form action="/common/logs_request.php" method="POST">
-    <table class="data-table table table-striped" role="presentation">
+    <table class="data-table table table-striped" aria-describedby="faire_une_demande_desc">
         <tr>
             <th scope="row">Date de début</th>
             <td><?php echo $this->fancyDate->getDateFrancais($date_debut) ?>

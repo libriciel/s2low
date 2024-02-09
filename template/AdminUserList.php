@@ -67,16 +67,17 @@ use S2lowLegacy\Class\Helpers;
     </table>
 </div>
 
-<h2>Modifier le certificat</h2>
+<h2 id="modif_desc">Modifier le certificat</h2>
 
 <div class="alert alert-danger">
-    <b>Attention</b> Ce formulaire permet de modifier le certificat pour tous les utilisateurs listés sur cette page.
+    <strong>Attention</strong> Ce formulaire permet de modifier le certificat pour tous les utilisateurs
+    listés sur cette page.
 </div>
 
 
 <form action="/admin/users/do_modif_bulk_certif.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="user_id" value="<?php hecho($user_id)?>"/>
-    <table class="data-table table table-striped" role="presentation">
+    <table class="data-table table table-striped" aria-describedby="modif_desc">
         <tr>
             <th scope="row"><label for="certificat">Nouveau certificat (partie publique au format PEM)</label></th>
             <td>

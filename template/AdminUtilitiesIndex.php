@@ -8,11 +8,11 @@
     <a class="btn btn-danger" href='/admin/utilities/send-critical-message.php'>Déclencher une erreur critique (test)</a>
 </div>
 
-<h2 >Envoi de message électronique global</h2>
+<h2 id="envoi_message_desc">Envoi de message électronique global</h2>
 <div id="global_message">
     <p class="alert-info alert">Utilisez le formulaire ci-dessous pour envoyer un message a l'ensemble des utilisateurs d'un module.</p>
         <form action="/admin/utilities/admin_send_global_message.php" method="post" name="form" onsubmit="return confirm('Voulez-vous vraiment envoyer le message à tous les utilisateurs de ce module');">
-            <table class="data-table table table-striped" role="presentation">
+            <table class="data-table table table-striped" aria-describedby="envoi_message_desc">
                 <tr>
                     <th scope="row"><label for="module">Module concerné</label></th>
                     <td>
