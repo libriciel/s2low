@@ -197,7 +197,11 @@ class ActesPdf implements IActesPdf
         );
 
         foreach ($textes as $texte) {
-            $pdf->myRow(array($texte[0],$texte[1],$texte[2]));
+            $pdf->myRow(
+                array($texte[0],$texte[1],$texte[2]),
+                false,
+                [1 => ["family" => 'Ubuntu',"style" => 'R',"size" => 8]]
+            );
             $this->switchColor($pdf);
         }
     }
