@@ -27,7 +27,7 @@ function toggle_upload(id, image)
 {
     var elt = document.getElementById(id);
 
-    html = '<img id="progress_bar_img" alt="Barre de progression" /><br />';
+    let html = '<img id="progress_bar_img" alt="Barre de progression" /><br />';
     html += 'Soumission du formulaire et controle en cours.<br />';
     html += 'Merci de patienter...';
 

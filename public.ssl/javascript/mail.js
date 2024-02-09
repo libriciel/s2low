@@ -32,8 +32,8 @@ function checkFormCreateMail()
 function checkpsw()
 {
      var returnval;
-     pswone = document.getElementById("psw1");
-     pswtwo = document.getElementById("psw2");
+     var pswone = document.getElementById("psw1");
+     var pswtwo = document.getElementById("psw2");
     if ( pswone.value == pswtwo.value) {
         returnval = true;
     } else {

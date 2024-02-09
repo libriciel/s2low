@@ -10,8 +10,8 @@ function hide_all()
 
 function toggle_all(style, symbol)
 {
-    done = false;
-    i = 1;
+    let done = false;
+    let i = 1;
 
     while (! done) {
         var content = document.getElementById("MailTrans_" + i);
@@ -46,7 +46,7 @@ function GereChkbox(conteneur, a_faire)
     var blnEtat = null;
     var Tab = document.getElementsByTagName("input");
     for (var i = 0; i < Tab.length; i++) {
-        Chckbox = Tab[i];
+        let Chckbox = Tab[i];
         if (Chckbox.getAttribute("type") == "checkbox") {
             blnEtat = (a_faire == '0') ? false : (a_faire == '1') ? true : (Chckbox.checked) ? false : true;
             Chckbox.checked = blnEtat;

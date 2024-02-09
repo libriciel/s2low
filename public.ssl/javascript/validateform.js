@@ -34,19 +34,19 @@ function findObj(n, d)
 function validateForm()
 {
  //v4.0
-    var i, p, q, nm, test, num, min, max, errors = '', args = validateForm.arguments;
+    var i, p, q, nm, test, num, min, max, errors = '', args = validateForm.arguments,pos;
 
     for (i = 0; i < (args.length - 2); i += 3) {
         test = args[i + 2];
-        val = findObj(args[i]);
+        let val = findObj(args[i]);
         if (val) {
           //nm=val.name;
             nm = args[i + 1];
             if ((val = val.value) != "") {
                 if (test.indexOf('isDatePasse') != -1) {
-                    today = new Date();
+                    let today = new Date();
                     num = val.split('-');
-                    date_choisi = new Date(0);
+                    let date_choisi = new Date(0);
                     date_choisi.setFullYear(num[0],num[1] - 1,num[2]);
                     if (today < date_choisi) {
                         errors += '- ' + nm + ' ne doit pas être une date dans le futur.\n';
@@ -85,7 +85,7 @@ function validateForm()
 
                 if ((pos = test.indexOf('maxLength')) != -1) {
                     p = test.indexOf('!');
-                    maxlength = parseInt(test.substring(pos + 9,p));
+                    let maxlength = parseInt(test.substring(pos + 9,p));
                     if (val.length > maxlength) {
                         errors += '- ' + nm + ' est limité à ' + maxlength + ' caractères maxi.\n';
                     }
@@ -93,8 +93,8 @@ function validateForm()
 
                 if ((pos = test.indexOf('RegExp')) != -1) {
                     p = test.indexOf('#');
-                    pattern = test.substring(pos + 6, p);
-                    regexp = new RegExp(pattern);
+                    let pattern = test.substring(pos + 6, p);
+                    let regexp = new RegExp(pattern);
                     if (! regexp.test(val)) {
                         errors += '- ' + nm + ' ne correspond pas au motif de caractères autorisés.\n';
                     }
