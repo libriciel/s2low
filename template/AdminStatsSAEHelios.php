@@ -11,9 +11,9 @@ use S2lowLegacy\Class\helios\HeliosStatusSQL;
     <a href="/admin/stats-sae.php" class="btn btn-default">Retour statistiques globale SAE</a>
 </p>
 
-<h2>Détail par collectivité</h2>
+<h2 id="detail_coll_desc">Détail par collectivité</h2>
 
-<table class="data-table table table-striped ">
+<table class="data-table table table-striped " aria-describedby="detail_coll_desc">
 
     <tr>
         <th scope="col">Collectivités</th>
@@ -32,7 +32,9 @@ use S2lowLegacy\Class\helios\HeliosStatusSQL;
         </th>
         <?php foreach ($status_list as $status_id) : ?>
             <td>
-                <span class="label label-<?php echo ($authority_info['status'][$status_id] ?? 0) ? "danger" : "success" ?>">
+                <span class="label label-<?php
+                echo ($authority_info['status'][$status_id] ?? 0) ? 'danger' : 'success'
+                ?>">
                     <?php echo $authority_info['status'][$status_id] ?? 0;?>
                 </span>
 

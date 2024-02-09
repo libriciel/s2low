@@ -1,17 +1,18 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\PagerHTML;
 use S2lowLegacy\Lib\FancyDate;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-require_once(__DIR__ . "/../../init/init-www-helios.php");
+require_once(__DIR__ . '/../../init/init-www-helios.php');
 
 if ($userInfo['role'] != 'SADM') {
-    $_SESSION["error"] = "Super admin only !";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    $_SESSION['error'] = 'Super admin only !';
+    header('Location: ' . Helpers::getLink('connexion-status'));
     exit();
 }
 
@@ -50,12 +51,12 @@ ob_start();
         <h1>Statistiques (super admin)</h1>
 
         <div class="alert alert-warning">
-            Attention, cette page n'est pas optimisée et ralentit l'ensemble de la plateforme. Merci d'utiliser avec la plus grande
-            parcimonie pour les besoins du service.
+            Attention, cette page n'est pas optimisée et ralentit l'ensemble de la plateforme.
+            Merci d'utiliser avec la plus grande parcimonie pour les besoins du service.
         </div>
 
-        <h2>Actes</h2>
-        <table  class="data-table table table-striped ">
+        <h2 id="desc_actes">Actes</h2>
+        <table  class="data-table table table-striped " aria-describedby="desc_actes">
             <tr>
                 <th scope="col">Mois</th>
                 <th scope="col">Nombre de transactions</th>
@@ -68,8 +69,8 @@ ob_start();
             <?php endforeach ?>
         </table>
 
-        <h2>Hélios</h2>
-        <table  class="data-table table table-striped ">
+        <h2 id="desc_helios">Hélios</h2>
+        <table  class="data-table table table-striped " aria-describedby="desc_helios">
             <tr>
                 <th scope="col">Mois</th>
                 <th scope="col">Nombre de transactions</th>

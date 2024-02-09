@@ -1,11 +1,13 @@
 <?php
 
+use JetBrains\PhpStorm\NoReturn;
 use S2lowLegacy\Class\actes\ActesAntivirusWorker;
 use S2lowLegacy\Class\actes\ActesScriptHelper;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\Connexion;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\ModulePermission;
@@ -14,19 +16,23 @@ use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\WorkerScript;
 
-list($workerScript, $actesTransactionsSQL, $actesScriptHelper, $connexion ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($workerScript, $actesTransactionsSQL, $actesScriptHelper, $connexion ) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [WorkerScript::class, ActesTransactionsSQL::class, ActesScriptHelper::class,Connexion::class]
     );
 
-$actionHtml = "";
+$actionHtml = '';
 
 
-function return_error_api($error_message)
+/**
+ * @param $error_message
+ * @return void
+ */
+#[NoReturn] function return_error_api($error_message): void
 {
-    $return_error = Helpers :: getVarFromGet("url_return");
-    $return_error = str_replace("%%ERROR%%", 1, $return_error);
-    $return_error = str_replace("%%MESSAGE%%", $error_message, $return_error);
+    $return_error = Helpers :: getVarFromGet('url_return');
+    $return_error = str_replace('%%ERROR%%', 1, $return_error);
+    $return_error = str_replace('%%MESSAGE%%', $error_message, $return_error);
     header("Location:  $return_error");
     exit;
 }
@@ -34,7 +40,7 @@ function return_error_api($error_message)
 
 // Instanciation du module courant
 $module = new Module();
-if (!$module->initByName("actes")) {
+if (!$module->initByName('actes')) {
     return_error_api("Erreur d'intialisation du module");
 }
 
@@ -44,8 +50,8 @@ if (!$me->authenticate()) {
     return_error_api("Échec de l'authentification");
 }
 
-if (!$module->isActive() || !$me->checkDroit($module->get("name"), 'TT')) {
-    return_error_api("Accès refusé");
+if (!$module->isActive() || !$me->checkDroit($module->get('name'), 'TT')) {
+    return_error_api('Accès refusé');
 }
 
 $rgsConnexion = new RgsConnexion();
@@ -55,7 +61,7 @@ if (! $rgsConnexion->isRgsConnexion()) {
 
 
 
-$id = Helpers :: getVarFromGet("id");
+$id = Helpers :: getVarFromGet('id');
 if (empty($id)) {
     return_error_api("Pas d'identifiant de transaction spécifié");
 }
@@ -67,17 +73,17 @@ if (! $trans->init()) {
     return_error_api("Erreur d'initialisation de la transaction.");
 }
 
-$envelope = new ActesEnvelope($trans->get("envelope_id"));
+$envelope = new ActesEnvelope($trans->get('envelope_id'));
 $envelope->init();
 
-$owner = new User($envelope->get("user_id"));
+$owner = new User($envelope->get('user_id'));
 $owner->init();
 
 $serviceUser = new ServiceUser(DatabasePool::getInstance());
-$permission = new ModulePermission($serviceUser, "actes");
+$permission = new ModulePermission($serviceUser, 'actes');
 
 if (! $permission->canView($me, $owner)) {
-    return_error_api("Accès refusé");
+    return_error_api('Accès refusé');
 }
 
 $msg = "La transaction a été postée par l'agent télétransmetteur {$me->getPrettyName()}";
@@ -92,11 +98,11 @@ $workerScript->putJobByClassName(ActesAntivirusWorker::class, $id);
 
 $msg4journal = $actesScriptHelper->getMessage($id, $msg);
 
-Log::newEntry(LOG_ISSUER_NAME, $msg4journal, 1, false, 'USER', "actes", false, $connexion->getId());
+Log::newEntry(LOG_ISSUER_NAME, $msg4journal, 1, false, 'USER', 'actes', false, $connexion->getId());
 
-$return_ok = Helpers :: getVarFromGet("url_return");
-$return_ok = str_replace("%%ERROR%%", 0, $return_ok);
-$return_ok = str_replace("%%MESSAGE%%", "", $return_ok);
+$return_ok = Helpers :: getVarFromGet('url_return');
+$return_ok = str_replace('%%ERROR%%', 0, $return_ok);
+$return_ok = str_replace('%%MESSAGE%%', '', $return_ok);
 
 header("Location:  $return_ok");
 exit;

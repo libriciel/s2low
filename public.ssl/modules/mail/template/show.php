@@ -8,22 +8,23 @@
         <h2>Détail du message</h2>
 
     <div id="list_area">
-            <table id="message-detail" class="data-table table table-bordered">
+            <table id="message-detail" class="data-table table table-bordered" role="presentation">
             <?php
 
             use S2lowLegacy\Class\CloudStorage;
             use S2lowLegacy\Class\CloudStorageFactory;
             use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
+            use S2lowLegacy\Lib\ObjectInstancierFactory;
 
             $mailToSize = 0;
             $mailCcSize = 0;
             $mailBccSize = 0;
             foreach ($mailEmisArray as $mailEmis) {
-                if ($mailEmis->getTypeEnvoi() == "mailTo") {
+                if ($mailEmis->getTypeEnvoi() == 'mailTo') {
                     $mailToSize++;
-                } elseif ($mailEmis->getTypeEnvoi() == "mailCC") {
+                } elseif ($mailEmis->getTypeEnvoi() == 'mailCC') {
                     $mailCcSize++;
-                } elseif ($mailEmis->getTypeEnvoi() == "mailBCC") {
+                } elseif ($mailEmis->getTypeEnvoi() == 'mailBCC') {
                     $mailBccSize++;
                 }
             }?>
@@ -33,13 +34,13 @@
             <?php
             $isFirstTo = true;
             foreach ($mailEmisArray as $mailEmis) {
-                if ($mailEmis->getTypeEnvoi() == "mailTo") {
+                if ($mailEmis->getTypeEnvoi() == 'mailTo') {
                     if ($isFirstTo) {
                         $isFirstTo = false;
                     } else {
                         echo '<tr>';
                     }
-                    echo '<td>' . get_hecho($mailEmis->getEmail()) . '';
+                    echo '<td>' . get_hecho($mailEmis->getEmail());
 
                     if ($mailEmis->getAck() == 't') {
                         echo '<span class="alert alert-info">Réception confirmée le ' . $mailEmis->getAckDate() . '</span></td></tr>';
@@ -54,14 +55,14 @@
             <?php
             $isFirstCc = true;
             foreach ($mailEmisArray as $mailEmis) {
-                if ($mailEmis->getTypeEnvoi() == "mailCC") {
+                if ($mailEmis->getTypeEnvoi() == 'mailCC') {
                     if ($isFirstCc) {
                         $isFirstCc = false;
                     } else {
                         echo '<tr>';
                     }
 
-                    echo '<td>' . get_hecho($mailEmis->getEmail()) . '';
+                    echo '<td>' . get_hecho($mailEmis->getEmail());
 
                     if ($mailEmis->getAck() == 't') {
                         echo '<span class="alert alert-info">Réception confirmée le ' . $mailEmis->getAckDate() . '</span></td></tr>';
@@ -76,14 +77,14 @@
             <?php
             $isFirstBcc = true;
             foreach ($mailEmisArray as $mailEmis) {
-                if ($mailEmis->getTypeEnvoi() == "mailBCC") {
+                if ($mailEmis->getTypeEnvoi() == 'mailBCC') {
                     if ($isFirstBcc) {
                         $isFirstBcc = false;
                     } else {
                         echo '<tr>';
                     }
 
-                    echo '<td>' . get_hecho($mailEmis->getEmail()) . '';
+                    echo '<td>' . get_hecho($mailEmis->getEmail());
 
                     if ($mailEmis->getAck() == 't') {
                         echo '<span class="alert alert-info">Réception confirmée le ' . $mailEmis->getAckDate() . '</span></td></tr>';
@@ -97,7 +98,7 @@
                 <td><?php hecho($mailTransaction->getObjet()); ?></td>
             </tr>
             <tr>
-                <th id="mail-date"><dt>Date d'envoi</th>
+                <th id="mail-date">Date d'envoi</th>
                 <td><?php echo $mailTransaction->getDateEvnoi(); ?>
             </tr>
             <tr>
@@ -109,15 +110,15 @@
     if ($mailIncludeFileArray) {
         //C'est super dégeulasse...
         /** @var CloudStorage $cloudStorage */
-        $cloudStorage  = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()
+        $cloudStorage  = ObjectInstancierFactory::getObjetInstancier()
             ->get(CloudStorageFactory::class)
             ->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
         $mailzip_filepath = $cloudStorage->getPath($mailTransaction->getId());
 
 
         ?>
-            <h2>Pièces jointes&nbsp;:</h2>
-            <table class="transactions_list table table-bordered table-striped">
+            <h2 id ="pj_desc">Pièces jointes&nbsp;:</h2>
+            <table class="transactions_list table table-bordered table-striped" aria-describedby="pj_desc">
                 <thead>
                     <tr>
                         <th id="file">Nom du fichier</th>
@@ -148,17 +149,20 @@
     <?php } ?>  
     <?php if ($mailErrors != false) {
         echo "<h3>L'envoi des messages a echoué</h3>";
+        echo '<dl>';
+
         for ($i = 0; $i < count($mailErrors); $i++) { ?>
              <dt><a href="#tedetis" onclick="toggle_mail_error(<?php echo $i; ?>);" id="expander_<?php echo $i; ?>" class="expander">+</a>
                 Adresse email : <?php echo $mailErrors[$i]['email']; ?> </dt>
              <dd id="mailError_<?php echo $i;  ?>" class="mailerror" style="display:none"> 
-             <table class="transactions_list" role="presentation">
+             <table class="transactions_list" role="presentation" aria-describedby="mailError_<?php echo $i;  ?>">
                 <td>Message retourné : </td>
                 <td><?php echo $mailErrors[$i]['message_retour']; ?> </td>
              </table>
             </dd>
             <?php
         }
+        echo '</dl>';
     } ?>
 
 </div>

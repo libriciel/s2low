@@ -5,11 +5,11 @@ use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\PagerHTML;
 
-require_once(__DIR__ . "/../../../../init/init-www-helios.php");
+require_once(__DIR__ . '/../../../../init/init-www-helios.php');
 
 if ($userInfo['role'] != 'SADM') {
-    $_SESSION["error"] = "Super admin only !";
-    header("Location: " . WEBSITE);
+    $_SESSION['error'] = 'Super admin only !';
+    header('Location: ' . WEBSITE);
     exit();
 }
 
@@ -41,14 +41,16 @@ ob_start();
 ?>
     <div id="content">
         <h1>Helios - Dématérialisation de documents financiers</h1>
-        <p id="back-user-btn"><a href="/admin/index.php" class="btn btn-default" title="">Retour console d'administration</a></p>
+        <p id="back-user-btn">
+            <a href="/admin/index.php" class="btn btn-default" title="">Retour console d'administration</a>
+        </p>
         <h2><?php echo $nb_responses_error ?> fichiers reçus en erreur</h2>
 
-    <div class="alert alert-info">
+    <div id="list_desc" class="alert alert-info">
         Liste des fichiers trouvés sur la plateforme Hélios mais dont l'analyse a échoué.
     </div>
 
-        <table class="data-table table table-striped">
+        <table class="data-table table table-striped" aria-describedby="list_desc">
             <tr>
                 <th scope="col">Nom du fichier</th>
                 <th scope="col">Date de récupération</th>
@@ -61,8 +63,13 @@ ob_start();
             foreach ($errorFileIterator as $errorFile) :
                 ?>
                 <tr>
-                    <td><a href="/modules/helios/admin/download-response.php?file=<?php echo urlencode($errorFile->getFilename()) ?>"><?php echo $errorFile->getFilename() ?></a></td>
-                    <td><?php echo date("Y-m-d H:i:s", $errorFile->getCTime()) ?></td>
+                    <td>
+                        <a href="/modules/helios/admin/download-response.php?file=<?php
+                        echo urlencode($errorFile->getFilename()) ?>">
+                            <?php echo $errorFile->getFilename() ?>
+                        </a>
+                    </td>
+                    <td><?php echo date('Y-m-d H:i:s', $errorFile->getCTime()) ?></td>
                     <td><?php echo ceil($errorFile->getSize() / 1024) ?> ko</td>
                     <td class="text-center">
                         <a class="btn btn-danger"

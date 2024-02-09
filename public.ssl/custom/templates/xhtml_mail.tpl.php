@@ -15,7 +15,7 @@
     <body>
         <div id="bandeau_s2low" class="container">
             <a href='<?php echo WEBSITE ?>'>
-                <img src="/custom/images/bandeau_s2low.jpg"  />
+                <img src="/custom/images/bandeau_s2low.jpg" alt="bandeau s2low" />
             </a>
         </div>
 

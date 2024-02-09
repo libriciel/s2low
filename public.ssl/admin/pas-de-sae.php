@@ -5,24 +5,25 @@ use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\PagerHTML;
 
-require_once(__DIR__ . "/../../init/init-www-helios.php");
+require_once(__DIR__ . '/../../init/init-www-helios.php');
 
 if ($userInfo['role'] != 'SADM') {
-    $_SESSION["error"] = "Super admin only !";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    $_SESSION['error'] = 'Super admin only !';
+    header('Location: ' . Helpers::getLink('connexion-status'));
     exit();
 }
 
 
-$sql = " SELECT DISTINCT users.email,authorities.name,authority_groups.name as group_name from users " .
-            " JOIN users_perms ON users_perms.user_id=users.id " .
-            " JOIN modules ON users_perms.module_id=modules.id AND modules.name='actes' AND (users_perms.perm='RO' OR users_perms.perm='RW')" .
-            " JOIN authorities ON authorities.id=users.authority_id " .
-            " JOIN authority_groups ON authorities.authority_group_id = authority_groups.id " .
-            " JOIN modules_authorities ON authorities.id=modules_authorities.authority_id " .
-            " JOIN modules m2 ON modules_authorities.module_id=m2.id AND m2.name='actes'" .
-            " WHERE users.status = 1 " .
-            "ORDER BY authority_groups.name, authorities.name, users.email";
+$sql = ' SELECT DISTINCT users.email,authorities.name,authority_groups.name as group_name from users ' .
+    ' JOIN users_perms ON users_perms.user_id=users.id ' .
+    " JOIN modules ON users_perms.module_id=modules.id AND modules.name='actes' " .
+    "AND (users_perms.perm='RO' OR users_perms.perm='RW')" .
+    ' JOIN authorities ON authorities.id=users.authority_id ' .
+    ' JOIN authority_groups ON authorities.authority_group_id = authority_groups.id ' .
+    ' JOIN modules_authorities ON authorities.id=modules_authorities.authority_id ' .
+    " JOIN modules m2 ON modules_authorities.module_id=m2.id AND m2.name='actes'" .
+    ' WHERE users.status = 1 ' .
+    'ORDER BY authority_groups.name, authorities.name, users.email';
 
 
 $user_list = $sqlQuery->query($sql);
@@ -31,13 +32,13 @@ $user_list = $sqlQuery->query($sql);
 $csv = isset($_GET['csv']) && $_GET['csv'];
 
 if ($csv) {
-    header("Content-type: text/csv; charset=iso-8859-1");
-    header("Content-disposition: attachment; filename=ancien-system-notif.csv");
-    header("Expires: 0");
-    header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
-    header("Pragma: public");
+    header('Content-type: text/csv; charset=iso-8859-1');
+    header('Content-disposition: attachment; filename=ancien-system-notif.csv');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate, post-check=0,pre-check=0');
+    header('Pragma: public');
 
-    $out = fopen("php://output", 'w');
+    $out = fopen('php://output', 'w');
     foreach ($user_list as $user_info) {
         fputcsv($out, $user_info);
     }
@@ -67,13 +68,14 @@ ob_start();
     <div id="content">
         <h1>Client qui n'ont pas de SAE</h1>
 
-    <div class="alert alert-info">
-        Sur cette page, on ne présente que les collectivités qui n'ont pas de SAE et qui ont des actes de plus de 26 mois
+    <div id="table_content_desc" class="alert alert-info">
+        Sur cette page, on ne présente que les collectivités qui n'ont pas de SAE et qui ont des actes de plus
+        de 26 mois
     </div>
 <p>
     <a href="/admin/ancien_systeme_notif.php?csv=true" class="btn btn-primary">CSV</a>
 </p>
-<table class="data-table table table-striped">
+<table class="data-table table table-striped" aria-describedby="table_content_desc">
     <tr>
         <th scope="col">Collectivité</th>
         <th scope="col">Groupes</th>

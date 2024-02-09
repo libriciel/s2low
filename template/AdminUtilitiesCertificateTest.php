@@ -8,7 +8,7 @@
 <h2>Certificat à tester</h2>
 
 <form action="/admin/utilities/do-test-certificate.php" method="POST" enctype="multipart/form-data">
-    <table class="data-table table table-striped">
+    <table class="data-table table table-striped" role="presentation">
         <tr>
             <th scope="row"><label for="titre">Certificat (format PEM)</label></th>
             <td>
@@ -26,9 +26,9 @@
 
 
 <?php if ($certificate_info) : ?>
-<h2>Analyse du certificat</h2>
+<h2 id="analyse_cert_desc">Analyse du certificat</h2>
 
-    <table class="data-table table table-striped">
+    <table class="data-table table table-striped" aria-describedby="analyse_cert_desc">
         <tr>
             <th scope="row">Certificat RGS</th>
             <td>
@@ -64,9 +64,9 @@
         </tr>
     </table>
 
-<h2>Informations complémentaires</h2>
+<h2 id="info_compl_desc">Informations complémentaires</h2>
 
-    <table class="data-table table table-striped">
+    <table class="data-table table table-striped" aria-describedby="info_compl_desc">
         <?php foreach ($certificate_info['certificate_info'] as $key => $value) : ?>
         <tr>
             <th scope="row"><?php hecho($key)?></th>

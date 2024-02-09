@@ -17,7 +17,7 @@
 
         <div id="bandeau_s2low" class="container">
             <a href='<?php echo WEBSITE ?>'>
-                <img src="/custom/images/bandeau_s2low.jpg"  />
+                <img src="/custom/images/bandeau_s2low.jpg"  alt ="bandeau s2low"/>
             </a>
         </div>
         <div class="container">
@@ -34,7 +34,8 @@
                     <h1>Pré-requis S²LOW&nbsp;</h1>
                     <h2 class="home">Navigateurs compatibles</h2>
                     <p class="home">
-                        S²LOW est développé principalement pour  <b>Google Chrome</b> et  <b>Mozilla Firefox</b>
+                        S²LOW est développé principalement pour  <strong>Google Chrome</strong> et
+                        <strong>Mozilla Firefox</strong>
                     </p>
                     <p class="home">
                         S²LOW assure la compatibilité avec :

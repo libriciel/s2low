@@ -13,17 +13,17 @@
     <h2>Faire une demande</h2>
 
     <form action="/common/logs_request.php" method="POST">
-    <table class="data-table table table-striped">
+    <table class="data-table table table-striped" role="presentation">
         <tr>
             <th scope="row">Date de début</th>
             <td><?php echo $this->fancyDate->getDateFrancais($date_debut) ?>
-            <input type="hidden" name="date_debut" value="<?php echo $date_debut ?>"?>
+            <input type="hidden" name="date_debut" value="<?php echo $date_debut ?>" ?>
             </td>
         </tr>
         <tr>
             <th scope="row">Date de fin</th>
             <td><?php echo $this->fancyDate->getDateFrancais($date_fin) ?>
-                <input type="hidden" name="date_fin" value="<?php echo $date_fin ?>"?>
+                <input type="hidden" name="date_fin" value="<?php echo $date_fin ?>" ?>
             </td>
         </tr>
 

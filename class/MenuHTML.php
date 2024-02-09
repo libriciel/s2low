@@ -62,11 +62,11 @@ class MenuHTML
 
                         <?php if ($nb_days_before_certificate_expires < self::NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_DANGER) :?>
                             <div class="alert alert-danger message-admin">
-                                <b>Votre certificat expire dans <?php echo $nb_days_before_certificate_expires ?> jours !</b>
+                                <strong>Votre certificat expire dans <?php echo $nb_days_before_certificate_expires ?> jours !</strong>
                             </div>
                         <?php elseif ($nb_days_before_certificate_expires < self::NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_WARNING) :?>
                             <div class="alert alert-warning message-admin">
-                                <b>Votre certificat expire dans <?php echo $nb_days_before_certificate_expires ?> jours !</b>
+                                <strong>Votre certificat expire dans <?php echo $nb_days_before_certificate_expires ?> jours !</strong>
                             </div>
                         <?php endif; ?>
 

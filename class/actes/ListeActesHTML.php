@@ -6,6 +6,9 @@ use S2lowLegacy\Class\DatePicker;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Lib\FancyDate;
 
+/**
+ *
+ */
 class ListeActesHTML
 {
     private $allCollectivite;
@@ -27,21 +30,42 @@ class ListeActesHTML
      * @var \S2lowLegacy\Lib\FancyDate
      */
     private FancyDate $fancyDate;
-    private string $sortWay = "desc";
+    private string $sortWay = 'desc';
 
-    public function addCollectivite($allCollectivite, $filtreAuthority)
+    /**
+     * @param $allCollectivite
+     * @param $filtreAuthority
+     * @return void
+     */
+    public function addCollectivite($allCollectivite, $filtreAuthority): void
     {
         $this->allCollectivite = $allCollectivite;
         $this->filtreAuthority = $filtreAuthority;
     }
 
-    public function addActionBox()
+    /**
+     * @return void
+     */
+    public function addActionBox(): void
     {
         $this->actionBox = true;
     }
 
-    public function setDate($fmin_submission_date, $fmin_ack_date, $fmax_submission_date, $fmax_ack_date, FancyDate $fancyDate)
-    {
+    /**
+     * @param $fmin_submission_date
+     * @param $fmin_ack_date
+     * @param $fmax_submission_date
+     * @param $fmax_ack_date
+     * @param \S2lowLegacy\Lib\FancyDate $fancyDate
+     * @return void
+     */
+    public function setDate(
+        $fmin_submission_date,
+        $fmin_ack_date,
+        $fmax_submission_date,
+        $fmax_ack_date,
+        FancyDate $fancyDate
+    ): void {
         $this->fmin_submission_date = $fmin_submission_date;
         $this->fmin_ack_date = $fmin_ack_date;
         $this->fmax_submission_date = $fmax_submission_date;
@@ -49,7 +73,18 @@ class ListeActesHTML
         $this->fancyDate = $fancyDate;
     }
 
-    public function setCritere($transTypes, $ftype, $transNatures, $fnature, $status, $fstatus, $fnum, $objet)
+    /**
+     * @param $transTypes
+     * @param $ftype
+     * @param $transNatures
+     * @param $fnature
+     * @param $status
+     * @param $fstatus
+     * @param $fnum
+     * @param $objet
+     * @return void
+     */
+    public function setCritere($transTypes, $ftype, $transNatures, $fnature, $status, $fstatus, $fnum, $objet): void
     {
         $this->transTypes = $transTypes;
         $this->ftype = $ftype;
@@ -61,12 +96,16 @@ class ListeActesHTML
         $this->objet = $objet;
     }
 
-    public function display($enveloppe)
+    /**
+     * @param $enveloppe
+     * @return void
+     */
+    public function display($enveloppe): void
     {
         $this->displayForm();
         ?>
-        <script type="text/javascript" src="<?php echo Helpers::getLink("/jsmodules/jquery.js")?>"></script>
-        <script type="text/javascript" src="<?php echo Helpers::getLink("/jsmodules/select2.js")?>"></script>
+        <script type="text/javascript" src="<?php echo Helpers::getLink('/jsmodules/jquery.js')?>"></script>
+        <script type="text/javascript" src="<?php echo Helpers::getLink('/jsmodules/select2.js')?>"></script>
         <script type="text/javascript" src="/javascript/zselect_s2low.js"></script>   
         
         <h2>
@@ -85,20 +124,27 @@ class ListeActesHTML
         }
     }
 
-    public function setSortWay(string $sortWay)
+    /**
+     * @param string $sortWay
+     * @return void
+     */
+    public function setSortWay(string $sortWay): void
     {
         $this->sortWay = $sortWay;
     }
 
-    public function displayForm()
+    /**
+     * @return void
+     */
+    public function displayForm(): void
     {
         ?>
         <?php if ($this->actionBox) : ?>
         <div id="actions_area">
             <h2>Actions</h2>
-            <a href="<?php echo  Helpers::getLink("/modules/actes/actes_transac_add.php");?>" class="btn btn-primary">Créer une transaction</a>
-            <a href="<?php echo  Helpers::getLink("/modules/actes/actes_transac_import.php");?>" class="btn btn-primary">Importer une enveloppe</a>
-            <a href="<?php echo  Helpers::getLink("/modules/actes/actes_batch_handle.php");?>" class="btn btn-primary">Traitement par lots</a>
+            <a href="<?php echo  Helpers::getLink('/modules/actes/actes_transac_add.php');?>" class="btn btn-primary">Créer une transaction</a>
+            <a href="<?php echo  Helpers::getLink('/modules/actes/actes_transac_import.php');?>" class="btn btn-primary">Importer une enveloppe</a>
+            <a href="<?php echo  Helpers::getLink('/modules/actes/actes_batch_handle.php');?>" class="btn btn-primary">Traitement par lots</a>
         </div>
         <?php endif;?>
     <h2>
@@ -107,21 +153,21 @@ class ListeActesHTML
         <button id="collapse-all" onclick="javascript:collapse_area('filtering-area');" class="toggle-action">Tout replier<span class="hidden-info">le formulaire de filtrage</span></button>
     </h2>
     <div id="filtering-area" >
-    <form action="<?php echo Helpers::getLink("/modules/actes/index.php"); ?>" method="get" role="form" class="form-horizontal">
+    <form action="<?php echo Helpers::getLink('/modules/actes/index.php'); ?>" method="get" role="form" class="form-horizontal">
             <div class="form-group">
                 <label for="type" class="col-md-3 control-label">Type de transaction</label>
                 <div class="col-md-3">
-                    <?php $this->getHTMLSelect("type", $this->transTypes, $this->ftype) ?>
+                    <?php $this->getHTMLSelect('type', $this->transTypes, $this->ftype) ?>
                 </div>
                 <label for="nature" class="col-md-3 control-label">Nature d'actes</label>
                 <div class="col-md-3">
-                    <?php $this->getHTMLSelect("nature", $this->transNatures, $this->fnature) ?>
+                    <?php $this->getHTMLSelect('nature', $this->transNatures, $this->fnature) ?>
                 </div>
             </div>
             <div class="form-group">
                 <label for="status" class="col-md-3 control-label">État</label>
                 <div class="col-md-3">
-                    <?php $this->getHTMLSelect("status", $this->status, $this->fstatus) ?>
+                    <?php $this->getHTMLSelect('status', $this->status, $this->fstatus) ?>
                 </div>
                 <label for="number" class="col-md-3 control-label">Le numéro contient</label>
                 <div class="col-md-3">
@@ -158,13 +204,13 @@ class ListeActesHTML
             <div class="form-group">
                 <label for="authority" class="col-md-3 control-label">Collectivité</label>
                 <div class="col-md-3">
-                    <?php $this->getHTMLSelect("authority", $this->allCollectivite, $this->filtreAuthority, "zselect_authorities") ?>
+                    <?php $this->getHTMLSelect('authority', $this->allCollectivite, $this->filtreAuthority, 'zselect_authorities') ?>
                 </div>
             </div>
             <?php endif;?>
             <div class="form-group">
                 <button type="submit" class="col-md-offset-3 col-md-3 btn btn-default">Filtrer</button>
-                <a href="<?php echo Helpers::getLink("/modules/actes/index.php"); ?>" class="col-md-offset-3 col-md-3 btn btn-default">
+                <a href="<?php echo Helpers::getLink('/modules/actes/index.php'); ?>" class="col-md-offset-3 col-md-3 btn btn-default">
                     Remise à zéro
                 </a>
             </div>
@@ -175,13 +221,20 @@ class ListeActesHTML
         <?php
     }
 
-    public function getHTMLSelect($name, $data, $selectedValue, $css_class = '')
+    /**
+     * @param $name
+     * @param $data
+     * @param $selectedValue
+     * @param $css_class
+     * @return void
+     */
+    public function getHTMLSelect($name, $data, $selectedValue, $css_class = ''): void
     {
         ?>
         <select name="<?php echo $name ?>" id="<?php echo $name ?>" class="form-control <?php echo $css_class?>">
             <option value="">Choisissez</option>
             <?php foreach ($data ?? [] as $key => $val) : ?>
-                <option value="<?php echo $key ?>" <?php echo (strcmp($key, $selectedValue) == 0) ? 'selected="selected"' : "";?>>
+                <option value="<?php echo $key ?>" <?php echo (strcmp($key, $selectedValue) == 0) ? 'selected="selected"' : '';?>>
                     <?php hecho($val)?>
                 </option>
             <?php endforeach;?>
@@ -189,23 +242,28 @@ class ListeActesHTML
         <?php
     }
 
-    private function datePicker($date, $name)
+    /**
+     * @param $date
+     * @param $name
+     * @return void
+     */
+    private function datePicker($date, $name): void
     {
         $datePicker = new DatePicker($name, $date);
         echo $datePicker->show();
     }
 
-    public function displayList($envelopes)
+    /**
+     * @param $envelopes
+     * @return void
+     */
+    public function displayList($envelopes): void
     {
         ?>
 
                 <div id="enveloppe-area">
-                    <form id="div_chck" onsubmit="return afficheWarning()" action="<?php echo Helpers::getLink("/modules/actes/actes_transac_close.php"); ?>" method="post">
+                    <form id="div_chck" onsubmit="return afficheWarning()" action="<?php echo Helpers::getLink('/modules/actes/actes_transac_close.php'); ?>" method="post">
                         <div class="form-group">
-<!--                            <div id="display-actions">  
-                                <a href="#tedetis" onclick="javascript:show_all();" title="Déplier toutes les enveloppes" class="btn btn-default">Tout déplier</a>
-                                <a href="#tedetis" onclick="javascript:hide_all();" title="Replier toutes les enveloppes" class="btn btn-default">Tout replier</a>
-                            </div>-->
                             <dl class="envelopes_list">
                             <?php foreach ($envelopes as $i => $envelope) : ?>
                                     <?php $this->displayEnvelope($envelope, $i);?>
@@ -230,7 +288,7 @@ class ListeActesHTML
                         </div>
                     </form>
                     <div class="form-group">
-                        <form id='form-sign' action="<?php echo Helpers::getLink("/modules/actes/actes_batch_sign.php"); ?>" method="post">
+                        <form id='form-sign' action="<?php echo Helpers::getLink('/modules/actes/actes_batch_sign.php'); ?>" method="post">
                             <input id='signer_button' type='submit' class='btn btn-default' value="Signer les transactions sélectionnées">
                         </form>
                         <script type='text/javascript'>
@@ -251,21 +309,26 @@ class ListeActesHTML
         <?php
     }
 
-    public function displayEnvelope($envelope, $i)
+    /**
+     * @param $envelope
+     * @param $i
+     * @return void
+     */
+    public function displayEnvelope($envelope, $i): void
     {
         ?>
-            <dt>
+            <dl><dt>
                 <a href="#tedetis" onclick="toggle_envelope_content(<?php echo $i ?>);" id="expander_<?php echo $i?>" class="expander btn btn-default btn-xs">-</a>
-                1 transaction de l'enveloppe n°<a href="<?php echo Helpers::getURLWithParam(array("order" => "id","sortway" => $this->sortWay == 'asc' ? 'desc' : 'asc')) ?>"
-                                title="Trier par identifiant"><?php echo $envelope["envelope_id"] ?></a> 
-                déposée le <a href="<?php echo Helpers::getURLWithParam(array("order" => "submission_date","sortway" => $this->sortWay == 'asc' ? 'desc' : 'asc')) ?>"
-                                title="Trier par date de dépôt"><?php echo Helpers :: getDateFromBDDDate($envelope["submission_date"], true) ?></a>
+                1 transaction de l'enveloppe n°<a href="<?php echo Helpers::getURLWithParam(['order' => 'id', 'sortway' => $this->sortWay == 'asc' ? 'desc' : 'asc']) ?>"
+                                title="Trier par identifiant"><?php echo $envelope['envelope_id'] ?></a>
+                déposée le <a href="<?php echo Helpers::getURLWithParam(['order' => 'submission_date', 'sortway' => $this->sortWay == 'asc' ? 'desc' : 'asc']) ?>"
+                                title="Trier par date de dépôt"><?php echo Helpers :: getDateFromBDDDate($envelope['submission_date'], true) ?></a>
                 <?php if ($this->allCollectivite) : ?>
                     de la collectivité <?php hecho($envelope['authority_name']) ?>
                 <?php endif;?>
-            </dt>
+                </dt></dl>
             <dd id="envelope_content_<?php echo $i ?>" class="envelope_content" style="display: block">
-                <table id="transactions-list" class="data-table table table-bordered" summary="Ce tableau présente respectivement une option de sélection pour action, le type, le numéro, le numéro interne, l'objet, la nature, l'état, le courrier ministre, le nom du responsable et un lien vers les actions disponibles de chaque enveloppe de transaction">
+                <table id="transactions-list" class="data-table table table-bordered">
                                     <caption>Liste des transactions en fonction des choix de filtrage</caption>
                                     <thead>
                     <tr class="active">
@@ -284,7 +347,7 @@ class ListeActesHTML
                                     <tbody>
                     <tr>
                                             <td headers="selection">
-                                                <?php if ($envelope['type'] == 1 && (in_array($envelope['current_status'], array(4,5,14,18,20)))) : ?>
+                                                <?php if ($envelope['type'] == 1 && (in_array($envelope['current_status'], [4,5,14,18,20]))) : ?>
                                                     <input type="checkbox" 
                                                                     name="liste_id[]" 
                                                                     value="<?php hecho($envelope['transaction_id']) ;?>" 
@@ -297,29 +360,29 @@ class ListeActesHTML
                                             <td headers="act-number"><?php echo $envelope['transaction_id'] ?></td>
                                             <td headers="act-internal-number"><?php hecho($envelope['number']) ?></td>
                                             <td headers="object" class="long_field"><?php echo nl2br(get_hecho(Helpers :: truncateString($envelope['subject']))) ?></td>
-                                            <td headers="nature"><?php echo $envelope["nature_descr"] ?></td>
+                                            <td headers="nature"><?php echo $envelope['nature_descr'] ?></td>
                                             <td headers="status"><?php echo $envelope['current_status_name'] ?></td>
                                             <td headers="mail">
                                                     <?php
                                                     foreach ($envelope['courrier_info'] as $id => $info) : ?>
                                                             <a href="<?php echo Helpers::getLink("/modules/actes/actes_transac_show.php?id=$id"); ?>">
-                                                                    <?php echo $info["type_str"] ?>
-                                                                    (<?php echo isset($info["sens"]) ? $info["sens"] : "envoyé" ?>) 
+                                                                    <?php echo $info['type_str'] ?>
+                                                                    (<?php echo isset($info['sens']) ? $info['sens'] : 'envoyé' ?>)
                                                             </a>
                                                             <br/>
                                                     <?php endforeach; ?>
                                             </td>
-                                            <td headers="follower"><?php echo $envelope['givenname'] . " " . $envelope['name'] ?></td>
+                                            <td headers="follower"><?php echo $envelope['givenname'] . ' ' . $envelope['name'] ?></td>
                                             <td headers="actions">
-                                                    <a href="<?php echo Helpers::getLink("/modules/actes/actes_transac_show.php?id=" . $envelope['transaction_id']);?>"
+                                                    <a href="<?php echo Helpers::getLink('/modules/actes/actes_transac_show.php?id=' . $envelope['transaction_id']);?>"
                                                                     class="icon">
-                                                            <img src="<?php echo Helpers::getLink("/custom/images/erreur.png"); ?>"
+                                                            <img src="<?php echo Helpers::getLink('/custom/images/erreur.png'); ?>"
                                                                             alt="image_modif" title="Afficher le détail" />
                                                     </a>
-                                                    <?php if ($envelope["archive_url"]) : ?>
-                                                                <a href="<?php echo $envelope["archive_url"] ?>" 
+                                                    <?php if ($envelope['archive_url']) : ?>
+                                                                <a href="<?php echo $envelope['archive_url'] ?>"
                                                                     class="icon">
-                                                                    <img src="<?php echo Helpers::getLink("/custom/images/icone_archivage.png"); ?>"
+                                                                    <img src="<?php echo Helpers::getLink('/custom/images/icone_archivage.png'); ?>"
                                                                                     alt="image_archivage" title="Accéder à  l'archivage de cette transaction" />
                                                                 </a>
                                                     <?php endif;?>

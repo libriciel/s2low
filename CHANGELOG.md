@@ -13,6 +13,7 @@
 - Correction d'erreurs remontées par la CI #1135
 - Mise à jour des composants javascript TimePicker et DatePicker #999
 - Correction d'erreurs css #1142
+- Correction d'erreurs html #1143
 
 ### Évolutions
 
