@@ -1,8 +1,10 @@
 <h1>Validation d'une archive acte</h1>
 <p id="back-transaction-btn">
-    <a class="btn btn-default" href='actes_transac_show.php?id=<?php echo $transaction_id ?>'>Retour à la transaction</a><br/>
+    <a class="btn btn-default" href='actes_transac_show.php?id=<?php echo $transaction_id ?>'>
+        Retour à la transaction
+    </a><br/>
 </p>
-<h2>Validation du fichier <?php echo $envelope_filename?></h2>
+<h2 id="validation_desc">Validation du fichier <?php echo $envelope_filename?></h2>
 
 
 <?php if ($archive_is_valide) : ?>
@@ -12,7 +14,7 @@
 <?php endif; ?>
 
 
-<table class="table table-bordered">
+<table class="table table-bordered" aria-describedby="validation_desc">
     <tr>
         <th scope="col">Niveau</th>
         <th scope="col">Code</th>
@@ -42,6 +44,7 @@
 <?php endif; ?>
 
 <table class="table table-bordered">
+    <caption>Validité des signatures contenues dans les fichiers</caption>
     <tr>
         <th scope="col">Fichier</th>
         <th scope="col">Signé ?</th>
@@ -52,8 +55,8 @@
     <?php foreach ($pades_result as $filename => $info) : ?>
         <tr>
             <td><?php hecho($filename)?></td>
-            <td><?php echo $info['is_signed'] ? "OUI" : "NON"?></td>
-            <td><?php echo $info['is_valid'] ? "OUI" : "NON" ?></td>
+            <td><?php echo $info['is_signed'] ? 'OUI' : 'NON' ?></td>
+            <td><?php echo $info['is_valid'] ? 'OUI' : 'NON' ?></td>
             <td><?php hecho($info['message']) ?></td>
             <td><?php hecho($info['last_result'])?></td>
         </tr>

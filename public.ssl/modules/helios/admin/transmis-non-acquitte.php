@@ -5,11 +5,11 @@ use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\PagerHTML;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-require_once(__DIR__ . "/../../../../init/init-www-helios.php");
+require_once(__DIR__ . '/../../../../init/init-www-helios.php');
 
 if ($userInfo['role'] != 'SADM') {
-    $_SESSION["error"] = "Super admin only !";
-    header("Location: " . WEBSITE);
+    $_SESSION['error'] = 'Super admin only !';
+    header('Location: ' . WEBSITE);
     exit();
 }
 
@@ -55,11 +55,13 @@ ob_start();
 
     <h2><?php echo count($transactions_list) ?> fichiers transmis non acquittés</h2>
 
-    <div class="alert alert-info">
+    <div id="list_desc" class="alert alert-info">
         Liste des transactions restées à l'état transmis (donc non-acquittées par Hélios) avant ce matin à minuit.
     </div>
 
-    <table class="data-table table table-striped">
+    <table class="data-table table table-striped"
+           aria-describedby="list_desc"
+    >
         <tr>
             <th scope="col">Nom du fichier</th>
             <th scope="col">Date de récupération</th>

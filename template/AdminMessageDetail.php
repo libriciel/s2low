@@ -7,7 +7,7 @@ use S2lowLegacy\Lib\FancyDate;
 use S2lowLegacy\Model\MessageAdmin;
 
 ?>
-<h1>Message d'urgence</h1>
+<h1 id="message_desc">Message d'urgence</h1>
 
 <p id="back-transaction-btn">
     <a class="btn btn-default" href="/admin/message/">Revenir à la liste des messages
@@ -19,7 +19,7 @@ use S2lowLegacy\Model\MessageAdmin;
 
 
 
-    <table class="data-table table table-striped">
+    <table class="data-table table table-striped" aria-describedby="message_desc">
         <tr>
             <th scope="row">Numéro du message</th>
             <td><?php hecho($messageAdmin->message_id) ?></td>
@@ -64,11 +64,29 @@ use S2lowLegacy\Model\MessageAdmin;
     <h2>Actions</h2>
 
     <?php if ($messageAdmin->getEtat() == MessageAdmin::ETAT_EN_COURS_DE_REDACTION) : ?>
-        <a class='btn btn-warning' href="/admin/message/message_publier.php?message_id=<?php hecho($messageAdmin->message_id) ?>">Publier</a></td>
+        <td>
+            <a
+                    class='btn btn-warning'
+                    href="/admin/message/message_publier.php?message_id=<?php hecho($messageAdmin->message_id) ?>">
+                Publier
+            </a>
+        </td>
 
-        <a class='btn btn-primary' href="/admin/message/message_edit.php?message_id=<?php hecho($messageAdmin->message_id) ?>">Modifier</a></td>
+        <td>
+            <a
+                    class='btn btn-primary'
+                    href="/admin/message/message_edit.php?message_id=<?php hecho($messageAdmin->message_id) ?>">
+                Modifier
+            </a>
+        </td>
     <?php endif; ?>
     <?php if ($messageAdmin->getEtat() == MessageAdmin::ETAT_PUBLIE) : ?>
-        <a class='btn btn-warning' href="/admin/message/message_retirer.php?message_id=<?php hecho($messageAdmin->message_id) ?>">Retirer</a></td>
+        <td>
+            <a
+                    class='btn btn-warning'
+                    href="/admin/message/message_retirer.php?message_id=<?php hecho($messageAdmin->message_id) ?>">
+                Retirer
+            </a>
+        </td>
     <?php endif; ?>
 <?php endif; ?>

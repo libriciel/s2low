@@ -17,7 +17,7 @@ use S2lowLegacy\Model\MessageAdmin;
 
 <form action="/admin/message/do_message_edit.php" method="POST">
     <input type="hidden" name="message_id" value="<?php hecho($messageAdmin->message_id)?>"/>
-    <table class="data-table table table-striped">
+    <table class="data-table table table-striped" role="presentation">
         <tr>
             <th scope="row"><label for="titre">Titre</label></th>
             <td>

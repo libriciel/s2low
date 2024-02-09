@@ -23,11 +23,11 @@ use S2lowLegacy\Class\Helpers;
         </a>
 </div>
 
-<h2>Liste des utilisateurs</h2>
+<h2 id="liste_utilisateurs_desc">Liste des utilisateurs</h2>
 
 
 <div class="data_table">
-    <table class="data-table table table-striped">
+    <table class="data-table table table-striped" aria-describedby="liste_utilisateurs_desc">
         <tr>
             <th class="data" scope="col">Login</th>
             <th class="data" scope="col">Nom</th>
@@ -40,14 +40,26 @@ use S2lowLegacy\Class\Helpers;
         <?php foreach ($user_list as $i => $info) : ?>
             <tr >
                 <td><?php hecho($info['login']) ?></td>
-                <td><?php hecho($info['givenname'] . " " . $info['name']) ?></td>
+                <td><?php hecho($info['givenname'] . ' ' . $info['name']) ?></td>
                 <td><a href="mailto: <?php hecho($info['email']) ?>"><?php hecho($info['email']) ?></a></td>
                 <td><?php echo $roles_type_list[$info['role']] ?></td>
-                <td><?php echo $status_type_list[$info["status"]] ?></td>
-                <td><a href="<?php echo Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=" . $info["authority_id"]); ?>"><?php hecho($info["authority_name"]) ?></a></td>
+                <td><?php echo $status_type_list[$info['status']] ?></td>
+                <td><a
+                            href="
+                            <?php
+                            $relativePath = '/admin/authorities/admin_authority_edit.php?id=' . $info['authority_id'];
+                            echo Helpers::getLink($relativePath);
+                            ?>"
+                    >
+                        <?php hecho($info['authority_name']) ?>
+                    </a>
+                </td>
                 <td>
-                    <a href="<?php echo Helpers::getLink("/admin/users/admin_user_edit.php?id=" .  $info['id']); ?>" class="icon")>
-                        <img src="<?php echo Helpers::getLink("/custom/images/erreur.png"); ?>" alt="image_modif" title="Modifier" />
+                    <a href="<?php echo Helpers::getLink('/admin/users/admin_user_edit.php?id=' . $info['id']); ?>"
+                       class="icon"
+                       )>
+                        <img src="<?php echo Helpers::getLink('/custom/images/erreur.png'); ?>" alt="image_modif"
+                             title="Modifier"/>
                     </a>
                 </td>
             </tr>
@@ -64,7 +76,7 @@ use S2lowLegacy\Class\Helpers;
 
 <form action="/admin/users/do_modif_bulk_certif.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="user_id" value="<?php hecho($user_id)?>"/>
-    <table class="data-table table table-striped">
+    <table class="data-table table table-striped" role="presentation">
         <tr>
             <th scope="row"><label for="certificat">Nouveau certificat (partie publique au format PEM)</label></th>
             <td>
@@ -72,7 +84,9 @@ use S2lowLegacy\Class\Helpers;
             </td>
         </tr>
         <tr>
-            <th scope="row"><label for="confirm">Êtes-vous sûr de vouloir effectuer cette opération ? (saisir OUI)</label></th>
+            <th scope="row">
+                <label for="confirm">Êtes-vous sûr de vouloir effectuer cette opération ? (saisir OUI)</label>
+            </th>
             <td>
                 <input  id="confirm" name="confirm" class="form-control" />
             </td>

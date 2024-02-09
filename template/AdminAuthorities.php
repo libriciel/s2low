@@ -7,8 +7,8 @@ use S2lowLegacy\Class\Helpers;
 
 <div id="actions-area">
     <h2>Actions</h2>
-    <a class="btn btn-primary" href="admin_authority_edit.php" class="bouton">Ajouter une collectivité</a>
-    <a class="btn btn-primary" href="admin_authorities_export.php" class="bouton">Exporter la liste des collectivités</a>
+    <a class="btn btn-primary bouton" href="admin_authority_edit.php">Ajouter une collectivité</a>
+    <a class="btn btn-primary bouton" href="admin_authorities_export.php">Exporter la liste des collectivités</a>
 </div>
 
 <div id="filtering-area">
@@ -20,14 +20,29 @@ use S2lowLegacy\Class\Helpers;
                 <select name="type" class="form-control">
                     <option value="">Choisissez</option>
                     <?php foreach ($authority_types as $authority_type_libelle_info) : ?>
-                        <option <?php echo $ftype == $authority_type_libelle_info['id'] ? "selected='selected'" : "" ?>
-                            value="<?php echo($authority_type_libelle_info['id']) ?>"><?php hecho(Helpers::chunkString($authority_type_libelle_info['id'] . " " . $authority_type_libelle_info['description'], 40)) ?></option>
+                        <option
+                            <?php echo $ftype == $authority_type_libelle_info['id'] ? "selected='selected'" : '' ?>
+                            value="<?php echo($authority_type_libelle_info['id']) ?>"
+                        >
+                            <?php
+                            $str = "{$authority_type_libelle_info['id']} {$authority_type_libelle_info['description']}";
+                            hecho(Helpers::chunkString($str, 40))
+                            ?>
+                        </option>
                     <?php endforeach;?>
                 </select>
             </div>
             <label for="name-contain" class="col-md-3 control-label">Le nom contient</label>
             <div class="col-md-3">
-                <input id="name-contain" class="form-control" type="text" name="name" size="20" maxlength="25" value="<?php hecho($fname) ?>" />
+                <input
+                        id="name-contain"
+                        class="form-control"
+                        type="text"
+                        name="name"
+                        size="20"
+                        maxlength="25"
+                        value="<?php hecho($fname) ?>"
+                />
             </div>
         </div>
             <div class="form-group">
@@ -37,7 +52,10 @@ use S2lowLegacy\Class\Helpers;
                     <select name="group" class="form-control">
                         <option value="">Choisissez</option>
                         <?php foreach ($groupe_list as $groupe_info) : ?>
-                            <option <?php echo $fgroup == $groupe_info['id'] ? "selected='selected'" : "" ?> value="<?php hecho($groupe_info['id']) ?>">
+                            <option
+                                <?php echo $fgroup == $groupe_info['id'] ? "selected='selected'" : '' ?>
+                                    value="<?php hecho($groupe_info['id']) ?>"
+                            >
                                 <?php hecho($groupe_info['name']) ?>
                             </option>
                         <?php endforeach; ?>
@@ -47,14 +65,30 @@ use S2lowLegacy\Class\Helpers;
 
             <label for="name-contain" class="col-md-3 control-label">Un SIRET contient</label>
             <div class="col-md-3">
-                <input id="siret-contain" class="form-control" type="text" name="siret" size="20" maxlength="25" value="<?php hecho($fsiret) ?>" />
+                <input
+                        id="siret-contain"
+                        class="form-control"
+                        type="text"
+                        name="siret"
+                        size="20"
+                        maxlength="25"
+                        value="<?php hecho($fsiret) ?>"
+                />
             </div>
             </div>
 
         <div class="form-group">
             <label for="name-contain" class="col-md-3 control-label">SIREN</label>
             <div class="col-md-3">
-                <input id="siren" class="form-control" type="text" name="siren" size="20" maxlength="25" value="<?php hecho($fsiren) ?>" />
+                <input
+                        id="siren"
+                        class="form-control"
+                        type="text"
+                        name="siren"
+                        size="20"
+                        maxlength="25"
+                        value="<?php hecho($fsiren) ?>"
+                />
             </div>
         </div>
 
@@ -65,9 +99,9 @@ use S2lowLegacy\Class\Helpers;
 </div>
 <br />
 
-<h2>Liste des collectivités</h2>
+<h2 id="liste_coll_desc">Liste des collectivités</h2>
 <div id="authority-list">
-    <table class="data-table table table-striped" summary="">
+    <table class="data-table table table-striped" aria-describedby="liste_coll_desc">
         <thead>
         <tr>
             <th id="name">Nom</th>
@@ -82,26 +116,29 @@ use S2lowLegacy\Class\Helpers;
         <tbody>
         <?php foreach ($authorities as $authority_info) :?>
         <tr>
-            <td headers="name"><?php hecho($authority_info["name"]) ?></td>
-            <td headers="group-member"><?php hecho($authority_info['group_name'] ?: "Aucun") ?></td>
-            <td headers="authority-type"><?php hecho($authority_info["type_name"]) ?></td>
+            <td headers="name"><?php hecho($authority_info['name']) ?></td>
+            <td headers="group-member"><?php hecho($authority_info['group_name'] ?: 'Aucun') ?></td>
+            <td headers="authority-type"><?php hecho($authority_info['type_name']) ?></td>
             <td headers="address"  class="long_field">
-                <?php echo nl2br(get_hecho($authority_info["address"])) ?>
+                <?php echo nl2br(get_hecho($authority_info['address'])) ?>
                 <br />
-                <?php hecho($authority_info["postal_code"]) ?>
-                <?php hecho($authority_info["city"]) ?>
+                <?php hecho($authority_info['postal_code']) ?>
+                <?php hecho($authority_info['city']) ?>
             </td>
-            <td headers="phone"><?php hecho($authority_info["telephone"]) ?></td>
-            <td headers="fax"><?php hecho($authority_info["siren"]) ?></td>
+            <td headers="phone"><?php hecho($authority_info['telephone']) ?></td>
+            <td headers="fax"><?php hecho($authority_info['siren']) ?></td>
             <td headers="actions">
-                <a href="admin_authority_edit.php?id=<?php echo $authority_info["id"] ?>" class="icon">
-                    <img src="<?php echo Helpers::getLink("/custom/images/erreur.png"); ?>" alt="image_modif" title="Modifier" />
+                <a href="admin_authority_edit.php?id=<?php echo $authority_info['id'] ?>" class="icon">
+                    <img
+                            src="<?php echo Helpers::getLink('/custom/images/erreur.png'); ?>"
+                            alt="image_modif"
+                            title="Modifier"
+                    />
                 </a>
             </td>
         </tr>
         <?php endforeach; ?>
         </tbody>
     </table>
-</div>
 </div>
 

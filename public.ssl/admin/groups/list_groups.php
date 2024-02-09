@@ -5,26 +5,26 @@ use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\User;
 
-require_once(__DIR__ . "/../../../init/init-www.php");
+require_once(__DIR__ . '/../../../init/init-www.php');
 
 $me = new User();
 
 if (! $me->authenticate()) {
-    $_SESSION["error"] = "Ehec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    $_SESSION['error'] = "Echec de l'authentification";
+    header('Location: ' . Helpers::getLink('connexion-status'));
     exit();
 }
 
 if (! $me->isSuper()) {
-    $_SESSION["error"] = "Accès refusé";
-    header("Location: " . WEBSITE_SSL);
+    $_SESSION['error'] = 'Accès refusé';
+    header('Location: ' . WEBSITE_SSL);
     exit();
 }
 
 
-$sql = "select count(authorities.id) as count,authority_group_id as id,authority_groups.name FROM authorities " .
-    "FULL JOIN authority_groups ON authorities.authority_group_id = authority_groups.id " .
-    "GROUP BY authority_group_id,authority_groups.name  ORDER BY authority_groups.name ;";
+$sql = 'select count(authorities.id) as count,authority_group_id as id,authority_groups.name FROM authorities ' .
+    'FULL JOIN authority_groups ON authorities.authority_group_id = authority_groups.id ' .
+    'GROUP BY authority_group_id,authority_groups.name  ORDER BY authority_groups.name ;';
 
 $groups_list = $sqlQuery->query($sql);
 
@@ -32,7 +32,7 @@ $groups_list = $sqlQuery->query($sql);
 $menuHTML = new MenuHTML();
 
 $doc = new HTMLLayout();
-$doc->setTitle("Configuration de la connexion SAE - S²low");
+$doc->setTitle('Configuration de la connexion SAE - S²low');
 $doc->openContainer();
 $doc->openSideBar();
 $doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
@@ -42,12 +42,12 @@ $doc->openContent();
 ob_start();
 ?>
 
-    <h1>Groupes de collectivités</h1>
+    <h1 id="groupes_col_desc">Groupes de collectivités</h1>
     <p id="back-transaction-btn">
-        <a href="<?php echo Helpers::getLink("/admin/groups/admin_groups.php"); ?>" class="btn btn-default">Retour liste groupes</a>
+        <a href="<?php echo Helpers::getLink('/admin/groups/admin_groups.php'); ?>" class="btn btn-default">Retour liste groupes</a>
     </p>
 
-    <table class="data-table table table-striped ">
+    <table class="data-table table table-striped " aria-describedby="groupes_col_desc">
         <tr>
             <th scope="col">Groupe</th>
             <th scope="col">Nombre de collectivités</th>
@@ -57,7 +57,7 @@ ob_start();
             <tr>
                 <?php  if (is_null($group['name'])) :?>
                     <td>
-                            <?php hecho("Collectivité(s) sans groupe attaché")  ?>
+                            <?php hecho('Collectivité(s) sans groupe attaché')  ?>
                     </td>
                     <td>
                         <?php echo $group['count'] ?>

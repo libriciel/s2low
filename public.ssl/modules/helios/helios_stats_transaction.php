@@ -4,26 +4,26 @@ use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\PagerHTML;
 
-require_once(__DIR__ . "/../../../init/init-www-helios.php");
+require_once(__DIR__ . '/../../../init/init-www-helios.php');
 
 if ($userInfo['role'] != 'SADM') {
-    $_SESSION["error"] = "Super admin only !";
-    header("Location: " . WEBSITE);
+    $_SESSION['error'] = 'Super admin only !';
+    header('Location: ' . WEBSITE);
     exit();
 }
 
 
-$info = array(
-    1 => "Posté",2 => "En attente de transmission",3 => "Transmis"
-);
+$info = [
+    1 => 'Posté',2 => 'En attente de transmission',3 => 'Transmis'
+];
 
-$result = array();
+$result = [];
 foreach ($info as $status_id => $status_libelle) {
-    $sql = "SELECT count(*) FROM helios_transactions WHERE last_status_id=?";
+    $sql = 'SELECT count(*) FROM helios_transactions WHERE last_status_id=?';
     $result[$status_id] = $sqlQuery->queryOne($sql, $status_id);
 }
 
-$sql = "SELECT count(*) FROM helios_transactions WHERE last_status_id=3";
+$sql = 'SELECT count(*) FROM helios_transactions WHERE last_status_id=3';
 
 
 
@@ -33,7 +33,7 @@ $pagerHTML  = new PagerHTML();
 
 $doc = new HTMLLayout();
 
-$doc->setTitle("Tedetis : module helios statistique");
+$doc->setTitle('Tedetis : module helios statistique');
 
 $doc->openContainer();
 
@@ -50,8 +50,8 @@ ob_start();
 <div id="content">
     <h1>Helios : status en cours DGFIP</h1>
 
-    <h2>Liste des status</h2>
-<table  class="data-table table table-striped ">
+    <h2 id="list_desc">Liste des status</h2>
+<table  class="data-table table table-striped " aria-describedby="list_desc">
     <tr>
         <th scope="col">Status</th>
         <th scope="col">Nombre de transactions</th>

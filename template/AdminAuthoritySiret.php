@@ -8,7 +8,7 @@
 <div class="col-xs-6">
 <ul class="list-group">
     <li class="list-group-item">
-        <b>SIRET activé</b>
+        <strong>SIRET activé</strong>
     </li>
 <?php if (! $siret_list) : ?>
     <li class="list-group-item">
@@ -45,7 +45,7 @@
 </ul>
 <ul class="list-group">
 <li class="list-group-item">
-    <b>SIRET bloqués</b>
+    <strong>SIRET bloqués</strong>
 </li>
 
     <?php if (! $siret_blocked_list) : ?>
@@ -97,8 +97,8 @@
 <div class="panel panel-default">
   <div class="panel-body">
       <p>Ces numéros SIRET sont utilisés dans le cadre du protocole PES pour associer les PES Retour en provenance d'Hélios à la collectivité.</p>
-      <p>Lorsqu'un PES Retour arrive on selectionne la collectivité avec le <b>SIRET activé</b></p>
-      <p>Les <b>SIRET bloqué</b> permettent de ne pas selectionner la collectivité (erreur dans le numéro SIRET sur le PES Aller)</p>
+      <p>Lorsqu'un PES Retour arrive on selectionne la collectivité avec le <strong>SIRET activé</strong></p>
+      <p>Les <strong>SIRET bloqué</strong> permettent de ne pas selectionner la collectivité (erreur dans le numéro SIRET sur le PES Aller)</p>
   </div>
 </div>
 

@@ -5,8 +5,8 @@ use S2lowLegacy\Class\DatePicker;
 
 ?>
 
-<script type="text/javascript" src="<?php echo Helpers::getLink("/jsmodules/jquery.js");?>"></script>
-<script type="text/javascript" src="<?php echo Helpers::getLink("/jsmodules/jqueryui.js");?>"></script>
+<script type="text/javascript" src="<?php echo Helpers::getLink('/jsmodules/jquery.js');?>"></script>
+<script type="text/javascript" src="<?php echo Helpers::getLink('/jsmodules/jqueryui.js');?>"></script>
 
 
 <h1><?php echo $h1_title ?></h1>
@@ -14,7 +14,7 @@ use S2lowLegacy\Class\DatePicker;
 <?php if ($has_logs_request) : ?>
 <div id="actions-area">
     <h2>Action</h2>
-    <a class="btn btn-primary" href="/common/logs_request_view.php" class="bouton">Demandes de journal</a>
+    <a class="btn btn-primary bouton" href="/common/logs_request_view.php" >Demandes de journal</a>
 </div>
 <?php endif; ?>
 
@@ -27,7 +27,12 @@ use S2lowLegacy\Class\DatePicker;
                 <select name="module" class="form-control">
                     <option value="">Choisissez</option>
                     <?php foreach ($module_list as $module_info) : ?>
-                        <option value="<?php hecho($module_info['name']) ?>" <?php echo $fmodule == $module_info['name'] ? 'selected="selected"' : '' ?>><?php hecho($module_info['name'])?></option>
+                        <option
+                                value="<?php hecho($module_info['name']) ?>"
+                            <?php echo $fmodule == $module_info['name'] ? 'selected="selected"' : '' ?>
+                        >
+                            <?php hecho($module_info['name'])?>
+                        </option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -36,7 +41,12 @@ use S2lowLegacy\Class\DatePicker;
                 <select name="severity" class="form-control">
                     <option value="-1" <?php  echo $fseverity == -1 ? 'selected="selected"' : ''?>>Choisissez</option>
                     <?php foreach ($loglevel_list as $loglevel_id => $loglevel_libelle) : ?>
-                        <option value="<?php echo $loglevel_id?>" <?php  echo $fseverity == $loglevel_id ? 'selected="selected"' : ''?>><?php echo $loglevel_libelle ?></option>
+                        <option
+                                value="<?php echo $loglevel_id?>"
+                            <?php  echo $fseverity == $loglevel_id ? 'selected="selected"' : ''?>
+                        >
+                            <?php echo $loglevel_libelle ?>
+                        </option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -56,7 +66,15 @@ use S2lowLegacy\Class\DatePicker;
         <div class="form-group">
             <label for="msg-contain" class="col-md-3 control-label">Message contient</label>
             <div class="col-md-3">
-                <input id="msg-contain" class="form-control" type="text" name="message" size="20" maxlength="25" value="<?php hecho($fmessage) ?>" />
+                <input
+                        id="msg-contain"
+                        class="form-control"
+                        type="text"
+                        name="message"
+                        size="20"
+                        maxlength="25"
+                        value="<?php hecho($fmessage) ?>"
+                />
             </div>
         </div>
         <?php if ($this->me->isAdmin()) : ?>
@@ -67,7 +85,12 @@ use S2lowLegacy\Class\DatePicker;
                         <select name="authority" class="form-control">
                             <option value="">Choisissez</option>
                             <?php foreach ($authorities_list as $authority_id => $authority_name) : ?>
-                                <option value="<?php hecho($authority_id) ?>" <?php echo $fauthority == $authority_id ? 'selected="selected"' : '' ?>><?php hecho($authority_name) ?></option>
+                                <option
+                                        value="<?php hecho($authority_id) ?>"
+                                    <?php echo $fauthority == $authority_id ? 'selected="selected"' : '' ?>
+                                >
+                                    <?php hecho($authority_name) ?>
+                                </option>
                             <?php endforeach ?>
                         </select>
                     </div>
@@ -88,8 +111,7 @@ use S2lowLegacy\Class\DatePicker;
     <?php if (! $logs_list) : ?>
         Aucune entrée du journal ne correspond au filtrage spécifié.
     <?php else : ?>
-        <table class="logs data-table table table-striped"
-               summary="Ce tableau présente respectivement la date, l'auteur, la sévérité, le module, le message et un lien vers une archive de chaque événement du journal">
+        <table class="logs data-table table table-striped">
             <caption>Liste des événements du journal en fonction des choix de filtrage</caption>
             <thead>
                 <tr>
@@ -107,29 +129,36 @@ use S2lowLegacy\Class\DatePicker;
             <?php foreach ($logs_list as $logEntry) : ?>
                 <tr>
                     <td headers="date">
-                        <?php echo Helpers::getDateFromBDDDate($logEntry["date"], true) ?>
+                        <?php echo Helpers::getDateFromBDDDate($logEntry['date'], true) ?>
                     </td>
                     <td headers="author">
-                        <?php hecho($logEntry["issuer"]) ?>
+                        <?php hecho($logEntry['issuer']) ?>
                     </td>
                     <td headers="severity">
-                        <?php hecho($loglevel_list[$logEntry["severity"]]) ?>
+                        <?php hecho($loglevel_list[$logEntry['severity']]) ?>
                     </td>
                     <td headers="module">
-                        <?php hecho($logEntry["module"]) ?>
+                        <?php hecho($logEntry['module']) ?>
                     </td>
                     <td headers="user">
-                        <?php hecho($userSQL->getPrettyName($logEntry['name'], $logEntry['givenname'], $logEntry['login'])) ?>
+                        <?php
+                        hecho($userSQL->getPrettyName($logEntry['name'], $logEntry['givenname'], $logEntry['login']))
+                        ?>
                     </td>
 
                     <td class="long_field" headers="message">
-                        <?php echo nl2br(get_hecho($logEntry["message"])) ?>
+                        <?php echo nl2br(get_hecho($logEntry['message'])) ?>
                     </td>
                     <td headers="timestamp">
-                            <a href="<?php echo Helpers::getLink("/common/logs_get_timestamp.php?id=" . $logEntry["id"]); ?>"
-                               title="Télécharger une archive contenant l'entrée de journal n°<?php echo $logEntry["id"] ?> et sa signature"
+                            <a href="<?php
+                            echo Helpers::getLink('/common/logs_get_timestamp.php?id=' . $logEntry['id']);
+                            ?>"
+                               title="Télécharger une archive contenant l'entrée de journal n°<?php
+                                echo $logEntry['id'] ?> et sa signature"
                                class="icon">
-                                <img src="<?php echo Helpers::getLink("/custom/images/timestamping_icon.png"); ?>" alt="timestamp" />
+                                <img src="<?php echo Helpers::getLink('/custom/images/timestamping_icon.png'); ?>"
+                                     alt="timestamp"
+                                />
                             </a>
                     </td>
                 </tr>

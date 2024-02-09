@@ -3,21 +3,23 @@
 use S2lowLegacy\Class\CloudStorage;
 use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
 use Legacy\MailLayout;
+use S2lowLegacy\Lib\ObjectInstancierFactory;
 
 require_once('../../../init/init.php');
-\S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
+LegacyObjectsManager::setLegacyObjectInstancier();
 
-$mail_emis_id = Helpers::getVarFromGet("mail_emis_id");
-$password = Helpers::getVarFromPost("mdp");
+$mail_emis_id = Helpers::getVarFromGet('mail_emis_id');
+$password = Helpers::getVarFromPost('mdp');
 
 
 $mailEmis = new MailMessageEmis($mail_emis_id);
 $mailEmis->init();
 if (! $mailEmis) {
     $_SESSION['last_error'] = "Le message que vous avez demandé n'existe pas.";
-    header("Location: error.php");
+    header('Location: error.php');
     exit;
 }
 
@@ -26,15 +28,15 @@ $mail_id = $mailEmis->getMailTransactionId();
 $mailTransaction = new MailTransaction($mail_id);
 if (! $mailTransaction->init()) {
     $_SESSION['last_error'] = "Le message que vous avez demandé n'existe pas.";
-    header("Location: error.php");
+    header('Location: error.php');
     exit;
 }
 
 if (! $mailTransaction->isPasswordOK($password)) {
     if ($password) {
-        $_SESSION['last_error'] = "Mot de passe incorrect";
+        $_SESSION['last_error'] = 'Mot de passe incorrect';
     }
-    $redirectUrl = "Location: password.php?mail_emis_id=" . urlencode($mail_emis_id);
+    $redirectUrl = 'Location: password.php?mail_emis_id=' . urlencode($mail_emis_id);
     header($redirectUrl);
     exit;
 }
@@ -52,7 +54,7 @@ $doc = new MailLayout('xhtml_mail.tpl.php');
 $doc->setTitle(WEBSITE_TITLE);
 
 /** @var CloudStorage $cloudStorage */
-$cloudStorage  = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()
+$cloudStorage  = ObjectInstancierFactory::getObjetInstancier()
     ->get(CloudStorageFactory::class)
     ->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
 
@@ -61,7 +63,7 @@ if ($fndownload) {
         $mailzip_filepath = $cloudStorage->getPath($mailTransaction->getId());
         $filesize = filesize($mailzip_filepath);
     } catch (Exception $e) {
-        $filesize = "Fichier non disponible";
+        $filesize = 'Fichier non disponible';
     }
 }
 
@@ -105,11 +107,11 @@ $doc->DisplayHead();
                     <br class="clear" />
 
                     <?php  if ($mailIncludeFileArray) : ?>      
-                    <h2>Pièces jointes</h2>
+                    <h2 id="pj_desc">Pièces jointes</h2>
     
                     <div class="col_gauche_pj">&nbsp;</div>
                     <div class="col_droite_pj">
-                        <table>
+                        <table aria-describedby="pj_desc">
                             <thead>
                                 <tr>
                                     <th id="file" class="align_left">Nom du fichier</th>
@@ -118,7 +120,7 @@ $doc->DisplayHead();
                                     <th id="download">Télécharger</th>
                                 </tr>
                             </thead>    
-                            </body>    
+                            <tbody>
                         <?php foreach ($mailIncludeFileArray as $mailIncludeFile) : ?>
                                 <tr>
                                     <td class="align_left" ><?php echo $mailIncludeFile->getFileName(); ?></td>

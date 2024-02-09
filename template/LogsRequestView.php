@@ -12,7 +12,7 @@ use S2lowLegacy\Model\LogsRequestData;
     </p>
 
 
-    <h2>Demandes sur le journal</h2>
+    <h2 id="demandes_desc">Demandes sur le journal</h2>
 
     <?php if (! $logs_request_list) : ?>
     <div class="alert alert-info">
@@ -20,7 +20,7 @@ use S2lowLegacy\Model\LogsRequestData;
     </div>
     <?php endif; ?>
 
-    <table class="table table-stripped">
+    <table class="table table-stripped" aria-describedby="demandes_desc">
 
         <tr>
             <th scope="col">Heure de la demande</th>
@@ -43,10 +43,21 @@ use S2lowLegacy\Model\LogsRequestData;
                 <td><?php echo LogsRequestData::getStateString($logs_request['state']) ?></td>
                 <td>
                     <?php if ($logs_request['state'] == LogsRequestData::STATE_ASKING) :?>
-                        <a href="/common/logs_request_cancel.php?id=<?php echo $logs_request['id'] ?>" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span>&nbsp;Supprimer</a>
+                        <a
+                                href="/common/logs_request_cancel.php?id=<?php echo $logs_request['id'] ?>"
+                                class="btn btn-danger"
+                        >
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>&nbsp;Supprimer
+                        </a>
                     <?php endif; ?>
                     <?php if ($logs_request['state'] == LogsRequestData::STATE_AVAILABLE) :?>
-                        <a href="/common/logs_request_donwload.php?id=<?php echo $logs_request['id'] ?>" class="btn btn-primary"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>&nbsp;Télécharger</a>
+                        <a
+                                href="/common/logs_request_donwload.php?id=<?php echo $logs_request['id'] ?>"
+                                class="btn btn-primary"
+                        >
+                            <span class="glyphicon glyphicon-download" aria-hidden="true">
+                            </span>&nbsp;Télécharger
+                        </a>
                     <?php endif; ?>
                 </td>
             </tr>

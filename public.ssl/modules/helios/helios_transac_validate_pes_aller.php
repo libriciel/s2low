@@ -14,18 +14,18 @@ use S2lowLegacy\Lib\XadesSignature;
 use S2lowLegacy\Lib\XadesSignatureParser;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-require_once(__DIR__ . "/../../../init/init-www-helios.php");
+require_once(__DIR__ . '/../../../init/init-www-helios.php');
 
 if (! $droit->isSuperAdmin($userInfo)) {
-    header("Location: index.php");
+    header('Location: index.php');
     exit;
 }
 
 $me = new User();
 
 if (!$me->authenticate()) {
-    $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . WEBSITE);
+    $_SESSION['error'] = "Échec de l'authentification";
+    header('Location: ' . WEBSITE);
     exit();
 }
 
@@ -72,7 +72,7 @@ $is_signed = $xadesSignature->isSigned($filename);
 
 $doc = new HTMLLayout();
 
-$doc->setTitle("Helios : visualisation de transactions pour un fichier");
+$doc->setTitle('Helios : visualisation de transactions pour un fichier');
 $doc->addBody("<div class=\"container\"><div class=\"row\">");
 
 $doc->openContainer();
@@ -103,6 +103,7 @@ ob_start();
 
 
 <table class="table table-bordered">
+    <caption>Erreurs remontées par l'analyse XML</caption>
     <tr>
         <th scope="col">Niveau</th>
         <th scope="col">Code</th>

@@ -20,9 +20,9 @@ use S2lowLegacy\Model\MessageAdmin;
 </div>
 
 
-<h2>Liste des messages</h2>
+<h2 id="list_desc">Liste des messages</h2>
 <div id="authority-list">
-    <table class="data-table table table-striped" summary="">
+    <table class="data-table table table-striped" aria-describedby="list_desc">
         <thead>
         <tr>
             <th scope="col">Titre</th>
@@ -34,7 +34,11 @@ use S2lowLegacy\Model\MessageAdmin;
         <tbody>
         <?php foreach ($message_list as $message) :?>
             <tr>
-                <td><a href="/admin/message/detail.php?message_id=<?php hecho($message->message_id) ?>"><?php hecho($message->titre ?: $message->message_id) ?></a></td>
+                <td>
+                    <a href="/admin/message/detail.php?message_id=<?php hecho($message->message_id) ?>">
+                        <?php hecho($message->titre ?: $message->message_id) ?>
+                    </a>
+                </td>
 
                 <td>
                     <?php $message->displayEtatLabel() ?>

@@ -11,13 +11,13 @@ use S2lowLegacy\Class\actes\ActesStatusSQL;
     <a href="/admin/stats-sae.php" class="btn btn-default">Retour statistiques globale SAE</a>
 </p>
 
-<h2>Détail par collectivité</h2>
-<table class="data-table table table-striped ">
+<h2 id="det_desc">Détail par collectivité</h2>
+<table class="data-table table table-striped " aria-describedby="det_desc">
 
     <tr>
         <th scope="col">Collectivités</th>
         <?php foreach ($status_list as $status_id) : ?>
-            <th>
+            <th scope="col">
                 <?php hecho(ActesStatusSQL::getStatusLibelle($status_id));?>
             </th>
         <?php endforeach; ?>
@@ -31,7 +31,7 @@ use S2lowLegacy\Class\actes\ActesStatusSQL;
         </th>
         <?php foreach ($status_list as $status_id) : ?>
             <td>
-                <span class="label label-<?php echo ($authority_info['status'][$status_id] ?? 0) ? "danger" : "success" ?>">
+                <span class="label label-<?php echo ($authority_info['status'][$status_id] ?? 0) ? 'danger' : 'success' ?>">
                     <?php echo $authority_info['status'][$status_id] ?? 0;?>
                 </span>
 

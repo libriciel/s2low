@@ -12,7 +12,7 @@
 <div id="global_message">
     <p class="alert-info alert">Utilisez le formulaire ci-dessous pour envoyer un message a l'ensemble des utilisateurs d'un module.</p>
         <form action="/admin/utilities/admin_send_global_message.php" method="post" name="form" onsubmit="return confirm('Voulez-vous vraiment envoyer le message à tous les utilisateurs de ce module');">
-            <table class="data-table table table-striped">
+            <table class="data-table table table-striped" role="presentation">
                 <tr>
                     <th scope="row"><label for="module">Module concerné</label></th>
                     <td>
@@ -45,7 +45,7 @@
                 <tr>
                     <th scope="row"><label for="body">Message (texte brut)</label></th>
                     <td>
-                        <textarea id="body" name="body" class="form-control" rows="20" cols="70" rows="16"></textarea>
+                        <textarea id="body" name="body" class="form-control" cols="70" rows="16"></textarea>
                     </td>
                 </tr>
                 <tr>

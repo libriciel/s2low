@@ -12,32 +12,32 @@ use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\Recuperateur;
 
-require_once(__DIR__ . "/../../../init/init-www-helios.php");
+require_once(__DIR__ . '/../../../init/init-www-helios.php');
 
 $recuperateur = new Recuperateur($_GET);
 
 
-$sortWay =   $recuperateur->get("sortway", "desc");
+$sortWay =   $recuperateur->get('sortway', 'desc');
 $order = $recuperateur->get('order', 'id');
 $page_number = $recuperateur->getInt('page', 1);
 $taille_page =  $recuperateur->getInt('count', 10);
 
 
-$fmin_submission_date =  $recuperateur->get("min_submission_date");
-$fmax_submission_date =  $recuperateur->get("max_submission_date");
-$fmin_ack_date = $recuperateur->get("min_ack_date");
-$fmax_ack_date =  $recuperateur->get("max_ack_date");
+$fmin_submission_date =  $recuperateur->get('min_submission_date');
+$fmax_submission_date =  $recuperateur->get('max_submission_date');
+$fmin_ack_date = $recuperateur->get('min_ack_date');
+$fmax_ack_date =  $recuperateur->get('max_ack_date');
 
 
 if (isset($_GET['status']) && $_GET['status'] === '0') {
     $fstatus = 0;
 } else {
-    $fstatus =  $recuperateur->get("status", 'all');
+    $fstatus =  $recuperateur->get('status', 'all');
 }
 
-$fauthority = $recuperateur->get("authority");
-$fnum =  $recuperateur->get("num");
-$fnomFic = $recuperateur->get("nomFic");
+$fauthority = $recuperateur->get('authority');
+$fnum =  $recuperateur->get('num');
+$fnomFic = $recuperateur->get('nomFic');
 
 
 $heliosTransactionsListe = new HeliosTransactionsListe($sqlQuery);
@@ -86,28 +86,28 @@ $heliosTransactionsListe->setNomFic($fnomFic);
 
 // Instanciation du module courant
 $module = new Module();
-if (!$module->initByName("helios")) {
-    $_SESSION["error"] = "Erreur d'initialisation du module";
-    header("Location: " . WEBSITE_SSL);
+if (!$module->initByName('helios')) {
+    $_SESSION['error'] = "Erreur d'initialisation du module";
+    header('Location: ' . WEBSITE_SSL);
     exit();
 }
 
 $me = new User();
 
 if (!$me->authenticate()) {
-    $_SESSION["error"] = "Echec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    $_SESSION['error'] = "Echec de l'authentification";
+    header('Location: ' . Helpers::getLink('connexion-status'));
     exit();
 }
 
-if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
-    $_SESSION["error"] = "Accés refusé";
-    header("Location: " . WEBSITE_SSL);
+if (!$module->isActive() || !$me->canAccess($module->get('name'))) {
+    $_SESSION['error'] = 'Accés refusé';
+    header('Location: ' . WEBSITE_SSL);
     exit();
 }
 
 
-$helios_configured = $authorityInfo["helios_ftp_dest"];
+$helios_configured = $authorityInfo['helios_ftp_dest'];
 
 
 $envelopes = $heliosTransactionsListe->getAll();
@@ -190,9 +190,9 @@ $pagerHTML  = new PagerHTML();
 $doc = new HTMLLayout();
 $doc->addHeader($js);
 
-$doc->addHeader("<script src=\"" . Helpers::getLink("/jsmodules/jquery.js") . "\" type=\"text/javascript\"></script>\n");
-$doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jqueryui.js") . "\"></script>");
-$doc->setTitle("Tedetis : module helios");
+$doc->addHeader("<script src=\"" . Helpers::getLink('/jsmodules/jquery.js') . "\" type=\"text/javascript\"></script>\n");
+$doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink('/jsmodules/jqueryui.js') . "\"></script>");
+$doc->setTitle('Tedetis : module helios');
 
 $doc->openContainer();
 
@@ -207,22 +207,22 @@ $doc->openContent();
 
 
 $status = HeliosTransaction :: getStatusList();
-$status["999"] = "En cours";
-$status["all"] = "Tous les états";
+$status['999'] = 'En cours';
+$status['all'] = 'Tous les états';
 
 if ($envelopes) {
-    $owner = new User($envelopes[0]["user_id"]);
+    $owner = new User($envelopes[0]['user_id']);
     $owner->init();
 }
 
-$sortWay = (isset($_GET['sortway']) && ($_GET["sortway"] == "asc")) ? "desc" : "asc";
-$sel_ok = array();
+$sortWay = (isset($_GET['sortway']) && ($_GET['sortway'] == 'asc')) ? 'desc' : 'asc';
+$sel_ok = [];
 
 
 ob_start();
 ?>
-<script type="text/javascript" src="<?php echo Helpers::getLink("/jsmodules/jquery.js")?>"></script>
-<script type="text/javascript" src="<?php echo Helpers::getLink("/jsmodules/select2.js")?>"></script>
+<script type="text/javascript" src="<?php echo Helpers::getLink('/jsmodules/jquery.js')?>"></script>
+<script type="text/javascript" src="<?php echo Helpers::getLink('/jsmodules/select2.js')?>"></script>
 <script type="text/javascript" src="/javascript/zselect_s2low.js"></script>
 
 <h1>Helios - Dématérialisation de documents financiers</h1>
@@ -236,30 +236,30 @@ ob_start();
     <?php endif; ?>
 
     <?php if (!$me->isSuper() && $me->canEdit($module->get('name'))) : ?>
-        <?php if ($module->getParam("paper") == "on") : ?>
+        <?php if ($module->getParam('paper') == 'on') : ?>
             <p>Le système est actuellement en mode &nbsp;papier&nbsp;.
                 Dans ce mode il est impossible de créer de nouvelle transaction.
                 Les transferts doivent se faire par les moyens classiques (non dématérialisé).
             </p>
         <?php else :  ?>
-            <a class="btn btn-primary" href="<?php echo Helpers::getLink("/modules/helios/helios_fichier_import.php"); ?>" >Importer un fichier</a>
+            <a class="btn btn-primary" href="<?php echo Helpers::getLink('/modules/helios/helios_fichier_import.php'); ?>" >Importer un fichier</a>
         <?php endif; ?>
     <?php endif; ?>
-    <a class="btn btn-primary" href="<?php echo Helpers::getLink("/modules/helios/helios_retour.php"); ?>" title="afficher la liste des réponses reçues">Réponse d'Hélios</a>
+    <a class="btn btn-primary" href="<?php echo Helpers::getLink('/modules/helios/helios_retour.php'); ?>" title="afficher la liste des réponses reçues">Réponse d'Hélios</a>
 </div>
 
 <h2 class="toggle_title" onclick="javascript:toggle_visibility('filtering-area');">Filtrage</h2>
 <div id="filtering-area">
-    <form  role="form" class="form-horizontal" action="<?php echo Helpers::getLink("/modules/helios/index.php"); ?>" method="get">
+    <form role="form" class="form-horizontal" action="<?php echo Helpers::getLink('/modules/helios/index.php'); ?>" method="get">
         <div class="form-group">
             <label class="col-md-3 control-label" for="status">État</label>
             <div class="col-md-3">
-                <?php echo $doc->getHTMLSelect("status", $status, $fstatus)  ?>
+                <?php echo $doc->getHTMLSelect('status', $status, $fstatus)  ?>
             </div>
             <label class="col-md-3 control-label" for="filename-contain">Le nom de fichier contient</label>
             <div class="col-md-3">
                 <input id="filename-contain" class="form-control" type="text" name="num" size="20" maxlength="25"
-                    value="<?php hecho((mb_strlen($fnum) > 0) ? $fnum : "");?>" />
+                    value="<?php hecho((mb_strlen($fnum) > 0) ? $fnum : '');?>" />
             </div>
         </div>
         <div class="form-group">
@@ -322,7 +322,7 @@ ob_start();
 <?php else : ?>
     <form id="div_chck" onsubmit="return afficheWarning();" action="<?php echo Helpers::getLink("/modules/helios/helios_transac_close.php"); ?>" method="post">
         <table class="transactions_list" role="presentation">
-            <table id="transaction-list" class="data-table table table-striped" summary="Ce tableau présente respectivement le nom de fichier, la date, le statut, l'auteur et un lien vers les actions disponibles de chaque fichier Helios posté">
+            <table id="transaction-list" class="data-table table table-striped" >
                 <caption>Liste des fichiers Helios postés en fonction des choix de filtrage</caption>
                 <thead>
                     <tr>

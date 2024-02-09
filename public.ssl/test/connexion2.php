@@ -1,15 +1,16 @@
 <?php
 
 use S2lowLegacy\Class\Authentification;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\User;
 
-define("TESTING_ENVIRONNEMENT", true);
-$authenfication = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(Authentification::class);
+define('TESTING_ENVIRONNEMENT', true);
+$authenfication = LegacyObjectsManager::getLegacyObjectInstancier()->get(Authentification::class);
 
 $connexion_info = $authenfication->getAllConnexionInfo();
 
-$authenfication_message = "";
-$user_message = "";
+$authenfication_message = '';
+$user_message = '';
 
 try {
     $id = $authenfication->authenticate();
@@ -28,6 +29,7 @@ try {
 <h1>Pré-requis</h1>
 
 <table border="1">
+    <caption>Vérification des propriétés attendues pour la connexion</caption>
     <tr>
         <th scope="col">Propriété</th>
         <th scope="col">Attendu</th>
