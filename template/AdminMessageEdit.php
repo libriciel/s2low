@@ -12,12 +12,12 @@ use S2lowLegacy\Model\MessageAdmin;
     </a><br>
 </p>
 
-<h2>Édition d'un message</h2>
+<h2 id = "edition_desc">Édition d'un message</h2>
 
 
 <form action="/admin/message/do_message_edit.php" method="POST">
     <input type="hidden" name="message_id" value="<?php hecho($messageAdmin->message_id)?>"/>
-    <table class="data-table table table-striped" role="presentation">
+    <table class="data-table table table-striped" aria-describedby="edition_desc">
         <tr>
             <th scope="row"><label for="titre">Titre</label></th>
             <td>

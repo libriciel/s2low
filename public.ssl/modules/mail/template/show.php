@@ -5,10 +5,10 @@
             <a href="index.php?command=create" class="btn btn-primary">Nouveau message</a>
             <a href="index.php?command=list" class="btn btn-primary">Messages envoyés</a>
     </div>
-        <h2>Détail du message</h2>
+        <h2 id="details_desc">Détail du message</h2>
 
     <div id="list_area">
-            <table id="message-detail" class="data-table table table-bordered" role="presentation">
+            <table id="message-detail" class="data-table table table-bordered" aria-describedby="details_desc">
             <?php
 
             use S2lowLegacy\Class\CloudStorage;
@@ -147,10 +147,10 @@
     <?php   } else {?>
             <h2>Aucune pièce jointe</h2>
     <?php } ?>  
-    <?php if ($mailErrors != false) {
-        echo "<h3>L'envoi des messages a echoué</h3>";
-        echo '<dl>';
-
+    <?php if ($mailErrors != false) { ?>
+        <h3>L'envoi des messages a echoué</h3>
+        <dl>
+        <?php
         for ($i = 0; $i < count($mailErrors); $i++) { ?>
              <dt><a href="#tedetis" onclick="toggle_mail_error(<?php echo $i; ?>);" id="expander_<?php echo $i; ?>" class="expander">+</a>
                 Adresse email : <?php echo $mailErrors[$i]['email']; ?> </dt>
@@ -161,8 +161,9 @@
              </table>
             </dd>
             <?php
-        }
-        echo '</dl>';
+        }?>
+        </dl>
+        <?php
     } ?>
 
 </div>
