@@ -14,6 +14,7 @@
 - Mise à jour des composants javascript TimePicker et DatePicker #999
 - Correction d'erreurs css #1142
 - Correction d'erreurs html #1143
+- Correction d'erreurs javascript #1144
 
 ### Évolutions
 
