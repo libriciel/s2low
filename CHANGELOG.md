@@ -20,6 +20,7 @@
 - Permettre de supprimer l'adresse électronique métier, l'adresse électronique de diffusion par défaut et l'adresse électronique de diffusion d'informations #937
 - Rendre cohérente la variable d'environnement CONVERT_API_LOGINS_FROM_ISO #1097
 - Correction du script de récupération des autorités de certification du ministère de l'intérieur #1096
+- Gestion des configurations des connexions DGFiP depuis le container de services #1147
 
 
 ### Évolutions
