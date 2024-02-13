@@ -233,12 +233,13 @@ class Authority extends DataObject
         return ($this->status == 1);
     }
 
-  /**
-   * \brief Méthode d'enregistrement d'une collectivité dans la base de données
-   * \param $module_perms (optionnel) : si true (défaut) sauvegarde aussi les permissions sur les modules
-   * \param $validate booléen (optionnel) Précise si la validation de l'entité doit avoir lieu (true par défaut)
-   * \return true si succès, false sinon
-  */
+    /**
+     * \brief Méthode d'enregistrement d'une collectivité dans la base de données
+     * \param $module_perms (optionnel) : si true (défaut) sauvegarde aussi les permissions sur les modules
+     * \param $validate booléen (optionnel) Précise si la validation de l'entité doit avoir lieu (true par défaut)
+     * \return true si succès, false sinon
+     * @throws \Exception
+     */
     public function save($module_perms = true, $validate = true)
     {
         $saveSQLRequest = parent::buildSaveSQLRequest($validate);
@@ -258,6 +259,17 @@ class Authority extends DataObject
             $this->errorMsg = "Erreur lors de la sauvegarde de la collectivité.";
             $this->db->rollback();
             return false;
+        }
+
+        $existingTransaction = isset($this->id);
+
+        if ($existingTransaction && empty($this->helios_ftp_dest)) {
+            $sql = "UPDATE authorities SET helios_ftp_dest ='' WHERE id = " . $this->id;
+            if (! $this->db->exec($sql)) {
+                $this->errorMsg = "Erreur lors du reset du helios_ftp_dest.";
+                $this->db->rollback();
+                return false;
+            }
         }
 
         if ($module_perms) {
