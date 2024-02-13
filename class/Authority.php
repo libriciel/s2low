@@ -272,6 +272,33 @@ class Authority extends DataObject
             }
         }
 
+        if ($existingTransaction && empty($this->email)) {
+            $sql = "UPDATE authorities SET email ='' WHERE id = " . $this->id;
+            if (! $this->db->exec($sql)) {
+                $this->errorMsg = "Erreur lors du reset du email.";
+                $this->db->rollback();
+                return false;
+            }
+        }
+
+        if ($existingTransaction && empty($this->broadcast_email)) {
+            $sql = "UPDATE authorities SET broadcast_email ='' WHERE id = " . $this->id;
+            if (! $this->db->exec($sql)) {
+                $this->errorMsg = "Erreur lors du reset du broadcast_email.";
+                $this->db->rollback();
+                return false;
+            }
+        }
+
+        if ($existingTransaction && empty($this->default_broadcast_email)) {
+            $sql = "UPDATE authorities SET default_broadcast_email ='' WHERE id = " . $this->id;
+            if (! $this->db->exec($sql)) {
+                $this->errorMsg = "Erreur lors du reset du default_broadcast_email.";
+                $this->db->rollback();
+                return false;
+            }
+        }
+
         if ($module_perms) {
           // Traitement permissions sur les modules
             $sql = "DELETE FROM modules_authorities WHERE authority_id=?";

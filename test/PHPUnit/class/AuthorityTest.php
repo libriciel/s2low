@@ -32,6 +32,48 @@ class AuthorityTest extends S2lowTestCase
     }
 
     /**
+     * Test simple d'init utilisant les données en BDD de S2lowTestCase
+     * @return void
+     * @throws Exception
+     * @dataProvider mails
+     */
+    public function testSimpleMail(string $mailField, string $value1, string $value2)
+    {
+        $authority = new Authority(1);
+        $authority->init();
+        $authority->set($mailField, $value1);
+        $authority->save(false, false);
+
+        $authority1 = new Authority(1);
+        $authority1->init();
+        static::assertEquals(
+            $value1,
+            $authority1->get($mailField)
+        );
+        $authority1->set($mailField, $value2);
+        $authority1->save(false, false);
+
+        $authority2 = new Authority(1);
+        $authority2->init();
+        static::assertEquals(
+            $value2,
+            $authority2->get($mailField)
+        );
+    }
+
+    /**
+     * @return array[]
+     */
+    public function mails(): array
+    {
+        return[
+            [ 'email','email',''],
+            [ 'broadcast_email','email',''],
+            ['default_broadcast_email','email',''],
+        ];
+    }
+
+    /**
      * @return void
      * @throws Exception
      * @dataProvider ftpDests
@@ -66,6 +108,9 @@ class AuthorityTest extends S2lowTestCase
         );
     }
 
+    /**
+     * @return array[]
+     */
     public function ftpDests(): array
     {
         return [
