@@ -24,7 +24,7 @@ services:
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-s2lowpwdpg}
             POSTGRES_DB: ${POSTGRES_DB:-s2lowdb}
             POSTGRES_HOST: ${POSTGRES_HOST:-db}
-            CONVERT_API_LOGINS_TO_ISO: ${CONVERT_API_LOGINS_TO_ISO:-false}
+            CONVERT_API_LOGINS_FROM_ISO: ${CONVERT_API_LOGINS_FROM_ISO:-false}
             LIBERSIGN_INSTALLER: ${LIBERSIGN_INSTALLER:-https://libersign.libriciel.fr/make.sh}
             HELIOS_FTP_P_APPLI: ${HELIOS_FTP_P_APPLI:-GHELPES2}
             HELIOS_NB_FILES_ENVOI: ${HELIOS_NB_FILES_ENVOI:-1}
