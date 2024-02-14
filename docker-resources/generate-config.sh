@@ -24,7 +24,7 @@ define('DB_USER_TEST', "${POSTGRES_USER_TEST:-s2lowusertest}");
 define('DB_PASSWORD_TEST', "${POSTGRES_PASSWORD_TEST:-s2lowpasswordtest}");
 define('DB_DATABASE_TEST', "${POSTGRES_DATABASE_TEST:-s2lowdbtest}");
 
-define('CONVERT_API_LOGINS_TO_ISO', ${CONVERT_API_LOGINS_TO_ISO:-false});
+define('CONVERT_API_LOGINS_FROM_ISO', ${CONVERT_API_LOGINS_FROM_ISO:-false});
 
 define('ONLY_USE_VALIDCARGS', ${ONLY_USE_VALIDCARGS:-false});
 

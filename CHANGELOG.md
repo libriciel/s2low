@@ -18,6 +18,7 @@
 - Correction du formatage des dates du bordereau d’acquittement des actes #1123
 - Permettre de supprimer helios_ftp_dest lors de l'édition d'une collectivité #1150
 - Permettre de supprimer l'adresse électronique métier, l'adresse électronique de diffusion par défaut et l'adresse électronique de diffusion d'informations #937
+- Rendre cohérente la variable d'environnement CONVERT_API_LOGINS_FROM_ISO #1097
 
 ### Évolutions
 
