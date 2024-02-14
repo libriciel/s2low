@@ -36,7 +36,7 @@ cd "$DIR2" || exit 5;
 
 echo "Creation des liens symboliques dans $DIR2"
 ln -sfn "$DIR1"/ac-racine-mi.pem
-ln -sfn "$DIR1"/serveur-1e.pem
+ln -sfn "$DIR1"/ac-serveur-auth-v1.pem
 c_rehash .
 
 
