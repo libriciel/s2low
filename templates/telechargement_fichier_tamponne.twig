@@ -22,18 +22,18 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $(".telecharger_tampon").click(function () {
-            const date_split = $("#tampon_date").val().split("/")
-            var day = date_split[0];
-            var month = date_split[1];
-            var year = date_split[2];
-            var dateString = year+"/"+month+"/"+day;
-            alert(dateString);
-            var href = $(this).attr('href')  + "&date_affichage=" + dateString;
-            $(this).attr('href',href);
-        });
         $("#tampon_date").datepicker().on("input change", function (e) {
             document.getElementById("datepicker_tampon_date_link").innerHTML = $("#tampon_date").val();
+        });
+        $("#tampon_date").datepicker("setDate", "0" );
+        $(".telecharger_tampon").click(function () {
+            let date = $("#tampon_date").datepicker('getDate');
+            let day = date.getDate();
+            let month = date.getMonth()+1;
+            let year = date.getFullYear();
+            dateString = year+"/"+month+"/"+day;
+            var href = $(this).attr('href')  + "&date_affichage=" + dateString;
+            $(this).attr('href',href);
         });
     })
 </script>
