@@ -89,6 +89,7 @@ unit_test:
         - cd /var/www/s2low/
         - composer test-cover
         - cp -rf coverage $CI_PROJECT_DIR
+    coverage: '/^\s*Lines:\s*\d+.\d+\%/'
     artifacts:
       paths:
         - coverage
