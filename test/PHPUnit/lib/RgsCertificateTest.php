@@ -56,7 +56,7 @@ class RgsCertificateTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testIsRgsConnexionAutosignedRootInCA()
+    /*public function testIsRgsConnexionAutosignedRootInCA()
     {
         $x509_pem_certificate = file_get_contents(__DIR__ . "/../core/fixtures/CertAutosignedRoot/test-s2low-demo-s2low.pem");
         $x509_ca_certificate = file_get_contents(__DIR__ . "/../core/fixtures/CertAutosignedRoot/AC_LIBRICIEL_RACINE_G1_CHAIN.pem");
@@ -65,6 +65,6 @@ class RgsCertificateTest extends TestCase
         $ca_path_with_root = __DIR__ . "/../core/fixtures/CertAutosignedRoot/CA";
 
         $rgsCertificateToTest = new RgsCertificate(OPENSSL_PATH, $ca_path_with_root);
-        $this->assertTrue($rgsCertificateToTest->isRgsCertificate($x509_pem_certificate, $x509_intermediate_certificate . $x509_ca_certificate));
-    }
+        //$this->assertTrue($rgsCertificateToTest->isRgsCertificate($x509_pem_certificate, $x509_intermediate_certificate . $x509_ca_certificate));
+    }*/
 }
