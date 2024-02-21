@@ -1,7 +1,14 @@
 include:
-  - remote: 'https://api.r2devops.libriciel.fr/job/r/gitlab/libriciel/integration-continue/templates/publish-compose-to-nexus@0.1.3.yaml?token=r2-9c1cd1c167.yml'
-  - remote: 'https://api.r2devops.libriciel.fr/job/r/gitlab/libriciel/integration-continue/templates/publish-container-to-registry@1.2.0.yaml?token=r2-bec2c06726.yml'
-  - remote: 'https://api.r2devops.libriciel.fr/job/r/gitlab/libriciel/integration-continue/templates/security-check@1.2.0.yaml?token=r2-de7bd52aa1.yml'
+  - project: "libriciel/integration-continue/templates"
+    ref: publish-container-to-registry@2.0.0
+    file: '/jobs/publish-container-to-registry/publish-container-to-registry.yml'
+  - project: "libriciel/integration-continue/templates"
+    ref: publish-compose-to-nexus@0.1.4
+    file: '/jobs/publish-compose-to-nexus/publish-compose-to-nexus.yml'
+  - project: "libriciel/integration-continue/templates"
+    ref: security-check@1.3.2
+    file: '/jobs/security-check/security-check.yml'
+
 
 stages:
     - build
