@@ -856,6 +856,11 @@
             "id": "201",
             "code": "987",
             "name": "Polyn\u00e9sie fran\u00e7aise"
+        },
+        {
+            "id": "203",
+            "code": "988",
+            "name": "Haut commissariat de Nouvelle-Calédonie"
         }
     ],
     "authority_districts": [
@@ -2928,6 +2933,30 @@
             "authority_department_id": "176",
             "code": "9",
             "name": "SGAR"
+        },
+        {
+            "id": "1038",
+            "authority_department_id": "203",
+            "code": "1",
+            "name": "Haut commissariat de Nouvelle-Calédonie"
+        },
+        {
+            "id": "1039",
+            "authority_department_id": "203",
+            "code": "2",
+            "name": "Province Nord"
+        },
+        {
+            "id": "1040",
+            "authority_department_id": "203",
+            "code": "3",
+            "name": "Province Sud"
+        },
+        {
+            "id": "1041",
+            "authority_department_id": "203",
+            "code": "4",
+            "name": "Iles Loyauté"
         }
     ],
     "helios_status": [
