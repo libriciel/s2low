@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.28 - 2024-02-26
+
+### Corrections
+
+- Mise en conformité du numéro de patch
+
 ## 5.0.27 - 2024-02-21
 
 ### Corrections
