@@ -108,7 +108,7 @@ class DGFiPConnectorOnFTP implements DGFiPConnector
         $ftp_get_result = $this->getConnection()->get($tmp_file, "$file");
         if (!$ftp_get_result) {
             throw new Exception(
-                "Impossible de récupérer le fichier $file pour le mettre sur $tmp_file sur le FTP"
+                "Impossible de récupérer le fichier $file pour le mettre sur $tmp_file depuis le FTP"
             );
         }
         return true;

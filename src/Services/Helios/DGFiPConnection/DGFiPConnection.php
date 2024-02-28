@@ -133,6 +133,7 @@ class DGFiPConnection
     public function disconnect(): void
     {
         $this->serverProtocol->close();
+        $this->logger->info('Déconnecté');
     }
 
     /**

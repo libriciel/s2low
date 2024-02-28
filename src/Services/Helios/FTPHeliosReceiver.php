@@ -12,11 +12,10 @@ use S2lowLegacy\Class\S2lowLogger;
 /**
  *
  */
-class FTPHeliosReceiver implements Iterator
+class FTPHeliosReceiver
 {
     private string $localPath;
-    private array $filesToProcess = [];
-    private int $index = 0;
+
     private S2lowLogger $s2lowLogger;
     /**
      * @var \S2low\Services\Helios\DGFiPConnection\DGFiPConnection|null
@@ -45,60 +44,6 @@ class FTPHeliosReceiver implements Iterator
     }
 
     /**
-     * @throws \Exception
-     */
-    public function current(): string
-    {
-        $this->recupOneFile($this->filesToProcess[$this->index], $this->key());
-        return $this->filesToProcess[$this->index];
-    }
-
-    /**
-     * Return the key of the current element
-     * @link https://php.net/manual/en/iterator.key.php
-     * @return int TKey on success, or null on failure.
-     */
-    public function key(): int
-    {
-        return $this->index;
-    }
-
-    /**
-     * Move forward to next element
-     * @link https://php.net/manual/en/iterator.next.php
-     * @return void Any returned value is ignored.
-     */
-    public function next(): void
-    {
-        $this->index++;
-    }
-
-    /**
-     * Checks if current position is valid
-     * @link https://php.net/manual/en/iterator.valid.php
-     * @return bool The return value will be casted to boolean and then evaluated.
-     * Returns true on success or false on failure.
-     */
-    public function valid(): bool
-    {
-        $valid = isset($this->filesToProcess[$this->key()]);
-        if (!$valid) {
-            $this->finTraitement();
-        }
-        return $valid;
-    }
-
-    /**
-     * Rewind the Iterator to the first element
-     * @link https://php.net/manual/en/iterator.rewind.php
-     * @return void Any returned value is ignored.
-     */
-    public function rewind(): void
-    {
-        $this->index = 0;
-    }
-
-    /**
      * @param string $filename
      * @return bool
      */
@@ -114,25 +59,42 @@ class FTPHeliosReceiver implements Iterator
     /**
      * @throws Exception
      */
-    public function retrieveNames(): void
+    public function retrieveNames(int $waitingTime = 5): array
     {
-        $this->heliosConnection->connect();                     //TODO : MOCHE !!
-        $all_file = $this->heliosConnection->getFileNames();
-        $this->filesToProcess = [];
+        $count = null;
+        $growing = true;
+
+        while ($growing) {
+            $previousCount = $count;
+            $all_file = $this->heliosConnection->getFileNames();
+            $count = count($all_file);
+            if (!is_null($count) && !is_null($previousCount) && $count <= $previousCount) {
+                $growing = false;
+            }
+            if (!is_null($previousCount) && $growing) {
+                $this->s2lowLogger->info(
+                    "Des PES sont en cours d'écriture ($previousCount à $count en $waitingTime s)"
+                );
+            }
+            if ($growing) {
+                sleep($waitingTime);
+            }
+        }
+        $filesToProcess = [];
 
         foreach ($all_file as $file) {
             if (!$this->isPesAller(basename($file))) {
-                $this->filesToProcess[] = $file;
+                $filesToProcess[] = $file;
             }
         }
+        return $filesToProcess;
     }
 
     /**
      * @param $file
-     * @param $i
      * @throws Exception
      */
-    private function recupOneFile($file, $i): void
+    public function recupOneFile($file): bool
     {
         try {
             $this->heliosConnection->retrieveFile(
@@ -142,10 +104,11 @@ class FTPHeliosReceiver implements Iterator
                 $this->tmp_path
             );
         } catch (Exception $exception) {
-            $this->s2lowLogger->info("$i : $file récupéré : ECHEC " . $exception->getMessage());
-            return;
+            $this->s2lowLogger->info("$file récupéré : ECHEC " . $exception->getMessage());
+            return false;
         }
-        $this->s2lowLogger->info("$i : $file récupéré : SUCCES") ;
+        $this->s2lowLogger->info("$file récupéré : SUCCES") ;
+        return true;
     }
 
     /**
@@ -154,5 +117,10 @@ class FTPHeliosReceiver implements Iterator
     public function finTraitement(): void
     {
         $this->heliosConnection->disconnect();
+    }
+
+    public function debutTraitement(): void
+    {
+        $this->heliosConnection->connect();
     }
 }

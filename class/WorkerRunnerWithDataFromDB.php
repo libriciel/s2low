@@ -60,7 +60,7 @@ class WorkerRunnerWithDataFromDB
 
         $sleep = $this->min_execution_time_in_seconds - (time() - $start);
         if ($sleep > 0) {
-            $this->s2lowLogger->debug("Arret du script $sleep secondes");
+            $this->s2lowLogger->info("Arret du script $sleep secondes");
             sleep_wrapper($sleep);
         }
         return true;
@@ -80,6 +80,7 @@ class WorkerRunnerWithDataFromDB
      */
     private function checkAll()
     {
+        $this->worker->start();
         $id_list = $this->worker->getAllId();
         $this->s2lowLogger->info(count($id_list) . " travaux trouvées");
 
@@ -98,5 +99,6 @@ class WorkerRunnerWithDataFromDB
                 /* Nothing to do*/
             }
         }
+        $this->worker->end();
     }
 }

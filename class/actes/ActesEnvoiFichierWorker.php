@@ -139,4 +139,14 @@ class ActesEnvoiFichierWorker implements IWorker
     {
         return true;
     }
+
+    public function start()
+    {
+        // TODO: Implement start() method.
+    }
+
+    public function end()
+    {
+        // TODO: Implement end() method.
+    }
 }

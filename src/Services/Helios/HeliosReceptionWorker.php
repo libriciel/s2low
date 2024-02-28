@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace S2low\Services\Helios;
 
 use Exception;
@@ -38,9 +40,19 @@ class HeliosReceptionWorker implements IWorker
         return $id;
     }
 
-    public function getAllId()
+    /**
+     * Renvoie une liste d'identifiant pour reconstruire une file
+     * @return string[]
+     */
+    public function getAllId(): array
     {
-        return [1];
+        try {
+            $this->s2lowLogger->info("Début de la récupération");
+            return $this->ftpFileGetter->retrieveNames();
+        } catch (Exception $e) {
+            $this->s2lowLogger->info("Probleme lors de la recuperation des noms : " . $e->getMessage());
+            exit;
+        }
     }
 
     /**
@@ -52,20 +64,20 @@ class HeliosReceptionWorker implements IWorker
     {
         $sigtermHandler = SigTermHandler::getInstance();
         try {
-            $this->s2lowLogger->info("Début de la récupération");
-            $this->ftpFileGetter->retrieveNames();
-            /* Reception des fichiers*/
-            foreach ($this->ftpFileGetter as $file) {
-                if ($this->workerScript) {
-                    $this->workerScript->putJobByClassName(HeliosAnalyseFichierRecuWorker::class, $file);
-                }
-                if ($sigtermHandler->isSigtermCalled()) {
-                    $this->ftpFileGetter->finTraitement();
-                }
+            $succes = $this->ftpFileGetter->recupOneFile($data);
+            if ($this->workerScript) {
+                $this->workerScript->putJobByClassName(HeliosAnalyseFichierRecuWorker::class, $data);
             }
-            $this->s2lowLogger->info("Recuperation terminee");
+            if ($sigtermHandler->isSigtermCalled()) {
+                $this->ftpFileGetter->finTraitement();
+            }
         } catch (Exception $e) {
-            $this->s2lowLogger->info("Probleme lors de la recuperation des enveloppes : " . $e->getMessage());
+            $this->s2lowLogger->info('Probleme lors de la recuperation du fichier $data : ' . $e->getMessage());
+            $this->ftpFileGetter->finTraitement();
+            exit;
+        }
+        if (!$succes) {
+            $this->ftpFileGetter->finTraitement();
             exit;
         }
     }
@@ -78,5 +90,21 @@ class HeliosReceptionWorker implements IWorker
     public function isDataValid($data)
     {
         return true;
+    }
+
+    /**
+     * @return void
+     */
+    public function start()
+    {
+        $this->ftpFileGetter->debutTraitement();
+    }
+
+    /**
+     * @return void
+     */
+    public function end()
+    {
+        $this->ftpFileGetter->finTraitement();
     }
 }

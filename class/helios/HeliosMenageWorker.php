@@ -52,4 +52,20 @@ class HeliosMenageWorker implements IWorker
     {
         return true;
     }
+
+    /**
+     * @return void
+     */
+    public function start()
+    {
+        // TODO: Implement start() method.
+    }
+
+    /**
+     * @return void
+     */
+    public function end()
+    {
+        // TODO: Implement end() method.
+    }
 }

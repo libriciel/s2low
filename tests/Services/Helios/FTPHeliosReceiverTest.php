@@ -28,7 +28,7 @@ class FTPHeliosReceiverTest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $ftpHeliosConnection->expects(static::once())
+        $ftpHeliosConnection->expects(static::exactly(2))
             ->method('getFileNames')
             ->with()
             ->willReturn([]);
@@ -40,11 +40,10 @@ class FTPHeliosReceiverTest extends S2lowTestCase
             ''
         );
 
-        $receiver->retrieveNames();
+        $retrievedNames = $receiver->retrieveNames(0);
 
-        $retrievedNames = [];
-        foreach ($receiver as $retrievedName) {
-            $retrievedNames[] = $retrievedName;
+        foreach ($retrievedNames as $name) {
+            $receiver->recupOneFile($name);
         }
 
         $this->assertEquals([], $retrievedNames);
@@ -53,7 +52,7 @@ class FTPHeliosReceiverTest extends S2lowTestCase
     /**
      * @throws \Exception
      */
-    public function testRetrieveOneFile()
+    public function testRetrieveADirectoryWithOneFile()
     {
         /** @var  S2lowLogger | MockObject $s2lowLogger */
         $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
@@ -62,7 +61,7 @@ class FTPHeliosReceiverTest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $heliosConnection->expects(static::once())
+        $heliosConnection->expects(static::exactly(2))
             ->method('getFileNames')
             ->with()
             ->willReturn(['File']);
@@ -77,11 +76,10 @@ class FTPHeliosReceiverTest extends S2lowTestCase
             ''
         );
 
-        $receiver->retrieveNames();
+        $retrievedNames = $receiver->retrieveNames(0);
 
-        $retrievedNames = [];
-        foreach ($receiver as $retrievedName) {
-            $retrievedNames[] = $retrievedName;
+        foreach ($retrievedNames as $name) {
+            $receiver->recupOneFile($name);
         }
 
         static::assertEquals(['File'], $retrievedNames);
@@ -103,7 +101,7 @@ class FTPHeliosReceiverTest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $heliosConnection->expects(static::once())
+        $heliosConnection->expects(static::exactly(2))
             ->method('getFileNames')
             ->with()
             ->willReturn(['PESALR2_File']);
@@ -117,11 +115,10 @@ class FTPHeliosReceiverTest extends S2lowTestCase
             ''
         );
 
-        $receiver->retrieveNames();
+        $retrievedNames = $receiver->retrieveNames(0);
 
-        $retrievedNames = [];
-        foreach ($receiver as $retrievedName) {
-            $retrievedNames[] = $retrievedName;
+        foreach ($retrievedNames as $name) {
+            $receiver->recupOneFile($name);
         }
 
         static::assertEquals([], $retrievedNames);
@@ -137,14 +134,14 @@ class FTPHeliosReceiverTest extends S2lowTestCase
         $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
         $s2lowLogger->expects(static::once())
             ->method('info')
-            ->with('0 : File récupéré : ECHEC Une très bonne raison');
+            ->with('File récupéré : ECHEC Une très bonne raison');
 
         /** @var DGFiPConnection | MockObject $heliosConnection */
         $heliosConnection = $this->getMockBuilder(DGFiPConnection::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $heliosConnection->expects(static::once())
+        $heliosConnection->expects(static::exactly(2))
             ->method('getFileNames')
             ->with()
             ->willReturn(['File']);
@@ -159,13 +156,11 @@ class FTPHeliosReceiverTest extends S2lowTestCase
             ''
         );
 
-        $receiver->retrieveNames();
+        $retrievedNames = $receiver->retrieveNames(0);
 
-        $retrievedNames = [];
-        foreach ($receiver as $retrievedName) {
-            $retrievedNames[] = $retrievedName;
+        foreach ($retrievedNames as $name) {
+            $receiver->recupOneFile($name);
         }
-
         static::assertEquals(['File'], $retrievedNames);
     }
 
@@ -182,7 +177,7 @@ class FTPHeliosReceiverTest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $heliosConnection->expects(static::once())
+        $heliosConnection->expects(static::exactly(2))
             ->method('getFileNames')
             ->with()
             ->willReturn(['File1', 'File2']);
@@ -197,13 +192,100 @@ class FTPHeliosReceiverTest extends S2lowTestCase
             ''
         );
 
-        $receiver->retrieveNames();
+        $retrievedNames = $receiver->retrieveNames(0);
 
-        $retrievedNames = [];
-        foreach ($receiver as $retrievedName) {
-            $retrievedNames[] = $retrievedName;
+        foreach ($retrievedNames as $name) {
+            $receiver->recupOneFile($name);
         }
 
         static::assertEquals(['File1', 'File2'], $retrievedNames);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testRetrieveFileNamesWhilePESAreDropped()
+    {
+        /** @var  S2lowLogger | MockObject $s2lowLogger */
+        $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
+
+        /** @var DGFiPConnection | MockObject $heliosConnection */
+        $heliosConnection = $this->getMockBuilder(DGFiPConnection::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $heliosConnection->expects(static::exactly(4))
+            ->method('getFileNames')
+            ->with()
+            ->willReturnOnConsecutiveCalls(
+                ['File1', 'File2'],
+                ['File1', 'File2', 'File3'],
+                ['File1', 'File2', 'File3', 'File4'],
+                ['File1', 'File2', 'File3', 'File4']
+            );
+
+        $receiver = new FTPHeliosReceiver(
+            $s2lowLogger,
+            $heliosConnection,
+            'tmp_local_path',
+            ''
+        );
+
+        $retrievedNames = $receiver->retrieveNames(0);
+
+        static::assertEquals(['File1', 'File2', 'File3', 'File4'], $retrievedNames);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testExceptionOnOneFile()
+    {
+        /** @var  S2lowLogger | MockObject $s2lowLogger */
+        $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
+
+        $heliosConnection = $this->getMockBuilder(DGFiPConnection::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $heliosConnection->expects(static::once())
+            ->method('retrieveFile')
+            ->with('File', 'tmp_local_path')
+            ->willThrowException(new Exception('obviously not because of the remote server'));
+
+        $receiver = new FTPHeliosReceiver(
+            $s2lowLogger,
+            $heliosConnection,
+            'tmp_local_path',
+            ''
+        );
+
+        $this->assertEquals(false, $receiver->recupOneFile('File'));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testRetrieveOneFile()
+    {
+        /** @var  S2lowLogger | MockObject $s2lowLogger */
+        $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
+
+        $heliosConnection = $this->getMockBuilder(DGFiPConnection::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $heliosConnection->expects(static::once())
+            ->method('retrieveFile')
+            ->with('File', 'tmp_local_path');
+
+        $receiver = new FTPHeliosReceiver(
+            $s2lowLogger,
+            $heliosConnection,
+            'tmp_local_path',
+            ''
+        );
+
+        $this->assertEquals(true, $receiver->recupOneFile('File'));
     }
 }
