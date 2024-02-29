@@ -47,4 +47,14 @@ interface IWorker
      * @return boolean indique si les données sont encore valide (i.e la transaction dans le bon état par exemple), si false, on sort le travail de la file
      */
     public function isDataValid($data);
+
+    /**
+     * @return void
+     */
+    public function start();
+
+    /**
+     * @return void
+     */
+    public function end();
 }

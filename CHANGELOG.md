@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.29
+
+### Évolutions
+
+- Attente avant de récupérer les PES lorsque des PES sont déposés sur le serveur distant et arrêt du script lorsqu'une erreur est rencontrée #1157
+
 ## 5.0.28 - 2024-02-26
 
 ### Corrections
