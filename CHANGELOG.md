@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.30 - 2024-02-29
+
+###  Évolutions
+
+- Remonter dans les logs les erreurs rencontrées lors du téléchargement d'un fichier PES en utilisant le protocole FTP #1157
+
 ## 5.0.29 - 2024-02-29
 
 ### Évolutions
