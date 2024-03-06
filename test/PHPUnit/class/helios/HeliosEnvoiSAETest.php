@@ -2,8 +2,10 @@
 
 use S2lowLegacy\Class\helios\HeliosEnvoiSAE;
 use S2lowLegacy\Class\helios\HeliosPrepareEnvoiSAE;
+use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 class HeliosEnvoiSAETest extends S2lowTestCase
 {
@@ -47,6 +49,39 @@ class HeliosEnvoiSAETest extends S2lowTestCase
 
         $this->assertFileDoesNotExist($pes_aller_path);
         $this->assertLogMessage("La transaction $transaction_id a été envoyé à Pastell", 2);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testSendWithCloudError()
+    {
+        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $openStackSwiftWrapper->method("fileExistsOnCloud")->willReturn(true);
+        $openStackSwiftWrapper->method("retrieveFile")->willReturn(false);
+        $this->getObjectInstancier()->set(OpenStackSwiftWrapper::class, $openStackSwiftWrapper);
+        $this->getObjectInstancier()->set('helios_files_upload_root', '/whatever/');
+
+        $this->mockPastellFactory();
+        $transaction_id = $this->setTransactionEnattente();
+
+        static::assertFalse(
+            $this->getObjectInstancier()->get(HeliosEnvoiSAE::class)->sendArchive($transaction_id)
+        );
+
+        $this->assertLogMessage(
+            "Documents indisponibles pour la transaction $transaction_id  : Impossible de récupérer le PES ALLER ab3321d34d3fb32b52332befa534c9854fff677b",
+            1
+        );
+
+        /** @var HeliosTransactionsSQL $heliosTransactionsSQL */
+        $heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+        $this->assertEquals(
+            HeliosStatusSQL::STATUS_ERREUR_SAE_DOC_INDISPONIBLES,
+            $heliosTransactionsSQL->getLatestStatusId($transaction_id)
+        );
     }
 
     private function setTransactionEnattente()

@@ -345,6 +345,10 @@
         {
             "id": "21",
             "name": "Document re\u00e7u (pas d'AR)"
+        },
+        {
+            "id": "22",
+            "name": "Impossible d'envoyer au SAE (documents indisponibles)"
         }
     ],
     "authority_departments": [

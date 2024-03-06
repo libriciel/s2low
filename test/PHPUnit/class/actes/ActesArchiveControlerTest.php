@@ -119,11 +119,11 @@ class ActesArchiveControlerTest extends S2lowTestCase
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
 
         $last_status_info = $actesTransactionsSQL->getLastStatusInfo($transaction_id);
-        $this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE, $last_status_info['status_id']);
+        $this->assertEquals(ActesStatusSQL::STATUS_ERREUR_SAE_DOC_INDISPONIBLES, $last_status_info['status_id']);
 
         $log_record = $this->getLogRecords();
         $this->assertEquals(
-            "Une erreur récupérable est survenue : Impossible de récupérer l'enveloppe abc-TACT--000000000--20170803-16.tar.gz. La transaction sera retentée.",
+            "Documents indisponibles pour la transaction $transaction_id  : Impossible de récupérer l'enveloppe abc-TACT--000000000--20170803-16.tar.gz",
             $log_record[count($log_record) - 1]['message']
         );
     }

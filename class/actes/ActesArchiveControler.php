@@ -97,6 +97,18 @@ class ActesArchiveControler
                 $this->deletePastellDocument($transaction_id, $id_d);
                 $this->logger->error("L'identifiant du document sur Pastell était : $id_d, le document a été supprimé sur Pastell");
             }
+        } catch (FilesNotFoundInCloudException $e) {
+            $message = "Documents indisponibles pour la transaction $transaction_id  : " . $e->getMessage();
+            if ($id_d) {
+                $this->deletePastellDocument($transaction_id, $id_d);
+                $message .=  " - id_d=$id_d";
+            }
+            $this->logger->error($message);
+            $this->actesTransactionsSQL->updateStatus(
+                $transaction_id,
+                ActesStatusSQL::STATUS_ERREUR_SAE_DOC_INDISPONIBLES,
+                $message
+            );
         } catch (Exception $e) {
             $message = "Impossible d'envoyer la transaction $transaction_id : " . $e->getMessage();
             if ($id_d) {
@@ -145,9 +157,9 @@ class ActesArchiveControler
      * @param $tmp_folder
      * @return ActesFilesForSAE
      * @throws RecoverableException
-     * @throws UnrecoverableException
+     * @throws UnrecoverableException|\S2lowLegacy\Class\actes\FilesNotFoundInCloudException
      */
-    private function prepareTransfert($transaction_id, $tmp_folder)
+    private function prepareTransfert($transaction_id, $tmp_folder): ActesFilesForSAE
     {
 
         $actesFilesForSAE = new ActesFilesForSAE();
@@ -160,7 +172,9 @@ class ActesArchiveControler
         $enveloppe_path = $this->actesRetriever->getPath($actesEnvelopeInfo['file_path']);
 
         if (! $enveloppe_path) {
-            throw new RecoverableException("Impossible de récupérer l'enveloppe {$actesEnvelopeInfo['file_path']}");
+            throw new FilesNotFoundInCloudException(
+                "Impossible de récupérer l'enveloppe {$actesEnvelopeInfo['file_path']}"
+            );
         }
 
         $tgzExtractor = new TGZExtractor($tmp_folder);

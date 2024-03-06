@@ -23,6 +23,8 @@ class ActesStatusSQL
 
     public const STATUS_ERREUR_LORS_DE_L_ENVOI_SAE = 20;
 
+    public const STATUS_ERREUR_SAE_DOC_INDISPONIBLES = 22;
+
     public const STATUS_DOCUMENT_RECU_PAS_DAR = 21;
 
     public const STATUS_ENVOYE_AU_SAE = 12;
