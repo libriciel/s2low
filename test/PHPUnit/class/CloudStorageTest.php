@@ -332,7 +332,7 @@ class CloudStorageTest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $cloudStorage = new CloudStorage($iCloudStorable, $openStackSwiftWrapper, $logger);
+        $cloudStorage = new CloudStorage($iCloudStorable, $openStackSwiftWrapper, $logger, true);
 
         $return = $cloudStorage->getFilePathOnCloudWithFileOnDiskPath($filePathOnDisk);
 
@@ -363,7 +363,7 @@ class CloudStorageTest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $cloudStorage = new CloudStorage($iCloudStorable, $openStackSwiftWrapper, $logger);
+        $cloudStorage = new CloudStorage($iCloudStorable, $openStackSwiftWrapper, $logger, true);
 
         $return = $cloudStorage->getFilePathOnCloudWithFileOnDiskPath($filePathOnDisk);
 
@@ -399,7 +399,7 @@ class CloudStorageTest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $cloudStorage = new CloudStorage($iCloudStorable, $openStackSwiftWrapper, $logger);
+        $cloudStorage = new CloudStorage($iCloudStorable, $openStackSwiftWrapper, $logger, true);
 
         $return = $cloudStorage->getFilePathOnCloudWithFileOnDiskPath($filePathOnDisk);
 
@@ -407,5 +407,31 @@ class CloudStorageTest extends S2lowTestCase
             "/test/import//test.tar.gz",
             $return
         );
+    }
+
+    public function testGetPath()
+    {
+        $iCloudStorable = $this->getMockBuilder(ICloudStorable::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $iCloudStorable->method('getFilePathOnDisk')
+            ->willReturn("/idontexist/idontexist/testidontexist.tar.gz");
+
+        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $logger = $this->getMockBuilder(Logger::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $cloudStorage = new CloudStorage($iCloudStorable, $openStackSwiftWrapper, $logger, false);
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(
+            "Unable to retrieve /idontexist/idontexist/testidontexist.tar.gz and no cloud storage enabled"
+        );
+        $cloudStorage->getPath(1);
     }
 }

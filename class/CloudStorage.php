@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace S2lowLegacy\Class;
 
 use Monolog\Logger;
@@ -20,11 +22,13 @@ class CloudStorage
     public function __construct(
         ICloudStorable $iCloudStorable,
         OpenStackSwiftWrapper $openStackSwiftWrapper,
-        Logger $logger
+        Logger $logger,
+        $openstack_enable
     ) {
         $this->iCloudStorable = $iCloudStorable;
         $this->openStackSwiftWrapper = $openStackSwiftWrapper;
         $this->logger = $logger;
+        $this->openstack_enable = $openstack_enable;
     }
 
     public function getAllObjectIdToStore()
@@ -194,7 +198,7 @@ class CloudStorage
     }
 
 
-    public function getPath(int $object_id): string
+    public function getPath(int $object_id): string | bool
     {
 
         $file_path_on_disk = $this->iCloudStorable->getFilePathOnDisk($object_id);
@@ -205,25 +209,15 @@ class CloudStorage
             return $file_path_on_disk;
         }
 
-        $file_path_on_cloud = $this->iCloudStorable->getFilePathOnCloud($object_id);
-
-        try {
-            $this->logger->info("Retrieve object #$object_id from cloud ($file_path_on_cloud)");
-
-            $result = $this->openStackSwiftWrapper->retrieveFile(
-                $this->iCloudStorable->getContainerName(),
-                $file_path_on_disk,
-                $file_path_on_cloud
-            );
-        } catch (Exception $e) {
-            $this->logger->error(
-                "Unable to retrieve $file_path_on_cloud to $file_path_on_disk (object #$object_id) from cloud : " . $e->getMessage(),
-                $e->getTrace()
-            );
-            throw new Exception($e);
+        if (! $this->openstack_enable) {
+            throw new Exception("Unable to retrieve $file_path_on_disk and no cloud storage enabled");
         }
 
-        return $result;
+        $file_path_on_cloud = $this->iCloudStorable->getFilePathOnCloud($object_id);
+
+        $this->retrieveFromCloud($object_id, $file_path_on_cloud, $file_path_on_disk);
+
+        return $file_path_on_disk;
     }
 
     /**
@@ -260,7 +254,7 @@ class CloudStorage
                 "Unable to retrieve $file_path_on_cloud to $file_path_on_disk (object #$object_id) from cloud : " . $e->getMessage(),
                 $e->getTrace()
             );
-            throw new Exception($e);
+            throw $e;
         }
 
         return $result;
@@ -313,6 +307,33 @@ class CloudStorage
         if ($this->iCloudStorable->isTransactionInCloud($object_id)) {
             $this->logger->info("$file [transaction $object_id] passé à is_in_cloud = false");
             $this->iCloudStorable->setInCloud($object_id, false);
+        }
+    }
+
+    /**
+     * @param int $object_id
+     * @param string $file_path_on_cloud
+     * @param string $file_path_on_disk
+     * @return void
+     * @throws \S2lowLegacy\Lib\PausingQueueException
+     * @throws \S2lowLegacy\Lib\UnrecoverableException
+     */
+    private function retrieveFromCloud(int $object_id, string $file_path_on_cloud, string $file_path_on_disk): void
+    {
+        try {
+            $this->logger->info("Retrieve object #$object_id from cloud ($file_path_on_cloud)");
+
+            $this->openStackSwiftWrapper->retrieveFile(
+                $this->iCloudStorable->getContainerName(),
+                $file_path_on_disk,
+                $file_path_on_cloud
+            );
+        } catch (Exception $e) {
+            $this->logger->error(
+                "Unable to retrieve $file_path_on_cloud to $file_path_on_disk (object #$object_id) from cloud : " . $e->getMessage(),
+                $e->getTrace()
+            );
+            throw $e;
         }
     }
 }

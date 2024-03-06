@@ -107,6 +107,8 @@ class LegacyObjectsManager
 
         $objectInstancier->set('helios_counter_file', HELIOS_COUNTER_FILE);
 
+        $objectInstancier->set('openstack_enable', OPENSTACK_ENABLE);
+
         $openStackConfigActes = new OpenStackConfig();
         $openStackConfigActes->openstack_authentication_url_v3 = ACTES_OPENSTACK_AUTHENTICATION_URL_V3;
         $openStackConfigActes->openstack_username = ACTES_OPENSTACK_USERNAME;
