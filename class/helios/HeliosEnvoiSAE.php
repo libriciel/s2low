@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class\helios;
 
+use S2lowLegacy\Class\actes\FilesNotFoundInCloudException;
 use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\PastellWrapperFactory;
 use S2lowLegacy\Class\RecoverableException;
@@ -68,6 +69,15 @@ class HeliosEnvoiSAE
         try {
             $this->sendArchiveThrow($id);
             $this->logger->info("La transaction $id a été envoyé à Pastell");
+        } catch (FilesNotFoundInCloudException $e) {
+            $message = "Documents indisponibles pour la transaction $id  : " . $e->getMessage();
+            $this->heliosTransactionsSQL->updateStatus(
+                $id,
+                HeliosStatusSQL::STATUS_ERREUR_SAE_DOC_INDISPONIBLES,
+                $message
+            );
+            $this->logger->error($message);
+            return false;
         } catch (Exception $e) {
             $message = "Le document n'a pas pu être envoyé sur Pastell : " . $e->getMessage();
             $this->heliosTransactionsSQL->updateStatus(
@@ -96,7 +106,7 @@ class HeliosEnvoiSAE
             $pes_aller_filepath = $this->pesAllerRetriever->getPath($transactionsInfo['sha1']);
 
             if (! $pes_aller_filepath) {
-                throw new RecoverableException("Impossible de récupérer le PES ALLER {$transactionsInfo['sha1']}");
+                throw new FilesNotFoundInCloudException("Impossible de récupérer le PES ALLER {$transactionsInfo['sha1']}");
             }
 
             $pesAcquitCloudStorage = $this->cloudStorageFactory->getInstanceByClassName(PESAcquitCloudStorage::class);

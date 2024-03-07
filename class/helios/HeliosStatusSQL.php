@@ -13,6 +13,7 @@ class HeliosStatusSQL
     public const INFORMATION_DISPONIBLE = 8;
     public const STATUS_EN_ATTENTE_TRANMISSION_SAE = 19;
     public const STATUS_ERREUR_LORS_DE_L_ENVOI_SAE = 20;
+    public const STATUS_ERREUR_SAE_DOC_INDISPONIBLES = 22;
     public const ENVOYER_AU_SAE = 9;
     public const ACCEPTER_PAR_LE_SAE = 10;
 

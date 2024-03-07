@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.31 -
+
+###  Évolutions
+
+- Création de nouveaux états pour les transactions Actes et Helios dont les fichiers ne sont pas accessibles lors de l'envoi au SAE #1103
+
 ## 5.0.30 - 2024-02-29
 
 ###  Évolutions

@@ -51,6 +51,7 @@ INSERT INTO actes_status VALUES (20, 'Erreur lors de l''envoi au SAE');
 INSERT INTO actes_status VALUES (21, 'Document reçu (pas d''AR)');
 INSERT INTO actes_status VALUES (12, 'Envoyé au SAE');
 INSERT INTO actes_status VALUES (18, 'En attente d''être signé');
+INSERT INTO actes_status VALUES (22, 'Impossible d''envoyer au SAE (documents indisponibles)');
 INSERT INTO authority_groups VALUES (1, 'Groupe de test', 1);
 INSERT INTO authority_groups VALUES (2, 'second groupe', 1);
 INSERT INTO authority_types VALUES (1, NULL, 'Région');
