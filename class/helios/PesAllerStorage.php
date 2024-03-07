@@ -189,7 +189,6 @@ class PesAllerStorage
             )
         ) {
             $this->logger->info("File $file : rename KO");
-            return;
         }
     }
 

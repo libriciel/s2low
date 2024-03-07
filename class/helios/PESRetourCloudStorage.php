@@ -16,10 +16,12 @@ class PESRetourCloudStorage implements ICloudStorable
 
     public function __construct(
         HeliosRetourSQL $heliosRetourSQL,
-        $helios_responses_root
+        $helios_responses_root,
+        $helios_pesretour_sanstransaction
     ) {
         $this->heliosRetourSQL = $heliosRetourSQL;
         $this->helios_responses_root = $helios_responses_root;
+        $this->helios_pesretour_sanstransaction = $helios_pesretour_sanstransaction;
     }
 
     public function getContainerName(): string
@@ -98,5 +100,15 @@ class PESRetourCloudStorage implements ICloudStorable
     public function isTransactionInCloud(int $object_id): bool
     {
         return $this->heliosRetourSQL->isInCloud($object_id);
+    }
+
+    public function getNoRelatedOjectInDBDirectory()
+    {
+        return $this->helios_pesretour_sanstransaction;
+    }
+
+    public function getRootPath()
+    {
+        return $this->helios_responses_root;
     }
 }

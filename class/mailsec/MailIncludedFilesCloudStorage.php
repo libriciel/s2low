@@ -13,10 +13,14 @@ class MailIncludedFilesCloudStorage implements ICloudStorable
     private $mailTransactionSQL;
     private $mail_files_upload_root;
 
-    public function __construct(MailTransactionSQL $mailTransactionSQL, $mail_files_upload_root)
-    {
+    public function __construct(
+        MailTransactionSQL $mailTransactionSQL,
+        $mail_files_upload_root,
+        $mail_files_upload_sans_transaction
+    ) {
         $this->mailTransactionSQL = $mailTransactionSQL;
         $this->mail_files_upload_root = $mail_files_upload_root;
+        $this->mail_files_upload_sans_transaction = $mail_files_upload_sans_transaction;
     }
 
     public function getContainerName(): string
@@ -92,5 +96,15 @@ class MailIncludedFilesCloudStorage implements ICloudStorable
     public function isTransactionInCloud(int $object_id)
     {
         return $this->mailTransactionSQL->isInCloud($object_id);
+    }
+
+    public function getNoRelatedOjectInDBDirectory()
+    {
+        return $this->mail_files_upload_sans_transaction;
+    }
+
+    public function getRootPath()
+    {
+        return $this->mail_files_upload_root;
     }
 }

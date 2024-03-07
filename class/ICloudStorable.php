@@ -25,11 +25,14 @@ interface ICloudStorable
 
     public function deleteFileOnDisk(SplFileInfo $file): void;
 
-    public function getObjectIdByFilePath(string $filepath): int;
+    public function getObjectIdByFilePath(string $filepath): ?int;
 
     public function setAvailable(int $object_id, bool $available): void;
 
     public function isAvailable(int $object_id): bool;
 
     public function isTransactionInCloud(int $object_id);
+
+    public function getRootPath();
+    public function getNoRelatedOjectInDBDirectory();
 }

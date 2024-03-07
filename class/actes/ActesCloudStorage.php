@@ -17,10 +17,12 @@ class ActesCloudStorage implements ICloudStorable
 
     public function __construct(
         $actes_files_upload_root,
+        $actes_sanstransaction,
         ActesEnvelopeSQL $actesEnvelopeSQL
     ) {
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
         $this->actes_files_upload_root = $actes_files_upload_root;
+        $this->actes_sanstransaction = $actes_sanstransaction;
     }
 
     public function getContainerName(): string
@@ -105,5 +107,15 @@ class ActesCloudStorage implements ICloudStorable
     public function isTransactionInCloud(int $object_id): bool
     {
         return $this->actesEnvelopeSQL->isInCloud($object_id);
+    }
+
+    public function getRootPath()
+    {
+        return $this->actes_files_upload_root;
+    }
+
+    public function getNoRelatedOjectInDBDirectory()
+    {
+        return $this->actes_sanstransaction;
     }
 }

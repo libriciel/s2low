@@ -354,6 +354,10 @@ if (!defined('ACTES_RESPONSE_ERROR_PATH')) {
     define('ACTES_RESPONSE_ERROR_PATH', WORKSPACE_DIRECTORY . 'actes/response_error');
 }
 
+// Répertoire temporaire de stockage des enveloppes sans transaction associée en BDD
+if (!defined('ACTES_SANSTRANSACTION')) {
+    define('ACTES_SANSTRANSACTION', WORKSPACE_DIRECTORY . 'actes/uploaded_no_transaction');
+}
 
 // Liste des adresses de destinataires des notification commune écoutes les collectivités de l'instance
 if (!defined('ACTES_COMMON_BROADCAST_EMAILS')) {
@@ -422,6 +426,14 @@ if (!defined('HELIOS_PESALLER_SANSTRANSACTION')) {
     define('HELIOS_PESALLER_SANSTRANSACTION', HELIOS_FILES_ROOT . "orphelins/");
 }
 
+if (!defined('HELIOS_PESACQUIT_SANSTRANSACTION')) {
+    define('HELIOS_PESACQUIT_SANSTRANSACTION', HELIOS_FILES_ROOT . "acquit_orphelins/");
+}
+
+if (!defined('HELIOS_PESRETOUR_SANSTRANSACTION')) {
+    define('HELIOS_PESRETOUR_SANSTRANSACTION', HELIOS_FILES_ROOT . "retour_orphelins/");
+}
+
 if (!defined("HELIOS_ZIP_BEFORE_SEND")) {
     define("HELIOS_ZIP_BEFORE_SEND", false);
 }
@@ -465,7 +477,12 @@ if (! defined("HELIOS_DO_NOT_VERIFY_NOM_FIC_UNICITY")) {
 ///////////////////////////////////
 // Répertoire de stockage des fichiers envoyés par les utilisateurs
 if (!defined('MAIL_FILES_UPLOAD_ROOT')) {
-    define('MAIL_FILES_UPLOAD_ROOT', WORKSPACE_DIRECTORY . 'mail/');
+    define('MAIL_FILES_UPLOAD_ROOT', WORKSPACE_DIRECTORY . 'mail/upload/');
+}
+
+// Répertoire de stockage des fichiers envoyés par les utilisateurs et non liés à une transaction
+if (!defined('MAIL_FILES_UPLOAD_SANSTRANSACTION')) {
+    define('MAIL_FILES_UPLOAD_SANSTRANSACTION', WORKSPACE_DIRECTORY . 'mail/orphelins/');
 }
 
 if (!defined('MAIL_TEDETIS_FROM')) {

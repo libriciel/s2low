@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class;
 
+use RuntimeException;
 use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
 use S2lowLegacy\Class\actes\ActesImapProperties;
 use S2lowLegacy\Class\actes\ActesMinistereProperties;
@@ -179,14 +180,15 @@ class LegacyObjectsManager
 
         $objectInstancier->set("helios_files_upload_root", HELIOS_FILES_UPLOAD_ROOT);
         $objectInstancier->set("repertoirePesAllerSansTransaction", HELIOS_PESALLER_SANSTRANSACTION);
+        $objectInstancier->set("helios_pesacquit_sans_transaction", HELIOS_PESACQUIT_SANSTRANSACTION);
+        $objectInstancier->set("helios_pesretour_sanstransaction", HELIOS_PESRETOUR_SANSTRANSACTION);
         $objectInstancier->set("helios_responses_root", HELIOS_RESPONSES_ROOT);
         $objectInstancier->set("helios_responses_error_path", HELIOS_RESPONSES_ERROR_PATH);
         $objectInstancier->set("schema_pes_path", HELIOS_XSD_PATH);
 
-        $objectInstancier->set("helios_responses_root", HELIOS_RESPONSES_ROOT);
-
 
         $objectInstancier->set("actes_files_upload_root", ACTES_FILES_UPLOAD_ROOT);
+        $objectInstancier->set('actes_sanstransaction', ACTES_SANSTRANSACTION);
         $objectInstancier->set("actes_appli_trigramme", ACTES_APPLI_TRIGRAMME);
         $objectInstancier->set("actes_appli_quadrigramme", ACTES_APPLI_QUADRIGRAMME);
 
@@ -220,6 +222,7 @@ class LegacyObjectsManager
         $objectInstancier->set('actes_response_error_path', ACTES_RESPONSE_ERROR_PATH);
 
         $objectInstancier->set('mail_files_upload_root', MAIL_FILES_UPLOAD_ROOT);
+        $objectInstancier->set('mail_files_upload_sans_transaction', MAIL_FILES_UPLOAD_SANSTRANSACTION);
 
         $objectInstancier->set('pades_valid_url', PADES_VALID_URL);
         $objectInstancier->set('pdf_stamp_url', PDF_STAMP_URL);

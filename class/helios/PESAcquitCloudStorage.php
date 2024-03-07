@@ -16,10 +16,12 @@ class PESAcquitCloudStorage implements ICloudStorable
 
     public function __construct(
         HeliosTransactionsSQL $heliosTransactionsSQL,
-        $helios_responses_root
+        $helios_responses_root,
+        $helios_pesacquit_sans_transaction
     ) {
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
         $this->helios_responses_root = $helios_responses_root;
+        $this->helios_pesacquit_sans_transaction = $helios_pesacquit_sans_transaction;
     }
 
     public function getContainerName(): string
@@ -98,5 +100,15 @@ class PESAcquitCloudStorage implements ICloudStorable
     public function isTransactionInCloud(int $object_id): bool
     {
         return $this->heliosTransactionsSQL->isPesAcquitInCloud($object_id);
+    }
+
+    public function getNoRelatedOjectInDBDirectory()
+    {
+        return $this->helios_pesacquit_sans_transaction;
+    }
+
+    public function getRootPath()
+    {
+        return $this->helios_responses_root;
     }
 }

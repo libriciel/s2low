@@ -245,6 +245,7 @@ class CloudStorageTest extends S2lowTestCase
         $finder->in(dirname($file_to_send));
 
         $iCloudStorable = $this->getICloudStorable($file_to_send, "", $finder);
+        $iCloudStorable->method("getObjectIdByFilePath")->willReturn(42);
 
         $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0);
         $this->assertFileExists($file_to_send);
@@ -309,6 +310,42 @@ class CloudStorageTest extends S2lowTestCase
             "withOnlyAvailable" => [true, false, 0, 0,  []],
             "withNotAvailableAndNotInCloud" => [false,false, 1, 0,["3" => "#set to available#"]]
         ];
+    }
+
+    public function testNoTransaction()
+    {
+        $this->setOpenStackSwiftWrapper(false, false);
+        $tmpFolder = new TmpFolder();
+        $inputFolder = $tmpFolder->create();
+        $outputFolder = $tmpFolder->create();
+        mkdir($inputFolder . "/dir1/dir2/", 0700, true);
+        $file_to_send =  $inputFolder . "/dir1/dir2/foo.txt";
+        file_put_contents($file_to_send, 'bar');
+        $finder = new Finder();
+        $finder->in(dirname($file_to_send));
+        $iCloudStorable = $this->getICloudStorable($file_to_send, "", $finder);
+        $iCloudStorable->method("getObjectIdByFilePath")->willReturn(null);
+        $iCloudStorable->method("getRootPath")->willReturn($inputFolder);
+        $iCloudStorable->method("getNoRelatedOjectInDBDirectory")->willReturn($outputFolder);
+        $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0, true);
+        $this->assertFalse(file_exists($inputFolder . "/dir1/dir2/foo.txt"));
+        $this->assertTrue(file_exists($outputFolder . "/dir1/dir2/foo.txt"));
+        $this->assertEquals(
+            'bar',
+            file_get_contents($outputFolder . "/dir1/dir2/foo.txt")
+        );
+    }
+
+    public function testMoveFileFromDirToOtherDir()
+    {
+        $this->setOpenStackSwiftWrapper(false, false);
+        $finder = new Finder();
+        $iCloudStorable = $this->getICloudStorable("", "", $finder);
+        $this->assertEquals(
+            "/dir/2/to/file",
+            $this->getCloudStorage($iCloudStorable)
+                ->moveFileFromDirToOtherDir("/path/1/to/file", "/path/1/", "/dir/2/")
+        );
     }
 
     public function testFileNotIncloud()

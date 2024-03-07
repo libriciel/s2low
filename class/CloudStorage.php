@@ -12,6 +12,7 @@ use S2lowLegacy\Lib\PausingQueueException;
 use S2lowLegacy\Lib\SigTermHandler;
 use S2lowLegacy\Lib\UnrecoverableException;
 use SplFileInfo;
+use Symfony\Component\Routing\Exception\RuntimeException;
 
 /**
  *
@@ -326,6 +327,7 @@ class CloudStorage
         $object_id = $this->iCloudStorable->getObjectIdByFilePath($file->getRealPath());
         if (!$object_id) {
             $this->logger->notice('Unable to find object id for the file ' . $file->getRealPath());
+            $this->moveToOrphelinsDirectory($file);
             return;
         }
         if (!$this->iCloudStorable->isAvailable($object_id)) {
@@ -362,6 +364,47 @@ class CloudStorage
                 $e->getTrace()
             );
             throw $e;
+        }
+    }
+    public function moveFileFromDirToOtherDir(string $path, string $dirFrom, string $dirTo): string
+    {
+        return str_replace($dirFrom, $dirTo, $path);
+    }
+
+    private function moveToOrphelinsDirectory(SplFileInfo $file)
+    {
+        if (!realpath($this->iCloudStorable->getRootPath())) {
+            $this->logger->info(
+                "File {$file->getRealPath()} : origin directory {$this->iCloudStorable->getRootPath()}  not found"
+            );
+            return;
+        }
+        if (!realpath($this->iCloudStorable->getNoRelatedOjectInDBDirectory())) {
+            $this->logger->info(
+                "File {$file->getRealPath()} : destination directory {$this->iCloudStorable->getNoRelatedOjectInDBDirectory()}  not found"
+            );
+            return;
+        }
+        $path = $this->moveFileFromDirToOtherDir(
+            $file->getRealPath(),
+            $this->iCloudStorable->getRootPath(),
+            $this->iCloudStorable->getNoRelatedOjectInDBDirectory(),
+        );
+
+        $destFile =  new SplFileInfo($path);
+        if (!is_dir($destFile->getPath())) {
+            echo "pouet ?";
+            if (!mkdir($destFile->getPath(), 0700, true)) {
+                throw new RuntimeException("pouet");
+            }
+        }
+        if (
+            !rename(
+                $file->getRealPath(),
+                $destFile->getPath() . "/" . $destFile->getFilename()
+            )
+        ) {
+            $this->logger->info("File $file : rename KO");
         }
     }
 }
