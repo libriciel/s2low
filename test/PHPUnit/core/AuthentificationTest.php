@@ -76,7 +76,7 @@ class AuthentificationTest extends S2lowTestCase
     {
         $this->setServerAdullactCertificate();
         $this->setServerInfo([
-            'PHP_AUTH_USER' => "alice",
+            'PHP_AUTH_USER' => "alice_é",
             'PHP_AUTH_PW' => "alice"
         ]);
         $this->authenticateWith(2);
@@ -89,7 +89,7 @@ class AuthentificationTest extends S2lowTestCase
     {
         $this->setServerAdullactCertificate();
         $this->setServerInfo([
-            'PHP_AUTH_USER' => "alice",
+            'PHP_AUTH_USER' => "alice_é",
             'PHP_AUTH_PW' => "password"
         ]);
         $this->setExpectedException("Exception", "Message : Le certificat n'est pas valide");
@@ -198,8 +198,9 @@ class AuthentificationTest extends S2lowTestCase
      */
     public function testAuthenticationWithNounce()
     {
+        /** @var NounceSQL $nounceSQL */
         $nounceSQL = $this->getObjectInstancier()->get(NounceSQL::class);
-        $nounce = $nounceSQL->create("alice", "alice", 1);
+        $nounce = $nounceSQL->create("alice_é", "alice", 1);
 
         $this->setServerInfo([
             'SSL_CLIENT_VERIFY' => "SUCCESS",
@@ -209,7 +210,7 @@ class AuthentificationTest extends S2lowTestCase
         ]);
 
         $this->getObjectInstancier()->get(Environnement::class)->get()->set('nounce', $nounce);
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('login', 'alice');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('login', 'alice_é');
         $this->getObjectInstancier()->get(Environnement::class)->get()->set('hash', hash("sha256", "alice:$nounce"));
 
         $certHandler = $this->getMockBuilder(X509Certificate::class)->disableOriginalConstructor()->getMock();
@@ -223,7 +224,7 @@ class AuthentificationTest extends S2lowTestCase
 
         $environment = $this->getObjectInstancier()->get(Environnement::class);
 
-        $httpsConnexion = new HttpsConnexion($environment, $certHandler, true);
+        $httpsConnexion = new HttpsConnexion($environment, $certHandler, false);
 
         $authentification = new Authentification(
             $environment,
@@ -242,11 +243,11 @@ class AuthentificationTest extends S2lowTestCase
     public function testAuthenticationWithNounceFailed()
     {
         $nounceSQL = $this->getObjectInstancier()->get(NounceSQL::class);
-        $nounce = $nounceSQL->create("alice", "alice", 1);
+        $nounce = $nounceSQL->create("alice_é", "alice", 1);
 
         $this->setServerAdullactCertificate();
         $this->getObjectInstancier()->get(Environnement::class)->get()->set('nounce', $nounce);
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('login', 'alice');
+        $this->getObjectInstancier()->get(Environnement::class)->get()->set('login', 'alice_é');
         $this->getObjectInstancier()->get(Environnement::class)->get()->set('hash', hash("sha256", "alice:$nounce:toto"));
 
         $authentification = $this->getObjectInstancier()->get(Authentification::class);

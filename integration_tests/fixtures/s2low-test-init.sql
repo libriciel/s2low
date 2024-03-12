@@ -41,17 +41,17 @@ DELETE FROM mail_transaction;
 INSERT INTO actes_natures VALUES (3, 'AI', 'Arretes individuelles');
 INSERT INTO actes_natures VALUES (1, 'DE', 'Deliberations');
 INSERT INTO actes_status VALUES (-1, 'Erreur');
-INSERT INTO actes_status VALUES (1, 'Post�');
+INSERT INTO actes_status VALUES (1, 'Posté');
 INSERT INTO actes_status VALUES (2, 'En attente de transmission');
 INSERT INTO actes_status VALUES (3, 'Transmis');
-INSERT INTO actes_status VALUES (4, 'Acquittement re�u');
-INSERT INTO actes_status VALUES (13, 'Archiv� par le SAE');
+INSERT INTO actes_status VALUES (4, 'Acquittement reçu');
+INSERT INTO actes_status VALUES (13, 'Archivé par le SAE');
 INSERT INTO actes_status VALUES (14, 'Erreur lors de l''archivage');
 INSERT INTO actes_status VALUES (19, 'En attente de transmission au SAE');
 INSERT INTO actes_status VALUES (20, 'Erreur lors de l''envoi au SAE');
-INSERT INTO actes_status VALUES (21, 'Document re�u (pas d''AR)');
-INSERT INTO actes_status VALUES (12, 'Envoy� au SAE');
-INSERT INTO actes_status VALUES (18, 'En attente d''�tre sign�');
+INSERT INTO actes_status VALUES (21, 'Document reçu (pas d''AR)');
+INSERT INTO actes_status VALUES (12, 'Envoyé au SAE');
+INSERT INTO actes_status VALUES (18, 'En attente d''être signé');
 
 -- Création des modules
 INSERT INTO modules VALUES (1, 'actes', 'Module Actes', 'Transactions Actes', 1);
@@ -62,7 +62,7 @@ INSERT INTO modules VALUES (3, 'mail', 'Module Mail', 'Transactions Mail', 1);
 INSERT INTO authority_groups VALUES (1, 'Groupe de test', 1);
 
 -- Création d'une collectivité
-INSERT INTO authority_types VALUES (1, NULL, 'R�gion');
+INSERT INTO authority_types VALUES (1, NULL, 'Région');
 INSERT INTO authorities VALUES (1, 1, 1, 'Bourg-en-Bresse', NULL, NULL, '123456789', NULL, NULL, NULL, NULL, NULL, NULL, '001', '1', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, true, NULL, NULL, NULL, NULL, NULL, false);
 INSERT INTO modules_authorities VALUES (1, 1, 1);  -- Accès au module Actes
 INSERT INTO modules_authorities VALUES (2, 2, 1);  -- Accès au module Helios

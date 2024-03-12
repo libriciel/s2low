@@ -40,7 +40,7 @@ abstract class S2lowTestCase extends TestCase
 
     protected function setServerInfo(array $server_info)
     {
-        return $this->testEnvironmentManager->setServerInfo($server_info);
+        $this->testEnvironmentManager->setServerInfo($server_info);
     }
 
     public function setSuperAdminAuthentication()
