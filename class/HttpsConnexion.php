@@ -91,23 +91,24 @@ class HttpsConnexion
     /**
      * @return array
      */
-    public function getCredentialsFromApache(): array
+    public function getCredentialsFromApache(): Credentials
     {
         // Il faudra supprimer la fonction correctEncoding lorsque l'on supprimera la constante convertAPILoginsToIso
-        return [
-            'login' => $this->correctEncoding($this->environnement->server()->get('PHP_AUTH_USER')),
-            'password' => $this->correctEncoding($this->environnement->server()->get('PHP_AUTH_PW'))
-        ];
+        return new Credentials(
+            $this->correctEncoding($this->environnement->server()->get('PHP_AUTH_USER')),
+            $this->correctEncoding($this->environnement->server()->get('PHP_AUTH_PW'))
+        );
     }
 
     /**
      * @return array
      */
-    public function getCredentialsFromPost(): array
+    public function getCredentialsFromPost(): Credentials
     {
-        return $this->getParameterList([
+        $parameters = $this->getParameterList([
             'login' => 'login',
             'password' => 'password'], "post");
+        return new Credentials($parameters['login'], $parameters['password']);
     }
 
     /**

@@ -221,6 +221,12 @@ services:
   S2lowLegacy\Class\BatchUploadHandler:
     autowire: false
 
+  S2lowLegacy\Class\ConnectionInfos:
+    autowire: false
+
+  S2lowLegacy\Class\Credentials:
+    autowire: false
+
   S2lowLegacy\Class\BeanstalkdWrapper:
     arguments:
       $beanstalkd_server: "%app.beanstalkd_server%"

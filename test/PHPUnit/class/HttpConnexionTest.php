@@ -53,7 +53,7 @@ class HttpConnexionTest extends S2lowTestCase
         $httpConnexion = new HttpsConnexion($environnement, $certificateHandler, true);
         $credentials = $httpConnexion->getCredentialsFromPost();
 
-        $this->assertEquals("login", $credentials["login"]);
-        $this->assertEquals("password", $credentials["password"]);
+        $this->assertEquals("login", $credentials->getLogin());
+        $this->assertEquals("password", $credentials->getPassword());
     }
 }

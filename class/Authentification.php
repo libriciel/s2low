@@ -105,7 +105,10 @@ class Authentification
             Helpers::returnAndExit(1, "La connexion n'a pas pu être établie", Helpers::getLink("connexion-status"));
         } // @codeCoverageIgnore
 
-        $list_id = $this->userSQL->getListIdFromConnexion($connexion_info['certificate_hash'], $connexion_info['certificate_rgs_2_etoiles']);
+        $list_id = $this->userSQL->getListIdFromConnexion(
+            $connexion_info->getCertificateHash(), //$connexion_info['certificate_hash'],
+            $connexion_info->getCertificateRGS() //$connexion_info['certificate_rgs_2_etoiles']
+        );
 
         if (! in_array($user_id, $list_id)) {
             Helpers::returnAndExit(1, "La connexion n'a pas pu être établie", Helpers::getLink("/login.php"));
@@ -114,7 +117,7 @@ class Authentification
 
     /**
      * @param int $authentProcess
-     * @return array|false
+     * @return \S2lowLegacy\Class\ConnectionInfos
      * @throws Exception
      */
     public function getAllConnexionInfo(int $authentProcess = Authentification::AUTHENTIFICATION_BY_APACHE)
@@ -133,7 +136,7 @@ class Authentification
             throw new Exception("Aucune information de certificat trouvée");
         }
 
-        return array_merge($credentials, $certificateInfos);
+        return new ConnectionInfos($credentials, $certificateInfos);
     }
 
     private function getConnexionIdFromNounce(array $nonceParameters)
@@ -156,9 +159,9 @@ class Authentification
      * @param $connexion_info
      * @return mixed
      */
-    private function getIdFromConnexionInfo(array $connexion_info)
+    private function getIdFromConnexionInfo(ConnectionInfos $connexion_info)
     {
-        if ($connexion_info['login']) {
+        if ($connexion_info->getLogin()) {
             return $this->getIdFromCertificateAndLogin($connexion_info);
         }
         return $this->getIdFromCertificateOnly($connexion_info);
@@ -168,19 +171,19 @@ class Authentification
      * @param $connexion_info
      * @return array
      */
-    private function getIdFromCertificateAndLogin(array $connexion_info): array
+    private function getIdFromCertificateAndLogin(ConnectionInfos $connexion_info): array
     {
         $possibleUsersInDB = $this->userSQL->getIdsAndPasswordsFromConnexionInfo(
-            $connexion_info['certificate_hash'],
-            $connexion_info['certificate_rgs_2_etoiles'],
-            $connexion_info['login']
+            $connexion_info->getCertificateHash(), //$connexion_info['certificate_hash'],
+            $connexion_info->getCertificateRGS(), //$connexion_info['certificate_rgs_2_etoiles'],
+            $connexion_info->getLogin() //$connexion_info['login']
         );
         $ids = [];
 
         foreach ($possibleUsersInDB as $possibleUser) {
             if (
                 $this->passwordHandler->passwordMatchesHash(
-                    $connexion_info['password'],
+                    $connexion_info->getPassword(), //$connexion_info['password'],
                     $possibleUser["password"],
                     $possibleUser['id']
                 )
@@ -196,11 +199,11 @@ class Authentification
      * @param $connexion_info
      * @return mixed
      */
-    private function getIdFromCertificateOnly(array $connexion_info)
+    private function getIdFromCertificateOnly(ConnectionInfos $connexion_info)
     {
         return $this->userSQL->getIdsFromConnexionInfo(
-            $connexion_info['certificate_hash'],
-            $connexion_info['certificate_rgs_2_etoiles']
+            $connexion_info->getCertificateHash(), //$connexion_info['certificate_hash'],
+            $connexion_info->getCertificateRGS()// $connexion_info['certificate_rgs_2_etoiles']
         );
     }
 }

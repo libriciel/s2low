@@ -254,6 +254,9 @@ class AuthentificationTest extends S2lowTestCase
         $authentification->authenticate();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetAllConnexionInfo()
     {
         $this->setServerInfo([
@@ -263,14 +266,27 @@ class AuthentificationTest extends S2lowTestCase
             'SSL_CLIENT_CERT' => file_get_contents(__DIR__ . "/fixtures/clean_pem.pem"),
         ]);
 
+        /** @var Authentification $authentification */
         $authentification = $this->getObjectInstancier()->get(Authentification::class);
         $info = $authentification->getAllConnexionInfo();
 
-        $this->assertEquals(array(
-            'ssl_client_verify' => 'SUCCESS',
-            'subject_dn' => '/C=FR/ST=France/L=Lyon/O=Sigmalis/OU=sigmalis/CN=Eric_Pommateau_RGS_2_etoiles',
-            'issuer_dn' => '/C=FR/ST=France/L=Lyon/O=Sigmalis/CN=Sigmalis Certificate Autority/emailAddress=eric@sigmalis.com',
-            'ssl_client_cert' => '-----BEGIN CERTIFICATE-----
+        $this->assertEquals(
+            'SUCCESS',
+            $info->getSslClientVerify() // '' =>
+        );
+
+        $this->assertEquals(
+            '/C=FR/ST=France/L=Lyon/O=Sigmalis/OU=sigmalis/CN=Eric_Pommateau_RGS_2_etoiles',
+            $info->getSubjectDN() // 'subject_dn'
+        );
+
+        $this->assertEquals(
+            '/C=FR/ST=France/L=Lyon/O=Sigmalis/CN=Sigmalis Certificate Autority/emailAddress=eric@sigmalis.com',
+            $info->getIssuerDN() // 'issuer_dn' =>
+        );
+
+        $this->assertEquals(
+            '-----BEGIN CERTIFICATE-----
 MIIFeTCCA2ECAQgwDQYJKoZIhvcNAQEFBQAwgYoxCzAJBgNVBAYTAkZSMQ8wDQYD
 VQQIDAZGcmFuY2UxDTALBgNVBAcMBEx5b24xETAPBgNVBAoMCFNpZ21hbGlzMSYw
 JAYDVQQDDB1TaWdtYWxpcyBDZXJ0aWZpY2F0ZSBBdXRvcml0eTEgMB4GCSqGSIb3
@@ -302,11 +318,19 @@ yPThsQ7QoSMwU27XzH1zb+NiD8sHNPgHacK6gSg/ZBj53IMGtElUAw3RRgXbuYnK
 eprALP5oks/IqINKST3K68njxMHj/v/hduEkw0dJxD5J/ga9beBhZ2Soe7XqBuUv
 YNN6Z4fNWGHPgI7R6w==
 -----END CERTIFICATE-----',
-            'certificate_rgs_2_etoiles' => false,
-            'login' => false,
-            'password' => false,
-            'certificate_hash' => 'ieQoLUcitdU9iZIJLPoIdp8TcUY=',
-        ), $info);
+            $info->getSslClientCert() //'ssl_client_cert' =>
+        );
+
+        $this->assertEquals(
+            false,
+            $info->getCertificateRGS() // 'certificate_rgs_2_etoiles'
+        );
+
+        $this->assertEquals(false, $info->getLogin());
+
+        $this->assertEquals(false, $info->getPassword());
+
+        $this->assertEquals('ieQoLUcitdU9iZIJLPoIdp8TcUY=', $info->getCertificateHash());
     }
 
     public function testAuthentByForm()
@@ -316,7 +340,9 @@ YNN6Z4fNWGHPgI7R6w==
         $passwordHandler = $this->getMockBuilder(PasswordHandler::class)->disableOriginalConstructor()->getMock();
         $httpsConnexion = $this->getMockBuilder(HttpsConnexion::class)->disableOriginalConstructor()->getMock();
 
-        $httpsConnexion->expects($this->once())->method('getCredentialsFromPost')->willReturn(['credentials']);
+        $httpsConnexion->expects($this->once())->method('getCredentialsFromPost')->willReturn(
+            new \S2lowLegacy\Class\Credentials('login', 'password')
+        );
         $httpsConnexion->expects($this->never())->method('getCredentialsFromApache');
 
         $httpsConnexion->expects($this->once())->method('getCertificateInfo')->willReturn(['certificate_infos']);
