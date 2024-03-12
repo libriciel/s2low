@@ -6,6 +6,10 @@
 
 - Création de nouveaux états pour les transactions Actes et Helios dont les fichiers ne sont pas accessibles lors de l'envoi au SAE #1103
 
+### Corrections
+
+- Passage en UTF-8 des fichiers d'initialisation de la base de données pour les tests unitaires #1160
+
 ## 5.0.30 - 2024-02-29
 
 ###  Évolutions

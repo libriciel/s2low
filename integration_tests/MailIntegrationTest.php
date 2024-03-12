@@ -1,41 +1,57 @@
 <?php
 
+declare(strict_types=1);
+
+use S2lowLegacy\Class\LegacyObjectsManager;
+use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\ObjectInstancierFactory;
 use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\SQLQuery;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ *
+ */
 class MailIntegrationTest extends WebTestCase
 {
     /** @var SQLQuery */
     private SQLQuery $sqlQuery;
     private PemCertificateFactory $pemCertificateFactory;
 
+    /**
+     * @param int|string $dataName
+     *
+     * @internal This method is not covered by the backward compatibility promise for PHPUnit
+     */
     public function __construct(?string $name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
     }
 
-    public function setUp(): void
+    /**
+     * This method is called before each test.
+     */
+    protected function setUp(): void
     {
         parent::setUp();
-        \S2lowLegacy\Class\LegacyObjectsManager::resetObjectInstancier();
+        LegacyObjectsManager::resetObjectInstancier();
         $_SESSION = [];
-        \S2lowLegacy\Lib\ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());    //DatabasePool utilise ObjectInstancier
+        ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());    //DatabasePool utilise ObjectInstancier
         $this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);            // On en crée un le temps de MàJ la BDD
         $this->sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST); // On le ressettera ensuite
         $this->sqlQuery->setDatabaseHost(DB_HOST_TEST);
-        \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->set(SQLQuery::class, $this->sqlQuery);
+        ObjectInstancierFactory::getObjetInstancier()->set(SQLQuery::class, $this->sqlQuery);
         $this->pemCertificateFactory = new PemCertificateFactory();
-        $this->sqlQuery->exec(utf8_encode(file_get_contents(__DIR__ . "/fixtures/s2low-test-init.sql")));
-        \S2lowLegacy\Lib\ObjectInstancierFactory::resetObjectInstancier(new ObjectInstancier());    //DatabasePool utilise ObjectInstancier
+        $this->sqlQuery->exec(file_get_contents(__DIR__ . '/fixtures/s2low-test-init.sql'));
+        ObjectInstancierFactory::resetObjectInstancier();    //DatabasePool utilise ObjectInstancier
     }
 
     /**
      * @throws \Exception
      */
-    public function setUpUser(string $certificatPem, string $certificatHash)
+    public function setUpUser(string $certificatPem, string $certificatHash): void
     {
         $sql = "INSERT INTO users VALUES (1, 'eric@sigmalis.com', 'test_subject', 'test_issuer', 'Pommateau', 'Eric', NULL, 'SADM', 1, 1, ?, NULL, NULL, NULL, 1, NULL, NULL, ?, ?)";
         $this->sqlQuery->query($sql, [$certificatPem, $certificatPem, $certificatHash]);
@@ -55,19 +71,19 @@ class MailIntegrationTest extends WebTestCase
      */
     private function setUpClient(string $certificatPem, string $certificatSansBegin): KernelBrowser
     {
-        $serverVariables = array(
+        $serverVariables = [
             'SSL_CLIENT_VERIFY' => 'ssl_client_verify',
             'SSL_CLIENT_S_DN' => 'subject_dn',
             'SSL_CLIENT_I_DN' => 'issuer_dn',
             'SSL_CLIENT_CERT' => $certificatPem,
             'HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION' => $certificatSansBegin
 
-        );
+        ];
         foreach ($serverVariables as $key => $value) {
             $_SERVER[$key] = $value;         // Le client Symfony ne set pas la session, utilisée par l'appli...
         }
         return static::createClient(
-            array(),
+            [],
             $serverVariables
         );
     }
@@ -78,19 +94,22 @@ class MailIntegrationTest extends WebTestCase
     public function testAccessIndexWithRightCertificate()
     {
         $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . "/../test/api/Eric_Pommateau_RGS_2_etoiles.pem")
+            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
 
         $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpClient($certificatePem->getContent(), $certificatePem->getContentStrippedFromBegin());                                                           // 2/ Le client ne modifie pas la variable _SERVER
+        $client = $this->setUpClient(
+            $certificatePem->getContent(),
+            $certificatePem->getContentStrippedFromBegin()
+        );                                                           // 2/ Le client ne modifie pas la variable _SERVER
 
-        \S2lowLegacy\Lib\ObjectInstancierFactory::resetObjectInstancier();
+        ObjectInstancierFactory::resetObjectInstancier();
         $crawler = $client->request('GET', '/index.php');
-        $this->assertMatchesRegularExpression(
-            "#<title>Tiers de téléransmission multiprotocoles</title>#",
+        static::assertMatchesRegularExpression(
+            '#<title>Tiers de téléransmission multiprotocoles</title>#',
             $crawler->html()
         );
-        $this->assertResponseIsSuccessful();
+        static::assertResponseIsSuccessful();
     }
 
     /**
@@ -100,22 +119,22 @@ class MailIntegrationTest extends WebTestCase
     public function testAccessIndexWithWrongCertificate(): void
     {
         $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . "/../test/api/Eric_Pommateau_RGS_2_etoiles.pem")
+            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
         $wrongCertificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . "/../test/PHPUnit/controller/fixtures/user1.pem")
+            file_get_contents(__DIR__ . '/../test/PHPUnit/controller/fixtures/user1.pem')
         );
 
         $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
 
-        \S2lowLegacy\Lib\ObjectInstancierFactory::resetObjectInstancier();
+        ObjectInstancierFactory::resetObjectInstancier();
 
         $client = $this->setUpClient(
             $wrongCertificatePem->getContent(),
             $wrongCertificatePem->getContentStrippedFromBegin()
         );
         $crawler = $client->request('GET', '/index.php');
-        $this->assertMatchesRegularExpression(
+        static::assertMatchesRegularExpression(
             "#Le certificat n'est pas valide : aucun compte trouvé#",
             $crawler->html()
         );
@@ -127,21 +146,24 @@ class MailIntegrationTest extends WebTestCase
     public function testAdminUtilitiesControllerdoSendWithRightCertificateButNoData()
     {
         $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . "/../test/api/Eric_Pommateau_RGS_2_etoiles.pem")
+            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
 
         $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
 
-        $client = $this->setUpClient($certificatePem->getContent(), $certificatePem->getContentStrippedFromBegin());                                                           // 2/ Le client ne modifie pas la variable _SERVER
+        $client = $this->setUpClient(
+            $certificatePem->getContent(),
+            $certificatePem->getContentStrippedFromBegin()
+        );                                                           // 2/ Le client ne modifie pas la variable _SERVER
 
-        \S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
+        LegacyObjectsManager::setLegacyObjectInstancier();
         $crawler = $client->request('GET', '/admin/utilities/admin_send_global_message.php');
 
-        $this->assertMatchesRegularExpression(
-            "#Redirecting to /admin/utilities/index.php#",
+        static::assertMatchesRegularExpression(
+            '#Redirecting to /admin/utilities/index.php#',
             $crawler->html()
         );
-        $this->assertResponseRedirects("/admin/utilities/index.php");
+        static::assertResponseRedirects('/admin/utilities/index.php');
     }
 
     /**
@@ -150,24 +172,24 @@ class MailIntegrationTest extends WebTestCase
     public function testAdminUtilitiesControllerdoSendWithRightCertificateWithData()
     {
         $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . "/../test/api/Eric_Pommateau_RGS_2_etoiles.pem")
+            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
 
         $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
 
         $client = $this->setUpClient($certificatePem->getContent(), $certificatePem->getContentStrippedFromBegin());
-        $postData = [ 'module' => '1', "authority_group_id" => "1","subject" => "le subject","body" => "le body" ];
+        $postData = [ 'module' => '1', 'authority_group_id' => '1', 'subject' => 'le subject', 'body' => 'le body'];
 
-        $crawler = $client->request(
+        $client->request(
             'POST',
             '/admin/utilities/admin_send_global_message.php',
             $postData
         );
 
-        $this->assertMatchesRegularExpression(
-            "#eric@sigmalis.com#",
-            \S2lowLegacy\Class\LegacyObjectsManager::getObject(\S2lowLegacy\Lib\Environnement::class)->session()->get("error")
+        static::assertMatchesRegularExpression(
+            '#eric@sigmalis.com#',
+            LegacyObjectsManager::getObject(Environnement::class)->session()->get('error')
         );
-        $this->assertResponseRedirects("/admin/utilities/index.php");
+        static::assertResponseRedirects('/admin/utilities/index.php');
     }
 }

@@ -100,7 +100,7 @@ class UserSQLTest extends S2lowTestCase
             $this->userSQL->getIdsAndPasswordsFromConnexionInfo(
                 'hash_adullact',
                 '',
-                'alice'
+                'alice_é'
             )
         );
     }

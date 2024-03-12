@@ -82,7 +82,7 @@ class TestEnvironmentManager
         $this->getObjectInstancier()->set(TestHandler::class, $testHandler);
         $this->getObjectInstancier()->get(Logger::class)->pushHandler($testHandler);
 
-        $this->getObjectInstancier()->set('convert_api_logins_from_iso', CONVERT_API_LOGINS_FROM_ISO);
+        $this->getObjectInstancier()->set('convert_api_logins_from_iso', false);
 
         // WARNING : PAS SUR DE LA MANIP
         $this->getObjectInstancier()->set(S2lowLogger::class, new  S2lowLogger($monologLogger));
@@ -102,7 +102,7 @@ class TestEnvironmentManager
     protected function getSQLContent()
     {
         if (! self::$sqlContentStatic) {
-            self::$sqlContentStatic = utf8_encode(file_get_contents(__DIR__ . "/s2low-test.sql")); // passage utf8
+            self::$sqlContentStatic = file_get_contents(__DIR__ . "/s2low-test.sql"); // passage utf8
         }
         return self::$sqlContentStatic;
     }
