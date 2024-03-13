@@ -500,6 +500,10 @@ if (! defined("USE_PROD_NOTIFICATIONS")) {
 
 ## Configuration OpenStack (facultative)
 
+if (! defined("OPENSTACK_ENABLE")) {
+    define("OPENSTACK_ENABLE", false);
+}
+
 if (! defined("OPENSTACK_AUTHENTICATION_URL_V3")) {
     define("OPENSTACK_AUTHENTICATION_URL_V3", 'https://auth.cloud.ovh.net/v3');
 }
