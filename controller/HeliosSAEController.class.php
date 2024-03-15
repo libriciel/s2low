@@ -3,6 +3,7 @@
 namespace S2lowLegacy\Controller;
 
 use Exception;
+use S2lowLegacy\Class\actes\FilesNotFoundInCloudException;
 use S2lowLegacy\Class\helios\HeliosEnvoiSAE;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Class\helios\HeliosVerificationSAE;
@@ -43,6 +44,13 @@ class HeliosSAEController extends Controller
         try {
             $this->getObjectInstancier()->get(HeliosEnvoiSAE::class)->sendArchiveThrow($transaction_id);
             $message = "La transaction a été envoyé sur le SAE";
+        } catch (FilesNotFoundInCloudException $e) {
+            $message = "Documents indisponibles pour la transaction $transaction_id  : " . $e->getMessage();
+            $this->heliosTransactionsSQL->updateStatus(
+                $transaction_id,
+                HeliosStatusSQL::STATUS_ERREUR_SAE_DOC_INDISPONIBLES,
+                $message
+            );
         } catch (Exception $e) {
             $message =  $e->getMessage();
         }
