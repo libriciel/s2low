@@ -95,5 +95,5 @@ chown "${USERNAME}":"${GROUPNAME}" /var/lib/apache2/site/enabled_by_admin/
 chown -R "${USERNAME}":"${GROUPNAME}" /etc/s2low/ssl/
 chown -R "${USERNAME}":"${GROUPNAME}" /etc/ssl/certs/
 
-mkdir /var/run/htmlpurifier/
+mkdir -p /var/run/htmlpurifier/
 chown -R "${USERNAME}":"${GROUPNAME}" /var/run/htmlpurifier/
