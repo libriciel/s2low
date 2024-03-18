@@ -288,7 +288,11 @@ if (is_array($files)) {
                             ?>
                         <br/>
 
-                        <a class='telecharger_tampon' href="/modules/actes/actes_download_file.php?tampon=true&file=<?php echo $file["id"] ?>" title="Télécharger le fichier avec tampon">
+                        <a
+                                class='telecharger_tampon'
+                                href="/modules/actes/actes_download_file.php?tampon=true&file=<?php echo $file["id"] ?>"
+                                title="Télécharger le fichier avec tampon"
+                        >
                         [Télécharger le fichier tamponné]</a>
                         <input id="tampon_date" type="hidden">
 
@@ -297,7 +301,7 @@ if (is_array($files)) {
                             ob_end_clean();
                             if ($file_num == 1) {
                                 # On ajoute le datepicker
-                                $html .= $twig->render('telechargement_fichier_tamponne.twig', []);
+                                $html .= $twig->render('telechargement_fichier_tamponne.twig', ['fileId' => $file["id"]]);
                             }
                         }
                     }
