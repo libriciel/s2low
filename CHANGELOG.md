@@ -10,6 +10,7 @@
 
 - Passage en UTF-8 des fichiers d'initialisation de la base de données pour les tests unitaires #1160
 - Lorsque le stockage openstack n'est pas configuré, ne plus tenter d'y récupérer un fichier #723
+- Repasser à vide la date de publication si aucune n'est sélectionnée #1162
 
 ## 5.0.30 - 2024-02-29
 

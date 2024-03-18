@@ -13,8 +13,7 @@
 <a href="#datepicker"
    id="datepicker_tampon_date_link"
    class="datepicker_link"
-   >
-    (date de publication)
+   >(date de publication)
 </a>
 
 <div class="date_picker" style="display: none;" id="datepicker_tampon_date_calendar"></div>
@@ -26,14 +25,19 @@
             document.getElementById("datepicker_tampon_date_link").innerHTML = $("#tampon_date").val();
         });
         $("#tampon_date").datepicker("setDate", "0" );
-        $(".telecharger_tampon").click(function () {
-            let date = $("#tampon_date").datepicker('getDate');
-            let day = date.getDate();
-            let month = date.getMonth()+1;
-            let year = date.getFullYear();
-            dateString = year+"/"+month+"/"+day;
-            var href = $(this).attr('href')  + "&date_affichage=" + dateString;
-            $(this).attr('href',href);
+        $(".telecharger_tampon").click(function () { // Lorsque l'on essaie de télécharger le fichier tamponné
+            if(!document.getElementById("datepicker_tampon_date_link").innerHTML.includes('date de publication'))
+            {
+                // Si la date a été modifiée, on la rajoute dans le lien
+                // Sinon, elle sera vide
+                let date = $("#tampon_date").datepicker('getDate');
+                let day = date.getDate();
+                let month = date.getMonth()+1;
+                let year = date.getFullYear();
+                dateString = year+"/"+month+"/"+day;
+                var href = "/modules/actes/actes_download_file.php?tampon=true&file=" + {{fileId}} + "&date_affichage=" + dateString;
+                $(this).attr('href',href);
+            }
         });
     })
 </script>
