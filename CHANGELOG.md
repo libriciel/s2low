@@ -1,10 +1,11 @@
-# Changelog
+# Changelog test
 
 ## 5.0.31 -
 
 ###  Évolutions
 
 - Création de nouveaux états pour les transactions Actes et Helios dont les fichiers ne sont pas accessibles lors de l'envoi au SAE #1103
+- Ajout du Haut-commissariat de Nouvelle-Calédonie et des arrondissements #1086
 
 ### Corrections
 
