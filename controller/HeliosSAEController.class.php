@@ -46,7 +46,7 @@ class HeliosSAEController extends Controller
             $message = "La transaction a été envoyé sur le SAE";
         } catch (FilesNotFoundInCloudException $e) {
             $message = "Documents indisponibles pour la transaction $transaction_id  : " . $e->getMessage();
-            $this->heliosTransactionsSQL->updateStatus(
+            $this->getObjectInstancier()->get(HeliosTransactionsSQL::class)->updateStatus(
                 $transaction_id,
                 HeliosStatusSQL::STATUS_ERREUR_SAE_DOC_INDISPONIBLES,
                 $message
