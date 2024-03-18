@@ -3035,6 +3035,10 @@
         {
             "id": "22",
             "name": "D\u00e9truite"
+        },
+        {
+            "id": "23",
+            "name": "Impossible d'envoyer au SAE (documents indisponibles)"
         }
     ]
 }
