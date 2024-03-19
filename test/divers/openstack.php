@@ -1,10 +1,12 @@
 <?php
 
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 
 require_once(__DIR__ . "/../../init/init.php");
 
-$openStackSwiftWrapper = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var OpenStackSwiftWrapper $openStackSwiftWrapper */
+$openStackSwiftWrapper = LegacyObjectsManager::getLegacyObjectInstancier()
     ->get(OpenStackSwiftWrapper::class);
 
 $file_content = mt_rand(0, mt_getrandmax());

@@ -159,8 +159,8 @@ services:
       $logger: '@monolog.logger.request'
 
   S2lowLegacy\Lib\OpenStackSwiftWrapper:
-    arguments:
-      $logger: '@monolog.logger.request'
+    factory: ['\S2lowLegacy\Class\LegacyObjectsManager','getObject']
+    arguments: ['S2lowLegacy\Lib\OpenStackSwiftWrapper']
 
   S2lowLegacy\Lib\ParsedownExtended:
     autowire: false #doit être configuré explicitement

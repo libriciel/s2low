@@ -60,7 +60,7 @@ class HeliosEnvoiSAETest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
         $openStackSwiftWrapper->method("fileExistsOnCloud")->willReturn(true);
-        $openStackSwiftWrapper->method("retrieveFile")->willReturn(false);
+        $openStackSwiftWrapper->method("retrieveFile")->willReturn('');
         $this->getObjectInstancier()->set(OpenStackSwiftWrapper::class, $openStackSwiftWrapper);
         $this->getObjectInstancier()->set('helios_files_upload_root', '/whatever/');
 
