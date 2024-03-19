@@ -119,7 +119,7 @@ class HeliosExport
      * @param $output_directory
      * @throws Exception
      */
-    private function exportOneTransaction($transaction_info, $output_directory)
+    private function exportOneTransaction($transaction_info, $output_directory): void
     {
         $this->s2lowLogger->info("Export de la transaction #ID {$transaction_info['id']}");
 

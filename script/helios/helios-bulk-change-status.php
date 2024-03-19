@@ -76,7 +76,7 @@ if ($response != "OUI\n") {
     echo "Annulé\n";
     exit(-2);
 }
-
+/** @var HeliosTransactionsSQL $heliosTransactions */
 $heliosTransactions = $objectInstancier->get(HeliosTransactionsSQL::class);
 
 foreach ($transaction_info_list as $i => $transaction_info) {

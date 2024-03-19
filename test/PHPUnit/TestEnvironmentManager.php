@@ -44,6 +44,7 @@ class TestEnvironmentManager
 
         $this->getObjectInstancier()->set('use_prod_notifications', false);
 
+        $this->getObjectInstancier()->set("openstack_enable", false);
         $this->getObjectInstancier()->set("openstack_authentication_url_v2", "");
         $this->getObjectInstancier()->set("openstack_username", "a");
         $this->getObjectInstancier()->set("openstack_password", "a");

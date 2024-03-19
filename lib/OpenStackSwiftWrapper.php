@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace S2lowLegacy\Lib;
 
 use S2lowLegacy\Class\CloudStorageException;
@@ -9,34 +11,46 @@ use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use GuzzleHttp\Psr7\Stream;
 
+/**
+ *
+ */
 class OpenStackSwiftWrapper
 {
     private const OPENSTACK_SERVICE = 'swift';
 
     /** @var OpenStackContainerStore  */
-    private $openStackContainersStore;
+    private OpenStackContainerStore $openStackContainersStore;
 
-    private $fileSystem;
+    private Filesystem $fileSystem;
 
-    private $logger;
+    private Logger $logger;
+    private bool $openstack_enable;
 
+    /**
+     * @param \S2lowLegacy\Lib\OpenStackContainerStore $openStackContainersStore
+     * @param \Monolog\Logger $logger
+     * @param $openstack_enable
+     */
     public function __construct(
         OpenStackContainerStore $openStackContainersStore,
-        Logger $logger
+        Logger $logger,
+        $openstack_enable
     ) {
         $this->openStackContainersStore = $openStackContainersStore;
         $this->fileSystem = new Filesystem();
         $this->logger = $logger;
+        $this->openstack_enable = $openstack_enable;
     }
 
     /**
      * Envoi un fichier dans les nuages
      * @param string $container_name Le nom du container au sens swift
      * @param string $filepath_local Le chemin local du fichier à envoyer dans les nuages
-     * @param string $filename_on_cloud Si présent l'emplacement sur le nuage, sinon, on prend le nom du fichier qu'on met directement sur le container
+     * @param string $filename_on_cloud Si présent l'emplacement sur le nuage, sinon, on prend le nom du fichier
+     * qu'on met directement sur le container
      * @throws CloudStorageException|UnrecoverableException|PausingQueueException
      */
-    public function sendFile($container_name, $filepath_local, $filename_on_cloud = '')
+    public function sendFile(string $container_name, string $filepath_local, string $filename_on_cloud = ''): bool
     {
         if (! $filename_on_cloud) {
             $filename_on_cloud = basename($filepath_local);
@@ -68,14 +82,19 @@ class OpenStackSwiftWrapper
     }
 
     /**
-     * @param $container_name
-     * @param $filepath_local
+     * @param string $container_name
+     * @param string $filepath_local
      * @param string $filepath_on_cloud
-     * @throws UnrecoverableException|PausingQueueException|CloudStorageException
+     * @throws \S2lowLegacy\Class\CloudStorageException
+     * @throws \S2lowLegacy\Lib\PausingQueueException
+     * @throws \S2lowLegacy\Lib\UnrecoverableException
      */
 
-    private function retrieveFileFromCloud($container_name, $filepath_local, $filepath_on_cloud = '')
-    {
+    private function retrieveFileFromCloud(
+        string $container_name,
+        string $filepath_local,
+        string $filepath_on_cloud = ''
+    ): void {
         $dirname_local = dirname($filepath_local);
 
         if (! $this->fileSystem->exists($dirname_local)) {
@@ -99,51 +118,34 @@ class OpenStackSwiftWrapper
 
         if (filesize($filepath_local) == 0) {
             unlink($filepath_local);
-            throw new CloudStorageException("Erreur lors du téléchargement");
+            throw new CloudStorageException('Erreur lors du téléchargement');
         }
         $this->logger->info("Retrieve [$container_name] $filepath_on_cloud to $filepath_local");
-    }
-
-    /**
-     * @param $container_name
-     * @param $filepath_local
-     * @param $filepath_on_cloud
-     * @return mixed
-     * @throws \S2lowLegacy\Class\CloudStorageException
-     * @throws \S2lowLegacy\Lib\PausingQueueException
-     * @throws \S2lowLegacy\Lib\UnrecoverableException
-     */
-    private function getFileSizeFromCloud($container_name, $filepath_local, $filepath_on_cloud = '')
-    {
-        throw new Exception('getFileSizeFromCloud pas encore implémenté');
-        if (! $filepath_on_cloud) {
-            $filepath_on_cloud = basename($filepath_local);
-        }
-
-        $containerWrapper = $this->openStackContainersStore->getContainerWrapper($container_name);
-        if (preg_match('#//+#', $filepath_on_cloud) && ! $containerWrapper->objectExists($filepath_on_cloud)) {
-            $filepath_on_cloud = preg_replace('#/+#', '/', $filepath_on_cloud);
-            if (!$containerWrapper->objectExists($filepath_on_cloud)) {
-                throw new CloudStorageException("$filepath_on_cloud non trouvé dans $container_name");
-            }
-        }
-        return $containerWrapper->getFileSize($filepath_on_cloud);
     }
 
     /**
      * Si nécessaire, récupère et copie le fichier depuis OpenStack vers le système de fichier local
      * @param $container_name : Le nom du container au sens swift
      * @param $filepath_local : Le chemin local du fichier à récupérer
-     * @param string $filepath_on_cloud l'emplacement sur le cloud, sinon on prend le nom du fichier local et on le cherche directemnet sur le container
+     * @param string $filepath_on_cloud l'emplacement sur le cloud, sinon on prend le nom du fichier local et
+     * on le cherche directemnet sur le container
      * @return mixed
-     * @throws UnrecoverableException|PausingQueueException
+     * @throws UnrecoverableException|PausingQueueException|\S2lowLegacy\Class\CloudStorageException
+     * @throws \Exception
      */
 
-    public function retrieveFile($container_name, $filepath_local, $filepath_on_cloud = '')
-    {
-        if (!$this->fileSystem->exists($filepath_local)) {
-            $this->retrieveFileFromCloud($container_name, $filepath_local, $filepath_on_cloud);
+    public function retrieveFile(
+        string $container_name,
+        string $filepath_local,
+        string $filepath_on_cloud = ''
+    ): string {
+        if ($this->fileSystem->exists($filepath_local)) {
+            return $filepath_local; //
         }
+        if (!$this->openstack_enable) {
+            throw new Exception("Le fichier $filepath_local n'est pas présent localement, aucun cloud configuré");
+        }
+        $this->retrieveFileFromCloud($container_name, $filepath_local, $filepath_on_cloud);
         return $filepath_local;
     }
 
@@ -151,18 +153,19 @@ class OpenStackSwiftWrapper
      * Si nécessaire, récupère et copie le fichier depuis OpenStack vers le système de fichier local
      * @param $container_name : Le nom du container au sens swift
      * @param $filepath_local : Le chemin local du fichier à récupérer
-     * @param string $filepath_on_cloud l'emplacement sur le cloud, sinon on prend le nom du fichier local et on le cherche directemnet sur le container
+     * @param string $filepath_on_cloud l'emplacement sur le cloud, sinon on prend le nom du fichier local et on le
+     * cherche directemnet sur le container
      * @return mixed
-     * @throws UnrecoverableException|PausingQueueException
+     * @throws \Exception
      */
 
-    public function getFileSize($container_name, $filepath_local, $filepath_on_cloud = '')
+    public function getFileSize(string $container_name, string $filepath_local, string $filepath_on_cloud = ''): array
     {
         if ($this->fileSystem->exists($filepath_local)) {
             return [ filesize($filepath_local), sha1_file($filepath_local) ];
         }
         throw new Exception('[getFileSize]getFileSizeFromCloud non encore implémenté');
-        return  $this->getFileSizeFromCloud($container_name, $filepath_local, $filepath_on_cloud);
+        //return  $this->getFileSizeFromCloud($container_name, $filepath_local, $filepath_on_cloud);
     }
     /**
      * @param $container_name
@@ -170,7 +173,7 @@ class OpenStackSwiftWrapper
      * @throws UnrecoverableException|PausingQueueException
      */
 
-    public function deleteFile($container_name, $filepath)
+    public function deleteFile($container_name, $filepath): void
     {
         $filename = basename($filepath);
         $containerWrapper = $this->openStackContainersStore->getContainerWrapper($container_name);
@@ -184,7 +187,7 @@ class OpenStackSwiftWrapper
      * @return bool|ResponseInterface
      */
 
-    public function fileExistsOnCloud($container_name, $filename)
+    public function fileExistsOnCloud($container_name, $filename): bool|ResponseInterface
     {
         try {
             $containerWrapper = $this->openStackContainersStore->getContainerWrapper($container_name);

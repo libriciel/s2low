@@ -13,12 +13,22 @@ use S2lowLegacy\Lib\SigTermHandler;
 use S2lowLegacy\Lib\UnrecoverableException;
 use SplFileInfo;
 
+/**
+ *
+ */
 class CloudStorage
 {
-    private $iCloudStorable;
-    private $openStackSwiftWrapper;
-    private $logger;
+    private ICloudStorable $iCloudStorable;
+    private OpenStackSwiftWrapper $openStackSwiftWrapper;
+    private Logger $logger;
+    private bool $openstack_enable;
 
+    /**
+     * @param \S2lowLegacy\Class\ICloudStorable $iCloudStorable
+     * @param \S2lowLegacy\Lib\OpenStackSwiftWrapper $openStackSwiftWrapper
+     * @param \Monolog\Logger $logger
+     * @param $openstack_enable
+     */
     public function __construct(
         ICloudStorable $iCloudStorable,
         OpenStackSwiftWrapper $openStackSwiftWrapper,
@@ -31,7 +41,10 @@ class CloudStorage
         $this->openstack_enable = $openstack_enable;
     }
 
-    public function getAllObjectIdToStore()
+    /**
+     * @return array
+     */
+    public function getAllObjectIdToStore(): array
     {
         return $this->iCloudStorable->getAllObjectIdToStore();
     }
@@ -42,21 +55,21 @@ class CloudStorage
      * @throws CloudStorageException | PausingQueueException | UnrecoverableException
      */
 
-    public function storeObject(int $object_id)
+    public function storeObject(int $object_id): bool
     {
         $file_path_on_disk = $this->iCloudStorable->getFilePathOnDisk($object_id);
         $file_path_on_cloud = $this->iCloudStorable->getFilePathOnCloud($object_id);
 
         if (! $file_path_on_disk) {
             $this->logger->error(
-                "Unable to store object #{$object_id} in cloud : file_path_on_disk not found !"
+                "Unable to store object #$object_id in cloud : file_path_on_disk not found !"
             );
             $this->iCloudStorable->setNotAvailable($object_id);
             return false;
         }
 
         if (! $file_path_on_cloud) {
-            $error_message = "Unable to store object #{$object_id} in cloud : file_path_on_cloud not found ?!?";
+            $error_message = "Unable to store object #$object_id in cloud : file_path_on_cloud not found ?!?";
             $this->logger->error($error_message);
             $this->iCloudStorable->setNotAvailable($object_id);
             return false;
@@ -72,7 +85,7 @@ class CloudStorage
 
         $this->logger->info(
             sprintf(
-                "Storing object #%s - filepath (on disk): %s - filepath (on cloud) : %s",
+                'Storing object #%s - filepath (on disk): %s - filepath (on cloud) : %s',
                 $object_id,
                 $file_path_on_disk,
                 $file_path_on_cloud
@@ -90,14 +103,14 @@ class CloudStorage
         }
 
 
-        $this->logger->info("Check file : {$file_path_on_cloud}");
+        $this->logger->info("Check file : $file_path_on_cloud");
         $check = $this->openStackSwiftWrapper->fileExistsOnCloud(
             $this->iCloudStorable->getContainerName(),
             $file_path_on_cloud
         );
-        $this->logger->info("File present ? [{$check}]");
+        $this->logger->info("File present ? [$check]");
         if (! $check) {
-            $this->logger->error("File {$file_path_on_disk} not present on cloud after sending ! ");
+            $this->logger->error("File $file_path_on_disk not present on cloud after sending ! ");
             return false;
         }
 
@@ -111,7 +124,7 @@ class CloudStorage
      * @param int $object_id
      * @return bool
      */
-    public function deleteIfIsInCloud(int $object_id)
+    public function deleteIfIsInCloud(int $object_id): bool
     {
 
         $file_path_on_disk = $this->iCloudStorable->getFilePathOnDisk($object_id);
@@ -151,7 +164,7 @@ class CloudStorage
      * @param int $no_access_during_nb_days
      * @param bool $do
      */
-    public function deleteFilesOnDisk($no_access_during_nb_days = 9999, $do = true)
+    public function deleteFilesOnDisk(int $no_access_during_nb_days = 9999, bool $do = true): void
     {
 
         $sigtermHandler = SigTermHandler::getInstance();
@@ -167,7 +180,7 @@ class CloudStorage
                 continue;
             }
             $filePathOnCloudWithFileOnDiskPath = $this->getFilePathOnCloudWithFileOnDiskPath($file->getRealPath());
-            $this->logger->debug("File path on cloud : " . $filePathOnCloudWithFileOnDiskPath);
+            $this->logger->debug('File path on cloud : ' . $filePathOnCloudWithFileOnDiskPath);
 
             if (
                 ! $this->openStackSwiftWrapper->fileExistsOnCloud(
@@ -186,18 +199,31 @@ class CloudStorage
         }
     }
 
-    private function isRecentlyCreated(SplFileInfo $file, $no_access_during_nb_days = 9999)
+    /**
+     * @param \SplFileInfo $file
+     * @param int $no_access_during_nb_days
+     * @return bool
+     */
+    private function isRecentlyCreated(SplFileInfo $file, int $no_access_during_nb_days = 9999): bool
     {
         $last_access_time = $file->getMTime();
         $nb_seconds_without_access = time() - $last_access_time;
         $no_access_during_nb_seconds = $no_access_during_nb_days * 86400;
         $this->logger->debug(
-            "Nombre de jour depuis la derniere modif : " . round($nb_seconds_without_access / 60 / 60 / 24)
+            'Nombre de jour depuis la derniere modif : ' . round($nb_seconds_without_access / 60 / 60 / 24)
         );
         return ($nb_seconds_without_access < $no_access_during_nb_seconds);
     }
 
 
+    /**
+     * @param int $object_id
+     * @return string|bool
+     * @throws \S2lowLegacy\Class\CloudStorageException
+     * @throws \S2lowLegacy\Lib\PausingQueueException
+     * @throws \S2lowLegacy\Lib\UnrecoverableException
+     * @throws \Exception
+     */
     public function getPath(int $object_id): string | bool
     {
 
@@ -236,10 +262,10 @@ class CloudStorage
             return [ filesize($file_path_on_disk), sha1_file($file_path_on_disk) ];
         }
 
-        throw new Exception("[getSize] Cloud not yet implemented !!");
+        throw new Exception('[getSize] Cloud not yet implemented !!');
         //TODO vérifier l'implémentation depuis le cloud pour les plateformes Adullact et JVS
         //TODO : permettre de récupérer aussi le sha1 !
-        $file_path_on_cloud = $this->iCloudStorable->getFilePathOnCloud($object_id);
+        /*$file_path_on_cloud = $this->iCloudStorable->getFilePathOnCloud($object_id);
 
         try {
             $this->logger->info("Retrieve object #$object_id from cloud ($file_path_on_cloud)");
@@ -251,26 +277,28 @@ class CloudStorage
             );
         } catch (Exception $e) {
             $this->logger->error(
-                "Unable to retrieve $file_path_on_cloud to $file_path_on_disk (object #$object_id) from cloud : " . $e->getMessage(),
+                "Unable to retrieve $file_path_on_cloud to $file_path_on_disk (object #$object_id) from cloud : " .
+        $e->getMessage(),
                 $e->getTrace()
             );
             throw $e;
         }
 
-        return $result;
+        return $result;*/
     }
+
     /**
-     * @param $file
-     * @return array|string|string[]|null
+     * @param string $filePath
+     * @return string
      */
-    public function getFilePathOnCloudWithFileOnDiskPath($filePath)
+    public function getFilePathOnCloudWithFileOnDiskPath(string $filePath): string
     {
         $filePathOnCloudWithFileOnDiskPath = $this->iCloudStorable
             ->getFilePathOnCloudWithFileOnDiskPath($filePath);
 
         $TempFilePathOnCloudWithFileOnDiskPath = str_replace(
-            "/import/",
-            "/import//",
+            '/import/',
+            '/import//',
             $filePathOnCloudWithFileOnDiskPath
         );
 
@@ -297,7 +325,7 @@ class CloudStorage
     {
         $object_id = $this->iCloudStorable->getObjectIdByFilePath($file->getRealPath());
         if (!$object_id) {
-            $this->logger->notice("Unable to find object id for the file " . $file->getRealPath());
+            $this->logger->notice('Unable to find object id for the file ' . $file->getRealPath());
             return;
         }
         if (!$this->iCloudStorable->isAvailable($object_id)) {
@@ -316,7 +344,7 @@ class CloudStorage
      * @param string $file_path_on_disk
      * @return void
      * @throws \S2lowLegacy\Lib\PausingQueueException
-     * @throws \S2lowLegacy\Lib\UnrecoverableException
+     * @throws \S2lowLegacy\Lib\UnrecoverableException|\S2lowLegacy\Class\CloudStorageException
      */
     private function retrieveFromCloud(int $object_id, string $file_path_on_cloud, string $file_path_on_disk): void
     {
