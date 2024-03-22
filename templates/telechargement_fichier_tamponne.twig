@@ -28,6 +28,10 @@
         $(".telecharger_tampon").click(function () { // Lorsque l'on essaie de télécharger le fichier tamponné
             if(!document.getElementById("datepicker_tampon_date_link").innerHTML.includes('date de publication'))
             {
+                // On extrait l'id du fichier depuis le href courant
+                var currentHref = $(this).attr('href');
+                var fileId = currentHref.match(/file=(\d+)/)[1];
+
                 // Si la date a été modifiée, on la rajoute dans le lien
                 // Sinon, elle sera vide
                 let date = $("#tampon_date").datepicker('getDate');
@@ -35,7 +39,7 @@
                 let month = date.getMonth()+1;
                 let year = date.getFullYear();
                 dateString = year+"/"+month+"/"+day;
-                var href = "/modules/actes/actes_download_file.php?tampon=true&file=" + {{fileId}} + "&date_affichage=" + dateString;
+                var href = "/modules/actes/actes_download_file.php?tampon=true&file=" + fileId + "&date_affichage=" + dateString;
                 $(this).attr('href',href);
             }
         });

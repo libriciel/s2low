@@ -1,5 +1,11 @@
 # Changelog test
 
+## 5.0.32 - 2024-03-22
+
+### Corrections
+
+- Correction du téléchargement des annexes d'un acte lorsqu'une date de publication est sélectionnée #1170 
+
 ## 5.0.31 - 2024-03-20
 
 ###  Évolutions
