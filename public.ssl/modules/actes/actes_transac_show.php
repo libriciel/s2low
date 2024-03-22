@@ -301,7 +301,7 @@ if (is_array($files)) {
                             ob_end_clean();
                             if ($file_num == 1) {
                                 # On ajoute le datepicker
-                                $html .= $twig->render('telechargement_fichier_tamponne.twig', ['fileId' => $file["id"]]);
+                                $html .= $twig->render('telechargement_fichier_tamponne.twig');
                             }
                         }
                     }
