@@ -1,5 +1,11 @@
 # Changelog test
 
+## 5.0.33 - 2024-03-16
+
+### Évolutions
+
+- Permettre de configurer le niveau de log Apache via la variable d'environnement APACHE_LOG_LEVEL #1171
+
 ## 5.0.32 - 2024-03-22
 
 ### Corrections
