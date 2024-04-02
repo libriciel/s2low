@@ -1,5 +1,11 @@
 # Changelog test
 
+## 5.0.34 - 2024-04-02
+
+### Évolutions
+
+- Faire apparaître explicitement la méthode appelée dans les messages d'erreur Pastell #1172
+
 ## 5.0.33 - 2024-03-16
 
 ### Évolutions

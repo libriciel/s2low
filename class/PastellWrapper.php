@@ -78,11 +78,11 @@ class PastellWrapper
 
         $data = json_decode($raw_data, true);
         if (! $data) {
-            throw new Exception("Impossible de décoder les données reçu : $raw_data");
+            throw new Exception("Impossible de décoder les données reçues [$url] : $raw_data");
         }
 
         if (isset($data['status']) && $data['status'] == 'error') {
-            throw new Exception("Message de Pastell : " . $data['error-message']);
+            throw new Exception("Message de Pastell [$url] : " . $data['error-message']);
         }
         return $data;
     }

@@ -49,7 +49,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
         $pastellWrapper = new PastellWrapper($pastellProperties, $curlWrapperFactory, $this->getS2lowLogger());
         $this->setExpectedException(
             Exception::class,
-            "Impossible de décoder les données reçu : not_in_json"
+            "Impossible de décoder les données reçues [list-entite.php] : not_in_json"
         );
         $pastellWrapper->testConnexion();
     }
@@ -70,7 +70,7 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
         $pastellWrapper = new PastellWrapper($pastellProperties, $curlWrapperFactory, $this->getS2lowLogger());
         $this->setExpectedException(
             Exception::class,
-            "Message de Pastell : Acces interdit id_e=1, droit=entite:lecture,id_u=15"
+            "Message de Pastell [list-entite.php] : Acces interdit id_e=1, droit=entite:lecture,id_u=15"
         );
         $pastellWrapper->testConnexion();
     }
