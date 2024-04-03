@@ -49,9 +49,37 @@ class PastellWrapperTest extends PHPUnit_Framework_TestCase
         $pastellWrapper = new PastellWrapper($pastellProperties, $curlWrapperFactory, $this->getS2lowLogger());
         $this->setExpectedException(
             Exception::class,
-            "Impossible de décoder les données reçues [list-entite.php] : not_in_json"
+            "Impossible de décoder les données reçues [list-entite.php ] : not_in_json"
         );
         $pastellWrapper->testConnexion();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testErrorSendSAE()
+    {
+        $curlWrapper = $this->getMockBuilder(CurlWrapper::class)->getMock();
+        $curlWrapper
+            ->method("get")
+            ->willReturn('pastells_return');
+
+        $curlWrapperFactory = $this->getMockBuilder(CurlWrapperFactory::class)->getMock();
+
+        $curlWrapperFactory
+            ->method('getNewInstance')
+            ->willReturn($curlWrapper);
+
+        $pastellProperties = new PastellProperties();
+        $pastellProperties->url = "url";
+        $pastellProperties->id_e = 34;
+
+        $pastellWrapper = new PastellWrapper($pastellProperties, $curlWrapperFactory, $this->getS2lowLogger());
+        $this->setExpectedException(
+            Exception::class,
+            "Impossible de décoder les données reçues [action.php action=>send-archive,id_d=>aeiouy] : pastells_return"
+        );
+        $pastellWrapper->sendSAE('aeiouy');
     }
 
     /**

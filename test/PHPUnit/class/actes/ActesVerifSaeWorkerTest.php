@@ -293,7 +293,7 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase
 
         $actesVerifSaeWorker->work($transaction_id);
 
-        $exepected_message = "Problème lors de la vérification de l'archive : Impossible de décoder les données reçues [detail-document.php] : Pastell ne répond pas... ou mal";
+        $exepected_message = "Problème lors de la vérification de l'archive : Impossible de décoder les données reçues [detail-document.php id_d=>42] : Pastell ne répond pas... ou mal";
 
         $this->assertEquals(
             $exepected_message,
