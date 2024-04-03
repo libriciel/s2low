@@ -37,6 +37,7 @@ class OpenStackContainerFetcher
 
     public function getNewTokenAndContainer()
     {
+        $this->logger->info("Openstack : début de la connexion");
         try {
             $token = $this->openStack->identityV3()->generateToken($this->generate_token_options);
             $parametresWithToken = $this->generate_token_options;
@@ -49,7 +50,7 @@ class OpenStackContainerFetcher
             $this->logger->error("Openstack : erreur à la génération du token / recherche du container : " . $e->getMessage());
             throw $e;
         }
-        $this->logger->info("Openstack : génération du token / recherche du container " . $this->containerFullName);
+        $this->logger->info("Openstack : fin de la génération du token / recherche du container " . $this->containerFullName);
         return [$token, $container];
     }
 }

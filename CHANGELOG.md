@@ -1,5 +1,11 @@
 # Changelog test
 
+## 5.0.36 - 2024-04-03
+
+### Évolutions
+
+- Faire apparaître les étapes de connection à Openstack et Pastell dans les logs d'envoi des flux helios au SAE #1175
+
 ## 5.0.35 - 2024-04-02
 
 ### Évolutions

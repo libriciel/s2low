@@ -48,7 +48,11 @@ class HeliosEnvoiSAETest extends S2lowTestCase
         );
 
         $this->assertFileDoesNotExist($pes_aller_path);
-        $this->assertLogMessage("La transaction $transaction_id a été envoyé à Pastell", 2);
+        $this->assertLogMessage("Début du traitement de la transaction $transaction_id", 1);
+        $this->assertLogMessage("Début de la récupération des fichiers de la transaction $transaction_id", 2);
+        $this->assertLogMessage("Début du transfert vers FakeURL de la transaction $transaction_id", 3);
+        $this->assertMatchesRegularExpressionLogMessage("/Deleting PES ALLER/", 4);
+        $this->assertLogMessage("La transaction $transaction_id a été envoyée à Pastell", 5);
     }
 
     /**
@@ -73,7 +77,7 @@ class HeliosEnvoiSAETest extends S2lowTestCase
 
         $this->assertLogMessage(
             "Documents indisponibles pour la transaction $transaction_id  : Impossible de récupérer le PES ALLER ab3321d34d3fb32b52332befa534c9854fff677b",
-            1
+            3
         );
 
         /** @var HeliosTransactionsSQL $heliosTransactionsSQL */
@@ -108,8 +112,8 @@ class HeliosEnvoiSAETest extends S2lowTestCase
             $this->getObjectInstancier()->get(HeliosEnvoiSAE::class)->sendArchive($transaction_id)
         );
         $this->assertLogMessage(
-            "Le document n'a pas pu être envoyé sur Pastell : Erreur renvoyé par le mock",
-            1
+            "La transaction $transaction_id n'a pas pu être envoyée sur Pastell : Erreur renvoyé par le mock",
+            4
         );
     }
 
@@ -123,7 +127,7 @@ class HeliosEnvoiSAETest extends S2lowTestCase
         $transaction_id = $this->setTransactionEnattente();
         $this->getObjectInstancier()->get(HeliosEnvoiSAE::class)->sendAllArchive();
         $this->assertLogMessage("1 transactions à envoyer...", 2);
-        $this->assertLogMessage("La transaction $transaction_id a été envoyé à Pastell", 5);
+        $this->assertLogMessage("La transaction $transaction_id a été envoyée à Pastell", 8);
     }
 
     /**
@@ -139,8 +143,8 @@ class HeliosEnvoiSAETest extends S2lowTestCase
             $this->getObjectInstancier()->get(HeliosEnvoiSAE::class)->sendArchive($transaction_id)
         );
         $this->assertLogMessage(
-            "Le document n'a pas pu être envoyé sur Pastell : $error_message",
-            1
+            "La transaction $transaction_id n'a pas pu être envoyée sur Pastell : $error_message",
+            4
         );
     }
 }

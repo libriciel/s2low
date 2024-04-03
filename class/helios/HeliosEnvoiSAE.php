@@ -68,7 +68,7 @@ class HeliosEnvoiSAE
     {
         try {
             $this->sendArchiveThrow($id);
-            $this->logger->info("La transaction $id a été envoyé à Pastell");
+            $this->logger->info("La transaction $id a été envoyée à Pastell");
         } catch (FilesNotFoundInCloudException $e) {
             $message = "Documents indisponibles pour la transaction $id  : " . $e->getMessage();
             $this->heliosTransactionsSQL->updateStatus(
@@ -79,7 +79,7 @@ class HeliosEnvoiSAE
             $this->logger->error($message);
             return false;
         } catch (Exception $e) {
-            $message = "Le document n'a pas pu être envoyé sur Pastell : " . $e->getMessage();
+            $message = "La transaction $id n'a pas pu être envoyée sur Pastell : " . $e->getMessage();
             $this->heliosTransactionsSQL->updateStatus(
                 $id,
                 HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
@@ -99,10 +99,12 @@ class HeliosEnvoiSAE
     public function sendArchiveThrow(int $transaction_id): bool
     {
         try {
+            $this->logger->info("Début du traitement de la transaction $transaction_id");
             $transactionsInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
 
             $this->authoritySQL->verifHasPastell($transactionsInfo[HeliosTransactionsSQL::AUTHORITY_ID]);
 
+            $this->logger->info("Début de la récupération des fichiers de la transaction $transaction_id");
             $pes_aller_filepath = $this->pesAllerRetriever->getPath($transactionsInfo['sha1']);
 
             if (! $pes_aller_filepath) {
@@ -113,6 +115,7 @@ class HeliosEnvoiSAE
             $pes_acquit_filepath = $pesAcquitCloudStorage->getPath($transaction_id);
 
             $pastellProperties = $this->pastellPropertiesSQL->getPastellProperties($transactionsInfo[HeliosTransactionsSQL::AUTHORITY_ID]);
+            $this->logger->info("Début du transfert vers $pastellProperties->url de la transaction $transaction_id");
 
             $pastell = $this->pastellWrapperFactory->getNewInstance($pastellProperties);
 
