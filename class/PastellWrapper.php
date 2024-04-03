@@ -91,7 +91,7 @@ class PastellWrapper
         }
 
         if (isset($data['status']) && $data['status'] == 'error') {
-            throw new Exception("Message de Pastell [$url] : " . $data['error-message']);
+            throw new Exception("Message de Pastell [$url $parametersString] : " . $data['error-message']);
         }
         return $data;
     }
