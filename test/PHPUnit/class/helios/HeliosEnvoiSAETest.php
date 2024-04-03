@@ -147,4 +147,38 @@ class HeliosEnvoiSAETest extends S2lowTestCase
             4
         );
     }
+
+    /**
+     * @throws Exception
+     */
+    public function testErreurEnvoiSAE()
+    {
+        $this->mockOpenStack();
+        $this->mockPastellFactory('dsf', "", true);
+        $transaction_id = $this->setTransactionEnattente();
+        $this->assertFalse(
+            $this->getObjectInstancier()->get(HeliosEnvoiSAE::class)->sendArchive($transaction_id)
+        );
+        $this->assertLogMessage(
+            "La transaction $transaction_id n'a pas pu être envoyée sur Pastell : [Exception] Error Send SAE",
+            4
+        );
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testErreurEnvoiSAEPuisErreurSuppression()
+    {
+        $this->mockOpenStack();
+        $this->mockPastellFactory('dsf', "", true, true);
+        $transaction_id = $this->setTransactionEnattente();
+        $this->assertFalse(
+            $this->getObjectInstancier()->get(HeliosEnvoiSAE::class)->sendArchive($transaction_id)
+        );
+        $this->assertLogMessage(
+            "La transaction $transaction_id n'a pas pu être envoyée sur Pastell : [Exception] Error Send SAE et erreur lors de la suppression de dsf\[Exception] Error on delete",
+            4
+        );
+    }
 }
