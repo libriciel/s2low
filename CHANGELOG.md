@@ -1,5 +1,11 @@
 # Changelog test
 
+## 5.0.37 - 2024-04-03
+
+### Évolutions
+
+- Concaténer les messages d'erreur lors de l'envoi de flux helios au SAE si une erreur de suppression succède à une erreur d'envoi vers Pas #1175
+
 ## 5.0.36 - 2024-04-03
 
 ### Évolutions

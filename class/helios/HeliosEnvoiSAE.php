@@ -98,7 +98,6 @@ class HeliosEnvoiSAE
      */
     public function sendArchiveThrow(int $transaction_id): bool
     {
-        try {
             $this->logger->info("Début du traitement de la transaction $transaction_id");
             $transactionsInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
 
@@ -107,9 +106,9 @@ class HeliosEnvoiSAE
             $this->logger->info("Début de la récupération des fichiers de la transaction $transaction_id");
             $pes_aller_filepath = $this->pesAllerRetriever->getPath($transactionsInfo['sha1']);
 
-            if (! $pes_aller_filepath) {
-                throw new FilesNotFoundInCloudException("Impossible de récupérer le PES ALLER {$transactionsInfo['sha1']}");
-            }
+        if (! $pes_aller_filepath) {
+            throw new FilesNotFoundInCloudException("Impossible de récupérer le PES ALLER {$transactionsInfo['sha1']}");
+        }
 
             $pesAcquitCloudStorage = $this->cloudStorageFactory->getInstanceByClassName(PESAcquitCloudStorage::class);
             $pes_acquit_filepath = $pesAcquitCloudStorage->getPath($transaction_id);
@@ -121,10 +120,11 @@ class HeliosEnvoiSAE
 
             $id_d = $pastell->createHelios($transactionsInfo);
 
-            if (!$id_d) {
-                throw new UnrecoverableException($pastell->getLastError());
-            }
+        if (!$id_d) {
+            throw new UnrecoverableException($pastell->getLastError());
+        }
 
+        try {
             $pastell->postFile($id_d, 'fichier_pes', $pes_aller_filepath, $transactionsInfo['complete_name']);
             $pastell->postFile($id_d, 'fichier_reponse', $pes_acquit_filepath, $transactionsInfo['acquit_filename']);
 
@@ -141,15 +141,14 @@ class HeliosEnvoiSAE
                 "Envoie de la transaction $transaction_id à Pastell"
             );
             $this->heliosTransactionsSQL->setSAETransferIdentifier($transaction_id, $id_d);
-        } catch (Exception $e) {
-            if (! empty($id_d)) {
-                try {
-                    $pastell->delete($id_d);
-                } catch (Exception $e) {
-                    /** Nothing to do */
-                }
+        } catch (Exception $exception) {
+            $message = '[' . get_class($exception) . '] ' . $exception->getMessage();
+            try {
+                $pastell->delete($id_d);
+            } catch (Exception $exception2) {
+                $message .= " et erreur lors de la suppression de $id_d\[" . get_class($exception2) . '] ' . $exception2->getMessage();
             }
-            throw $e;
+            throw new Exception($message);
         }
 
 
