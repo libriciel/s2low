@@ -1,4 +1,10 @@
-# Changelog test
+# Changelog
+
+## 5.0.38 - 
+
+### Évolutions
+
+- Permettre de configurer les Signature Schemes par une variable d'environnement #1179
 
 ## 5.0.37 - 2024-04-03
 
