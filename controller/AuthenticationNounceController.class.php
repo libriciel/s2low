@@ -8,13 +8,7 @@ use S2lowLegacy\Model\NounceSQL;
 
 class AuthenticationNounceController extends Controller
 {
-    /**
-     * @var \S2lowLegacy\Model\NounceSQL
-     */
     private NounceSQL $nounceSQL;
-    /**
-     * @var \S2lowLegacy\Lib\Environnement
-     */
     private Environnement $environnement;
 
     /**

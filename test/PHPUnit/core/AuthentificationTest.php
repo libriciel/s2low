@@ -197,7 +197,7 @@ class AuthentificationTest extends S2lowTestCase
      * @throws Exception
      * @dataProvider convertedLogins
      */
-    public function testAuthenticationWithNounce(bool $convertLoginFromIso, string $login, string $encoding)
+    public function testAuthenticationWithNounce(bool $convertLoginFromIso, string $login, string $encoding): void
     {
         /** @var NounceSQL $nounceSQL */
         $nounceSQL = $this->getObjectInstancier()->get(NounceSQL::class);
@@ -208,9 +208,7 @@ class AuthentificationTest extends S2lowTestCase
             'login' => mb_convert_encoding($login, $encoding),
             'hash' => hash("sha256", "alice:$nounce")
         ];
-        $post = array();
-        $request = array();
-        $session = array();
+        $session = [];
         $server = [
             'SSL_CLIENT_VERIFY' => "SUCCESS",
             'SSL_CLIENT_S_DN' => "adullact",
@@ -218,7 +216,7 @@ class AuthentificationTest extends S2lowTestCase
             'SSL_CLIENT_CERT' => "certificat"
         ];
 
-        $environment = new Environnement($get, $post, $request, $session, $server, $convertLoginFromIso);
+        $environment = new Environnement($get, [], [], $session, $server, $convertLoginFromIso);
 
         $certHandler = $this->getMockBuilder(X509Certificate::class)->disableOriginalConstructor()->getMock();
 
@@ -245,12 +243,10 @@ class AuthentificationTest extends S2lowTestCase
         $this->assertEquals(2, $authentification->authenticate());
     }
 
-    public function convertedLogins()
+    public function convertedLogins(): Generator
     {
-        return [
-            [false, 'alice_é', 'UTF-8'],
-            [true, 'alice_é','ISO-8859-1']
-        ];
+        yield [false, 'alice_é', 'UTF-8'];
+        yield [true, 'alice_é','ISO-8859-1'];
     }
 
     /**
