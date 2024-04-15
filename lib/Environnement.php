@@ -12,11 +12,14 @@ class Environnement
 
     public function __construct($get, $post, $request, &$session, $server, bool $forceConversionFromIso = false)
     {
-        $this->getWrapper = new Recuperateur($get, $forceConversionFromIso);
-        $this->postWrapper = new Recuperateur($post, $forceConversionFromIso);
-        $this->requestWrapper = new Recuperateur($request, $forceConversionFromIso);
+        $isHTTPAuthentification = isset($server['PHP_AUTH_USER']);
+        $isNounceAuthentification = isset($get['login']) && isset($get['nounce']) && isset($get['hash']);
+        $needsConversionFromIso = ($isHTTPAuthentification || $isNounceAuthentification) && $forceConversionFromIso;
+        $this->getWrapper = new Recuperateur($get, $needsConversionFromIso);
+        $this->postWrapper = new Recuperateur($post, $needsConversionFromIso);
+        $this->requestWrapper = new Recuperateur($request, $needsConversionFromIso);
         $this->sessionWrapper = new SessionWrapper($session);
-        $this->serverWrapper = new Recuperateur($server, $forceConversionFromIso);
+        $this->serverWrapper = new Recuperateur($server, $needsConversionFromIso);
     }
 
     public function session()
