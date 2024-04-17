@@ -64,7 +64,7 @@ class HeliosReceptionWorker implements IWorker
     {
         $sigtermHandler = SigTermHandler::getInstance();
         try {
-            $succes = $this->ftpFileGetter->recupOneFile($data);
+            $this->ftpFileGetter->recupOneFile($data);
             if ($this->workerScript) {
                 $this->workerScript->putJobByClassName(HeliosAnalyseFichierRecuWorker::class, $data);
             }
@@ -73,10 +73,6 @@ class HeliosReceptionWorker implements IWorker
             }
         } catch (Exception $e) {
             $this->s2lowLogger->info('Probleme lors de la recuperation du fichier $data : ' . $e->getMessage());
-            $this->ftpFileGetter->finTraitement();
-            exit;
-        }
-        if (!$succes) {
             $this->ftpFileGetter->finTraitement();
             exit;
         }
