@@ -11,9 +11,6 @@ class AuthenticationNounceController extends Controller
     private NounceSQL $nounceSQL;
     private Environnement $environnement;
 
-    /**
-     * @param \S2lowLegacy\Lib\ObjectInstancier $objectInstancier
-     */
     public function __construct(
         ObjectInstancier $objectInstancier,
     ) {

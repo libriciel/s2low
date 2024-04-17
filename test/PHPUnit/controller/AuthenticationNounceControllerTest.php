@@ -12,8 +12,6 @@ use S2lowTestCase;
  */
 class AuthenticationNounceControllerTest extends S2lowTestCase
 {
-    /**
-     */
     public function testGetNounce(): void
     {
         $this->setServerAdullactCertificate();
@@ -30,9 +28,6 @@ class AuthenticationNounceControllerTest extends S2lowTestCase
         static::assertSame(['nounce'], array_keys($jsonOutput));
     }
 
-    /**
-     * @return void
-     */
     private function setServerAdullactCertificate(): void
     {
         $this->setServerInfo([
