@@ -27,7 +27,7 @@ class HttpConnexionTest extends S2lowTestCase
 
         $certificateHandler->expects($this->once())->method('getInfo')->willReturn(false);
 
-        $httpConnexion = new HttpsConnexion($environnement, $certificateHandler, true);
+        $httpConnexion = new HttpsConnexion($environnement, $certificateHandler);
         $this->assertFalse($httpConnexion->getCertificateInfo());
     }
 
@@ -50,10 +50,36 @@ class HttpConnexionTest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $httpConnexion = new HttpsConnexion($environnement, $certificateHandler, true);
+        $httpConnexion = new HttpsConnexion($environnement, $certificateHandler);
         $credentials = $httpConnexion->getCredentialsFromPost();
 
         $this->assertEquals("login", $credentials["login"]);
         $this->assertEquals("password", $credentials["password"]);
+    }
+
+    /**
+     * @return void
+     */
+    public function testAPIRequestWithHTTPLogin(): void
+    {
+        $get = ['api' => '1'];
+        $serveur = [
+            'PHP_AUTH_USER' => mb_convert_encoding('alice_é', 'ISO-8859-1', 'UTF-8'),
+            'PHP_AUTH_PW' => 'alice'
+        ];
+
+        $session = [];
+        $environnement = new Environnement($get, [], [], $session, $serveur, true);
+        $httpsConnexion = new HttpsConnexion(
+            $environnement,
+            $this->getObjectInstancier()->get(X509Certificate::class)
+        );
+        // Comme on a une authentification HTTP *et* la variable forceConversionFromIso,
+        // s2low devrait considérer qu'on utilise l'API.
+
+        static::assertSame(
+            ['login' => 'alice_é', 'password' => 'alice'],
+            $httpsConnexion->getCredentialsFromApache()
+        );
     }
 }

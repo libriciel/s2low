@@ -6,6 +6,11 @@
 
 - Permettre de configurer les Signature Schemes par une variable d'environnement #1179
 
+### Corrections
+
+- Permettre de convertir les login/mot de passe de l'identification HTTP de l'ISO-8859-1 vers l'UTF-8 en spécifiant CONVERT_API_LOGINS_FROM_ISO #1071
+- Permettre de convertir les login/mot de passe contenus dans le nonce de l'ISO-8859-1 vers l'UTF-8 en spécifiant CONVERT_API_LOGINS_FROM_ISO #1071
+
 ## 5.0.37 - 2024-04-03
 
 ### Évolutions
@@ -158,7 +163,6 @@
 - Permettre de convertir les login/mot de passe de l'ISO-8859-1 vers l'UTF-8 en spécifiant CONVERT_API_LOGINS_FROM_ISO #1071
 - Correction du script monitoring_actes_pdf-stamp.php #1087
 - Correction de failles de sécurité #1088
-
 
 ### Évolutions
 

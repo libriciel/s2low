@@ -89,11 +89,25 @@ class LegacyObjectsManager
 
         if (isset($_SESSION)) {
             $objectInstancier->set(SessionWrapper::class, new SessionWrapper($_SESSION));
-            $environnement = new Environnement($_GET, $_POST, $_REQUEST, $_SESSION, $_SERVER);
+            $environnement = new Environnement(
+                $_GET,
+                $_POST,
+                $_REQUEST,
+                $_SESSION,
+                $_SERVER,
+                CONVERT_API_LOGINS_FROM_ISO
+            );
         } else {
             $session = array();
             $objectInstancier->set(SessionWrapper::class, new SessionWrapper($session));
-            $environnement = new Environnement($_GET, $_POST, $_REQUEST, $session, $_SERVER);
+            $environnement = new Environnement(
+                $_GET,
+                $_POST,
+                $_REQUEST,
+                $session,
+                $_SERVER,
+                CONVERT_API_LOGINS_FROM_ISO
+            );
         }
         $objectInstancier->set(Environnement::class, $environnement);
         $objectInstancier->set("website_ssl", WEBSITE_SSL);

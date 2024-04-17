@@ -12,16 +12,13 @@ class HttpsConnexion
     private $environnement;
     /** @var X509Certificate  */
     private $certificateHandler;
-    private bool $convertAPILoginsFromIso;
 
     public function __construct(
         Environnement $environnement,
-        X509Certificate $certificateHandler,
-        $convert_api_logins_from_iso
+        X509Certificate $certificateHandler
     ) {
         $this->environnement = $environnement;
         $this->certificateHandler = $certificateHandler;
-        $this->convertAPILoginsFromIso = $convert_api_logins_from_iso;
     }
 
     private function der2pem(string $der_data): string
@@ -93,10 +90,9 @@ class HttpsConnexion
      */
     public function getCredentialsFromApache(): array
     {
-        // Il faudra supprimer la fonction correctEncoding lorsque l'on supprimera la constante convertAPILoginsToIso
         return [
-            'login' => $this->correctEncoding($this->environnement->server()->get('PHP_AUTH_USER')),
-            'password' => $this->correctEncoding($this->environnement->server()->get('PHP_AUTH_PW'))
+            'login' => $this->environnement->server()->get('PHP_AUTH_USER'),
+            'password' => $this->environnement->server()->get('PHP_AUTH_PW')
         ];
     }
 
@@ -128,13 +124,5 @@ class HttpsConnexion
     public function hasNonceParameters(): bool
     {
         return !empty($this->environnement->get()->get('nounce'));
-    }
-
-    private function correctEncoding(mixed $get)
-    {
-        if ($this->convertAPILoginsFromIso) {
-            return mb_convert_encoding($get, 'UTF-8', 'ISO-8859-1');
-        }
-        return $get;
     }
 }

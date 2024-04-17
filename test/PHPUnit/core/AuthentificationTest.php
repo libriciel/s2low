@@ -195,23 +195,28 @@ class AuthentificationTest extends S2lowTestCase
 
     /**
      * @throws Exception
+     * @dataProvider convertedLogins
      */
-    public function testAuthenticationWithNounce()
+    public function testAuthenticationWithNounce(bool $convertLoginFromIso, string $login, string $encoding): void
     {
         /** @var NounceSQL $nounceSQL */
         $nounceSQL = $this->getObjectInstancier()->get(NounceSQL::class);
-        $nounce = $nounceSQL->create("alice_é", "alice", 1);
+        $nounce = $nounceSQL->create($login, "alice", 1);
 
-        $this->setServerInfo([
+        $get = [
+            'nounce' => $nounce,
+            'login' => mb_convert_encoding($login, $encoding),
+            'hash' => hash("sha256", "alice:$nounce")
+        ];
+        $session = [];
+        $server = [
             'SSL_CLIENT_VERIFY' => "SUCCESS",
             'SSL_CLIENT_S_DN' => "adullact",
             'SSL_CLIENT_I_DN' => "adullact",
             'SSL_CLIENT_CERT' => "certificat"
-        ]);
+        ];
 
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('nounce', $nounce);
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('login', 'alice_é');
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('hash', hash("sha256", "alice:$nounce"));
+        $environment = new Environnement($get, [], [], $session, $server, $convertLoginFromIso);
 
         $certHandler = $this->getMockBuilder(X509Certificate::class)->disableOriginalConstructor()->getMock();
 
@@ -222,9 +227,10 @@ class AuthentificationTest extends S2lowTestCase
             'certificate_hash' => "hash_adullact"
         ]);
 
-        $environment = $this->getObjectInstancier()->get(Environnement::class);
-
-        $httpsConnexion = new HttpsConnexion($environment, $certHandler, false);
+        $httpsConnexion = new HttpsConnexion(
+            $environment,
+            $certHandler
+        );
 
         $authentification = new Authentification(
             $environment,
@@ -237,17 +243,25 @@ class AuthentificationTest extends S2lowTestCase
         $this->assertEquals(2, $authentification->authenticate());
     }
 
+    public function convertedLogins(): Generator
+    {
+        yield [false, 'alice_é', 'UTF-8'];
+        yield [true, 'alice_é','ISO-8859-1'];
+    }
+
     /**
      * @throws Exception
      */
     public function testAuthenticationWithNounceFailed()
     {
+        /** @var NounceSQL $nounceSQL */
         $nounceSQL = $this->getObjectInstancier()->get(NounceSQL::class);
         $nounce = $nounceSQL->create("alice_é", "alice", 1);
 
         $this->setServerAdullactCertificate();
         $this->getObjectInstancier()->get(Environnement::class)->get()->set('nounce', $nounce);
         $this->getObjectInstancier()->get(Environnement::class)->get()->set('login', 'alice_é');
+        // C'est le :toto qui est en trop : le hash ne sera pas bon
         $this->getObjectInstancier()->get(Environnement::class)->get()->set('hash', hash("sha256", "alice:$nounce:toto"));
 
         $authentification = $this->getObjectInstancier()->get(Authentification::class);

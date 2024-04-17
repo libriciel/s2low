@@ -2,6 +2,7 @@
 
 use S2lowLegacy\Class\Connexion;
 use S2lowLegacy\Class\Droit;
+use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\FrontController;
 use S2lowLegacy\Lib\JSONoutput;

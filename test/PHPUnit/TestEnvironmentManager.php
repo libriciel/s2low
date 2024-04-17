@@ -75,7 +75,7 @@ class TestEnvironmentManager
         $session = array();
         $server = array();
 
-        $this->getObjectInstancier()->set(Environnement::class, new Environnement($get, $post, $request, $session, $server));
+        $this->getObjectInstancier()->set(Environnement::class, new Environnement($get, $post, $request, $session, $server, false));
         $this->getObjectInstancier()->set(SessionWrapper::class, $this->getObjectInstancier()->get(Environnement::class)->session());
         $monologLogger = new  Logger('PHPUNIT');
         $this->getObjectInstancier()->set(Logger::class, $monologLogger);
