@@ -57,12 +57,15 @@ class HttpConnexionTest extends S2lowTestCase
         $this->assertEquals("password", $credentials["password"]);
     }
 
-    public function testAPIRequestWithHTTPLogin()
+    /**
+     * @return void
+     */
+    public function testAPIRequestWithHTTPLogin(): void
     {
         $get = ['api' => '1'];
         $serveur = [
-            'PHP_AUTH_USER' => mb_convert_encoding("alice_é", 'ISO-8859-1', 'UTF-8'),
-            'PHP_AUTH_PW' => "alice"
+            'PHP_AUTH_USER' => mb_convert_encoding('alice_é', 'ISO-8859-1', 'UTF-8'),
+            'PHP_AUTH_PW' => 'alice'
         ];
 
         $session = [];
@@ -74,8 +77,8 @@ class HttpConnexionTest extends S2lowTestCase
         // Comme on a une authentification HTTP *et* la variable forceConversionFromIso,
         // s2low devrait considérer qu'on utilise l'API.
 
-        $this->assertEquals(
-            ["login" => "alice_é","password" => "alice"],
+        static::assertSame(
+            ['login' => 'alice_é', 'password' => 'alice'],
             $httpsConnexion->getCredentialsFromApache()
         );
     }
