@@ -100,19 +100,19 @@ class DGFiPConnectorOnFTP implements DGFiPConnector
      * Télécharge un fichier
      * @param string $tmp_file chemin du fichier local
      * @param string $file chemin du fichier distant
-     * @return bool
+     * @return void
+     * @throws \S2low\Services\Helios\DGFiPConnection\FTPFileRetrieveException
      * @throws \Exception
      */
-    public function retrieveFile(string $tmp_file, string $file): bool
+    public function retrieveFile(string $tmp_file, string $file): void
     {
         $ftp_get_result = $this->getConnection()->get($tmp_file, "$file");
         if (!$ftp_get_result) {
             $errorMessage = var_export(error_get_last(), true);
-            throw new Exception(
+            throw new FTPFileRetrieveException(
                 "Impossible de transférer le fichier distant $file vers $tmp_file : " . $errorMessage
             );
         }
-        return true;
     }
 
     /**

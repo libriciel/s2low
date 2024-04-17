@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace S2low\Services\Helios;
 
 use Exception;
+use S2low\Services\Helios\DGFiPConnection\FTPFileRetrieveException;
 use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker;
 use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\S2lowLogger;
@@ -71,8 +72,11 @@ class HeliosReceptionWorker implements IWorker
             if ($sigtermHandler->isSigtermCalled()) {
                 $this->ftpFileGetter->finTraitement();
             }
+        } catch (FTPFileRetrieveException $e) {
+            // Dans ce cas, on va continuer à traiter les autres fichiers
+            $this->s2lowLogger->info("Probleme lors de la recuperation du fichier $data : " . $e->getMessage());
         } catch (Exception $e) {
-            $this->s2lowLogger->info('Probleme lors de la recuperation du fichier $data : ' . $e->getMessage());
+            $this->s2lowLogger->info("Probleme lors de la recuperation du fichier $data : " . $e->getMessage());
             $this->ftpFileGetter->finTraitement();
             exit;
         }

@@ -83,6 +83,7 @@ class SFTPConnection
      * @param string $tmp_file
      * @param $remoteFile
      * @return bool
+     * @throws \S2low\Services\Helios\DGFiPConnection\FTPFileRetrieveException
      * @throws \Exception
      */
     public function get(string $tmp_file, $remoteFile): bool

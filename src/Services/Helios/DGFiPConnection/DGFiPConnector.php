@@ -18,12 +18,13 @@ interface DGFiPConnector
 
     /**
      * Télécharge un fichier
-     * @param string $tmp_file  chemin du fichier local
+     * @param string $tmp_file chemin du fichier local
      * @param string $file chemin du fichier distant
-     * @return bool
+     * @return void
      * @throws \Exception
+     * @throws \S2low\Services\Helios\DGFiPConnection\FTPFileRetrieveException
      */
-    public function retrieveFile(string $tmp_file, string $file): bool;
+    public function retrieveFile(string $tmp_file, string $file): void;
 
     /**
      * Ordonne de supprimer explicitement le fichier

@@ -92,6 +92,7 @@ class FTPHeliosReceiver
 
     /**
      * @param $file
+     * @throws \S2low\Services\Helios\DGFiPConnection\FTPFileRetrieveException
      * @throws Exception
      */
     public function recupOneFile($file): void

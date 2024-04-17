@@ -4,6 +4,7 @@ namespace S2low\Services\Helios\DGFiPConnection\Protocols;
 
 use Exception;
 use phpseclib3\Net\SFTP;
+use S2low\Services\Helios\DGFiPConnection\FTPFileRetrieveException;
 
 /**
  * Permet de mocker les retours des fonctions ssh2 et autres utilisées pour la connection sftp
@@ -58,12 +59,13 @@ class SftpServiceWrapper
      * @param int $mode
      * @return void
      * @throws \Exception
+     * @throws \S2low\Services\Helios\DGFiPConnection\FTPFileRetrieveException
      */
     public function get(SFTP $ftp, $tmp_file, $remoteFile, int $mode = FTP_ASCII): void
     {
         $result = $ftp->get($remoteFile, $tmp_file);
         if (!$result) {
-            throw new Exception("[SFTP] Impossible d'ouvrir le fichier distant : $remoteFile");
+            throw new FTPFileRetrieveException("[SFTP] Impossible d'ouvrir le fichier distant : $remoteFile");
         }
     }
 
