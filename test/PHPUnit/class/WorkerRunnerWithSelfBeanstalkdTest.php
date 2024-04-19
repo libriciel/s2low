@@ -123,25 +123,6 @@ class WorkerRunnerWithSelfBeanstalkdTest extends TestCase
         $this->workerRunner->work();
     }
 
-    //TODO : heu, Nope ??!!
-    // il faudrait plutôt considérer que le job est traité.
-    // si on le garde, il va bloquer la queue qui ne se rebuildera jamais !
-    public function testJobIsReleasedOnException()
-    {
-        $this->heliosReceptionWorker->expects(static::once())->method('getData')->with('data')->willReturn("data");
-        $this->heliosReceptionWorker->expects(static::once())->method('isDataValid')->with('data')->willReturn(true);
-        $this->heliosReceptionWorker->expects(static::once())->method('work')->with('data')
-            ->will(static::throwException(new \Exception("Oupsie !")));
-
-        $this->Job->expects(static::once())->method('getData')->willReturn("data");
-
-        $this->queue->method('peekReady')->willReturn($this->Job);
-        $this->queue-> expects(self::once())->method('reserve')->willReturn($this->Job);
-        $this->queue-> expects(self::once())->method('release');
-
-        $this->workerRunner->work();
-    }
-
     public function testRebuildQueueWhenEmpty()
     {
         $this->queue->expects(static::once())->method('peekReady')
