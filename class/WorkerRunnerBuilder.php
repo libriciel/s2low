@@ -6,10 +6,11 @@ class WorkerRunnerBuilder
 {
     private const MIN_EXECUTION_TIME_IN_SECONDS = 10; //uniquement pour le mode non beanstalked
 
-    private $s2lowLogger;
-    private $beanstalkdWrapper;
-    private $redisMutexWrapper;
-    private $sigTermHandlerFactory;
+    private S2lowLogger $s2lowLogger;
+    private BeanstalkdWrapper $beanstalkdWrapper;
+    private RedisMutexWrapper $redisMutexWrapper;
+    private SigTermHandlerFactory $sigTermHandlerFactory;
+    private WorkerScript $workerScript;
 
 
     /**
@@ -22,12 +23,14 @@ class WorkerRunnerBuilder
         BeanstalkdWrapper $beanstalkdWrapper,
         S2lowLogger $s2lowLogger,
         SigTermHandlerFactory $sigTermHandlerFactory,
-        RedisMutexWrapper $redisMutexWrapper
+        RedisMutexWrapper $redisMutexWrapper,
+        WorkerScript $workerScript
     ) {
         $this->s2lowLogger = $s2lowLogger;
         $this->beanstalkdWrapper = $beanstalkdWrapper;
         $this->sigTermHandlerFactory = $sigTermHandlerFactory;
         $this->redisMutexWrapper = $redisMutexWrapper;
+        $this->workerScript = $workerScript;
     }
 
     /**
@@ -40,7 +43,7 @@ class WorkerRunnerBuilder
         IWorker $worker,
         bool $log_enable_stdout = true,
         string $scriptType = WorkerRunnerWithDataFromBeanstalkd::class
-    ): WorkerRunnerWithDataFromDB|WorkerRunnerWithDataFromBeanstalkd {
+    ): WorkerRunnerWithDataFromDB|WorkerRunnerWithDataFromBeanstalkd|WorkerRunnerWithSelfBeanstalkd {
         $this->s2lowLogger->setName($worker->getQueueName() . "-script");
         $this->s2lowLogger->enableStdOut($log_enable_stdout);
         return $this->script($worker, $scriptType);
@@ -62,6 +65,16 @@ class WorkerRunnerBuilder
                     $IWorker,
                     $this->s2lowLogger,
                     $this->sigTermHandlerFactory->getInstance(),
+                    self::MIN_EXECUTION_TIME_IN_SECONDS
+                );
+            case WorkerRunnerWithSelfBeanstalkd::class:
+                return new WorkerRunnerWithSelfBeanstalkd(
+                    $IWorker,
+                    $this->beanstalkdWrapper,
+                    $this->s2lowLogger,
+                    $this->sigTermHandlerFactory->getInstance(),
+                    $this->redisMutexWrapper,
+                    $this->workerScript,
                     self::MIN_EXECUTION_TIME_IN_SECONDS
                 );
             default:

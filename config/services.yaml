@@ -329,6 +329,9 @@ services:
   S2lowLegacy\Class\WorkerRunnerWithDataFromBeanstalkd:
     autowire: false
 
+  S2lowLegacy\Class\WorkerRunnerWithSelfBeanstalkd:
+    autowire: false
+
   S2lowLegacy\Class\XSDValidation:
     arguments:
       $xsdPath: "todo"

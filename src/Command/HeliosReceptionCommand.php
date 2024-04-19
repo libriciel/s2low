@@ -5,7 +5,9 @@ namespace S2low\Command;
 use LogicException;
 use S2low\Services\Helios\HeliosReceptionWorkerFactory;
 use S2lowLegacy\Class\WorkerRunnerBuilder;
+use S2lowLegacy\Class\WorkerRunnerWithDataFromBeanstalkd;
 use S2lowLegacy\Class\WorkerRunnerWithDataFromDB;
+use S2lowLegacy\Class\WorkerRunnerWithSelfBeanstalkd;
 use S2lowLegacy\Class\WorkerScript;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -74,7 +76,7 @@ class HeliosReceptionCommand extends Command
         $worker = $this->workerRunnerBuilder->scriptWithLogs(
             $this->heliosReceptionWorkerFactory->get($input->getOption('usePasstrans')),
             false,
-            WorkerRunnerWithDataFromDB::class
+            WorkerRunnerWithSelfBeanstalkd::class
         );
 
         $worker->setMinExecutionTimeInSeconds(240);
