@@ -158,10 +158,16 @@ class FTPHeliosReceiverTest extends S2lowTestCase
 
         $retrievedNames = $receiver->retrieveNames(0);
 
+        $exceptionsThrown = [];
         foreach ($retrievedNames as $name) {
-            $receiver->recupOneFile($name);
+            try {
+                $receiver->recupOneFile($name);
+            } catch (Exception $exception) {
+                $exceptionsThrown[] = $exception->getMessage();
+            }
         }
         static::assertEquals(['File'], $retrievedNames);
+        static::assertSame(['Une très bonne raison'], $exceptionsThrown);
     }
 
     /**
@@ -260,7 +266,10 @@ class FTPHeliosReceiverTest extends S2lowTestCase
             ''
         );
 
-        $this->assertEquals(false, $receiver->recupOneFile('File'));
+        self ::expectException(Exception::class);
+        self ::expectExceptionMessage('obviously not because of the remote server');
+
+        $receiver->recupOneFile('File');
     }
 
     /**
@@ -286,6 +295,6 @@ class FTPHeliosReceiverTest extends S2lowTestCase
             ''
         );
 
-        $this->assertEquals(true, $receiver->recupOneFile('File'));
+        $receiver->recupOneFile('File');
     }
 }

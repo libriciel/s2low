@@ -47,20 +47,11 @@ class DGFiPConnectorOnSFTP implements DGFiPConnector
     }
 
     /**
-     * Télécharge un fichier
-     * @param string $tmp_file  chemin du fichier local
-     * @param string $file chemin du fichier distant
-     * @return bool
+     * @throws \S2low\Services\Helios\DGFiPConnection\FTPFileRetrieveException
      */
-    public function retrieveFile(string $tmp_file, string $file): bool
+    public function retrieveFile(string $localFilePath, string $remoteFilePath): void
     {
-        try {
-            $this->activeSFTPConnection->get($tmp_file, $file);
-        } catch (Exception $exception) {
-            echo $exception->getMessage();
-            return false;
-        }
-        return true;
+            $this->activeSFTPConnection->get($localFilePath, $remoteFilePath);
     }
 
     /**
@@ -98,7 +89,6 @@ class DGFiPConnectorOnSFTP implements DGFiPConnector
         string $destinationDirectory,
         string $file_to_send
     ): void {
-        //$filename = basename($file_to_send);
         $hash = sha1_file($file_to_send);
         $passtransFileName = "$p_dest%%$pAppli%%$p_msg%%$hash";
         $this->activeSFTPConnection->put("$destinationDirectory/$passtransFileName", $file_to_send);

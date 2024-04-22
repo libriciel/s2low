@@ -94,6 +94,7 @@ class DGFiPConnection
      * @param $helios_responses_error_path
      * @param string $tmp_path
      * @return void
+     * @throws \S2low\Services\Helios\DGFiPConnection\FTPFileRetrieveException
      * @throws Exception
      */
     public function retrieveFile($fileNameOnFTP, $local_path, $helios_responses_error_path, string $tmp_path): void
@@ -171,15 +172,12 @@ class DGFiPConnection
      * @param SplFileInfo $tmp_file
      * @param $file
      * @return void
+     * @throws \S2low\Services\Helios\DGFiPConnection\FTPFileRetrieveException
      * @throws Exception
      */
     public function retrieveToTmpFile(SplFileInfo $tmp_file, $file): void
     {
-        $ftp_get_result = $this->serverProtocol->retrieveFile($tmp_file->getPathname(), $file);
-
-        if (!$ftp_get_result) {
-            throw new Exception("Erreur lors de la récupération de $file vers $tmp_file");
-        }
+        $this->serverProtocol->retrieveFile($tmp_file->getPathname(), $file);
 
         if (!file_exists($tmp_file->getPathname())) {
             throw new Exception(

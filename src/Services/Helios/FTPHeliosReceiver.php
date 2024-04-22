@@ -92,9 +92,10 @@ class FTPHeliosReceiver
 
     /**
      * @param $file
+     * @throws \S2low\Services\Helios\DGFiPConnection\FTPFileRetrieveException
      * @throws Exception
      */
-    public function recupOneFile($file): bool
+    public function recupOneFile($file): void
     {
         try {
             $this->heliosConnection->retrieveFile(
@@ -105,10 +106,9 @@ class FTPHeliosReceiver
             );
         } catch (Exception $exception) {
             $this->s2lowLogger->info("$file récupéré : ECHEC " . $exception->getMessage());
-            return false;
+            throw $exception;
         }
         $this->s2lowLogger->info("$file récupéré : SUCCES") ;
-        return true;
     }
 
     /**

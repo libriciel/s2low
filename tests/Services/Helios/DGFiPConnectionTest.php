@@ -10,6 +10,7 @@ use S2low\Services\FilesAndDirectoriesUtils\DirectoryManagerFactory;
 use S2low\Services\FilesAndDirectoriesUtils\FileNamesHandler;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnection;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectorOnFTP;
+use S2low\Services\Helios\DGFiPConnection\FTPFileRetrieveException;
 use S2lowLegacy\Class\S2lowLogger;
 use SplFileInfo;
 
@@ -45,7 +46,7 @@ class DGFiPConnectionTest extends TestCase
      */
     public function testRetrieveToTmpFileOk()
     {
-        $this->connector->expects(static::once())->method('retrieveFile')->willReturn(true);
+        $this->connector->expects(static::once())->method('retrieveFile');
         $filename = '/tmp/' . uniqid('test_', true);
         file_put_contents($filename, 'content');
         $this->dgfipConnection->retrieveToTmpFile(new SplFileInfo($filename), 'file name');
@@ -59,11 +60,13 @@ class DGFiPConnectionTest extends TestCase
      */
     public function testRetrieveToTmpFileFtpFail()
     {
-        $this->connector->expects(static::once())->method('retrieveFile')->willReturn(false);
+        $this->connector->expects(static::once())->method('retrieveFile')->willThrowException(
+            new FTPFileRetrieveException("Impossible de transférer le fichier distant file vers tmp_file : ")
+        );
         $filename = '/tmp/' . uniqid('test_', true);
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage("Erreur lors de la récupération de file name vers $filename");
+        $this->expectExceptionMessage("Impossible de transférer le fichier distant file vers tmp_file : ");
         $this->dgfipConnection->retrieveToTmpFile(new SplFileInfo($filename), 'file name');
     }
 
@@ -73,7 +76,7 @@ class DGFiPConnectionTest extends TestCase
      */
     public function testRetrieveToTmpFileFileNotCreated()
     {
-        $this->connector->expects(static::once())->method('retrieveFile')->willReturn(true);
+        $this->connector->expects(static::once())->method('retrieveFile');
         $filename = '/tmp/' . uniqid('test_', true);
 
         $this->expectException(Exception::class);
@@ -89,7 +92,7 @@ class DGFiPConnectionTest extends TestCase
      */
     public function testRetrieveToTmpEmptyFile()
     {
-        $this->connector->expects(static::once())->method('retrieveFile')->willReturn(true);
+        $this->connector->expects(static::once())->method('retrieveFile');
         $filename = '/tmp/' . uniqid('test_', true);
 
         file_put_contents($filename, '');
