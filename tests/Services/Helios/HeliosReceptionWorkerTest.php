@@ -35,7 +35,7 @@ class HeliosReceptionWorkerTest extends TestCase
         );
     }
 
-    public function testExecutionNormale()
+    public function testExecutionNormale(): void
     {
         // On récupère bien le fichier fileName
         $this->FTPHeliosReceiver->expects(self::once())->method('recupOneFile')->with('fileName');
@@ -48,7 +48,7 @@ class HeliosReceptionWorkerTest extends TestCase
         $this->heliosReceptionWorker->work('fileName');
     }
 
-    public function testExecutionAvecFTPFileRetrieveException()
+    public function testExecutionAvecFTPFileRetrieveException(): void
     {
         // Si l'exception FTPFileRetrieveException qui indique une erreur de récupération côté serveur est throw
         // lors de la récupération du fichier

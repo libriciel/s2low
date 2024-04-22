@@ -11,20 +11,15 @@ interface DGFiPConnector
 {
     /**
      * Retourne les fichiers disponibles sur un répertoire du serveur
-     * @param string $remote_path Chemin du répertoire
-     * @return array
+     * @param string $remote_path Chemin du répertoire distant
      */
     public function getFileNames(string $remote_path): array;
 
     /**
-     * Télécharge un fichier
-     * @param string $tmp_file chemin du fichier local
-     * @param string $file chemin du fichier distant
-     * @return void
      * @throws \Exception
      * @throws \S2low\Services\Helios\DGFiPConnection\FTPFileRetrieveException
      */
-    public function retrieveFile(string $tmp_file, string $file): void;
+    public function retrieveFile(string $localFilePath, string $remoteFilePath): void;
 
     /**
      * Ordonne de supprimer explicitement le fichier
