@@ -77,6 +77,10 @@ class WorkerRunnerWithSelfUpdatedBeanstalkdTest extends TestCase
         $this->queue->method('reserve')->willReturnOnConsecutiveCalls($this->Job, false);
         $this->Job->expects(static::once())->method('getData')->willReturn('data');
 
+        // Le job est supprimé systématiquement avant même d'être traité
+        // Autrement, la queue risque d'être bloquée
+        $this->queue->expects(self::once())->method('delete')->with($this->Job);
+
         // Le heliosReceptionWorker est capable de traiter
         $this->heliosReceptionWorker->expects(static::once())
             ->method('getData')

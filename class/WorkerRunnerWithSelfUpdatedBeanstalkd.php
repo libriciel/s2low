@@ -4,13 +4,8 @@ declare(strict_types=1);
 
 namespace S2lowLegacy\Class;
 
-use Pheanstalk\Exception\CommandException;
 use Pheanstalk\Exception\ServerException;
-use Pheanstalk\Job;
 use Pheanstalk\Pheanstalk;
-use Pheanstalk\PheanstalkInterface;
-use S2lowLegacy\Lib\SigTermHandler;
-use Throwable;
 
 /**
  * WorkerRunner qui va
@@ -35,11 +30,13 @@ class WorkerRunnerWithSelfUpdatedBeanstalkd implements IWorkerRunnerStrategies
     public function getAllId(IWorker $worker, S2lowLogger $s2lowLogger): iterable
     {
         while (true) {
-            $job = $this->queue->reserve(1);
+            $job = $this->queue->reserve(0);
             if (!$job) {
                 return false;
             }
-            yield $job->getData();
+            $data = $job->getData();
+            $this->queue->delete($job);
+            yield $data;
         }
     }
 
