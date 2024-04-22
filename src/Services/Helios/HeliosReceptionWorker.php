@@ -64,22 +64,20 @@ class HeliosReceptionWorker implements IWorker
      */
     public function work($data)
     {
-        $sigtermHandler = SigTermHandler::getInstance();
         try {
             $this->ftpFileGetter->recupOneFile($data);
             if ($this->workerScript) {
                 $this->workerScript->putJobByClassName(HeliosAnalyseFichierRecuWorker::class, $data);
             }
-            if ($sigtermHandler->isSigtermCalled()) {
-                $this->ftpFileGetter->finTraitement();
-            }
         } catch (FTPFileRetrieveException $e) {
             // Dans ce cas, on va continuer à traiter les autres fichiers
+            // Car la RecoverableException reste dans la boucle de traitement du AbstractWorkerRunner
             $this->s2lowLogger->info("Probleme lors de la recuperation du fichier $data : " . $e->getMessage());
             throw new RecoverableException($e->getMessage());
         } catch (Exception $e) {
+            // Dans ce cas, on sort de la boucle de traitement du AbstractWorkerRunner
+            // car tous les autres types d'Exceptions ne sont pas catchées
             $this->s2lowLogger->info("Probleme lors de la recuperation du fichier $data : " . $e->getMessage());
-            $this->ftpFileGetter->finTraitement();
             throw $e;
         }
     }

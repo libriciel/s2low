@@ -97,6 +97,5 @@ class AbstractWorkerRunner
                 $this->s2lowLogger->debug("RecoverableException " . $e->getMessage());
             }
         }
-        $this->worker->end();
     }
 }
