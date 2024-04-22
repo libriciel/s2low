@@ -8,23 +8,26 @@ use S2lowLegacy\Lib\PausingQueueException;
 use S2lowLegacy\Lib\SigTermHandler;
 use Throwable;
 
-abstract class AbstractWorkerRunner
+class AbstractWorkerRunner
 {
     protected IWorker $worker;
     protected S2lowLogger $s2lowLogger;
     private mixed $min_execution_time_in_seconds;
     private SigTermHandler $sigTermHandler;
+    private IWorkerRunnerStrategies $workerRunnerStrategies;
 
     public function __construct(
         IWorker $worker,
         S2lowLogger $s2lowLogger,
         SigTermHandler $sigTermHandler,
-        int $min_execution_time_in_seconds
+        int $min_execution_time_in_seconds,
+        IWorkerRunnerStrategies $workerRunnerStrategies
     ) {
         $this->worker = $worker;
         $this->s2lowLogger = $s2lowLogger;
         $this->sigTermHandler = $sigTermHandler;
         $this->min_execution_time_in_seconds = $min_execution_time_in_seconds;
+        $this->workerRunnerStrategies = $workerRunnerStrategies;
     }
     public function work(): bool
     {
@@ -34,7 +37,7 @@ abstract class AbstractWorkerRunner
 
         try {
             $this->worker->start();
-            $this->init();
+            $this->workerRunnerStrategies->init($this->worker, $this->s2lowLogger);
             $this->checkAll();
         } catch (WorkerScriptException $e) {
             $this->s2lowLogger->notice($e->getMessage());
@@ -76,11 +79,11 @@ abstract class AbstractWorkerRunner
      */
     private function checkAll(): void
     {
-        foreach ($this->getAllId() as $id) {
+        foreach ($this->workerRunnerStrategies->getAllId($this->worker, $this->s2lowLogger) as $id) {
             if ($this->sigTermHandler->isSigtermCalled()) {
                 throw new WorkerScriptException('SIGTERM reçu');
             }
-            $data = $this->worker->getData($id);    //TODO : pas très élégant pour WorkerRunnerWithSelfBeanstalkd
+            $data = $this->worker->getData($id);
             try {
                 if ($this->worker->isDataValid($data)) {
                     $this->worker->work($data);
@@ -88,15 +91,12 @@ abstract class AbstractWorkerRunner
                     $this->s2lowLogger->info("Le travail n'est plus à faire, abandon", [$data]);
                 }
             } catch (RecoverableException $e) {
-                /* Nothing to do*/
+                /**  Dans le cas d'une RecoverableException, on continue à traiter les $id
+                 *   Sinon, on arrêtera la boucle.
+                 **/
+                $this->s2lowLogger->debug("RecoverableException " . $e->getMessage());
             }
         }
         $this->worker->end();
-    }
-
-    abstract protected function getAllId();
-
-    protected function init()
-    {
     }
 }

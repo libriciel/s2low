@@ -2,19 +2,18 @@
 
 namespace S2lowLegacy\Class;
 
-use Exception;
-use S2lowLegacy\Lib\PausingQueueException;
-use S2lowLegacy\Lib\SigTermHandler;
-
-class WorkerRunnerWithDataFromDB extends AbstractWorkerRunner
+class WorkerRunnerWithDataFromDB implements IWorkerRunnerStrategies
 {
-    protected function getAllId()
+    public function getAllId(IWorker $worker, S2lowLogger $s2lowLogger): iterable
     {
-        $id_list = $this->worker->getAllId();
-        $this->s2lowLogger->info(count($id_list) . " travaux trouvées");
-
+        $id_list = $worker->getAllId();
+        $s2lowLogger->info(count($id_list) . ' travaux trouvées');
         foreach ($id_list as $id) {
             yield $id;
         }
+    }
+
+    public function init(IWorker $worker, S2lowLogger $s2lowLogger): void
+    {
     }
 }
