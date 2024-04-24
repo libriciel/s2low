@@ -17,12 +17,13 @@ use S2lowLegacy\Class\WorkerScript;
 
 class HeliosReceptionWorkerTest extends TestCase
 {
+    private S2lowLogger $logger;
     private WorkerScript $workerScript;
     private FTPHeliosReceiver $FTPHeliosReceiver;
     protected function setUp(): void
     {
         parent::setUp();
-        $logger = $this->getMockBuilder(S2lowLogger::class)
+        $this->logger = $this->getMockBuilder(S2lowLogger::class)
             ->disableOriginalConstructor()
             ->getMock();
         $this->workerScript = $this->getMockBuilder(WorkerScript::class)
@@ -32,7 +33,7 @@ class HeliosReceptionWorkerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $this->heliosReceptionWorker = new HeliosReceptionWorker(
-            $logger,
+            $this->logger,
             $this->workerScript,
             $this->FTPHeliosReceiver
         );
@@ -90,5 +91,26 @@ class HeliosReceptionWorkerTest extends TestCase
         $this->expectExceptionMessage('OupsieDaysy');
 
         $this->heliosReceptionWorker->work('fileName');
+    }
+
+    /**
+     * @dataProvider queueNamesProvider
+     */
+    public function testQueueName(bool $usePasstrans, string $queueName): void
+    {
+        static::assertEquals(
+            $queueName,
+            (new HeliosReceptionWorker(
+                $this->logger,
+                $this->workerScript,
+                $this->FTPHeliosReceiver
+            ))->getQueueName()
+        );
+    }
+
+    public function queueNamesProvider(): iterable
+    {
+        yield [false, HeliosReceptionWorker::QUEUE_NAME];
+        return [true, HeliosReceptionWorker::QUEUE_NAME . '-passtrans'];
     }
 }

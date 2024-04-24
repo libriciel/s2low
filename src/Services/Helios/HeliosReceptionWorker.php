@@ -17,24 +17,26 @@ class HeliosReceptionWorker implements IWorker
 {
     public const QUEUE_NAME = 'helios-reception-fichier';
 
-    private $workerScript;
-    private $s2lowLogger;
-    /** @var FTPHeliosReceiver  */
-    private $ftpFileGetter;
+    private WorkerScript $workerScript;
+    private S2lowLogger $s2lowLogger;
+    private FTPHeliosReceiver $ftpFileGetter;
+    private bool $usePasstrans;
 
     public function __construct(
         S2lowLogger $s2lowLogger,
         WorkerScript $workerScript,
-        FTPHeliosReceiver $FTPHeliosReceiver
+        FTPHeliosReceiver $FTPHeliosReceiver,
+        bool $usePasstrans = false
     ) {
         $this->s2lowLogger = $s2lowLogger;
         $this->workerScript = $workerScript;
         $this->ftpFileGetter = $FTPHeliosReceiver;
+        $this->usePasstrans = $usePasstrans;
     }
 
     public function getQueueName()
     {
-        return self::QUEUE_NAME;
+        return self::QUEUE_NAME . ($this->usePasstrans ? '-passtrans' : '');
     }
 
     public function getData($id)
@@ -49,7 +51,7 @@ class HeliosReceptionWorker implements IWorker
     public function getAllId(): array
     {
         try {
-            $this->s2lowLogger->info("Début de la récupération");
+            $this->s2lowLogger->info("Début de la récupération [{$this->getQueueName()}]");
             return $this->ftpFileGetter->retrieveNames();
         } catch (Exception $e) {
             $this->s2lowLogger->info("Probleme lors de la recuperation des noms : " . $e->getMessage());
