@@ -12,5 +12,5 @@ require_once(__DIR__ . "/../init/init.php");
 $workerBuilder->scriptWithLogs(
     $worker,
     true,
-    \S2lowLegacy\Class\WorkerRunnerWithDataFromDB::class
+    \S2lowLegacy\Class\JobFetcherFromDB::class
 )->work();

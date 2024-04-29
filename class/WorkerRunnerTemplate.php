@@ -8,26 +8,26 @@ use S2lowLegacy\Lib\PausingQueueException;
 use S2lowLegacy\Lib\SigTermHandler;
 use Throwable;
 
-class AbstractWorkerRunner
+class WorkerRunnerTemplate implements WorkerRunner
 {
-    protected IWorker $worker;
-    protected S2lowLogger $s2lowLogger;
-    private mixed $min_execution_time_in_seconds;
+    private IWorker $worker;
+    private S2lowLogger $s2lowLogger;
+    private int $min_execution_time_in_seconds;
     private SigTermHandler $sigTermHandler;
-    private IWorkerRunnerStrategies $workerRunnerStrategies;
+    private JobFetchingStrategies $jobFetchingStrategies;
 
     public function __construct(
         IWorker $worker,
         S2lowLogger $s2lowLogger,
         SigTermHandler $sigTermHandler,
         int $min_execution_time_in_seconds,
-        IWorkerRunnerStrategies $workerRunnerStrategies
+        JobFetchingStrategies $jobFetchingStrategies
     ) {
         $this->worker = $worker;
         $this->s2lowLogger = $s2lowLogger;
         $this->sigTermHandler = $sigTermHandler;
         $this->min_execution_time_in_seconds = $min_execution_time_in_seconds;
-        $this->workerRunnerStrategies = $workerRunnerStrategies;
+        $this->jobFetchingStrategies = $jobFetchingStrategies;
     }
     public function work(): bool
     {
@@ -37,7 +37,7 @@ class AbstractWorkerRunner
 
         try {
             $this->worker->start();
-            $this->workerRunnerStrategies->init($this->worker, $this->s2lowLogger);
+            $this->jobFetchingStrategies->init($this->worker, $this->s2lowLogger);
             $this->checkAll();
         } catch (WorkerScriptException $e) {
             $this->s2lowLogger->notice($e->getMessage());
@@ -79,11 +79,10 @@ class AbstractWorkerRunner
      */
     private function checkAll(): void
     {
-        foreach ($this->workerRunnerStrategies->getAllId($this->worker, $this->s2lowLogger) as $id) {
+        foreach ($this->jobFetchingStrategies->getAllData($this->worker, $this->s2lowLogger) as $data) {
             if ($this->sigTermHandler->isSigtermCalled()) {
                 throw new WorkerScriptException('SIGTERM reçu');
             }
-            $data = $this->worker->getData($id);
             try {
                 if ($this->worker->isDataValid($data)) {
                     $this->worker->work($data);

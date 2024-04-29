@@ -73,11 +73,11 @@ class HeliosReceptionWorker implements IWorker
             }
         } catch (FTPFileRetrieveException $e) {
             // Dans ce cas, on va continuer à traiter les autres fichiers
-            // Car la RecoverableException reste dans la boucle de traitement du AbstractWorkerRunner
+            // Car la RecoverableException reste dans la boucle de traitement du WorkerRunnerTemplate
             $this->s2lowLogger->info("Probleme lors de la recuperation du fichier $data : " . $e->getMessage());
             throw new RecoverableException($e->getMessage());
         } catch (Exception $e) {
-            // Dans ce cas, on sort de la boucle de traitement du AbstractWorkerRunner
+            // Dans ce cas, on sort de la boucle de traitement du WorkerRunnerTemplate
             // car tous les autres types d'Exceptions ne sont pas catchées
             $this->s2lowLogger->info("Probleme lors de la recuperation du fichier $data : " . $e->getMessage());
             throw $e;

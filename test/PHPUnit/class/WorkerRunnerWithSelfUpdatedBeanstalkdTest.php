@@ -10,11 +10,11 @@ use Pheanstalk\Pheanstalk;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use S2low\Services\Helios\HeliosReceptionWorker;
-use S2lowLegacy\Class\AbstractWorkerRunner;
+use S2lowLegacy\Class\WorkerRunnerTemplate;
 use S2lowLegacy\Class\BeanstalkdWrapper;
 use S2lowLegacy\Class\RedisMutexWrapper;
 use S2lowLegacy\Class\S2lowLogger;
-use S2lowLegacy\Class\WorkerRunnerWithSelfUpdatedBeanstalkd;
+use S2lowLegacy\Class\JobFetcherFromSelfUpdatedBeanstalkd;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\SigTermHandler;
 
@@ -24,7 +24,7 @@ class WorkerRunnerWithSelfUpdatedBeanstalkdTest extends TestCase
     private Job|MockObject $Job;
     private MockObject|Pheanstalk $queue;
     private MockObject|WorkerScript $workerScript;
-    private AbstractWorkerRunner $workerRunner;
+    private WorkerRunnerTemplate $workerRunner;
 
     protected function setUp(): void
     {
@@ -55,19 +55,19 @@ class WorkerRunnerWithSelfUpdatedBeanstalkdTest extends TestCase
 
         $logger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
 
-        $this->workerRunner = new AbstractWorkerRunner(
+        $this->workerRunner = new WorkerRunnerTemplate(
             $this->heliosReceptionWorker,
             $logger,
             $sigTermHandler,
             0,
-            new WorkerRunnerWithSelfUpdatedBeanstalkd(
+            new JobFetcherFromSelfUpdatedBeanstalkd(
                 $beanstalkdWrapper,
                 $this->workerScript,
                 'queueName'
             )
         );
     }
-    public function testNormalExecution()
+    public function testNormalExecution(): void
     {
         // peekReady retourne un job : il n'y a pas besoin de rebuild la queue
         $this->queue->method('peekReady')->willReturn($this->Job);
@@ -83,10 +83,6 @@ class WorkerRunnerWithSelfUpdatedBeanstalkdTest extends TestCase
 
         // Le heliosReceptionWorker est capable de traiter
         $this->heliosReceptionWorker->expects(static::once())
-            ->method('getData')
-            ->with('data')
-            ->willReturn('data');
-        $this->heliosReceptionWorker->expects(static::once())
             ->method('isDataValid')
             ->with('data')
             ->willReturn(true);
@@ -95,11 +91,10 @@ class WorkerRunnerWithSelfUpdatedBeanstalkdTest extends TestCase
             ->method('work')
             ->with('data');
 
-
         $this->workerRunner->work();
     }
 
-    public function testRebuildQueueWhenEmpty()
+    public function testRebuildQueueWhenEmpty(): void
     {
         $this->queue->expects(static::once())->method('peekReady')
             ->willThrowException(new ServerException("Une ServerException est lancée quand aucun job n'est ready"));

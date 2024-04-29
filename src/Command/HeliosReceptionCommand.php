@@ -6,8 +6,8 @@ use LogicException;
 use S2low\Services\Helios\HeliosReceptionWorkerFactory;
 use S2lowLegacy\Class\WorkerRunnerBuilder;
 use S2lowLegacy\Class\WorkerRunnerWithDataFromBeanstalkd;
-use S2lowLegacy\Class\WorkerRunnerWithDataFromDB;
-use S2lowLegacy\Class\WorkerRunnerWithSelfUpdatedBeanstalkd;
+use S2lowLegacy\Class\JobFetcherFromDB;
+use S2lowLegacy\Class\JobFetcherFromSelfUpdatedBeanstalkd;
 use S2lowLegacy\Class\WorkerScript;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -76,7 +76,7 @@ class HeliosReceptionCommand extends Command
         $worker = $this->workerRunnerBuilder->scriptWithLogs(
             $this->heliosReceptionWorkerFactory->get($input->getOption('usePasstrans')),
             false,
-            WorkerRunnerWithSelfUpdatedBeanstalkd::class
+            JobFetcherFromSelfUpdatedBeanstalkd::class
         );
 
         $worker->setMinExecutionTimeInSeconds(240);

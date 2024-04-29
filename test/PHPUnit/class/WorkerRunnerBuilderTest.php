@@ -8,7 +8,7 @@ use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\RedisMutexWrapper;
 use S2lowLegacy\Class\SigTermHandlerFactory;
 use S2lowLegacy\Class\WorkerRunnerBuilder;
-use S2lowLegacy\Class\WorkerRunnerWithDataFromDB;
+use S2lowLegacy\Class\JobFetcherFromDB;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\SigTermHandler;
 
@@ -106,7 +106,7 @@ class WorkerRunnerBuilderTest extends S2lowTestCase
         $workerBuilder = $this->getObjectInstancier()->get(WorkerRunnerBuilder::class);
 
         $this->assertTrue(
-            $workerBuilder->scriptWithLogs($IWorker, false, WorkerRunnerWithDataFromDB::class)->work()
+            $workerBuilder->scriptWithLogs($IWorker, false, JobFetcherFromDB::class)->work()
         );
     }
 
@@ -124,7 +124,7 @@ class WorkerRunnerBuilderTest extends S2lowTestCase
         /** @var IWorker $IWorker */
 
         $workerRunnerBuilder = $this->getObjectInstancier()->get(WorkerRunnerBuilder::class);
-        $this->assertTrue($workerRunnerBuilder->script($IWorker, WorkerRunnerWithDataFromDB::class)->work());
+        $this->assertTrue($workerRunnerBuilder->script($IWorker, JobFetcherFromDB::class)->work());
         $logs_records = $this->getLogRecords();
         $this->assertEquals("SIGTERM reçu", $logs_records[2]['message']);
     }
@@ -138,7 +138,7 @@ class WorkerRunnerBuilderTest extends S2lowTestCase
         /** @var IWorker $IWorker */
 
         $workerRunnerBuilder = $this->getObjectInstancier()->get(WorkerRunnerBuilder::class);
-        $this->assertFalse($workerRunnerBuilder->script($IWorker, WorkerRunnerWithDataFromDB::class)->work());
+        $this->assertFalse($workerRunnerBuilder->script($IWorker, JobFetcherFromDB::class)->work());
         $logs_records = $this->getLogRecords();
         $this->assertEquals("Erreur lors de l'execution du script : foo", $logs_records[1]['message']);
     }

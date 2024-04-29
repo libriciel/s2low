@@ -2,7 +2,7 @@
 
 use S2lowLegacy\Class\AcCertificatesRetrieverWorker;
 use S2lowLegacy\Class\LegacyObjectsManager;
-use S2lowLegacy\Class\WorkerRunnerWithDataFromDB;
+use S2lowLegacy\Class\JobFetcherFromDB;
 use S2lowLegacy\Class\WorkerRunnerBuilder;
 use S2lowLegacy\Class\WorkerScript;
 
@@ -11,6 +11,6 @@ require_once(__DIR__ . "/../init/init.php");
 [$workerBuilder,$worker] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([WorkerRunnerBuilder::class,AcCertificatesRetrieverWorker::class]);
 
-$worker = $workerBuilder->scriptWithLogs($worker, true, WorkerRunnerWithDataFromDB::class);
+$worker = $workerBuilder->scriptWithLogs($worker, true, JobFetcherFromDB::class);
 $worker->setMinExecutionTimeInSeconds(3600);
 $worker->work();

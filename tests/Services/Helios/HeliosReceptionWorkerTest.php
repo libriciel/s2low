@@ -103,7 +103,8 @@ class HeliosReceptionWorkerTest extends TestCase
             (new HeliosReceptionWorker(
                 $this->logger,
                 $this->workerScript,
-                $this->FTPHeliosReceiver
+                $this->FTPHeliosReceiver,
+                $usePasstrans
             ))->getQueueName()
         );
     }
@@ -111,6 +112,6 @@ class HeliosReceptionWorkerTest extends TestCase
     public function queueNamesProvider(): iterable
     {
         yield [false, HeliosReceptionWorker::QUEUE_NAME];
-        return [true, HeliosReceptionWorker::QUEUE_NAME . '-passtrans'];
+        yield [true, HeliosReceptionWorker::QUEUE_NAME . '-passtrans'];
     }
 }

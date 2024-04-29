@@ -14,20 +14,18 @@ use Pheanstalk\Pheanstalk;
  * ATTENTION : il ne faut pas reserve les jobs qui échouent, sinon la file ne se videra pas,
  * et restera bloquée sur les jobs qui failent.
  */
-class WorkerRunnerWithSelfUpdatedBeanstalkd implements IWorkerRunnerStrategies
+class JobFetcherFromSelfUpdatedBeanstalkd implements JobFetchingStrategies
 {
-    private BeanstalkdWrapper $beanstalkdWrapper;
     private WorkerScript $workerScript;
     private Pheanstalk $queue;
 
     public function __construct(BeanstalkdWrapper $beanstalkdWrapper, WorkerScript $workerScript, string $queueName)
     {
-        $this->beanstalkdWrapper = $beanstalkdWrapper;
         $this->workerScript = $workerScript;
-        $this->queue = $this->beanstalkdWrapper->getQueue($queueName);
+        $this->queue = $beanstalkdWrapper->getQueue($queueName);
     }
 
-    public function getAllId(IWorker $worker, S2lowLogger $s2lowLogger): iterable
+    public function getAllData(IWorker $worker, S2lowLogger $s2lowLogger): iterable
     {
         while (true) {
             $job = $this->queue->reserve(0);

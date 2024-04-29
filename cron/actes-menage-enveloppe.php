@@ -3,7 +3,7 @@
 use S2lowLegacy\Class\actes\ActesMenageEnveloppeWorker;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\WorkerRunnerBuilder;
-use S2lowLegacy\Class\WorkerRunnerWithDataFromDB;
+use S2lowLegacy\Class\JobFetcherFromDB;
 
 require_once(__DIR__ . '/../init/init.php');
 /** @var WorkerRunnerBuilder $workerBuilder */
@@ -14,5 +14,5 @@ require_once(__DIR__ . '/../init/init.php');
 $workerBuilder->scriptWithLogs(
     $worker,
     true,
-    WorkerRunnerWithDataFromDB::class
+    JobFetcherFromDB::class
 )->work();

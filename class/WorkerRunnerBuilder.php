@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace S2lowLegacy\Class;
 
 use RuntimeException;
@@ -32,7 +34,7 @@ class WorkerRunnerBuilder
         IWorker $worker,
         bool $log_enable_stdout = true,
         string $scriptType = WorkerRunnerWithDataFromBeanstalkd::class
-    ): WorkerRunnerWithDataFromBeanstalkd|AbstractWorkerRunner {
+    ): WorkerRunner {
         $this->s2lowLogger->setName($worker->getQueueName() . '-script');
         $this->s2lowLogger->enableStdOut($log_enable_stdout);
         return $this->script($worker, $scriptType);
@@ -41,7 +43,7 @@ class WorkerRunnerBuilder
     public function script(
         IWorker $IWorker,
         string $scriptType = WorkerRunnerWithDataFromBeanstalkd::class
-    ): WorkerRunnerWithDataFromBeanstalkd|AbstractWorkerRunner {
+    ): WorkerRunner {
         return match ($scriptType) {
             WorkerRunnerWithDataFromBeanstalkd::class => new WorkerRunnerWithDataFromBeanstalkd(
                 $IWorker,
@@ -50,19 +52,19 @@ class WorkerRunnerBuilder
                 $this->sigTermHandlerFactory->getInstance(),
                 $this->redisMutexWrapper
             ),
-            WorkerRunnerWithDataFromDB::class => new AbstractWorkerRunner(
+            JobFetcherFromDB::class => new WorkerRunnerTemplate(
                 $IWorker,
                 $this->s2lowLogger,
                 $this->sigTermHandlerFactory->getInstance(),
                 self::MIN_EXECUTION_TIME_IN_SECONDS,
-                new WorkerRunnerWithDataFromDB()
+                new JobFetcherFromDB()
             ),
-            WorkerRunnerWithSelfUpdatedBeanstalkd::class => new AbstractWorkerRunner(
+            JobFetcherFromSelfUpdatedBeanstalkd::class => new WorkerRunnerTemplate(
                 $IWorker,
                 $this->s2lowLogger,
                 $this->sigTermHandlerFactory->getInstance(),
                 self::MIN_EXECUTION_TIME_IN_SECONDS,
-                new WorkerRunnerWithSelfUpdatedBeanstalkd(
+                new JobFetcherFromSelfUpdatedBeanstalkd(
                     $this->beanstalkdWrapper,
                     $this->workerScript,
                     $IWorker->getQueueName()

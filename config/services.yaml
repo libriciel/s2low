@@ -323,16 +323,19 @@ services:
   S2lowLegacy\Class\Versionning:
     autowire: false #Pas un service
 
-  S2lowLegacy\Class\AbstractWorkerRunner:
+  S2lowLegacy\Class\WorkerRunner:
     autowire: false
 
-  S2lowLegacy\Class\WorkerRunnerWithDataFromDB:
+  S2lowLegacy\Class\WorkerRunnerTemplate:
+    autowire: false
+
+  S2lowLegacy\Class\JobFetcherFromDB:
     autowire: false
 
   S2lowLegacy\Class\WorkerRunnerWithDataFromBeanstalkd:
     autowire: false
 
-  S2lowLegacy\Class\WorkerRunnerWithSelfUpdatedBeanstalkd:
+  S2lowLegacy\Class\JobFetcherFromSelfUpdatedBeanstalkd:
     autowire: false
 
   S2lowLegacy\Class\XSDValidation:
