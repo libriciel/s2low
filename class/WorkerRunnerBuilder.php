@@ -52,14 +52,14 @@ class WorkerRunnerBuilder
                 $this->sigTermHandlerFactory->getInstance(),
                 $this->redisMutexWrapper
             ),
-            JobFetcherFromDB::class => new WorkerRunnerTemplate(
+            JobFetcherFromDB::class => new CustomizableWorkerRunner(
                 $IWorker,
                 $this->s2lowLogger,
                 $this->sigTermHandlerFactory->getInstance(),
                 self::MIN_EXECUTION_TIME_IN_SECONDS,
                 new JobFetcherFromDB()
             ),
-            JobFetcherFromSelfUpdatedBeanstalkd::class => new WorkerRunnerTemplate(
+            JobFetcherFromSelfUpdatedBeanstalkd::class => new CustomizableWorkerRunner(
                 $IWorker,
                 $this->s2lowLogger,
                 $this->sigTermHandlerFactory->getInstance(),

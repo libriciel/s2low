@@ -10,7 +10,7 @@ use Pheanstalk\Pheanstalk;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use S2low\Services\Helios\HeliosReceptionWorker;
-use S2lowLegacy\Class\WorkerRunnerTemplate;
+use S2lowLegacy\Class\CustomizableWorkerRunner;
 use S2lowLegacy\Class\BeanstalkdWrapper;
 use S2lowLegacy\Class\RedisMutexWrapper;
 use S2lowLegacy\Class\S2lowLogger;
@@ -24,7 +24,7 @@ class WorkerRunnerWithSelfUpdatedBeanstalkdTest extends TestCase
     private Job|MockObject $Job;
     private MockObject|Pheanstalk $queue;
     private MockObject|WorkerScript $workerScript;
-    private WorkerRunnerTemplate $workerRunner;
+    private CustomizableWorkerRunner $workerRunner;
 
     protected function setUp(): void
     {
@@ -55,7 +55,7 @@ class WorkerRunnerWithSelfUpdatedBeanstalkdTest extends TestCase
 
         $logger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
 
-        $this->workerRunner = new WorkerRunnerTemplate(
+        $this->workerRunner = new CustomizableWorkerRunner(
             $this->heliosReceptionWorker,
             $logger,
             $sigTermHandler,

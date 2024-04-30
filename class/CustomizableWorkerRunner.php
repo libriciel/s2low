@@ -8,20 +8,20 @@ use S2lowLegacy\Lib\PausingQueueException;
 use S2lowLegacy\Lib\SigTermHandler;
 use Throwable;
 
-class WorkerRunnerTemplate implements WorkerRunner
+class CustomizableWorkerRunner implements WorkerRunner
 {
     private IWorker $worker;
     private S2lowLogger $s2lowLogger;
     private int $min_execution_time_in_seconds;
     private SigTermHandler $sigTermHandler;
-    private JobFetchingStrategies $jobFetchingStrategies;
+    private JobFetchingStrategy $jobFetchingStrategies;
 
     public function __construct(
         IWorker $worker,
         S2lowLogger $s2lowLogger,
         SigTermHandler $sigTermHandler,
         int $min_execution_time_in_seconds,
-        JobFetchingStrategies $jobFetchingStrategies
+        JobFetchingStrategy $jobFetchingStrategies
     ) {
         $this->worker = $worker;
         $this->s2lowLogger = $s2lowLogger;

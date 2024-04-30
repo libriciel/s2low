@@ -14,7 +14,7 @@ use Pheanstalk\Pheanstalk;
  * ATTENTION : il ne faut pas reserve les jobs qui échouent, sinon la file ne se videra pas,
  * et restera bloquée sur les jobs qui failent.
  */
-class JobFetcherFromSelfUpdatedBeanstalkd implements JobFetchingStrategies
+class JobFetcherFromSelfUpdatedBeanstalkd implements JobFetchingStrategy
 {
     private WorkerScript $workerScript;
     private Pheanstalk $queue;

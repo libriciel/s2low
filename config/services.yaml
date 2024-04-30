@@ -326,7 +326,7 @@ services:
   S2lowLegacy\Class\WorkerRunner:
     autowire: false
 
-  S2lowLegacy\Class\WorkerRunnerTemplate:
+  S2lowLegacy\Class\CustomizableWorkerRunner:
     autowire: false
 
   S2lowLegacy\Class\JobFetcherFromDB:
