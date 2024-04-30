@@ -35,7 +35,8 @@ class HeliosReceptionWorkerFactory
         return new HeliosReceptionWorker(
             $this->s2lowLogger,
             $this->workerScript,
-            $this->ftpHeliosReceiverFactory->get($usePasstrans)
+            $this->ftpHeliosReceiverFactory->get($usePasstrans),
+            $usePasstrans
         );
     }
 }

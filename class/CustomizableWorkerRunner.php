@@ -1,46 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace S2lowLegacy\Class;
 
-use Exception;
 use S2lowLegacy\Lib\PausingQueueException;
 use S2lowLegacy\Lib\SigTermHandler;
+use Throwable;
 
-class WorkerRunnerWithDataFromDB
+class CustomizableWorkerRunner implements WorkerRunner
 {
-    /**
-     * @var \S2lowLegacy\Class\IWorker
-     */
     private IWorker $worker;
-
-    /**
-     * @var \S2lowLegacy\Class\S2lowLogger
-     */
     private S2lowLogger $s2lowLogger;
-    private mixed $min_execution_time_in_seconds;
-    /**
-     * @var \S2lowLegacy\Lib\SigTermHandler
-     */
+    private int $min_execution_time_in_seconds;
     private SigTermHandler $sigTermHandler;
+    private JobFetchingStrategy $jobFetchingStrategies;
 
     public function __construct(
         IWorker $worker,
         S2lowLogger $s2lowLogger,
         SigTermHandler $sigTermHandler,
-        int $min_execution_time_in_seconds
+        int $min_execution_time_in_seconds,
+        JobFetchingStrategy $jobFetchingStrategies
     ) {
         $this->worker = $worker;
         $this->s2lowLogger = $s2lowLogger;
         $this->sigTermHandler = $sigTermHandler;
         $this->min_execution_time_in_seconds = $min_execution_time_in_seconds;
+        $this->jobFetchingStrategies = $jobFetchingStrategies;
     }
-    public function work()
+    public function work(): bool
     {
         $start = time();
 
-        $this->s2lowLogger->info("Démarrage en mode supervisord");
+        $this->s2lowLogger->info('Démarrage en mode supervisord');
 
         try {
+            $this->worker->start();
+            $this->jobFetchingStrategies->init($this->worker, $this->s2lowLogger);
             $this->checkAll();
         } catch (WorkerScriptException $e) {
             $this->s2lowLogger->notice($e->getMessage());
@@ -49,13 +46,15 @@ class WorkerRunnerWithDataFromDB
             $seconds = $e->getTimeToWait();
             $this->s2lowLogger->info("Pausing queue for $seconds seconds");
             sleep($seconds);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $message = $e->getMessage();
             $this->s2lowLogger->critical(
                 "Erreur lors de l'execution du script : " . $message,
                 [$e->getTraceAsString()]
             );
             return false;
+        } finally {
+            $this->worker->end();
         }
 
         $sleep = $this->min_execution_time_in_seconds - (time() - $start);
@@ -67,7 +66,7 @@ class WorkerRunnerWithDataFromDB
     }
 
 
-    public function setMinExecutionTimeInSeconds($min_execution_time_in_seconds)
+    public function setMinExecutionTimeInSeconds($min_execution_time_in_seconds): void
     {
         $this->min_execution_time_in_seconds = $min_execution_time_in_seconds;
     }
@@ -78,17 +77,12 @@ class WorkerRunnerWithDataFromDB
      * @throws \S2lowLegacy\Lib\PausingQueueException
      * @throws \S2lowLegacy\Lib\UnrecoverableException
      */
-    private function checkAll()
+    private function checkAll(): void
     {
-        $this->worker->start();
-        $id_list = $this->worker->getAllId();
-        $this->s2lowLogger->info(count($id_list) . " travaux trouvées");
-
-        foreach ($id_list as $id) {
+        foreach ($this->jobFetchingStrategies->getAllData($this->worker, $this->s2lowLogger) as $data) {
             if ($this->sigTermHandler->isSigtermCalled()) {
-                throw new WorkerScriptException("SIGTERM reçu");
+                throw new WorkerScriptException('SIGTERM reçu');
             }
-            $data = $this->worker->getData($id);
             try {
                 if ($this->worker->isDataValid($data)) {
                     $this->worker->work($data);
@@ -96,9 +90,11 @@ class WorkerRunnerWithDataFromDB
                     $this->s2lowLogger->info("Le travail n'est plus à faire, abandon", [$data]);
                 }
             } catch (RecoverableException $e) {
-                /* Nothing to do*/
+                /**  Dans le cas d'une RecoverableException, on continue à traiter les $id
+                 *   Sinon, on arrêtera la boucle.
+                 **/
+                $this->s2lowLogger->debug("RecoverableException " . $e->getMessage());
             }
         }
-        $this->worker->end();
     }
 }

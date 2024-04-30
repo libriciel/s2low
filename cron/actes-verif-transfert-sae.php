@@ -2,7 +2,7 @@
 
 use S2lowLegacy\Class\actes\ActesVerifSaeWorker;
 use S2lowLegacy\Class\LegacyObjectsManager;
-use S2lowLegacy\Class\WorkerRunnerWithDataFromDB;
+use S2lowLegacy\Class\JobFetcherFromDB;
 use S2lowLegacy\Class\WorkerRunnerBuilder;
 
 require_once(__DIR__ . "/../init/init.php");
@@ -10,4 +10,4 @@ require_once(__DIR__ . "/../init/init.php");
 [$workerBuilder,$worker] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([WorkerRunnerBuilder::class,ActesVerifSaeWorker::class]);
 
-$workerBuilder->scriptWithLogs($worker, true, WorkerRunnerWithDataFromDB::class)->work();
+$workerBuilder->scriptWithLogs($worker, true, JobFetcherFromDB::class)->work();

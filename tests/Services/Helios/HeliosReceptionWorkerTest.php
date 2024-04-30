@@ -4,22 +4,26 @@ declare(strict_types=1);
 
 namespace S2low\Tests\Services\Helios;
 
+use Exception;
+use RuntimeException;
 use PHPUnit\Framework\TestCase;
 use S2low\Services\Helios\DGFiPConnection\FTPFileRetrieveException;
 use S2low\Services\Helios\FTPHeliosReceiver;
 use S2low\Services\Helios\HeliosReceptionWorker;
 use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker;
+use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\WorkerScript;
 
 class HeliosReceptionWorkerTest extends TestCase
 {
+    private S2lowLogger $logger;
     private WorkerScript $workerScript;
     private FTPHeliosReceiver $FTPHeliosReceiver;
     protected function setUp(): void
     {
         parent::setUp();
-        $logger = $this->getMockBuilder(S2lowLogger::class)
+        $this->logger = $this->getMockBuilder(S2lowLogger::class)
             ->disableOriginalConstructor()
             ->getMock();
         $this->workerScript = $this->getMockBuilder(WorkerScript::class)
@@ -29,12 +33,15 @@ class HeliosReceptionWorkerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $this->heliosReceptionWorker = new HeliosReceptionWorker(
-            $logger,
+            $this->logger,
             $this->workerScript,
             $this->FTPHeliosReceiver
         );
     }
 
+    /**
+     * @throws Exception
+     */
     public function testExecutionNormale(): void
     {
         // On récupère bien le fichier fileName
@@ -48,21 +55,63 @@ class HeliosReceptionWorkerTest extends TestCase
         $this->heliosReceptionWorker->work('fileName');
     }
 
+    /**
+     * @throws Exception
+     */
     public function testExecutionAvecFTPFileRetrieveException(): void
     {
         // Si l'exception FTPFileRetrieveException qui indique une erreur de récupération côté serveur est throw
         // lors de la récupération du fichier
         $this->FTPHeliosReceiver->expects(self::once())->method('recupOneFile')
-            ->willThrowException(new FTPFileRetrieveException());
+            ->willThrowException(new FTPFileRetrieveException('OupsieDaysy'));
         // On n'aura rien à envoyer dans la queue d'analyse des fichiers reçus
         $this->workerScript->expects(self::never())->method('putJobByClassName')
             ->with(HeliosAnalyseFichierRecuWorker::class, 'fileName');
-        // Mais on continuera le traitement des fichiers tout de même
-        $this->FTPHeliosReceiver->expects(self::never())->method('finTraitement');
+        // Et une RecoverableException est lancée
+        $this->expectException(RecoverableException::class);
+        $this->expectExceptionMessage('OupsieDaysy');
 
         $this->heliosReceptionWorker->work('fileName');
     }
 
-    // Pour l'instant, il n'est pas possible de tester que le déclenchement d'un autre type d'exception stoppera bien
-    // la réception ... Ce sera possible lorsqu'on changera le exit pour le changement d'une exception appropriée.
+    /**
+     * @throws Exception
+     */
+    public function testExecutionAvecAutreException(): void
+    {
+        // Si une Exception générique est throw
+        // lors de la récupération du fichier
+        $this->FTPHeliosReceiver->expects(self::once())->method('recupOneFile')
+            ->willThrowException(new RuntimeException('OupsieDaysy'));
+        // On n'aura rien à envoyer dans la queue d'analyse des fichiers reçus
+        $this->workerScript->expects(self::never())->method('putJobByClassName')
+            ->with(HeliosAnalyseFichierRecuWorker::class, 'fileName');
+        // Et l'exception est relancée
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('OupsieDaysy');
+
+        $this->heliosReceptionWorker->work('fileName');
+    }
+
+    /**
+     * @dataProvider queueNamesProvider
+     */
+    public function testQueueName(bool $usePasstrans, string $queueName): void
+    {
+        static::assertEquals(
+            $queueName,
+            (new HeliosReceptionWorker(
+                $this->logger,
+                $this->workerScript,
+                $this->FTPHeliosReceiver,
+                $usePasstrans
+            ))->getQueueName()
+        );
+    }
+
+    public function queueNamesProvider(): iterable
+    {
+        yield [false, HeliosReceptionWorker::QUEUE_NAME];
+        yield [true, HeliosReceptionWorker::QUEUE_NAME . '-passtrans'];
+    }
 }

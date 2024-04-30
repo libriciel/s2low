@@ -2,19 +2,13 @@
 
 namespace S2lowLegacy\Class;
 
-use Exception;
 use Pheanstalk\PheanstalkInterface;
-use S2lowLegacy\Class\BeanstalkdWrapper;
-use S2lowLegacy\Class\CloudStorageException;
-use S2lowLegacy\Class\IWorker;
-use S2lowLegacy\Class\RecoverableException;
-use S2lowLegacy\Class\RedisMutexWrapper;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Lib\PausingQueueException;
 use S2lowLegacy\Lib\SigTermHandler;
 use S2lowLegacy\Lib\UnrecoverableException;
+use Throwable;
 
-class WorkerRunnerWithDataFromBeanstalkd
+class WorkerRunnerWithDataFromBeanstalkd implements WorkerRunner
 {
     private const QUEUE_DELAY_RETRY_IN_SECONDS = 60;
     private const NB_MAX_JOBS_TRAITES = 100; // uniquement pour le mode beanstalked
@@ -61,17 +55,17 @@ class WorkerRunnerWithDataFromBeanstalkd
      * @throws RecoverableException
      * @throws UnrecoverableException
      */
-    private function syncrhonizedWork(IWorker $IWorker, $data)
+    private function syncrhonizedWork(IWorker $IWorker, $data): void
     {
-        $this->s2lowLogger->debug("Entree section critique");
+        $this->s2lowLogger->debug('Entree section critique');
         if ($IWorker->isDataValid($data)) {
             $IWorker->work($data);
         } else {
             $this->s2lowLogger->info("Le travail n'est plus à faire, abandon", [$data]);
         }
-        $this->s2lowLogger->debug("Sortie section critique");
+        $this->s2lowLogger->debug('Sortie section critique');
     }
-    public function work()
+    public function work(): bool
     {
 
         $queue = $this->beanstalkdWrapper->getQueue($this->worker->getQueueName());
@@ -86,15 +80,15 @@ class WorkerRunnerWithDataFromBeanstalkd
                                                          // Ce qui fait une boucle à vide de 5 minutes
             if (!$job) {                                 // Et on logge si aucun job disponible.
                 $nbIterationsAVide++;
-                $this->s2lowLogger->info("Aucun job à traiter.");
+                $this->s2lowLogger->info('Aucun job à traiter.');
                 continue;
             }
 
             $this->sigTermHandler->setExitOnSignal(false);
-            $data = "undefined";
+            $data = 'undefined';
             try {
                 $data = $job->getData();
-                $this->s2lowLogger->info("Travail en cours", [$data]);
+                $this->s2lowLogger->info('Travail en cours', [$data]);
 
                 $mutex = $this->redisMutexWrapper->getMutex($this->worker->getMutexName($data));
                 $workerToUse = $this->worker;
@@ -107,7 +101,7 @@ class WorkerRunnerWithDataFromBeanstalkd
                     $this->s2lowLogger->info("Exit after $nbJobsTraités jobs executed");
                     return true;
                 }
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $this->s2lowLogger->error(
                     $e->getMessage(),
                     [$data,$e->getTraceAsString()]
@@ -125,7 +119,7 @@ class WorkerRunnerWithDataFromBeanstalkd
                 continue;
             }
             if ($this->sigTermHandler->isSigtermCalled()) {
-                $this->s2lowLogger->info("Exit on signal (after traitement)" . $this->sigTermHandler->getLastSigNo());
+                $this->s2lowLogger->info('Exit on signal (after traitement)' . $this->sigTermHandler->getLastSigNo());
                 break;
             }
             $this->sigTermHandler->setExitOnSignal(true);
