@@ -28,7 +28,7 @@ class FileUploader
     }
 
 
-    public function verifOKAll($formFileName)
+    public function verifOKAll($formFileName): bool
     {
         if (! isset($_FILES[$formFileName]) || ! $_FILES[$formFileName]) {
             $this->lastError = "Il n'y a pas de fichier à charger sur le serveur";
@@ -42,14 +42,14 @@ class FileUploader
             }
 
             if ($_FILES[$formFileName]['size'][$i] <= 0) {
-                $this->lastError = "Le fichier semble vide";
+                $this->lastError = "Le fichier {$_FILES[$formFileName]['name'][$i]} semble vide";
                 return false;
             }
         }
         return true;
     }
 
-    public function verifOK($formFileName)
+    public function verifOK($formFileName): bool
     {
         if (! isset($_FILES[$formFileName]) || ! $_FILES[$formFileName]) {
             $this->lastError = "Il n'y a pas de fichier à charger sur le serveur";
@@ -65,7 +65,7 @@ class FileUploader
         $this->fileName = $_FILES[$formFileName]['name'];
         $this->fileSize = $_FILES[$formFileName]['size'];
         if ($this->fileSize <= 0) {
-            $this->lastError = "Le fichier semble vide";
+            $this->lastError = "Le fichier {$this->fileName} semble vide";
             return false;
         }
         return true;
