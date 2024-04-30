@@ -9,6 +9,10 @@ use S2lowTestCase;
 
 class FileUploaderTest extends S2lowTestCase
 {
+    public function setUp(): void
+    {
+        $_FILES = [];
+    }
     public function testUploadInexistingFile(): void
     {
         $fileUploader = new FileUploader();
@@ -110,7 +114,7 @@ class FileUploaderTest extends S2lowTestCase
     public function testVerifOkEmptyFile(): void
     {
         $_FILES['form']['name'] = 'vide.pdf';
-        $_FILES['form']['tmp_name'] = __DIR__ . '/fixtures/vide.pdf';
+        $_FILES['form']['tmp_name'] = __DIR__ . '/fixtures/toto.txt';
         $_FILES['form']['error'] = UPLOAD_ERR_OK;
         $_FILES['form']['size'] = '0';
 
@@ -164,7 +168,7 @@ class FileUploaderTest extends S2lowTestCase
     public function testVerifOkAllEmptyFile(): void
     {
         $_FILES['form']['name'][] = 'vide.pdf';
-        $_FILES['form']['tmp_name'][] = __DIR__ . '/fixtures/vide.pdf';
+        $_FILES['form']['tmp_name'][] = __DIR__ . '/fixtures/toto.txt';
         $_FILES['form']['error'][] = UPLOAD_ERR_OK;
         $_FILES['form']['size'][] = '0';
 
