@@ -5,6 +5,7 @@
 ### Évolutions
 
 - Permettre de configurer les Signature Schemes par une variable d'environnement #1179
+- Mettre à jour pdf-stamp en 2.5.3 #1016
 
 ### Corrections
 

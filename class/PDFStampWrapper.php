@@ -82,7 +82,7 @@ class PDFStampWrapper
         $curlWrapper->addPostData('metadata', json_encode($data));
 
 
-        $result = $curlWrapper->get($this->pdf_stamp_url);
+        $result = $curlWrapper->get($this->pdf_stamp_url. '/pdf-stamp/');
         if (!$result) {
             throw new Exception($curlWrapper->getLastError() . " " . $curlWrapper->getLastOutput());
         }
