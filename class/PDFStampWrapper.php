@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class;
 
+use CURLFile;
 use Exception;
 
 class PDFStampWrapper
@@ -43,6 +44,9 @@ class PDFStampWrapper
         }
 
         $data = array(
+            'stamps' =>
+                array( array(
+                    'page' => 0,
             'opacity' => 0.8,
             'fontSize' => 7,
             'position' => array(
@@ -50,8 +54,8 @@ class PDFStampWrapper
                 'height' => 55,
                 'x' => 10,
                 'y' => 10
-            ),
-            'rows' => array(
+                ),
+                'rows' => array(
                 array(
                     'title' => $this->pdfStampMessage->getMessageEnvoi(),
                     'value' => $this->getDateFr($pdfStampData->envoi_prefecture_date),
@@ -62,31 +66,50 @@ class PDFStampWrapper
                 ),
                 array(
                     'title' => $this->pdfStampMessage->getMessagePublication(),
-                    'value' => $date_affichage,
+                    'value' => $date_affichage/*,
                     'logo' => array(
-                        'data' =>  base64_encode(file_get_contents($this->image_for_stamp)),
-                        "width" =>  60,
-                        "marginRight" =>  20
-                    )
+                        'imageRef' => 'test',
+                        'width' =>  60,
+                        'marginRight' =>  20
+                    )*/
                 ),
                 array(
                     'title' => 'ID :',
                     'value' => $pdfStampData->identifiant_unique
                 ),
-            )
-        );
+                    ))
+        ));
 
         /* curl -F "file=@Courrier.pdf" -F "metadata=$SAMPLE" -X POST http://pdf-stamp:8080 (!) */
-        $curlWrapper = $this->curlWrapperFactory->getNewInstance();
-        $curlWrapper->addPostFile('file', $pdf_filepath);
-        $curlWrapper->addPostData('metadata', json_encode($data));
+        $curlHandle = curl_init();
+        curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curlHandle, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($curlHandle, CURLOPT_MAXREDIRS, 5);
 
+        $file = new CURLFile($pdf_filepath, 'application/pdf', basename($pdf_filepath));
+        $stringFile = new \CURLStringFile(json_encode($data), 'metadata', 'application/json');
+        /*$images = array('logoRef' => base64_encode(file_get_contents($this->image_for_stamp)));
+        $imagesFile = new \CURLStringFile(json_encode($images), 'images', 'application/json');*/
+        $image = new CURLFile(__DIR__ . '/../public.ssl/custom/images/s2low-stamp.png', 'image/png', 'test');
+        //$data = array('pdfSource' => $file,'stampRequest' => $stringFile/*,'images' => $imagesFile*/);
+        $data = array('pdfSource' => $file,'stampRequest' => $stringFile,'images' => $image);
 
-        $result = $curlWrapper->get($this->pdf_stamp_url. '/pdf-stamp/');
-        if (!$result) {
-            throw new Exception($curlWrapper->getLastError() . " " . $curlWrapper->getLastOutput());
-        }
-        return $result;
+        curl_setopt($curlHandle, CURLOPT_POST, true); // enable posting
+        curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $data); // post images
+
+        curl_setopt($curlHandle, CURLOPT_URL, 'http://pdf-stamp:8889/pdf-stamp/v3/stamp/add');
+        $last_output = curl_exec($curlHandle);
+
+        //print_r(curl_getinfo($this->curlHandle,CURLINFO_HEADER_OUT));
+        //echo $url;
+        $httpcode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
+        //var_dump($last_output);
+        //var_dump($httpcode);
+        //die();
+        //var_dump($last_output);
+        //var_dump(curl_error($curlHandle));
+        //die();
+        return $last_output;
     }
 
     private function getDateFr($date)

@@ -56,6 +56,8 @@ class ActeTamponne
             $this->logger->info("Tamponnage de l'acte $transaction_id");
             return $result;
         } catch (Exception $e) {
+            echo $e->getMessage();
+            die();
             $this->logger->error("Impossible de tamponné l'acte $transaction_id : " . $e->getMessage());
             return file_get_contents($file_path);
         }

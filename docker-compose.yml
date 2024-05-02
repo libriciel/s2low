@@ -175,9 +175,13 @@ services:
 
     pdf-stamp:
         restart: unless-stopped
-        image: registry.libriciel.fr/public/signature/pdf-stamp:2.5.3
+        image: registry.libriciel.fr/public/signature/pdf-stamp:2.6.5
         networks:
           - services
+        environment:
+            JAVA_OPTS: "-Dspring.profiles.active=dev"
+        ports:
+            - "8889:8889"
         mem_limit: 2G
 
     redis:
