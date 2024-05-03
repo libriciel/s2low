@@ -5,6 +5,7 @@
 ### Évolutions
 
 - Permettre de configurer les Signature Schemes par une variable d'environnement #1179
+- Permettre de spécifier `max_submission_date` et `min_submission_date` pour `/modules/actes/api/list_actes.php` #1188
 
 ### Corrections
 

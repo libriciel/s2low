@@ -1,5 +1,6 @@
 <?php
 
+use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\ActesPrepareEnvoiSAE;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\PastellProperties;

@@ -1,5 +1,6 @@
 <?php
 
+use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\ActesArchiveControler;
 use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;

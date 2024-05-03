@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit;
+
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Controller\ActesAPIController;
 use S2lowLegacy\Lib\ObjectInstancier;
@@ -22,10 +26,10 @@ trait ActesUtilitiesTestTrait
     /**
      * @param $status
      * @param string $archive_path
-     * @return array|bool|mixed
-     * @throws Exception
+     * @return int
+     * @throws \Exception
      */
-    protected function createTransaction($status, $archive_path = "")
+    protected function createTransaction($status, $archive_path = ""): int
     {
         $sql = "INSERT INTO actes_envelopes(user_id,siren,department) VALUES(1,'000000000','034') returning ID";
         $envelope_id = $this->getSQLQuery()->queryOne($sql);

@@ -432,13 +432,29 @@ WHERE
         return $this->queryOneCol($sql, $status_id, $authority_id);
     }
 
-    public function getListByStatusAndAuthority($status_id, $authority_id, $offset, $limit)
-    {
+    public function getListByStatusAndAuthority(
+        $status_id,
+        $authority_id,
+        $offset,
+        $limit,
+        $min_submission_date = '',
+        $max_submission_date = ''
+    ): array | false {
         $offset = intval($offset);
         $limit = intval($limit);
         $sql = "SELECT id,subject,number,date(decision_date),nature_descr,classification,type FROM actes_transactions " .
-            " WHERE last_status_id=? AND authority_id = ? ORDER BY actes_transactions.id DESC OFFSET $offset LIMIT $limit";
-        return $this->query($sql, $status_id, $authority_id);
+            " WHERE last_status_id=? AND authority_id = ?";
+        $data = [$status_id, $authority_id];
+        if (!empty($min_submission_date)) {
+            $sql .= " AND decision_date >= ? ";
+            $data[] = $min_submission_date;
+        }
+        if (!empty($max_submission_date)) {
+            $sql .= " AND decision_date <= ? ";
+            $data[] = $max_submission_date;
+        }
+        $sql .= " ORDER BY actes_transactions.id DESC OFFSET $offset LIMIT $limit";
+        return $this->query($sql, $data);
     }
 
     public function listDocumentPrefectureNonLu($authority_id)
