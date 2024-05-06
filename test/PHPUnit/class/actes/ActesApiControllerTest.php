@@ -80,6 +80,10 @@ class ActesApiControllerTest extends S2lowTestCase
         // la transaction est crée avec une decision_date au 2017-07-01
         // si min_submission_date est antérieure, cette transaction apparaitra dans la liste
         yield ['2017-06-30','{"status_id":"1","authority_id":"1","offset":"0","limit":"100","transactions":[{'];
+        // si min_submission_date est null, elle apparaitra dans la liste
+        yield [null,'{"status_id":"1","authority_id":"1","offset":"0","limit":"100","transactions":[{'];
+        // si min_submission_date est égale à la date de création, elle apparaitra dans la liste
+        yield ['2017-07-01','{"status_id":"1","authority_id":"1","offset":"0","limit":"100","transactions":[{'];
         // si elle est postérieure, on ne verra aucune transaction
         yield ['2017-07-02','{"status_id":"1","authority_id":"1","offset":"0","limit":"100","transactions":[]}'];
     }
@@ -106,6 +110,10 @@ class ActesApiControllerTest extends S2lowTestCase
         // la transaction est crée avec une decision_date au 2017-07-01
         // si max_submission_date est antérieure, aucune transaction n'apparaitra dans la liste
         yield ['2017-06-30','{"status_id":"1","authority_id":"1","offset":"0","limit":"100","transactions":[]}'];
+        // si max_submission_date est null, la transaction apparaitra
+        yield [null,'{"status_id":"1","authority_id":"1","offset":"0","limit":"100","transactions":[{'];
+        // si max_submission_date est égale à la date de création, la transaction apparaitra
+        yield ['2017-07-01','{"status_id":"1","authority_id":"1","offset":"0","limit":"100","transactions":[{'];
         // si max_submission_date est postérieure, la transaction apparaitra
         yield ['2017-07-02','{"status_id":"1","authority_id":"1","offset":"0","limit":"100","transactions":[{'];
     }

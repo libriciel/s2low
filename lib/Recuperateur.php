@@ -2,6 +2,8 @@
 
 namespace S2lowLegacy\Lib;
 
+use S2lowLegacy\Class\Helpers;
+
 class Recuperateur
 {
     private array $tableauInput;
@@ -22,6 +24,15 @@ class Recuperateur
     public function getInt($name, $default = 0)
     {
         return $this->doSomethingOnValueOrArray('intval', $this->get($name, $default));
+    }
+
+    public function getDate($name)
+    {
+        return Helpers::checkDate(
+            $this->get($name, null),
+            true,
+            $name
+        );
     }
 
     public function get($name, $default = false)
