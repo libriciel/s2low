@@ -476,7 +476,8 @@ CREATE TABLE users (
     login character varying(128) DEFAULT NULL::character varying,
     password character varying(255) DEFAULT NULL::character varying,
     certificate_rgs_2_etoiles text,
-    certificate_hash character varying(64)
+    certificate_hash character varying(64),
+    archivist_rights boolean DEFAULT false
 );
 CREATE TABLE users_perms (
     id integer DEFAULT nextval('users_perms_id_seq'::regclass) NOT NULL,
@@ -565,7 +566,7 @@ ALTER TABLE authority_siret ADD CONSTRAINT authority_siret_pkey PRIMARY KEY (id)
 ALTER TABLE actes_natures ADD CONSTRAINT actes_natures_pkey PRIMARY KEY (id);
 ALTER TABLE actes_transmission_window_hours ADD CONSTRAINT actes_transmission_window_hours_pkey PRIMARY KEY (id);
 ALTER TABLE authority_departments ADD CONSTRAINT authority_departments_pkey PRIMARY KEY (id);
-ALTER TABLE users ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+ALTER TABLE service_user ADD CONSTRAINT service_user_pkey PRIMARY KEY (id);
 ALTER TABLE authority_districts ADD CONSTRAINT authority_districts_pkey PRIMARY KEY (id);
 ALTER TABLE helios_status ADD CONSTRAINT helios_status_pkey PRIMARY KEY (id);
 ALTER TABLE authority_groups ADD CONSTRAINT authority_groups_pkey PRIMARY KEY (id);
@@ -574,9 +575,9 @@ ALTER TABLE actes_batch_files ADD CONSTRAINT actes_batch_files_pkey PRIMARY KEY 
 ALTER TABLE modules_authorities ADD CONSTRAINT modules_authorities_pkey PRIMARY KEY (id);
 ALTER TABLE authority_group_siren ADD CONSTRAINT authority_group_siren_pkey PRIMARY KEY (id);
 ALTER TABLE logs_historique ADD CONSTRAINT logs_historique_pkey PRIMARY KEY (id);
-ALTER TABLE users_perms ADD CONSTRAINT users_perms_pkey PRIMARY KEY (id);
+ALTER TABLE users ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 ALTER TABLE mail_groupe ADD CONSTRAINT mail_groupe_pkey PRIMARY KEY (id);
-ALTER TABLE service_user ADD CONSTRAINT service_user_pkey PRIMARY KEY (id);
+ALTER TABLE users_perms ADD CONSTRAINT users_perms_pkey PRIMARY KEY (id);
 ALTER TABLE helios_transmission_windows ADD CONSTRAINT helios_transmission_windows_pkey PRIMARY KEY (id);
 ALTER TABLE authority_pastell_config ADD CONSTRAINT authorities_pastell_config_pkey PRIMARY KEY (id);
 ALTER TABLE mail_errors ADD CONSTRAINT mail_errors_pkey PRIMARY KEY (id);
@@ -586,10 +587,10 @@ ALTER TABLE mail_user_groupe ADD CONSTRAINT mail_user_groupe_unique UNIQUE (id_u
 ALTER TABLE mail_groupe ADD CONSTRAINT mail_groupe_unique UNIQUE (authority_id,name);
 ALTER TABLE authority_group_siren ADD CONSTRAINT authority_group_siren_authority_group_id_fk FOREIGN KEY (authority_group_id) REFERENCES authority_groups (id);
 ALTER TABLE actes_batch_files ADD CONSTRAINT actes_batch_files_transaction_id_fk FOREIGN KEY (transaction_id) REFERENCES actes_transactions (id);
-ALTER TABLE users_perms ADD CONSTRAINT users_perms_module_id_fk FOREIGN KEY (module_id) REFERENCES modules (id);
+ALTER TABLE users ADD CONSTRAINT users_authority_group_id_fk FOREIGN KEY (authority_group_id) REFERENCES authority_groups (id);
 ALTER TABLE authority_pastell_config ADD CONSTRAINT authority_pastell_config_authority_id_fk FOREIGN KEY (authority_id) REFERENCES authorities (id);
-ALTER TABLE helios_retour ADD CONSTRAINT helios_retour_authority_id FOREIGN KEY (authority_id) REFERENCES authorities (id);
-ALTER TABLE users ADD CONSTRAINT users_entity_id_fk FOREIGN KEY (authority_id) REFERENCES authorities (id);
+ALTER TABLE users_perms ADD CONSTRAINT users_perms_user_id_fk FOREIGN KEY (user_id) REFERENCES users (id);
+ALTER TABLE service_user ADD CONSTRAINT service_user_parent_id_fkey FOREIGN KEY (parent_id) REFERENCES service_user (id);
 ALTER TABLE helios_transmission_window_hours ADD CONSTRAINT helios_transmission_window_hours_transmission_window_id_fk FOREIGN KEY (transmission_window_id) REFERENCES helios_transmission_windows (id);
 ALTER TABLE logs_request ADD CONSTRAINT logs_request_authority_id_fkey FOREIGN KEY (authority_id) REFERENCES authorities (id);
 ALTER TABLE logs ADD CONSTRAINT logs_authority_group_id FOREIGN KEY (authority_group_id) REFERENCES authority_groups (id);
@@ -602,11 +603,11 @@ ALTER TABLE authority_siret ADD CONSTRAINT authority_siret_authority_id_fk FOREI
 ALTER TABLE logs_request ADD CONSTRAINT logs_request_user_id_demandeur_fkey FOREIGN KEY (user_id_demandeur) REFERENCES users (id);
 ALTER TABLE message_admin ADD CONSTRAINT message_admin_user_id_retireur_fkey FOREIGN KEY (user_id_retireur) REFERENCES users (id);
 ALTER TABLE logs_request ADD CONSTRAINT logs_request_user_id_fkey FOREIGN KEY (user_id) REFERENCES users (id);
-ALTER TABLE users ADD CONSTRAINT users_authority_group_id_fk FOREIGN KEY (authority_group_id) REFERENCES authority_groups (id);
+ALTER TABLE helios_retour ADD CONSTRAINT helios_retour_authority_id FOREIGN KEY (authority_id) REFERENCES authorities (id);
 ALTER TABLE logs_historique ADD CONSTRAINT logs_historique_authority_group_id FOREIGN KEY (authority_group_id) REFERENCES authority_groups (id);
-ALTER TABLE service_user ADD CONSTRAINT service_user_parent_id_fkey FOREIGN KEY (parent_id) REFERENCES service_user (id);
+ALTER TABLE users_perms ADD CONSTRAINT users_perms_module_id_fk FOREIGN KEY (module_id) REFERENCES modules (id);
 ALTER TABLE mail_user_groupe ADD CONSTRAINT mail_user_groupe_id_user_fkey FOREIGN KEY (id_user) REFERENCES mail_annuaire (id);
-ALTER TABLE users_perms ADD CONSTRAINT users_perms_user_id_fk FOREIGN KEY (user_id) REFERENCES users (id);
+ALTER TABLE users ADD CONSTRAINT users_entity_id_fk FOREIGN KEY (authority_id) REFERENCES authorities (id);
 ALTER TABLE mail_user_groupe ADD CONSTRAINT mail_user_groupe_id_groupe_fkey FOREIGN KEY (id_groupe) REFERENCES mail_groupe (id);
 ALTER TABLE authority_pastell_config ADD CONSTRAINT authority_pastell_config_module_id_fk FOREIGN KEY (module_id) REFERENCES modules (id);
 ALTER TABLE modules_authorities ADD CONSTRAINT modules_authorities_module_id_fk FOREIGN KEY (module_id) REFERENCES modules (id);

@@ -2200,6 +2200,12 @@
                 "character_maximum_length": 64,
                 "is_nullable": "YES",
                 "column_default": null
+            },
+            "archivist_rights": {
+                "data_type": "boolean",
+                "character_maximum_length": null,
+                "is_nullable": "YES",
+                "column_default": "false"
             }
         },
         "users_perms": {
@@ -3012,42 +3018,6 @@
                 "confkey": []
             }
         },
-        "users": {
-            "users_entity_id_fk": {
-                "conname": "users_entity_id_fk",
-                "contype": "f",
-                "conrelname": "users",
-                "conkey": [
-                    "authority_id"
-                ],
-                "confrelname": "authorities",
-                "confkey": [
-                    "id"
-                ]
-            },
-            "users_authority_group_id_fk": {
-                "conname": "users_authority_group_id_fk",
-                "contype": "f",
-                "conrelname": "users",
-                "conkey": [
-                    "authority_group_id"
-                ],
-                "confrelname": "authority_groups",
-                "confkey": [
-                    "id"
-                ]
-            },
-            "users_pkey": {
-                "conname": "users_pkey",
-                "contype": "p",
-                "conrelname": "users",
-                "conkey": [
-                    "id"
-                ],
-                "confrelname": null,
-                "confkey": []
-            }
-        },
         "service_user": {
             "service_user_parent_id_fkey": {
                 "conname": "service_user_parent_id_fkey",
@@ -3101,6 +3071,42 @@
                 "conname": "users_perms_pkey",
                 "contype": "p",
                 "conrelname": "users_perms",
+                "conkey": [
+                    "id"
+                ],
+                "confrelname": null,
+                "confkey": []
+            }
+        },
+        "users": {
+            "users_entity_id_fk": {
+                "conname": "users_entity_id_fk",
+                "contype": "f",
+                "conrelname": "users",
+                "conkey": [
+                    "authority_id"
+                ],
+                "confrelname": "authorities",
+                "confkey": [
+                    "id"
+                ]
+            },
+            "users_authority_group_id_fk": {
+                "conname": "users_authority_group_id_fk",
+                "contype": "f",
+                "conrelname": "users",
+                "conkey": [
+                    "authority_group_id"
+                ],
+                "confrelname": "authority_groups",
+                "confkey": [
+                    "id"
+                ]
+            },
+            "users_pkey": {
+                "conname": "users_pkey",
+                "contype": "p",
+                "conrelname": "users",
                 "conkey": [
                     "id"
                 ],
