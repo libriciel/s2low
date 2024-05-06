@@ -6,9 +6,8 @@ namespace PHPUnit\class\actes;
 
 use Exception;
 use PHPUnit\ActesUtilitiesTestTrait;
-use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
-use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Controller\ActesAPIController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowTestCase;
@@ -17,6 +16,11 @@ class ActesApiControllerTest extends S2lowTestCase
 {
     use ActesUtilitiesTestTrait;
 
+
+    private function getActesAPIController(): ActesAPIController
+    {
+        return $this->getObjectInstancier()->get(ActesAPIController::class);
+    }
 
     public function testActesStatus(): void
     {
@@ -36,7 +40,7 @@ class ActesApiControllerTest extends S2lowTestCase
     {
         $this->setUserAuthentification();
         $this->expectOutputString(
-            '{"status_id":"0","authority_id":"1","offset":"0","limit":"100","transactions":[]}'
+            $this->emptyResponse(0) // Le status 0 correspond à la valeur par défaut de getInt()
         );
         $this->getActesAPIController()->listActesAction();
     }
@@ -59,15 +63,17 @@ class ActesApiControllerTest extends S2lowTestCase
     }
 
     /**
-     * @dataProvider minDatesProvider
+     * @dataProvider maxDatesAndStatusProvider
      * @throws \Exception
      */
-    public function testListActesWithActeWithMinDate($date, $string): void
+    public function testListActesWithActeWithMaxDateMinDateAndStatus($minDate, $maxDate, $status, $string): void
     {
-        $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
+        $id = $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
+        $this->updateStatus($id, ActesStatusSQL::STATUS_TRANSMIS, 'message', '2017-08-01');
         $this->setUserAuthentification();
-        $this->getEnvironment()->get()->set('status_id', ActesStatusSQL::STATUS_POSTE);
-        $this->getEnvironment()->get()->set('min_submission_date', $date);
+        $this->getEnvironment()->get()->set('status_id', $status);
+        $this->getEnvironment()->get()->set('min_date', $minDate);
+        $this->getEnvironment()->get()->set('max_date', $maxDate);
         $this->getActesAPIController()->listActesAction();
 
         static::assertStringContainsString(
@@ -75,48 +81,66 @@ class ActesApiControllerTest extends S2lowTestCase
             $this->getActualOutputForAssertion()
         );
     }
-    public function minDatesProvider(): iterable
+
+    public function maxDatesAndStatusProvider()
     {
         // la transaction est crée avec une decision_date au 2017-07-01
-        // si min_submission_date est antérieure, cette transaction apparaitra dans la liste
-        yield ['2017-06-30','{"status_id":"1","authority_id":"1","offset":"0","limit":"100","transactions":[{'];
-        // si min_submission_date est null, elle apparaitra dans la liste
-        yield [null,'{"status_id":"1","authority_id":"1","offset":"0","limit":"100","transactions":[{'];
-        // si min_submission_date est égale à la date de création, elle apparaitra dans la liste
-        yield ['2017-07-01','{"status_id":"1","authority_id":"1","offset":"0","limit":"100","transactions":[{'];
+        // Et est transmise au 2017-08-01
+        // si min_date est antérieure, cette transaction apparaitra dans la liste
+        yield [
+            '2017-06-30',null, ActesStatusSQL::STATUS_TRANSMIS,
+            $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
+        // si min_date est null, elle apparaitra dans la liste
+        yield [null,null, ActesStatusSQL::STATUS_TRANSMIS,
+            $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
+        // si min_date est égale à la date de transmission, elle apparaitra dans la liste
+        yield ['2017-08-01',null, ActesStatusSQL::STATUS_TRANSMIS,
+            $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
         // si elle est postérieure, on ne verra aucune transaction
-        yield ['2017-07-02','{"status_id":"1","authority_id":"1","offset":"0","limit":"100","transactions":[]}'];
-    }
+        yield ['2017-08-02',null, ActesStatusSQL::STATUS_TRANSMIS,
+            $this->emptyResponse(ActesStatusSQL::STATUS_TRANSMIS)];
 
-    /**
-     * @dataProvider maxDatesProvider
-     * @throws \Exception
-     */
-    public function testListActesWithActeWithMaxDate($date, $string): void
-    {
-        $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
-        $this->setUserAuthentification();
-        $this->getEnvironment()->get()->set('status_id', ActesStatusSQL::STATUS_POSTE);
-        $this->getEnvironment()->get()->set('max_submission_date', $date);
-        $this->getActesAPIController()->listActesAction();
-
-        static::assertStringContainsString(
-            $string,
-            $this->getActualOutputForAssertion()
-        );
-    }
-    public function maxDatesProvider(): iterable
-    {
         // la transaction est crée avec une decision_date au 2017-07-01
-        // si max_submission_date est antérieure, aucune transaction n'apparaitra dans la liste
-        yield ['2017-06-30','{"status_id":"1","authority_id":"1","offset":"0","limit":"100","transactions":[]}'];
-        // si max_submission_date est null, la transaction apparaitra
-        yield [null,'{"status_id":"1","authority_id":"1","offset":"0","limit":"100","transactions":[{'];
+        // Et est transmise au 2017-08-01
+        // si max_date est antérieure, aucune transaction n'apparaitra dans la liste
+        yield [null, '2017-06-30', ActesStatusSQL::STATUS_TRANSMIS,
+            $this->emptyResponse(ActesStatusSQL::STATUS_TRANSMIS)];
+        // si max_date est null, la transaction apparaitra
+        yield [null, null, ActesStatusSQL::STATUS_TRANSMIS,
+            $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
         // si max_submission_date est égale à la date de création, la transaction apparaitra
-        yield ['2017-07-01','{"status_id":"1","authority_id":"1","offset":"0","limit":"100","transactions":[{'];
-        // si max_submission_date est postérieure, la transaction apparaitra
-        yield ['2017-07-02','{"status_id":"1","authority_id":"1","offset":"0","limit":"100","transactions":[{'];
+        yield [null, '2017-08-01', ActesStatusSQL::STATUS_TRANSMIS,
+            $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
+        // si max_date est postérieure, la transaction apparaitra
+        yield [null, '2017-08-02',ActesStatusSQL::STATUS_TRANSMIS,
+            $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
+
+        // la transaction est crée avec une decision_date au 2017-07-01
+        // Et est transmise au 2017-08-01
+        // si max_date est antérieure aux deux, aucune transaction n'apparaitra dans la liste quel que soit
+        // le status
+        yield [null, '2017-06-30',ActesStatusSQL::STATUS_POSTE,
+            $this->emptyResponse(ActesStatusSQL::STATUS_POSTE)];
+        yield [null, '2017-06-30',ActesStatusSQL::STATUS_TRANSMIS,
+            $this->emptyResponse(ActesStatusSQL::STATUS_TRANSMIS)];
+        // si 2017-07-01 < max_date < 2017-08-01, la transaction n'apparaitra pas dans la liste des posté car
+        // elle n'est plus à ce statut, dans la liste des transmise non plus car le changement est postérieur à la date
+        yield [null, '2017-07-02', ActesStatusSQL::STATUS_POSTE,
+            $this->emptyResponse(ActesStatusSQL::STATUS_POSTE)];
+        yield [null, '2017-07-02',ActesStatusSQL::STATUS_TRANSMIS,
+            $this->emptyResponse(ActesStatusSQL::STATUS_TRANSMIS)];
+        // si max_date est postérieure aux deux, la transaction la liste des transmise seulement
+        yield [null, '2017-08-02', ActesStatusSQL::STATUS_POSTE,
+            $this->emptyResponse(ActesStatusSQL::STATUS_POSTE)];
+        yield [null, '2017-08-02',ActesStatusSQL::STATUS_TRANSMIS,
+            $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
+
+        // Si max_date est antérieure à min_date, la liste est vide ...
+        yield ['2017-08-02','2017-07-02' , ActesStatusSQL::STATUS_POSTE,
+            $this->emptyResponse(ActesStatusSQL::STATUS_POSTE)];
     }
+
+
     public function testActionAfter()
     {
         $this->setUserAuthentification();
@@ -135,25 +159,6 @@ class ActesApiControllerTest extends S2lowTestCase
         $this->getActesAPIController()->listDocumentPrefectureAction();
     }
 
-
-    /**
-     * @return int
-     * @throws \Exception
-     */
-    private function createRelatedTransaction(): int
-    {
-        $transaction_id = $this->createTransaction(4);
-        /** @var ActesTransactionsSQL $actesTransactionsSQL */
-        $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
-
-        $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
-        /** @var ActesEnvelopeSQL $actesEnvelopeSQL */
-        $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
-
-        $related_envelope_id = $actesEnvelopeSQL->createRelatedEnveloppe($transaction_info['envelope_id'], 'a', 12);
-
-        return $actesTransactionsSQL->createRelatedTransaction($related_envelope_id, 3, '2018-01-01', $transaction_id);
-    }
 
     /**
      * @throws Exception
@@ -235,5 +240,15 @@ class ActesApiControllerTest extends S2lowTestCase
     private function getEnvironment(): Environnement
     {
         return $this->getObjectInstancier()->get(Environnement::class);
+    }
+
+    private function emptyResponse(int $status): string
+    {
+        return '{"status_id":"' . $status . '","authority_id":"1","offset":"0","limit":"100","transactions":[]}';
+    }
+
+    private function responseWithTransaction(int $status): string
+    {
+        return '{"status_id":"' . $status . '","authority_id":"1","offset":"0","limit":"100","transactions":[{';
     }
 }

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace PHPUnit;
 
 use Exception;
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Controller\ActesAPIController;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 
@@ -19,11 +19,6 @@ use S2lowLegacy\Lib\SQLQuery;
 
 trait ActesUtilitiesTestTrait
 {
-    private function getActesAPIController()
-    {
-        return $this->getObjectInstancier()->get(ActesAPIController::class);
-    }
-
     /**
      * @throws Exception
      */
@@ -35,10 +30,7 @@ trait ActesUtilitiesTestTrait
         $sql = 'INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,decision_date,number,nature_code,type) VALUES (?,?,?,?,?,?,?,?) returning ID;';
         $transaction_id = $this->getSQLQuery()->queryOne($sql, $envelope_id, $status, 1, 1, $date, '20170728C', 3, 1);
 
-        /** @var ActesTransactionsSQL $actesTransactionSQL */
-        $actesTransactionSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
-
-        $actesTransactionSQL->updateStatus($transaction_id, $status, '', '', $date);
+        $this->getActesTransactionsSQL()->updateStatus($transaction_id, $status, '', '', $date);
 
         if ($archive_path) {
             $relative_path = basename($archive_path);
@@ -48,12 +40,48 @@ trait ActesUtilitiesTestTrait
             $this->getSQLQuery()->query($sql, $relative_path, filesize($archive_path), $envelope_id);
         }
 
-        $unique_id = $actesTransactionSQL->guessUniqueId($transaction_id);
+        $unique_id = $this->getActesTransactionsSQL()->guessUniqueId($transaction_id);
 
         $sql = 'UPDATE actes_transactions SET unique_id=? WHERE id=?';
         $this->getSQLQuery()->query($sql, $unique_id, $transaction_id);
 
         return $transaction_id;
+    }
+
+    /**
+     * @return int
+     * @throws \Exception
+     */
+    protected function createRelatedTransaction(): int
+    {
+        $transaction_id = $this->createTransaction(4);
+
+        $transaction_info = $this->getActesTransactionsSQL()->getInfo($transaction_id);
+        /** @var ActesEnvelopeSQL $actesEnvelopeSQL */
+        $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
+
+        $related_envelope_id = $actesEnvelopeSQL->createRelatedEnveloppe(
+            $transaction_info['envelope_id'],
+            'a',
+            12
+        );
+
+        return $this->getActesTransactionsSQL()->createRelatedTransaction(
+            $related_envelope_id,
+            3,
+            '2018-01-01',
+            $transaction_id
+        );
+    }
+
+    protected function updateStatus(int $transaction_id, int $status_id, ?string $message, string $date = null): void
+    {
+        $this->getActesTransactionsSQL()->updateStatus($transaction_id, $status_id, $message, '', $date);
+    }
+
+    protected function getActesTransactionsSQL(): ActesTransactionsSQL
+    {
+        return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
     }
 
     abstract public function getSQLQuery(): SQLQuery;

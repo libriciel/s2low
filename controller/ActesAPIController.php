@@ -57,8 +57,8 @@ class ActesAPIController extends Controller
         $status_id = $this->getRecuperateurGet()->getInt('status_id');
         $offset = $this->getRecuperateurGet()->getInt('offset');
         $limit = $this->getRecuperateurGet()->getInt('limit', 100);
-        $min_submission_date = $this->getRecuperateurGet()->getDate('min_submission_date');
-        $max_submission_date = $this->getRecuperateurGet()->getDate('max_submission_date');
+        $min_submission_date = $this->getRecuperateurGet()->getDate('min_date');
+        $max_submission_date = $this->getRecuperateurGet()->getDate('max_date');
 
         $authority_id = intval($this->me->get('authority_id'));
 
