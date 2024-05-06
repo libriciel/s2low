@@ -93,6 +93,7 @@ class ActesSAEController extends Controller
         $transaction_id = $this->getRecuperateurPost()->get('transaction_id');
         $status_id = $this->getRecuperateurPost()->get('status_id');
 
+        /** @var ActesTransactionsSQL $actesTransactionSQL */
         $actesTransactionSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
 
         $status_info = $actesTransactionSQL->getLastStatusInfo($transaction_id);
@@ -129,6 +130,7 @@ class ActesSAEController extends Controller
             $this->redirect("/admin/authorities/admin_authority_sae_statistiques.php?id=$authority_id");
         }
 
+        /** @var ActesTransactionsSQL $actesTransactionsSQL */
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
         $all = $actesTransactionsSQL->getIdByStatusAndAuthority(
             $status_id_from,

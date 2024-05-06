@@ -125,20 +125,6 @@ class ActesTransactionsSQL extends SQL
         return $this->queryOneCol($sql, $envelope_id);
     }
 
-    public function getTransactionIdFromStatus($status_id, $antivirus_check = true)
-    {
-        $sql = "SELECT  actes_transactions.id as id FROM actes_transactions " .
-            " WHERE last_status_id=? AND antivirus_check=?";
-        return $this->queryOneCol($sql, $status_id, $antivirus_check);
-    }
-
-    public function getTransactionIdByStatus($status_id)
-    {
-        $sql = "SELECT  actes_transactions.id as id FROM actes_transactions " .
-            " WHERE last_status_id=?";
-        return $this->queryOneCol($sql, $status_id);
-    }
-
 
     public function getLastArchiveFromStatus($status_id, $start_date)
     {
@@ -167,27 +153,6 @@ class ActesTransactionsSQL extends SQL
             " JOIN actes_envelopes ON actes_transactions.envelope_id=actes_envelopes.id " .
             " WHERE last_status_id=13 OR last_status_id = 6";
         return $this->query($sql);
-    }
-
-
-    public function getNextNumeroTransfert()
-    {
-        $sql = "SELECT count(*) + 1 FROM actes_transactions_workflow WHERE status_id=? AND date(date) = date(now());";
-        return $this->queryOne($sql, 12);
-    }
-
-    public function getLatestDate($id)
-    {
-        $all_id = array($id);
-        $relatedTransaction = $this->getRelatedTransaction($id);
-        foreach ($relatedTransaction as $transaction) {
-            $all_id[] = $transaction['id'];
-        }
-        $sql = "SELECT max(date) " .
-            " FROM actes_transactions_workflow " .
-            " WHERE status_id IN (4,11,7) " .
-            " AND transaction_id IN (" . implode(",", $all_id) . ")";
-        return $this->queryOne($sql);
     }
 
     public function getRelatedTransaction($id)

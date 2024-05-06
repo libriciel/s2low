@@ -89,6 +89,7 @@ class AdminStatsController extends Controller
 
     public function SAEActesAction()
     {
+        /** @var ActesTransactionsSQL $actesTransactionsSQL */
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
         $this->{'status_list'} = [
             ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
@@ -101,6 +102,7 @@ class AdminStatsController extends Controller
 
     public function SAEHeliosAction()
     {
+        /** @var HeliosTransactionsSQL $heliosTransactionsSQL */
         $heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
         $this->{'status_list'} = [
             HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
