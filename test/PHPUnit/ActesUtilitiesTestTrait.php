@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PHPUnit;
 
+use Exception;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Controller\ActesAPIController;
 use S2lowLegacy\Lib\ObjectInstancier;
@@ -24,57 +25,38 @@ trait ActesUtilitiesTestTrait
     }
 
     /**
-     * @param $status
-     * @param string $archive_path
-     * @return int
-     * @throws \Exception
+     * @throws Exception
      */
-    protected function createTransaction($status, $archive_path = ""): int
+    protected function createTransaction($status, string $archive_path = '', ?string $date = '2017-07-01'): int
     {
         $sql = "INSERT INTO actes_envelopes(user_id,siren,department) VALUES(1,'000000000','034') returning ID";
         $envelope_id = $this->getSQLQuery()->queryOne($sql);
 
-        $sql = "INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,decision_date,number,nature_code,type) VALUES (?,?,?,?,?,?,?,?) returning ID;";
-        $transaction_id = $this->getSQLQuery()->queryOne($sql, $envelope_id, $status, 1, 1, "2017-07-01", "20170728C", 3, 1);
+        $sql = 'INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,decision_date,number,nature_code,type) VALUES (?,?,?,?,?,?,?,?) returning ID;';
+        $transaction_id = $this->getSQLQuery()->queryOne($sql, $envelope_id, $status, 1, 1, $date, '20170728C', 3, 1);
 
-        /*$authoritySQL = new AuthoritySQL($this->getSQLQuery());
-        $pastellProperties = new PastellProperties();
-        $pastellProperties->url = "test";
-        $pastellProperties->login = "login";
-        $pastellProperties->password = "password";
-        $pastellProperties->id_e = 42;
-
-        $authoritySQL->updateSAE(1,$pastellProperties);*/
-
-
+        /** @var ActesTransactionsSQL $actesTransactionSQL */
         $actesTransactionSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
 
-        $actesTransactionSQL->updateStatus($transaction_id, $status, "");
+        $actesTransactionSQL->updateStatus($transaction_id, $status, '', '', $date);
 
         if ($archive_path) {
             $relative_path = basename($archive_path);
-            $destination = $this->getObjectInstancier()->get("actes_files_upload_root") . "/" . basename($archive_path);
+            $destination = $this->getObjectInstancier()->get('actes_files_upload_root') . '/' . basename($archive_path);
             copy($archive_path, $destination);
-            $sql = "UPDATE actes_envelopes SET file_path=?,file_size=? WHERE id=?";
+            $sql = 'UPDATE actes_envelopes SET file_path=?,file_size=? WHERE id=?';
             $this->getSQLQuery()->query($sql, $relative_path, filesize($archive_path), $envelope_id);
         }
 
         $unique_id = $actesTransactionSQL->guessUniqueId($transaction_id);
 
-        $sql = "UPDATE actes_transactions SET unique_id=? WHERE id=?";
+        $sql = 'UPDATE actes_transactions SET unique_id=? WHERE id=?';
         $this->getSQLQuery()->query($sql, $unique_id, $transaction_id);
 
         return $transaction_id;
     }
 
+    abstract public function getSQLQuery(): SQLQuery;
 
-    /**
-     * @return SQLQuery
-     */
-    abstract public function getSQLQuery();
-
-    /**
-     * @return ObjectInstancier
-     */
-    abstract public function getObjectInstancier();
+    abstract public function getObjectInstancier(): ObjectInstancier;
 }

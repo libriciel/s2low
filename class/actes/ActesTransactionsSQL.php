@@ -66,35 +66,40 @@ class ActesTransactionsSQL extends SQL
     }
 
 
-    public function updateStatus($transaction_id, $status_id, $message, $flux_retour = '')
-    {
+    public function updateStatus(
+        int $transaction_id,
+        int | string $status_id,
+        ?string $message,
+        string $flux_retour = '',
+        string $date = null
+    ): int {
 
         $message = mb_substr($message ?? '', 0, 512); // quickfix transition 8.0
 
-        $date = date("Y-m-d H:i:s");
-        $sql = "INSERT INTO actes_transactions_workflow (transaction_id, status_id, date, message ) " .
-            " VALUES( ? , ? , ? , ? ) RETURNING ID";
+        if (is_null($date)) {
+            $date = date('Y-m-d H:i:s');
+        }
+        $sql = 'INSERT INTO actes_transactions_workflow (transaction_id, status_id, date, message ) ' .
+            ' VALUES( ? , ? , ? , ? ) RETURNING ID';
 
         $id = $this->queryOne($sql, $transaction_id, $status_id, $date, $message);
 
         if (!empty($flux_retour)) {
-            $sql = "UPDATE actes_transactions_workflow SET flux_retour = ? WHERE id = ?";
+            $sql = 'UPDATE actes_transactions_workflow SET flux_retour = ? WHERE id = ?';
             $pdo = $this->getSQLQuery()->getPdo();
             $stmt = $pdo->prepare($sql);                                    //QUICKFIX Passage UTF-8
             $stmt->bindParam(1, $flux_retour, PDO::PARAM_LOB);
             $stmt->bindParam(2, $id);
             $stmt->execute();
         }
-        $sql = "UPDATE actes_transactions SET last_status_id=? " .
-            " WHERE id=?";
-
+        $sql = 'UPDATE actes_transactions SET last_status_id=? WHERE id=?';
         $this->query($sql, $status_id, $transaction_id);
         return $id;
     }
 
     public function getArchiveFStatus($status_id, $authority_id = 0)
     {
-        $sql = "SELECT  actes_transactions.id as id FROM actes_transactions " .
+        $sql = 'SELECT  actes_transactions.id as id FROM actes_transactions ' .
             " WHERE last_status_id=? ";
         $data = [$status_id];
         if ($authority_id) {
@@ -407,16 +412,23 @@ WHERE
     ): array | false {
         $offset = intval($offset);
         $limit = intval($limit);
-        $sql = "SELECT id,subject,number,date(decision_date),nature_descr,classification,type FROM actes_transactions " .
-            " WHERE last_status_id=? AND authority_id = ?";
+        $sql = "SELECT actes_transactions.id,subject,number,date(decision_date),nature_descr,classification,type FROM actes_transactions ";
+        if (!empty($min_submission_date) || !empty($max_submission_date)) {
+            $sql .= "JOIN actes_transactions_workflow ON transaction_id=actes_transactions.id";
+        }
+            $sql .= " WHERE last_status_id=? AND authority_id = ?";
         $data = [$status_id, $authority_id];
         if (!empty($min_submission_date)) {
-            $sql .= " AND decision_date >= ? ";
+            $sql .= " AND date >= ? ";
             $data[] = $min_submission_date;
         }
         if (!empty($max_submission_date)) {
-            $sql .= " AND decision_date <= ? ";
+            $sql .= " AND date <= ? ";
             $data[] = $max_submission_date;
+        }
+        if (!empty($min_submission_date) || !empty($max_submission_date)) {
+            $sql .= "AND status_id = ?";
+            $data[] = $status_id;
         }
         $sql .= " ORDER BY actes_transactions.id DESC OFFSET $offset LIMIT $limit";
         return $this->query($sql, $data);

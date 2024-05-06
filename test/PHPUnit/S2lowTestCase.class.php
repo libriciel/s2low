@@ -22,18 +22,12 @@ abstract class S2lowTestCase extends TestCase
         $this->testEnvironmentManager->setUp();
     }
 
-    /**
-     * @return ObjectInstancier
-     */
-    public function getObjectInstancier()
+    public function getObjectInstancier(): ObjectInstancier
     {
         return  $this->testEnvironmentManager->getObjectInstancier();
     }
 
-    /**
-     * @return SQLQuery
-     */
-    public function getSQLQuery()
+    public function getSQLQuery(): SQLQuery
     {
         return $this->testEnvironmentManager->getSQLQuery();
     }
