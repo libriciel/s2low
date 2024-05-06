@@ -50,4 +50,81 @@ class UserTest extends S2lowTestCase
             $user->getDn($certificate)
         );
     }
+
+    public function testSaveUser()
+    {
+        $user = new User();
+        $user->set("email", "em@i.l");
+        $user->set("certFilePath", __DIR__ . '/fixtures/certificats/dateOk/fullchain.pem');
+        $user->set("name", "name");
+        $user->set("givenname", "givenName");
+        $user->set("role", "USER");
+        $user->set("telephone", "0000000000");
+        $user->set("authority_id", 1);
+        $user->set("status", 1);
+        $this->assertTrue($user->save());
+
+        $userId = $user->getId();
+
+        $retrievedUser = new User($userId);
+        $retrievedUser->init();
+
+        $this->assertEquals($retrievedUser->get("email"), "em@i.l");
+        $this->assertEquals($retrievedUser->get("name"), "name");
+        $this->assertEquals($retrievedUser->get("givenname"), "givenName");
+        $this->assertEquals($retrievedUser->get("role"), "USER");
+        $this->assertEquals($retrievedUser->get("telephone"), "0000000000");
+        $this->assertEquals($retrievedUser->get("authority_id"), 1);
+        $this->assertEquals($retrievedUser->get("status"), 1);
+    }
+
+    /**
+     * @dataProvider archivistRights
+     */
+    public function testSaveUserArchivistRight(bool $archivistRight)
+    {
+        $user = new User();
+        $user->set("email", "em@i.l");
+        $user->set("certFilePath", __DIR__ . '/fixtures/certificats/dateOk/fullchain.pem');
+        $user->set("name", "name");
+        $user->set("givenname", "givenName");
+        $user->set("role", "USER");
+        $user->set("telephone", "0000000000");
+        $user->set("authority_id", 1);
+        $user->set("status", 1);
+        $user->set("archivist_rights", $archivistRight);
+        $user->save();
+
+        $retrievedUser = new User($user->getId());
+        $retrievedUser->init();
+        $this->assertEquals($archivistRight, $retrievedUser->hasArchivistsRights());
+    }
+
+    public function archivistRights(): iterable
+    {
+        yield [true];
+        yield [false];
+    }
+
+    public function testResetArchivistRight()
+    {
+        $user = new User();
+        $user->set("email", "em@i.l");
+        $user->set("certFilePath", __DIR__ . '/fixtures/certificats/dateOk/fullchain.pem');
+        $user->set("name", "name");
+        $user->set("givenname", "givenName");
+        $user->set("role", "USER");
+        $user->set("telephone", "0000000000");
+        $user->set("authority_id", 1);
+        $user->set("status", 1);
+        $user->set("archivist_right", true);
+        $user->save();
+
+        $user->set("archivist_right", false);
+        $user->save();
+
+        $retrievedUser = new User($user->getId());
+        $retrievedUser->init();
+        $this->assertEquals($retrievedUser->hasArchivistsRights(), false);
+    }
 }
