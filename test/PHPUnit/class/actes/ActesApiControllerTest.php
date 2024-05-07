@@ -66,8 +66,12 @@ class ActesApiControllerTest extends S2lowTestCase
      * @dataProvider maxDatesAndStatusProvider
      * @throws \Exception
      */
-    public function testListActesWithActeWithMaxDateMinDateAndStatus($minDate, $maxDate, $status, $string): void
-    {
+    public function testListActesWithActeWithMaxDateMinDateAndStatus(
+        ?string $minDate,
+        ?string $maxDate,
+        int $status,
+        string $string
+    ): void {
         $id = $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
         $this->updateStatus($id, ActesStatusSQL::STATUS_TRANSMIS, 'message', '2017-08-01');
         $this->setUserAuthentification();
@@ -82,7 +86,7 @@ class ActesApiControllerTest extends S2lowTestCase
         );
     }
 
-    public function maxDatesAndStatusProvider()
+    public function maxDatesAndStatusProvider(): iterable
     {
         // la transaction est crée avec une decision_date au 2017-07-01
         // Et est transmise au 2017-08-01

@@ -76,7 +76,7 @@ class ActesTransactionsSQL extends SQL
 
         $message = mb_substr($message ?? '', 0, 512); // quickfix transition 8.0
 
-        if (is_null($date)) {
+        if ($date === null) {
             $date = date('Y-m-d H:i:s');
         }
         $sql = 'INSERT INTO actes_transactions_workflow (transaction_id, status_id, date, message ) ' .
@@ -407,26 +407,26 @@ WHERE
         $authority_id,
         $offset,
         $limit,
-        $min_submission_date = '',
-        $max_submission_date = ''
+        ?string $min_submission_date = null,
+        ?string $max_submission_date = null,
     ): array | false {
         $offset = intval($offset);
         $limit = intval($limit);
         $sql = "SELECT actes_transactions.id,subject,number,date(decision_date),nature_descr,classification,type FROM actes_transactions ";
-        if (!empty($min_submission_date) || !empty($max_submission_date)) {
+        if ($min_submission_date !== null || $max_submission_date !== null) {
             $sql .= "JOIN actes_transactions_workflow ON transaction_id=actes_transactions.id";
         }
             $sql .= " WHERE last_status_id=? AND authority_id = ?";
         $data = [$status_id, $authority_id];
-        if (!empty($min_submission_date)) {
+        if ($min_submission_date !== null) {
             $sql .= " AND date >= ? ";
             $data[] = $min_submission_date;
         }
-        if (!empty($max_submission_date)) {
+        if ($max_submission_date !== null) {
             $sql .= " AND date <= ? ";
             $data[] = $max_submission_date;
         }
-        if (!empty($min_submission_date) || !empty($max_submission_date)) {
+        if ($min_submission_date !== null || $max_submission_date !== null) {
             $sql .= "AND status_id = ?";
             $data[] = $status_id;
         }

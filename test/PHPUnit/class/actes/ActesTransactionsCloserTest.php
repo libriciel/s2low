@@ -39,10 +39,10 @@ class ActesTransactionsCloserTest extends S2lowTestCase
         /** @var ActesTransactionsSQL $actesTransactionsSQL */
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
         $status_info = $actesTransactionsSQL->getLastStatusInfo($vieilleTransactionId);
-        static::assertEquals(ActesStatusSQL::STATUS_EN_ERREUR, $status_info['status_id']);
-        static::assertEquals('Fermeture automatique de la transaction de plus de 30 jours', $status_info['message']);
+        static::assertSame(ActesStatusSQL::STATUS_EN_ERREUR, $status_info['status_id']);
+        static::assertSame('Fermeture automatique de la transaction de plus de 30 jours', $status_info['message']);
 
         $status_info = $actesTransactionsSQL->getLastStatusInfo($recenteTransactionId);
-        static::assertEquals(ActesStatusSQL::STATUS_TRANSMIS, $status_info['status_id']);
+        static::assertSame(ActesStatusSQL::STATUS_TRANSMIS, $status_info['status_id']);
     }
 }

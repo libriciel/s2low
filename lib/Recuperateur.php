@@ -26,7 +26,7 @@ class Recuperateur
         return $this->doSomethingOnValueOrArray('intval', $this->get($name, $default));
     }
 
-    public function getDate($name)
+    public function getDate(string $name): ?string
     {
         return Helpers::checkDate(
             $this->get($name, null),
