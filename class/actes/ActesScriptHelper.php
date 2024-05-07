@@ -46,8 +46,12 @@ class ActesScriptHelper
             );
     }
 
-    public function updateStatus($transactions_ids, $status_id, $message, $flux_retour = "")
-    {
+    public function updateStatusAndLog(
+        array $transactions_ids,
+        int $status_id,
+        string $message,
+        string $flux_retour = ''
+    ) {
         foreach ($transactions_ids as $transactions_id) {
             $this->actesTransactionsSQL->updateStatus($transactions_id, $status_id, $message, $flux_retour);
             $info = $this->actesTransactionsSQL->getInfo($transactions_id);

@@ -1,6 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesFiles;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Lib\ObjectInstancier;
@@ -29,7 +30,11 @@ foreach ($allEnvelopes as $envelopeInfo) {
 
     $msg = "Les fichiers de l'envelope {$envelopeInfo['id']} ont été détruits";
 
-    $actesTransactionsSQL->updateStatus($envelopeInfo['transaction_id'], 16, $msg);
+    $actesTransactionsSQL->updateStatus(
+        $envelopeInfo['transaction_id'],
+        ActesStatusSQL::STATUS_DETRUITE,
+        $msg
+    );
     Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "actes", false, $envelopeInfo['user_id']);
 
     echo $msg . "\n";

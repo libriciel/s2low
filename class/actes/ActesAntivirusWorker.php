@@ -94,7 +94,11 @@ class ActesAntivirusWorker implements IWorker
                 "Un virus a été trouvé pour la transaction $transaction_id",
                 [$message]
             );
-            $this->actesTransactionSQL->updateStatus($transaction_id, -1, $message);
+            $this->actesTransactionSQL->updateStatus(
+                $transaction_id,
+                ActesStatusSQL::STATUS_EN_ERREUR,
+                $message
+            );
             return false;
         }
 

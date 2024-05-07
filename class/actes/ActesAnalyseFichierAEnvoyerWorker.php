@@ -137,14 +137,14 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
             $tmpFolder->delete($tmp_dir);
             $message = $e->getMessage();
             $this->logger->notice("[$envelope_libelle] L'archive n'est valide : $message");
-            $this->actesScriptHelper->updateStatus($transaction_ids, ActesStatusSQL::STATUS_EN_ERREUR, "Enveloppe invalide : $message");
+            $this->actesScriptHelper->updateStatusAndLog($transaction_ids, ActesStatusSQL::STATUS_EN_ERREUR, "Enveloppe invalide : $message");
             return false;
         }
 
         $tmpFolder->delete($tmp_dir);
         $this->logger->info("[$envelope_libelle] L'archive est valide !");
 
-        $this->actesScriptHelper->updateStatus(
+        $this->actesScriptHelper->updateStatusAndLog(
             $transaction_ids,
             ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,
             "Accepté par le TdT : validation OK"

@@ -68,10 +68,10 @@ class ActesTransactionsSQL extends SQL
 
     public function updateStatus(
         int $transaction_id,
-        int | string $status_id,
+        int $status_id,
         ?string $message,
         string $flux_retour = '',
-        string $date = null
+        ?string $date = null
     ): int {
 
         $message = mb_substr($message ?? '', 0, 512); // quickfix transition 8.0

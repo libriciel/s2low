@@ -119,7 +119,7 @@ class ActesEnvoiFichierWorker implements IWorker
         }
         $this->logger->info("[$envelope_libelle] L'archive a été envoyé");
 
-        $this->actesScriptHelper->updateStatus(
+        $this->actesScriptHelper->updateStatusAndLog(
             $transaction_ids,
             ActesStatusSQL::STATUS_TRANSMIS,
             "Transmis au {$this->actes_ministere_acronyme}"

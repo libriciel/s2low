@@ -138,7 +138,7 @@ class ActesEnvoiAR
 
         $this->actesFileSender->send($archive_path);
 
-        $this->actesScriptHelper->updateStatus(
+        $this->actesScriptHelper->updateStatusAndLog(
             array($transaction_id),
             ActesStatusSQL::STATUS_ACQUITTEMENT_ENVOYE,
             "Acquittement envoyé"

@@ -37,7 +37,11 @@ class ActesTransactionsSQLTest extends S2lowTestCase
     {
         $this->configurePastell();
         $transaction_id = $this->createTransaction('14');
-        $this->getActesTransactionsSQL()->updateStatus($transaction_id, 12, "test");
+        $this->getActesTransactionsSQL()->updateStatus(
+            $transaction_id,
+            ActesStatusSQL::STATUS_ENVOYE_AU_SAE,
+            "test"
+        );
 
         $result_1 = $this->getActesTransactionsSQL()->getArchiveFromStatusWithSAE(12);
         $this->assertNotEmpty($result_1);
@@ -88,8 +92,8 @@ class ActesTransactionsSQLTest extends S2lowTestCase
      */
     public function testUpdateStatus()
     {
-        $transaction_id = $this->createTransaction('14');
-        $this->getActesTransactionsSQL()->updateStatus($transaction_id, 1, "foo");
+        $transaction_id = $this->createTransaction(14);
+        $this->getActesTransactionsSQL()->updateStatus($transaction_id, ActesStatusSQL::STATUS_POSTE, "foo");
         $info = $this->getActesTransactionsSQL()->getStatusInfo($transaction_id, 1);
         $this->assertEquals("foo", $info['message']);
     }
@@ -99,9 +103,9 @@ class ActesTransactionsSQLTest extends S2lowTestCase
      */
     public function testUpdateStatusTooLong()
     {
-        $transaction_id = $this->createTransaction('14');
+        $transaction_id = $this->createTransaction(14);
         $message = str_repeat("1234567890", 53);
-        $this->getActesTransactionsSQL()->updateStatus($transaction_id, 1, $message);
+        $this->getActesTransactionsSQL()->updateStatus($transaction_id, ActesStatusSQL::STATUS_POSTE, $message);
         $info = $this->getActesTransactionsSQL()->getStatusInfo($transaction_id, 1);
         $this->assertEquals(512, mb_strlen($info['message']));
     }
@@ -114,7 +118,12 @@ class ActesTransactionsSQLTest extends S2lowTestCase
         $transaction_id = $this->createTransaction('14');
         $message = "test update classification";
         $flux_retour = file_get_contents(__DIR__ . '/../fixtures/classification.xml');
-        $this->getActesTransactionsSQL()->updateStatus($transaction_id, 1, $message, $flux_retour);
+        $this->getActesTransactionsSQL()->updateStatus(
+            $transaction_id,
+            ActesStatusSQL::STATUS_POSTE,
+            $message,
+            $flux_retour
+        );
         $info = $this->getActesTransactionsSQL()->getStatusInfo($transaction_id, 1);
         $this->assertEquals("test update classification", $info['message']);
     }

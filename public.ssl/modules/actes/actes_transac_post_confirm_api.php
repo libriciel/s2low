@@ -3,6 +3,7 @@
 use JetBrains\PhpStorm\NoReturn;
 use S2lowLegacy\Class\actes\ActesAntivirusWorker;
 use S2lowLegacy\Class\actes\ActesScriptHelper;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\Connexion;
 use S2lowLegacy\Class\DatabasePool;
@@ -16,6 +17,10 @@ use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\WorkerScript;
 
+/** @var WorkerScript $workerScript */
+/** @var ActesTransactionsSQL $actesTransactionsSQL */
+/** @var ActesScriptHelper $actesScriptHelper */
+/** @var Connexion $connexion */
 list($workerScript, $actesTransactionsSQL, $actesScriptHelper, $connexion ) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [WorkerScript::class, ActesTransactionsSQL::class, ActesScriptHelper::class,Connexion::class]
@@ -93,7 +98,7 @@ if ($info['last_status_id'] != 17) {
     return_error_api("La transaction n'est pas dans le statut « En attente d'être posté»");
 }
 
-$actesTransactionsSQL->updateStatus($id, 1, $msg);
+$actesTransactionsSQL->updateStatus($id, ActesStatusSQL::STATUS_POSTE, $msg);
 $workerScript->putJobByClassName(ActesAntivirusWorker::class, $id);
 
 $msg4journal = $actesScriptHelper->getMessage($id, $msg);

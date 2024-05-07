@@ -22,7 +22,7 @@ trait ActesUtilitiesTestTrait
     /**
      * @throws Exception
      */
-    protected function createTransaction($status, string $archive_path = '', ?string $date = '2017-07-01'): int
+    protected function createTransaction(int $status, string $archive_path = '', ?string $date = '2017-07-01'): int
     {
         $sql = "INSERT INTO actes_envelopes(user_id,siren,department) VALUES(1,'000000000','034') returning ID";
         $envelope_id = $this->getSQLQuery()->queryOne($sql);

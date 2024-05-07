@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Lib\SQLQuery;
 
@@ -21,7 +22,11 @@ $all_transaction = $sqlQuery->query($sql);
 
 foreach ($all_transaction as $info) {
     echo $info['transaction_id'];
-    $actesTransactionSQL->updateStatus($info['transaction_id'], 2, "Transaction repassee manuellement en attente de transmission");
+    $actesTransactionSQL->updateStatus(
+        $info['transaction_id'],
+        ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,
+        'Transaction repassee manuellement en attente de transmission'
+    );
     echo " [OK]\n";
     exit;
 }

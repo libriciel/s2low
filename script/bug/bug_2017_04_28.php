@@ -8,6 +8,7 @@
  */
 
 
+use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Lib\SQLQuery;
 
@@ -32,5 +33,9 @@ $actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);
 foreach ($actes_list as $acte) {
     echo "{$acte['id']} : {$acte['message']}\n";
 
-    $actesTransactionSQL->updateStatus($acte['id'], 1, "Transaction repassee en posté");
+    $actesTransactionSQL->updateStatus(
+        $acte['id'],
+        ActesStatusSQL::STATUS_POSTE,
+        'Transaction repassee en posté'
+    );
 }
