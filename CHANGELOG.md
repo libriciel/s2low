@@ -11,6 +11,7 @@
 ### Évolutions
 
 - Permettre de spécifier `max_submission_date` et `min_submission_date` pour `/modules/actes/api/list_actes.php` #1188
+- Créer la possibilité de changer d'état d'archivage via l'API et création du droit correspondant #1180
 
 ### Corrections
 

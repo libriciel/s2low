@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class;
 
+use RuntimeException;
 use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
 use S2lowLegacy\Class\actes\ActesImapProperties;
 use S2lowLegacy\Class\actes\ActesMinistereProperties;
@@ -293,7 +294,7 @@ class LegacyObjectsManager
     public static function getObject(string $className)
     {
         if (!ObjectInstancierFactory::issetObjectInstancier()) {
-            throw new RuntimeException("ObjectInstancier not test");
+            throw new RuntimeException('ObjectInstancier not set');
         }
         return ObjectInstancierFactory::getObjetInstancier()->get($className);
     }
