@@ -358,7 +358,11 @@ class ActesArchiveControler
         if (! $result) {
             throw new UnrecoverableException($pastell->getLastError());
         }
-        $this->actesTransactionsSQL->updateStatus($transaction_id, 12, "Envoie de la transaction $transaction_id à Pastell");
+        $this->actesTransactionsSQL->updateStatus(
+            $transaction_id,
+            ActesStatusSQL::STATUS_ENVOYE_AU_SAE,
+            "Envoie de la transaction $transaction_id à Pastell"
+        );
         $this->actesTransactionsSQL->setSAETransferIdentifier($transaction_id, $id_d);
     }
 

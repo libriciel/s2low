@@ -1,40 +1,154 @@
 <?php
 
-use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
-use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+declare(strict_types=1);
+
+namespace PHPUnit\class\actes;
+
+use Exception;
+use PHPUnit\ActesUtilitiesTestTrait;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Controller\ActesAPIController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\SQLQuery;
+use S2lowTestCase;
 
 class ActesApiControllerTest extends S2lowTestCase
 {
     use ActesUtilitiesTestTrait;
 
 
-    public function testActesStatus()
+    private function getActesAPIController(): ActesAPIController
+    {
+        return $this->getObjectInstancier()->get(ActesAPIController::class);
+    }
+
+    public function testActesStatus(): void
     {
         $this->setUserAuthentification();
-        $this->expectOutputRegex("#En attente de transmission#");
+        $this->expectOutputRegex('#En attente de transmission#');
         $this->getActesAPIController()->listStatusAction();
     }
 
-    public function testNbActes()
+    public function testNbActes(): void
     {
         $this->setUserAuthentification();
         $this->expectOutputString("{\"status_id\":0,\"authority_id\":1,\"nb_transactions\":0}");
         $this->getActesAPIController()->nbActesAction();
     }
 
-    public function testListActes()
+    public function testListActes(): void
     {
         $this->setUserAuthentification();
-        $this->expectOutputString("{\"status_id\":\"0\",\"authority_id\":\"1\",\"offset\":\"0\",\"limit\":\"100\",\"transactions\":[]}");
+        $this->expectOutputString(
+            $this->emptyResponse(0) // Le status 0 correspond à la valeur par défaut de getInt()
+        );
         $this->getActesAPIController()->listActesAction();
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function testListActesWithActe(): void
+    {
+        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
+        $this->setUserAuthentification();
+        $this->getEnvironment()->get()->set('status_id', ActesStatusSQL::STATUS_POSTE);
+
+        $this->getActesAPIController()->listActesAction();
+
+        static::assertStringContainsString(
+            '{"status_id":"1","authority_id":"1","offset":"0","limit":"100","transactions":[{"id":"' . $transaction_id,
+            $this->getActualOutputForAssertion()
+        );
+    }
+
+    /**
+     * @dataProvider maxDatesAndStatusProvider
+     * @throws \Exception
+     */
+    public function testListActesWithActeWithMaxDateMinDateAndStatus(
+        ?string $minDate,
+        ?string $maxDate,
+        int $status,
+        string $string
+    ): void {
+        $id = $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
+        $this->updateStatus($id, ActesStatusSQL::STATUS_TRANSMIS, 'message', '2017-08-01');
+        $this->setUserAuthentification();
+        $this->getEnvironment()->get()->set('status_id', $status);
+        $this->getEnvironment()->get()->set('min_date', $minDate);
+        $this->getEnvironment()->get()->set('max_date', $maxDate);
+        $this->getActesAPIController()->listActesAction();
+
+        static::assertStringContainsString(
+            $string,
+            $this->getActualOutputForAssertion()
+        );
+    }
+
+    public function maxDatesAndStatusProvider(): iterable
+    {
+        // la transaction est crée avec une decision_date au 2017-07-01
+        // Et est transmise au 2017-08-01
+        // si min_date est antérieure, cette transaction apparaitra dans la liste
+        yield [
+            '2017-06-30',null, ActesStatusSQL::STATUS_TRANSMIS,
+            $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
+        // si min_date est null, elle apparaitra dans la liste
+        yield [null,null, ActesStatusSQL::STATUS_TRANSMIS,
+            $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
+        // si min_date est égale à la date de transmission, elle apparaitra dans la liste
+        yield ['2017-08-01',null, ActesStatusSQL::STATUS_TRANSMIS,
+            $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
+        // si elle est postérieure, on ne verra aucune transaction
+        yield ['2017-08-02',null, ActesStatusSQL::STATUS_TRANSMIS,
+            $this->emptyResponse(ActesStatusSQL::STATUS_TRANSMIS)];
+
+        // la transaction est crée avec une decision_date au 2017-07-01
+        // Et est transmise au 2017-08-01
+        // si max_date est antérieure, aucune transaction n'apparaitra dans la liste
+        yield [null, '2017-06-30', ActesStatusSQL::STATUS_TRANSMIS,
+            $this->emptyResponse(ActesStatusSQL::STATUS_TRANSMIS)];
+        // si max_date est null, la transaction apparaitra
+        yield [null, null, ActesStatusSQL::STATUS_TRANSMIS,
+            $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
+        // si max_submission_date est égale à la date de création, la transaction apparaitra
+        yield [null, '2017-08-01', ActesStatusSQL::STATUS_TRANSMIS,
+            $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
+        // si max_date est postérieure, la transaction apparaitra
+        yield [null, '2017-08-02',ActesStatusSQL::STATUS_TRANSMIS,
+            $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
+
+        // la transaction est crée avec une decision_date au 2017-07-01
+        // Et est transmise au 2017-08-01
+        // si max_date est antérieure aux deux, aucune transaction n'apparaitra dans la liste quel que soit
+        // le status
+        yield [null, '2017-06-30',ActesStatusSQL::STATUS_POSTE,
+            $this->emptyResponse(ActesStatusSQL::STATUS_POSTE)];
+        yield [null, '2017-06-30',ActesStatusSQL::STATUS_TRANSMIS,
+            $this->emptyResponse(ActesStatusSQL::STATUS_TRANSMIS)];
+        // si 2017-07-01 < max_date < 2017-08-01, la transaction n'apparaitra pas dans la liste des posté car
+        // elle n'est plus à ce statut, dans la liste des transmise non plus car le changement est postérieur à la date
+        yield [null, '2017-07-02', ActesStatusSQL::STATUS_POSTE,
+            $this->emptyResponse(ActesStatusSQL::STATUS_POSTE)];
+        yield [null, '2017-07-02',ActesStatusSQL::STATUS_TRANSMIS,
+            $this->emptyResponse(ActesStatusSQL::STATUS_TRANSMIS)];
+        // si max_date est postérieure aux deux, la transaction la liste des transmise seulement
+        yield [null, '2017-08-02', ActesStatusSQL::STATUS_POSTE,
+            $this->emptyResponse(ActesStatusSQL::STATUS_POSTE)];
+        yield [null, '2017-08-02',ActesStatusSQL::STATUS_TRANSMIS,
+            $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
+
+        // Si max_date est antérieure à min_date, la liste est vide ...
+        yield ['2017-08-02','2017-07-02' , ActesStatusSQL::STATUS_POSTE,
+            $this->emptyResponse(ActesStatusSQL::STATUS_POSTE)];
+    }
+
 
     public function testActionAfter()
     {
         $this->setUserAuthentification();
-        $this->expectOutputString("");
+        $this->expectOutputString('');
         $this->getActesAPIController()->_actionAfter();
     }
 
@@ -51,33 +165,15 @@ class ActesApiControllerTest extends S2lowTestCase
 
 
     /**
-     * @return false|mixed
      * @throws Exception
      */
-    private function createRelatedTransaction()
-    {
-        $transaction_id = $this->createTransaction(4);
-        $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
-
-        $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
-
-        $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
-
-        $related_envelope_id = $actesEnvelopeSQL->createRelatedEnveloppe($transaction_info['envelope_id'], 'a', 12);
-
-        return $actesTransactionsSQL->createRelatedTransaction($related_envelope_id, 3, '2018-01-01', $transaction_id);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function testActionMarkAsRead()
+    public function testActionMarkAsRead(): void
     {
         $transaction_id = $this->createRelatedTransaction();
         $this->setUserAuthentification();
         $this->expectOutputRegex('#"number":"20170728C".*\{"result":"ok"\}\[\]#');
         $this->getActesAPIController()->listDocumentPrefectureAction();
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('transaction_id', $transaction_id);
+        $this->getEnvironment()->get()->set('transaction_id', $transaction_id);
         $this->getActesAPIController()->documentPrefectureMarkAsReadAction();
         $this->getActesAPIController()->listDocumentPrefectureAction();
     }
@@ -85,19 +181,19 @@ class ActesApiControllerTest extends S2lowTestCase
     /**
      * @throws Exception
      */
-    public function testNbCreatedActesByAuthoritiesAndMonth()
+    public function testNbCreatedActesByAuthoritiesAndMonth(): void
     {
         $this->createTransaction(1);
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('month', '7');
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('year', '2017');
+        $this->getEnvironment()->get()->set('month', '7');
+        $this->getEnvironment()->get()->set('year', '2017');
 
         $this->setAdminGroupAuthentication();
         ob_start();
         $this->getActesAPIController()->nbCreatedActesByAuthorityGroupIdAndMonthAction();
         $data = ob_get_contents();
         ob_end_clean();
-        $this->assertJsonStringEqualsJsonFile(
-            __DIR__ . "/fixtures/nbTransactionPerAuthorities.json",
+        static::assertJsonStringEqualsJsonFile(
+            __DIR__ . '/fixtures/nbTransactionPerAuthorities.json',
             $data
         );
     }
@@ -105,20 +201,20 @@ class ActesApiControllerTest extends S2lowTestCase
     /**
      * @throws Exception
      */
-    public function testNbCreatedActesByAuthoritiesAndMonthGroupProvided()
+    public function testNbCreatedActesByAuthoritiesAndMonthGroupProvided(): void
     {
         $this->createTransaction(1);
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('month', '7');
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('year', '2017');
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('authority_group_id', '1');
+        $this->getEnvironment()->get()->set('month', '7');
+        $this->getEnvironment()->get()->set('year', '2017');
+        $this->getEnvironment()->get()->set('authority_group_id', '1');
         $this->setSuperAdminAuthentication();
 
         ob_start();
         $this->getActesAPIController()->nbCreatedActesByAuthorityGroupIdAndMonthAction();
         $data = ob_get_contents();
         ob_end_clean();
-        $this->assertJsonStringEqualsJsonFile(
-            __DIR__ . "/fixtures/nbTransactionPerAuthorities.json",
+        static::assertJsonStringEqualsJsonFile(
+            __DIR__ . '/fixtures/nbTransactionPerAuthorities.json',
             $data
         );
     }
@@ -126,23 +222,37 @@ class ActesApiControllerTest extends S2lowTestCase
     /**
      * @throws Exception
      */
-    public function testNbCreatedActesByAuthoritiesAndMonthNoGroupProvided()
+    public function testNbCreatedActesByAuthoritiesAndMonthNoGroupProvided(): void
     {
 
         $this->createTransaction(1);
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('month', '7');
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('year', '2017');
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('authority_group_id', '1');
+        $this->getEnvironment()->get()->set('month', '7');
+        $this->getEnvironment()->get()->set('year', '2017');
+        $this->getEnvironment()->get()->set('authority_group_id', '1');
         $this->setAdminGroupAuthentication();
-        $sql = "UPDATE authorities SET authority_group_id=NULL WHERE authority_group_id=1";
+        $sql = 'UPDATE authorities SET authority_group_id=NULL WHERE authority_group_id=1';
         $this->getObjectInstancier()->get(SQLQuery::class)->query($sql);
         ob_start();
         $this->getActesAPIController()->nbCreatedActesByAuthorityGroupIdAndMonthAction();
         $data = ob_get_contents();
         ob_end_clean();
-        $this->assertJsonStringEqualsJsonFile(
-            __DIR__ . "/fixtures/nbTransactionPerAuthoritiesFailed.json",
+        static::assertJsonStringEqualsJsonFile(
+            __DIR__ . '/fixtures/nbTransactionPerAuthoritiesFailed.json',
             $data
         );
+    }
+    private function getEnvironment(): Environnement
+    {
+        return $this->getObjectInstancier()->get(Environnement::class);
+    }
+
+    private function emptyResponse(int $status): string
+    {
+        return '{"status_id":"' . $status . '","authority_id":"1","offset":"0","limit":"100","transactions":[]}';
+    }
+
+    private function responseWithTransaction(int $status): string
+    {
+        return '{"status_id":"' . $status . '","authority_id":"1","offset":"0","limit":"100","transactions":[{';
     }
 }

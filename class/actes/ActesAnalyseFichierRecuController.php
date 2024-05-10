@@ -541,13 +541,13 @@ class ActesAnalyseFichierRecuController
         );
     }
 
-    private function updateStatus($transaction_ids, $status_id, $message, $xml = false)
+    private function updateStatus(array | int $transaction_ids, int $status_id, string $message, $xml = false)
     {
         if (! is_array($transaction_ids)) {
             $transaction_ids = array($transaction_ids);
         }
         $this->s2lowLogger->info($message);
-        $this->actesScriptHelper->updateStatus(
+        $this->actesScriptHelper->updateStatusAndLog(
             $transaction_ids,
             $status_id,
             $message,

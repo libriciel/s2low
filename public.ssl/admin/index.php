@@ -23,7 +23,7 @@ $helios_status = [
     2 => 'En attente de transmission',
     3 => 'Transmis'
 ];
-
+/** @var HeliosTransactionsSQL $heliosTransactionsSQL */
 $heliosTransactionsSQL = $objectInstancier->get(HeliosTransactionsSQL::class);
 
 $helios_nb_transaction_by_status = [];
@@ -45,6 +45,7 @@ $actes_status = [
     3 => 'Transmis',
     7 => 'Document reçu',
 ];
+/** @var ActesTransactionsSQL $actesTransactionsSQL */
 $actesTransactionsSQL = $objectInstancier->get(ActesTransactionsSQL::class);
 
 

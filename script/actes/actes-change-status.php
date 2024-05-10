@@ -52,7 +52,7 @@ if ($argc != 3) {
 }
 
 $transaction_id = (int) $argv[1];
-$status_id = $argv[2];
+$status_id = (int) $argv[2];
 
 if (!strval($transaction_id) == $argv[1]) {
     $s2LowLogger->error("transaction_id doit être un entier");

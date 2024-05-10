@@ -66,35 +66,40 @@ class ActesTransactionsSQL extends SQL
     }
 
 
-    public function updateStatus($transaction_id, $status_id, $message, $flux_retour = '')
-    {
+    public function updateStatus(
+        int $transaction_id,
+        int $status_id,
+        ?string $message,
+        string $flux_retour = '',
+        ?string $date = null
+    ): int {
 
         $message = mb_substr($message ?? '', 0, 512); // quickfix transition 8.0
 
-        $date = date("Y-m-d H:i:s");
-        $sql = "INSERT INTO actes_transactions_workflow (transaction_id, status_id, date, message ) " .
-            " VALUES( ? , ? , ? , ? ) RETURNING ID";
+        if ($date === null) {
+            $date = date('Y-m-d H:i:s');
+        }
+        $sql = 'INSERT INTO actes_transactions_workflow (transaction_id, status_id, date, message ) ' .
+            ' VALUES( ? , ? , ? , ? ) RETURNING ID';
 
         $id = $this->queryOne($sql, $transaction_id, $status_id, $date, $message);
 
         if (!empty($flux_retour)) {
-            $sql = "UPDATE actes_transactions_workflow SET flux_retour = ? WHERE id = ?";
+            $sql = 'UPDATE actes_transactions_workflow SET flux_retour = ? WHERE id = ?';
             $pdo = $this->getSQLQuery()->getPdo();
             $stmt = $pdo->prepare($sql);                                    //QUICKFIX Passage UTF-8
             $stmt->bindParam(1, $flux_retour, PDO::PARAM_LOB);
             $stmt->bindParam(2, $id);
             $stmt->execute();
         }
-        $sql = "UPDATE actes_transactions SET last_status_id=? " .
-            " WHERE id=?";
-
+        $sql = 'UPDATE actes_transactions SET last_status_id=? WHERE id=?';
         $this->query($sql, $status_id, $transaction_id);
         return $id;
     }
 
     public function getArchiveFStatus($status_id, $authority_id = 0)
     {
-        $sql = "SELECT  actes_transactions.id as id FROM actes_transactions " .
+        $sql = 'SELECT  actes_transactions.id as id FROM actes_transactions ' .
             " WHERE last_status_id=? ";
         $data = [$status_id];
         if ($authority_id) {
@@ -125,20 +130,6 @@ class ActesTransactionsSQL extends SQL
         return $this->queryOneCol($sql, $envelope_id);
     }
 
-    public function getTransactionIdFromStatus($status_id, $antivirus_check = true)
-    {
-        $sql = "SELECT  actes_transactions.id as id FROM actes_transactions " .
-            " WHERE last_status_id=? AND antivirus_check=?";
-        return $this->queryOneCol($sql, $status_id, $antivirus_check);
-    }
-
-    public function getTransactionIdByStatus($status_id)
-    {
-        $sql = "SELECT  actes_transactions.id as id FROM actes_transactions " .
-            " WHERE last_status_id=?";
-        return $this->queryOneCol($sql, $status_id);
-    }
-
 
     public function getLastArchiveFromStatus($status_id, $start_date)
     {
@@ -167,27 +158,6 @@ class ActesTransactionsSQL extends SQL
             " JOIN actes_envelopes ON actes_transactions.envelope_id=actes_envelopes.id " .
             " WHERE last_status_id=13 OR last_status_id = 6";
         return $this->query($sql);
-    }
-
-
-    public function getNextNumeroTransfert()
-    {
-        $sql = "SELECT count(*) + 1 FROM actes_transactions_workflow WHERE status_id=? AND date(date) = date(now());";
-        return $this->queryOne($sql, 12);
-    }
-
-    public function getLatestDate($id)
-    {
-        $all_id = array($id);
-        $relatedTransaction = $this->getRelatedTransaction($id);
-        foreach ($relatedTransaction as $transaction) {
-            $all_id[] = $transaction['id'];
-        }
-        $sql = "SELECT max(date) " .
-            " FROM actes_transactions_workflow " .
-            " WHERE status_id IN (4,11,7) " .
-            " AND transaction_id IN (" . implode(",", $all_id) . ")";
-        return $this->queryOne($sql);
     }
 
     public function getRelatedTransaction($id)
@@ -432,13 +402,36 @@ WHERE
         return $this->queryOneCol($sql, $status_id, $authority_id);
     }
 
-    public function getListByStatusAndAuthority($status_id, $authority_id, $offset, $limit)
-    {
+    public function getListByStatusAndAuthority(
+        $status_id,
+        $authority_id,
+        $offset,
+        $limit,
+        ?string $min_submission_date = null,
+        ?string $max_submission_date = null,
+    ): array | false {
         $offset = intval($offset);
         $limit = intval($limit);
-        $sql = "SELECT id,subject,number,date(decision_date),nature_descr,classification,type FROM actes_transactions " .
-            " WHERE last_status_id=? AND authority_id = ? ORDER BY actes_transactions.id DESC OFFSET $offset LIMIT $limit";
-        return $this->query($sql, $status_id, $authority_id);
+        $sql = "SELECT actes_transactions.id,subject,number,date(decision_date),nature_descr,classification,type FROM actes_transactions ";
+        if ($min_submission_date !== null || $max_submission_date !== null) {
+            $sql .= "JOIN actes_transactions_workflow ON transaction_id=actes_transactions.id";
+        }
+            $sql .= " WHERE last_status_id=? AND authority_id = ?";
+        $data = [$status_id, $authority_id];
+        if ($min_submission_date !== null) {
+            $sql .= " AND date >= ? ";
+            $data[] = $min_submission_date;
+        }
+        if ($max_submission_date !== null) {
+            $sql .= " AND date <= ? ";
+            $data[] = $max_submission_date;
+        }
+        if ($min_submission_date !== null || $max_submission_date !== null) {
+            $sql .= "AND status_id = ?";
+            $data[] = $status_id;
+        }
+        $sql .= " ORDER BY actes_transactions.id DESC OFFSET $offset LIMIT $limit";
+        return $this->query($sql, $data);
     }
 
     public function listDocumentPrefectureNonLu($authority_id)

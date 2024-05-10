@@ -1,5 +1,6 @@
 <?php
 
+use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\TransactionSQL;
 
 class TransactionSQLTest extends S2lowTestCase

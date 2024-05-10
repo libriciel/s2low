@@ -93,7 +93,11 @@ class ActesSignature
         system($cmd, $ret);
         chdir($old_cvd);
         $this->actesIncludedFileSQL->setSignature($transaction_id, $actes_included_file_id, $signature);
-        $this->actesTransactionSQL->updateStatus($transaction_id, 1, "L'acte a été signé électroniquement");
+        $this->actesTransactionSQL->updateStatus(
+            $transaction_id,
+            ActesStatusSQL::STATUS_POSTE,
+            "L'acte a été signé électroniquement"
+        );
         return $transaction_id;
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\ActesPdfLegacy;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\BordereauPdfGenerator;

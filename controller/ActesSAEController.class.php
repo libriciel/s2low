@@ -91,8 +91,9 @@ class ActesSAEController extends Controller
     {
         $this->verifSuperAdmin();
         $transaction_id = $this->getRecuperateurPost()->get('transaction_id');
-        $status_id = $this->getRecuperateurPost()->get('status_id');
+        $status_id = $this->getRecuperateurPost()->getInt('status_id');
 
+        /** @var ActesTransactionsSQL $actesTransactionSQL */
         $actesTransactionSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
 
         $status_info = $actesTransactionSQL->getLastStatusInfo($transaction_id);
@@ -123,12 +124,13 @@ class ActesSAEController extends Controller
         $this->verifSuperAdmin();
         $authority_id = $this->getRecuperateurPost()->get('authority_id');
         $status_id_from = $this->getRecuperateurPost()->get('status_id_from');
-        $status_id_to = $this->getRecuperateurPost()->get('status_id_to');
+        $status_id_to = $this->getRecuperateurPost()->getInt('status_id_to');
         if (! $this->isActionPossible($status_id_from, $status_id_to)) {
             $this->setErrorMessage("Action impossible");
             $this->redirect("/admin/authorities/admin_authority_sae_statistiques.php?id=$authority_id");
         }
 
+        /** @var ActesTransactionsSQL $actesTransactionsSQL */
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
         $all = $actesTransactionsSQL->getIdByStatusAndAuthority(
             $status_id_from,

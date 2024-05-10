@@ -16,7 +16,7 @@ class ActesCreator
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
     }
 
-    public function createTransaction($status, $archive_path, $tmp_dir)
+    public function createTransaction(int $status, ?string $archive_path, string $tmp_dir)
     {
         if (is_null($archive_path)) {
             $archive_name = uniqid(rand(), true);

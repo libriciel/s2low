@@ -2,6 +2,7 @@
 
 use S2lowLegacy\Class\actes\ActesAntivirusWorker;
 use S2lowLegacy\Class\actes\ActesScriptHelper;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\Connexion;
 use S2lowLegacy\Class\DatabasePool;
@@ -14,6 +15,9 @@ use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\WorkerScript;
 
+/** @var WorkerScript $workerScript */
+/** @var ActesScriptHelper $actesScriptHelper */
+/** @var ActesTransactionsSQL $actesTransactionsSQL */
 list($workerScript, $actesScriptHelper,$actesTransactionsSQL) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [WorkerScript::class,ActesScriptHelper::class,ActesTransactionsSQL::class]
@@ -91,7 +95,7 @@ foreach ($id_list as $id) {
         continue;
     }
 
-    $actesTransactionsSQL->updateStatus($id, 1, $msg);
+    $actesTransactionsSQL->updateStatus($id, ActesStatusSQL::STATUS_POSTE, $msg);
 
     $workerScript->putJobByClassName(ActesAntivirusWorker::class, $id);
 

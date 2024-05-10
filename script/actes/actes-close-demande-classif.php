@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Lib\SQLQuery;
 
@@ -21,7 +22,11 @@ $all_transaction = $sqlQuery->query($sql);
 
 foreach ($all_transaction as $info) {
     echo $info['transaction_id'];
-    $actesTransactionSQL->updateStatus($info['transaction_id'], -1, "Transaction passé en erreur");
+    $actesTransactionSQL->updateStatus(
+        $info['transaction_id'],
+        ActesStatusSQL::STATUS_EN_ERREUR,
+        'Transaction passé en erreur'
+    );
     echo " [OK]\n";
     exit;
 }

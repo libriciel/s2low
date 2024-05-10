@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
@@ -29,5 +30,9 @@ $id_list = $sqlQuery->queryOneCol($sql, $authority_id);
 
 foreach ($id_list as $transaction_id) {
     echo $transaction_id . "\n";
-    $actesTransactionSQL->updateStatus($transaction_id, 12, "Reprise récupération SAE");
+    $actesTransactionSQL->updateStatus(
+        $transaction_id,
+        ActesStatusSQL::STATUS_ENVOYE_AU_SAE,
+        'Reprise récupération SAE'
+    );
 }

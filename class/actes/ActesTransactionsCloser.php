@@ -32,7 +32,7 @@ class ActesTransactionsCloser
         $this->s2lowLogger->info(count($transaction_id_list) . " transactions ont été trouvé");
         foreach ($transaction_id_list as $transaction_id) {
             $this->s2lowLogger->info("Fermeture de la transaction $transaction_id");
-            $this->actesScriptHelper->updateStatus(
+            $this->actesScriptHelper->updateStatusAndLog(
                 [$transaction_id],
                 ActesStatusSQL::STATUS_EN_ERREUR,
                 "Fermeture automatique de la transaction de plus de 30 jours"
