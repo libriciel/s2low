@@ -9,6 +9,7 @@
     "ext-ftp": "*",
     "ext-gd": "*",
     "ext-iconv": "*",
+    "ext-imagick": "*",
     "ext-intl": "*",
     "ext-json": "^8.1",
     "ext-libxml": "^8.1",
