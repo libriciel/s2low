@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use S2low\Services\Helios\HeliosReceptionWorker;
 use S2lowLegacy\Class\CustomizableWorkerRunner;
 use S2lowLegacy\Class\BeanstalkdWrapper;
+use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\RedisMutexWrapper;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\JobFetcherFromSelfUpdatedBeanstalkd;
@@ -99,6 +100,42 @@ class CustomizableWorkerRunnerTest extends TestCase
             ->expects(static::once())
             ->method('work')
             ->with('data');
+
+        $this->workerRunner->work();
+    }
+
+    public function testRecoverableException(): void
+    {
+        // peekReady retourne un job : il n'y a pas besoin de rebuild la queue
+        $this->queue->method('peekReady')->willReturn($this->Job);
+        $this->workerScript->expects(static::never())->method('rebuildQueue');
+
+        // La queue va renvoyer un seul job, puis false quand elle est vide
+        $this->queue->method('reserve')->willReturnOnConsecutiveCalls($this->Job, $this->Job);
+
+        $this->Job->expects(static::exactly(2))->method('getData')->willReturn('data');
+
+        // Le job est supprimé systématiquement avant même d'être traité
+        // Autrement, la queue risque d'être bloquée
+        $this->queue->expects(self::exactly(2))->method('delete')->with($this->Job);
+
+        // Le heliosReceptionWorker est capable de traiter les deux job
+        $this->heliosReceptionWorker->expects(self::exactly(2))
+            ->method('isDataValid')
+            ->with('data')
+            ->willReturn(true);
+
+        // mais rencontre une RecoverableException la première fois, et traite correctement la seconde
+        $matcher     = static::exactly(2);
+        $this->heliosReceptionWorker
+            ->expects(static::exactly(2))
+            ->method('work')
+            ->willReturnCallback(function () use ($matcher) {
+                if ($matcher->getInvocationCount() === 1) {
+                    throw new RecoverableException();
+                }
+                return 'data';
+            });
 
         $this->workerRunner->work();
     }
