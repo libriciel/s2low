@@ -39,20 +39,22 @@ class CustomizableWorkerRunner implements WorkerRunner
             $this->worker->start();
             $this->jobFetchingStrategies->init($this->worker, $this->s2lowLogger);
             $this->checkAll();
+            $workerhasRunSuccessfully = true;
         } catch (WorkerScriptException $e) {
             $this->s2lowLogger->notice($e->getMessage());
-            return true;
+            $workerhasRunSuccessfully = true;
         } catch (PausingQueueException $e) {
             $seconds = $e->getTimeToWait();
             $this->s2lowLogger->info("Pausing queue for $seconds seconds");
             sleep_wrapper($seconds);
+            $workerhasRunSuccessfully = true;
         } catch (Throwable $e) {
             $message = $e->getMessage();
             $this->s2lowLogger->critical(
                 "Erreur lors de l'execution du script : " . $message,
                 [$e->getTraceAsString()]
             );
-            return false;
+            $workerhasRunSuccessfully = false;
         } finally {
             $this->worker->end();
         }
@@ -62,7 +64,7 @@ class CustomizableWorkerRunner implements WorkerRunner
             $this->s2lowLogger->info("Arret du script $sleep secondes");
             sleep_wrapper($sleep);
         }
-        return true;
+        return $workerhasRunSuccessfully;
     }
 
 

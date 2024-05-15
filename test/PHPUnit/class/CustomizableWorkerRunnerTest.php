@@ -120,16 +120,16 @@ class CustomizableWorkerRunnerTest extends TestCase
         // Le heliosReceptionWorker renvoie une WorkerScriptException à l'appel de start
         $this->heliosReceptionWorker->expects(static::once())
             ->method('start')
-            ->willThrowException(new WorkerScriptException("Un message informatif"));
+            ->willThrowException(new WorkerScriptException('Un message informatif'));
 
         $this->workerRunner->setMinExecutionTimeInSeconds(1);
-        $this->assertTrue($this->workerRunner->work());
-        $this->assertTrue(
+        static::assertTrue($this->workerRunner->work());
+        static::assertTrue(
             $this->testHandler->hasNoticeThatMatches('/Un message informatif/')
         );
-        /*$this->assertTrue(
+        static::assertTrue(
             $this->testHandler->hasInfoThatMatches('/Arret du script/')
-        ); Pour plus tard*/
+        );
     }
 
     public function testPausingQueueException(): void
@@ -140,11 +140,11 @@ class CustomizableWorkerRunnerTest extends TestCase
         // Le heliosReceptionWorker renvoie une WorkerScriptException à l'appel de start
         $this->heliosReceptionWorker->expects(static::once())
             ->method('start')
-            ->willThrowException(new PausingQueueException("Un message informatif"));
+            ->willThrowException(new PausingQueueException('Un message informatif'));
 
         $this->workerRunner->setMinExecutionTimeInSeconds(1);
-        $this->assertTrue($this->workerRunner->work());
-        $this->assertTrue(
+        static::assertTrue($this->workerRunner->work());
+        static::assertTrue(
             $this->testHandler->hasInfoThatMatches('/Pausing queue for 30 seconds/')
         );
         // Le temps de pause est supérieur au MinExecutionTime
@@ -159,15 +159,15 @@ class CustomizableWorkerRunnerTest extends TestCase
         // Le heliosReceptionWorker renvoie une WorkerScriptException à l'appel de start
         $this->heliosReceptionWorker->expects(static::once())
             ->method('start')
-            ->willThrowException(new Error("Un message informatif"));
+            ->willThrowException(new Error('Un message informatif'));
 
         $this->workerRunner->setMinExecutionTimeInSeconds(1);
-        $this->assertFalse($this->workerRunner->work());
-        $this->assertTrue(
+        static::assertFalse($this->workerRunner->work());
+        static::assertTrue(
             $this->testHandler->hasCriticalThatContains("Erreur lors de l'execution du script : Un message informatif")
         );
-        /*$this->assertTrue(
-    $this->testHandler->hasInfoThatMatches('/Arret du script/')
-); Pour plus tard*/
+        static::assertTrue(
+            $this->testHandler->hasInfoThatMatches('/Arret du script/')
+        );
     }
 }
