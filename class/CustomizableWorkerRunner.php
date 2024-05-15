@@ -56,7 +56,11 @@ class CustomizableWorkerRunner implements WorkerRunner
             );
             $workerhasRunSuccessfully = false;
         } finally {
-            $this->worker->end();
+            try {
+                $this->worker->end();
+            } catch (Throwable $finallyThrowable) {
+                $this->s2lowLogger->error($finallyThrowable->getMessage());
+            }
         }
 
         $sleep = $this->min_execution_time_in_seconds - (time() - $start);

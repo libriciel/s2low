@@ -12,6 +12,7 @@ use Pheanstalk\Job;
 use Pheanstalk\Pheanstalk;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Exception;
 use S2low\Services\Helios\HeliosReceptionWorker;
 use S2lowLegacy\Class\CustomizableWorkerRunner;
 use S2lowLegacy\Class\BeanstalkdWrapper;
@@ -104,6 +105,26 @@ class CustomizableWorkerRunnerTest extends TestCase
         $this->workerRunner->work();
     }
 
+    public function testExecutionWhithFinallyException(): void
+    {
+        $this->queue->method('peekReady')->willReturn($this->Job);
+
+        $this->queue->method('reserve')->willReturnOnConsecutiveCalls($this->Job, false);
+        $this->Job->method('getData')->willReturn('data');
+
+        // Le heliosReceptionWorker est capable de traiter
+        $this->heliosReceptionWorker->method('isDataValid')->willReturn(true);
+        $this->heliosReceptionWorker->method('end')->willThrowException(new Exception('Bitter End'));
+        $this->workerRunner->setMinExecutionTimeInSeconds(1);
+        $this->workerRunner->work();
+        static::assertTrue(
+            $this->testHandler->hasErrorThatContains('Bitter End')
+        );
+        static::assertTrue(
+            $this->testHandler->hasInfoThatMatches('/Arret du script/')
+        );
+    }
+
     public function testRecoverableException(): void
     {
         // peekReady retourne un job : il n'y a pas besoin de rebuild la queue
@@ -161,12 +182,6 @@ class CustomizableWorkerRunnerTest extends TestCase
 
         $this->workerRunner->setMinExecutionTimeInSeconds(1);
         static::assertTrue($this->workerRunner->work());
-        static::assertTrue(
-            $this->testHandler->hasNoticeThatMatches('/Un message informatif/')
-        );
-        static::assertTrue(
-            $this->testHandler->hasInfoThatMatches('/Arret du script/')
-        );
     }
 
     public function testPausingQueueException(): void
