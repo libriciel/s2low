@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace PHPUnit\class;
 
+use Error;
+use Monolog\Handler\TestHandler;
+use Monolog\Logger;
 use Pheanstalk\Exception\ServerException;
 use Pheanstalk\Job;
 use Pheanstalk\Pheanstalk;
@@ -16,15 +19,18 @@ use S2lowLegacy\Class\RedisMutexWrapper;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\JobFetcherFromSelfUpdatedBeanstalkd;
 use S2lowLegacy\Class\WorkerScript;
+use S2lowLegacy\Class\WorkerScriptException;
+use S2lowLegacy\Lib\PausingQueueException;
 use S2lowLegacy\Lib\SigTermHandler;
 
-class WorkerRunnerWithSelfUpdatedBeanstalkdTest extends TestCase
+class CustomizableWorkerRunnerTest extends TestCase
 {
     private HeliosReceptionWorker|MockObject $heliosReceptionWorker;
     private Job|MockObject $Job;
     private MockObject|Pheanstalk $queue;
     private MockObject|WorkerScript $workerScript;
     private CustomizableWorkerRunner $workerRunner;
+    private TestHandler $testHandler;
 
     protected function setUp(): void
     {
@@ -53,11 +59,14 @@ class WorkerRunnerWithSelfUpdatedBeanstalkdTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $logger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
+        $this->testHandler = new TestHandler();
+        $logger = new Logger('tests');
+        $logger->pushHandler($this->testHandler);
+
 
         $this->workerRunner = new CustomizableWorkerRunner(
             $this->heliosReceptionWorker,
-            $logger,
+            new S2lowLogger($logger),
             $sigTermHandler,
             0,
             new JobFetcherFromSelfUpdatedBeanstalkd(
@@ -101,5 +110,64 @@ class WorkerRunnerWithSelfUpdatedBeanstalkdTest extends TestCase
         $this->workerScript->expects(static::once())->method('rebuildQueue');
 
         $this->workerRunner->work();
+    }
+
+    public function testWorkerScriptException(): void
+    {
+        $this->queue->method('peekReady')->willReturn($this->Job);
+        $this->queue->method('reserve')->willReturn($this->Job);
+
+        // Le heliosReceptionWorker renvoie une WorkerScriptException à l'appel de start
+        $this->heliosReceptionWorker->expects(static::once())
+            ->method('start')
+            ->willThrowException(new WorkerScriptException("Un message informatif"));
+
+        $this->workerRunner->setMinExecutionTimeInSeconds(1);
+        $this->assertTrue($this->workerRunner->work());
+        $this->assertTrue(
+            $this->testHandler->hasNoticeThatMatches('/Un message informatif/')
+        );
+        /*$this->assertTrue(
+            $this->testHandler->hasInfoThatMatches('/Arret du script/')
+        ); Pour plus tard*/
+    }
+
+    public function testPausingQueueException(): void
+    {
+        $this->queue->method('peekReady')->willReturn($this->Job);
+        $this->queue->method('reserve')->willReturn($this->Job);
+
+        // Le heliosReceptionWorker renvoie une WorkerScriptException à l'appel de start
+        $this->heliosReceptionWorker->expects(static::once())
+            ->method('start')
+            ->willThrowException(new PausingQueueException("Un message informatif"));
+
+        $this->workerRunner->setMinExecutionTimeInSeconds(1);
+        $this->assertTrue($this->workerRunner->work());
+        $this->assertTrue(
+            $this->testHandler->hasInfoThatMatches('/Pausing queue for 30 seconds/')
+        );
+        // Le temps de pause est supérieur au MinExecutionTime
+        // On n'a donc pas d'éntrée log 'Arret du script'
+    }
+
+    public function testThrowable(): void
+    {
+        $this->queue->method('peekReady')->willReturn($this->Job);
+        $this->queue->method('reserve')->willReturn($this->Job);
+
+        // Le heliosReceptionWorker renvoie une WorkerScriptException à l'appel de start
+        $this->heliosReceptionWorker->expects(static::once())
+            ->method('start')
+            ->willThrowException(new Error("Un message informatif"));
+
+        $this->workerRunner->setMinExecutionTimeInSeconds(1);
+        $this->assertFalse($this->workerRunner->work());
+        $this->assertTrue(
+            $this->testHandler->hasCriticalThatContains("Erreur lors de l'execution du script : Un message informatif")
+        );
+        /*$this->assertTrue(
+    $this->testHandler->hasInfoThatMatches('/Arret du script/')
+); Pour plus tard*/
     }
 }

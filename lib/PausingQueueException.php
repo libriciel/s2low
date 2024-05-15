@@ -11,7 +11,7 @@ class PausingQueueException extends Exception
      * Time to wait (in seconds) when this exceptions is thrown
      * @var int
      */
-    private $timeToWait;
+    private $timeToWait = 30;
 
     public function __construct($message = "", $code = 0, Throwable $previous = null)
     {

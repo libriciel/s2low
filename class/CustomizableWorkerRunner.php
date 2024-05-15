@@ -45,7 +45,7 @@ class CustomizableWorkerRunner implements WorkerRunner
         } catch (PausingQueueException $e) {
             $seconds = $e->getTimeToWait();
             $this->s2lowLogger->info("Pausing queue for $seconds seconds");
-            sleep($seconds);
+            sleep_wrapper($seconds);
         } catch (Throwable $e) {
             $message = $e->getMessage();
             $this->s2lowLogger->critical(
