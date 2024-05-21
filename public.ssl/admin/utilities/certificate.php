@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\Recuperateur;
 
@@ -8,13 +9,13 @@ require_once(__DIR__ . "/../../../init/init-www.php");
 
 $me = new User();
 
-if (! $me->authenticate()) {
+if (!$me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
     header("Location: " . Helpers::getLink("connexion-status"));
     exit();
 }
 
-if (! $me->isSuper()) {
+if (!$me->isSuper()) {
     $_SESSION["error"] = "Accès refusé";
     header("Location: " . WEBSITE_SSL);
     exit();
@@ -33,7 +34,7 @@ if ($type == 'rgs') {
     $file = EXTENDED_VALIDCA_PATH . "/$name";
 }
 
-if (! file_exists($file)) {
+if (!file_exists($file)) {
     $_SESSION["error"] = "Accès refusé";
     header("Location: certitificate_list.php");
     exit();

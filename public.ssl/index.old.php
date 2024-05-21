@@ -2,6 +2,7 @@
 
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Group;
+use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Model\MessageAdminSQL;
@@ -10,7 +11,7 @@ use S2lowLegacy\Model\MessageAdminSQL;
 $messageAdminSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(MessageAdminSQL::class);
 
 $me = new User();
-if (! $me->authenticate()) {
+if (!$me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
     header("Location: " . Helpers::getLink("connexion-status"));
     exit();
@@ -55,7 +56,6 @@ if (defined("HOTLINE_NUM")) {
 $html .= "Merci de signaler tout problème rencontré sur la plate-forme ";
 
 
-
 if (defined("SUPPORT_URL")) {
     $html .= " sur le <a href=\"" . SUPPORT_URL . "\">site support</a> réservé à cet effet";
 } elseif (defined("PHRASE_SUPPORT")) {
@@ -79,7 +79,6 @@ if ($me->isSuper()) {
     $html .= "<h2>Fonctions super administrateur</h2>";
     $html .= "<a href='admin/index.php' class='btn  btn-primary'>Console d'administration</a>";
 }
-
 
 
 $doc->addBody($html);

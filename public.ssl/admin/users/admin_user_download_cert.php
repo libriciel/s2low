@@ -1,17 +1,18 @@
 <?php
 
 // Configuration
+use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\User;
 
 $me = new User();
 
-if (! $me->authenticate()) {
+if (!$me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
     header("Location: " . Helpers::getLink("connexion-status"));
     exit();
 }
 
-if (! $me->isAdmin()) {
+if (!$me->isAdmin()) {
     $_SESSION["error"] = "Accès refusé";
     header("Location: " . WEBSITE_SSL);
     exit();
@@ -19,7 +20,7 @@ if (! $me->isAdmin()) {
 
 $id = isset($_GET["id"]) ? $_GET["id"] : null;
 
-if (! $id) {
+if (!$id) {
     $_SESSION["error"] = "Accès refusé";
     header("Location: " . WEBSITE_SSL);
     exit();
@@ -30,7 +31,7 @@ $him = new User($id);
 $him->init();
 $certificate = $him->get("certificate");
 
-if (! $certificate) {
+if (!$certificate) {
     $_SESSION["error"] = "Pas de certificate";
     header("Location: " . WEBSITE_SSL);
     exit();

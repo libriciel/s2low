@@ -15,19 +15,20 @@
  *
  */
 
+use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
 $me = new User();
 
-if (! $me->authenticate()) {
+if (!$me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
     header("Location: " . Helpers::getLink("connexion-status"));
     exit();
 }
 
-if (! $me->isSuper()) {
+if (!$me->isSuper()) {
     $_SESSION["error"] = "Accès refusé";
     header("Location: " . WEBSITE_SSL);
     exit();
@@ -40,7 +41,7 @@ if (isset($id)) {
     $module = new Module($id);
     if ($module->delete()) {
         $msg = "Suppression du module " . $module->get("name") . ". Résultat ok.";
-        if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
+        if (!Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
             $msg .= "\nErreur de journalisation.";
         }
 
@@ -49,7 +50,7 @@ if (isset($id)) {
         exit();
     } else {
         $msg = "Erreur lors de la tentative de suppression du module<br />" . $module->getErrorMsg();
-        if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, $me->get("role"), false, $me)) {
+        if (!Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, $me->get("role"), false, $me)) {
             $msg .= "\nErreur de journalisation.";
         }
 
