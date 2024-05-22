@@ -51,7 +51,7 @@ class ActesSAEApiControllerTest extends S2lowTestCase
         $this->mockUser->expects(static::once())->method('hasArchivistsRights')->willReturn(false);
 
         static::assertSame(
-            '{"error":"Pas les bons droits"}',
+            '{"error":"L\u0027utilisateur ne poss\u00e8de pas le droit archiviste"}',
             $this->actesSAEApiController->manageSAEState(
                 new SAEStateTransitionRequest(1, 1)
             )->getContent()

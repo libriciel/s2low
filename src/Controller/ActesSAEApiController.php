@@ -36,7 +36,7 @@ class ActesSAEApiController extends AbstractController
     ): JsonResponse {
         $this->legacyController->verifUser();
         if (!$this->legacyController->getUser()->hasArchivistsRights()) {
-            return $this->json(['error' => 'Pas les bons droits'], 400);
+            return $this->json(['error' => 'L\'utilisateur ne possède pas le droit archiviste'], 400);
         }
         try {
             $this->transitionner->do(
