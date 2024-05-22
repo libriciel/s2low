@@ -1,12 +1,13 @@
 <?php
 
+use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\ParsedownExtended;
 
 $me = new User();
 
-if (! $me->authenticate()) {
+if (!$me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
     header("Location: " . Helpers::getLink("connexion-status"));
     exit();
@@ -27,7 +28,7 @@ $html .= "<h1>Logiciel S²LOW - notes de publication</h1>\n<br/>";
 
 $Parsedown = new ParsedownExtended(2);
 
-$html  .= $Parsedown->text(
+$html .= $Parsedown->text(
     file_get_contents(
         __DIR__ . "/../../CHANGELOG.md"
     )
