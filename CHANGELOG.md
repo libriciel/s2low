@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.39
+
+### Corrections
+
+- Respecter le temps entre deux lancements de script par CustomizableWorkerRunner même lorsqu'une erreur est rencontrée #1185
+
 ## 5.0.38 - 2024-05-21
 
 ### Évolutions
@@ -12,7 +18,6 @@
 - Permettre de convertir les login/mot de passe contenus dans le nonce de l'ISO-8859-1 vers l'UTF-8 en spécifiant CONVERT_API_LOGINS_FROM_ISO #1071
 - Continuer la récupération des PES depuis le serveur DGFiP après un erreur de téléchargement #1183
 - Enregistrer les fichiers PES à récupérer depuis le serveur DGFiP dans une file Beanstalkd #1129
-- Respecter le temps entre deux lancements de script par CustomizableWorkerRunner même lorsqu'une erreur est rencontrée #1185
 
 ## 5.0.37 - 2024-04-03
 
