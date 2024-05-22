@@ -10,8 +10,7 @@ use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Controller\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -44,43 +43,43 @@ class ActesSAEApiController extends AbstractController
     )]
     public function manageSAEState(
         #[MapRequestPayload] SAEStateTransitionRequest $SAEStateTransitionRequest
-    ): Response {
+    ): JsonResponse {
         $this->legacyController->verifUser();
         if (!$this->legacyController->getUser()->hasArchivistsRights()) {
-            return new Response(json_encode(['error' => 'Pas les bons droits']));
+            return $this->json(['error' => 'Pas les bons droits'], 400);
         }
         $trans = new ActesTransaction();
         $trans->setId($SAEStateTransitionRequest->transaction_id);
         if (! $trans->init()) {
-            return new Response(json_encode(['error' => sprintf(
-                "Transaction %s non existante",
+            return $this->json(['error' => sprintf(
+                'Transaction %s non existante',
                 $SAEStateTransitionRequest->transaction_id
-            )]), 400);
+            )], 400);
         }
         if ($trans->get('authority_id') !== $this->legacyController->getUser()->get('authority_id')) {
-            return new Response(json_encode(['error' => 'Mauvaise collectivite']), 400);
+            return $this->json(['error' => 'Mauvaise collectivite'], 400);
         }
         if (! in_array($trans->get('last_status_id'), self::ALLOWED_INPUT_STATUS, true)) {
-            return new Response(
-                json_encode(['error' => sprintf(
+            return $this->json(
+                ['error' => sprintf(
                     'Transition depuis le statut %s impossible',
                     $trans->get('last_status_id')
-                )]),
+                )],
                 400
             );
         }
         if (!in_array($SAEStateTransitionRequest->status_id, self::ALLOWED_OUTPUT_STATUS, true)) {
-            return new Response(json_encode(['error' => sprintf(
-                "Transition vers le statut %s impossible",
+            return $this->json(['error' => sprintf(
+                'Transition vers le statut %s impossible',
                 $SAEStateTransitionRequest->status_id
             )
-            ]), 400);
+            ], 400);
         }
         $this->actesTransactionsSQL->updateStatus(
             $SAEStateTransitionRequest->transaction_id,
             $SAEStateTransitionRequest->status_id,
             'Modification par l\'API manage_actes_sae_status'
         );
-        return new Response(json_encode(['status' => 'ok']));
+        return $this->json(['status' => 'ok']);
     }
 }

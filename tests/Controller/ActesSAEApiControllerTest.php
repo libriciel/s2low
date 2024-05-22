@@ -9,6 +9,7 @@ use PHPUnit;
 use PHPUnit\Framework\MockObject\MockObject;
 use S2low\Controller\ActesSAEApiController;
 use S2low\DTO\SAEStateTransitionRequest;
+use S2low\Kernel;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\User;
@@ -34,6 +35,11 @@ class ActesSAEApiControllerTest extends S2lowTestCase
             ->disableOriginalConstructor()->getMock();
         $legacyController->method('getUser')->willReturn($this->mockUser);
         $this->actesSAEApiController = new ActesSAEApiController($legacyController, $this->actesTransactionsSQL);
+
+        $kernel = new Kernel('test', true);
+        $kernel->boot();
+
+        $this->actesSAEApiController->setContainer($kernel->getContainer());
     }
 
     public function testNoArchivistRights(): void
