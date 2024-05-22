@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.39
+
+### Corrections
+
+- Respecter le temps entre deux lancements de script par CustomizableWorkerRunner même lorsqu'une erreur est rencontrée #1185
+
 ## 5.0.38 - 2024-05-21
 
 ### Évolutions
