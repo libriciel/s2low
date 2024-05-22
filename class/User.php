@@ -10,6 +10,7 @@ class User extends DataObject
     public const PERM_MODIFICATION = "RW";
 
 
+    protected bool $archivist_rights;
     protected $objectName = "users";
     protected $prettyName = "Utilisateur";
 
@@ -474,11 +475,12 @@ class User extends DataObject
         return $str;
     }
 
-  /**
-   * \brief Méthode d'enregistrement d'un utilisateur dans la base de données
-   * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (défaut : true)
-   * \return true si succès, false sinon
-  */
+    /**
+     * \brief Méthode d'enregistrement d'un utilisateur dans la base de données
+     * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (défaut : true)
+     * \return true si succès, false sinon
+     * @throws \Exception
+     */
     public function save($validate = true, $bouchon_4_strict_standard = true)
     {
         if (isset($this->certFilePath)) {
@@ -536,10 +538,10 @@ class User extends DataObject
                 return false;
             }
         }
-        if (!$new && empty($this->archivist_rights)) {
-            $sql = "UPDATE users SET archivist_rights=false WHERE id = " . $this->id;
-            if (! $this->db->exec($sql)) {
-                $this->errorMsg = "Erreur lors du reset des droits archiviste.";
+        if (!$new && isset($this->archivist_rights) && !$this->archivist_rights) {
+            $sql = 'UPDATE users SET archivist_rights=false WHERE id = ?';
+            if (! $this->db->exec($sql, [ $this->id])) {
+                $this->errorMsg = 'Erreur lors du reset des droits archiviste.';
                 $this->db->rollback();
                 return false;
             }
@@ -817,7 +819,7 @@ class User extends DataObject
         return $dn;
     }
 
-    public function hasArchivistsRights()
+    public function hasArchivistsRights(): bool
     {
         return !empty($this->get('archivist_rights'));
     }

@@ -3,3 +3,6 @@
 framework:
   secret: '%env(APP_SECRET)%'
   test: true                  #
+
+  serializer:
+    enabled: true

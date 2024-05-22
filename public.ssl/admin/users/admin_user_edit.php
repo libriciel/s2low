@@ -459,7 +459,7 @@ ob_start();
     <div class="form-group">
         <label class="control-label col-md-4">Droits archiviste:</label>
         <div class="col-md-6">
-            <input type="checkbox" name ="archivistRights" <?php echo !empty($him->get('archivist_rights')) ? 'checked' : '' ?>/>
+            <input type="checkbox" name ="archivistRights" <?php echo $him->get('archivist_rights') ? 'checked' : '' ?>/>
         </div>
     </div>
 

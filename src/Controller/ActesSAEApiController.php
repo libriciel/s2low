@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace S2low\Controller;
 
 use ActesTransaction;
+use S2low\DTO\SAEStateTransitionRequest;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Controller\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ActesSAEApiController extends AbstractController
@@ -24,7 +26,8 @@ class ActesSAEApiController extends AbstractController
     ];
     private const ALLOWED_INPUT_STATUS = [
         ActesStatusSQL::STATUS_ACQUITTEMENT_RECU,
-        ActesStatusSQL::STATUS_VALIDE
+        ActesStatusSQL::STATUS_VALIDE,
+        ActesStatusSQL::STATUS_ENVOYE_AU_SAE
     ];
     private Controller $legacyController;
     private ActesTransactionsSQL $actesTransactionsSQL;
@@ -34,34 +37,48 @@ class ActesSAEApiController extends AbstractController
         $this->legacyController = $legacyController;
         $this->actesTransactionsSQL = $actesTransactionsSQL;
     }
-    #[Route(path: '/modules/actes/api/actes_sae_status.php', name: 'manage_actes_sae_status')]
+    #[Route(
+        path: '/modules/actes/api/actes_sae_status.php',
+        name: 'app_api_v1_manage_actes_sae_status',
+        methods: 'POST'
+    )]
     public function manageSAEState(
-        #[MapQueryParameter] int $transaction_id,
-        #[MapQueryParameter] int $status_id
+        #[MapRequestPayload] SAEStateTransitionRequest $SAEStateTransitionRequest
     ): Response {
         $this->legacyController->verifUser();
         if (!$this->legacyController->getUser()->hasArchivistsRights()) {
             return new Response(json_encode(['error' => 'Pas les bons droits']));
         }
         $trans = new ActesTransaction();
-        $trans->setId($transaction_id);
+        $trans->setId($SAEStateTransitionRequest->transaction_id);
         if (! $trans->init()) {
-            return new Response(json_encode(['error' => "Transaction $transaction_id non existante"]));
+            return new Response(json_encode(['error' => sprintf(
+                "Transaction %s non existante",
+                $SAEStateTransitionRequest->transaction_id
+            )]), 400);
         }
         if ($trans->get('authority_id') !== $this->legacyController->getUser()->get('authority_id')) {
-            return new Response(json_encode(['error' => 'Mauvaise collectivite']));
+            return new Response(json_encode(['error' => 'Mauvaise collectivite']), 400);
         }
-        if (! in_array($trans->get('last_status_id'), self::ALLOWED_INPUT_STATUS)) {
+        if (! in_array($trans->get('last_status_id'), self::ALLOWED_INPUT_STATUS, true)) {
             return new Response(
-                json_encode(['error' => "Transition depuis le statut {$trans->get('last_status_id')} impossible"])
+                json_encode(['error' => sprintf(
+                    'Transition depuis le statut %s impossible',
+                    $trans->get('last_status_id')
+                )]),
+                400
             );
         }
-        if (!in_array($status_id, self::ALLOWED_OUTPUT_STATUS)) {
-            return new Response(json_encode(['error' => "Transition vers le statut $status_id impossible"]));
+        if (!in_array($SAEStateTransitionRequest->status_id, self::ALLOWED_OUTPUT_STATUS, true)) {
+            return new Response(json_encode(['error' => sprintf(
+                "Transition vers le statut %s impossible",
+                $SAEStateTransitionRequest->status_id
+            )
+            ]), 400);
         }
         $this->actesTransactionsSQL->updateStatus(
-            $transaction_id,
-            $status_id,
+            $SAEStateTransitionRequest->transaction_id,
+            $SAEStateTransitionRequest->status_id,
             'Modification par l\'API manage_actes_sae_status'
         );
         return new Response(json_encode(['status' => 'ok']));
