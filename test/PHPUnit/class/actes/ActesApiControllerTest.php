@@ -8,6 +8,8 @@ use Exception;
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Controller\ActesAPIController;
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowTestCase;

@@ -10,6 +10,7 @@ class User extends DataObject
     public const PERM_MODIFICATION = "RW";
 
 
+    protected bool $archivist_rights;
     protected $objectName = "users";
     protected $prettyName = "Utilisateur";
 
@@ -48,8 +49,8 @@ class User extends DataObject
                         "login" => array("descr" => "login","type" => "isString","mandatory" => false),
                         "password" => array("descr" => "password","type" => "isString","mandatory" => false),
                         "certificate_rgs_2_etoiles" => array("descr" => "Certificat RGS**","type" => "isString","mandatory" => false),
-      "certificate_hash" => array("descr", "Certificat fingerprint", "type" => "isString", "mandatory" => false),
-
+                        "certificate_hash" => array("descr", "Certificat fingerprint", "type" => "isString", "mandatory" => false),
+                        "archivist_rights" => array("descr" => "Droits d'accès aux fonctions d'archive","type" => "isBool","mandatory" => false)
                          );
     protected $roleTypes = array(
                                "SADM" => "Super administrateur",
@@ -75,30 +76,6 @@ class User extends DataObject
     public function __construct($id = false)
     {
         parent::__construct($id);
-    }
-
-  /**
-   * \brief Méthode de vérification de la présence d'utilisateur dans la base
-   * \return True si la base contient au moins un utilisateur, false sinon
-  */
-    public static function dbHasUser()
-    {
-        $sql = "SELECT id FROM users";
-
-        $db = DatabasePool::getInstance();
-
-        $result = $db->select($sql);
-
-        if (! $result->isError()) {
-            if ($result->num_row() > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            echo $result->error;
-            return false;
-        }
     }
 
     public function getNbUserWithMyCertificate()
@@ -247,11 +224,6 @@ class User extends DataObject
         return ($this->status == 1 && $authority->isActive() && $groupIsActive);
     }
 
-    public function isLogged()
-    {
-        return $this->is_loggued;
-    }
-
     public function retrieveInfoFromClientCertificate()
     {
          // Ne marche pas avec apache-ssl
@@ -286,26 +258,6 @@ class User extends DataObject
     {
         $this->retrieveInfoFromClientCertificate();
         return array('subject' => $this->subject_dn, 'issuer' => $this->issuer_dn,'certificate_hash' => $this->certificate_hash);
-    }
-
-  /**
-   * \brief Méthode de réinitialisation de la session d'un utilisateur
-  */
-    public function resetSession()
-    {
-        $_SESSION = array();
-
-        $sessionCookie = session_get_cookie_params();
-
-        if ((empty($sessionCookie['domain'])) && (empty($sessionCookie['secure']))) {
-            setcookie(session_name(), '', time() - 3600, $sessionCookie['path']);
-        } elseif (empty($sessionCookie['secure'])) {
-            setcookie(session_name(), '', time() - 3600, $sessionCookie['path'], $sessionCookie['domain']);
-        } else {
-            setcookie(session_name(), '', time() - 3600, $sessionCookie['path'], $sessionCookie['domain'], $sessionCookie['secure']);
-        }
-
-        session_destroy();
     }
 
   /**
@@ -391,24 +343,6 @@ class User extends DataObject
             return null;
         }
         return $this->perms[$module]["perm"];
-    }
-
-  /**
-   * \brief Méthode retournant la description du rôle de l'utilisateur en cours
-   * \return La description ou une chaîne vide si la decsription n'est pas trouvée
-  */
-    public function getRoleDescr()
-    {
-        return (isset($this->role)) ? $this->roleTypes[$this->role] : "";
-    }
-
-  /**
-   * \brief Méthode retournant les permissions de l'utilisateur en cours sur les modules
-   * \return Un tableau de permissions ou null si les permissions ne sont pas définies
-  */
-    public function getPerms()
-    {
-        return (isset($this->perms)) ? $this->perms : null;
     }
 
   /**
@@ -541,11 +475,12 @@ class User extends DataObject
         return $str;
     }
 
-  /**
-   * \brief Méthode d'enregistrement d'un utilisateur dans la base de données
-   * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (défaut : true)
-   * \return true si succès, false sinon
-  */
+    /**
+     * \brief Méthode d'enregistrement d'un utilisateur dans la base de données
+     * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (défaut : true)
+     * \return true si succès, false sinon
+     * @throws \Exception
+     */
     public function save($validate = true, $bouchon_4_strict_standard = true)
     {
         if (isset($this->certFilePath)) {
@@ -603,6 +538,16 @@ class User extends DataObject
                 return false;
             }
         }
+        if (!$new && isset($this->archivist_rights) && !$this->archivist_rights) {
+            $sql = 'UPDATE users SET archivist_rights=false WHERE id = ?';
+            if (! $this->db->exec($sql, [ $this->id])) {
+                $this->errorMsg = 'Erreur lors du reset des droits archiviste.';
+                $this->db->rollback();
+                return false;
+            }
+        }
+
+        // Reset droits archiviste
 
         if (! $this->db->commit()) {
             $this->errorMsg = "Erreur lors de la validation de la transaction.";
@@ -872,5 +817,10 @@ class User extends DataObject
             }
         }
         return $dn;
+    }
+
+    public function hasArchivistsRights(): bool
+    {
+        return $this->get('archivist_rights');
     }
 }

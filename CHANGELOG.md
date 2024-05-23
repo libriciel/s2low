@@ -2,6 +2,10 @@
 
 ## 5.0.39
 
+### Évolutions
+
+- Créer la possibilité de changer d'état d'archivage via l'API et création du droit correspondant #1180
+
 ### Corrections
 
 - Respecter le temps entre deux lancements de script par CustomizableWorkerRunner même lorsqu'une erreur est rencontrée #1185

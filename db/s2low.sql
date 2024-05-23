@@ -476,7 +476,8 @@ CREATE TABLE users (
     login character varying(128) DEFAULT NULL::character varying,
     password character varying(255) DEFAULT NULL::character varying,
     certificate_rgs_2_etoiles text,
-    certificate_hash character varying(64)
+    certificate_hash character varying(64),
+    archivist_rights boolean DEFAULT false NOT NULL
 );
 CREATE TABLE users_perms (
     id integer DEFAULT nextval('users_perms_id_seq'::regclass) NOT NULL,

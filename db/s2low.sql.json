@@ -2200,6 +2200,12 @@
                 "character_maximum_length": 64,
                 "is_nullable": "YES",
                 "column_default": null
+            },
+            "archivist_rights": {
+                "data_type": "boolean",
+                "character_maximum_length": null,
+                "is_nullable": "NO",
+                "column_default": "false"
             }
         },
         "users_perms": {
