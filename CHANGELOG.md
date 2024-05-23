@@ -9,13 +9,13 @@
 ### Corrections
 
 - Respecter le temps entre deux lancements de script par CustomizableWorkerRunner même lorsqu'une erreur est rencontrée #1185
+- Ajouter le nom du fichier concerné aux erreurs 'Erreur lors de la réception du fichier : Le fichier semble vide' #1177
 
 ## 5.0.38 - 2024-05-21
 
 ### Évolutions
 
 - Permettre de spécifier `max_submission_date` et `min_submission_date` pour `/modules/actes/api/list_actes.php` #1188
-- Ajouter le nom du fichier concerné aux erreurs 'Erreur lors de la réception du fichier : Le fichier semble vide' #1177
 
 ### Corrections
 
