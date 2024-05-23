@@ -246,6 +246,11 @@ services:
     autoconfigure: false
     public: false
 
+  S2lowLegacy\Class\helios\PESAllerCloudStorage:
+    autowire: false
+    autoconfigure: false
+    public: false
+
   S2lowLegacy\Class\CloudStorage: #TODO : verify
     autowire: false
 
