@@ -97,7 +97,7 @@ class ActesSAEStateTransitionner
         }
         if ($trans->get('last_status_id') === $request->status_id) {
             throw new Exception(sprintf(
-                'Transition entre deux status identiques (%s) impossibles',
+                'Transition entre deux status identiques (%s) impossible',
                 $request->status_id
             ));
         }

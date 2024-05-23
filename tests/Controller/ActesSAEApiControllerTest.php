@@ -115,7 +115,7 @@ class ActesSAEApiControllerTest extends S2lowTestCase
             'Transition vers le statut 1 impossible'];
 
         yield [ActesStatusSQL::STATUS_ENVOYE_AU_SAE,ActesStatusSQL::STATUS_ENVOYE_AU_SAE,
-            'Transition entre deux status identiques (12) impossibles'];
+            'Transition entre deux status identiques (12) impossible'];
     }
 
     /**
