@@ -88,37 +88,34 @@ class ActesSAEApiControllerTest extends S2lowTestCase
     }
 
     /**
-     * @throws Exception
+     * @dataProvider wrongStatuses
      */
-    public function testTransactionWrongTransactionStatus(): void
+    public function testTransactionWrongStatuses(int $inputStatus, int $outputStatus, string $message): void
     {
         $this->mockUser->method('hasArchivistsRights')->willReturn(true);
         $this->mockUser->method('get')->with('authority_id')->willReturn(1);
         // La transaction est créé avec l'autorité 1, l'user ne doit y accéder
-        $created_trans_id = $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
+        $created_trans_id = $this->createTransaction($inputStatus);
 
         static::assertSame(
-            '{"error":"Transition depuis le statut 1 impossible"}',
-            $this->actesSAEApiController->manageSAEState(new SAEStateTransitionRequest($created_trans_id, 1))
+            sprintf('{"error":"%s"}', $message),
+            $this->actesSAEApiController
+                ->manageSAEState(new SAEStateTransitionRequest($created_trans_id, $outputStatus))
                 ->getContent()
         );
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testTransactionWrongOutputStatus(): void
+    public function wrongStatuses(): iterable
     {
-        $this->mockUser->method('hasArchivistsRights')->willReturn(true);
-        $this->mockUser->method('get')->with('authority_id')->willReturn(1);
-        // La transaction est créé avec l'autorité 1, l'user ne doit y accéder
-        $created_trans_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+        yield [
+            ActesStatusSQL::STATUS_POSTE,ActesStatusSQL::STATUS_ENVOYE_AU_SAE,
+            'Transition depuis le statut 1 impossible'];
 
-        static::assertSame(
-            '{"error":"Transition vers le statut 1 impossible"}',
-            $this->actesSAEApiController->manageSAEState(new SAEStateTransitionRequest($created_trans_id, 1))
-            ->getContent()
-        );
+        yield [ActesStatusSQL::STATUS_ACQUITTEMENT_RECU,ActesStatusSQL::STATUS_POSTE,
+            'Transition vers le statut 1 impossible'];
+
+        yield [ActesStatusSQL::STATUS_ENVOYE_AU_SAE,ActesStatusSQL::STATUS_ENVOYE_AU_SAE,
+            'Transition entre deux status identiques (12) impossibles'];
     }
 
     /**

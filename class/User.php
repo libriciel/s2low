@@ -821,6 +821,6 @@ class User extends DataObject
 
     public function hasArchivistsRights(): bool
     {
-        return !empty($this->get('archivist_rights'));
+        return $this->get('archivist_rights');
     }
 }

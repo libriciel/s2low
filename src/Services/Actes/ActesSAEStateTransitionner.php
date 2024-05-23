@@ -32,18 +32,58 @@ class ActesSAEStateTransitionner
 
     public function do(SAEStateTransitionRequest $request, ?int $userAuthorityId)
     {
+        $trans = $this->getActesTransaction($request);
+
+        $this->checkTransactionAuthorityMatchesUserAuthority($trans, $userAuthorityId);
+
+        $this->checkStatuts($trans, $request);
+        $this->actesTransactionsSQL->updateStatus(
+            $request->transaction_id,
+            $request->status_id,
+            'Modification par l\'API manage_actes_sae_status'
+        );
+    }
+
+    /**
+     * @param \S2low\DTO\SAEStateTransitionRequest $request
+     * @return \ActesTransaction
+     * @throws \Exception
+     */
+    private function getActesTransaction(SAEStateTransitionRequest $request): ActesTransaction
+    {
         $trans = new ActesTransaction();
         $trans->setId($request->transaction_id);
-        if (! $trans->init()) {
+        if (!$trans->init()) {
             throw new Exception(sprintf(
                 'Transaction %s non existante',
                 $request->transaction_id
             ));
         }
+        return $trans;
+    }
+
+    /**
+     * @param \ActesTransaction $trans
+     * @param int|null $userAuthorityId
+     * @return void
+     * @throws \Exception
+     */
+    private function checkTransactionAuthorityMatchesUserAuthority(ActesTransaction $trans, ?int $userAuthorityId): void
+    {
         if ($trans->get('authority_id') !== $userAuthorityId) {
             throw new Exception('Mauvaise collectivite');
         }
-        if (! in_array($trans->get('last_status_id'), self::ALLOWED_INPUT_STATUS, true)) {
+    }
+
+    /**
+     * @param \ActesTransaction $trans
+     * @param \S2low\DTO\SAEStateTransitionRequest $request
+     * @return void
+     * @throws \Exception
+     */
+    private function checkStatuts(ActesTransaction $trans, SAEStateTransitionRequest $request): void
+    {
+        if (!in_array($trans->get('last_status_id'), self::ALLOWED_INPUT_STATUS, true)) {
             throw new Exception(sprintf(
                 'Transition depuis le statut %s impossible',
                 $trans->get('last_status_id')
@@ -55,10 +95,11 @@ class ActesSAEStateTransitionner
                 $request->status_id
             ));
         }
-        $this->actesTransactionsSQL->updateStatus(
-            $request->transaction_id,
-            $request->status_id,
-            'Modification par l\'API manage_actes_sae_status'
-        );
+        if ($trans->get('last_status_id') === $request->status_id) {
+            throw new Exception(sprintf(
+                'Transition entre deux status identiques (%s) impossibles',
+                $request->status_id
+            ));
+        }
     }
 }
