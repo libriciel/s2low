@@ -9,6 +9,7 @@
 ### Corrections
 
 - Respecter le temps entre deux lancements de script par CustomizableWorkerRunner même lorsqu'une erreur est rencontrée #1185
+- Ajouter le nom du fichier concerné aux erreurs 'Erreur lors de la réception du fichier : Le fichier semble vide' #1177
 
 ## 5.0.38 - 2024-05-21
 
