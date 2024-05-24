@@ -19,7 +19,7 @@ class FileUploader
     private $fileHandler;
 
 
-    public function setDestinationDirectory($directory): void
+    public function setDestinationDirectory(string $directory): void
     {
         $this->destinationDirectory = $directory;
     }
@@ -105,7 +105,7 @@ class FileUploader
         return true;
     }
 
-    public function getLigne(): bool|string
+    public function getLigne(): false|string
     {
         if (feof($this->fileHandler)) {
             return false;

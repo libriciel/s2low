@@ -23,7 +23,7 @@ class FileUploaderTest extends S2lowTestCase
     {
         $fileUploader = new FileUploader();
         static::assertFalse($fileUploader->upload('nope'));
-        static::assertEquals(
+        static::assertSame(
             "Il n'y a pas de fichier à charger sur le serveur",
             $fileUploader->getLastError()
         );
@@ -106,7 +106,7 @@ class FileUploaderTest extends S2lowTestCase
 
         $fileUploader->upload('yep');
 
-        static::assertEquals(
+        static::assertSame(
             'txt',
             $fileUploader->getExtension()
         );
@@ -123,7 +123,7 @@ class FileUploaderTest extends S2lowTestCase
 
         $fileUploader->upload('yep');
 
-        static::assertEquals(
+        static::assertSame(
             'txt',
             $fileUploader->getExtension()
         );
@@ -140,7 +140,7 @@ class FileUploaderTest extends S2lowTestCase
 
         static::assertFalse($fileUploader->upload('nope'));
 
-        static::assertEquals(
+        static::assertSame(
             'Le fichier toto.asp contient une extension interdite',
             $fileUploader->getLastError()
         );
@@ -165,7 +165,7 @@ class FileUploaderTest extends S2lowTestCase
         $fileUploader = new FileUploader();
 
         static::assertFalse($fileUploader->verifOK('nope'));
-        static::assertEquals(
+        static::assertSame(
             "Il n'y a pas de fichier à charger sur le serveur",
             $fileUploader->getLastError()
         );
@@ -178,7 +178,7 @@ class FileUploaderTest extends S2lowTestCase
         $fileUploader = new FileUploader();
 
         static::assertFalse($fileUploader->verifOK('form'));
-        static::assertEquals(
+        static::assertSame(
             "Aucun fichier n'a été présenté",
             $fileUploader->getLastError()
         );
@@ -194,7 +194,7 @@ class FileUploaderTest extends S2lowTestCase
         $fileUploader = new FileUploader();
 
         static::assertFalse($fileUploader->verifOK('form'));
-        static::assertEquals(
+        static::assertSame(
             'Le fichier vide.pdf semble vide',
             $fileUploader->getLastError()
         );
@@ -219,7 +219,7 @@ class FileUploaderTest extends S2lowTestCase
         $fileUploader = new FileUploader();
 
         static::assertFalse($fileUploader->verifOKAll('nope'));
-        static::assertEquals(
+        static::assertSame(
             "Il n'y a pas de fichier à charger sur le serveur",
             $fileUploader->getLastError()
         );
@@ -232,7 +232,7 @@ class FileUploaderTest extends S2lowTestCase
         $fileUploader = new FileUploader();
 
         static::assertFalse($fileUploader->verifOKAll('form'));
-        static::assertEquals(
+        static::assertSame(
             "Aucun fichier n'a été présenté",
             $fileUploader->getLastError()
         );
@@ -248,7 +248,7 @@ class FileUploaderTest extends S2lowTestCase
         $fileUploader = new FileUploader();
 
         static::assertFalse($fileUploader->verifOKAll('form'));
-        static::assertEquals(
+        static::assertSame(
             'Le fichier vide.pdf semble vide',
             $fileUploader->getLastError()
         );
@@ -279,7 +279,7 @@ class FileUploaderTest extends S2lowTestCase
         $fileUploader = new FileUploader();
 
         static::assertFalse($fileUploader->verifOKAll('form'));
-        static::assertEquals($message, $fileUploader->getLastError());
+        static::assertSame($message, $fileUploader->getLastError());
     }
 
     public function errors(): iterable
