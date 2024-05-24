@@ -4,6 +4,8 @@ namespace S2lowLegacy\Class\actes;
 
 /* Archive au sens SEDA et pas au sens Actes ... */
 
+use S2lowLegacy\Class\CloudStorage;
+use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\PastellWrapperFactory;
 use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\S2lowLogger;
@@ -16,29 +18,25 @@ use S2lowLegacy\Model\PastellPropertiesSQL;
 
 class ActesArchiveControler
 {
-    /** @var  PastellWrapperFactory */
-    private $pastellWrapperFactory;
+    private PastellWrapperFactory $pastellWrapperFactory;
 
-    /** @var  ActesTransactionsSQL */
-    private $actesTransactionsSQL;
+    private ActesTransactionsSQL $actesTransactionsSQL;
 
-    /** @var AuthoritySQL  */
-    private $authoritySQL;
+    private AuthoritySQL $authoritySQL;
 
-    private $actesRetriever;
+    private ActesRetriever $actesRetriever;
 
-    /** @var PastellPropertiesSQL */
-    private $pastellPropetiesSQL;
+    private PastellPropertiesSQL $pastellPropetiesSQL;
 
-    /** @var S2lowLogger */
-    private $logger;
+    private S2lowLogger $logger;
 
-    private $actesEnvelopeSQL;
+    private ActesEnvelopeSQL $actesEnvelopeSQL;
+    private ActesTypePJSQL $actesTypePJSQL;
+    private CloudStorage $actesEnvelopeCloudStorage;
 
-    private $actesEnvelopeStorage;
-
-    private $actesTypePJSQL;
-
+    /**
+     * @throws \S2lowLegacy\Lib\UnrecoverableException
+     */
     public function __construct(
         ActesRetriever $actesRetriever,
         PastellPropertiesSQL $pastellPropertiesSQL,
@@ -47,8 +45,8 @@ class ActesArchiveControler
         AuthoritySQL $authoritySQL,
         ActesTransactionsSQL $actesTransactionsSQL,
         ActesEnvelopeSQL $actesEnvelopeSQL,
-        ActesEnvelopeStorage $actesEnvelopeStorage,
-        ActesTypePJSQL $actesTypePJSQL
+        ActesTypePJSQL $actesTypePJSQL,
+        CloudStorageFactory $cloudStorageFactory
     ) {
         $this->pastellWrapperFactory = $pastellWrapperFactory;
         $this->actesTransactionsSQL = $actesTransactionsSQL;
@@ -57,8 +55,9 @@ class ActesArchiveControler
         $this->pastellPropetiesSQL = $pastellPropertiesSQL;
         $this->logger = $logger;
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
-        $this->actesEnvelopeStorage = $actesEnvelopeStorage;
         $this->actesTypePJSQL = $actesTypePJSQL;
+        $this->actesEnvelopeCloudStorage = $cloudStorageFactory
+            ->getInstanceByClassName(ActesCloudStorage::class);
     }
 
     /**
@@ -66,7 +65,7 @@ class ActesArchiveControler
      * @return array
      */
 
-    public function getAllTransactionIdToSend($limit = 0)
+    public function getAllTransactionIdToSend(int $limit = 0): array
     {
         if ($limit > 0) {
             return $this->actesTransactionsSQL->getTransactionToSendSAEWithLimit($limit);
@@ -79,7 +78,7 @@ class ActesArchiveControler
      * @param int $transaction_id
      * @throws Exception
      */
-    public function sendArchive(int $transaction_id)
+    public function sendArchive(int $transaction_id): void
     {
 
         $this->logger->info("Envoi de La transaction $transaction_id sur le SAE");
@@ -145,7 +144,7 @@ class ActesArchiveControler
             $this->logger->info("La transaction $transaction_id a été envoyé sur le SAE (id_d pastell : $id_d)");
 
             $actesEnvelopeInfo = $this->actesEnvelopeSQL->getInfo($transactionsInfo['envelope_id']);
-            $this->actesEnvelopeStorage->deleteIfIsInCloud($actesEnvelopeInfo['file_path']);
+            $this->actesEnvelopeCloudStorage->deleteIfIsInCloud($actesEnvelopeInfo['id']);
         } finally {
             $tmpFolder->delete($tmp_folder);
         }
