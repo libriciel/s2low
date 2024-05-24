@@ -1,7 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\helios;
+
+use Exception;
+use HeliosUtilitiesTestTrait;
+use S2lowLegacy\Class\CloudStorage;
+use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\helios\HeliosStorePESAllerWorker;
-use S2lowLegacy\Class\helios\PesAllerStorage;
+use S2lowTestCase;
 
 class HeliosStorePESAllerWorkerTest extends S2lowTestCase
 {
@@ -11,8 +19,9 @@ class HeliosStorePESAllerWorkerTest extends S2lowTestCase
     public function testGetAllId()
     {
         $transaction_id = $this->createTransaction();
+        /** @var HeliosStorePESAllerWorker $heliosStorePESAllerWorker */
         $heliosStorePESAllerWorker = $this->getObjectInstancier()->get(HeliosStorePESAllerWorker::class);
-        $this->assertEquals([$transaction_id], $heliosStorePESAllerWorker->getAllId());
+        static::assertEquals([$transaction_id], $heliosStorePESAllerWorker->getAllId());
     }
 
     /**
@@ -20,20 +29,19 @@ class HeliosStorePESAllerWorkerTest extends S2lowTestCase
      */
     public function testWork()
     {
-        $pesAllerStorage = $this->getMockBuilder(PesAllerStorage::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $pesAllerStorage
+        $storageMock = $this->getMockBuilder(CloudStorage::class)
+            ->disableOriginalConstructor()->getMock();
 
-            ->method("storeNextFileById")
-            ->willReturn(true);
-        $this->getObjectInstancier()->set(PesAllerStorage::class, $pesAllerStorage);
+        $cloudStorageFactoryMock = $this->getMockBuilder(CloudStorageFactory::class)
+            ->disableOriginalConstructor()->getMock();
 
+        $cloudStorageFactoryMock->expects(static::once())->method('getInstanceByClassName')
+            ->willReturn($storageMock);
 
-        $transaction_id = $this->createTransaction();
-        $heliosStorePESAllerWorker = $this->getObjectInstancier()->get(HeliosStorePESAllerWorker::class);
+        $storageMock->expects(static::once())->method('storeObject')->with(6587);
 
-        $heliosStorePESAllerWorker->work($transaction_id);
-        $this->assertTrue(true);
+        $heliosStorePESAllerWorker = new HeliosStorePESAllerWorker($cloudStorageFactoryMock);
+
+        $heliosStorePESAllerWorker->work(6587);
     }
 }

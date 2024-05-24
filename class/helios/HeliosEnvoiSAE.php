@@ -151,8 +151,8 @@ class HeliosEnvoiSAE
             throw new Exception($message);
         }
 
-
-        $this->pesAllerStorage->deleteIfIsInCloud($transactionsInfo['sha1']);
+        $pesAllerCloudStorage = $this->cloudStorageFactory->getInstanceByClassName(PESAllerCloudStorage::class);
+        $pesAllerCloudStorage->deleteIfIsInCloud($transaction_id);
 
 
         return true;

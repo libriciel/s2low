@@ -31,7 +31,7 @@ class PESAllerCloudStorage implements ICloudStorable
 
     public function getAllObjectIdToStore(): array
     {
-        return $this->transactionsSQL->getAllTransactionToSendInCloud();
+        return $this->transactionsSQL->getAllTransactionIdToSendInCloud();
     }
 
     public function getFilePathOnDisk(int $object_id): string
