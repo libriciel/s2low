@@ -22,7 +22,7 @@ class ActesStoreEnveloppeWorker implements IWorker
      */
     public function __construct(CloudStorageFactory $cloudStorageFactory)
     {
-        $this->cloudStorage = $cloudStorageFactory->getInstanceByClassName(ActesEnvelopeStorage::class);
+        $this->cloudStorage = $cloudStorageFactory->getInstanceByClassName(ActesCloudStorage::class);
     }
 
     public function getData($id): int
