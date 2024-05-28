@@ -179,16 +179,31 @@ if ($me->isSuper()) {
         var   sirenArray   =   [<?php   echo   $valueString;   ?> ];
         var   groupIdArray = [<?php echo $indexString ;?>];
         var groupId=document.getElementById("authority_group_id");
-        var sienSelect=document.getElementById("sirenId");
+        var sirenSelect=document.getElementById("sirenId");
+
+        var originalSiren = document.getElementById("originalSiren").value;
+
         for (var i=0;i< groupIdArray.length;i++)
         {
             if (groupIdArray[i]==groupId.value)
             {
                 var siren=sirenArray[i];
-                sienSelect.options.length = 0;
+                sirenSelect.options.length = 0;
+                var sirenInList = false;
+                alert(originalSiren);
                 for(var j = 0; j < siren.length; j++) {
-
-                    sienSelect.options[j]=new Option(siren[j],siren[j]);
+                    var selected = false;
+                    if(siren[j] == originalSiren)
+                    {
+                        selected=true;
+                        sirenInList=true;
+                    }
+                    sirenSelect.options[j]=new Option(siren[j],siren[j],selected,selected);
+                }
+                if(!sirenInList)
+                {
+                    sirenSelect.options[j+1]=new Option(originalSiren+' (hors groupe)','',true,true);
+                    sirenSelect.options[j+1].disabled=true;
                 }
                 break;
             }
@@ -214,7 +229,9 @@ if ($me->isGroupAdminOrSuper()) {
         $group = new Group($authority->get("authority_group_id"));
     }
     $sirenList = $group->getAuthorizedSiren();
-    $html .= "  <div class=\"col-md-6\"><select id=\"sirenId\" class=\"form-control\" name=\"siren\">";
+    $html .= "  <div class=\"col-md-6\">";
+    $html .= "  <input id=\"originalSiren\" type =\"hidden\" value = \"" . $authority->get('siren') . '"/>';
+    $html .= "<select id=\"sirenId\" class=\"form-control\" name=\"siren\">";
     foreach ($sirenList as $siren_tmp) {
         if ($siren_tmp == $authority->get("siren")) {
               $html .= " <option value =\"$siren_tmp\" selected=\"selected\">$siren_tmp</option>";
