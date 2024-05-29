@@ -11,6 +11,7 @@
 
 - Respecter le temps entre deux lancements de script par CustomizableWorkerRunner même lorsqu'une erreur est rencontrée #1185
 - Ajouter le nom du fichier concerné aux erreurs 'Erreur lors de la réception du fichier : Le fichier semble vide' #1177
+- Eviter un changement de SIREN arbitraire en cas de changement de groupe lors de l'édition d'un collectivité #1158
 
 ## 5.0.38 - 2024-05-21
 

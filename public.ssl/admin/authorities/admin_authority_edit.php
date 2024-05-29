@@ -171,51 +171,10 @@ if ($me->isSuper()) {
             $valueString   .=   '"' . $value . '"';
         }
     }
-    ?>
-    <script language="JavaScript">
-
-
-    function groupchange()  {
-        var   sirenArray   =   [<?php   echo   $valueString;   ?> ];
-        var   groupIdArray = [<?php echo $indexString ;?>];
-        var groupId=document.getElementById("authority_group_id");
-        var sirenSelect=document.getElementById("sirenId");
-
-        var originalSiren = document.getElementById("originalSiren").value;
-
-        for (var i=0;i< groupIdArray.length;i++)
-        {
-            if (groupIdArray[i]==groupId.value)
-            {
-                var siren=sirenArray[i];
-                sirenSelect.options.length = 0;
-                var sirenInList = false;
-                alert(originalSiren);
-                for(var j = 0; j < siren.length; j++) {
-                    var selected = false;
-                    if(siren[j] == originalSiren)
-                    {
-                        selected=true;
-                        sirenInList=true;
-                    }
-                    sirenSelect.options[j]=new Option(siren[j],siren[j],selected,selected);
-                }
-                if(!sirenInList)
-                {
-                    sirenSelect.options[j+1]=new Option(originalSiren+' (hors groupe)','',true,true);
-                    sirenSelect.options[j+1].disabled=true;
-                }
-                break;
-            }
-        }
-    }
-
-    </script>
-    <?php
     $html .= " <div class=\"form-group\">\n";
     $html .= "  <label for=\"authority_group_id\" class=\"control-label col-md-4\">Groupe</label>\n";
     $html .= "  <div class=\"col-md-6\">\n";
-    $html .= $doc->getHTMLSelect("authority_group_id", $groups, $authority->get("authority_group_id"), "", "groupchange()");
+    $html .= $doc->getHTMLSelect("authority_group_id", $groups, $authority->get("authority_group_id"));
     $html .= "  </div>\n";
     $html .= " </div>\n";
 }
@@ -245,6 +204,11 @@ if ($me->isGroupAdminOrSuper()) {
 }
 
 $html .= " </div>\n";
+$html .= "<script language=\"JavaScript\">";
+$html .= "    window.sirenArray   =   [$valueString];\n";
+$html .= "    window.groupIdArray = [$indexString];\n";
+$html .= '</script>';
+$html .= "<script src=\"" . Helpers::getLink('/jsmodules/handleSirenGroupe.js') . "\"></script>";
 
 //************
 
@@ -439,4 +403,3 @@ $doc->closeContainer();
 $doc->buildFooter();
 
 $doc->display();
-
