@@ -4,6 +4,7 @@ namespace S2low\Tests\Legacy;
 
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use S2low\Legacy\LegacyClassLoader;
 use S2low\Legacy\LegacyRouteLoader;
 
 class LegacyRouteLoaderTests extends TestCase
@@ -17,7 +18,11 @@ class LegacyRouteLoaderTests extends TestCase
     private function setUpVFSAndLegacyRoadLoader(array $directory): void
     {
         $file_system = vfsStream::setup('/tmp', 444, ["testDirectory" => $directory]);
-        $this->legacyRouteLoader = new LegacyRouteLoader($file_system->url(), "/testDirectory");
+        $this->legacyRouteLoader = new LegacyRouteLoader(
+            $file_system->url(),
+            "/testDirectory",
+            new LegacyClassLoader()
+        );
         $this->fileSystem = $file_system;
     }
 
@@ -191,8 +196,24 @@ class LegacyRouteLoaderTests extends TestCase
 
     public function testSupportsLegacyRouteAndNothingElse()
     {
-        $legacyRouteLoader = new LegacyRouteLoader("", "");
+        $legacyRouteLoader = new LegacyRouteLoader("", "", new LegacyClassLoader());
         $this->assertTrue($legacyRouteLoader->supports(null, "legacyroute"));
         $this->assertFalse($legacyRouteLoader->supports(null, "randomroute"));
+    }
+
+    public function testWithClass()
+    {
+        $directory = [
+            'test.php' => file_get_contents(__DIR__ . '/fixtures/TestClass.php'),
+        ];
+
+        $this->setUpVFSAndLegacyRoadLoader($directory);
+
+        $collection = $this->legacyRouteLoader->load(null);
+
+        $this->assertEquals(
+            ['_controller' => 'S2low\Tests\Legacy\fixtures\TestClass::doTheWork'],
+            $collection->get('app_legacy_testdoubleslash')->getDefaults(),
+        );
     }
 }

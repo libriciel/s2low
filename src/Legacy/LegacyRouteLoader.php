@@ -13,10 +13,16 @@ class LegacyRouteLoader extends Loader
      * @var string
      */
     private string $legacy_ssl_path;
+    private LegacyClassLoader $classLoader;
 
-    public function __construct(string $project_dir, string $relative_legacy_ssl_path, string $env = null)
-    {
+    public function __construct(
+        string $project_dir,
+        string $relative_legacy_ssl_path,
+        LegacyClassLoader $classLoader,
+        string $env = null
+    ) {
         $this->legacy_ssl_path = $this->trimPathToAccomodateVFS("$project_dir/$relative_legacy_ssl_path");
+        $this->classLoader = $classLoader;
         parent::__construct($env);
     }
 
@@ -48,7 +54,12 @@ class LegacyRouteLoader extends Loader
         $collection = new LegacyRouteCollection();
 
         foreach ($phpFilesForStandardRoutes as $phpFile) {
+            $className = $this->classLoader->getClassName($phpFile->getPathname());
+            if ($className != '') {
+                $this->addRouteForClass($className, $phpFile, $collection);
+            } else {
                 $this->addRouteForFile($phpFile, $collection);
+            }
         }
 
         $collection->add(
@@ -96,5 +107,18 @@ class LegacyRouteLoader extends Loader
                 $this->trimPathToAccomodateVFS($legacyScriptFile->getPathname())
             );
         }
+    }
+
+    private function addRouteForClass(string $className, mixed $legacyScriptFile, LegacyRouteCollection $collection)
+    {
+        $relativePathname = $legacyScriptFile->getRelativePathname();
+        $shortFilename = basename($relativePathname, '.php');
+        $routeName = sprintf(
+            'app_legacy_%s',
+            ltrim(str_replace('/', '_', $legacyScriptFile->getRelativePath() . "/" . $shortFilename), "_")
+        );
+
+        $collection->addClass($routeName, $relativePathname, $className);
+        $collection->addClass($routeName . "doubleslash", "/{slash}/" . $relativePathname, $className);
     }
 }

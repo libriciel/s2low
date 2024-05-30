@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.42
+
+### Évolutions
+
+- Permettre de transformer une commande legacy en S2lowLegacyCommand instanciée comme un controlleur par Symfony #1127
+
 ## 5.0.41 2024-06-20
 
 ### Corrections

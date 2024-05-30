@@ -25,5 +25,6 @@ class LegacyClassLoaderTest extends TestCase
         yield [__DIR__ . '/fixtures/TestClass.php', 'S2low\Tests\Legacy\fixtures\TestClass'];
         yield [__DIR__ . '/fixtures/TestNotAClass.php', ''];
         yield [__DIR__ . '/fixtures/TestBadClass.php', ''];
+        yield [__DIR__ . '/fixtures/FileWithDie.php', ''];
     }
 }

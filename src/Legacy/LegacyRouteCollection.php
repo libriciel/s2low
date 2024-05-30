@@ -37,4 +37,18 @@ class LegacyRouteCollection
             )
         );
     }
+
+    public function addClass(string $routeName, string $path, string $className, array $routeOptions = [])
+    {
+        $this->routeCollection->add(
+            $routeName,
+            new Route(
+                $path,
+                [
+                    '_controller' => "$className::doTheWork",
+                ],
+                $routeOptions
+            )
+        );
+    }
 }
