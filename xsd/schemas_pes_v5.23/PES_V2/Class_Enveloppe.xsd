@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="Simple_Type.xsd" />
+  <xs:complexType name="TEnveloppe">
+    <xs:annotation>
+      <xs:documentation>L'enveloppe contient les éléments d'identification du flux (fichier, émetteur et récepteur).</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Parametres" type="TParametres">
+        <xs:annotation>
+          <xs:documentation>Caractéristiques du fichier.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Emetteur" type="TCarteVisite">
+        <xs:annotation>
+          <xs:documentation>Carte de visite du partenaire émetteur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Recepteur" type="TCarteVisiteRecepteur" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Carte de visite du partenaire récepteur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TParametres">
+    <xs:annotation>
+      <xs:documentation>Caractéristiques du fichier.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Version" type="Base_Num2">
+        <xs:annotation>
+          <xs:documentation>Numéro de version du message. Ce numéro est relatif à l'enveloppe. Doit être valorisé à 2.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypFic" type="Base_Texte32">
+        <xs:annotation>
+          <xs:documentation>Code du type de fichier :
+- PESALR1 pour le PES_Aller
+- PESORMC pour l'ORMC</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NomFic" type="Base_Texte100">
+        <xs:annotation>
+          <xs:documentation>Nom du fichier.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TCarteVisite">
+    <xs:annotation>
+      <xs:documentation>Carte de visite du partenaire émetteur</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Sigle" type="Base_Texte32">
+        <xs:annotation>
+          <xs:documentation>Nom de l'éditeur émetteur du flux</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Adresse" type="Base_Texte38">
+        <xs:annotation>
+          <xs:documentation>Nom et version de l'application</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TCarteVisiteRecepteur">
+    <xs:annotation>
+      <xs:documentation>Carte de visite du partenaire récepteur</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Sigle" type="Base_Texte32" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nom du récepteur du flux</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Adresse" type="Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Adresse du récepteur du flux</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:complexType name="TBancaireMarche">
+    <xs:annotation>
+      <xs:documentation>Le bloc CpteBancaire représente les information bancaires.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:sequence>
+          <xs:element name="IdPayInt" type="cm:Base_Alphanum4" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Identification internationale du pays.
+Cette zone permet d'obtenir les références bancaires internationales (IBAN).
+Si valorisation la valeur doit être connue et valide sinon rejet du marché .
+La balise IdPayInt est obligatoirement valorisée si IdBancInt est servie. Si la balise IdPayInt n'est pas valorisée alors qu'IdBancInt l'est, rejet du marché contenant le RIB incomplet.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="IdBancInt" type="cm:Base_Alphanum11" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Identification internationale de la banque.
+Cette zone permet d'obtenir les références bancaires internationales (IBAN).
+Si valorisation la valeur doit être connue et valide sinon rejet du marché.
+La balise IdBancInt est obligatoirement valorisée si IdPayInt est servie. Si la balise IdBancInt n'est pas valorisée alors qu'IdPayInt l'est, rejet du marché contenant le RIB incomplet.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CodeEtab" type="cm:Base_Alphanum5">
+            <xs:annotation>
+              <xs:documentation>Code de l'établissement bancaire.
+4 balises doivent être valorisées en même temps et RIB correct sinon rejet du marché qui comprend le titulaire ou sous-traitant qui porte ce RIB incomplet ou erroné.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CodeGuic" type="cm:Base_Alphanum5_Light">
+            <xs:annotation>
+              <xs:documentation>Code du guichet de l'établissement bancaire.
+4 balises doivent être valorisées en même temps et RIB correct sinon rejet du marché qui comprend le titulaire ou sous-traitant qui porte ce RIB incomplet ou erroné.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="IdCpte" type="cm:Base_Texte11">
+            <xs:annotation>
+              <xs:documentation>Numéro du compte du client de l'établissement bancaire.
+4 balises doivent être valorisées en même temps et RIB correct sinon rejet du marché qui comprend le titulaire ou sous-traitant qui porte ce RIB incomplet ou erroné.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CleRib" type="cm:Base_Num2_Light">
+            <xs:annotation>
+              <xs:documentation>Clé RIB du compte client.
+4 balises doivent être valorisées en même temps et RIB correct sinon rejet du marché qui comprend le titulaire ou sous-traitant qui porte ce RIB incomplet ou erroné.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:sequence>
+          <xs:element name="BIC" type="cm:Base_Texte11BIC" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Bank International Code.
+Tous les caractères alphabétiques du BIC doivent être en majuscules, sinon rejet du flux.
+Doit être un code connu et valide
+sinon rejet du marché
+La balise est obligatoire pour toute domiciliation à l'étranger, sinon rejet du marché .</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="IBAN" type="cm:Base_Texte34IBAN">
+            <xs:annotation>
+              <xs:documentation>International Bank Account Number
+Tous les caractères alphabétiques de l'IBAN doivent être en majuscules, sinon rejet du flux.
+Doit être complet et valide sinon rejet du marché.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:sequence>
+          <xs:element name="CodePays" type="cm:Base_Texte2">
+            <xs:annotation>
+              <xs:documentation>Code pays du compte bancaire étranger : cette information permet de déterminer le pays du compte bancaire hors zone SEPA pour un opérateur économique de nature d'identifiant « 06 Hors UE ». Cette zone utilise la codification de l'INSEE (Code_Alpha2_Pays). Tout CodePays qui n'existe pas aboutit au rejet du marché.
+Autorisé uniquement pour les opérateurs économiques de nature d'identifiant 06 Hors UE intervenant sur les marchés publics.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="NumeroCompteEtranger" type="cm:Base_Texte34">
+            <xs:annotation>
+              <xs:documentation>Numéro de compte étranger hors zone SEPA.
+Equivalent du BBAN :
+Exemple pour les États-Unis : code ABA (9 chiffres) numéro de routage ou routing transit number (RTN) + numéro de compte ACCT (account number : maximum 17 caractères (tirets acceptés)).
+Autorisé uniquement pour les opérateurs économiques de nature d'identifiant 06 Hors UE intervenant sur les marchés publics.
+Le numéro de compte étranger ne fait l'objet d'aucun contrôle particulier en dehors du type associé à la balise (Base_Texte36).</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:choice>
+      <xs:element name="LibBanc" type="cm:Base_Texte24" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Libellé de l'établissement bancaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TitCpte" type="cm:Base_Texte32">
+        <xs:annotation>
+          <xs:documentation>Nom du titulaire du compte client.
+Cette zone reprend la désignation du titulaire du compte à créditer telle qu'elle est précisée sur le relevé d'identité bancaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteBanc" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de mise à jour des éléments de la domiciliation bancaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

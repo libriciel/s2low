@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="CommunPES.xsd" />
+  <xs:complexType name="TPJReference">
+    <xs:sequence>
+      <xs:element name="Support" type="TSupport">
+        <xs:annotation>
+          <xs:documentation>Précise la forme de l'élément référencé.
+
+Si absence en PJ Ref rejet du flux complet .
+Les valeurs 02 ou 03 interdisent d'avoir un bloc PJ.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdUnique" type="Base_Alphanum50">
+        <xs:annotation>
+          <xs:documentation>Identifiant unique de la pièce pour la CEPL quel que soit le domaine, l'objet comptable, l'exercice et le budget concerné.
+Si absence en PJ Ref rejet du flux.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NomPJ" type="Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Nom de la PJ sur 100 caractères maximum – optionnel, destiné à préciser le référencement de PJ non électronique (i.e. qui ne sont pas "en ligne").</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypePJ" type="TPJ" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Type de la pièce référencée.
+Pour un titre ORMC dont la balise Edition est valorisé à « 06 »  (Avis des sommes à payer ORMC ENSU à éditer) :
+- la PJ de type « 010 » (Facture ASAP ORMC ENSU à éditer) doit être véhiculée dans un bloc PJ Reference avec son type afin qu'Hélios puisse identifier de façon explicite la PJ devant servir de facture. Il n'y a pas de rejet dans le guichet mais toutefois le comptable ne pourra pas enregistrer l'article de rôle correspondant.
+- l'éventuelle PJ de type « 011 » (Document complémentaire à l'ASAP ENSU à éditer) devant être fusionné à la facture doit être véhiculée dans un bloc PJ Reference avec son type afin qu'Hélios puisse identifier de façon explicite cette PJ. 
+Pour un titre dont la balise Edition est valorisé à 01 (Avis des sommes à payer à éditer) ou 05 (Avis des sommes à payer Patients à éditer)
+- l'éventuelle PJ de type « 011 » (Document complémentaire à l'ASAP ENSU à éditer) devant être fusionné avec la facture doit être véhiculée dans un bloc PJ Reference avec son type afin qu'Hélios puisse identifier de façon explicite cette PJ.
+Pour les autres contextes, la balise est facultative.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TSupport">
+    <xs:annotation>
+      <xs:documentation>Type de support.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Support électronique.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Support papier.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Support cdrom/dvdrom.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>
