@@ -164,7 +164,7 @@ services:
 
     pades-valid:
         restart: unless-stopped
-        image: registry.libriciel.fr/public/signature/pades-valid:1.4.9
+        image: registry.libriciel.fr/public/signature/pades-valid:1.4.10
 
         networks:
           - services
