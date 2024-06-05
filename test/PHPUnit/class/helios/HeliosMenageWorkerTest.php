@@ -59,15 +59,15 @@ class HeliosMenageWorkerTest extends S2lowTestCase
     }
 
 
-    public function testGetAllId()
+    public function testGetAllId(): void
     {
-        static::assertEquals([1], $this->worker->getAllId());
+        static::assertSame([1], $this->worker->getAllId());
     }
 
     /**
      * @throws \Exception
      */
-    public function testWorkRecentylCreated()
+    public function testWorkRecentylCreated(): void
     {
         $pes_aller_path = $this->createPesAller();
         $this->swift->expects(self::never())->method('fileExistsOnCloud');
@@ -82,7 +82,7 @@ class HeliosMenageWorkerTest extends S2lowTestCase
     /**
      * @throws \Exception
      */
-    public function testWorkWithoutTransactionId()
+    public function testWorkWithoutTransactionId(): void
     {
         $pes_aller_path = $this->createPesAller(true);
         $this->swift->expects(self::once())->method('fileExistsOnCloud')->willReturn(false);
@@ -104,7 +104,7 @@ class HeliosMenageWorkerTest extends S2lowTestCase
     /**
      * @throws \Exception
      */
-    public function testWorkExistsInCloud()
+    public function testWorkExistsInCloud(): void
     {
         $pes_aller_path = $this->createPesAller(true);
         $this->swift->expects(self::once())->method('fileExistsOnCloud')->willReturn(true);
@@ -120,9 +120,9 @@ class HeliosMenageWorkerTest extends S2lowTestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    public function testWorkWithTransaction()
+    public function testWorkWithTransaction(): void
     {
         $pes_aller_path = $this->createPesAller(true);
         $this->swift->expects(self::once())->method('fileExistsOnCloud')->willReturn(false);
@@ -138,9 +138,6 @@ class HeliosMenageWorkerTest extends S2lowTestCase
         static::assertTrue($this->transactionsSQL->isTransactionAvailable($transaction_id));
     }
 
-    /**
-     * @return string
-     */
     private function createPesAller(bool $createOldFile = false): string
     {
         $pes_aller_path = $this->helios_files_upload_root . '/ab3321d34d3fb32b52332befa534c9854fff677b';

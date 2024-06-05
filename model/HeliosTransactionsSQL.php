@@ -345,7 +345,7 @@ class HeliosTransactionsSQL extends SQL
     public function setTransactionInCloud($id, bool $isInCloud = true)
     {
         $sql = "UPDATE helios_transactions SET is_in_cloud=? WHERE id=?";
-        $this->query($sql, intval($isInCloud), $id);
+        $this->query($sql, (int) $isInCloud, $id);
     }
 
     public function setTransactionInCloudRemove($id)

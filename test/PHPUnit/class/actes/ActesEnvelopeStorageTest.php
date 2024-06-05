@@ -75,7 +75,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
         $actesEnvelopeStorage->grandMenage(self::MIN_DATE, $this->dateTomorrow, 'ok');
         $testHandler = $this->getObjectInstancier()->get(TestHandler::class);
         static::assertFalse(file_exists($actes_files_upload_root . "/$filename"));
-        static::assertEquals("File $filename deleted", $testHandler->getRecords()[3][self::MESSAGE]);
+        static::assertSame("File $filename deleted", $testHandler->getRecords()[3][self::MESSAGE]);
     }
 
     public function testGrandMenageFileNotExists()
@@ -88,7 +88,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
         $actesEnvelopeStorage = $this->getObjectInstancier()->get(ActesEnvelopeStorage::class);
         $actesEnvelopeStorage->grandMenage(self::MIN_DATE, $this->dateTomorrow, true);
         $testHandler = $this->getObjectInstancier()->get(TestHandler::class);
-        static::assertEquals("File not exists $filename [PASS]", $testHandler->getRecords()[2][self::MESSAGE]);
+        static::assertSame("File not exists $filename [PASS]", $testHandler->getRecords()[2][self::MESSAGE]);
     }
 
     public function testGrandMenageNotConfirm()
@@ -106,7 +106,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
         $actesEnvelopeStorage->grandMenage(self::MIN_DATE, $this->dateTomorrow, false);
         $testHandler = $this->getObjectInstancier()->get(TestHandler::class);
         static::assertTrue(file_exists("$actes_files_upload_root/$filename"));
-        static::assertEquals(
+        static::assertSame(
             "File $filename will be deleted if confirm is ok",
             $testHandler->getRecords()[3][self::MESSAGE]
         );

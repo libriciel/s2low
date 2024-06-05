@@ -10,6 +10,10 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 use Monolog\Logger;
 use Symfony\Component\Filesystem\Filesystem;
 
+/**
+ * @deprecated 5.0.39
+ * Le script de ménage doit être réimplémenté en utilisant CloudStorage
+ */
 class PesAllerStorage
 {
     public const CONTAINER_NAME = "pes_aller";

@@ -10,19 +10,15 @@ use Symfony\Component\Finder\Finder;
 
 class PESAllerCloudStorage implements ICloudStorable
 {
-    /**
-     * @var \S2lowLegacy\Model\HeliosTransactionsSQL
-     */
+    public const CONTAINER_NAME = 'pes_aller';
     private HeliosTransactionsSQL $transactionsSQL;
-    private $helios_files_upload_root;
+    private string $helios_files_upload_root;
 
     public function __construct($helios_files_upload_root, HeliosTransactionsSQL $transactionsSQL)
     {
         $this->helios_files_upload_root = $helios_files_upload_root;
         $this->transactionsSQL = $transactionsSQL;
     }
-
-    public const CONTAINER_NAME = 'pes_aller';
 
     public function getContainerName(): string
     {

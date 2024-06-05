@@ -8,6 +8,10 @@ use S2lowLegacy\Lib\SigTermHandler;
 use Monolog\Logger;
 use Symfony\Component\Filesystem\Filesystem;
 
+/**
+ * @deprecated 5.0.39
+ * Le script de ménage doit être réimplémenté en utilisant CloudStorage
+ */
 class ActesEnvelopeStorage
 {
     public const CONTAINER_NAME = 'acte_envelope';

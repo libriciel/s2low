@@ -143,7 +143,6 @@ class ActesArchiveControlerTest extends S2lowTestCase
     }
 
     /**
-     * @return int
      * @throws \Exception
      */
     private function createTransactionEnAttenteEnvoiSAE(): int
