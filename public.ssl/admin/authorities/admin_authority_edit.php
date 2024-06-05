@@ -2,6 +2,7 @@
 
 use S2lowLegacy\Class\actes\ActesConventions;
 use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\AvailableSirensByGroup;
 use S2lowLegacy\Class\Group;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
@@ -12,9 +13,9 @@ use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 use S2lowLegacy\Model\AuthorityTypesSQL;
 use S2lowLegacy\Model\GroupSQL;
 
-list($objectInstancier, $html ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $html, $availableSirensByGroup ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, 'html']
+        [ObjectInstancier::class, 'html', AvailableSirensByGroup::class]
     );
 
 $me = new User();
@@ -148,33 +149,12 @@ if ($authority->getModulePermByName("helios") && $me->isGroupAdminOrSuper()) {
 //********************************
 
 if ($me->isSuper()) {
-    $groupSQL = $objectInstancier->get(GroupSQL::class);
-
-    $groups = $groupSQL->getGroupsIdName();
-    $groupIds = array();
-    $sirenList = array();
-    $authorityGroupSirenSQL = $objectInstancier->get(AuthorityGroupSirenSQL::class);
-
-    foreach ($groups as $key => $value) {
-        $group = new Group($key);
-        $sirenList[] = $authorityGroupSirenSQL->getUnusedSiren($key);
-        $groupIds[] = $key;
-    }
-
-        $valueString   =  "";
-        $indexString = "";
-        $indexString = '"' . join('","', $groupIds) . '"';
-    foreach ($sirenList as $value) {
-        if (is_array($value)) {
-            $valueString   .=   (!empty($valueString) ? "," : "") . 'new   Array("' . join('","', $value) . '")';
-        } else {
-            $valueString   .=   '"' . $value . '"';
-        }
-    }
+    list($groups, $sirensByGroup) = $availableSirensByGroup->get($authority->get('id'));
     $html .= " <div class=\"form-group\">\n";
     $html .= "  <label for=\"authority_group_id\" class=\"control-label col-md-4\">Groupe</label>\n";
     $html .= "  <div class=\"col-md-6\">\n";
-    $html .= $doc->getHTMLSelect("authority_group_id", $groups, $authority->get("authority_group_id"));
+    $html .= $doc->getHTMLSelect("authority_group_id", $groups, $authority->get('authority_group_id'));
+    $html .= "<input type=\"hidden\" id=\"sirensByGroupArray\" value='" . json_encode($sirensByGroup) . "' />\n";
     $html .= "  </div>\n";
     $html .= " </div>\n";
 }
@@ -190,7 +170,8 @@ if ($me->isGroupAdminOrSuper()) {
     $sirenList = $group->getAuthorizedSiren();
     $html .= "  <div class=\"col-md-6\">";
     $html .= "  <input id=\"originalSiren\" type =\"hidden\" value = \"" . $authority->get('siren') . '"/>';
-    $html .= "<select id=\"sirenId\" class=\"form-control\" name=\"siren\">";
+    $html .= "  <input id=\"originalGroupId\" type =\"hidden\" value = \"" . $authority->get('authority_group_id') . '"/>';
+    $html .= "<select id=\"SelectSirenInput\" class=\"form-control\" name=\"siren\">";
     foreach ($sirenList as $siren_tmp) {
         if ($siren_tmp == $authority->get("siren")) {
               $html .= " <option value =\"$siren_tmp\" selected=\"selected\">$siren_tmp</option>";
@@ -204,10 +185,6 @@ if ($me->isGroupAdminOrSuper()) {
 }
 
 $html .= " </div>\n";
-$html .= "<script language=\"JavaScript\">";
-$html .= "    window.sirenArray   =   [$valueString];\n";
-$html .= "    window.groupIdArray = [$indexString];\n";
-$html .= '</script>';
 $html .= "<script src=\"" . Helpers::getLink('/jsmodules/handleSirenGroupe.js') . "\"></script>";
 
 //************

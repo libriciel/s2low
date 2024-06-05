@@ -1,39 +1,63 @@
 window.onload = (event) => {
-    var elements = window.document.getElementsByName('authority_group_id');
-    if(elements.length != 1){
+    let elements = window.document.getElementsByName('authority_group_id');
+    if (elements.length != 1) {
         console.log("Plusieurs éléments authority_group_id présents !");
         return;
     }
-    elements[0].addEventListener('change', groupchange);
+
+    elements[0].addEventListener('change', function () {
+        sirensToShow = getSirensToShow(
+            window.document.getElementsByName("authority_group_id")[0].value,
+            window.document.getElementById("originalSiren").value,
+            window.document.getElementById("originalGroupId").value,
+            JSON.parse(window.document.getElementById("sirensByGroupArray").value)
+        )
+        updateSirenSelectList(sirensToShow, window.document.getElementById("SelectSirenInput"),)
+    });
 };
 
-function groupchange()  {
-    var groupId=window.document.getElementsByName("authority_group_id")[0];
-    var sirenSelect=window.document.getElementById("sirenId");
-    var originalSiren = window.document.getElementById("originalSiren").value;
+function getSirensToShow(selectedGroupId, originalSiren, originalGroupId, sirensByGroupArray) {
 
-    for (var i=0;i< window.groupIdArray.length;i++)
-    {
-        if (window.groupIdArray[i]==groupId.value)
-        {
-            var siren=window.sirenArray[i];
-            sirenSelect.options.length = 0;
-            var sirenInList = false;
-            for(var j = 0; j < siren.length; j++) {
-                var selected = false;
-                if(siren[j] == originalSiren)
-                {
-                    selected=true;
-                    sirenInList=true;
-                }
-                sirenSelect.options[j]=new Option(siren[j],siren[j],selected,selected);
-            }
-            if(!sirenInList)
-            {
-                sirenSelect.options[j+1]=new Option(originalSiren+' (hors groupe)','',true,true);
-                sirenSelect.options[j+1].disabled=true;
-            }
-            break;
+    const sirensInGroup = sirensByGroupArray[selectedGroupId];
+
+    let originalSirenIsInSelectedGroup = false;
+    let sirensToShow = [];
+
+    sirensInGroup.forEach((siren, index) => {
+        let selected = false;
+        if (siren == originalSiren) {
+            selected = true;
+            originalSirenIsInSelectedGroup = true;
         }
+        sirensToShow.push({'siren': siren, 'selected': selected, 'disabled': false});
+    })
+
+    if (!originalSirenIsInSelectedGroup) {
+        // On va afficher le SIREN original et le sélectionner pour éviter d'en selectionner un autre par défaut
+        sirensToShow.push({'siren': originalSiren + ' (hors groupe)', 'selected': true, 'disabled': true});
+    }
+
+    return sirensToShow;
+}
+
+function updateSirenSelectList(sirensToShow, sirenSelectHTMLElement) {
+    sirenSelectHTMLElement.options.length = 0;
+    sirensToShow.forEach((sirenToShow, index) => {
+            sirenSelectHTMLElement.options[index] = getOption(sirenToShow);
+    })
+}
+
+function getOption(sirenToShow){
+    if (sirenToShow.disabled) {
+        let option = new Option(
+            sirenToShow.siren,
+            '',
+            true,
+            true
+        );
+        option.disabled = true;
+        return option;
+    } else {
+        return new Option(sirenToShow.siren, sirenToShow.siren, sirenToShow.selected, sirenToShow.selected);
     }
 }
