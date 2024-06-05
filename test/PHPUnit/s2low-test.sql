@@ -11,6 +11,7 @@ DELETE FROM actes_envelopes;
 DELETE FROM actes_type_pj;
 DELETE FROM actes_natures;
 DELETE FROM actes_status;
+DELETE FROM helios_status;
 DELETE FROM actes_transmission_window_hours;
 DELETE FROM actes_transmission_windows;
 
@@ -52,6 +53,7 @@ INSERT INTO actes_status VALUES (21, 'Document reçu (pas d''AR)');
 INSERT INTO actes_status VALUES (12, 'Envoyé au SAE');
 INSERT INTO actes_status VALUES (18, 'En attente d''être signé');
 INSERT INTO actes_status VALUES (22, 'Impossible d''envoyer au SAE (documents indisponibles)');
+INSERT INTO helios_status VALUES (1, 'Posté');
 INSERT INTO authority_groups VALUES (1, 'Groupe de test', 1);
 INSERT INTO authority_groups VALUES (2, 'second groupe', 1);
 INSERT INTO authority_types VALUES (1, NULL, 'Région');
