@@ -14,7 +14,7 @@ class PESAllerCloudStorage implements ICloudStorable
     private HeliosTransactionsSQL $transactionsSQL;
     private string $helios_files_upload_root;
 
-    public function __construct($helios_files_upload_root, HeliosTransactionsSQL $transactionsSQL)
+    public function __construct(string $helios_files_upload_root, HeliosTransactionsSQL $transactionsSQL)
     {
         $this->helios_files_upload_root = $helios_files_upload_root;
         $this->transactionsSQL = $transactionsSQL;
