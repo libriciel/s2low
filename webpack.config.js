@@ -41,6 +41,10 @@ module.exports = {
             {
                 import: './src_js/jquery.fileupload.js',
                 dependOn: 'jquery'
+            },
+        handleSirenGroupe:
+            {
+                import: './src_js/handleSirenGroupe.js'
             }
     },
     output: {

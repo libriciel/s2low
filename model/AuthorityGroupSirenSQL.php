@@ -21,11 +21,12 @@ class AuthorityGroupSirenSQL extends SQL
         $this->query($sql, $id, $siren);
     }
 
-    public function getUnusedSiren($authority_group_id)
+    public function getAvailableSiren($authority_group_id, $authority_id)
     {
         $sql = "SELECT siren FROM authority_group_siren " .
-            " WHERE authority_group_id=? AND siren NOT IN (SELECT siren FROM authorities WHERE siren IS NOT NULL AND authority_group_id=?)" .
+            " WHERE authority_group_id=? AND siren NOT IN (" .
+            "SELECT siren FROM authorities WHERE siren IS NOT NULL AND authority_group_id=? AND NOT id=?)" .
             " ORDER BY siren";
-        return $this->queryOneCol($sql, $authority_group_id, $authority_group_id);
+        return $this->queryOneCol($sql, $authority_group_id, $authority_group_id, $authority_id);
     }
 }
