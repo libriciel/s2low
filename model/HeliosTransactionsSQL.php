@@ -342,10 +342,10 @@ class HeliosTransactionsSQL extends SQL
         return $this->queryOne($sql);
     }
 
-    public function setTransactionInCloud($id)
+    public function setTransactionInCloud($id, bool $isInCloud = true)
     {
-        $sql = "UPDATE helios_transactions SET is_in_cloud=TRUE WHERE id=?";
-        $this->query($sql, $id);
+        $sql = "UPDATE helios_transactions SET is_in_cloud=? WHERE id=?";
+        $this->query($sql, (int) $isInCloud, $id);
     }
 
     public function setTransactionInCloudRemove($id)

@@ -2,33 +2,37 @@
 
 namespace S2lowLegacy\Class\helios;
 
+use S2lowLegacy\Class\CloudStorage;
+use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\IWorker;
 use Exception;
 
 class HeliosStorePESAllerWorker implements IWorker
 {
     public const QUEUE_NAME = 'helios-store-pes-aller';
+    private CloudStorage $cloudStorage;
 
-    public function getQueueName()
+    public function getQueueName(): string
     {
         return self::QUEUE_NAME;
     }
 
-    private $pesAllerStorage;
-
-    public function __construct(PesAllerStorage $pesAllerStorage)
+    /**
+     * @throws \S2lowLegacy\Lib\UnrecoverableException
+     */
+    public function __construct(CloudStorageFactory $cloudStorageFactory)
     {
-        $this->pesAllerStorage = $pesAllerStorage;
+        $this->cloudStorage = $cloudStorageFactory->getInstanceByClassName(PESAllerCloudStorage::class);
     }
 
-    public function getData($id)
+    public function getData($id): int
     {
         return $id;
     }
 
-    public function getAllId()
+    public function getAllId(): array
     {
-        return $this->pesAllerStorage->getAllTransactionIdToStore();
+        return $this->cloudStorage->getAllObjectIdToStore();
     }
 
     /**
@@ -36,17 +40,17 @@ class HeliosStorePESAllerWorker implements IWorker
      * @return void
      * @throws Exception
      */
-    public function work($data)
+    public function work($data): void
     {
-        $this->pesAllerStorage->storeNextFileById($data);
+        $this->cloudStorage->storeObject($data);
     }
 
-    public function getMutexName($data)
+    public function getMutexName($data): string
     {
         return sprintf("%s-%s", self::QUEUE_NAME, $data);
     }
 
-    public function isDataValid($data)
+    public function isDataValid($data): bool
     {
         return true;
     }

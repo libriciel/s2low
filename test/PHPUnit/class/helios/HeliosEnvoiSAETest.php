@@ -51,7 +51,7 @@ class HeliosEnvoiSAETest extends S2lowTestCase
         $this->assertLogMessage("Début du traitement de la transaction $transaction_id", 1);
         $this->assertLogMessage("Début de la récupération des fichiers de la transaction $transaction_id", 2);
         $this->assertLogMessage("Début du transfert vers FakeURL de la transaction $transaction_id", 3);
-        $this->assertMatchesRegularExpressionLogMessage("/Deleting PES ALLER/", 4);
+        $this->assertMatchesRegularExpressionLogMessage("/Deleting object #$transaction_id/", 4);
         $this->assertLogMessage("La transaction $transaction_id a été envoyée à Pastell", 5);
     }
 

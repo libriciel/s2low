@@ -2,33 +2,37 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use S2lowLegacy\Class\CloudStorage;
+use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\IWorker;
 use Exception;
 
 class ActesStoreEnveloppeWorker implements IWorker
 {
     public const QUEUE_NAME = 'actes-store-enveloppe';
+    private CloudStorage $cloudStorage;
 
-    public function getQueueName()
+    public function getQueueName(): string
     {
         return self::QUEUE_NAME;
     }
 
-    private $actesEnvelopeStorage;
-
-    public function __construct(ActesEnvelopeStorage $actesEnvelopeStorage)
+    /**
+     * @throws \S2lowLegacy\Lib\UnrecoverableException
+     */
+    public function __construct(CloudStorageFactory $cloudStorageFactory)
     {
-        $this->actesEnvelopeStorage = $actesEnvelopeStorage;
+        $this->cloudStorage = $cloudStorageFactory->getInstanceByClassName(ActesCloudStorage::class);
     }
 
-    public function getData($id)
+    public function getData($id): int
     {
         return $id;
     }
 
-    public function getAllId()
+    public function getAllId(): array
     {
-        return $this->actesEnvelopeStorage->getAllEnveloppeIdToStore();
+        return $this->cloudStorage->getAllObjectIdToStore();
     }
 
     /**
@@ -36,17 +40,17 @@ class ActesStoreEnveloppeWorker implements IWorker
      * @return void
      * @throws Exception
      */
-    public function work($data)
+    public function work($data): void
     {
-        $this->actesEnvelopeStorage->storeNextFileById($data);
+        $this->cloudStorage->storeObject($data);
     }
 
-    public function getMutexName($data)
+    public function getMutexName($data): string
     {
-        return sprintf("%s-%s", self::QUEUE_NAME, $data);
+        return sprintf('%s-%s', self::QUEUE_NAME, $data);
     }
 
-    public function isDataValid($data)
+    public function isDataValid($data): bool
     {
         return true;
     }

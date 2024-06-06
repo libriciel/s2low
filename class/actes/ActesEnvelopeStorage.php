@@ -8,6 +8,10 @@ use S2lowLegacy\Lib\SigTermHandler;
 use Monolog\Logger;
 use Symfony\Component\Filesystem\Filesystem;
 
+/**
+ * @deprecated 5.0.39
+ * Le script de ménage doit être réimplémenté en utilisant CloudStorage
+ */
 class ActesEnvelopeStorage
 {
     public const CONTAINER_NAME = 'acte_envelope';
@@ -30,81 +34,6 @@ class ActesEnvelopeStorage
         $this->logger = $logger;
     }
 
-    public function getAllEnveloppeIdToStore()
-    {
-        return $this->actesEnvelopeSQL->getAllEnvelopepIdToSendInCloud();
-    }
-
-    /**
-     * @param $transaction_id
-     * @return bool
-     * @throws Exception
-     */
-    public function storeNextFileById($envelope_id)
-    {
-        $envelope_info = $this->actesEnvelopeSQL->getInfo($envelope_id);
-        $this->logger->debug(
-            "Storing envelope {$envelope_info['id']} - " .
-            "file {$envelope_info['file_path']}"
-        );
-        if (! $envelope_info['file_path']) {
-            $this->logger->error(
-                "Unable to store envelope #{$envelope_info['id']} in cloud : file_path not set ! ",
-                $envelope_info
-            );
-            $this->actesEnvelopeSQL->setEnveloppeNotAvailable($envelope_info['id']);
-            return false;
-        }
-        if (! file_exists($this->actes_files_upload_root . "/" . $envelope_info['file_path'])) {
-            $this->logger->error(
-                "Unable to store {$envelope_info['file_path']} in cloud : file did not exist ! ",
-                $envelope_info
-            );
-            $this->actesEnvelopeSQL->setEnveloppeNotAvailable($envelope_info['id']);
-            return false;
-        }
-        $this->logger->info("Storing file " . $this->actes_files_upload_root . "/" . $envelope_info['file_path']);
-
-        if (
-            !$this->openStackSwiftWrapper->sendFile(
-                self::CONTAINER_NAME,
-                $this->actes_files_upload_root . "/" . $envelope_info['file_path'],
-                $envelope_info['file_path']
-            )
-        ) {
-            return false;
-        }
-
-        $this->actesEnvelopeSQL->setTransactionInCloud($envelope_info['id']);
-        $this->logger->info("Stored file : {$envelope_info['file_path']}");
-        return true;
-    }
-
-    public function deleteIfIsInCloud($actes_envelope_file_path)
-    {
-        try {
-            $file = $this->actes_files_upload_root . "/" . $actes_envelope_file_path;
-            if (
-                !$this->openStackSwiftWrapper->fileExistsOnCloud(
-                    self::CONTAINER_NAME,
-                    $actes_envelope_file_path
-                )
-            ) {
-                $this->logger->info("Actes $actes_envelope_file_path not existing on cloud : not deleted");
-                return false;
-            }
-            $this->logger->info("Deleting Actes : $actes_envelope_file_path");
-
-            $filesystem = new Filesystem();
-            $filesystem->remove($file);
-            return true;
-        } catch (Exception $e) {
-            $this->logger->alert(
-                "Problème lors de la supression de l'acte $actes_envelope_file_path : " . $e->getMessage()
-            );
-            return false;
-        }
-    }
     /**
      * @param $min_date
      * @param $max_date
