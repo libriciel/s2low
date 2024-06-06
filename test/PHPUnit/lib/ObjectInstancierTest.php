@@ -1,47 +1,60 @@
 <?php
 
+declare(strict_types=1);
+
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Lib\ObjectInstancier;
 
-class ObjectInstancierTest extends PHPUnit_Framework_TestCase
+class ObjectInstancierTest extends TestCase
 {
-    public function testRecupValue()
+    public function testRecupValue(): void
     {
         $objectInstancier = new ObjectInstancier();
         $objectInstancier->foo = 'bar';
-        $this->assertEquals('bar', $objectInstancier->foo);
+        static::assertSame('bar', $objectInstancier->foo);
     }
 
-    public function testMakeObject()
+    public function testMakeObject(): void
     {
         $objectInstancier = new ObjectInstancier();
-        require_once(__DIR__ . "/fixtures/MockClass.class.php");
         $mockClass = $objectInstancier->MockClass;
-        $this->assertInstanceOf('MockClass', $mockClass);
+        static::assertInstanceOf('MockClass', $mockClass);
     }
 
 
-    public function testMakeObjectParamFail()
+    public function testMakeObjectParamFail(): void
     {
         $objectInstancier = new ObjectInstancier();
-        require_once(__DIR__ . "/fixtures/MockClassParam.class.php");
-        $this->setExpectedException("Exception", "Impossible d'instancier MockClassParam car le parametre param est manquant");
-        $mockClass = $objectInstancier->MockClassParam;
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Impossible d'instancier MockClassParam car le parametre param est manquant");
+        $objectInstancier->MockClassParam;
     }
 
-    public function testMakeObjectParam()
+    public function testMakeObjectParam(): void
     {
         $objectInstancier = new ObjectInstancier();
         $objectInstancier->param = 42;
-        require_once(__DIR__ . "/fixtures/MockClassParam.class.php");
         $mockClass = $objectInstancier->MockClassParam;
-        $this->assertInstanceOf('MockClassParam', $mockClass);
+        static::assertInstanceOf('MockClassParam', $mockClass);
     }
 
-    public function testMakeObjectParamOptionnal()
+    public function testMakeObjectParamOptionnal(): void
     {
         $objectInstancier = new ObjectInstancier();
-        require_once(__DIR__ . "/fixtures/MockClassParamOptional.class.php");
         $mockClass = $objectInstancier->MockClassParamOptional;
-        $this->assertInstanceOf('MockClassParamOptional', $mockClass);
+        static::assertInstanceOf('MockClassParamOptional', $mockClass);
+    }
+
+    public function testGetObjectWithPrimitiveTypeHint(): void
+    {
+        $objectInstancier = new ObjectInstancier();
+        $objectInstancier->set('foo', 100);
+        $class = new class (1) {
+            public function __construct(public int $foo)
+            {
+            }
+        };
+
+        self::assertSame(100, $objectInstancier->get($class::class)->foo);
     }
 }

@@ -64,16 +64,20 @@ class ObjectInstancier
         return $reflexionClass->newInstanceArgs($param);
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     private function bindParameters($className, array $allParameters)
     {
-        $param = array();
+        $param = [];
+        /** @var ReflectionParameter $parameters */
         foreach ($allParameters as $parameters) {
-            /* @var $parameters ReflectionParameter */
-
-            if ($parameters->getType()) {
-                $param_name =  $parameters->getType()->getName();
+            $type = $parameters->getType();
+            if ($type !== null && !$type->isBuiltin()) {
+                $class = new ReflectionClass($type->getName());
+                $param_name = $class->getName();
             } else {
-                $param_name =  $parameters->name;
+                $param_name = $parameters->getName();
             }
             try {
                 $bind_value = $this->$param_name;
