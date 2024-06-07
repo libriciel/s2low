@@ -29,6 +29,8 @@ DELETE FROM modules_authorities;
 DELETE FROM authority_siret;
 DELETE FROM nounce;
 DELETE FROM authorities;
+DELETE FROM authority_districts;
+DELETE FROM authority_departments;
 DELETE FROM authority_types;
 DELETE FROM authority_group_siren;
 DELETE FROM authority_groups;
@@ -63,6 +65,8 @@ INSERT INTO authority_groups VALUES (1, 'Groupe de test', 1);
 
 -- Création d'une collectivité
 INSERT INTO authority_types VALUES (1, NULL, 'Région');
+INSERT INTO authority_departments VALUES (1,'001','nom département');
+INSERT INTO authority_districts VALUES (1,1,'1','nom district');
 INSERT INTO authorities VALUES (1, 1, 1, 'Bourg-en-Bresse', NULL, NULL, '123456789', NULL, NULL, NULL, NULL, NULL, NULL, '001', '1', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, true, NULL, NULL, NULL, NULL, NULL, false);
 INSERT INTO modules_authorities VALUES (1, 1, 1);  -- Accès au module Actes
 INSERT INTO modules_authorities VALUES (2, 2, 1);  -- Accès au module Helios

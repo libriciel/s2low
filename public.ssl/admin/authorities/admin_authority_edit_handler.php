@@ -6,8 +6,8 @@ use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\FileUploader;
 use S2lowLegacy\Class\Group;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Log;
-use S2lowLegacy\Class\Mailer;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\JSONoutput;
@@ -15,7 +15,7 @@ use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\AuthoritySQL;
 
-list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [ObjectInstancier::class, SQLQuery::class]
     );
@@ -24,31 +24,18 @@ $me = new User();
 
 $api = Helpers::getVarFromPost("api");
 
-
-function exitOrDisplayError($api, $erreur_msg, $location)
-{
-    if ($api) {
-        $jsonOutput = new JSONoutput();
-        $jsonOutput->displayErrorAndExit($erreur_msg);
-    } else {
-        $_SESSION["error"] = $erreur_msg;
-        header("Location: $location");
-        exit;
-    }
-}
-
 if (! $me->authenticate()) {
-    exitOrDisplayError($api, "Échec de l'authentification", Helpers::getLink("connexion-status"));
+    Helpers::exitOrDisplayError($api, "Échec de l'authentification", Helpers::getLink("connexion-status"));
 }
 
 if (! $me->isAdmin()) {
-    exitOrDisplayError($api, "Accès refusé", WEBSITE_SSL);
+    Helpers::exitOrDisplayError($api, "Accès refusé", WEBSITE_SSL);
 }
 
 try {
     $id = Helpers::getIntFromPost("id", true);
 } catch (Exception $exception) {
-    exitOrDisplayError($api, $exception->getMessage(), WEBSITE_SSL);
+    Helpers::exitOrDisplayError($api, $exception->getMessage(), WEBSITE_SSL);
 }
 
 $name = Helpers::getVarFromPost("name");
@@ -72,16 +59,7 @@ $email_mail_securise = Helpers::getVarFromPost("email_mail_securise");
 $descr_mail_securise = Helpers::getVarFromPost("descr_mail_securise");
 $helios_do_not_verify_nom_fic_unicity =
     Helpers::getVarFromPost("helios_do_not_verify_nom_fic_unicity") === 't' ? true : false;
-//$newmailnotif = Helpers::getVarFromPost("newnotif");
-$newmailnotif = "on";
-
-
-if ($newmailnotif == 'on') {
-    $newmailnotif = 'true';
-} else {
-    $newmailnotif = 'false';
-}
-
+$newmailnotif = 'true';
 
 
 $form_location =  Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=$id");
@@ -89,7 +67,11 @@ $form_location =  Helpers::getLink("/admin/authorities/admin_authority_edit.php?
 $authoritySQL = new AuthoritySQL($sqlQuery);
 
 if (! $authoritySQL->verifDepartmentAndDistrict($department, $district)) {
-    exitOrDisplayError($api, "Le code département ou le code arrondissement sont incorrects", $form_location);
+    Helpers::exitOrDisplayError(
+        $api,
+        "Le code département ou le code arrondissement sont incorrects",
+        $form_location
+    );
 }
 
 
@@ -102,7 +84,11 @@ if (isset($id) && ! empty($id)) {
     $authority->setId($id);
     $mod = true;
     if (! $authority->init()) {
-        exitOrDisplayError($api, "Erreur lors de la modification de la collectivité", $form_location);
+        Helpers::exitOrDisplayError(
+            $api,
+            "Erreur lors de la modification de la collectivité",
+            $form_location
+        );
     }
     $form_location =  Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=$id");
 }
@@ -114,12 +100,12 @@ if (isset($id) && ! empty($id)) {
 // et modif de sa collectivité uniquement
 if (! $me->isGroupAdminOrSuper()) {
     if ($authority->isNew() || $authority->getId() != $me->get("authority_id")) {
-        exitOrDisplayError($api, "Accès refusé", $form_location);
+        Helpers::exitOrDisplayError($api, "Accès refusé", $form_location);
     }
 } elseif ($me->isGroupAdmin()) {
   // Si mode modif on vérifie que la collectivité appartient bien au groupe dont l'utilisateur est admin
     if (! $authority->isNew() && ! $authority->isInGroup($me->get("authority_group_id"))) {
-        exitOrDisplayError($api, "Accès refusé.", $form_location);
+        Helpers::exitOrDisplayError($api, "Accès refusé.", $form_location);
     }
 
   // Vérification que le SIREN est bien autorisé pour ce groupe
@@ -128,7 +114,7 @@ if (! $me->isGroupAdminOrSuper()) {
     $sirenList = $group->getAuthorizedSiren();
 
     if (array_search($siren, $sirenList) === false) {
-        exitOrDisplayError($api, "Ce numéro de SIREN (" . $siren . ") n'est pas autorisé pour le groupe " . $group->get("name"), $form_location);
+        Helpers::exitOrDisplayError($api, "Ce numéro de SIREN (" . $siren . ") n'est pas autorisé pour le groupe " . $group->get("name"), $form_location);
     }
 
   // On force le authority_group_id à celui de l'admin du groupe
@@ -143,7 +129,7 @@ if ($email_mail_securise && (  ! MailerSymfony::isValidMail($email_mail_securise
     } else {
         $location = Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=") . $authority->getId();
     }
-    exitOrDisplayError($api, "L'email " . get_hecho($email_mail_securise) . " n'est pas valide.", $location);
+    Helpers::exitOrDisplayError($api, "L'email " . get_hecho($email_mail_securise) . " n'est pas valide.", $location);
 }
 
 
@@ -195,7 +181,7 @@ if (! $authority->save($savePerms)) {
         $location =  Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=") . $authority->getId();
     }
 
-    exitOrDisplayError($api, nl2br($msg), $location);
+    Helpers::exitOrDisplayError($api, nl2br($msg), $location);
 }
 
 
@@ -208,7 +194,7 @@ if (isset($_FILES['convention_actes']) && $me->isGroupAdminOrSuper()) {
         if ($finfo->file($_FILES['convention_actes']['tmp_name'], FILEINFO_MIME_TYPE) == 'application/pdf') {
             $actesConventions->setConvention($authority->getId(), $_FILES['convention_actes']['tmp_name']);
         } else {
-            exitOrDisplayError(
+            Helpers::exitOrDisplayError(
                 $api,
                 nl2br("Erreur lors de la sauvegarde de la convention (PDF attendu)"),
                 $location =  Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=") . $authority->getId()

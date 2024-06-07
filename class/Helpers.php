@@ -5,6 +5,7 @@ namespace S2lowLegacy\Class;
 use DateTime;
 use Exception;
 use IntlDateFormatter;
+use S2lowLegacy\Lib\JSONoutput;
 use UnexpectedValueException;
 
 class Helpers
@@ -700,5 +701,20 @@ class Helpers
         $url = trim(WEBSITE_SSL, "/");
         $relativePath = ltrim($relativePath, "/");
         return $url . "/" . $relativePath;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public static function exitOrDisplayError($api, $erreur_msg, $location)
+    {
+        if ($api) {
+            $jsonOutput = new JSONoutput();
+            $jsonOutput->displayErrorAndExit($erreur_msg);
+        } else {
+            $_SESSION['error'] = $erreur_msg;
+            header("Location: $location");
+            exit;
+        }
     }
 }
