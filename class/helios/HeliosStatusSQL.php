@@ -26,14 +26,14 @@ class HeliosStatusSQL
     public const DETRUITE = 22;
 
 
-    public function __construct(public SQLQuery $sqlQuery)
+    public function __construct(private SQLQuery $sqlQuery)
     {
     }
 
     /**
      * @throws Exception
      */
-    public function getAllStatus()
+    public function getAllStatus(): array
     {
         $sql = 'SELECT id, name FROM helios_status ORDER BY id';
         return $this->sqlQuery->query($sql);

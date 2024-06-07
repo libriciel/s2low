@@ -44,10 +44,9 @@ class ChangeStatus extends Command
                 InputArgument::REQUIRED,
                 "l'id de la transaction modifiée"
             )
-            ->addOption(
+            ->addArgument(
                 'status-id',
-                's',
-                InputOption::VALUE_REQUIRED,
+                InputArgument::REQUIRED,
                 'id du statut désiré'
             )
             ->addOption(
@@ -65,18 +64,16 @@ class ChangeStatus extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $transactionId = $input->getArgument('transaction-id');
-        $statusId = $input->getOption('status-id');
-        $force = $input->getOption('force');
 
         try {
-            if (intval($transactionId) != $transactionId) {
-                throw new RuntimeException('transaction_id doit être un entier');
-            }
+            $transactionId = (int) $input->getArgument('transaction-id');
+            $statusId = (int) $input->getArgument('status-id');
+            $force = $input->getOption('force');
+
             if (!$this->transactionsSQL->getInfo($transactionId)) {
                 throw new RuntimeException('transaction_id incorrect : aucune transaction trouvée');
             }
-            $nouveauStatut = $this->statuses->getNameById((int) $statusId);
+            $nouveauStatut = $this->statuses->getNameById($statusId);
             $ancienStatut = $this->statuses->getNameById(
                 (int)$this->transactionsSQL->getLatestStatusId($transactionId)
             );

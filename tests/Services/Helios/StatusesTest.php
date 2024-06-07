@@ -32,16 +32,16 @@ class StatusesTest extends S2lowTestCase
     public function testGetNonExistingStatus(): void
     {
         $statuses = new Statuses([]);
-        self::expectException(RuntimeException::class);
-        self::expectExceptionMessage('Status 1 not found');
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Status 1 not found');
         self::assertSame('Posté', $statuses->getNameById(1));
     }
 
     public function testGetStatusDoubles(): void
     {
         $statuses = new Statuses([['id' => 1,'name' => 'foo'],['id' => 1,'name' => 'bar']]);
-        self::expectException(RuntimeException::class);
-        self::expectExceptionMessage('Statuts non cohérents');
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Statuts non cohérents');
         self::assertSame('Posté', $statuses->getNameById(1));
     }
 
