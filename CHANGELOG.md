@@ -7,6 +7,7 @@
 - Créer la possibilité de changer d'état d'archivage via l'API et création du droit correspondant #1180
 - mise à jour de pades-valid vers 1.4.10 #1190
 - Prise en compte de la version 5.23 du schema XSD Pes Aller #1186
+- Ajout d'une commande de changement d'état pour les transactions Helios #630
 
 ### Corrections
 
