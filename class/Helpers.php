@@ -47,7 +47,7 @@ class Helpers
     {
         $varFromRequest = Helpers::getVarFromRequest($name, "POST", $memorize);
 
-        if (self::isApiCall($allowGetApiCall) && !is_array($varFromRequest)) {
+        if (!is_null($varFromRequest) && self::isApiCall($allowGetApiCall) && !is_array($varFromRequest)) {
             $varFromRequest = utf8_encode($varFromRequest);
         }
         return $varFromRequest;

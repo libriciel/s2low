@@ -15,9 +15,9 @@ use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\AuthoritySQL;
 
-list($objectInstancier, $sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $sqlQuery, $helios_use_passtrans) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, SQLQuery::class]
+        [ObjectInstancier::class, SQLQuery::class, 'helios_use_passtrans']
     );
 
 $me = new User();
@@ -156,6 +156,10 @@ $authority->set("fax", $fax);
 $authority->set("email_mail_securise", $email_mail_securise);
 $authority->set("descr_mail_securise", $descr_mail_securise);
 $authority->set("new_notification", $newmailnotif);
+
+if (!$mod) {
+    $authority->set('helios_use_passtrans', $helios_use_passtrans);
+}
 
 $savePerms = false;
 if ($me->isGroupAdminOrSuper()) {
