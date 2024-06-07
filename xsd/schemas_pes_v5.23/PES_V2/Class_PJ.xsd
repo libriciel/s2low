@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+  <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="Class_Signature.xsd" />
+  <xs:import namespace="http://www.w3.org/2001/04/xmlenc#" schemaLocation="Class_Chiffrement.xsd" />
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="Class_SchemasCommuns.xsd" />
+  <xs:complexType name="TPES_PJ">
+    <xs:annotation>
+      <xs:documentation>Référence comptable de la pièce si celle ci n'est pas dématérialisée en même temps que l'objet comptable PES correspondant.
+Obligatoire si présence d'un d'un type PJ 012 et type PJ 013 sinon rejet de la PJ.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:annotation>
+        <xs:documentation>--- Signature Optionnelle de chaque PJ par l'ordonnateur</xs:documentation>
+      </xs:annotation>
+      <xs:element name="Contenu">
+        <xs:annotation>
+          <xs:documentation>Stockage du fichier PJ.
+Les fichiers d'origine correspondant aux pièces justificatives, qu'ils soient XML ou binaires devront être compressés avec Gzip puis convertis en Base64 : 
+La compression Gzip sur un fichier d'origine XML réduira considérablement (au moins facteur 8 à 20) la taille du fichier.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Fichier">
+              <xs:annotation>
+                <xs:documentation>Fichier d'origine (binaire ou XML) compressé avec Gzip puis converti en base 64.
+Recette, Dépense et Budget concernés.
+SI fichier à vide, rejet de la PJ non accessible depuis le proxy ou Atlas (CQ 183950).
+Le fichier doit être lisible.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:simpleContent>
+                  <xs:extension base="xs:base64Binary">
+                    <xs:attribute name="MIMEType" type="xs:token" use="required" />
+                  </xs:extension>
+                </xs:simpleContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="IdUnique" type="cm:Base_Alphanum50">
+        <xs:annotation>
+          <xs:documentation>Identification unique de la pièce pour la CEPL quel que soit le domaine, l'objet comptable, l'exercice et le budget concerné.
+Chaque CEPL fixe le format et la nomenclature de nommage (dans la limite des règles définies dans les conventions cadres nationales et du cadre nationale d'acceptation).
+
+Contrôle complémentaire : La valeur portée par cette balise doit être unique. Si une valeur identique a déjà été intégrée, la PJ doit être rejetée.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ServeurId" type="cm:Base_Alphanum20" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Identifiant du serveur de stockage du document (en lien avec le paramétrage Helios)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NomPJ" type="cm:Base_NomPJ">
+        <xs:annotation>
+          <xs:documentation>Nom du fichier correspondant à la pièce justificative.
+Une PJ qui ne dispose pas d'extension ou bien a une extension d'une longueur supérieur à 4 caractères doit être rejetée par le Guichet XML.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypePJ" type="cm:TPJ" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Enumération sur 3 caractères : Type de la pièce transmise (optionnel en lien avec le paramétrage HELIOS).
+La nomenclature du type de fichier est gérée par la DGFIP. Valeurs : 
+001 Document Budgétaire, 002 Recette, 003 Dépense, 004 Etat de Paye, 005 Etat d'Aide sociale, 006 PESFacture, 007 Facture ORMC CPP, 008 Document complémentaire ASAP CPP, 009 pièces contractuelles de marché, 010 Facture ASAP ORMC ENSU à éditer, 011 Document complémentaire à l'ASAP ENSU à éditer, 012 CFU états ordonnateur et 013 CFU états annexes. 
+Le type peut servir dans ce cas de traitement centralisé nécessaire sur certain fichier. Il ne s'agit en aucun cas d'une nomenclature destinée à référencer l'ensemble des PJ.
+S'il est valorisé le TypePj doit être cohérent avec le domaine servi dans le bloc RefCompta
+Ainsi si le bloc RefCompta est ouvert,
+TypePj 003 004 et 005 ne peuvent être associés si le bloc RefCompta est valorisé qu'avec Domaine 01
+TypePJ 002 avec Domaine 02
+TypePJ 001 012 et 013 avec Domaine 04
+TypePJ 006 avec Domaine 01 ou 02
+TypePJ 007 avec le Domaine 02
+TypePJ 008 avec le Domaine 02
+TypePJ 010 avec le Domaine 02
+TypePJ 011 avec le Domaine 02
+TypePJ 009 avec le Domaine 06
+
+Sinon rejet de la PJ.
+De plus pour les TypePJ 012 et 013 un contrôle est effectué vérifiant que le budget est paramétré CFU, sinon rejet de la PJ.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Description" type="cm:Base_Texte250">
+        <xs:annotation>
+          <xs:documentation>Description de la pièce justificative.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RefCompta" type="TPES_RefCompta" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Référence comptable de la pièce si celle ci n'est pas dématérialisée en même temps que l'objet comptable PES correspondant.
+Obligatoire si présence d'un d'un type PJ 012 et type PJ 013 sinon rejet de la PJ.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TPES_PJs">
+    <xs:sequence>
+      <xs:element name="EnTetePES_PJ">
+        <xs:annotation>
+          <xs:documentation>Ce bloc définit la version du bloc PJ.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="IdVer" type="cm:Base_Num1">
+              <xs:annotation>
+                <xs:documentation>Seule valeur possible= 1 
+Vide ou autre valeur= rejet PJ même dans le proxy.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="PJ" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="TPES_PJ" />
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TPES_RefCompta">
+    <xs:annotation>
+      <xs:documentation>Référence comptable de la pièce si celle ci n'est pas dématérialisée en même temps que l'objet comptable PES correspondant</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Domaine" type="cm:TDomaine">
+        <xs:annotation>
+          <xs:documentation>Codification du domaine PES (pour cette version DEPENSE, RECETTE ou BUDGET). 
+01 - Depense / 02 – Recette /, / 04 – Budget / 06 – Marché. Avec le PESV2 dépense, seul le domaine 01 est accepté. Avec le PESV2 recette, seule la valeur 02 est possible. Avec le PESV2 Marché, seule la valeur 06 est possible. Toute autre valeur ou valorisation à vide aboutit au rejet de la PJ.
+
+S'il est valorisé le TypePj doit être cohérent avec Domaine servi dans le bloc RefCompta.
+Ainsi si le bloc RefCompta est ouvert,
+Domaine 01 ne peut être associé qu'à TypePj 003 004 et 005 ou Type PJ 006
+Domaine 02 avec TypePJ 002 ,TypePJ 006, TypePJ 007,Type PJ 008, Type PJ 010 ou Type PJ 011
+Domaine 04 avec TypePJ 001   Type PJ 012, TypePJ 013
+Domaine 06 avec TypePJ 009
+
+Sinon rejet de la PJ.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Exercice" type="cm:Base_Annee">
+        <xs:annotation>
+          <xs:documentation>Exercice de la pièce comptable ou exercice du Budget en cas de présence d'un type de PJ 001 ou exercice du CFU en cas de présence d'un type PJ 012 ou 013
+Absence ou valeur erronée= rejet de la PJ.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypeObjet" type="cm:TObjet">
+        <xs:annotation>
+          <xs:documentation>Type de la pièce comptable. La valorisation de cet élément dépend du domaine. Se rapporter au tableau ci-dessous.
+Absence ou valeur erronée = rejet de la PJ. 
+Pour le domaine 01 dépense : Il correspond au type de bordereau de mandats : 01 bordereau ordinaire, 02 bordereau d'annulation correction, ...
+Pour le domaine 02 recette : Il correspond au type de bordereau de titres. 01 bordereau ordinaire (Type PJ 002, 006, 008, 011), 02 bordereau d'annulation, … 06 bordereau ORMC (Type PJ 007, 008, 010, 011)
+Pour le domaine 04  : il correspond à 01 pour le Budget primitif, 02 pour une décision modificative, 03 pour le budget supplémentaire et 10 pour CFU
+Pour le domaine 06 marché il correspond à la nature du marché (ex : 02 marché de partenariat).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Identifiant" type="cm:Base_IdentifiantPJ20" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>- Pour le domaine DEPENSE : n° du mandat (IdPce),
+- Pour le domaine RECETTE : n° du Titre (IdPce) pour les titres hors ORMC, n° du rôle (IdBord) pour les titres ORMC.
+- Pour le domaine BUDGET : le numéro de décision lorsque le document budgétaire (TypePiece) est une DM, renseigné à 1 pour document budgétaire budget primitif et pour un document budgétaire budget supplémentaire.
+- Pour le domaine BUDGET (TypePJ 012, 013)  : l'exercice du CFU, sur 4 caractères.
+- Pour le domaine MARCHE : Identifiant du marché,(IdContrat entre 5 et 14 caractères  : ne prend pas en compte le numéro d'ordre de la modification). Le type associé à la balise &lt;Identifiant&gt; accepte le caractère « / » à partir de la cinquième position pour l'identifiant d'un marché. 
+Si absence dans bloc RefCompta = rejet PJ.
+Balise obligatoire dans le cadre d'une RefCompta et associée à ComplementIdentifiant ≥ 1 ou absence mais aucune valorisation à vide n'est possible.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ComplementIdentifiant" type="cm:Base_Alphanum20" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Optionnel
+Pour le domaine DEPENSE : n° de ligne de mandat (IdLigne). Si zone servie, alors la PJ peut être rattachée à une ligne de pièce particulière sinon la PJ est visible depuis toutes les lignes de mandat servi dans la balise Identifiant.
+Pour le domaine RECETTE : 
+- n° de ligne de titre (IdLigne) pour les titres hors ORMC, alors la PJ peut être rattachée à une ligne de pièce particulière sinon la PJ est visible depuis toutes les lignes de titre servi dans la balise Identifiant.
+- n° d'article de rôle (IdLigne) pour les titres ORMC.
+Si RefCompta et Identifiant, valeur en PESDépense et PESRecette forcément supérieure ou égale à 1 ou la balise est absente.
+Si la RefCompta est supérieure ou égale à 1, la pj est référencée et accessible pour les lignes RefCompta décrites. Si la balise est absente, la PJ est accessible sur toutes les lignes du mandat ou du titre référence dans la balise Identifiant au niveau de la pièce dans Hélios.
+Pour le domaine MARCHE, le SIRET du Pouvoir Adjudicateur du marché notifié pour un groupement de commandes, la PJ pourra être rattachée à un marché porteur des informations (Identifiant du marché notifié, SIRET du Pouvoir Adjudicateur) même si le numéro de marché dans Hélios diffère.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdTiers" type="cm:Base_Texte15" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>SIRET du tiers titulaire du marché public(balise typeTitulaire=01 titulaire(Balise réservée au domaine Marché)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+
