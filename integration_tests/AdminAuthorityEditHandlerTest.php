@@ -29,7 +29,7 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTest
         );                                                           // 2/ Le client ne modifie pas la variable _SERVER
 
         LegacyObjectsManager::setLegacyObjectInstancier();
-        LegacyObjectsManager::getLegacyObjectInstancier()->set('helios_use_passtrans', false);
+        LegacyObjectsManager::getLegacyObjectInstancier()->set('helios_use_passtrans_as_default', false);
 
         $_POST = [
             'id' => '1',
@@ -106,7 +106,7 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTest
         );                                                           // 2/ Le client ne modifie pas la variable _SERVER
 
         LegacyObjectsManager::setLegacyObjectInstancier();
-        LegacyObjectsManager::getLegacyObjectInstancier()->set('helios_use_passtrans', false);
+        LegacyObjectsManager::getLegacyObjectInstancier()->set('helios_use_passtrans_as_default', false);
 
         $_POST = [
             'name' => 'le nom',
@@ -186,7 +186,7 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTest
         );                                                           // 2/ Le client ne modifie pas la variable _SERVER
 
         LegacyObjectsManager::setLegacyObjectInstancier();
-        LegacyObjectsManager::getLegacyObjectInstancier()->set('helios_use_passtrans', $usePasstrans);
+        LegacyObjectsManager::getLegacyObjectInstancier()->set('helios_use_passtrans_as_default', $usePasstrans);
 
         $_POST = [
             'id' => $id,

@@ -119,4 +119,6 @@ define("MAIL_TEXT","${MAIL_TEXT:-Bonjour,
 Un courrier recommandé avec d’éventuelles pièces jointes vous a été transmis par la plateforme sécurisée de l’ADULLACT. 
 Nous vous proposons de cliquer sur le lien suivant pour accéder au courrier recommandé et confirmer la réception : 
 accés au courrier recommandé.}");
+
+define("HELIOS_USE_PASSTRANS_AS_DEFAULT",${HELIOS_USE_PASSTRANS_AS_DEFAULT:-false});
 EOF
