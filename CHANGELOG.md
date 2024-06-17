@@ -1,6 +1,6 @@
 # Changelog
 
-## 5.0.39-rc.1 2024-06-10
+## 5.0.39 2024-06-17
 
 ### Évolutions
 
@@ -8,6 +8,7 @@
 - mise à jour de pades-valid vers 1.4.10 #1190
 - Prise en compte de la version 5.23 du schema XSD Pes Aller #1186
 - Ajout d'une commande de changement d'état pour les transactions Helios #630
+- Permettre de configurer la valeur par défaut de helios_use_passtrans via la variable d'environnement HELIOS_USE_PASSTRANS_AS_DEFAULT #1192
 
 ### Corrections
 

@@ -418,6 +418,10 @@ if (!defined('HELIOS_COUNTER_FILE')) {
     define('HELIOS_COUNTER_FILE', HELIOS_FILES_ROOT . "counter.txt");
 }
 
+if (!defined('HELIOS_USE_PASSTRANS_AS_DEFAULT')) {
+    define('HELIOS_USE_PASSTRANS_AS_DEFAULT', false);
+}
+
 if (!defined('HELIOS_PESALLER_SANSTRANSACTION')) {
     define('HELIOS_PESALLER_SANSTRANSACTION', HELIOS_FILES_ROOT . "orphelins/");
 }

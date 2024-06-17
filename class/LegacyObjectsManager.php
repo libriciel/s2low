@@ -121,6 +121,7 @@ class LegacyObjectsManager
         $objectInstancier->set('database_sql_definition_filepath', __DIR__ . "/../db/s2low.sql");
 
         $objectInstancier->set('helios_counter_file', HELIOS_COUNTER_FILE);
+        $objectInstancier->set('helios_use_passtrans_as_default', HELIOS_USE_PASSTRANS_AS_DEFAULT);
 
         $objectInstancier->set('openstack_enable', OPENSTACK_ENABLE);
 
