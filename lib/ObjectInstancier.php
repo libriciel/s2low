@@ -25,7 +25,7 @@ class ObjectInstancier
         $this->set($name, $value);
     }
 
-    public function get($name) : mixed
+    public function get($name): mixed
     {
         if (! isset($this->objects[$name])) {
             $this->objects[$name] =  $this->newInstance($name);

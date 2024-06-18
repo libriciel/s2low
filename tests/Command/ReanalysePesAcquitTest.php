@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace S2low\Tests\Command;
@@ -70,10 +71,6 @@ class ReanalysePesAcquitTest extends KernelTestCase
 
         $command = $application->find('helios:reanalyse-pes-acquit');
         $commandTester = new CommandTester($command);
-        $commandOutput = $commandTester->execute([
-            // pass arguments to the helper
-            'transaction-id' => 1
-        ]);
 
         $pesAllerRetriever = new PesAllerRetriever(
             $helios_files_upload_root,
@@ -94,8 +91,17 @@ class ReanalysePesAcquitTest extends KernelTestCase
 
         $heliosTransactionSQL->setAcquitFilename($transaction_id, 'pes_acquit.xml');
 
-        static::assertStringContainsString('[1] Path \'\' vide, ignoré', $commandTester->getDisplay());
-        static::assertEquals(-1, $commandOutput);
+        $commandOutput = $commandTester->execute([
+            // pass arguments to the helper
+            'transaction-id' => $transaction_id
+        ]);
+
+        static::assertStringContainsString(
+            "[$transaction_id] Copie de /data/tdt-workspace/helios/response//pes_acquit.xml " .
+            "vers /data/tdt-workspace/helios/response_tmp//pes_acquit.xml",
+            $commandTester->getDisplay()
+        );
+        static::assertEquals(0, $commandOutput);
     }
 
     private function getObjectInstancier(): ObjectInstancier
