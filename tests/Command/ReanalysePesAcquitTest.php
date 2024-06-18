@@ -21,28 +21,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class ReanalysePesAcquitTest extends KernelTestCase
 {
-    public function testExecuteOnATransactionWithoutPesAcquit()
-    {
-        LegacyObjectsManager::resetObjectInstancier();
-        self::ensureKernelShutdown();
-        $kernel = new Kernel('test', true);
-        $application = new Application($kernel);
-
-        $command = $application->find('helios:reanalyse-pes-acquit');
-        $commandTester = new CommandTester($command);
-        $commandOutput = $commandTester->execute([
-            // pass arguments to the helper
-            'transaction-id' => 1
-        ]);
-
-        static::assertStringContainsString("[1] Path '' vide", $commandTester->getDisplay());
-        static::assertEquals(-1, $commandOutput);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function testExecuteOnATransactionWithPesAcquit()
+    protected function setUp(): void
     {
         LegacyObjectsManager::resetObjectInstancier();
         self::ensureKernelShutdown();
@@ -50,10 +29,7 @@ class ReanalysePesAcquitTest extends KernelTestCase
         // WARNING : Normalement, la gestion des répertoires tmp est géré par vfs ...
         $tmpFolder = new TmpFolder();
         $helios_responses_root = $tmpFolder->create();
-        $helios_files_upload_root = $tmpFolder->create();
-
-        $pes_aller = __DIR__ . '/../../test/PHPUnit/helios/fixtures/pes_aller_ok.xml';
-        $pes_acquit = __DIR__ . '/../../test/PHPUnit/helios/fixtures/pes_acquit.xml';
+        $this->helios_files_upload_root = $tmpFolder->create();
         // WARNING : fin de la partie à remplacer
 
         LegacyObjectsManager::getLegacyObjectInstancier()->set(
@@ -63,17 +39,36 @@ class ReanalysePesAcquitTest extends KernelTestCase
 
         LegacyObjectsManager::getLegacyObjectInstancier()->set(
             'helios_files_upload_root',
-            $helios_files_upload_root
+            $this->helios_files_upload_root
         );
 
         $kernel = new Kernel('test', true);
         $application = new Application($kernel);
 
         $command = $application->find('helios:reanalyse-pes-acquit');
-        $commandTester = new CommandTester($command);
+        $this->commandTester = new CommandTester($command);
+    }
+    public function testExecuteOnATransactionWithoutPesAcquit()
+    {
+        $commandOutput = $this->commandTester->execute([
+            // pass arguments to the helper
+            'transaction-id' => 1
+        ]);
+
+        static::assertStringContainsString("[1] Path '' vide", $this->commandTester->getDisplay());
+        static::assertEquals(-1, $commandOutput);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testExecuteOnATransactionWithPesAcquit()
+    {
+        $pes_aller = __DIR__ . '/../../test/PHPUnit/helios/fixtures/pes_aller_ok.xml';
+        $pes_acquit = __DIR__ . '/../../test/PHPUnit/helios/fixtures/pes_acquit.xml';
 
         $pesAllerRetriever = new PesAllerRetriever(
-            $helios_files_upload_root,
+            $this->helios_files_upload_root,
             $this->getObjectInstancier()->get(OpenStackSwiftWrapper::class),
             $this->getObjectInstancier()->get(S2lowLogger::class)
         )
@@ -91,15 +86,15 @@ class ReanalysePesAcquitTest extends KernelTestCase
 
         $heliosTransactionSQL->setAcquitFilename($transaction_id, 'pes_acquit.xml');
 
-        $commandOutput = $commandTester->execute([
+        $commandOutput = $this->commandTester->execute([
             // pass arguments to the helper
             'transaction-id' => $transaction_id
         ]);
 
         static::assertStringContainsString(
             "[$transaction_id] Copie de /data/tdt-workspace/helios/response//pes_acquit.xml " .
-            "vers /data/tdt-workspace/helios/response_tmp//pes_acquit.xml",
-            $commandTester->getDisplay()
+            'vers /data/tdt-workspace/helios/response_tmp//pes_acquit.xml',
+            $this->commandTester->getDisplay()
         );
         static::assertEquals(0, $commandOutput);
     }
