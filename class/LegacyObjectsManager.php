@@ -49,11 +49,11 @@ class LegacyObjectsManager
      */
     public static function setLegacyObjectInstancier(): void
     {
-        if (TESTING_ENVIRONNEMENT) {
+        if (TESTING_ENVIRONNEMENT) {    // Environnement de tests unitaire, variable définie dans bootstrap.php
             $sqlQuery = new SQLQuery(DB_DATABASE_TEST);
             $sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST);
             $sqlQuery->setDatabaseHost(DB_HOST_TEST);
-        } else {
+        } else {                        // Environnement de test, prod ...
             $sqlQuery = new SQLQuery(DB_DATABASE);
             $sqlQuery->setDatabaseHost(DB_HOST);
             $sqlQuery->setCredential(DB_USER, DB_PASSWORD);

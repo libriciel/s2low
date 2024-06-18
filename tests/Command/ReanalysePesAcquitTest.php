@@ -1,8 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace S2low\Tests\Command;
 
-use S2low\Helpers\ClassHelper;
+use Exception;
+use org\bovigo\vfs\vfsStream;
 use S2low\Kernel;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\LegacyObjectsManager;
@@ -15,7 +17,6 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\Console\Command\Command;
 
 class ReanalysePesAcquitTest extends KernelTestCase
 {
@@ -30,13 +31,16 @@ class ReanalysePesAcquitTest extends KernelTestCase
         $commandTester = new CommandTester($command);
         $commandOutput = $commandTester->execute([
             // pass arguments to the helper
-            'transaction-id' => '1'
+            'transaction-id' => 1
         ]);
 
-        $this->assertStringContainsString("[1] Path vide, ignoré", $commandTester->getDisplay());
-        $this->assertEquals(-1, $commandOutput);
+        static::assertStringContainsString("[1] Path '' vide", $commandTester->getDisplay());
+        static::assertEquals(-1, $commandOutput);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testExecuteOnATransactionWithPesAcquit()
     {
         LegacyObjectsManager::resetObjectInstancier();
@@ -68,10 +72,9 @@ class ReanalysePesAcquitTest extends KernelTestCase
         $commandTester = new CommandTester($command);
         $commandOutput = $commandTester->execute([
             // pass arguments to the helper
-            'transaction-id' => '1'
+            'transaction-id' => 1
         ]);
 
-        /** @var PesAllerRetriever $pesAllerRetriever */
         $pesAllerRetriever = new PesAllerRetriever(
             $helios_files_upload_root,
             $this->getObjectInstancier()->get(OpenStackSwiftWrapper::class),
@@ -79,21 +82,20 @@ class ReanalysePesAcquitTest extends KernelTestCase
         )
             ;
         $filepath = $pesAllerRetriever->getPathForNonExistingFile(sha1_file($pes_aller));
-        \org\bovigo\vfs\vfsStream::setup('test');
-        var_dump($pes_aller);
-        var_dump($filepath);
+        vfsStream::setup('test');
         copy($pes_aller, $filepath);
+        /** @var HeliosController $heliosControler */
         $heliosControler = $this->getObjectInstancier()->get(HeliosController::class);
-        $transaction_id =  $heliosControler->importFile(8, $pes_aller, "pes_aller.xml");
+        $transaction_id =  $heliosControler->importFile(1, $pes_aller, 'pes_aller.xml');
 
-        copy($pes_acquit, $this->getObjectInstancier()->get('helios_responses_root') . "/pes_acquit.xml");
+        copy($pes_acquit, $this->getObjectInstancier()->get('helios_responses_root') . '/pes_acquit.xml');
 
         $heliosTransactionSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
 
-        $heliosTransactionSQL->setAcquitFilename($transaction_id, "pes_acquit.xml");
+        $heliosTransactionSQL->setAcquitFilename($transaction_id, 'pes_acquit.xml');
 
-        $this->assertStringContainsString("[1] Path vide, ignoré", $commandTester->getDisplay());
-        $this->assertEquals(-1, $commandOutput);
+        static::assertStringContainsString('[1] Path \'\' vide, ignoré', $commandTester->getDisplay());
+        static::assertEquals(-1, $commandOutput);
     }
 
     private function getObjectInstancier(): ObjectInstancier
