@@ -44,17 +44,18 @@ class ReanalysePesAcquitTest extends KernelTestCase
             'helios_files_upload_root',
             $this->helios_files_upload_root
         );
-        // On mocke WorkerScript pour éviter la dépendance au mail et à beanstalkd
-        LegacyObjectsManager::getLegacyObjectInstancier()->set(
-            WorkerScript::class,
-            $this->getMockBuilder(WorkerScript::class)->disableOriginalConstructor()->getMock()
-        );
 
         $kernel = new Kernel('test', true);
         $kernel->boot();
         $application = new Application($kernel);
 
         $command = $application->find('helios:reanalyse-pes-acquit');
+
+        // On mocke WorkerScript pour éviter la dépendance au mail et à beanstalkd
+        LegacyObjectsManager::getLegacyObjectInstancier()->set(
+            WorkerScript::class,
+            $this->getMockBuilder(WorkerScript::class)->disableOriginalConstructor()->getMock()
+        );
         $this->commandTester = new CommandTester($command);
     }
     public function testExecuteOnATransactionWithoutPesAcquit()
