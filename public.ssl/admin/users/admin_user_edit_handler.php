@@ -1,6 +1,7 @@
 <?php
 
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Lib\FrontController;
 
-$frontController = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(FrontController::class);
-$frontController->go("AdminUser", "doEdit");
+$frontController = LegacyObjectsManager::getLegacyObjectInstancier()->get(FrontController::class);
+$frontController->go('AdminUser', 'doEdit');

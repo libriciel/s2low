@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.40 2024-06-19
+
+### Corrections
+
+- N'afficher qu'aux Super Administrateurs la possibilité d'accorder les droits archivistes #1193
+
 ## 5.0.39 2024-06-17
 
 ### Évolutions
