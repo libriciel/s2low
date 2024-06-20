@@ -14,7 +14,7 @@ class AvailableSirensByGroup
         private AuthorityGroupSirenSQL $authorityGroupSirenSQL
     ) {
     }
-    public function get(int $authorityId): array
+    public function get(?int $authorityId): array
     {
         $groups = $this->groupSQL->getGroupsIdName();
         $sirensByGroup = [];
