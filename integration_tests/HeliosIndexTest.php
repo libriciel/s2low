@@ -9,7 +9,7 @@ use S2lowLegacy\Class\LegacyObjectsManager;
 /**
  *
  */
-class HeliosIndexTestCase extends S2lowIntegrationTestCase
+class HeliosIndexTest extends S2lowIntegrationTestCase
 {
     /**
      * @throws \Exception

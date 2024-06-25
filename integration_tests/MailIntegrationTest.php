@@ -11,7 +11,7 @@ use S2lowLegacy\Lib\ObjectInstancierFactory;
 /**
  *
  */
-class MailIntegrationTestCase extends S2lowIntegrationTestCase
+class MailIntegrationTest extends S2lowIntegrationTestCase
 {
     /**
      * @throws \Exception

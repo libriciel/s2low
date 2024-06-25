@@ -10,7 +10,7 @@ use S2lowLegacy\Class\LegacyObjectsManager;
 /**
  *
  */
-class AdminAuthorityEditHandlerTestCase extends S2lowIntegrationTestCase
+class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
 {
     /**
      * @throws \Exception
