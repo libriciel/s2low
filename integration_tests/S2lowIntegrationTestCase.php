@@ -10,7 +10,7 @@ use S2lowLegacy\Lib\SQLQuery;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class S2lowIntegrationTest extends WebTestCase
+class S2lowIntegrationTestCase extends WebTestCase
 {
     /** @var SQLQuery */
     protected SQLQuery $sqlQuery;
@@ -47,7 +47,7 @@ class S2lowIntegrationTest extends WebTestCase
     /**
      * @throws \Exception
      */
-    public function setUpUser(string $certificatPem, string $certificatHash): void
+    public function SuperAdmin(string $certificatPem, string $certificatHash): void
     {
         $sql = "INSERT INTO users VALUES (1, 'eric@sigmalis.com', 'test_subject', 'test_issuer', 'Pommateau', 'Eric', NULL, 'SADM', 1, 1, ?, NULL, NULL, NULL, 1, NULL, NULL, ?, ?)";
         $this->sqlQuery->query($sql, [$certificatPem, $certificatPem, $certificatHash]);
@@ -58,6 +58,18 @@ class S2lowIntegrationTest extends WebTestCase
         $this->sqlQuery->query($sql2);
         $sql3 = "INSERT INTO users_perms VALUES (64397, 3, 1, 'RW'); -- Permission RW sur le module Mail";
         $this->sqlQuery->query($sql3);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function setUpUserWithNoPermissions(string $certificatPem, string $certificatHash): void
+    {
+        $sql = "INSERT INTO users VALUES (1, 'eric@sigmalis.com', 'test_subject', 'test_issuer', 'Pommateau', 'Eric', NULL, 'USER', 1, 1, ?, NULL, NULL, NULL, 1, NULL, NULL, ?, ?)";
+        $this->sqlQuery->query($sql, [$certificatPem, $certificatPem, $certificatHash]);
+
+        $sql1 = "DELETE FROM users_perms WHERE user_id=1; -- Suppression des permissions sur tous les modules";
+        $this->sqlQuery->query($sql1);
     }
 
     /**

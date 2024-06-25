@@ -10,7 +10,7 @@ use S2lowLegacy\Class\LegacyObjectsManager;
 /**
  *
  */
-class AdminAuthorityEditHandlerTest extends S2lowIntegrationTest
+class AdminAuthorityEditHandlerTestCase extends S2lowIntegrationTestCase
 {
     /**
      * @throws \Exception
@@ -21,7 +21,7 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTest
             file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
 
-        $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
+        $this->SuperAdmin($certificatePem->getContent(), $certificatePem->getHash());
 
         $client = $this->setUpClient(
             $certificatePem->getContent(),
@@ -98,7 +98,7 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTest
             file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
 
-        $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
+        $this->SuperAdmin($certificatePem->getContent(), $certificatePem->getHash());
 
         $client = $this->setUpClient(
             $certificatePem->getContent(),
@@ -178,7 +178,7 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTest
             file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
 
-        $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
+        $this->SuperAdmin($certificatePem->getContent(), $certificatePem->getHash());
 
         $client = $this->setUpClient(
             $certificatePem->getContent(),

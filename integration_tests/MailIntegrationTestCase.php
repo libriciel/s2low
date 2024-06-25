@@ -11,7 +11,7 @@ use S2lowLegacy\Lib\ObjectInstancierFactory;
 /**
  *
  */
-class MailIntegrationTest extends S2lowIntegrationTest
+class MailIntegrationTestCase extends S2lowIntegrationTestCase
 {
     /**
      * @throws \Exception
@@ -22,7 +22,7 @@ class MailIntegrationTest extends S2lowIntegrationTest
             file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
 
-        $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
+        $this->SuperAdmin($certificatePem->getContent(), $certificatePem->getHash());
         $client = $this->setUpClient(
             $certificatePem->getContent(),
             $certificatePem->getContentStrippedFromBegin()
@@ -50,7 +50,7 @@ class MailIntegrationTest extends S2lowIntegrationTest
             file_get_contents(__DIR__ . '/../test/PHPUnit/controller/fixtures/user1.pem')
         );
 
-        $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
+        $this->SuperAdmin($certificatePem->getContent(), $certificatePem->getHash());
 
         ObjectInstancierFactory::resetObjectInstancier();
 
@@ -74,7 +74,7 @@ class MailIntegrationTest extends S2lowIntegrationTest
             file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
 
-        $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
+        $this->SuperAdmin($certificatePem->getContent(), $certificatePem->getHash());
 
         $client = $this->setUpClient(
             $certificatePem->getContent(),
@@ -100,7 +100,7 @@ class MailIntegrationTest extends S2lowIntegrationTest
             file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
 
-        $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
+        $this->SuperAdmin($certificatePem->getContent(), $certificatePem->getHash());
 
         $client = $this->setUpClient($certificatePem->getContent(), $certificatePem->getContentStrippedFromBegin());
         $postData = [ 'module' => '1', 'authority_group_id' => '1', 'subject' => 'le subject', 'body' => 'le body'];
