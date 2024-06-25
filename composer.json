@@ -100,7 +100,7 @@
   "autoload-dev": {
     "psr-4": {
       "S2low\\Tests\\": "tests/",
-      "IntegrationTests\\": "integration_tests"
+      "IntegrationTests\\": "integration_tests/"
     },
     "classmap": [
       "test/PHPUnit"
