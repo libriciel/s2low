@@ -2,25 +2,32 @@
 
 use S2lowLegacy\Class\actes\ActesScriptHelper;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\Droit;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Lib\Recuperateur;
 
-require_once(dirname(__FILE__) . "/../../../init/init-www-actes.php");
-//require_once(__DIR__."/../../../class/actes/ActesTransactionsSQL.class.php");
+/** @var Initialisation $initialisation */
+/** @var Droit $droit */
+/** @var ActesScriptHelper $actesScriptHelper */
 
-if (! $droit->isSuperAdmin($userInfo)) {
-    header("Location: index.php");
+[$initialisation,$droit ,$actesScriptHelper] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, Droit::class,ActesScriptHelper::class]);
+
+$initData = $initialisation->doInit(Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+
+if (! $droit->isSuperAdmin($initData->userInfo)) {
+    header('Location: index.php');
     exit;
 }
 $recuperateur = new Recuperateur($_POST);
 
 $id = $recuperateur->get('id');
 
-$actesScriptHelper  = $objectInstancier->get(ActesScriptHelper::class);
-
 $actesScriptHelper->updateStatus(
     [$id],
     ActesStatusSQL::STATUS_EN_ERREUR,
-    "Transaction passée manuellement en erreur"
+    'Transaction passée manuellement en erreur'
 );
 
 

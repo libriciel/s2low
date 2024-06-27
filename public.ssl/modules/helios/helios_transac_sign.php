@@ -5,45 +5,45 @@ use S2lowLegacy\Class\helios\HeliosSignature;
 use S2lowLegacy\Class\helios\HeliosStorePESAllerWorker;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-list($pesAllerRetriever,$workerScript, $heliosTransactionSQL ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($initialisation, $pesAllerRetriever,$workerScript, $heliosTransactionSQL ) =
+    LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [PesAllerRetriever::class, WorkerScript::class, HeliosTransactionsSQL::class]
+        [Initialisation::class, PesAllerRetriever::class, WorkerScript::class, HeliosTransactionsSQL::class]
     );
-require_once(__DIR__ . "/../../../init/init-www-helios.php");
+
+$initData = $initialisation->doInit(Initialisation::MODULENAMEHELIOS);
 
 // Instanciation du module courant
 $module = new Module();
-if (!$module->initByName("helios")) {
-    $_SESSION["error"] = "Erreur d'initialisation du module";
-    header("Location: " . WEBSITE_SSL);
+if (!$module->initByName('helios')) {
+    $_SESSION['error'] = "Erreur d'initialisation du module";
+    header('Location: ' . WEBSITE_SSL);
     exit();
 }
 
 $me = new User();
 
 if (!$me->authenticate()) {
-    $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    $_SESSION['error'] = "Échec de l'authentification";
+    header('Location: ' . Helpers::getLink('connexion-status'));
     exit();
 }
 
-if (!$module->isActive() || !$me->checkDroit($module->get("name"), 'CS')) {
-    $_SESSION["error"] = "Accès refusé";
-    header("Location: " . WEBSITE_SSL);
+if (!$module->isActive() || !$me->checkDroit($module->get('name'), 'CS')) {
+    $_SESSION['error'] = 'Accès refusé';
+    header('Location: ' . WEBSITE_SSL);
     exit();
 }
 
-
-
-
-
-$nb_signature = Helpers :: getVarFromPost("nb_signature");
+$nb_signature = Helpers :: getVarFromPost('nb_signature');
 
 
 
@@ -54,8 +54,8 @@ for ($i = 1; $i <= $nb_signature; $i++) {
     $is_bordereau_1 = Helpers :: getVarFromPost("is_bordereau_$i");
 
     if (empty($id)) {
-        $_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
-        header("Location: " . Helpers::getLink("/modules/helios/index.php"));
+        $_SESSION['error'] = "Pas d'identifiant de transaction spécifié";
+        header('Location: ' . Helpers::getLink('/modules/helios/index.php'));
         exit();
     }
 
@@ -63,14 +63,14 @@ for ($i = 1; $i <= $nb_signature; $i++) {
     $trans = new HeliosTransaction();
     $trans->setId($id);
     if (! $trans->init()) {
-        $_SESSION["error"] = "Erreur d'initialisation de la transaction.";
-        header("Location: " . Helpers::getLink("/modules/helios/index.php"));
+        $_SESSION['error'] = "Erreur d'initialisation de la transaction.";
+        header('Location: ' . Helpers::getLink('/modules/helios/index.php'));
         exit();
     }
 
     if ($trans->get('last_status_id') != 13) {
-        $_SESSION["error"] = "Le fichier PES ne peut plus être signé à ce moment-là (status : " . $trans->get('last_status_id') . ")";
-        header("Location:  " . Helpers::getLink("/modules/helios/helios_transac_show.php?id=$id"));
+        $_SESSION['error'] = 'Le fichier PES ne peut plus être signé à ce moment-là (status : ' . $trans->get('last_status_id') . ')';
+        header('Location:  ' . Helpers::getLink("/modules/helios/helios_transac_show.php?id=$id"));
         exit();
     }
 
@@ -87,8 +87,9 @@ for ($i = 1; $i <= $nb_signature; $i++) {
     $new_filesize = mb_strlen($new_pes_content);
 
     if ($new_filesize > HELIOS_MAX_UPLOAD_SIZE) {
-        $_SESSION["error"] = "Taille de fichier supérieure à la limite autorisée (" . (HELIOS_MAX_UPLOAD_SIZE / 1024 / 1024) . "Mo maximum).";
-        header("Location: " . WEBSITE_SSL);
+        $_SESSION['error'] = 'Taille de fichier supérieure à la limite autorisée (' .
+            (HELIOS_MAX_UPLOAD_SIZE / 1024 / 1024) . 'Mo maximum).';
+        header('Location: ' . WEBSITE_SSL);
         exit();
     }
 
@@ -102,29 +103,29 @@ for ($i = 1; $i <= $nb_signature; $i++) {
     $trans->set('sha1', $new_sha1);
     $trans->set('filesize', $new_filesize);
 
-    if (! $trans->save(true)) {
+    if (! $trans->save()) {
         $msg =  "Erreur de l'enregistrement de la signature.";
 
-        if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
-            $_SESSION["error"] .= "\nErreur de journalisation.";
+        if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get('name'), $me)) {
+            $_SESSION['error'] .= "\nErreur de journalisation.";
         }
-        $_SESSION["error"] = $msg;
-        header("Location:  " . Helpers::getLink("/modules/helios/helios_transac_show.php?id=$id"));
+        $_SESSION['error'] = $msg;
+        header('Location:  ' . Helpers::getLink("/modules/helios/helios_transac_show.php?id=$id"));
         exit();
     }
 
-    $heliosTransactionSQL->updateStatus($id, HeliosTransactionsSQL::POSTE, "Fichier signé");
+    $heliosTransactionSQL->updateStatus($id, HeliosTransactionsSQL::POSTE, 'Fichier signé');
 
     $workerScript->putJobByClassName(HeliosStorePESAllerWorker::class, $id);
     $workerScript->putJobByQueueName(HeliosAnalyseFichierAEnvoyerWorker::QUEUE_NAME, $id);
 }
 
 if ($nb_signature > 1) {
-    $_SESSION["error"] = "Les signatures ont été enregistrées";
-    header("Location:  " . Helpers::getLink("/modules/helios/index.php"));
+    $_SESSION['error'] = 'Les signatures ont été enregistrées';
+    header('Location:  ' . Helpers::getLink('/modules/helios/index.php'));
     exit();
 } else {
-    $_SESSION["error"] = "La signature a été enregistrée";
-    header("Location:  " . Helpers::getLink("/modules/helios/helios_transac_show.php?id=$id"));
+    $_SESSION['error'] = 'La signature a été enregistrée';
+    header('Location:  ' . Helpers::getLink("/modules/helios/helios_transac_show.php?id=$id"));
     exit();
 }

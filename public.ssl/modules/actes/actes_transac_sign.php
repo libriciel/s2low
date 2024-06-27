@@ -1,11 +1,15 @@
 <?php
 
+use S2low\Services\ProcessCommand\CommandLauncher;
+use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesSignature;
 use S2lowLegacy\Class\actes\ActesStoreEnveloppeWorker;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\VerifyPemCertificate;
@@ -14,42 +18,59 @@ use S2lowLegacy\Class\VerifyPKCS7Signature;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\PemCertificateFactory;
 
-list($actesSignature, $actesTransactionsSQL, $actesEnvelopeSQL, $workerScript ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var Initialisation $initialisation */
+/** @var ActesSignature $actesSignature */
+/** @var ActesTransactionsSQL $actesTransactionsSQL */
+/** @var ActesEnvelopeSQL $actesEnvelopeSQL */
+/** @var WorkerScript $workerScript */
+list(
+    $initialisation,
+    $actesSignature,
+    $actesTransactionsSQL,
+    $actesEnvelopeSQL,
+    $workerScript
+    ) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ActesSignature::class, ActesTransactionsSQL::class, ActesEnvelopeSQL::class, WorkerScript::class]
+        [
+            Initialisation::class,
+            ActesSignature::class,
+            ActesTransactionsSQL::class,
+            ActesEnvelopeSQL::class,
+            WorkerScript::class
+        ]
     );
 
-require_once(__DIR__ . "/../../../init/init-www-actes.php");
+$initData = $initialisation->doInit(Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
 // Instanciation du module courant
 $module = new Module();
-if (!$module->initByName("actes")) {
-    $_SESSION["error"] = "Erreur d'initialisation du module";
-    header("Location: " . WEBSITE_SSL);
+if (!$module->initByName('actes')) {
+    $_SESSION['error'] = "Erreur d'initialisation du module";
+    header('Location: ' . WEBSITE_SSL);
     exit();
 }
 
 $me = new User();
 
 if (!$me->authenticate()) {
-    $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    $_SESSION['error'] = "Échec de l'authentification";
+    header('Location: ' . Helpers::getLink('connexion-status'));
     exit();
 }
 
 if (!$module->isActive() || ! $me->checkDroit($module->get("name"), 'CS')) {
-    $_SESSION["error"] = "Accès refusé";
-    header("Location: " . WEBSITE_SSL);
+    $_SESSION['error'] = 'Accès refusé';
+    header('Location: ' . WEBSITE_SSL);
     exit();
 }
 
-$nb_signature = Helpers::getVarFromPost("nb_signature");
+$nb_signature = Helpers::getVarFromPost('nb_signature');
 if ($nb_signature == 0) {
-    $_SESSION["error"] = "Les signatures n'ont pas pu être récupérées";
-    header("Location:  " . Helpers::getLink("/modules/actes/index.php"));
+    $_SESSION['error'] = "Les signatures n'ont pas pu être récupérées";
+    header('Location:  ' . Helpers::getLink('/modules/actes/index.php'));
 }
 
-$all_transaction_id = array();
+$all_transaction_id = [];
 
 try {
     for ($i = 1; $i <= $nb_signature; $i++) {
@@ -61,9 +82,9 @@ try {
             RGS_VALIDCA_PATH,
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory(),
-            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
+            new OpenSSLWrapper(
                 RGS_VALIDCA_PATH,
-                new \S2low\Services\ProcessCommand\CommandLauncher()
+                new CommandLauncher()
             )
         );
         $verifyPKCS7Signature->verifySignature($signature, VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS);
@@ -82,20 +103,18 @@ try {
             $transaction_info['envelope_id']
         );
     }
-} catch (Exception $e) {
-    $_SESSION["error"] = "Erreur lors de la signature : " . $e->getMessage();
-    header("Location:  " . Helpers::getLink("/modules/actes/index.php"));
-} catch (Throwable $e) {
-    $_SESSION["error"] = "[ Throwable ] Erreur lors de la signature : " . $e->getMessage();
-    header("Location:  " . Helpers::getLink("/modules/actes/index.php"));
+} catch (Exception $exception) {
+    $_SESSION['error'] = 'Erreur lors de la signature : ' . $exception->getMessage();
+    header('Location:  ' . Helpers::getLink('/modules/actes/index.php'));
+} catch (Throwable $exception) {
+    $_SESSION['error'] = '[ Throwable ] Erreur lors de la signature : ' . $exception->getMessage();
+    header('Location:  ' . Helpers::getLink('/modules/actes/index.php'));
 }
 
 if (count($all_transaction_id) == 1) {
-    $_SESSION["error"] = "La signature a été enregistrée";
-    header("Location:  " . Helpers::getLink("/modules/actes/actes_transac_show.php?id={$all_transaction_id[0]}"));
-    exit();
+    $_SESSION['error'] = 'La signature a été enregistrée';
+    header('Location:  ' . Helpers::getLink("/modules/actes/actes_transac_show.php?id=$all_transaction_id[0]"));
 } else {
-    $_SESSION["error"] = "Les signatures ont été enregistrées";
-    header("Location:  " . Helpers::getLink("/modules/actes/index.php"));
-    exit();
+    $_SESSION['error'] = 'Les signatures ont été enregistrées';
+    header('Location:  ' . Helpers::getLink('/modules/actes/index.php'));
 }

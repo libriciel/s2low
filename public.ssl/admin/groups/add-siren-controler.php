@@ -1,19 +1,25 @@
 <?php
 
+use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\LegacyObjectsManager;
-use S2lowLegacy\Lib\LuhnKey;
+use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Lib\Recuperateur;
-use S2lowLegacy\Lib\Siren;
 use S2lowLegacy\Lib\SirenFactory;
+use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 use S2lowLegacy\Model\GroupSQL;
 
-require_once(__DIR__ . '/../../../init/init-www.php');
 /** @var  SirenFactory $sirenFactory */
-$sirenFactory = LegacyObjectsManager::getLegacyObjectInstancier()->get(SirenFactory::class);
+/** @var Initialisation $initialisation */
+/** @var SQLQuery $sqlQuery */
+/** @var Droit $droit */
+[$sirenFactory,$initialisation,$sqlQuery, $droit ] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([SirenFactory::class,Initialisation::class, SQLQuery::class, Droit::class]);
 
-if (! $droit->isSuperAdmin($userInfo)) {
+$initData = $initialisation->doInit();
+
+if (! $droit->isSuperAdmin($initData->userInfo)) {
     header('Location: index.php');
     exit;
 }
@@ -27,7 +33,7 @@ $siren = $sirenFactory->get($recuperateur->get('siren'));
 $authorityGroup = new GroupSQL($sqlQuery);
 
 if (!(is_numeric($id) && floatval($id) == intval(floatval($id)))) {
-    $_SESSION['error'] = "L'id fournie n'est pas un entier.";
+    $_SESSION['error'] = "L'id $id fournie n'est pas un entier.";
     header('Location: ' . WEBSITE_SSL);
     exit;
 }
@@ -39,7 +45,7 @@ if (empty($authorityGroup->getInfo($id))) {
 }
 
 if (!$siren->isValid()) {
-    $_SESSION['error'] = 'Le siren ne semble  pas valide.';
+    $_SESSION['error'] = "Le siren $siren->getValue() ne semble  pas valide.";
     header('Location: ' . Helpers::getLink("/admin/groups/admin_group_edit.php?id=$id"));
     exit;
 }
@@ -47,7 +53,7 @@ if (!$siren->isValid()) {
 $authorityGroupSirenSQL = new AuthorityGroupSirenSQL($sqlQuery);
 
 if ($authorityGroupSirenSQL->exist($id, $siren->getValue())) {
-    $_SESSION["error"] = 'Le siren existe déjà dans ce groupe';
+    $_SESSION['error'] = 'Le siren existe déjà dans ce groupe';
     header('Location: ' . Helpers::getLink("/admin/groups/admin_group_edit.php?id=$id"));
     exit;
 }

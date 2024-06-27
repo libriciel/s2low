@@ -2,10 +2,18 @@
 
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\User;
+use S2lowLegacy\Lib\SQLQuery;
 
-require_once(__DIR__ . '/../../../init/init-www.php');
+/** @var Initialisation $initialisation */
+/** @var SQLQuery $sqlQuery */
+[$initialisation, $sqlQuery] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, SQLQuery::class]);
+
+$initData = $initialisation->doInit();
 
 $me = new User();
 
@@ -35,7 +43,7 @@ $doc = new HTMLLayout();
 $doc->setTitle('Configuration de la connexion SAE - S²low');
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $initData->modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 

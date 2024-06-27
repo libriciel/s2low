@@ -12,14 +12,17 @@
  *
  */
 
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\RgsConnexion;
 
-require_once(__DIR__ . "/../../init/init-www.php");
+LegacyObjectsManager::getLegacyObjectInstancier()->get(Initialisation::class)->doInit();
 
 $rgsConnexion = new RgsConnexion();
+
+$message = 'OK';
 if (! $rgsConnexion->isRgsConnexion()) {
-    echo "KO";
-    exit ;
+    $message = 'KO';
 }
 
-echo "OK";
+echo $message;

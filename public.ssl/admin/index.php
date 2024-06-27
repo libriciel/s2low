@@ -4,13 +4,30 @@ use S2lowLegacy\Class\actes\ActesResponsesError;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\helios\HeliosResponsesError;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\PagerHTML;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-require_once(__DIR__ . '/../../init/init-www-helios.php');
+/** @var Initialisation $initialisation */
+/** @var HeliosTransactionsSQL $heliosTransactionsSQL */
+/** @var ActesTransactionsSQL $actesTransactionsSQL */
+/** @var ActesResponsesError $actesResponsesError */
 
-if ($userInfo['role'] != 'SADM') {
+[
+        $initialisation,
+    $heliosTransactionsSQL,
+    $actesTransactionsSQL,
+    $actesResponsesError
+] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [Initialisation::class,HeliosTransactionsSQL::class,ActesTransactionsSQL::class,ActesResponsesError::class]
+    );
+
+$initData = $initialisation->doInit(Initialisation::MODULENAMEHELIOS);
+
+if ($initData->userInfo['role'] != 'SADM') {
     $_SESSION['error'] = 'Super admin only !';
     header('Location: ' . WEBSITE);
     exit();
@@ -23,8 +40,6 @@ $helios_status = [
     2 => 'En attente de transmission',
     3 => 'Transmis'
 ];
-/** @var HeliosTransactionsSQL $heliosTransactionsSQL */
-$heliosTransactionsSQL = $objectInstancier->get(HeliosTransactionsSQL::class);
 
 $helios_nb_transaction_by_status = [];
 foreach ($helios_status as $status_id => $status_libelle) {
@@ -45,8 +60,6 @@ $actes_status = [
     3 => 'Transmis',
     7 => 'Document reçu',
 ];
-/** @var ActesTransactionsSQL $actesTransactionsSQL */
-$actesTransactionsSQL = $objectInstancier->get(ActesTransactionsSQL::class);
 
 
 $actes_nb_transaction_by_status = [];
@@ -54,7 +67,6 @@ foreach ($actes_status as $status_id => $status_libelle) {
     $actes_nb_transaction_by_status[$status_id] =  $actesTransactionsSQL->getNbByStatus($status_id);
 }
 
-$actesResponsesError = $objectInstancier->get(ActesResponsesError::class);
 $actes_nb_responses_error = $actesResponsesError->getNbError();
 
 $nb_actes_transmis_4hours_before = $actesTransactionsSQL
@@ -70,7 +82,7 @@ $doc->setTitle("Console d'administration");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $initData->modulesInfo));
 $doc->closeSideBar();
 
 

@@ -38,7 +38,7 @@ class ActesResponsesError
         $filepath = realpath($this->actes_response_error_path . "/" . $filename);
 
         if (dirname($filepath) != $this->actes_response_error_path) {
-            throw new Exception("Impossible de lire le fichier.");
+            throw new Exception('Impossible de lire le fichier.');
         }
 
         if (! file_exists($filepath)) {

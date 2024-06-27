@@ -34,6 +34,9 @@ class S2lowIntegrationTest extends WebTestCase
         parent::setUp();
         LegacyObjectsManager::resetObjectInstancier();
         $_SESSION = [];
+        $_GET = [];
+        $_POST = [];
+        //$_SERVER = [];
         ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());    //DatabasePool utilise ObjectInstancier
         $this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);            // On en crée un le temps de MàJ la BDD
         $this->sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST); // On le ressettera ensuite
@@ -47,7 +50,7 @@ class S2lowIntegrationTest extends WebTestCase
     /**
      * @throws \Exception
      */
-    public function setUpUser(string $certificatPem, string $certificatHash): void
+    public function setUpUserInDB(string $certificatPem, string $certificatHash): void
     {
         $sql = "INSERT INTO users VALUES (1, 'eric@sigmalis.com', 'test_subject', 'test_issuer', 'Pommateau', 'Eric', NULL, 'SADM', 1, 1, ?, NULL, NULL, NULL, 1, NULL, NULL, ?, ?)";
         $this->sqlQuery->query($sql, [$certificatPem, $certificatPem, $certificatHash]);
@@ -65,7 +68,7 @@ class S2lowIntegrationTest extends WebTestCase
      * @param string $certificatSansBegin
      * @return \Symfony\Bundle\FrameworkBundle\KernelBrowser
      */
-    protected function setUpClient(string $certificatPem, string $certificatSansBegin): KernelBrowser
+    protected function setUpUserCertInServer(string $certificatPem, string $certificatSansBegin): KernelBrowser
     {
         $serverVariables = [
             'SSL_CLIENT_VERIFY' => 'ssl_client_verify',
@@ -78,6 +81,7 @@ class S2lowIntegrationTest extends WebTestCase
         foreach ($serverVariables as $key => $value) {
             $_SERVER[$key] = $value;         // Le client Symfony ne set pas la session, utilisée par l'appli...
         }
+        self::ensureKernelShutdown();
         return static::createClient(
             [],
             $serverVariables
