@@ -6,9 +6,12 @@ namespace IntegrationTests;
 
 use Exception;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
+use S2lowLegacy\Lib\SQLQuery;
 
-class HeliosIntegrationTest extends WebIntegrationTest
+class HeliosIntegrationTest extends S2lowIntegrationTestCase
 {
+    use \HeliosUtilitiesTestTrait;
+
     /**
      * @throws Exception
      */
@@ -278,10 +281,14 @@ class HeliosIntegrationTest extends WebIntegrationTest
         );
 
         ObjectInstancierFactory::resetObjectInstancier();
+
+        $transaction_id = $this->createTransaction(1,);
+
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
-        $client->request('GET', 'modules/helios/helios_transac_rollback.php');
+        $_POST['id'] = $transaction_id;
+        var_dump($client->request('GET', 'modules/helios/helios_transac_rollback.php')->html());
         static::assertMatchesRegularExpression(
-            '#La transaction 0 est de nouveau à l\'état posté.#',     //TODO : créer un test plus pertinent
+            "#La transaction $transaction_id est de nouveau à l\'état posté.#",
             $_SESSION['error']
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête

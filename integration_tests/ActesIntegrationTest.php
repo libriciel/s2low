@@ -7,7 +7,7 @@ namespace IntegrationTests;
 use Exception;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 
-class ActesIntegrationTest extends S2lowIntegrationTest
+class ActesIntegrationTest extends S2lowIntegrationTestCase
 {
     /**
      * @throws Exception

@@ -10,7 +10,7 @@ use S2lowLegacy\Lib\ObjectInstancierFactory;
 /**
  *
  */
-class WebIntegrationTest extends S2lowIntegrationTest
+class WebIntegrationTest extends S2lowIntegrationTestCase
 {
     protected function tearDown(): void
     {

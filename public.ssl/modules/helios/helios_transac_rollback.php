@@ -19,8 +19,9 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 $initData = $initialisation->doInit(Initialisation::MODULENAMEHELIOS);
 
 if (! $droit->isSuperAdmin($initData->userInfo)) {
+    $_SESSION['error'] = "Réservé au super admin";
     header('Location: index.php');
-    exit;
+    exit_wrapper();
 }
 $recuperateur = new Recuperateur($_POST);
 
@@ -41,5 +42,5 @@ $workerScript->putJobByQueueName(HeliosAnalyseFichierAEnvoyerWorker::QUEUE_NAME,
 
 
 $_SESSION['error'] = $message;
-header("Location: helios_transac_show.php?id=$id");
-exit();
+header_wrapper("Location: helios_transac_show.php?id=$id");
+exit_wrapper();

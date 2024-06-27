@@ -10,7 +10,7 @@ use S2lowLegacy\Lib\SQLQuery;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class S2lowIntegrationTest extends WebTestCase
+class S2lowIntegrationTestCase extends WebTestCase
 {
     /** @var SQLQuery */
     protected SQLQuery $sqlQuery;
@@ -86,5 +86,13 @@ class S2lowIntegrationTest extends WebTestCase
             [],
             $serverVariables
         );
+    }
+
+    /**
+     * @return SQLQuery
+     */
+    public function getSQLQuery(): SQLQuery
+    {
+        return $this->sqlQuery;
     }
 }
