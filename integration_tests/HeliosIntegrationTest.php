@@ -17,17 +17,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosDeleteResponse(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $client->request('GET', 'modules/helios/admin/delete-response.php');
         static::assertMatchesRegularExpression(
@@ -42,17 +32,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosDownloadResponse(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $client->request('GET', 'modules/helios/admin/download-response.php');
         static::assertMatchesRegularExpression(
@@ -67,17 +47,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosAnalyseResponse(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $client->request('GET', 'modules/helios/admin/analyse-response.php');
         static::assertMatchesRegularExpression(
@@ -92,17 +62,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosResponseError(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'modules/helios/admin/responses-helios-error.php');
         static::assertMatchesRegularExpression(
@@ -118,17 +78,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosTransmisNonAcquitte(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'modules/helios/admin/transmis-non-acquitte.php');
         static::assertMatchesRegularExpression(
@@ -143,17 +93,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosBatchSign(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'modules/helios/helios_batch_sign.php');
         static::assertMatchesRegularExpression(
@@ -169,17 +109,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosStatsTransaction(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'modules/helios/helios_stats_transaction.php');
         static::assertMatchesRegularExpression(
@@ -194,17 +124,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosTransacArchiver(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $client->request('GET', 'modules/helios/helios_transac_archiver.php');
         static::assertMatchesRegularExpression(
@@ -219,17 +139,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosTransacClose(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'modules/helios/helios_transac_close.php');
         static::assertMatchesRegularExpression(
@@ -244,17 +154,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosTransacDelete(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'modules/helios/helios_transac_delete.php');
         static::assertMatchesRegularExpression(
@@ -270,23 +170,13 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosTransacRollBack(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
 
         $transaction_id = $this->createTransaction(1,);
 
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $_POST['id'] = $transaction_id;
-        var_dump($client->request('GET', 'modules/helios/helios_transac_rollback.php')->html());
+        $client->request('GET', 'modules/helios/helios_transac_rollback.php');
         static::assertMatchesRegularExpression(
             "#La transaction $transaction_id est de nouveau à l\'état posté.#",
             $_SESSION['error']
@@ -299,17 +189,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosTransacSetError(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $client->request('GET', 'modules/helios/helios_transac_set_error.php');
         static::assertMatchesRegularExpression(
@@ -324,17 +204,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosTransacSign(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $client->request('GET', 'modules/helios/helios_transac_sign.php');
         static::assertMatchesRegularExpression(
@@ -349,17 +219,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosTransacValidatePesAller(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'modules/helios/helios_transac_validate_pes_aller.php');
         static::assertMatchesRegularExpression(
@@ -374,17 +234,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosIndex(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'modules/helios/index.php');
         static::assertMatchesRegularExpression(

@@ -43,18 +43,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesAnalyseResponse(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
-
+        $client = $this->setUpUser();
         $client->request('GET', 'modules/actes/admin/analyse-response.php');
         static::assertMatchesRegularExpression(
             '#Impossible de lire le fichier#',
@@ -69,17 +58,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testDeleteResponse(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
 
         $client->request('GET', 'modules/actes/admin/analyse-response.php');
         static::assertMatchesRegularExpression(
@@ -95,17 +74,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testDownloadResponse(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
 
         $client->request('GET', 'modules/actes/admin/download-response.php');
         static::assertMatchesRegularExpression(
@@ -120,17 +89,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesAdminIndex(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
 
         $crawler = $client->request('GET', 'modules/actes/admin/index.php');
         static::assertMatchesRegularExpression(
@@ -145,17 +104,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testResponsesActesError(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
 
         $crawler = $client->request('GET', 'modules/actes/admin/responses-actes-error.php');
         static::assertMatchesRegularExpression(
@@ -171,17 +120,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesBatchSign(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
 
         $crawler = $client->request('GET', 'modules/actes/actes_batch_sign.php');
         static::assertMatchesRegularExpression(
@@ -197,17 +136,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesStats(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
 
         $crawler = $client->request('GET', 'modules/actes/actes_stats.php');
         static::assertMatchesRegularExpression(
@@ -223,17 +152,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacArchiver(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
 
         $client->request('GET', 'modules/actes/actes_transac_archiver.php');
         static::assertMatchesRegularExpression(
@@ -249,17 +168,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacDelete(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
 
         $crawler = $client->request('GET', 'modules/actes/actes_transac_delete.php');
         static::assertMatchesRegularExpression(
@@ -275,17 +184,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacGetARActe(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
 
         $client->request('GET', 'modules/actes/actes_transac_get_ARActe.php');
         static::assertMatchesRegularExpression(
@@ -301,17 +200,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacPostConfirm(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
 
         $client->request('GET', 'modules/actes/actes_transac_post_confirm.php');
         static::assertMatchesRegularExpression(
@@ -327,17 +216,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacPostConfirmApiMulti(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
 
             $crawler = $client->request('GET', 'modules/actes/actes_transac_post_confirm_api_multi.php');
             static::assertMatchesRegularExpression(
@@ -354,17 +233,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacRollBackAttente(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
 
         $crawler = $client->request('GET', 'modules/actes/actes_transac_rolback_attente.php');
         static::assertMatchesRegularExpression(
@@ -381,17 +250,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacSetError(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
 
         $crawler = $client->request('GET', 'modules/actes/actes_transac_rolback_attente.php');
         static::assertMatchesRegularExpression(
@@ -407,17 +266,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacShow(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
 
         $crawler = $client->request('GET', 'modules/actes/actes_transac_show.php');
         static::assertMatchesRegularExpression(
@@ -433,17 +282,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacSign(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
 
         $client->request('GET', 'modules/actes/actes_transac_sign.php');
         static::assertMatchesRegularExpression(
@@ -459,17 +298,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesIndex(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
 
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'modules/actes/index.php');
@@ -486,17 +315,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacClose(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->setUpUser();
 
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'modules/actes/actes_transac_close.php');

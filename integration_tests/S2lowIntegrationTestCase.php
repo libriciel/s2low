@@ -95,4 +95,24 @@ class S2lowIntegrationTestCase extends WebTestCase
     {
         return $this->sqlQuery;
     }
+
+    /**
+     * @return \Symfony\Bundle\FrameworkBundle\KernelBrowser
+     * @throws \Exception
+     */
+    protected function setUpUser(): \Symfony\Bundle\FrameworkBundle\KernelBrowser
+    {
+        $certificatePem = $this->pemCertificateFactory->getFromString(
+            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
+        );
+
+        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
+        $client = $this->setUpUserCertInServer(
+            $certificatePem->getContent(),
+            $certificatePem->getContentStrippedFromBegin()
+        );
+
+        ObjectInstancierFactory::resetObjectInstancier();
+        return $client;
+    }
 }
