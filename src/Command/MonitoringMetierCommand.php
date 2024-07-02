@@ -13,29 +13,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class MonitoringMetierCommand extends Command
 {
-    /**
-     * @var \S2lowLegacy\Class\actes\ActesTransactionsSQL
-     */
-    private ActesTransactionsSQL $actesTransactionsSQL;
-    /**
-     * @var \S2lowLegacy\Model\HeliosTransactionsSQL
-     */
-    private HeliosTransactionsSQL $heliosTransactionsSQL;
-    /**
-     * @var \S2lowLegacy\Class\BeanstalkdWrapper
-     */
-    private BeanstalkdWrapper $beanstalkdWrapper;
-
     public function __construct(
-        ActesTransactionsSQL $actesTransactionsSQL,
-        HeliosTransactionsSQL $heliosTransactionsSQL,
-        BeanstalkdWrapper $beanstalkdWrapper,
-        HeliosEnvoiWorkerFactory $heliosEnvoiWorkerFactory
+        private readonly ActesTransactionsSQL $actesTransactionsSQL,
+        private readonly HeliosTransactionsSQL $heliosTransactionsSQL,
+        private readonly BeanstalkdWrapper $beanstalkdWrapper,
+        private readonly HeliosEnvoiWorkerFactory $heliosEnvoiWorkerFactory
     ) {
-        $this->actesTransactionsSQL = $actesTransactionsSQL;
-        $this->heliosTransactionsSQL = $heliosTransactionsSQL;
-        $this->beanstalkdWrapper = $beanstalkdWrapper;
-        $this->heliosEnvoiWorkerFactory = $heliosEnvoiWorkerFactory;
         parent::__construct();
     }
 

@@ -7,12 +7,10 @@ use S2lowLegacy\Model\AuthoritySQL;
 
 class ActesConventions
 {
-    private $authoritySQL;
-
-    public function __construct(AuthoritySQL $authoritySQL, $actes_files_upload_root)
-    {
-        $this->authoritySQL = $authoritySQL;
-        $this->actes_files_upload_root = $actes_files_upload_root;
+    public function __construct(
+        private readonly AuthoritySQL $authoritySQL,
+        private readonly string $actes_files_upload_root,
+    ) {
     }
 
     public function hasConvention($authority_id)

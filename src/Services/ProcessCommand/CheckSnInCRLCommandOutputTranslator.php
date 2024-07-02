@@ -6,9 +6,8 @@ use Symfony\Component\Process\Process;
 
 class CheckSnInCRLCommandOutputTranslator implements ICommandOutputTranslator
 {
-    public function __construct(string $serialNumber)
+    public function __construct(private readonly string $serialNumber)
     {
-        $this->serialNumber = $serialNumber;
     }
 
     public function getCommandOutput(Process $process): AnalysedOutput

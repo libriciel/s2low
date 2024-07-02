@@ -4,19 +4,13 @@ namespace S2low\Command;
 
 use LogicException;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
-/**
- *
- */
 class TestActesMailerCommand extends Command
 {
-    /**
-     * @param \Symfony\Component\Mailer\MailerInterface $mailer
-     */
-    public function __construct(\Symfony\Component\Mailer\MailerInterface $mailer)
+    public function __construct(private readonly MailerInterface $mailer)
     {
-        $this->mailer = $mailer;
         parent::__construct();
     }
 

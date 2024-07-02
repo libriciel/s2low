@@ -4,23 +4,22 @@ namespace S2lowLegacy\Class;
 
 class DatePicker
 {
-    private string $name;
     private array $datePickerOptions = ["altFormat" => 'yy-mm-dd',"dateFormat" => 'dd MM yy'];
     private string $inputDefaultValue = "";
 
     private string $hidenInputDefaultValue = "";
 
 
-    public function __construct(string $name, ?string $ansiDate = "", string $class = "form-control")
-    {
+    public function __construct(
+        private readonly string $name,
+        ?string $ansiDate = '',
+        private readonly string $class = 'form-control',
+    ) {
         $dateInLetters = "";
         if ($ansiDate) {
             $dateInLetters = strftime("%d %B %Y", Helpers :: ansiDateToTimestamp($ansiDate));
         }
 
-        $this->class = $class;
-
-        $this->name = $name;
         $this->datePickerOptions["altField"] =  "#$name";
         if ($ansiDate) {
             $this->inputDefaultValue = "value = \"$dateInLetters\"";

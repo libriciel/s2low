@@ -8,9 +8,8 @@ namespace S2lowLegacy\Class;
  */
 class ServiceUser
 {
-    public function __construct(Database $db)
+    public function __construct(private readonly Database $db)
     {
-        $this->db = $db;
     }
 
     public function add($name, $authority_id)

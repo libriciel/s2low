@@ -9,21 +9,12 @@ use Monolog\Logger;
 
 class CloudStorageFactory
 {
-    private $openStackSwiftWrapper;
-    private $logger;
-
-    private $objectInstancier;
-
     public function __construct(
-        OpenStackSwiftWrapper $openStackSwiftWrapper,
-        Logger $logger,
-        ObjectInstancier $objectInstancier,
-        $openstack_enable
+        private readonly OpenStackSwiftWrapper $openStackSwiftWrapper,
+        private readonly Logger $logger,
+        private readonly ObjectInstancier $objectInstancier,
+        private readonly bool $openstack_enable,
     ) {
-        $this->openStackSwiftWrapper = $openStackSwiftWrapper;
-        $this->logger = $logger;
-        $this->objectInstancier = $objectInstancier;
-        $this->openstack_enable = $openstack_enable;
     }
 
     /**

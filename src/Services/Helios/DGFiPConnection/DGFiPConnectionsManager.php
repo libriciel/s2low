@@ -9,24 +9,11 @@ namespace S2low\Services\Helios\DGFiPConnection;
  */
 class DGFiPConnectionsManager
 {
-    /**
-     * @var \S2low\Services\Helios\DGFiPConnection\DGFiPConnectionBuilder
-     */
-    private DGFiPConnectionBuilder $DGFiPConnectionBuilder;
-
-    /**
-     * @param \S2low\Services\Helios\DGFiPConnection\DGFiPConnectionConfiguration $passtransConnection
-     * @param \S2low\Services\Helios\DGFiPConnection\DGFiPConnectionConfiguration $gatewayConnection
-     * @param \S2low\Services\Helios\DGFiPConnection\DGFiPConnectionBuilder $DGFiPConnectionBuilder
-     */
     public function __construct(
-        DGFiPConnectionConfiguration $passtransConnection,
-        DGFiPConnectionConfiguration $gatewayConnection,
-        DGFiPConnectionBuilder $DGFiPConnectionBuilder
+        private readonly DGFiPConnectionConfiguration $passtransConnection,
+        private readonly DGFiPConnectionConfiguration $gatewayConnection,
+        private readonly DGFiPConnectionBuilder $DGFiPConnectionBuilder,
     ) {
-        $this->passtransConnection = $passtransConnection;
-        $this->gatewayConnection = $gatewayConnection;
-        $this->DGFiPConnectionBuilder = $DGFiPConnectionBuilder;
     }
 
     /**

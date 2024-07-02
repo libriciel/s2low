@@ -35,9 +35,8 @@ class ActesStatusSQL
 
     public const STATUS_DETRUITE = 16;
 
-    public function __construct(SQLQuery $sqlQuery)
+    public function __construct(private readonly SQLQuery $sqlQuery)
     {
-        $this->sqlQuery = $sqlQuery;
     }
 
     public function getAllStatus()

@@ -8,9 +8,8 @@ class OpensslVerifyCommandOutputTranslator implements ICommandOutputTranslator
 {
     private const VALIDE = "VALIDE";
 
-    public function __construct(array $resultatAnalysisOptions)
+    public function __construct(private readonly array $resultatAnalysisOptions)
     {
-        $this->resultatAnalysisOptions = $resultatAnalysisOptions;
     }
 
     public function getCommandOutput(Process $process): AnalysedOutput

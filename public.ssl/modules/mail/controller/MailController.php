@@ -1,5 +1,6 @@
 <?php
 
+use S2low\Services\MailSecurises\MailSecuriseNotification;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Helpers;
@@ -13,17 +14,14 @@ class MailController
     private $MailAnnuaireArray = array();
 
     private $lastError;
-    private User $me;
-    private $doc;
-    private Module $module;
 
-    public function __construct(User $me, $doc, Module $module, Authority $myAuthority, \S2low\Services\MailSecurises\MailSecuriseNotification $mailSecuriseNotification)
-    {
-        $this->me = $me;
-        $this->doc = $doc;
-        $this->module = $module;
-        $this->myAuthority = $myAuthority;
-        $this->mailSecuriseNotification = $mailSecuriseNotification;
+    public function __construct(
+        private readonly User $me,
+        private $doc,
+        private readonly Module $module,
+        private readonly Authority $myAuthority,
+        private readonly MailSecuriseNotification $mailSecuriseNotification,
+    ) {
     }
 
     public function exitIfNotAdmin()
