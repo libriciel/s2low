@@ -164,5 +164,3 @@
             ?>  
         <p>Pas de messages envoyés correspondant aux critères de filtrage </p>
         <?php } ?>
-
-
