@@ -41,38 +41,38 @@ $fmax_submission_date = Helpers :: getVarFromGet("max_submission_date");
 $fnum = Helpers :: getVarFromGet("num");
 $fauthority = Helpers :: getVarFromGet("authority");
 
-$filter = array ();
+$filter = [];
 // Construction chaine de filtrage
 //filtre sur état
 if (isset($fstatus) && is_numeric($fstatus) && $fstatus != 2) {//si = 2 : tous les états
-    $filter[] .= "status = $fstatus";
+    $filter[] = "status = $fstatus";
 }
 
 //collectivité (si sadmin)
 if (!$me->isGroupAdminOrSuper()) { // Le super utilisateur voit les reponses de toutes les collectivité
     // Un utilisateur ne voit que les reponses de sa collectivité
-    $filter[] .= "helios_retour.authority_id='" . $me->get('authority_id') . "'";
+    $filter[] = "helios_retour.authority_id='" . $me->get('authority_id') . "'";
 } elseif ($me->isGroupAdmin() && in_array($fauthority, array_keys($me->getAllPossibleAuthority()))) {
     if (isset($fauthority) && !empty($fauthority)) {
-        $filter[] .= "helios_retour.authority_id='" . $fauthority . "'";
+        $filter[] = "helios_retour.authority_id='" . $fauthority . "'";
     } else {
-        $filter[] .= "helios_retour.authority_id='" . $me->get('authority_id') . "'";
+        $filter[] = "helios_retour.authority_id='" . $me->get('authority_id') . "'";
     }
 } else {
     if (isset($fauthority) && !empty($fauthority)) {
-        $filter[] .= "helios_retour.authority_id='" . $fauthority . "'";
+        $filter[] = "helios_retour.authority_id='" . $fauthority . "'";
     }
 }
 // On ajoute les filtres relatifs aux dates
 if (isset($fmin_submission_date) && !empty($fmin_submission_date)) {
-    $filter[] .= "date >= '" . addslashes($fmin_submission_date) . "'";
+    $filter[] = "date >= '" . addslashes($fmin_submission_date) . "'";
 }
 if (isset($fmax_submission_date) && !empty($fmax_submission_date)) {
-    $filter[] .= "date <= '" . addslashes($fmax_submission_date) . "'";
+    $filter[] = "date <= '" . addslashes($fmax_submission_date) . "'";
 }
 //on ajoute filtre sur nom fichier
 if (isset($fnum) && !empty($fnum)) {
-    $filter[] .= "filename LIKE '%" . addslashes($fnum) . "%'";
+    $filter[] = "filename LIKE '%" . addslashes($fnum) . "%'";
 }
 
 $where = "";

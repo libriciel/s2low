@@ -7,9 +7,8 @@ class TransactionSQLTest extends S2lowTestCase
 {
     use ActesUtilitiesTestTrait;
 
-    private $transaction_id;
-    /** @var TransactionSQL */
-    private $transactionSQL;
+    private int $transaction_id;
+    private TransactionSQL $transactionSQL;
 
     protected function setUp(): void
     {
@@ -18,33 +17,44 @@ class TransactionSQLTest extends S2lowTestCase
         $this->transactionSQL = $this->getObjectInstancier()->get(TransactionSQL::class);
     }
 
-
-    public function testGetAll()
+    public function testGetAll(): void
     {
         $this->transactionSQL->setNumero('20170728C');
         $all = $this->transactionSQL->getAll();
-        $this->assertEquals($this->transaction_id, $all[0]['transaction_id']);
+        static::assertSame($this->transaction_id, $all[0]['transaction_id']);
     }
 
-    //FIX #378
-    /*public function testGetAllEmpty(){
-        //Ca ne doit pas marché si on ne met pas %xxx% pour chercher une partie
-        $this->transactionSQL->setNumero('2017');
-        $all = $this->transactionSQL->getAll();
-        $this->assertEmpty($all);
-    }*/
-
-    public function testGetAllPartial()
+    public function testGetAllPartial(): void
     {
         $this->transactionSQL->setNumero('2017%');
         $all = $this->transactionSQL->getAll();
-        $this->assertEquals($this->transaction_id, $all[0]['transaction_id']);
+        static::assertSame($this->transaction_id, $all[0]['transaction_id']);
     }
 
-    public function testGetAllPartialUndescore()
+    public function testGetAllPartialUnderscore(): void
     {
         $this->transactionSQL->setNumero('2017__28C');
         $all = $this->transactionSQL->getAll();
-        $this->assertEquals($this->transaction_id, $all[0]['transaction_id']);
+        static::assertSame($this->transaction_id, $all[0]['transaction_id']);
+    }
+
+    public static function setAuthorityAndStatusProvider(): \Generator
+    {
+        yield [1, 3, 0];
+        yield [1, 4, 1];
+        yield [1, TransactionSQL::EN_COURS, 1];
+        yield [2, 3, 0];
+        yield [2, 4, 0];
+        yield [2, TransactionSQL::EN_COURS, 0];
+    }
+
+    /**
+     * @dataProvider setAuthorityAndStatusProvider
+     */
+    public function testSetAuthorityAndStatus(int $authority, int $status, int $expectedTransactions): void
+    {
+        $this->transactionSQL->setAuthority($authority);
+        $this->transactionSQL->setStatus($status);
+        static::assertSame($expectedTransactions, $this->transactionSQL->getNbTransaction());
     }
 }

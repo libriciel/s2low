@@ -32,7 +32,7 @@ $group = new Group();
 
 $filter = array();
 if (isset($fname) && mb_strlen($fname) > 0) {
-    $filter[] .= "authority_groups.name ILIKE '%" . addslashes($fname) . "%'";
+    $filter[] = "authority_groups.name ILIKE '%" . addslashes($fname) . "%'";
 }
 
 $where = "";
