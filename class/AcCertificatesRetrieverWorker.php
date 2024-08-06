@@ -57,6 +57,7 @@ class AcCertificatesRetrieverWorker implements IWorker
             $retvalApache = null;
             exec(self::COMMAND_APACHE, $output, $retval);
         }
+        return true;
     }
 
     /**
