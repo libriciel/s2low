@@ -315,4 +315,24 @@ class ActesTransactionsSQLTest extends S2lowTestCase
             ]
         ];
     }
+
+    /**
+     * @throws Exception
+     */
+    public function testGetStatusInfoWithFluxRetour(): void
+    {
+        $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+        $this->getActesTransactionsSQL()->updateStatus(
+            $transactionId,
+            ActesStatusSQL::STATUS_ENVOYE_AU_SAE,
+            'test',
+            'test'
+        );
+        $result = $this->getActesTransactionsSQL()->getStatusInfoWithFluxRetour(
+            $transactionId,
+            ActesStatusSQL::STATUS_ENVOYE_AU_SAE
+        );
+        self::assertSame('test', $result['flux_retour']);
+        self::assertSame($transactionId, $result['transaction_id']);
+    }
 }

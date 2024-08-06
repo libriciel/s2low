@@ -33,16 +33,19 @@ class ActesTransactionsSQL extends SQL
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$id, $status]);
+
+        $flux_retour = null;
+        $transaction_id = null;
         $stmt->bindColumn(1, $flux_retour, PDO::PARAM_LOB);
         $stmt->bindColumn(2, $transaction_id, PDO::PARAM_INT);
         $stmt->fetch(PDO::FETCH_BOUND);
-        if (is_null($flux_retour)) {
-            return ["flux_retour" => null, "transaction_id" => null];
+        if ($flux_retour === null) {
+            return ['flux_retour' => null, 'transaction_id' => null];
         }
         $flux_retour_contents = stream_get_contents($flux_retour);
         fclose($flux_retour);
 
-        return ["flux_retour" => $flux_retour_contents, "transaction_id" => $transaction_id];
+        return ['flux_retour' => $flux_retour_contents, 'transaction_id' => $transaction_id];
     }
 
     public function getLastStatusInfo($id)

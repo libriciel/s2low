@@ -71,8 +71,12 @@ class ActesNotificationController extends \Symfony\Bundle\FrameworkBundle\Contro
             $owner->init();
 
             //Vérification du type de transaction
-            if ($trans->get("type") != 1) {
-                Helpers :: returnAndExit(1, "Ce type de transaction ne peut pas être notifié.", Helpers::getLink("/modules/actes/actes_transac_show.php?id=") . $rel_trans->getId());
+            if ($trans->get('type') != 1) {
+                Helpers::returnAndExit(
+                    1,
+                    'Ce type de transaction ne peut pas être notifié.',
+                    Helpers::getLink('/modules/actes/actes_transac_show.php?id=') . $trans->getId()
+                );
             }
 
             // Vérification des permissions
