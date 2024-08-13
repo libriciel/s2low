@@ -293,7 +293,12 @@ class HeliosTransmissionWindow extends DataObject
   */
     public function getWindowsList($cond = "")
     {
-        if (! $this->pagerInit('helios_transmission_windows.id, helios_transmission_windows.rate_limit, MIN(atwh.window_begin) AS start, MAX(atwh.window_end) AS end', 'helios_transmission_windows LEFT OUTER JOIN helios_transmission_window_hours atwh ON helios_transmission_windows.id=atwh.transmission_window_id', $cond . " GROUP BY helios_transmission_windows.id, helios_transmission_windows.rate_limit")) {
+        $pagerInit = $this->pagerInit(
+            'helios_transmission_windows.id, helios_transmission_windows.rate_limit, MIN(atwh.window_begin) AS start, MAX(atwh.window_end) AS end',
+            'helios_transmission_windows LEFT OUTER JOIN helios_transmission_window_hours atwh ON helios_transmission_windows.id=atwh.transmission_window_id',
+            $cond . ' GROUP BY helios_transmission_windows.id, helios_transmission_windows.rate_limit'
+        );
+        if (!$pagerInit) {
             return false;
         }
 

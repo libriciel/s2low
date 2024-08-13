@@ -276,11 +276,28 @@ class ActesTransaction extends DataObject
    * \brief Méthode d'obtention de la liste des transactions et tous leurs attributs
    * \param $cond (optionnel) chaîne : Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
    * \return tableau des transactions
+   * @deprecated 5.0.42, dead code
   */
     public static function getTransactionsList($cond = "")
     {
       // TODO: utiliser le pager pour multipages
-        $sql = "SELECT actes_transactions.id, actes_transactions.envelope_id, actes_transactions.type, actes_transactions.related_transaction_id, actes_transactions.nature_code, actes_transactions.nature_descr, actes_transactions.subject, actes_transactions.number, actes_transactions.classification, actes_transactions.classification_date, actes_transactions.decision_date, actes_transactions.unique_id, actes_transactions.archive_url FROM actes_transactions " . $cond;
+        $sql = <<<SQL
+SELECT actes_transactions.id,
+       actes_transactions.envelope_id,
+       actes_transactions.type,
+       actes_transactions.related_transaction_id,
+       actes_transactions.nature_code,
+       actes_transactions.nature_descr,
+       actes_transactions.subject,
+       actes_transactions.number,
+       actes_transactions.classification,
+       actes_transactions.classification_date,
+       actes_transactions.decision_date,
+       actes_transactions.unique_id,
+       actes_transactions.archive_url
+FROM actes_transactions 
+SQL;
+        $sql .= ' ' . $cond;
 
         $db = DatabasePool :: getInstance();
 

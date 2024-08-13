@@ -109,7 +109,12 @@ if ($me->isGroupAdminOrSuper()) {
 }
 
 $html .= "<h2>" . $modStr . " collectivité</h2>\n";
-$html .= "<form class=\"form form-horizontal\" action=\"" . Helpers::getLink("/admin/authorities/admin_authority_edit_handler.php\" enctype=\"multipart/form-data\"  method=\"post\" name=\"form\" onsubmit=\"javascript:return validateForm(" . $authority->getValidationTrio('name', 'siren', 'agreement', 'email', 'broadcast_email', 'default_broadcast_email', 'status', 'authority_type_id', 'address', 'postal_code', 'city', 'department', 'district', 'telephone', 'fax', 'email_mail_securise') . ")\">\n");
+$html .= "<form class=\"form form-horizontal\" action=\"" .
+    Helpers::getLink(
+        "/admin/authorities/admin_authority_edit_handler.php\" enctype=\"multipart/form-data\"  method=\"post\" name=\"form\" onsubmit=\"javascript:return validateForm("
+        . $authority->getValidationTrio('name', 'siren', 'agreement', 'email', 'broadcast_email', 'default_broadcast_email', 'status', 'authority_type_id', 'address', 'postal_code', 'city', 'department', 'district', 'telephone', 'fax', 'email_mail_securise')
+        . ")\">\n"
+    );
 
 if ($mod) {
     $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $authority->getId() . "\" />\n";
