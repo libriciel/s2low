@@ -154,12 +154,10 @@ class MailPeer
             $sql .= " mail_address=" . $db->quote($mail) . " and authority_id=" . $authority_id;
                 $result = $db->select($sql);
             $idArray = $result->get_all_rows();
-            if (count($idArray) > 0) {
-                return true;
-            }
-        } else {
-            return false;
+            return count($idArray) > 0;
         }
+
+        return false;
     }
 
   /**
