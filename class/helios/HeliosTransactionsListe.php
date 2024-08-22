@@ -105,7 +105,7 @@ class HeliosTransactionsListe
         if ($status == self::EN_COURS) {
             $this->filter[] = "helios_transactions.last_status_id  IN (" . implode(',', self::$etat_en_cours) . ")";
         } else {
-            $this->filter[] .= "helios_transactions.last_status_id  = ?" ;
+            $this->filter[] = "helios_transactions.last_status_id  = ?" ;
             $this->value[] = $status;
         }
     }
@@ -115,7 +115,7 @@ class HeliosTransactionsListe
         if (! $authority_id) {
             return ;
         }
-        $this->filter[] .= "helios_transactions.authority_id=?";
+        $this->filter[] = "helios_transactions.authority_id=?";
         $this->value[] = $authority_id;
     }
 
@@ -151,6 +151,9 @@ class HeliosTransactionsListe
         return "WHERE " . implode(" AND ", $this->filter);
     }
 
+    /**
+     * @deprecated 5.0.42, unused, no alternative
+     */
     public function getNbTransaction()
     {
         $where = "";

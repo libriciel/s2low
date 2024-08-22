@@ -37,32 +37,32 @@ $filter = [];
 // Construction chaîne de filtrage
 if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivités et tous les groupes
     if (isset($fauthority) && is_numeric($fauthority)) {
-        $filter[] .= 'users.authority_id=' . addslashes($fauthority);
+        $filter[] = 'users.authority_id=' . addslashes($fauthority);
     }
 
     if (isset($fgroup) && is_numeric($fgroup)) {
-        $filter[] .= 'authorities.authority_group_id=' . addslashes($fgroup);
+        $filter[] = 'authorities.authority_group_id=' . addslashes($fgroup);
     }
 } elseif ($me->isGroupAdmin()) {
   // Un admin de groupe ne voit forcément que les utilisateurs des collectivité appartenant à son groupe
     if (isset($fauthority) && mb_strlen($fauthority) > 0) {
         $auth = new Authority($fauthority);
         if ($auth->isInGroup($me->get('authority_group_id'))) {
-            $filter[] .= "users.authority_id='" . addslashes($fauthority) . "'";
+            $filter[] = "users.authority_id='" . addslashes($fauthority) . "'";
         }
     }
-    $filter[] .= "authorities.authority_group_id='" . $me->get('authority_group_id') . "'";
+    $filter[] = "authorities.authority_group_id='" . $me->get('authority_group_id') . "'";
 } elseif ($me->isAuthorityAdmin()) {
     //Un admin d'une collectivité ne voit forcément que les utilisateurs de sa collectivité
-    $filter[] .= "users.authority_id='" . $me->get('authority_id') . "'";
+    $filter[] = "users.authority_id='" . $me->get('authority_id') . "'";
 }
 
 if (isset($frole) && mb_strlen($frole) > 0) {
-    $filter[] .= "users.role='" . addslashes($frole) . "'";
+    $filter[] = "users.role='" . addslashes($frole) . "'";
 }
 
 if (isset($fname) && mb_strlen($fname) > 0) {
-    $filter[] .= "users.name ILIKE '%" . addslashes($fname) . "%'";
+    $filter[] = "users.name ILIKE '%" . addslashes($fname) . "%'";
 }
 
 $where = '';

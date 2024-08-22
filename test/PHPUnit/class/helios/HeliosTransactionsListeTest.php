@@ -6,11 +6,40 @@ class HeliosTransactionsListeTest extends S2lowTestCase
 {
     use HeliosUtilitiesTestTrait;
 
-    public function testGetAll()
+    public function heliosTransactionListe(): HeliosTransactionsListe
+    {
+        return $this->getObjectInstancier()->get(HeliosTransactionsListe::class);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testGetAll(): void
     {
         $this->createTransaction();
-        $heliosTransactionsListe  = $this->getObjectInstancier()->get(HeliosTransactionsListe::class);
-        $all = $heliosTransactionsListe->getAll();
-        $this->assertEquals('toto.txt', $all[0]['filename']);
+        $all = $this->heliosTransactionListe()->getAll();
+        static::assertSame('toto.txt', $all[0]['filename']);
+    }
+
+    public static function statusAndAuthorityProvider(): \Generator
+    {
+        yield [3,1,0];
+        yield [4,1,1];
+        yield [4,2,0];
+    }
+
+    /**
+     * @dataProvider statusAndAuthorityProvider
+     * @throws Exception
+     */
+    public function testGetAllWithStatusAndAuthority(int $status, int $authority, int $expectedCount): void
+    {
+        $this->createTransaction();
+        $this->heliosTransactionListe()->setStatus($status);
+        $this->heliosTransactionListe()->setAuthority($authority);
+        static::assertCount(
+            $expectedCount,
+            $this->heliosTransactionListe()->getAll()
+        );
     }
 }

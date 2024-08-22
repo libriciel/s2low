@@ -135,11 +135,11 @@ class AuthoritySQL extends SQL
         }
         if ($name) {
             $sql .=  " AND authorities.name ILIKE ? ";
-            $data[] .= "%$name%";
+            $data[] = "%$name%";
         }
         if ($siren) {
             $sql .=  " AND siren LIKE ? ";
-            $data[] .= "%$siren%";
+            $data[] = "%$siren%";
         }
         $offset = intval($offset);
         $limit = intval($limit);
@@ -169,11 +169,11 @@ class AuthoritySQL extends SQL
         }
         if ($name) {
             $sql .= " AND name ILIKE ? ";
-            $data[] .= "%$name%";
+            $data[] = "%$name%";
         }
         if ($siren) {
             $sql .=  " AND siren LIKE ? ";
-            $data[] .= "%$siren%";
+            $data[] = "%$siren%";
         }
         return $this->queryOne($sql, $data);
     }

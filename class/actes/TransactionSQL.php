@@ -114,7 +114,7 @@ class TransactionSQL
         if (! $authority_id) {
             return ;
         }
-        $this->filter[] .= "actes_transactions.authority_id=?";
+        $this->filter[] = "actes_transactions.authority_id=?";
         $this->value[] = $authority_id;
     }
 
@@ -149,7 +149,7 @@ class TransactionSQL
         if ($status == self::EN_COURS) {
              $this->filter[] = "actes_transactions.last_status_id  IN (" . implode(',', self::$etat_en_cours) . ")";
         } else {
-            $this->filter[] .= "actes_transactions.last_status_id  = ?" ;
+            $this->filter[] = "actes_transactions.last_status_id  = ?" ;
             $this->value[] = $status;
         }
     }
