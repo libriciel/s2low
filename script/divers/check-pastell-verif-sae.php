@@ -6,7 +6,8 @@ use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\PastellProperties;
 
-require_once(__DIR__ . "/../../init/init.php");
+require_once __DIR__ . '/../../init/init.php';
+
 list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [ObjectInstancier::class, SQLQuery::class]
@@ -22,7 +23,13 @@ function verif_sae(PastellWrapper $pastell, $listdocument, $last_action)
     }
 }
 
-$sql = "select pastell_id_e,pastell_login,pastell_password,pastell_url from authorities where pastell_url not like '' AND pastell_login not like '' AND pastell_password not like ''";
+$sql = <<<SQL
+SELECT pastell_id_e,pastell_login,pastell_password,pastell_url
+FROM authorities
+WHERE pastell_url NOT LIKE ''
+  AND pastell_login NOT LIKE ''
+  AND pastell_password NOT LIKE ''
+SQL;
 
 $list_col = $sqlQuery->query($sql);
 
@@ -35,7 +42,7 @@ foreach ($list_col as $col) {
     $pastellProperties->login = $col['pastell_login'];
     $pastellProperties->password = $col['pastell_password'];
 
-    $pastell =  $pastellFactory->getNewInstance($pastellProperties);
+    $pastell = $pastellFactory->getNewInstance($pastellProperties);
     //$etat='ar-recu-sae
     //$etat='send-archive';
     $etat = 'verif-sae-erreur';
@@ -45,10 +52,9 @@ foreach ($list_col as $col) {
         verif_sae($pastell, $recherche, $etat);
     }
 
-
     $recherche = $pastell->listDocuments('helios-generique');
     if (!empty($recherche) && !array_key_exists('error-message', $recherche)) {
         print_r($recherche);
-        verifsae($pastell, $recherche);
+        verif_sae($pastell, $recherche, $etat);
     }
 }

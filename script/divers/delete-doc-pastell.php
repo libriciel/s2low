@@ -2,9 +2,9 @@
 
 use S2lowLegacy\Lib\SQLQuery;
 
-require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+require_once __DIR__ . '/../../init/init.php';
 
+$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 function curl_appel($URL, $login, $mdp, $post_data)
 {
@@ -38,8 +38,8 @@ function list_document_pastell($id_e, $login, $mdp, $url, $flux, $etat)
                 'limit' => 50000
         );
 
-    echo"$URL $login $mdp \n";
-    $output = curlappel($URL, $login, $mdp, $post_data);
+    echo "$URL $login $mdp \n";
+    $output = curl_appel($URL, $login, $mdp, $post_data);
     return json_decode($output);
 }
 
@@ -76,22 +76,42 @@ if ($argc != 2) {
 
 $idcoll = (int) $argv[1];
 
-$sql = "select pastell_id_e,pastell_login,pastell_password,pastell_url from authorities where pastell_url not like '' AND pastell_login not like '' AND pastell_password not like '' AND id = ?";
+$sql = <<<SQL
+SELECT pastell_id_e,pastell_login,pastell_password,pastell_url
+FROM authorities
+WHERE pastell_url NOT LIKE ''
+  AND pastell_login NOT LIKE ''
+  AND pastell_password NOT LIKE ''
+  AND id = ?
+SQL;
 
 $list_col = $sqlQuery->query($sql, $idcoll);
 
 //print_r($list_col);exit;
 
 foreach ($list_col as $col) {
-    $recherche = list_document_pastell($col['pastell_id_e'], $col['pastell_login'], $col['pastell_password'], $col['pastell_url'], 'actes-generique', 'modification');
+    $recherche = list_document_pastell(
+        $col['pastell_id_e'],
+        $col['pastell_login'],
+        $col['pastell_password'],
+        $col['pastell_url'],
+        'actes-generique',
+        'modification'
+    );
 
     if (!empty($recherche) && !array_key_exists('error-message', $recherche)) {
         //print_r($recherche);exit;
         verif_sae($col['pastell_id_e'], $col['pastell_login'], $col['pastell_password'], $col['pastell_url'], $recherche);
     }
 
-
-    $recherche = list_document_pastell($col['pastell_id_e'], $col['pastell_login'], $col['pastell_password'], $col['pastell_url'], 'helios-generique', 'modification');
+    $recherche = list_document_pastell(
+        $col['pastell_id_e'],
+        $col['pastell_login'],
+        $col['pastell_password'],
+        $col['pastell_url'],
+        'helios-generique',
+        'modification'
+    );
 
     if (!empty($recherche) && !array_key_exists('error-message', $recherche)) {
         verif_sae($col['pastell_id_e'], $col['pastell_login'], $col['pastell_password'], $col['pastell_url'], $recherche);
