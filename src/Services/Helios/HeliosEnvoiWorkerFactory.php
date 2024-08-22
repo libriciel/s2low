@@ -7,11 +7,9 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 class HeliosEnvoiWorkerFactory
 {
     public function __construct(
-        HeliosEnvoiControler $heliosEnvoiControler,
-        HeliosTransactionsSQL $heliosTransactionsSQL
+        private readonly HeliosEnvoiControler $heliosEnvoiControler,
+        private readonly HeliosTransactionsSQL $heliosTransactionsSQL,
     ) {
-        $this->heliosEnvoiControler = $heliosEnvoiControler;
-        $this->heliosTransactionsSQL = $heliosTransactionsSQL;
     }
 
     public function get(bool $usePasstrans): HeliosEnvoiWorker

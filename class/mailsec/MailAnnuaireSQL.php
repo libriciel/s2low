@@ -6,9 +6,8 @@ use S2lowLegacy\Lib\SQLQuery;
 
 class MailAnnuaireSQL
 {
-    public function __construct(SQLQuery $sqlQuery)
+    public function __construct(private readonly SQLQuery $sqlQuery)
     {
-        $this->sqlQuery = $sqlQuery;
     }
 
     public function getInfo($id)

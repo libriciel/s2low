@@ -7,11 +7,10 @@ class Siren
 {
     public const LENGTH = 9;
 
-    private $luhnKey;
+    private string $value;
 
-    public function __construct(LuhnKey $luhnKey, $value)
+    public function __construct(private readonly LuhnKey $luhnKey, string $value)
     {
-        $this->luhnKey = $luhnKey;
         $this->value = preg_replace('/\s+/', '', $value);
     }
 

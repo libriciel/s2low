@@ -6,9 +6,12 @@ use ActesBatch;
 
 class BatchUploadHandler extends \S2lowLegacy\Class\UploadHandler
 {
-    public function __construct(ActesBatch $actesBatch, $options = null, $initialize = true, $error_messages = null)
-    {
-        $this->actesBatch = $actesBatch;
+    public function __construct(
+        private readonly ActesBatch $actesBatch,
+        $options = null,
+        $initialize = true,
+        $error_messages = null,
+    ) {
         parent::__construct($options, $initialize, $error_messages);
     }
 

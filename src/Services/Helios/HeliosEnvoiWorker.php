@@ -15,17 +15,12 @@ class HeliosEnvoiWorker implements IWorker
                                                 // Le risque est que le traitement du tube soit bloqué, mais comme on a
                                                 // plusieurs Worker, ça devrait être ok.
                                                 // Idéalement, on ferait un job.touch , mais je ne vois pas comment ...
-    private $heliosEnvoiControler;
-    private $heliosTransactionsSQL;
 
     public function __construct(
-        HeliosEnvoiControler $heliosEnvoiControler,
-        HeliosTransactionsSQL $heliosTransactionsSQL,
-        bool $usePasstrans
+        private readonly HeliosEnvoiControler $heliosEnvoiControler,
+        private readonly HeliosTransactionsSQL $heliosTransactionsSQL,
+        private readonly bool $usePasstrans,
     ) {
-        $this->heliosEnvoiControler = $heliosEnvoiControler;
-        $this->heliosTransactionsSQL = $heliosTransactionsSQL;
-        $this->usePasstrans = $usePasstrans;
     }
 
     public function getQueueName()

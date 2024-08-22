@@ -6,14 +6,11 @@ class Siret
 {
     private const LENGTH = 14;
 
-    private $siren;
-    private $luhnKey;
-
-    public function __construct(LuhnKey $luhnKey, $value, Siren $siren)
-    {
-        $this->luhnKey = $luhnKey;
-        $this->value = $value;
-        $this->siren = $siren;
+    public function __construct(
+        private readonly LuhnKey $luhnKey,
+        private readonly string $value,
+        private readonly Siren $siren,
+    ) {
     }
 
     public function isValid()

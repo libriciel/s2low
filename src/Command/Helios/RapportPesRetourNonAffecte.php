@@ -12,10 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RapportPesRetourNonAffecte extends Command
 {
-    public function __construct(SQLQuery $SQLQuery, MailerSymfonyFactory $mailerSymfonyFactory)
-    {
-        $this->sqlQuery = $SQLQuery;
-        $this->mailerSymfonyFactory = $mailerSymfonyFactory;
+    public function __construct(
+        private readonly SQLQuery $sqlQuery,
+        private readonly MailerSymfonyFactory $mailerSymfonyFactory,
+    ) {
         parent::__construct();
     }
 

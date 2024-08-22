@@ -4,20 +4,11 @@ namespace S2low\Services\ProcessCommand;
 
 class AnalysedOutput
 {
-    /**
-     * @var array
-     */
-    private $blockingErrors;
-    /**
-     * @var array
-     */
-    private $nonBlockingErrors;
-
-    public function __construct(string $result = "", array $blockingErrors = [], array $nonBlockingErrors = [])
-    {
-        $this->blockingErrors = $blockingErrors;
-        $this->nonBlockingErrors = $nonBlockingErrors;
-        $this->result = $result;
+    public function __construct(
+        private readonly string $result = '',
+        private readonly array $blockingErrors = [],
+        private readonly array $nonBlockingErrors = [],
+    ) {
     }
 
     public function hasBlockingErrors(): bool

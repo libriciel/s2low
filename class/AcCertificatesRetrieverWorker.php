@@ -8,9 +8,8 @@ class AcCertificatesRetrieverWorker implements IWorker
     private const COMMAND = "/usr/bin/curl -s https://validca.libriciel.fr/retrieve-validca.sh | /bin/bash -s /etc/s2low/ssl 2>&1";
     private const COMMAND_APACHE = "apachectl graceful";
 
-    public function __construct(S2lowLogger $logger)
+    public function __construct(private readonly S2lowLogger $logger)
     {
-        $this->logger = $logger;
     }
     /**
      * @inheritDoc
