@@ -122,6 +122,9 @@ class ActesUpdateClassificationSQL extends SQL
         //$this->query($sql,$date_classification,$xml_data,$siren);
     }
 
+    /**
+     * @deprecated 5.0.42, dead code, only used in test
+     */
     public function getClassification($siren)
     {
         $sql = "SELECT xml_data FROM actes_classification_requests WHERE requested_by IN ( SELECT users.id FROM  users, authorities" .
@@ -130,12 +133,12 @@ class ActesUpdateClassificationSQL extends SQL
         $pdo = $this->getSQLQuery()->getPdo();
         $stmt = $pdo->prepare($sql);                                    //QUICKFIX Passage UTF-8
         $stmt->execute([$siren]);
+        $xml_data = \stream_context_create();
         $stmt->bindColumn(1, $xml_data, PDO::PARAM_LOB);
         $stmt->fetch(PDO::FETCH_BOUND);
         $contents = stream_get_contents($xml_data);
         fclose($xml_data);
         return $contents;
-        //return $this->queryOne($sql,$siren);
     }
 
     public function deleteActeNature()
