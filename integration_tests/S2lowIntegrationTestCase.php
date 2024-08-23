@@ -47,6 +47,14 @@ class S2lowIntegrationTestCase extends WebTestCase
         ObjectInstancierFactory::resetObjectInstancier();    //DatabasePool utilise ObjectInstancier
     }
 
+    protected function tearDown(): void
+    {
+        // Evite le message postgres phpunit désolé, trop de clients sont déjà connectés
+        // TODO : ce disconnect serait-il nécessaire ailleurs ?
+        $this->sqlQuery->disconnect();
+        parent::tearDown();
+    }
+
     /**
      * @throws \Exception
      */

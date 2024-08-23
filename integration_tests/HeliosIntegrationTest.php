@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace IntegrationTests;
 
 use Exception;
-use S2lowLegacy\Lib\ObjectInstancierFactory;
-use S2lowLegacy\Lib\SQLQuery;
+use HeliosUtilitiesTestTrait;
 
 class HeliosIntegrationTest extends S2lowIntegrationTestCase
 {
-    use \HeliosUtilitiesTestTrait;
+    use HeliosUtilitiesTestTrait;
 
     /**
      * @throws Exception
@@ -172,7 +171,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
     {
         $client = $this->setUpUser();
 
-        $transaction_id = $this->createTransaction(1,);
+        $transaction_id = $this->createTransaction();
 
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $_POST['id'] = $transaction_id;

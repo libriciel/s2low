@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace IntegrationTests;
 
 use Exception;
-use S2lowLegacy\Lib\ObjectInstancierFactory;
 
 /**
  *

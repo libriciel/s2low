@@ -231,7 +231,7 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
         static::assertSame($expected, $authority->get('helios_use_passtrans'));
     }
 
-    public function heliosPasstrans()
+    public function heliosPasstrans(): iterable
     {
         // On créé la collectivité : helios_use_passtrans doit correspondre à la valeur
         // de la variable d'environnement
