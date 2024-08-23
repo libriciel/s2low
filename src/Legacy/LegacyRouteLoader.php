@@ -56,7 +56,7 @@ class LegacyRouteLoader extends Loader
         foreach ($phpFilesForStandardRoutes as $phpFile) {
             $className = $this->classLoader->getClassName($phpFile->getPathname());
             if ($className != '') {
-                $this->addRouteForClass($className, $phpFile, $collection);
+                $this->addRouteForLegacyCommand($className, $phpFile, $collection);
             } else {
                 $this->addRouteForFile($phpFile, $collection);
             }
@@ -109,7 +109,7 @@ class LegacyRouteLoader extends Loader
         }
     }
 
-    private function addRouteForClass(string $className, mixed $legacyScriptFile, LegacyRouteCollection $collection)
+    private function addRouteForLegacyCommand(string $className, mixed $legacyScriptFile, LegacyRouteCollection $collection)
     {
         $relativePathname = $legacyScriptFile->getRelativePathname();
         $shortFilename = basename($relativePathname, '.php');
@@ -118,7 +118,7 @@ class LegacyRouteLoader extends Loader
             ltrim(str_replace('/', '_', $legacyScriptFile->getRelativePath() . "/" . $shortFilename), "_")
         );
 
-        $collection->addClass($routeName, $relativePathname, $className);
-        $collection->addClass($routeName . "doubleslash", "/{slash}/" . $relativePathname, $className);
+        $collection->addRouteWithSymfonyContainer($routeName, $relativePathname, $className);
+        $collection->addRouteWithSymfonyContainer($routeName . "doubleslash", "/{slash}/" . $relativePathname, $className);
     }
 }

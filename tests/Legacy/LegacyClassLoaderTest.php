@@ -12,10 +12,10 @@ class LegacyClassLoaderTest extends TestCase
     /**
      * @dataProvider files
      */
-    public function testLegacyClassLoader(string $file, string $expectedClass)
+    public function testLegacyClassLoader(string $file, string $expectedClass): void
     {
         $legacyClassLoader = new LegacyClassLoader();
-        static::assertEquals(
+        static::assertSame(
             $expectedClass,
             $legacyClassLoader->getClassName($file)
         );
