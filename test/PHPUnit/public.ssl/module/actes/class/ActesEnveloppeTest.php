@@ -31,6 +31,7 @@ class ActesEnveloppeTest extends S2lowTestCase
         $my_tmp_folder = $tmpFolder->create();
         $this->getObjectInstancier()->set('actes_files_upload_root', $my_tmp_folder);
         file_put_contents("$my_tmp_folder/test.txt", "foo");
+        /** @var ActesRetriever $actesRetriever */
         $actesRetriever = $this->getObjectInstancier()->get(ActesRetriever::class);
         $file_path = $actesRetriever->getPath("test.txt");
         file_put_contents($file_path, "toto");

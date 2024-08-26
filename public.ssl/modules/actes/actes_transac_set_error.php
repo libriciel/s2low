@@ -24,7 +24,7 @@ $recuperateur = new Recuperateur($_POST);
 
 $id = $recuperateur->get('id');
 
-$actesScriptHelper->updateStatus(
+$actesScriptHelper->updateStatusAndLog(
     [$id],
     ActesStatusSQL::STATUS_EN_ERREUR,
     'Transaction passée manuellement en erreur'
@@ -33,4 +33,4 @@ $actesScriptHelper->updateStatus(
 
 
 $_SESSION['error'] = "La transaction $id a été passée en erreur.";
-header("Location: actes_transac_show.php?id=$id");
+header_wrapper("Location: actes_transac_show.php?id=$id");

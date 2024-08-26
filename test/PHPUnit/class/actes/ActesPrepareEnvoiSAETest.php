@@ -2,6 +2,7 @@
 
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\ActesPrepareEnvoiSAE;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\PastellProperties;
 
@@ -71,5 +72,10 @@ class ActesPrepareEnvoiSAETest extends S2lowTestCase
         $result = $this->getActesPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(5, $transaction_id);
         $this->assertFalse($result);
         $this->assertEquals("Accès interdit", $this->getActesPrepareEnvoiSAE()->getLastError());
+    }
+
+    public function getActesTransactionsSQL(): \S2lowLegacy\Class\actes\ActesTransactionsSQL
+    {
+        return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
     }
 }

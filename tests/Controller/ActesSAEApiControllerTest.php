@@ -143,4 +143,9 @@ class ActesSAEApiControllerTest extends S2lowTestCase
             $this->actesTransactionsSQL->getInfo($created_trans_id)['last_status_id']
         );
     }
+
+    protected function getActesTransactionsSQL(): ActesTransactionsSQL
+    {
+        return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+    }
 }

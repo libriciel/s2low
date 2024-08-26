@@ -31,19 +31,7 @@ class S2lowIntegrationTestCase extends WebTestCase
      */
     protected function setUp(): void
     {
-        parent::setUp();
-        LegacyObjectsManager::resetObjectInstancier();
-        $_SESSION = [];
-        $_GET = [];
-        $_POST = [];
-        //$_SERVER = [];
-        ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());    //DatabasePool utilise ObjectInstancier
-        $this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);            // On en crée un le temps de MàJ la BDD
-        $this->sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST); // On le ressettera ensuite
-        $this->sqlQuery->setDatabaseHost(DB_HOST_TEST);
-        ObjectInstancierFactory::getObjetInstancier()->set(SQLQuery::class, $this->sqlQuery);
-        $this->pemCertificateFactory = new PemCertificateFactory();
-        $this->sqlQuery->exec(file_get_contents(__DIR__ . '/fixtures/s2low-test-init.sql'));
+        $this->setUpWithoutDeletingObjectInstancier();
         ObjectInstancierFactory::resetObjectInstancier();    //DatabasePool utilise ObjectInstancier
     }
 
@@ -122,5 +110,25 @@ class S2lowIntegrationTestCase extends WebTestCase
 
         ObjectInstancierFactory::resetObjectInstancier();
         return $client;
+    }
+
+    /**
+     * @return void
+     */
+    protected function setUpWithoutDeletingObjectInstancier(): void
+    {
+        parent::setUp();
+        LegacyObjectsManager::resetObjectInstancier();
+        $_SESSION = [];
+        $_GET = [];
+        $_POST = [];
+        //$_SERVER = [];
+        ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());    //DatabasePool utilise ObjectInstancier
+        $this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);            // On en crée un le temps de MàJ la BDD
+        $this->sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST); // On le ressettera ensuite
+        $this->sqlQuery->setDatabaseHost(DB_HOST_TEST);
+        ObjectInstancierFactory::getObjetInstancier()->set(SQLQuery::class, $this->sqlQuery);
+        $this->pemCertificateFactory = new PemCertificateFactory();
+        $this->sqlQuery->exec(file_get_contents(__DIR__ . '/fixtures/s2low-test-init.sql'));
     }
 }

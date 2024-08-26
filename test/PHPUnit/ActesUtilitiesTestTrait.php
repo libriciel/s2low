@@ -6,6 +6,7 @@ namespace PHPUnit;
 
 use Exception;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
@@ -27,10 +28,35 @@ trait ActesUtilitiesTestTrait
         $sql = "INSERT INTO actes_envelopes(user_id,siren,department) VALUES(1,'000000000','034') returning ID";
         $envelope_id = $this->getSQLQuery()->queryOne($sql);
 
-        $sql = 'INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,decision_date,number,nature_code,type) VALUES (?,?,?,?,?,?,?,?) returning ID;';
-        $transaction_id = $this->getSQLQuery()->queryOne($sql, $envelope_id, $status, 1, 1, $date, '20170728C', 3, 1);
+        $sql = 'INSERT INTO actes_transactions(
+                               envelope_id,
+                               last_status_id,
+                               user_id,
+                               authority_id,
+                               decision_date,
+                               number,
+                               nature_code,
+                               type,
+                               classification
+                               ) VALUES (?,?,?,?,?,?,?,?,?) returning ID;';
+        $transaction_id = $this->getSQLQuery()->queryOne(
+            $sql,
+            $envelope_id,
+            $status,
+            1,
+            1,
+            $date,
+            '20170728C',
+            3,
+            1,
+            '1.1.1'
+        );
 
-        $this->getActesTransactionsSQL()->updateStatus($transaction_id, $status, '', '', $date);
+        $flux_retour = '';
+        if ($status === ActesStatusSQL::STATUS_ACQUITTEMENT_RECU) {
+            $flux_retour = 'Acquittement très officiel';
+        }
+        $this->getActesTransactionsSQL()->updateStatus($transaction_id, $status, '', $flux_retour, $date);
 
         if ($archive_path) {
             $relative_path = basename($archive_path);
@@ -78,13 +104,7 @@ trait ActesUtilitiesTestTrait
     {
         $this->getActesTransactionsSQL()->updateStatus($transaction_id, $status_id, $message, '', $date);
     }
-
-    protected function getActesTransactionsSQL(): ActesTransactionsSQL
-    {
-        return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
-    }
+    abstract protected function getActesTransactionsSQL(): ActesTransactionsSQL;
 
     abstract public function getSQLQuery(): SQLQuery;
-
-    abstract public function getObjectInstancier(): ObjectInstancier;
 }

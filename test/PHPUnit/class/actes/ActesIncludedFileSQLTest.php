@@ -61,4 +61,9 @@ class ActesIncludedFileSQLTest extends S2lowTestCase
 
         $this->assertEquals('test2.txt', $actesIncludedFileSQL->getSendFile($transaction_id)[1]['filename']);
     }
+
+    public function getActesTransactionsSQL(): ActesTransactionsSQL
+    {
+        return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+    }
 }

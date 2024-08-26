@@ -1,6 +1,7 @@
 <?php
 
 use PHPUnit\ActesUtilitiesTestTrait;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\TransactionSQL;
 
 class TransactionSQLTest extends S2lowTestCase
@@ -56,5 +57,10 @@ class TransactionSQLTest extends S2lowTestCase
         $this->transactionSQL->setAuthority($authority);
         $this->transactionSQL->setStatus($status);
         static::assertSame($expectedTransactions, $this->transactionSQL->getNbTransaction());
+    }
+
+    protected function getActesTransactionsSQL(): \S2lowLegacy\Class\actes\ActesTransactionsSQL
+    {
+        return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
     }
 }

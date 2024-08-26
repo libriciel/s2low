@@ -45,4 +45,4 @@ if (
 }
 
 $_SESSION['error'] = $msg;
-header('Location: index.php');
+header_wrapper('Location: index.php');

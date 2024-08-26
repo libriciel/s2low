@@ -78,5 +78,5 @@ if (! $info) {
 }
 
 
-header('Content-type: application/xml');
+header_wrapper('Content-type: application/xml');
 echo $info['flux_retour'];

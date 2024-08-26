@@ -5,9 +5,41 @@ declare(strict_types=1);
 namespace IntegrationTests;
 
 use Exception;
+use PHPUnit\ActesUtilitiesTestTrait;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Lib\ObjectInstancierFactory;
 
 class ActesIntegrationTest extends S2lowIntegrationTestCase
 {
+    use ActesUtilitiesTestTrait;
+
+    private string $enveloppeInErrorPath = '';
+
+    private ?ActesTransactionsSQL $actesTransactionsSQL;
+
+    protected function setUp(): void
+    {
+        $this->setUpWithoutDeletingObjectInstancier();
+        $this->actesTransactionsSQL = ObjectInstancierFactory::getObjetInstancier()->get(ActesTransactionsSQL::class);
+        ObjectInstancierFactory::resetObjectInstancier();    //DatabasePool utilise ObjectInstancier
+    }
+    protected function tearDown(): void
+    {
+        if ($this->enveloppeInErrorPath !== '' && file_exists($this->enveloppeInErrorPath)) {
+            foreach (glob($this->enveloppeInErrorPath . '/*') as $file) {
+                unlink($file);
+            }
+            rmdir($this->enveloppeInErrorPath);
+        }
+        $this->enveloppeInErrorPath = '';
+        parent::tearDown();
+    }
+
+    protected function getActesTransactionsSQL(): ActesTransactionsSQL
+    {
+        return $this->actesTransactionsSQL;
+    }
     /**
      * @throws Exception
      * TODO : corriger, bug dans cette fonctionnalité
@@ -37,48 +69,59 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
     }
     */
     /**
-     * TODO : ajouter un cas qui fonctionne
      * @throws Exception
      */
     public function testActesAnalyseResponse(): void
     {
         $client = $this->setUpUser();
-        $client->request('GET', 'modules/actes/admin/analyse-response.php');
+        $enveloppeName = 'enveloppe';
+        $this->copyEnveloppeToErrorDirectory($enveloppeName);
+        $_GET['file'] = $enveloppeName; // Comme l'objet Récupérateur est set dans le script, ça ne fonctionne pas
+                                      // autrement ( le client Symfony ne set pas _GET )
+        $client->request(
+            'GET',
+            'modules/actes/admin/analyse-response.php'
+        );
         static::assertMatchesRegularExpression(
-            '#Impossible de lire le fichier#',
+            '#Le fichier a été analysé#',
             $_SESSION['error']
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
 
     /**
-     * TODO : ajouter un cas qui fonctionne
      * @throws \Exception
      */
     public function testDeleteResponse(): void
     {
         $client = $this->setUpUser();
-
-        $client->request('GET', 'modules/actes/admin/analyse-response.php');
+        $enveloppeName = 'enveloppe';
+        $this->copyEnveloppeToErrorDirectory($enveloppeName);
+        $_GET['file'] = $enveloppeName; // Comme l'objet Récupérateur est set dans le script, ça ne fonctionne pas
+        // autrement ( le client Symfony ne set pas _GET )
+        $client->request('GET', 'modules/actes/admin/delete-response.php');
         static::assertMatchesRegularExpression(
-            '#Impossible de lire le fichier#',
+            '#Le fichier enveloppe a été supprimé#',
             $_SESSION['error']
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
+        static::assertFileDoesNotExist($enveloppeName);
     }
 
     /**
-     * TODO : ajouter un cas qui fonctionne
      * @throws \Exception
      */
     public function testDownloadResponse(): void
     {
         $client = $this->setUpUser();
-
-        $client->request('GET', 'modules/actes/admin/download-response.php');
+        $enveloppeName = 'enveloppe';
+        $this->copyEnveloppeToErrorDirectory($enveloppeName);
+        $_GET['file'] = $enveloppeName; // Comme l'objet Récupérateur est set dans le script, ça ne fonctionne pas
+        // autrement ( le client Symfony ne set pas _GET )
+        $crawler = $client->request('GET', 'modules/actes/admin/download-response.php');
         static::assertMatchesRegularExpression(
-            '#Impossible de lire le fichier#',
-            $_SESSION['error']
+            '#enveloppe.tar.gz#',
+            $crawler->html()
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
@@ -130,71 +173,83 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
     }
 
     /**
-     * TODO : ajouter des transactions
      * @throws Exception
      */
     public function testActesStats(): void
     {
         $client = $this->setUpUser();
 
+        $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
+        $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
+
         $crawler = $client->request('GET', 'modules/actes/actes_stats.php');
+
         static::assertMatchesRegularExpression(
-            '#Statistiques de transmission des enveloppes  pour l\'ensemble des collectivités#',
+            '#Nombre d\'enveloppes postées : 1#',
+            $crawler->html()
+        );
+
+        static::assertMatchesRegularExpression(
+            '#Nombre d\'enveloppes transmises au ministère : 1#',
             $crawler->html()
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
 
     /**
-     * TODO : ajouter des transactions
      * @throws Exception
      */
     public function testActesTransacArchiver(): void
     {
         $client = $this->setUpUser();
 
+        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+
+        $_POST['id'] = $transaction_id;
         $client->request('GET', 'modules/actes/actes_transac_archiver.php');
         static::assertMatchesRegularExpression(
-            '#Trying to access array offset on value of type bool#',
+            '#La collectivité n\'a pas de Pastell configuré#',
             $_SESSION['error']
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
 
     /**
-     * TODO : ajouter des transactions
      * @throws Exception
      */
     public function testActesTransacDelete(): void
     {
         $client = $this->setUpUser();
 
-        $crawler = $client->request('GET', 'modules/actes/actes_transac_delete.php');
+        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
+        $_POST['id'] = $transaction_id;
+        $client->request('GET', 'modules/actes/actes_transac_delete.php');
         static::assertMatchesRegularExpression(
-            '#Invalid text representation:#',
-            $crawler->html()
-        );
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
-    }
-
-    /**
-     * TODO : ajouter des transactions
-     * @throws Exception
-     */
-    public function testActesTransacGetARActe(): void
-    {
-        $client = $this->setUpUser();
-
-        $client->request('GET', 'modules/actes/actes_transac_get_ARActe.php');
-        static::assertMatchesRegularExpression(
-            '#Erreur d\'initialisation de la transaction#',
+            "#La transaction $transaction_id a été éradiquée ....#",
             $_SESSION['error']
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
 
     /**
-     * TODO : ajouter des transactions
+     * @throws Exception
+     */
+    public function testActesTransacGetARActe(): void
+    {
+        $client = $this->setUpUser();
+
+        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+        $_GET['id'] = $transaction_id;
+
+        $crawler = $client->request('GET', 'modules/actes/actes_transac_get_ARActe.php');
+        static::assertMatchesRegularExpression(
+            '#Acquittement très officiel#',
+            $crawler->html()
+        );
+        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
+    }
+
+    /**
      * @throws Exception
      */
     public function testActesTransacPostConfirm(): void
@@ -210,7 +265,6 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
     }
 
     /**
-     * TODO : ajouter des transactions
      * @throws Exception
      */
     public function testActesTransacPostConfirmApiMulti(): void
@@ -227,56 +281,68 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
     }
 
     /**
-     * TODO : ajouter des transactions
      * @throws Exception
      */
     public function testActesTransacRollBackAttente(): void
     {
         $client = $this->setUpUser();
 
+        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+        $_POST['id'] = $transaction_id;
+
         $crawler = $client->request('GET', 'modules/actes/actes_transac_rolback_attente.php');
         static::assertMatchesRegularExpression(
-            '#Foreign key violation: 7 ERREUR#',        //TODO : faire un cas réaliste
+            "#actes_transac_show.php\?id=$transaction_id#",
             $crawler->html()
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
+        static::assertSame(
+            ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,
+            $this->actesTransactionsSQL->getLastStatusInfo($transaction_id)['status_id'],
+        );
     }
 
     /**
-     * TODO : ajouter des transactions
-     * TODO : corriger ( le script ne fonctionne plus)
      * @throws Exception
      */
     public function testActesTransacSetError(): void
     {
         $client = $this->setUpUser();
+        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+        $_POST['id'] = $transaction_id;
 
-        $crawler = $client->request('GET', 'modules/actes/actes_transac_rolback_attente.php');
+        $crawler = $client->request('GET', 'modules/actes/actes_transac_set_error.php');
         static::assertMatchesRegularExpression(
-            '#Foreign key violation: 7 ERREUR#',        //TODO : faire un cas réaliste
+            "#actes_transac_show.php\?id=$transaction_id#",
             $crawler->html()
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
+        static::assertSame(
+            ActesStatusSQL::STATUS_EN_ERREUR,
+            $this->actesTransactionsSQL->getLastStatusInfo($transaction_id)['status_id'],
+        );
     }
 
     /**
-     * TODO : ajouter des transactions
      * @throws Exception
      */
     public function testActesTransacShow(): void
     {
         $client = $this->setUpUser();
 
+        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+        $_GET['id'] = $transaction_id;
+
         $crawler = $client->request('GET', 'modules/actes/actes_transac_show.php');
         static::assertMatchesRegularExpression(
-            '#exit\(\) called#',        //TODO : faire un cas réaliste
+            '#20170728C#',        //Le numéro de l'acte créé par ActesUtilitiesTestTrait.php
             $crawler->html()
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
 
     /**
-     * TODO : ajouter des transactions
+     * TODO : faire un cas plus réaliste
      * @throws Exception
      */
     public function testActesTransacSign(): void
@@ -285,43 +351,71 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
 
         $client->request('GET', 'modules/actes/actes_transac_sign.php');
         static::assertMatchesRegularExpression(
-            '#Les signatures n\'ont pas pu être récupérées#',        //TODO : faire un cas réaliste
+            '#Les signatures n\'ont pas pu être récupérées#',
             $_SESSION['error']
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
 
     /**
-     * TODO : ajouter des transactions
      * @throws Exception
      */
     public function testActesIndex(): void
     {
         $client = $this->setUpUser();
-
+        $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'modules/actes/index.php');
         static::assertMatchesRegularExpression(
-            '#Liste des transactions - ACTES#',        //TODO : faire un cas réaliste
+            '#Liste des transactions - ACTES#',
+            $crawler->html()
+        );
+        static::assertMatchesRegularExpression(
+            '#20170728C#',        //Le numéro de l'acte créé par ActesUtilitiesTestTrait.php
             $crawler->html()
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
 
     /**
-     * TODO : ajouter des transactions
      * @throws Exception
      */
     public function testActesTransacClose(): void
     {
         $client = $this->setUpUser();
 
+        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+        $_POST['id'] = $transaction_id;
+        $_POST['status'] = 'sae';
+
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'modules/actes/actes_transac_close.php');
         static::assertMatchesRegularExpression(
-            '#Message : État incorrect#',        //TODO : faire un cas réaliste
+            "#Message : Erreur lors de l'envoi de la transaction $transaction_id à Pastell#",
             $crawler->html()
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
+    }
+
+    /**
+     * @param string $enveloppeName
+     * @return void
+     */
+    private function copyEnveloppeToErrorDirectory(string $enveloppeName): void
+    {
+        $this->enveloppeInErrorPath = "/data/tdt-workspace/actes/response_error/$enveloppeName/";
+        mkdir($this->enveloppeInErrorPath);
+        copy(
+            __DIR__ . '/../test/PHPUnit/class/fixtures/test-courrier-simple/034-000000000-20170701-20170725A-AI-2-1_0.xml',
+            $this->enveloppeInErrorPath . '/034-000000000-20170701-20170725A-AI-2-1_0.xml'
+        );
+        copy(
+            __DIR__ . '/../test/PHPUnit/class/fixtures/test-courrier-simple/TACT--SPREF0011-000000000-20170725-1.xml',
+            $this->enveloppeInErrorPath . '/TACT--SPREF0011-000000000-20170725-1.xml'
+        );
+        copy(
+            __DIR__ . '/../test/PHPUnit/class/fixtures/test-courrier-simple/034-000000000-20170701-20170725A-AI-2-1_1.pdf',
+            $this->enveloppeInErrorPath . '/034-000000000-20170701-20170725A-AI-2-1_1.pdf'
+        );
     }
 }
