@@ -11,7 +11,8 @@ use S2lowLegacy\Lib\Recuperateur;
 [$initialisation,$heliosArchiveControler] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([Initialisation::class,HeliosPrepareEnvoiSAE::class]);
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEHELIOS);
+$initData = $initialisation->doInit();
+$initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
 
 $recuperateur = new Recuperateur($_POST);
 $id = $recuperateur->getInt('id');

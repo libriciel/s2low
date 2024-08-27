@@ -14,7 +14,8 @@ use S2lowLegacy\Lib\Recuperateur;
 [$initialisation,$droit ,$actesScriptHelper] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([Initialisation::class, Droit::class,ActesScriptHelper::class]);
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+$initData = $initialisation->doInit();
+$initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
 if (! $droit->isSuperAdmin($initData->userInfo)) {
     header('Location: index.php');

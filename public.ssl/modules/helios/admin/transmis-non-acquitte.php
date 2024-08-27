@@ -12,7 +12,8 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 [$initialisation,$heliosTransactionsSQL] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([Initialisation::class,HeliosTransactionsSQL::class]);
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEHELIOS);
+$initData = $initialisation->doInit();
+$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
 
 if ($initData->userInfo['role'] != 'SADM') {
     $_SESSION['error'] = 'Super admin only !';
@@ -34,7 +35,7 @@ $doc->setTitle("Console d'administration");
 $doc->openContainer();
 
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $initData->modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
 
 $doc->closeSideBar();
 

@@ -16,7 +16,8 @@ use S2lowLegacy\Lib\Recuperateur;
 [$initialisation,$droit,$mailAnnuaireSQL] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([Initialisation::class, Droit::class,MailAnnuaireSQL::class]);
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEMAIL);
+$initData = $initialisation->doInit();
+$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEMAIL);
 
 if (! $droit->isAuthorityAdmin($initData->userInfo)) {
     exit_wrapper();
@@ -39,7 +40,7 @@ $doc->setTitle(($id ? "Edition" : "Ajout") . " d'un contact de l'annuaire - Mail
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $initData->modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 

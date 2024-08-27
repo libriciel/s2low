@@ -12,7 +12,8 @@ use S2lowLegacy\Class\Log;
 [$initialisation,$heliosArchiveControler] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([Initialisation::class,HeliosPrepareEnvoiSAE::class]);
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEHELIOS);
+$initData = $initialisation->doInit();
+$initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
 
 $liste_id = Helpers::getVarFromPost('liste_id');
 

@@ -18,7 +18,8 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 [$initialisation,$sqlQuery,$heliosAnalyseFichierRecu] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([Initialisation::class, SQLQuery::class,HeliosAnalyseFichierRecu::class]);
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEHELIOS);
+$initData = $initialisation->doInit();
+$initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
 
 if ($initData->userInfo['role'] != 'SADM') {
     $_SESSION['error'] = 'Super admin only !';

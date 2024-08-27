@@ -19,7 +19,8 @@ list($initialisation, $pesAllerRetriever,$workerScript, $heliosTransactionSQL ) 
         [Initialisation::class, PesAllerRetriever::class, WorkerScript::class, HeliosTransactionsSQL::class]
     );
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEHELIOS);
+$initData = $initialisation->doInit();
+$initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
 
 // Instanciation du module courant
 $module = new Module();

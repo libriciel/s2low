@@ -43,7 +43,7 @@ $doc = new HTMLLayout();
 $doc->setTitle('Configuration de la connexion SAE - S²low');
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $initData->modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($initData->userInfo, []));
 $doc->closeSideBar();
 $doc->openContent();
 

@@ -23,7 +23,8 @@ use S2lowLegacy\Model\AuthoritySQL;
 [$initialisation, $droit,  $transactionSQL,$authoritySQL] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([Initialisation::class, Droit::class, TransactionSQL::class, AuthoritySQL::class]);
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+$initData = $initialisation->doInit();
+$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
 $recuperateur = new Recuperateur($_GET);
 
@@ -109,7 +110,7 @@ $listeActesHTML = new ListeActesHTML();
 
 if ($droit->isSuperAdmin($initData->userInfo)) {
     $listeActesHTML->addCollectivite($authoritySQL->getAll(), $authority_filtre);
-} elseif (! $droit->isGroupAdmin($initData->userInfo) && ($initData->permUser == 'RW' || $initData->permUser == 'CS')) {
+} elseif (! $droit->isGroupAdmin($initData->userInfo) && ($moduleData->permUser == 'RW' || $moduleData->permUser == 'CS')) {
         $listeActesHTML->addActionBox();
 }
 
@@ -130,7 +131,7 @@ $doc->addJavascript('/javascript/tedetis.js');
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $initData->modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
 $doc->addBody($pagerHTML->getHTML($page_number, $nb_transactions, $taille_page));
 $doc->closeSideBar();
 $doc->openContent();

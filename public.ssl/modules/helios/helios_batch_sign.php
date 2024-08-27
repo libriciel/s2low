@@ -35,9 +35,10 @@ use S2lowLegacy\Model\ModuleSQL;
         'html'
         ]);
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEHELIOS);
+$initData = $initialisation->doInit();
+$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
 
-if (! $moduleSQL->hasDroit($initData->moduleInfo['id'], $initData->connexion->getId(), 'CS')) {
+if (! $moduleSQL->hasDroit($moduleData->moduleInfo['id'], $initData->connexion->getId(), 'CS')) {
     Helpers::returnAndExit(
         1,
         'Vous ne disposez pas du droit de signature.',
@@ -94,7 +95,7 @@ $doc = new HTMLLayout();
 $doc->setTitle('Tedetis : Signature de plusieurs fichier PES');
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $initData->modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 

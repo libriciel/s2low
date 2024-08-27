@@ -36,7 +36,8 @@ class HeliosAdminController extends AbstractController
      */
     public function transmisNonAcquitteParMail(): RedirectResponse
     {
-        $initData = $this->initialisation->doInit(Initialisation::MODULENAMEHELIOS);
+        $initData = $this->initialisation->doInit();
+        $this->initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
 
         if ($initData->userInfo['role'] != 'SADM') {
             $_SESSION['error'] = 'Super admin only !';

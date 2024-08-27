@@ -12,7 +12,8 @@ use S2lowLegacy\Lib\Recuperateur;
 [$initialisation,$actesPrepareEnvoiSAE] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([Initialisation::class,ActesPrepareEnvoiSAE::class]);
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+$initData = $initialisation->doInit();
+$initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
 $recuperateur = new Recuperateur($_POST);
 $id = $recuperateur->getInt('id');

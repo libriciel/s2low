@@ -13,7 +13,8 @@ use S2lowLegacy\Class\PagerHTML;
 [$initialisation,$actesResponsesError] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([Initialisation::class,ActesResponsesError::class]);
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+$initData = $initialisation->doInit();
+$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
 if ($initData->userInfo['role'] != 'SADM') {
     $_SESSION['error'] = 'Super admin only !';
@@ -36,7 +37,7 @@ $doc->setTitle("Console d'administration");
 $doc->openContainer();
 
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $initData->modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
 
 $doc->closeSideBar();
 

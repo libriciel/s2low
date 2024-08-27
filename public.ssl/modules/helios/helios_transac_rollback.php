@@ -16,7 +16,8 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 [$initialisation,$droit,$transactionSQL,$workerScript] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([Initialisation::class,Droit::class,HeliosTransactionsSQL::class,WorkerScript::class]);
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEHELIOS);
+$initData = $initialisation->doInit();
+$initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
 
 if (! $droit->isSuperAdmin($initData->userInfo)) {
     $_SESSION['error'] = "Réservé au super admin";

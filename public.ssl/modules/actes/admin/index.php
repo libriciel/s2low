@@ -14,7 +14,8 @@ use S2lowLegacy\Class\S2lowRedirect;
 [$initialisation,$droit,$s2lowRedirect] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([Initialisation::class, Droit::class,S2lowRedirect::class]);
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+$initData = $initialisation->doInit();
+$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
 if (! $droit->isSuperAdmin($initData->userInfo)) {
     $s2lowRedirect->redirect('/', 'Accès refusé');
@@ -29,7 +30,7 @@ $doc->setTitle('Utilitaires module ACTES');
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $initData->modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 

@@ -14,7 +14,8 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 [$initialisation,$droit,$transactionSQL] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([Initialisation::class, Droit::class,HeliosTransactionsSQL::class]);
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEHELIOS);
+$initData = $initialisation->doInit();
+$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
 
 if (! $droit->isSuperAdmin($initData->userInfo)) {
     header('Location: index.php');
@@ -35,7 +36,7 @@ if (
         1,
         false,
         'USER',
-        $initData->module_name,
+        $moduleData->module_name,
         null,
         $initData->userInfo['id']
     )

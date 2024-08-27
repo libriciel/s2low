@@ -13,7 +13,8 @@ use S2lowLegacy\Class\MenuHTML;
 [$initialisation,$actesStatistiques,$droit ] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([Initialisation::class,ActesStatistiques::class, Droit::class]);
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+$initData = $initialisation->doInit();
+$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
 
 $title = 'Statistiques de transmission des enveloppes ';
@@ -45,7 +46,7 @@ $doc = new HTMLLayout();
 $doc->setTitle('Statistiques - ACTES - S²low');
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $initData->modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 

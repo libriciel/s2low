@@ -13,7 +13,8 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 [$initialisation, $droit, $heliosTransactionSQL] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([Initialisation::class, Droit::class, HeliosTransactionsSQL::class]);
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEHELIOS);
+$initData = $initialisation->doInit();
+$initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
 
 
 if (! $droit->isSuperAdmin($initData->userInfo)) {

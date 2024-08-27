@@ -24,7 +24,8 @@ use S2lowLegacy\Model\AuthoritySQL;
 [$initialisation, $droit,$heliosTransactionsListe,$authoritySQL] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([Initialisation::class, Droit::class, HeliosTransactionsListe::class,AuthoritySQL::class]);
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEHELIOS);
+$initData = $initialisation->doInit();
+$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
 
 $recuperateur = new Recuperateur($_GET);
 
@@ -207,7 +208,7 @@ $doc->setTitle('Tedetis : module helios');
 $doc->openContainer();
 
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $initData->modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
 $doc->addBody($pagerHTML->getHTML($page_number, $nb_transactions, $taille_page));
 
 $doc->closeSideBar();

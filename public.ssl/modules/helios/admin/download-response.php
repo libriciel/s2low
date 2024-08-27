@@ -9,7 +9,8 @@ use S2lowLegacy\Lib\Recuperateur;
 
 $initialisation = LegacyObjectsManager::getLegacyObjectInstancier()->get(Initialisation::class);
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEHELIOS);
+$initData = $initialisation->doInit();
+$initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
 
 if ($initData->userInfo['role'] != 'SADM') {
     $_SESSION['error'] = 'Super admin only !';

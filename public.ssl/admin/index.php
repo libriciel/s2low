@@ -7,6 +7,7 @@ use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
+use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\PagerHTML;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
@@ -25,7 +26,8 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
         [Initialisation::class,HeliosTransactionsSQL::class,ActesTransactionsSQL::class,ActesResponsesError::class]
     );
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEHELIOS);
+$initData = $initialisation->doInit();
+$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
 
 if ($initData->userInfo['role'] != 'SADM') {
     $_SESSION['error'] = 'Super admin only !';
@@ -82,7 +84,7 @@ $doc->setTitle("Console d'administration");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $initData->modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
 $doc->closeSideBar();
 
 

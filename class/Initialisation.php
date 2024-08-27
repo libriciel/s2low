@@ -40,7 +40,7 @@ class Initialisation
     /**
      * @throws \Exception
      */
-    public function doInit(string $module_name = '', array $droit_specific = []): InitData
+    public function doInit(): InitData
     {
         $connexion = new Connexion();
         $me = null;
@@ -64,47 +64,43 @@ class Initialisation
             $groupeInfo = $this->groupSQL->getInfo($authorityInfo['authority_group_id']);
         }
 
-        if (! empty($module_name)) {
-            $moduleInfo = $this->moduleSQL->getInfoByName($module_name);
-            $droitModuleInfo = $this->moduleSQL->getInfoModuleAuthority(
-                $moduleInfo['id'],
-                $userInfo['authority_id']
-            );
-            $permUser = $this->moduleSQL->getInfoPerms($moduleInfo['id'], $connexion->getId());
-            $modulesInfo = $this->moduleSQL->getModulesForUser($userInfo);
-
-            if (
-                ! $this->droit->canAccess(
-                    $moduleInfo,
-                    $userInfo,
-                    $authorityInfo,
-                    $groupeInfo,
-                    $droitModuleInfo,
-                    $permUser,
-                    $droit_specific
-                )
-            ) {
-                $this->s2lowRedirect->redirect('/', 'Accès refusé');
-            }
-            return new InitData(
-                $connexion,
-                $me,
-                $userInfo,
-                $authorityInfo,
-                $groupeInfo,
-                $moduleInfo,
-                $droitModuleInfo,
-                $permUser,
-                $modulesInfo,
-                $module_name
-            );
-        }
         return new InitData(
             $connexion,
             $me,
             $userInfo,
             $authorityInfo,
             $groupeInfo,
+        );
+    }
+
+    public function initModule(InitData $initData, string $module_name, array $droit_specific = []): ModuleData
+    {
+        $moduleInfo = $this->moduleSQL->getInfoByName($module_name);
+        $droitModuleInfo = $this->moduleSQL->getInfoModuleAuthority(
+            $moduleInfo['id'],
+            $initData->userInfo['authority_id']
+        );
+        $permUser = $this->moduleSQL->getInfoPerms($moduleInfo['id'], $initData->connexion->getId());
+        $modulesInfo = $this->moduleSQL->getModulesForUser($initData->userInfo);
+
+        if (
+            ! $this->droit->canAccess(
+                $moduleInfo,
+                $initData->userInfo,
+                $initData->authorityInfo,
+                $initData->groupeInfo,
+                $droitModuleInfo,
+                $permUser,
+                $droit_specific
+            )
+        ) {
+            $this->s2lowRedirect->redirect('/', 'Accès refusé');
+        }
+        return new ModuleData(
+            $moduleInfo,
+            $permUser,
+            $modulesInfo,
+            $module_name
         );
     }
 }

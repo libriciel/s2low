@@ -18,7 +18,8 @@ use S2lowLegacy\Lib\Recuperateur;
 [$initialisation,$actesTransactionSQL] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([Initialisation::class,ActesTransactionsSQL::class]);
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+$initData = $initialisation->doInit();
+$initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
 $recuperateur = new Recuperateur($_GET);
 

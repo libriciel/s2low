@@ -36,9 +36,10 @@ use S2lowLegacy\Model\ModuleSQL;
             ]
     );
 
-$initData = $initialisation->doInit(Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+$initData = $initialisation->doInit();
+$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
-if (! $moduleSQL->hasDroit($initData->moduleInfo['id'], $initData->connexion->getId(), 'CS')) {
+if (! $moduleSQL->hasDroit($moduleData->moduleInfo['id'], $initData->connexion->getId(), 'CS')) {
     Helpers::returnAndExit(1, 'Vous ne disposez pas du droit de signature.', Helpers::getLink('/modules/actes/index.php'));
 }
 
@@ -67,7 +68,7 @@ $doc = new HTMLLayout();
 $doc->setTitle("Tedetis : Signature de plusieurs Actes");
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $initData->modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 
