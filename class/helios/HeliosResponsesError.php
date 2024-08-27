@@ -56,7 +56,7 @@ class HeliosResponsesError
         $mime_type = finfo_file($finfo, $filepath);
         finfo_close($finfo);
 
-        header("Content-type: $mime_type;");
+        header_wrapper("Content-type: $mime_type;");
         readfile($filepath);
     }
 

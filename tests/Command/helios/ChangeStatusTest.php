@@ -7,6 +7,7 @@ namespace S2low\Tests\Command\helios;
 use HeliosUtilitiesTestTrait;
 use S2low\Kernel;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
 use S2lowTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Command\Command;
@@ -15,6 +16,11 @@ use Symfony\Component\Console\Tester\CommandTester;
 class ChangeStatusTest extends S2lowTestCase
 {
     use HeliosUtilitiesTestTrait;
+
+    public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
+    {
+        return $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+    }
 
     public function testCommandBadTransactionId(): void
     {

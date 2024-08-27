@@ -6,10 +6,29 @@ namespace IntegrationTests;
 
 use Exception;
 use HeliosUtilitiesTestTrait;
+use S2lowLegacy\Lib\ObjectInstancierFactory;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+use SplFileInfo;
 
 class HeliosIntegrationTest extends S2lowIntegrationTestCase
 {
     use HeliosUtilitiesTestTrait;
+
+    private HeliosTransactionsSQL $heliosTransactionsSQL;
+
+    protected function setUp(): void
+    {
+        $this->setUpWithoutDeletingObjectInstancier();
+        $this->heliosTransactionsSQL = ObjectInstancierFactory::getObjetInstancier()->get(HeliosTransactionsSQL::class);
+        ObjectInstancierFactory::resetObjectInstancier();
+    }
+
+    protected function tearDown(): void
+    {
+        foreach (glob(HELIOS_RESPONSES_ERROR_PATH . '/*') as $file) {
+            unlink($file);
+        }
+    }
 
     /**
      * @throws Exception
@@ -17,13 +36,18 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
     public function testHeliosDeleteResponse(): void
     {
         $client = $this->setUpUser();
-        $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
+
+        $pesAller = $this->addPesAllerInErrorPath();
+
+        $_GET['file'] = $pesAller->getFilename();
+
         $client->request('GET', 'modules/helios/admin/delete-response.php');
         static::assertMatchesRegularExpression(
-            '#Impossible de lire le fichier.#',
+            '#Le fichier ' . preg_quote($pesAller->getFilename()) . ' a été supprimé#',
             $_SESSION['error']
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
+        static::assertFileDoesNotExist($pesAller->getPathname());
     }
 
     /**
@@ -32,11 +56,14 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
     public function testHeliosDownloadResponse(): void
     {
         $client = $this->setUpUser();
-        $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
-        $client->request('GET', 'modules/helios/admin/download-response.php');
+        $pesAller = $this->addPesAllerInErrorPath();
+
+        $_GET['file'] = $pesAller->getFilename();
+
+        $crawler = $client->request('GET', 'modules/helios/admin/download-response.php');
         static::assertMatchesRegularExpression(
-            '#Impossible de lire le fichier.#',
-            $_SESSION['error']
+            '#03f432a4f6d35110bf309fb525eb61f7#',           //nomfic du pes_aller de test
+            $crawler->html()
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
@@ -47,25 +74,34 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
     public function testHeliosAnalyseResponse(): void
     {
         $client = $this->setUpUser();
-        $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
+        $pesAller = $this->addPesAllerInErrorPath();
+
+        $_GET['file'] = $pesAller->getFilename();
+
         $client->request('GET', 'modules/helios/admin/analyse-response.php');
         static::assertMatchesRegularExpression(
-            '#Impossible de lire le fichier.#',
+            '#identificant NomFic 03f432a4f6d35110bf309fb525eb61f7#',
             $_SESSION['error']
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function testHeliosResponseError(): void
     {
         $client = $this->setUpUser();
-        $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
+        $pesAller = $this->addPesAllerInErrorPath();
+
         $crawler = $client->request('GET', 'modules/helios/admin/responses-helios-error.php');
+
         static::assertMatchesRegularExpression(
             '#Liste des fichiers trouvés sur la plateforme Hélios mais dont l\'analyse a échoué.#',
+            $crawler->html()
+        );
+        static::assertMatchesRegularExpression(
+            '#' . preg_quote($pesAller->getFilename()) . '#',
             $crawler->html()
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
@@ -77,10 +113,20 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
     public function testHeliosTransmisNonAcquitte(): void
     {
         $client = $this->setUpUser();
-        $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
+        $this->createTransaction(
+            1,
+            HeliosTransactionsSQL::TRANSMIS,
+            '01-01-1970'
+        );
+
         $crawler = $client->request('GET', 'modules/helios/admin/transmis-non-acquitte.php');
+
         static::assertMatchesRegularExpression(
             '#Liste des transactions restées à l\'état transmis#',
+            $crawler->html()
+        );
+        static::assertMatchesRegularExpression(
+            '#toto\.txt#',                  //Le nom du fichier créé par HeliosUtilitiesTestTrait
             $crawler->html()
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
@@ -92,8 +138,9 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
     public function testHeliosBatchSign(): void
     {
         $client = $this->setUpUser();
-        $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
+
         $crawler = $client->request('GET', 'modules/helios/helios_batch_sign.php');
+
         static::assertMatchesRegularExpression(
             '#Message : Vous devez sélectionner au moins une transaction à signer.#',
             $crawler->html()
@@ -107,8 +154,9 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
     public function testHeliosStatsTransaction(): void
     {
         $client = $this->setUpUser();
-        $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
+
         $crawler = $client->request('GET', 'modules/helios/helios_stats_transaction.php');
+
         static::assertMatchesRegularExpression(
             '#Tedetis : module helios statistique#',
             $crawler->html()
@@ -122,10 +170,16 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
     public function testHeliosTransacArchiver(): void
     {
         $client = $this->setUpUser();
-        $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
+        $transaction_id = $this->createTransaction(
+            1,
+            HeliosTransactionsSQL::INFORMATION_DISPONIBLE,
+        );
+
+        $_POST['id'] = $transaction_id;
+
         $client->request('GET', 'modules/helios/helios_transac_archiver.php');
         static::assertMatchesRegularExpression(
-            '#Erreur: La transaction 0 n\'existe pas#',
+            '#Erreur: La collectivité n\'a pas de Pastell configuré#',
             $_SESSION['error']
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
@@ -137,11 +191,18 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
     public function testHeliosTransacClose(): void
     {
         $client = $this->setUpUser();
-        $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
-        $crawler = $client->request('GET', 'modules/helios/helios_transac_close.php');
+        $transaction_id = $this->createTransaction(
+            1,
+            HeliosTransactionsSQL::INFORMATION_DISPONIBLE,
+        );
+
+        $_POST['liste_id'] = [$transaction_id];
+
+        $client->request('GET', 'modules/helios/helios_transac_close.php');
+
         static::assertMatchesRegularExpression(
-            '#foreach\(\) argument must be of type array|object, null given#',
-            $crawler->html()
+            '#La collectivité n\'a pas de Pastell configuré#',
+            $_SESSION['error']
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
@@ -152,14 +213,21 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
     public function testHeliosTransacDelete(): void
     {
         $client = $this->setUpUser();
+        $transaction_id = $this->createTransaction(
+            1,
+            HeliosTransactionsSQL::INFORMATION_DISPONIBLE,
+        );
 
-        $transaction_id = $this->createTransaction();
         $_POST['id'] = $transaction_id;
-        $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
+
         $crawler = $client->request('GET', 'modules/helios/helios_transac_delete.php');
         static::assertMatchesRegularExpression(
             '#Location: index.php#',
             $crawler->html()
+        );
+        static::assertMatchesRegularExpression(
+            "#La transaction $transaction_id a été éradiquée ....#",
+            $_SESSION['error']
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
@@ -170,11 +238,10 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
     public function testHeliosTransacRollBack(): void
     {
         $client = $this->setUpUser();
-
         $transaction_id = $this->createTransaction();
 
-        $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $_POST['id'] = $transaction_id;
+
         $client->request('GET', 'modules/helios/helios_transac_rollback.php');
         static::assertMatchesRegularExpression(
             "#La transaction $transaction_id est de nouveau à l\'état posté.#",
@@ -190,8 +257,9 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
     {
         $client = $this->setUpUser();
         $transaction_id = $this->createTransaction();
+
         $_POST['id'] = $transaction_id;
-        $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
+
         $client->request('GET', 'modules/helios/helios_transac_set_error.php');
         static::assertMatchesRegularExpression(
             "#La transaction $transaction_id a été passée en erreur.#",
@@ -206,7 +274,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
     public function testHeliosTransacSign(): void
     {
         $client = $this->setUpUser();
-        $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
+
         $client->request('GET', 'modules/helios/helios_transac_sign.php');
         static::assertMatchesRegularExpression(
             '#La signature a été enregistrée#',
@@ -222,8 +290,8 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
     {
         $client = $this->setUpUser();
         $transaction_id = $this->createTransaction();
+
         $_GET['id'] = $transaction_id;
-        $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $this->expectError();           //Le Pes Aller n'est pas set
         $client->request('GET', 'modules/helios/helios_transac_validate_pes_aller.php');
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
@@ -237,7 +305,6 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
         $client = $this->setUpUser();
         $this->createTransaction();
 
-        $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'modules/helios/index.php');
         static::assertMatchesRegularExpression(
             '#Liste des fichiers postés#',
@@ -248,5 +315,24 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
             $crawler->html()
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
+    }
+
+    public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
+    {
+        return $this->heliosTransactionsSQL;
+    }
+
+    /**
+     * @return SplFileInfo
+     */
+    private function addPesAllerInErrorPath(): SplFileInfo
+    {
+        $pesAller = new SplFileInfo(HELIOS_RESPONSES_ERROR_PATH . uniqid('test') . '.xml');
+
+        file_put_contents(
+            $pesAller->getPathname(),
+            file_get_contents(__DIR__ . '/../test/PHPUnit/helios/fixtures/pes_aller.xml')
+        );
+        return $pesAller;
     }
 }

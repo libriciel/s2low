@@ -24,13 +24,14 @@ trait HeliosUtilitiesTestTrait
             return $transactionId;
         }
         /** @var \S2lowLegacy\Model\HeliosTransactionsSQL $heliosTransactionsSQL */
-        $heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
-        $heliosTransactionsSQL->updateStatus($transactionId, $status, "test");
+        $this->getHeliosTransactionsSQL()->updateStatus($transactionId, $status, "test");
         return $transactionId;
     }
 
     /**
      * @return SQLQuery
      */
-    abstract public function getSQLQuery();
+    abstract public function getSQLQuery(): SQLQuery;
+
+    abstract public function getHeliosTransactionsSQL(): HeliosTransactionsSQL;
 }

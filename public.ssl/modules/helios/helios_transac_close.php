@@ -44,5 +44,5 @@ foreach ($liste_id as $id) {
 
 
 $_SESSION['error'] = nl2br($msg);
-header('Location: index.php');
-exit();
+header_wrapper('Location: index.php');
+exit_wrapper();

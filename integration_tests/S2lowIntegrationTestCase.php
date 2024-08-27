@@ -123,6 +123,7 @@ class S2lowIntegrationTestCase extends WebTestCase
         $_GET = [];
         $_POST = [];
         //$_SERVER = [];
+        $_SERVER['QUERY_STRING'] = '';
         ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());    //DatabasePool utilise ObjectInstancier
         $this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);            // On en crée un le temps de MàJ la BDD
         $this->sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST); // On le ressettera ensuite

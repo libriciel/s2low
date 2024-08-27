@@ -25,6 +25,11 @@ class HeliosTransactionSQLTest extends S2lowTestCase
         $this->heliosTransactionSQL->updateStatus($this->transaction_id, HeliosTransactionsSQL::POSTE, "test");
     }
 
+    public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
+    {
+        return $this->heliosTransactionSQL;
+    }
+
     public function testGetInfo()
     {
         $info = $this->heliosTransactionSQL->getInfo($this->transaction_id);

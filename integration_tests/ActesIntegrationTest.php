@@ -364,7 +364,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
     {
         $client = $this->setUpUser();
         $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
-        $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
+
         $crawler = $client->request('GET', 'modules/actes/index.php');
         static::assertMatchesRegularExpression(
             '#Liste des transactions - ACTES#',
@@ -388,7 +388,6 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
         $_POST['id'] = $transaction_id;
         $_POST['status'] = 'sae';
 
-        $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'modules/actes/actes_transac_close.php');
         static::assertMatchesRegularExpression(
             "#Message : Erreur lors de l'envoi de la transaction $transaction_id à Pastell#",
