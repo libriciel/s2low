@@ -6,6 +6,10 @@
 
 - Permettre de transformer une commande legacy en S2lowLegacyCommandInSymfonyContainer instanciée comme un controlleur par Symfony #1127
 
+### Ajouts
+
+- Ajout du script script/helios/helios_admin_transac_retour_export.php permettant d'exporter la liste des PES_RETOUR #1210
+
 ## 5.0.41 2024-06-20
 
 ### Corrections
@@ -89,11 +93,11 @@
 
 ### Corrections
 
-- Correction du téléchargement des annexes d'un acte lorsqu'une date de publication est sélectionnée #1170 
+- Correction du téléchargement des annexes d'un acte lorsqu'une date de publication est sélectionnée #1170
 
 ## 5.0.31 - 2024-03-20
 
-###  Évolutions
+### Évolutions
 
 - Création de nouveaux états pour les transactions Actes et Helios dont les fichiers ne sont pas accessibles lors de l'envoi au SAE #1103
 - Ajout du Haut-commissariat de Nouvelle-Calédonie et des arrondissements #1086
@@ -106,7 +110,7 @@
 
 ## 5.0.30 - 2024-02-29
 
-###  Évolutions
+### Évolutions
 
 - Remonter dans les logs les erreurs rencontrées lors du téléchargement d'un fichier PES en utilisant le protocole FTP #1157
 
@@ -144,7 +148,6 @@
 - Correction du script de récupération des autorités de certification du ministère de l'intérieur #1096
 - Gestion des configurations des connexions DGFiP depuis le container de services #1147
 - Simplification du script migre_postes_comptables.php #1120
-
 
 ### Évolutions
 
@@ -242,7 +245,7 @@
 
 - Ajout du monitoring des jobs présents dans la file 'helios-reception' #1046
 
-### Corrections 
+### Corrections
 
 - Eviter les messages beanstalkd 'socket timed out' #1046
 
