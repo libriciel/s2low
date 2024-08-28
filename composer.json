@@ -87,6 +87,7 @@
       "controller",
       "class",
       "ext",
+      "public.ssl/admin/authorities/",
       "public.ssl/modules/mail/lib",
       "public.ssl/modules/mail/om",
       "public.ssl/modules/mail/controller",

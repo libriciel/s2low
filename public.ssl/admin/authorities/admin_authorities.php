@@ -1,4 +1,19 @@
 <?php
 
-$frontController = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2lowLegacy\Lib\FrontController::class);
-$frontController->go("Admin", "authorities");
+namespace App\Http\Controllers\Admin;
+
+use S2low\Legacy\S2lowLegacyCommandInSymfonyContainer;
+use S2lowLegacy\Lib\FrontController;
+
+// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class Admin_authorities extends S2lowLegacyCommandInSymfonyContainer
+{
+    public function __construct(
+        private FrontController $frontController
+    ) {
+    }
+    public function launchLegacyCommand(): void
+    {
+        $this->frontController->go('Admin', 'authorities');
+    }
+}

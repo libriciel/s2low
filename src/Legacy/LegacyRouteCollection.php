@@ -37,4 +37,18 @@ class LegacyRouteCollection
             )
         );
     }
+
+    public function addRouteWithSymfonyContainer(string $routeName, string $path, string $className, array $routeOptions = []): void
+    {
+        $this->routeCollection->add(
+            $routeName,
+            new Route(
+                $path,
+                [
+                    '_controller' => "$className::generateResponse",
+                ],
+                $routeOptions
+            )
+        );
+    }
 }
