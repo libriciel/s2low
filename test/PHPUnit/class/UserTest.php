@@ -130,6 +130,8 @@ class UserTest extends S2lowTestCase
 
     /**
      * @dataProvider roles
+     * @param string $role
+     * @param array $availableRoles
      * @return void
      */
     public function testGetAvailableRolesForUserCreation(string $role, array $availableRoles): void
@@ -144,38 +146,46 @@ class UserTest extends S2lowTestCase
 
     public function roles()
     {
-        return [
-            [
-                'SADM',
-                [
-                    'SADM' => 'Super administrateur',
-                'GADM' => 'Administrateur de groupe',
-                'ADM' => 'Administrateur collectivité',
-                'USER' => 'Utilisateur',
-                    'ARCH' => 'Archiviste'
-                ]
-            ],
-            [
-                'GADM',
-                [
-                    'ADM' => 'Administrateur collectivité',
-                'USER' => 'Utilisateur'
-                ]
-            ],
-            [
-                'ADM',
-                [
-                    'ADM' => 'Administrateur collectivité',
-                'USER' => 'Utilisateur'
-                ]
-            ],
-            [
-                'USER',
-                [
-                    'ADM' => 'Administrateur collectivité',
-                'USER' => 'Utilisateur'
-                ]
-            ],
+        $restrictedRoles = [
+            User::ADM => 'Administrateur collectivité',
+            User::USER => 'Utilisateur'
         ];
+
+        $allRoles = [
+            User::SADM => 'Super administrateur',
+            User::GADM => 'Administrateur de groupe',
+            User::ADM => 'Administrateur collectivité',
+            User::USER => 'Utilisateur',
+            User::ARCH => 'Archiviste'
+        ];
+        return [
+            [User::SADM, $allRoles ],
+            [User::GADM, $restrictedRoles],
+            [User::ADM, $restrictedRoles],
+            [User::USER,$restrictedRoles],
+            [User::ARCH,$restrictedRoles],
+        ];
+    }
+
+    /**
+     * @dataProvider roleIsArchivist
+     */
+    public function testIsArchivist(string $role, bool $isArchivist): void
+    {
+        $user = new User();
+        $user->set('role', $role);
+        self::assertSame($isArchivist, $user->isArchivist());
+    }
+
+    public function roleIsArchivist(): array
+    {
+        return
+            [   [User::SADM, false ],
+                [User::GADM, false ],
+                [User::ADM, false ],
+                [User::USER, false ],
+                [User::ARCH, true ]
+                ]
+            ;
     }
 }

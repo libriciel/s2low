@@ -9,6 +9,11 @@ class User extends DataObject
 {
     public const PERM_MODIFICATION = "RW";
 
+    public const SADM = 'SADM';
+    public const GADM = 'GADM';
+    public const ADM = 'ADM';
+    public const USER = 'USER';
+    public const ARCH = 'ARCH';
 
     protected bool $archivist_rights;
     protected $objectName = "users";
@@ -53,11 +58,11 @@ class User extends DataObject
                         "archivist_rights" => array("descr" => "Droits d'accès aux fonctions d'archive","type" => "isBool","mandatory" => false)
                          );
     protected $roleTypes = array(
-                               'SADM' => 'Super administrateur',
-                               'GADM' => 'Administrateur de groupe',
-                               'ADM' => 'Administrateur collectivité',
-                               'USER' => 'Utilisateur',
-                               'ARCH' => 'Archiviste'
+                               self::SADM => 'Super administrateur',
+                               self::GADM => 'Administrateur de groupe',
+                               self::ADM => 'Administrateur collectivité',
+                               self::USER => 'Utilisateur',
+                               self::ARCH => 'Archiviste'
                                );
     protected $permsTypes = array(
                                 "NONE" => "Aucune",
@@ -281,6 +286,15 @@ class User extends DataObject
     public function isAuthorityAdmin()
     {
         if (isset($this->role) && $this->role == "ADM") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function isArchivist()
+    {
+        if (isset($this->role) && $this->role == 'ARCH') {
             return true;
         } else {
             return false;

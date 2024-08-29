@@ -48,10 +48,10 @@ class ActesSAEApiControllerTest extends S2lowTestCase
 
     public function testNoArchivistRights(): void
     {
-        $this->mockUser->expects(static::once())->method('hasArchivistsRights')->willReturn(false);
+        $this->mockUser->expects(static::once())->method('isArchivist')->willReturn(false);
 
         static::assertSame(
-            '{"error":"L\u0027utilisateur ne poss\u00e8de pas le droit archiviste"}',
+            '{"error":"L\u0027utilisateur n\u0027est pas archiviste"}',
             $this->actesSAEApiController->manageSAEState(
                 new SAEStateTransitionRequest(1, 1)
             )->getContent()
@@ -60,7 +60,7 @@ class ActesSAEApiControllerTest extends S2lowTestCase
 
     public function testNoTransaction(): void
     {
-        $this->mockUser->expects(static::once())->method('hasArchivistsRights')->willReturn(true);
+        $this->mockUser->expects(static::once())->method('isArchivist')->willReturn(true);
 
         static::assertSame(
             '{"error":"Transaction 1165464894 non existante"}',
@@ -75,7 +75,7 @@ class ActesSAEApiControllerTest extends S2lowTestCase
      */
     public function testTransactionWrongAuthority(): void
     {
-        $this->mockUser->method('hasArchivistsRights')->willReturn(true);
+        $this->mockUser->method('isArchivist')->willReturn(true);
         $this->mockUser->method('get')->with('authority_id')->willReturn(2);
         // La transaction est créé avec l'autorité 1, l'user ne doit donc normalement pas y accéder
         $created_trans_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
@@ -92,7 +92,7 @@ class ActesSAEApiControllerTest extends S2lowTestCase
      */
     public function testTransactionWrongStatuses(int $inputStatus, int $outputStatus, string $message): void
     {
-        $this->mockUser->method('hasArchivistsRights')->willReturn(true);
+        $this->mockUser->method('isArchivist')->willReturn(true);
         $this->mockUser->method('get')->with('authority_id')->willReturn(1);
         // La transaction est créé avec l'autorité 1, l'user ne doit y accéder
         $created_trans_id = $this->createTransaction($inputStatus);
@@ -123,7 +123,7 @@ class ActesSAEApiControllerTest extends S2lowTestCase
      */
     public function testSuccessfulStatusSwitch(): void
     {
-        $this->mockUser->method('hasArchivistsRights')->willReturn(true);
+        $this->mockUser->method('isArchivist')->willReturn(true);
         $this->mockUser->method('get')->with('authority_id')->willReturn(1);
         // La transaction est créé avec l'autorité 1, l'user ne doit y accéder
         $created_trans_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);

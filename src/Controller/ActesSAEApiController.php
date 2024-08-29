@@ -35,8 +35,8 @@ class ActesSAEApiController extends AbstractController
         #[MapRequestPayload] SAEStateTransitionRequest $SAEStateTransitionRequest
     ): JsonResponse {
         $this->legacyController->verifUser();
-        if (!$this->legacyController->getUser()->hasArchivistsRights()) {
-            return $this->json(['error' => 'L\'utilisateur ne possède pas le droit archiviste'], 400);
+        if (!$this->legacyController->getUser()->isArchivist()) {
+            return $this->json(['error' => 'L\'utilisateur n\'est pas archiviste'], 400);
         }
         try {
             $this->transitionner->do(
