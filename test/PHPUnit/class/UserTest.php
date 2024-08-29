@@ -127,4 +127,55 @@ class UserTest extends S2lowTestCase
         $retrievedUser->init();
         static::assertFalse($retrievedUser->hasArchivistsRights());
     }
+
+    /**
+     * @dataProvider roles
+     * @return void
+     */
+    public function testGetAvailableRolesForUserCreation(string $role, array $availableRoles): void
+    {
+        $user = new User();
+        $user->set('role', $role);
+        self::assertSame(
+            $availableRoles,
+            $user->getAvailableRolesForUserCreation()
+        );
+    }
+
+    public function roles()
+    {
+        return [
+            [
+                'SADM',
+                [
+                    'SADM' => 'Super administrateur',
+                'GADM' => 'Administrateur de groupe',
+                'ADM' => 'Administrateur collectivité',
+                'USER' => 'Utilisateur',
+                    'ARCH' => 'Archiviste'
+                ]
+            ],
+            [
+                'GADM',
+                [
+                    'ADM' => 'Administrateur collectivité',
+                'USER' => 'Utilisateur'
+                ]
+            ],
+            [
+                'ADM',
+                [
+                    'ADM' => 'Administrateur collectivité',
+                'USER' => 'Utilisateur'
+                ]
+            ],
+            [
+                'USER',
+                [
+                    'ADM' => 'Administrateur collectivité',
+                'USER' => 'Utilisateur'
+                ]
+            ],
+        ];
+    }
 }

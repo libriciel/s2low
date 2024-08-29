@@ -53,10 +53,11 @@ class User extends DataObject
                         "archivist_rights" => array("descr" => "Droits d'accès aux fonctions d'archive","type" => "isBool","mandatory" => false)
                          );
     protected $roleTypes = array(
-                               "SADM" => "Super administrateur",
-                               "GADM" => "Administrateur de groupe",
-                               "ADM" => "Administrateur collectivité",
-                               "USER" => "Utilisateur"
+                               'SADM' => 'Super administrateur',
+                               'GADM' => 'Administrateur de groupe',
+                               'ADM' => 'Administrateur collectivité',
+                               'USER' => 'Utilisateur',
+                               'ARCH' => 'Archiviste'
                                );
     protected $permsTypes = array(
                                 "NONE" => "Aucune",
@@ -822,5 +823,22 @@ class User extends DataObject
     public function hasArchivistsRights(): bool
     {
         return $this->get('archivist_rights');
+    }
+
+    public function getAvailableRolesForUserCreation(): array
+    {
+        $roles_list = $this->get('roleTypes');
+        if (! $this->isSuper()) {
+            // Les admin simple et de groupe ne peut pas créer un super admin ni un admin de groupe
+            $tmp = [];
+
+            foreach ($roles_list as $role => $descr) {
+                if ($role != 'SADM' && $role != 'GADM' && $role != 'ARCH') {
+                    $tmp[$role] = $descr;
+                }
+            }
+            $roles_list = $tmp;
+        }
+        return $roles_list;
     }
 }

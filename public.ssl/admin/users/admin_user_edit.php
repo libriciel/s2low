@@ -143,18 +143,7 @@ $him_role = ($val = Helpers::getFromSession("role")) ? $val : $him->get("role");
 
 
 
-$roles_list = $me->get("roleTypes");
-if (! $me->isSuper()) {
-    // Les admin simple et de groupe ne peut pas créer un super admin ni un admin de groupe
-    $tmp = array();
-
-    foreach ($roles_list as $role => $descr) {
-        if ($role != 'SADM' && $role != 'GADM') {
-            $tmp[$role] = $descr;
-        }
-    }
-    $roles_list = $tmp;
-}
+$roles_list = $me->getAvailableRolesForUserCreation();
 
 $groups_list = Group::getGroupsIdName();
 
