@@ -1,35 +1,46 @@
 <?xml version="1.0"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" bootstrap="test/PHPUnit/bootstrap.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
-  <coverage>
-    <include>
-      <directory suffix=".php">class</directory>
-      <directory suffix=".php">config</directory>
-      <directory suffix=".php">controller</directory>
-      <directory suffix=".php">cron</directory>
-      <directory suffix=".php">init</directory>
-      <directory suffix=".php">lib</directory>
-      <directory suffix=".php">model</directory>
-      <directory suffix=".php">public</directory>
-      <directory suffix=".php">public.ssl</directory>
-      <directory suffix=".php">script</directory>
-      <directory suffix=".php">template</directory>
-      <directory suffix=".php">tools</directory>
-      <directory suffix=".php">src</directory>
-    </include>
-  </coverage>
-  <testsuites>
-    <testsuite name="S2low">
-      <directory>test/PHPUnit</directory>
-      <directory>tests</directory>
-    </testsuite>
-    <testsuite name="S2low_integration">
-      <directory>integration_tests</directory>
-    </testsuite>
-  </testsuites>
-  <listeners>
-    <listener class="S2low\tests\Base\S2lowTestListener" file="./tests/Base/S2lowTestListener.php"/>
-  </listeners>
-  <php>
-    <server name = "KERNEL_CLASS" value="S2low\Kernel" />
-  </php>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false"
+         bootstrap="test/PHPUnit/bootstrap.php"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+
+    <php>
+        <server name="KERNEL_CLASS" value="S2low\Kernel"/>
+
+        <!-- ###+ symfony/framework-bundle ### -->
+        <env name="APP_ENV" value="dev"/>
+        <env name="APP_SECRET" value="b0fc277a3213f78858601e7dee6892d0"/>
+        <!-- ###- symfony/framework-bundle ### -->
+    </php>
+
+    <coverage>
+        <include>
+            <directory suffix=".php">class</directory>
+            <directory suffix=".php">config</directory>
+            <directory suffix=".php">controller</directory>
+            <directory suffix=".php">cron</directory>
+            <directory suffix=".php">init</directory>
+            <directory suffix=".php">lib</directory>
+            <directory suffix=".php">model</directory>
+            <directory suffix=".php">public</directory>
+            <directory suffix=".php">public.ssl</directory>
+            <directory suffix=".php">script</directory>
+            <directory suffix=".php">template</directory>
+            <directory suffix=".php">tools</directory>
+            <directory suffix=".php">src</directory>
+        </include>
+    </coverage>
+
+    <testsuites>
+        <testsuite name="S2low">
+            <directory>test/PHPUnit</directory>
+            <directory>tests</directory>
+        </testsuite>
+        <testsuite name="S2low_integration">
+            <directory>integration_tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <listeners>
+        <listener class="S2low\tests\Base\S2lowTestListener" file="./tests/Base/S2lowTestListener.php"/>
+    </listeners>
 </phpunit>

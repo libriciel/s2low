@@ -1,25 +1,27 @@
-/config/LocalSettings.php
 /.idea
-/vendor/
 /.env
-.DS_STORE
+/config/LocalSettings.php
+/node_modules/
+/public.ssl/jsmodules/
+/public.ssl/modules/actes/files/
 /temp/
-/public.ssl/libersign
-/public.ssl/temp
-ext/standalone/HTMLPurifier/DefinitionCache
-.settings
-.project
-.buildpath
-/build/
-.scannerwork
-/coverage-reports/
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
 .phpunit.result.cache
-.vscode
-var/
-coverage
-dump.sql
-dumptest.sql
-dist/
-node_modules/
-public.ssl/jsmodules/
-public.ssl/modules/actes/files/
+###< phpunit/phpunit ###
+
+###> squizlabs/php_codesniffer ###
+/.phpcs-cache
+/phpcs.xml
+###< squizlabs/php_codesniffer ###

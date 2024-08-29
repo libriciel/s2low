@@ -233,7 +233,12 @@ if ($batchMode) {
     $html .= "Fichier courant&nbsp;: " . get_hecho($zeBatchFile->getDisplayName()) . "<br />\n</div>";
 }
 
-$html .= "<form id=\"add-transac-content\" role=\"form\" class=\"form col-md-offset-1\" action=\"" . Helpers::getLink("/modules/actes/actes_transac_create.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm(" . $trans->getValidationTrio('nature_code', 'number', 'decision_date', 'title', 'subject') . ", 'classif1', 'Classification', 'RisInt','decision_date', 'Date de la décision', 'isDatePasse'");
+$html .= "<form id=\"add-transac-content\" role=\"form\" class=\"form col-md-offset-1\" action=\"" .
+    Helpers::getLink(
+        "/modules/actes/actes_transac_create.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm(" .
+        $trans->getValidationTrio('nature_code', 'number', 'decision_date', 'title', 'subject') .
+        ", 'classif1', 'Classification', 'RisInt','decision_date', 'Date de la décision', 'isDatePasse'"
+    );
 
 
 

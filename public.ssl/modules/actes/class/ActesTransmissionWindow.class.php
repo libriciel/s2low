@@ -298,7 +298,12 @@ class ActesTransmissionWindow extends DataObject
   */
     public function getWindowsList($cond = "")
     {
-        if (! $this->pagerInit('actes_transmission_windows.id, actes_transmission_windows.rate_limit, MIN(atwh.window_begin) AS start, MAX(atwh.window_end) AS end', 'actes_transmission_windows LEFT OUTER JOIN actes_transmission_window_hours atwh ON actes_transmission_windows.id=atwh.transmission_window_id', $cond . " GROUP BY actes_transmission_windows.id, actes_transmission_windows.rate_limit")) {
+        $pagerInit = $this->pagerInit(
+            'actes_transmission_windows.id, actes_transmission_windows.rate_limit, MIN(atwh.window_begin) AS start, MAX(atwh.window_end) AS end',
+            'actes_transmission_windows LEFT OUTER JOIN actes_transmission_window_hours atwh ON actes_transmission_windows.id=atwh.transmission_window_id',
+            $cond . ' GROUP BY actes_transmission_windows.id, actes_transmission_windows.rate_limit'
+        );
+        if (!$pagerInit) {
             return false;
         }
 

@@ -25,21 +25,13 @@
     <file>./test</file>
     <file>./tests</file>
 
-    <exclude-pattern>./vendor/*</exclude-pattern>
-    <exclude-pattern>./var/*</exclude-pattern>
-    <exclude-pattern>./.git/*</exclude-pattern>
-    <exclude-pattern>./ext/*</exclude-pattern>
-    <exclude-pattern>./public.ssl/custom/styles/*</exclude-pattern>
+    <exclude-pattern>./config/preload.php</exclude-pattern>
     <exclude-pattern>./public/custom/styles/*</exclude-pattern>
-    <exclude-pattern>./public.ssl/javascript/*</exclude-pattern>
-    <exclude-pattern>./public/javascript/*</exclude-pattern>
-    <exclude-pattern>./public.ssl/modules/mail/template/*</exclude-pattern>
-    <exclude-pattern>test/PHPUnit/bootstrap.php</exclude-pattern>
-    <exclude-pattern>./src_js</exclude-pattern>
+    <exclude-pattern>./public.ssl/custom/styles/*</exclude-pattern>
     <exclude-pattern>./public.ssl/jsmodules/*</exclude-pattern>
-    <exclude-pattern>./webpack.config.js</exclude-pattern>
-    <exclude-pattern>composer-setup.php</exclude-pattern>
-    <exclude-pattern>./node_modules</exclude-pattern>
+    <exclude-pattern>./public.ssl/modules/mail/template/*</exclude-pattern>
+    <exclude-pattern>./test/PHPUnit/bootstrap.php</exclude-pattern>
+    <exclude-pattern>./tests/bootstrap.php</exclude-pattern>
 
     <rule ref="PSR12">
         <!-- require and require_once before classes declarations -->
@@ -55,7 +47,10 @@
 
     </rule>
 
-    <rule ref="Generic.Files.LineLength">
-            <exclude name="Generic.Files.LineLength.TooLong"/>
-    </rule>
+     <rule ref="Generic.Files.LineLength">
+            <properties>
+                <property name="lineLimit" value="400"/>
+                <property name="absoluteLineLimit" value="400"/>
+            </properties>
+        </rule>
 </ruleset>

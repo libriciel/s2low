@@ -4,31 +4,31 @@ namespace S2low\Controller;
 
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class LegacyController extends AbstractController
 {
-    public function loadLegacyScript(string $requestPath, string $legacyScript): StreamedResponse
+    public function loadLegacyScript(string $requestPath, string $legacyScript): Response
     {
-        $serverVariablesToSet['PHP_SELF'] = $requestPath;
-        $serverVariablesToSet['SCRIPT_NAME'] = $requestPath;
-        $serverVariablesToSet['SCRIPT_FILENAME'] = $legacyScript;
+        $_SERVER['PHP_SELF'] = $requestPath;
+        $_SERVER['SCRIPT_NAME'] = $requestPath;
+        $_SERVER['SCRIPT_FILENAME'] = $legacyScript;
 
-        return new StreamedResponse(
-            function () use ($legacyScript, $serverVariablesToSet) {
+        chdir(\dirname($legacyScript));
 
-                foreach ($serverVariablesToSet as $key => $value) {
-                    $_SERVER[$key] = $value;
-                }
+        \ob_start();
+        try {
+            require $legacyScript;
+        } catch (Exception $e) {
+            \var_dump($e->getMessage());
+        }
+        $content = (string)\ob_get_clean();
 
-                chdir(dirname($legacyScript));
-
-                try {
-                    require $legacyScript;
-                } catch (Exception $exception) {
-                    var_dump($exception->getMessage()); //TODO : utiliser la façon Symfony standard de traiter les exceptions
-                }
-            }
-        );
+        $headers = [];
+        foreach (\headers_list() as $header) {
+            $trimmed = \explode(': ', $header);
+            $headers[$trimmed[0]] = $trimmed[1];
+        }
+        return new Response($content, 200, $headers);
     }
 }

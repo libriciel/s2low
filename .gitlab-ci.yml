@@ -63,7 +63,7 @@ lint:
     DONT_INIT_DATABASE: "true"
   script:
     - cd /var/www/s2low
-    - vendor/bin/phpcs .
+    - vendor/bin/phpcs
 
 unit_test:
     stage: test
