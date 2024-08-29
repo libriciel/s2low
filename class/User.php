@@ -15,7 +15,6 @@ class User extends DataObject
     public const USER = 'USER';
     public const ARCH = 'ARCH';
 
-    protected bool $archivist_rights;
     protected $objectName = "users";
     protected $prettyName = "Utilisateur";
 
@@ -54,8 +53,7 @@ class User extends DataObject
                         "login" => array("descr" => "login","type" => "isString","mandatory" => false),
                         "password" => array("descr" => "password","type" => "isString","mandatory" => false),
                         "certificate_rgs_2_etoiles" => array("descr" => "Certificat RGS**","type" => "isString","mandatory" => false),
-                        "certificate_hash" => array("descr", "Certificat fingerprint", "type" => "isString", "mandatory" => false),
-                        "archivist_rights" => array("descr" => "Droits d'accès aux fonctions d'archive","type" => "isBool","mandatory" => false)
+                        "certificate_hash" => array("descr", "Certificat fingerprint", "type" => "isString", "mandatory" => false)
                          );
     protected $roleTypes = array(
                                self::SADM => 'Super administrateur',
@@ -553,16 +551,6 @@ class User extends DataObject
                 return false;
             }
         }
-        if (!$new && isset($this->archivist_rights) && !$this->archivist_rights) {
-            $sql = 'UPDATE users SET archivist_rights=false WHERE id = ?';
-            if (! $this->db->exec($sql, [ $this->id])) {
-                $this->errorMsg = 'Erreur lors du reset des droits archiviste.';
-                $this->db->rollback();
-                return false;
-            }
-        }
-
-        // Reset droits archiviste
 
         if (! $this->db->commit()) {
             $this->errorMsg = "Erreur lors de la validation de la transaction.";
@@ -832,11 +820,6 @@ class User extends DataObject
             }
         }
         return $dn;
-    }
-
-    public function hasArchivistsRights(): bool
-    {
-        return $this->get('archivist_rights');
     }
 
     public function getAvailableRolesForUserCreation(): array

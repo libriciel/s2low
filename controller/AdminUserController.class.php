@@ -195,8 +195,6 @@ class AdminUserController extends Controller
         $password2 = $this->getEnvironnement()->post()->get('password2');
         Helpers::putInSession("password2", $password2);
 
-        $archivistRights = $this->getEnvironnement()->post()->get('archivistRights');
-
         $certificate = $_FILES['certificate'] ?? [];
 
         $certificate_rgs_2_etoiles = $_FILES['certificate_rgs_2_etoiles'] ?? [];
@@ -334,9 +332,6 @@ class AdminUserController extends Controller
                 $him->setPerm($module["id"], Helpers::getVarFromPost("perm_" . $module["id"]), $module['specific_perms']);
             }
         }
-
-        $archivistRightsBool = ($archivistRights === 'on');
-        $him->set("archivist_rights", $archivistRightsBool);
 
         if (! $him->save()) {
             $msg = "Erreur lors de l'enregistrement de l'utilisateur :\n" . $him->getErrorMsg();
