@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Model;
 
+use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\SQL;
 use S2lowLegacy\Lib\X509Certificate;
 
@@ -75,12 +76,7 @@ class UserSQL extends SQL
 
     public function getRoleStr($role)
     {
-        $roleTypes = array( "SADM" => "Super administrateur",
-                               "GADM" => "Administrateur de groupe",
-                               "ADM" => "Administrateur collectivité",
-                               "USER" => "Utilisateur"
-                               );
-        return $roleTypes[$role];
+        return User::ROLES_DESCR[$role];
     }
 
     public function getIdentificationMethod($user_id)

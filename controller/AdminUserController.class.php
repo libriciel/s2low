@@ -427,7 +427,7 @@ class AdminUserController extends Controller
         $this->title = "Utilisateurs partageant le même certificat";
 
         $this->status_type_list = $this->me->get("statusTypes");
-        $this->roles_type_list = $this->me->get("roleTypes");
+        $this->roles_type_list = User::ROLES_DESCR;
     }
 
     /**

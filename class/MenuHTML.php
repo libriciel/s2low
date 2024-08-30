@@ -99,7 +99,7 @@ class MenuHTML
                 <li><a href="<?php echo Helpers::getLink('/modules/mail/index.php?command=annuaire');?>">Carnet d'adresses de la collectivité</a></li>
                 <li><a href="<?php echo Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=" . $userInfo["authority_id"]); ?>">Paramètres collectivité</a></li>
             <?php endif;?>
-            <?php if ($userInfo['role'] != 'USER') : ?>
+            <?php if (! in_array($userInfo['role'], [User::USER,User::ARCH])) : ?>
                 <li><a href="<?php echo Helpers::getLink("/admin/users/admin_users.php");?>">Gestion des utilisateurs</a></li>
                 <li><a href="<?php echo Helpers::getLink("/admin/services/admin_services.php");?>">Gestion des services</a></li>
             <?php endif;?>
@@ -131,7 +131,7 @@ class MenuHTML
             <?php endif; ?>
 
 
-            <li class="menu-list-title">Suivi <?php echo $userInfo['role'] != 'USER' ? "du site" : ""?></li>
+            <li class="menu-list-title">Suivi <?php echo ! in_array($userInfo['role'], [User::USER,User::ARCH]) ? "du site" : ""?></li>
             <li><a href="<?php echo Helpers::getLink("/common/logs_view.php");?>">Journal des événements</a></li>
             <?php foreach ($module_stat as $module) : ?>
                 <li><a href="<?php echo Helpers::getLink("/modules/" . $module["name"] . "/" . $module["name"] . "_stats.php");?>">Statistiques module <?php echo $module["name"] ?></a></li>

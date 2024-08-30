@@ -55,7 +55,7 @@ class User extends DataObject
                         "certificate_rgs_2_etoiles" => array("descr" => "Certificat RGS**","type" => "isString","mandatory" => false),
                         "certificate_hash" => array("descr", "Certificat fingerprint", "type" => "isString", "mandatory" => false)
                          );
-    protected $roleTypes = array(
+    public const ROLES_DESCR = array(
                                self::SADM => 'Super administrateur',
                                self::GADM => 'Administrateur de groupe',
                                self::ADM => 'Administrateur collectivité',
@@ -760,7 +760,7 @@ class User extends DataObject
     {
         switch ($name) {
             case "role":
-                if (array_search($val, array_keys($this->roleTypes)) === false) {
+                if (array_search($val, array_keys(self::ROLES_DESCR)) === false) {
                     $val = 'USER';
                 }
                 break;
@@ -824,7 +824,7 @@ class User extends DataObject
 
     public function getAvailableRolesForUserCreation(): array
     {
-        $roles_list = $this->get('roleTypes');
+        $roles_list = self::ROLES_DESCR;
         if (! $this->isSuper()) {
             // Les admin simple et de groupe ne peut pas créer un super admin ni un admin de groupe
             $tmp = [];
