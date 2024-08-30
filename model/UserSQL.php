@@ -5,6 +5,7 @@ namespace S2lowLegacy\Model;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\SQL;
 use S2lowLegacy\Lib\X509Certificate;
+use UnexpectedValueException;
 
 class UserSQL extends SQL
 {
@@ -76,6 +77,9 @@ class UserSQL extends SQL
 
     public function getRoleStr($role)
     {
+        if (!in_array($role, array_keys(User::ROLES_DESCR))) {
+            throw new UnexpectedValueException("Rôle $role inconnu");
+        }
         return User::ROLES_DESCR[$role];
     }
 

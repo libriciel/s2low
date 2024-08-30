@@ -75,7 +75,7 @@ $users = $me->getUsersList($where);
 
 
 $statusList = $me->get('statusTypes');
-$rolesList = $me->get('roleTypes');
+$rolesList = User::ROLES_DESCR;
 
 
 if ($api) {
@@ -138,7 +138,7 @@ ob_start();?>
         <form action="admin_users.php" method="get" class="form-horizontal">
         <div class="form-group">
             <label for="role" class="col-md-3 control-label">Le rôle est</label>
-            <div class="col-md-3"><?php echo $doc->getHTMLSelect('role', $me->get('roleTypes'), $frole) ?></div>
+            <div class="col-md-3"><?php echo $doc->getHTMLSelect('role', User::ROLES_DESCR, $frole) ?></div>
             <label for="name" class="col-md-3 control-label">Le nom contient</label>
             <div class="col-md-3">
                 <input

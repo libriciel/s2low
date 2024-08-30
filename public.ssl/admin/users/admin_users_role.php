@@ -15,4 +15,4 @@ if (! $me->isAdmin()) {
     $jsonOutput->displayErrorAndExit("Accès refusé");
 }
 
-$jsonOutput->display($me->get("roleTypes"));
+$jsonOutput->display(User::ROLES_DESCR);

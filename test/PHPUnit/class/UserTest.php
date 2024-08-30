@@ -94,7 +94,7 @@ class UserTest extends S2lowTestCase
         );
     }
 
-    public function roles()
+    public function roles(): iterable
     {
         $restrictedRoles = [
             User::ADM => 'Administrateur collectivité',

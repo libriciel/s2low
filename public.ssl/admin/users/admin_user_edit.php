@@ -177,7 +177,7 @@ $certitificate_id_list = $him->getIdFromCertData($him->get("certificate_hash")) 
 
 
 $status_type_list = $me->get("statusTypes");
-$roles_type_list = $me->get("roleTypes");
+$roles_type_list = User::ROLES_DESCR;
 
 $serviceUser = new ServiceUser(DatabasePool::getInstance());
 $services_list = $serviceUser->getServiceUser($him->get('authority_id'));

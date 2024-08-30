@@ -290,13 +290,9 @@ class User extends DataObject
         }
     }
 
-    public function isArchivist()
+    public function isArchivist(): bool
     {
-        if (isset($this->role) && $this->role == 'ARCH') {
-            return true;
-        } else {
-            return false;
-        }
+        return isset($this->role) && $this->role == self::ARCH;
     }
 
   /**
@@ -760,8 +756,8 @@ class User extends DataObject
     {
         switch ($name) {
             case "role":
-                if (array_search($val, array_keys(self::ROLES_DESCR)) === false) {
-                    $val = 'USER';
+                if (!in_array($val, array_keys(self::ROLES_DESCR))) {
+                    $val = User::USER;
                 }
                 break;
         }
@@ -824,17 +820,15 @@ class User extends DataObject
 
     public function getAvailableRolesForUserCreation(): array
     {
-        $roles_list = self::ROLES_DESCR;
-        if (! $this->isSuper()) {
+        if ($this->isSuper()) {
+            return self::ROLES_DESCR;
+        }
             // Les admin simple et de groupe ne peut pas créer un super admin ni un admin de groupe
-            $tmp = [];
 
-            foreach ($roles_list as $role => $descr) {
-                if ($role != 'SADM' && $role != 'GADM' && $role != 'ARCH') {
-                    $tmp[$role] = $descr;
-                }
+        foreach (self::ROLES_DESCR as $role => $descr) {
+            if (!in_array($role, [User::SADM,User::GADM,User::ARCH])) {
+                $roles_list[$role] = $descr;
             }
-            $roles_list = $tmp;
         }
         return $roles_list;
     }

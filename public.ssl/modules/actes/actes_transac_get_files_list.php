@@ -19,7 +19,7 @@ if (! $me->authenticate()) {
     exit();
 }
 
-if ($me->isGroupAdminOrSuper() || ! $module->isActive() || !$me->canEdit($module->get("name"))) {
+if ($me->isGroupAdminOrSuper() || ! $module->isActive() || !$me->canAccess($module->get("name"))) {
     echo "KO\nAccès refusé";
     exit();
 }
