@@ -27,7 +27,7 @@ class PesAllerRetriever
     {
         try {
             $result = $this->openStackSwiftWrapper->retrieveFile(
-                PesAllerStorage::CONTAINER_NAME,
+                PESAllerCloudStorage::CONTAINER_NAME,
                 $this->helios_files_upload_root . "/" . $pes_sha1
             );
         } catch (Exception $e) {

@@ -2,25 +2,39 @@
 
 namespace S2lowLegacy\Class\helios;
 
+use S2lowLegacy\Class\CloudStorage;
+use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\IWorker;
 use Exception;
+use S2lowLegacy\Lib\UnrecoverableException;
 
 class HeliosMenageWorker implements IWorker
 {
     public const QUEUE_NAME = 'helios-menage';
     private const NB_DAYS_IN_DISK = 15;
-
-    private $pesAllerStorage;
-
+    private CloudStorageFactory $cloudStorageFactory;
+    private ?CloudStorage $cloudStorage = null;
     public function __construct(
-        PesAllerStorage $pesAllerStorage
+        CloudStorageFactory $cloudStorageFactory
     ) {
-        $this->pesAllerStorage = $pesAllerStorage;
+        $this->cloudStorageFactory = $cloudStorageFactory;
     }
 
-    public function getQueueName()
+    /**
+     * @throws UnrecoverableException
+     */
+    private function getCloudStorage(): CloudStorage
     {
-        return sprintf("%s-%s", self::QUEUE_NAME, gethostname());
+        if (is_null($this->cloudStorage)) {
+            $this->cloudStorage = $this->cloudStorageFactory
+                ->getInstanceByClassName(PESAllerCloudStorage::class);
+        }
+        return $this->cloudStorage;
+    }
+
+    public function getQueueName(): string
+    {
+        return sprintf('%s-%s', self::QUEUE_NAME, gethostname());
     }
 
     public function getData($id)
@@ -28,7 +42,7 @@ class HeliosMenageWorker implements IWorker
         return $id;
     }
 
-    public function getAllId()
+    public function getAllId(): array
     {
         return [1];
     }
@@ -38,17 +52,17 @@ class HeliosMenageWorker implements IWorker
      * @return void
      * @throws Exception
      */
-    public function work($data)
+    public function work($data): void
     {
-        $this->pesAllerStorage->menageLocal(15);
+        $this->getCloudStorage()->deleteFilesOnDisk(self::NB_DAYS_IN_DISK);
     }
 
-    public function getMutexName($data)
+    public function getMutexName($data): string
     {
         return $this->getQueueName();
     }
 
-    public function isDataValid($data)
+    public function isDataValid($data): bool
     {
         return true;
     }

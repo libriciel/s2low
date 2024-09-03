@@ -89,6 +89,7 @@ class TestEnvironmentManager
         $this->getObjectInstancier()->set(S2lowLogger::class, new  S2lowLogger($monologLogger));
 
         $this->getObjectInstancier()->set('image_for_stamp', SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg");
+        $this->getObjectInstancier()->set('repertoirePesAllerSansTransaction', '');
     }
 
     public function getConnection()

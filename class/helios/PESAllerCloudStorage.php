@@ -13,11 +13,16 @@ class PESAllerCloudStorage implements ICloudStorable
     public const CONTAINER_NAME = 'pes_aller';
     private HeliosTransactionsSQL $transactionsSQL;
     private string $helios_files_upload_root;
+    private string $repertoirePesAllerSansTransaction;
 
-    public function __construct(string $helios_files_upload_root, HeliosTransactionsSQL $transactionsSQL)
-    {
+    public function __construct(
+        string $helios_files_upload_root,
+        HeliosTransactionsSQL $transactionsSQL,
+        string $repertoirePesAllerSansTransaction
+    ) {
         $this->helios_files_upload_root = $helios_files_upload_root;
         $this->transactionsSQL = $transactionsSQL;
+        $this->repertoirePesAllerSansTransaction = $repertoirePesAllerSansTransaction;
     }
 
     public function getContainerName(): string
@@ -43,7 +48,7 @@ class PESAllerCloudStorage implements ICloudStorable
 
     public function getFilePathOnCloudWithFileOnDiskPath(string $file_on_disk_path): string
     {
-        return $this->transactionsSQL->getIdBySHA1($file_on_disk_path);
+        return basename($file_on_disk_path);
     }
 
     public function setNotAvailable(int $object_id): void
@@ -87,5 +92,10 @@ class PESAllerCloudStorage implements ICloudStorable
     public function isTransactionInCloud(int $object_id)
     {
         return $this->transactionsSQL->isTransactionInCloud($object_id);
+    }
+
+    public function getDirectoryForFilesWithoutTransaction(): ?string
+    {
+        return $this->repertoirePesAllerSansTransaction;
     }
 }

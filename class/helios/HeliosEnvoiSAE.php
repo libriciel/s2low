@@ -5,7 +5,6 @@ namespace S2lowLegacy\Class\helios;
 use S2lowLegacy\Class\actes\FilesNotFoundInCloudException;
 use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\PastellWrapperFactory;
-use S2lowLegacy\Class\RecoverableException;
 use Exception;
 use S2lowLegacy\Lib\SigTermHandler;
 use S2lowLegacy\Lib\UnrecoverableException;
@@ -22,7 +21,6 @@ class HeliosEnvoiSAE
     private $logger;
     private $authoritySQL;
     private $pastellPropertiesSQL;
-    private $pesAllerStorage;
     private $cloudStorageFactory;
 
     public function __construct(
@@ -32,7 +30,6 @@ class HeliosEnvoiSAE
         AuthoritySQL $authoritySQL,
         HeliosTransactionsSQL $heliosTransactionsSQL,
         PastellPropertiesSQL $pastellPropertiesSQL,
-        PesAllerStorage $pesAllerStorage,
         CloudStorageFactory $cloudStorageFactory
     ) {
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
@@ -41,7 +38,6 @@ class HeliosEnvoiSAE
         $this->pesAllerRetriever = $pesAllerRetriever;
         $this->logger = $logger;
         $this->pastellPropertiesSQL = $pastellPropertiesSQL;
-        $this->pesAllerStorage = $pesAllerStorage;
         $this->cloudStorageFactory = $cloudStorageFactory;
     }
 

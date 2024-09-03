@@ -106,4 +106,9 @@ class ActesCloudStorage implements ICloudStorable
     {
         return $this->actesEnvelopeSQL->isInCloud($object_id);
     }
+
+    public function getDirectoryForFilesWithoutTransaction(): ?string
+    {
+        return null;
+    }
 }

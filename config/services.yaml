@@ -519,11 +519,6 @@ services:
     factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
     arguments: ['S2lowLegacy\Class\helios\PesAllerRetriever']
 
-  S2lowLegacy\Class\helios\PesAllerStorage:
-    autowire: false # TODO : logger
-    #arguments:
-    #  $helios_files_upload_root: "todo"
-
   S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage:
     arguments:
       $mail_files_upload_root: "todo"

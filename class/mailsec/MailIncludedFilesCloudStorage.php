@@ -93,4 +93,9 @@ class MailIncludedFilesCloudStorage implements ICloudStorable
     {
         return $this->mailTransactionSQL->isInCloud($object_id);
     }
+
+    public function getDirectoryForFilesWithoutTransaction(): ?string
+    {
+        return null;
+    }
 }

@@ -99,4 +99,9 @@ class PESAcquitCloudStorage implements ICloudStorable
     {
         return $this->heliosTransactionsSQL->isPesAcquitInCloud($object_id);
     }
+
+    public function getDirectoryForFilesWithoutTransaction(): ?string
+    {
+        return null;
+    }
 }
