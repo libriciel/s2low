@@ -283,16 +283,23 @@ class User extends DataObject
   */
     public function isAuthorityAdmin()
     {
-        if (isset($this->role) && $this->role == "ADM") {
-            return true;
-        } else {
-            return false;
-        }
+        return isset($this->role) && $this->role == self::ADM;
+    }
+
+
+    public function isAuthorityAdminFor(int $authority_id)
+    {
+        return $this->isAuthorityAdmin() && $this->authority_id === $authority_id;
     }
 
     public function isArchivist(): bool
     {
         return isset($this->role) && $this->role == self::ARCH;
+    }
+
+    public function isArchivistFor(int $authority_id): bool
+    {
+        return $this->isArchivist() && $this->authority_id === $authority_id;
     }
 
   /**
@@ -747,17 +754,22 @@ class User extends DataObject
         }
     }
 
+    public static function isExistingRole(string $val): bool
+    {
+        return array_key_exists($val, self::ROLES_DESCR);
+    }
+
   /**
    * \brief Méthode permettant de fixer la valeur d'un attribut
    * \param $name chaîne : Nom de l'attribut
    * \param $val : valeur de l'attribut
   */
-    public function set($name, $val)
+    public function set($name, $val): void
     {
         switch ($name) {
-            case "role":
-                if (!in_array($val, array_keys(self::ROLES_DESCR))) {
-                    $val = User::USER;
+            case 'role':
+                if (!$this->isExistingRole($val)) {
+                    $val = self::USER;
                 }
                 break;
         }
@@ -823,13 +835,10 @@ class User extends DataObject
         if ($this->isSuper()) {
             return self::ROLES_DESCR;
         }
-            // Les admin simple et de groupe ne peut pas créer un super admin ni un admin de groupe
-
-        foreach (self::ROLES_DESCR as $role => $descr) {
-            if (!in_array($role, [User::SADM,User::GADM,User::ARCH])) {
-                $roles_list[$role] = $descr;
-            }
-        }
-        return $roles_list;
+        // Les admin simple et de groupe ne peut pas créer un super admin, un admin de groupe ou un archiviste
+        return array_intersect_key(
+            self::ROLES_DESCR,
+            array_flip([self::USER,self::ADM])
+        );
     }
 }

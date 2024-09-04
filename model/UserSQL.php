@@ -77,7 +77,7 @@ class UserSQL extends SQL
 
     public function getRoleStr($role)
     {
-        if (!in_array($role, array_keys(User::ROLES_DESCR))) {
+        if (!User::isExistingRole($role)) {
             throw new UnexpectedValueException("Rôle $role inconnu");
         }
         return User::ROLES_DESCR[$role];

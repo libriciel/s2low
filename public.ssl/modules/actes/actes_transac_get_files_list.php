@@ -7,7 +7,7 @@ use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
 $module = new Module();
-if (! $module->initByName("actes")) {
+if (! $module->initByName('actes')) {
     echo "KO\nErreur d'initialisation du module";
     exit();
 }
@@ -19,23 +19,23 @@ if (! $me->authenticate()) {
     exit();
 }
 
-if ($me->isGroupAdminOrSuper() || ! $module->isActive() || !$me->canAccess($module->get("name"))) {
+if ($me->isGroupAdminOrSuper() || ! $module->isActive() || !$me->canAccess($module->get('name'))) {
     echo "KO\nAccès refusé";
     exit();
 }
 
-$myAuthority = new Authority($me->get("authority_id"));
+$myAuthority = new Authority($me->get('authority_id'));
 
 // Recuperation des variables du GET
-$transId = intval(Helpers::getVarFromGet("transaction"));
-$transUniqueId = intval(Helpers::getVarFromGet("unique_id"));
+$transId = intval(Helpers::getVarFromGet('transaction'));
+$transUniqueId = intval(Helpers::getVarFromGet('unique_id'));
 
-if (isset($transUniqueId) && ! empty($transUniqueId)) {
+if (! empty($transUniqueId)) {
     $transId = ActesTransaction::getTransactionFromUniqueId($transUniqueId);
 }
 
 
-if (isset($transId) && ! empty($transId)) {
+if (! empty($transId)) {
     $zeTrans = new ActesTransaction();
     $zeTrans->setId($transId);
 } else {
@@ -44,27 +44,27 @@ if (isset($transId) && ! empty($transId)) {
 }
 
 if ($zeTrans->init()) {
-    $owner = new User($zeTrans->get("user_id"));
+    $owner = new User($zeTrans->get('user_id'));
     $owner->init();
 } else {
     echo "KO\nNuméro de transaction invalide.";
     exit();
 }
 
-$zeEnv = new ActesEnvelope($zeTrans->get("envelope_id"));
+$zeEnv = new ActesEnvelope($zeTrans->get('envelope_id'));
 if (! $zeEnv->init()) {
     echo "KO\nEnveloppe invalide.";
     exit();
 }
 
-// Vérification des permissions
+// Vérification des permissions spécifiques à la transaction
 if (! $me->isSuper()) {
     if (
-        ! ($me->isAdmin() && $me->get('authority_id') == $owner->get('authority_id'))
+        ! ($me->getId() == $zeEnv->get('user_id'))
         &&
-        ! ($me->getId() == $zeEnv->get('user_id') && $me->canAccess($module->get('name')))
+        ! ($me->isAuthorityAdminFor($owner->get('authority_id')))
         &&
-        ! ($me->isArchivist() && $me->get('authority_id') == $owner->get('authority_id'))
+        ! ($me->isArchivistFor($owner->get('authority_id')))
     ) {
         echo "KO\nAccès refusé";
         exit();
