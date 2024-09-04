@@ -103,6 +103,7 @@ class Controller
         }
         if (! TESTING_ENVIRONNEMENT) {
             header("Location: $url");
+            exit();
         }
         throw new RedirectException("Redirect to $url");
     }
@@ -114,6 +115,7 @@ class Controller
         }
         if (! TESTING_ENVIRONNEMENT) {
             header("Location: $url");
+            exit();
         }
         throw new RedirectException("Redirect to $url with message : $error_message");
     }
