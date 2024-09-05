@@ -281,7 +281,7 @@ class User extends DataObject
    * \brief Méthode qui détermine si l'utilisateur est un administrateur de collectivité
    * \return true si l'utilisateur est administrateur de collectivité, false sinon
   */
-    public function isAuthorityAdmin()
+    public function isAuthorityAdmin(): bool
     {
         return isset($this->role) && $this->role == self::ADM;
     }
