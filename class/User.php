@@ -9,8 +9,12 @@ class User extends DataObject
 {
     public const PERM_MODIFICATION = "RW";
 
+    public const SADM = 'SADM';
+    public const GADM = 'GADM';
+    public const ADM = 'ADM';
+    public const USER = 'USER';
+    public const ARCH = 'ARCH';
 
-    protected bool $archivist_rights;
     protected $objectName = "users";
     protected $prettyName = "Utilisateur";
 
@@ -49,14 +53,14 @@ class User extends DataObject
                         "login" => array("descr" => "login","type" => "isString","mandatory" => false),
                         "password" => array("descr" => "password","type" => "isString","mandatory" => false),
                         "certificate_rgs_2_etoiles" => array("descr" => "Certificat RGS**","type" => "isString","mandatory" => false),
-                        "certificate_hash" => array("descr", "Certificat fingerprint", "type" => "isString", "mandatory" => false),
-                        "archivist_rights" => array("descr" => "Droits d'accès aux fonctions d'archive","type" => "isBool","mandatory" => false)
+                        "certificate_hash" => array("descr", "Certificat fingerprint", "type" => "isString", "mandatory" => false)
                          );
-    protected $roleTypes = array(
-                               "SADM" => "Super administrateur",
-                               "GADM" => "Administrateur de groupe",
-                               "ADM" => "Administrateur collectivité",
-                               "USER" => "Utilisateur"
+    public const ROLES_DESCR = array(
+                               self::SADM => 'Super administrateur',
+                               self::GADM => 'Administrateur de groupe',
+                               self::ADM => 'Administrateur collectivité',
+                               self::USER => 'Utilisateur',
+                               self::ARCH => 'Archiviste'
                                );
     protected $permsTypes = array(
                                 "NONE" => "Aucune",
@@ -277,13 +281,25 @@ class User extends DataObject
    * \brief Méthode qui détermine si l'utilisateur est un administrateur de collectivité
    * \return true si l'utilisateur est administrateur de collectivité, false sinon
   */
-    public function isAuthorityAdmin()
+    public function isAuthorityAdmin(): bool
     {
-        if (isset($this->role) && $this->role == "ADM") {
-            return true;
-        } else {
-            return false;
-        }
+        return isset($this->role) && $this->role == self::ADM;
+    }
+
+
+    public function isAuthorityAdminFor(int $authority_id)
+    {
+        return $this->isAuthorityAdmin() && $this->authority_id === $authority_id;
+    }
+
+    public function isArchivist(): bool
+    {
+        return isset($this->role) && $this->role == self::ARCH;
+    }
+
+    public function isArchivistFor(int $authority_id): bool
+    {
+        return $this->isArchivist() && $this->authority_id === $authority_id;
     }
 
   /**
@@ -538,16 +554,6 @@ class User extends DataObject
                 return false;
             }
         }
-        if (!$new && isset($this->archivist_rights) && !$this->archivist_rights) {
-            $sql = 'UPDATE users SET archivist_rights=false WHERE id = ?';
-            if (! $this->db->exec($sql, [ $this->id])) {
-                $this->errorMsg = 'Erreur lors du reset des droits archiviste.';
-                $this->db->rollback();
-                return false;
-            }
-        }
-
-        // Reset droits archiviste
 
         if (! $this->db->commit()) {
             $this->errorMsg = "Erreur lors de la validation de la transaction.";
@@ -748,17 +754,22 @@ class User extends DataObject
         }
     }
 
+    public static function isExistingRole(string $val): bool
+    {
+        return array_key_exists($val, self::ROLES_DESCR);
+    }
+
   /**
    * \brief Méthode permettant de fixer la valeur d'un attribut
    * \param $name chaîne : Nom de l'attribut
    * \param $val : valeur de l'attribut
   */
-    public function set($name, $val)
+    public function set($name, $val): void
     {
         switch ($name) {
-            case "role":
-                if (array_search($val, array_keys($this->roleTypes)) === false) {
-                    $val = 'USER';
+            case 'role':
+                if (!$this->isExistingRole($val)) {
+                    $val = self::USER;
                 }
                 break;
         }
@@ -819,8 +830,15 @@ class User extends DataObject
         return $dn;
     }
 
-    public function hasArchivistsRights(): bool
+    public function getAvailableRolesForUserCreation(): array
     {
-        return $this->get('archivist_rights');
+        if ($this->isSuper()) {
+            return self::ROLES_DESCR;
+        }
+        // Les admin simple et de groupe ne peut pas créer un super admin, un admin de groupe ou un archiviste
+        return array_intersect_key(
+            self::ROLES_DESCR,
+            array_flip([self::USER,self::ADM])
+        );
     }
 }

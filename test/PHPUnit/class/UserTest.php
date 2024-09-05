@@ -79,52 +79,63 @@ class UserTest extends S2lowTestCase
     }
 
     /**
-     * @dataProvider archivistRights
+     * @dataProvider roles
+     * @param string $role
+     * @param array $availableRoles
+     * @return void
      */
-    public function testSaveUserArchivistRight(bool $archivistRight): void
+    public function testGetAvailableRolesForUserCreation(string $role, array $availableRoles): void
     {
         $user = new User();
-        $user->set('email', 'em@i.l');
-        $user->set('certFilePath', __DIR__ . '/fixtures/certificats/dateOk/fullchain.pem');
-        $user->set('name', 'name');
-        $user->set('givenname', 'givenName');
-        $user->set('role', 'USER');
-        $user->set('telephone', '0000000000');
-        $user->set('authority_id', 1);
-        $user->set('status', 1);
-        $user->set('archivist_rights', $archivistRight);
-        $user->save();
-
-        $retrievedUser = new User($user->getId());
-        $retrievedUser->init();
-        $this->assertEquals($archivistRight, $retrievedUser->hasArchivistsRights());
+        $user->set('role', $role);
+        self::assertSame(
+            $availableRoles,
+            $user->getAvailableRolesForUserCreation()
+        );
     }
 
-    public function archivistRights(): iterable
+    public function roles(): iterable
     {
-        yield [true];
-        yield [false];
+        $restrictedRoles = [
+            User::ADM => 'Administrateur collectivité',
+            User::USER => 'Utilisateur'
+        ];
+
+        $allRoles = [
+            User::SADM => 'Super administrateur',
+            User::GADM => 'Administrateur de groupe',
+            User::ADM => 'Administrateur collectivité',
+            User::USER => 'Utilisateur',
+            User::ARCH => 'Archiviste'
+        ];
+        return [
+            [User::SADM, $allRoles ],
+            [User::GADM, $restrictedRoles],
+            [User::ADM, $restrictedRoles],
+            [User::USER,$restrictedRoles],
+            [User::ARCH,$restrictedRoles],
+        ];
     }
 
-    public function testResetArchivistRight(): void
+    /**
+     * @dataProvider roleIsArchivist
+     */
+    public function testIsArchivist(string $role, bool $isArchivist): void
     {
         $user = new User();
-        $user->set('email', 'em@i.l');
-        $user->set('certFilePath', __DIR__ . '/fixtures/certificats/dateOk/fullchain.pem');
-        $user->set('name', 'name');
-        $user->set('givenname', 'givenName');
-        $user->set('role', 'USER');
-        $user->set('telephone', '0000000000');
-        $user->set('authority_id', 1);
-        $user->set('status', 1);
-        $user->set('archivist_right', true);
-        $user->save();
+        $user->set('role', $role);
+        self::assertSame($isArchivist, $user->isArchivist());
+    }
 
-        $user->set('archivist_right', false);
-        $user->save();
-
-        $retrievedUser = new User($user->getId());
-        $retrievedUser->init();
-        static::assertFalse($retrievedUser->hasArchivistsRights());
+    public function roleIsArchivist(): array
+    {
+        return
+            [   [User::SADM, false ],
+                [User::GADM, false ],
+                [User::ADM, false ],
+                [User::USER, false ],
+                [User::ARCH, true ]
+                ]
+            ;
     }
 }

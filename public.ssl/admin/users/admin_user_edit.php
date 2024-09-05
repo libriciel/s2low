@@ -143,18 +143,7 @@ $him_role = ($val = Helpers::getFromSession("role")) ? $val : $him->get("role");
 
 
 
-$roles_list = $me->get("roleTypes");
-if (! $me->isSuper()) {
-    // Les admin simple et de groupe ne peut pas créer un super admin ni un admin de groupe
-    $tmp = array();
-
-    foreach ($roles_list as $role => $descr) {
-        if ($role != 'SADM' && $role != 'GADM') {
-            $tmp[$role] = $descr;
-        }
-    }
-    $roles_list = $tmp;
-}
+$roles_list = $me->getAvailableRolesForUserCreation();
 
 $groups_list = Group::getGroupsIdName();
 
@@ -188,7 +177,7 @@ $certitificate_id_list = $him->getIdFromCertData($him->get("certificate_hash")) 
 
 
 $status_type_list = $me->get("statusTypes");
-$roles_type_list = $me->get("roleTypes");
+$roles_type_list = User::ROLES_DESCR;
 
 $serviceUser = new ServiceUser(DatabasePool::getInstance());
 $services_list = $serviceUser->getServiceUser($him->get('authority_id'));
@@ -455,15 +444,6 @@ ob_start();
         </div>
     <?php endif;?>
 <?php endforeach;?>
-
-    <?php if ($me->isSuper()) :?>
-    <div class="form-group">
-        <label class="control-label col-md-4">Droits archiviste:</label>
-        <div class="col-md-6">
-            <input type="checkbox" name ="archivistRights" <?php echo $him->get('archivist_rights') ? 'checked' : '' ?>/>
-        </div>
-    </div>
-    <?php endif;?>
 
 
 

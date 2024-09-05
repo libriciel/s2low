@@ -44,6 +44,13 @@ class UserSQLTest extends S2lowTestCase
         $this->assertEquals("Super administrateur", $this->userSQL->getRoleStr("SADM"));
     }
 
+    public function testGetRoleException()
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage("Rôle Rick inconnu");
+        $this->userSQL->getRoleStr("Rick");
+    }
+
     public function testGetIdentificationMethode()
     {
         $this->assertEquals(UserSQL::IDENT_METHOD_CERT_ONLY, $this->userSQL->getIdentificationMethod(1));

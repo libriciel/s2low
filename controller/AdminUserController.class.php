@@ -195,8 +195,6 @@ class AdminUserController extends Controller
         $password2 = $this->getEnvironnement()->post()->get('password2');
         Helpers::putInSession("password2", $password2);
 
-        $archivistRights = $this->getEnvironnement()->post()->get('archivistRights');
-
         $certificate = $_FILES['certificate'] ?? [];
 
         $certificate_rgs_2_etoiles = $_FILES['certificate_rgs_2_etoiles'] ?? [];
@@ -335,9 +333,6 @@ class AdminUserController extends Controller
             }
         }
 
-        $archivistRightsBool = ($archivistRights === 'on');
-        $him->set("archivist_rights", $archivistRightsBool);
-
         if (! $him->save()) {
             $msg = "Erreur lors de l'enregistrement de l'utilisateur :\n" . $him->getErrorMsg();
             if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, $me->get("role"), false, $me)) {
@@ -432,7 +427,7 @@ class AdminUserController extends Controller
         $this->title = "Utilisateurs partageant le même certificat";
 
         $this->status_type_list = $this->me->get("statusTypes");
-        $this->roles_type_list = $this->me->get("roleTypes");
+        $this->roles_type_list = User::ROLES_DESCR;
     }
 
     /**
