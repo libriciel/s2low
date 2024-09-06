@@ -104,16 +104,6 @@ services:
             - .:/usr/app/
             - /usr/app/node_modules
 
-    openstack:
-        restart: unless-stopped
-        image: hubdocker.libriciel.fr/serverascode/swift-onlyone:latest@sha256:752d54d0e432c81b9aa6f3ef5e7c68945a798242b54a8ba016183cae3313dc55
-        networks:
-            - openstack
-        volumes:
-            - ${VOL_OPENSTACK:-openstack_datadir}:/srv
-        ports:
-            - ${BEANSTALKD_PORT:-10003}:8080
-
 volumes:
     db_datadir_test:
     openstack_datadir:
