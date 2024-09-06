@@ -65,7 +65,6 @@
 |Postgres test|`POSTGRESQL_DATADIR_TEST`|`/var/lib/postgresql/data`|Persistence de la base de données de tests |mapping direct `/data/pgdatatests/` ou `pgdatatests` définit via `docker volume create pgdatatests` |
 |Simulateur |`SIMULATEUR_WORKSPACE_DIRECTORY`|`/var/www/simulateur-helios/workspace`|Ce volume est obligatoire car il doit être partagé avec le serveur FTP |mapping direct `/data/simualateur/` ou `simulateur` définit via `docker volume create simulateur` |
 |ftp |`SIMULATEUR_WORKSPACE_DIRECTORY`|`/data/$HELIOS_FTP_LOGIN`|Ce volume est obligatoire car il doit être partagé avec le simulateur |mapping direct `/data/simualateur/` ou `simulateur` définit via `docker volume create simulateur` |
-|openstack |`VOL_OPENSTACK`|`/data/openstack`|Ce volume est utilisé pour la stockage objet. |mapping direct `/data/openstack/` ou `openstack` définit via `docker volume create openstack` |
 |redis|`REDIS_VOLUME`|`/data/`|Permet de définir le volume  pour les données persistante de Redis|mapping direct `/data/` |
 
 
