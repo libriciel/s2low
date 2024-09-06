@@ -11,6 +11,10 @@
 
 - Ajout du script script/helios/helios_admin_transac_retour_export.php permettant d'exporter la liste des PES_RETOUR #1210
 
+### Corrections
+
+- Eviter le message "Erreur : string(36) "Class "S2lowRedirect" does not exist" #1197
+
 ## 5.0.41 2024-06-20
 
 ### Corrections
