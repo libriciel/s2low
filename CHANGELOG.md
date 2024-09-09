@@ -16,6 +16,10 @@
 
 - Eviter le message "Erreur : string(36) "Class "S2lowRedirect" does not exist" #1197
 
+### Sécurité
+
+- Mise à jour des headers HTTP #1212
+
 ## 5.0.41 2024-06-20
 
 ### Corrections
