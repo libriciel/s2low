@@ -9,6 +9,7 @@ use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\JSONoutput;
 use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\Recuperateur;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\AuthoritySQL;
@@ -16,49 +17,46 @@ use S2lowLegacy\Model\MessageAdminSQL;
 
 class Controller
 {
-    /**
-     * @var User
-     */
-    protected $me;
+    protected User $me;
 
-    private $viewParameter;
+    private array $viewParameter = [];
 
-    /**
-     * @var ObjectInstancier
-     */
-    private $objectInstancier;
-
-
-    private $files;
+    private ObjectInstancier $objectInstancier;
+    private array $files;
 
     public function __construct(ObjectInstancier $objectInstancier)
     {
         $this->objectInstancier = $objectInstancier;
-        $this->viewParameter = array();
         $this->setFiles($_FILES);
     }
 
-    public function __get($key)
+    /**
+     * @throws \Exception
+     */
+    public function __get($key): mixed
     {
         return $this->getViewParameter($key);
     }
 
-    public function __set($key, $value)
+    public function __set($key, $value): void
     {
         $this->setViewParameter($key, $value);
     }
 
-    public function isViewParameter($key)
+    public function isViewParameter($key): bool
     {
         return isset($this->viewParameter[$key]);
     }
 
-    public function setViewParameter($key, $value)
+    public function setViewParameter($key, $value): void
     {
         $this->viewParameter[$key] = $value;
     }
 
-    public function getViewParameter($key)
+    /**
+     * @throws Exception
+     */
+    public function getViewParameter($key): mixed
     {
         if (isset($this->viewParameter[$key])) {
             return $this->viewParameter[$key];
@@ -66,12 +64,12 @@ class Controller
         throw new Exception("parameter $key not found");
     }
 
-    public function getAllViewParameter()
+    public function getAllViewParameter(): array
     {
         return $this->viewParameter;
     }
 
-    public function setFiles($files)
+    public function setFiles($files): void
     {
         $this->files = $files;
     }
@@ -84,20 +82,23 @@ class Controller
         return $this->objectInstancier->get(Environnement::class);
     }
 
-    public function setErrorMessage($error_message)
+    public function setErrorMessage($error_message): void
     {
         $this->getEnvironnement()->session()->set('error', $error_message);
     }
 
-    public function setMessage($message)
+    public function setMessage($message): void
     {
         //En attendant mieux...
         $this->getEnvironnement()->session()->set('error', $message);
     }
 
-    public function redirectSSL($url_path = "", $url_arg = "")
+    /**
+     * @throws \S2lowLegacy\Lib\RedirectException
+     */
+    public function redirectSSL($url_path = '', $url_arg = ''): void
     {
-        $url = trim(WEBSITE_SSL, "/") . "/" . trim($url_path, "/");
+        $url = trim(WEBSITE_SSL, '/') . '/' . trim($url_path, '/');
         if ($url_arg) {
             $url .= "?$url_arg";
         }
@@ -108,7 +109,10 @@ class Controller
         throw new RedirectException("Redirect to $url");
     }
 
-    public function redirect($url, $error_message = "")
+    /**
+     * @throws \S2lowLegacy\Lib\RedirectException
+     */
+    public function redirect($url, $error_message = ''): void
     {
         if ($error_message) {
             $this->setErrorMessage($error_message);
@@ -120,7 +124,11 @@ class Controller
         throw new RedirectException("Redirect to $url with message : $error_message");
     }
 
-    public function displayErrorAndExit($error_message, $url_redirect)
+    /**
+     * @throws \S2lowLegacy\Lib\RedirectException
+     * @throws \Exception
+     */
+    public function displayErrorAndExit($error_message, $url_redirect): void
     {
         if ($this->isApiCall()) {
             $json = new JSONoutput();
@@ -134,7 +142,11 @@ class Controller
     }
     //@codeCoverageIgnore
 
-    public function displayAndExit($message, $url_redirect)
+    /**
+     * @throws \S2lowLegacy\Lib\RedirectException
+     * @throws \Exception
+     */
+    public function displayAndExit($message, $url_redirect): void
     {
         if ($this->isApiCall()) {
             $json = new JSONoutput();
@@ -146,18 +158,25 @@ class Controller
     //@codeCoverageIgnore
 
 
-    public function verifUser()
+    /**
+     * @throws \Exception
+     */
+    public function verifUser(): void
     {
         $this->me = new User();
         $this->me->authenticate();
     }
 
-    public function verifAdmin($authority_id = false)
+    /**
+     * @throws \S2lowLegacy\Lib\RedirectException
+     * @throws \Exception
+     */
+    public function verifAdmin($authority_id = false): void
     {
         $this->verifUser();
 
         if (! $this->me->isAdmin()) {
-            $this->displayErrorAndExit("Accès refusé", "");
+            $this->displayErrorAndExit('Accès refusé', '');
         } // @codeCoverageIgnore
         if ($this->me->isSuper()) {
             return;
@@ -167,20 +186,23 @@ class Controller
             $info = $authoritySQL->getInfo($authority_id);
 
             if ($this->me->isGroupAdmin()) {
-                if ($info['authority_group_id'] == $this->me->get("authority_group_id")) {
+                if ($info['authority_group_id'] == $this->me->get('authority_group_id')) {
                     return;
                 }
-                $this->displayErrorAndExit("Accès refusé", "");
+                $this->displayErrorAndExit('Accès refusé', '');
             } // @codeCoverageIgnore
 
             if ($info['id'] == $this->me->get('authority_id')) {
                 return ;
             }
-            $this->displayErrorAndExit("Accès refusé", "");
+            $this->displayErrorAndExit('Accès refusé', '');
         } // @codeCoverageIgnore
     }
 
-    public function verifGroupAdmin($authority_id)
+    /**
+     * @throws \S2lowLegacy\Lib\RedirectException
+     */
+    public function verifGroupAdmin($authority_id): void
     {
         $this->verifAdmin();
         if ($this->me->isSuper()) {
@@ -190,33 +212,39 @@ class Controller
         if ($this->me->isGroupAdmin()) {
             $authoritySQL = new AuthoritySQL($this->getSQLQuery());
             $info = $authoritySQL->getInfo($authority_id);
-            if ($info['authority_group_id'] == $this->me->get("authority_group_id")) {
+            if ($info['authority_group_id'] == $this->me->get('authority_group_id')) {
                 return;
             }
         }
 
-        $this->redirect(WEBSITE_SSL, "Accès refusé");
+        $this->redirect(WEBSITE_SSL, 'Accès refusé');
     }
     // @codeCoverageIgnore
 
 
-    public function verifSuperAdmin()
+    /**
+     * @throws \S2lowLegacy\Lib\RedirectException
+     */
+    public function verifSuperAdmin(): void
     {
         $this->verifAdmin();
         if (! $this->me->isSuper()) {
-            $this->redirect(WEBSITE_SSL, "Accès refusé");
+            $this->redirect(WEBSITE_SSL, 'Accès refusé');
         } // @codeCoverageIgnore
     }
 
 
-    public function renderDefault()
+    /**
+     * @throws \Exception
+     */
+    public function renderDefault(): void
     {
         $doc = new HTMLLayout();
         $doc->setTitle($this->getViewParameter('title'));
 
         $doc->openContainer();
         $doc->openSideBar();
-        if ($this->me) {
+        if (isset($this->me)) {
             $doc->buildMenu($this->me);
         }
 
@@ -239,7 +267,7 @@ class Controller
         $doc->display();
     }
 
-    public function render($template)
+    public function render($template): void
     {
         foreach ($this->viewParameter as $key => $value) {
             $$key = $value;
@@ -247,36 +275,37 @@ class Controller
         include($template);
     }
 
-    public function _actionBefore($controller, $action)
+    public function _actionBefore($controller, $action): void
     {
-        $this->setViewParameter('title', "S2low");
-        $this->setViewParameter('template_milieu', __DIR__ . "/../template/" . ucfirst($controller) . ucfirst($action) . ".php");
+        $this->setViewParameter('title', 'S2low');
+        $this->setViewParameter('template_milieu', __DIR__ . '/../template/' . ucfirst($controller) . ucfirst($action) . '.php');
         $this->setViewParameter('side_bar', false);
     }
 
-    public function _actionAfter()
+    /**
+     * @throws \Exception
+     */
+    public function _actionAfter(): void
     {
         $this->renderDefault();
     }
 
-    public function getRecuperateurGet()
+    public function getRecuperateurGet(): Recuperateur
     {
         return $this->getEnvironnement()->get();
     }
 
-    public function getRecuperateurPost()
+    public function getRecuperateurPost(): Recuperateur
     {
         return $this->getEnvironnement()->post();
     }
 
-
-
-    public function getFiles()
+    public function getFiles(): array
     {
         return $this->files;
     }
 
-    public function isApiCall()
+    public function isApiCall(): bool
     {
         $recuperateur = $this->getRecuperateurGet();
         $api = $recuperateur->get('api');
@@ -290,30 +319,30 @@ class Controller
     /**
      * @return SQLQuery
      */
-    public function getSQLQuery()
+    public function getSQLQuery(): SQLQuery
     {
         return $this->objectInstancier->get(SQLQuery::class);
     }
 
-    public function getObjectInstancier()
+    public function getObjectInstancier(): ObjectInstancier
     {
         return $this->objectInstancier;
     }
 
-    public function controller_exit()
+    public function controller_exit(): void
     {
         exit_wrapper();
     }
 
-    public function log($message)
+    public function log($message): void
     {
-        Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, $this->me->get("role"), false, $this->me);
+        Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, $this->me->get('role'), false, $this->me);
     }
 
     /**
      * @return MessageAdminSQL
      */
-    protected function getMessageAdminSQL()
+    protected function getMessageAdminSQL(): MessageAdminSQL
     {
         return $this->getObjectInstancier()->get(MessageAdminSQL::class);
     }

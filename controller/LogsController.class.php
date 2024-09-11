@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Controller;
 
+use S2lowLegacy\Class\DatePicker;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\PagerHTML;
 use S2lowLegacy\Lib\FancyDate;
@@ -17,6 +18,8 @@ use S2lowLegacy\Model\UserSQL;
 
 class LogsController extends Controller
 {
+    private $date;
+
     /** @return LogsHistoriqueSQL $logsHistoriqueSQL */
     private function getLogsHistoriqueSQL()
     {
@@ -33,10 +36,10 @@ class LogsController extends Controller
     {
         $recuperateur = $this->getRecuperateurGet();
 
-        $this->fauthority = $recuperateur->get("authority");
-        $this->fmodule = $recuperateur->get("module");
-        $this->fuser = $recuperateur->get("user");
-        $this->fmessage = $recuperateur->get("message");
+        $this->fauthority = $recuperateur->get('authority');
+        $this->fmodule = $recuperateur->get('module');
+        $this->fuser = $recuperateur->get('user');
+        $this->fmessage = $recuperateur->get('message');
         $logs_date_min  = $this->getObjectInstancier()->get(LogsSQL::class)->getMinDate();
         $logs_history_date_max  = $this->getObjectInstancier()->get(LogsHistoriqueSQL::class)->getMaxDate();
 
@@ -44,19 +47,31 @@ class LogsController extends Controller
         if (!is_null($logs_history_date_max)) {
             $timestamp_max = strtotime($logs_history_date_max);
         }
-        $logs_history_date_max =  date("Y-m-d", $timestamp_max);
+        $logs_history_date_max =  date('Y-m-d', $timestamp_max);
 
         $timestamp_min = null;
 
         if (!is_null($logs_date_min)) {
             $timestamp_min = strtotime($logs_date_min);
         }
-        $date_debut_default = date("Y-m-d", $timestamp_min);
+        $date_debut_default = date('Y-m-d', $timestamp_min);
 
-        $this->date_debut = date("Y-m-d", strtotime($recuperateur->get("date_debut", $date_debut_default)));
-        $this->date_fin =  date("Y-m-d", strtotime($recuperateur->get("date_fin", date("Y-m-d"))));
+        $this->date_debut = date('Y-m-d', strtotime($recuperateur->get('date_debut', $date_debut_default)));
+        $datePickerDebut = new DatePicker(
+            'date_debut',
+            $this->date
+        );
+        $this->datePickerDebutHtml = $datePickerDebut->show();
 
-        $fseverity = Helpers::getVarFromGet("severity");
+        $this->date_fin = date('Y-m-d', strtotime($recuperateur->get('date_fin', date('Y-m-d'))));
+        $datePickerFin = new DatePicker(
+            'date_fin',
+            $this->date_fin
+        );
+
+        $this->datePickerFinHtml = $datePickerFin->show();
+
+        $fseverity = Helpers::getVarFromGet('severity');
         if (! isset($fseverity)) {
             $fseverity = -1;
         }
@@ -86,7 +101,7 @@ class LogsController extends Controller
             $this->fancyDate = new FancyDate();
             $this->has_pending_logs_request =  $this->getLogsRequestSQL()->hasPendingRequest($this->me->get('id'));
 
-            $this->template_milieu = __DIR__ . "/../template/LogsCreateRequest.php";
+            $this->template_milieu = __DIR__ . '/../template/LogsCreateRequest.php';
             return;
         }
 

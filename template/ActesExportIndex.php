@@ -1,6 +1,5 @@
 <?php
 
-use S2lowLegacy\Class\DatePicker;
 use S2lowLegacy\Class\Helpers;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -42,15 +41,13 @@ $twig = new Environment($loader); ?>
             <label for="date_debut" class="col-md-3 control-label">Date de début</label>
             <div class="col-md-3">
             <?php
-            $datePickerDebut = new DatePicker("date_debut", $date_debut);
-            echo $datePickerDebut->show();
+            echo $datePickerDebutHtml;
             ?>
             </div>
             <label for="date-fin" class="col-md-3 control-label">Date de fin</label>
             <div class="col-md-3">
             <?php
-            $datePickerFin = new DatePicker("date_fin", $date_debut);
-            echo $datePickerFin->show();
+            echo $datePickerFinHtml;
             ?>
             </div>
         </div>

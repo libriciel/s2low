@@ -17,7 +17,7 @@ use S2lowLegacy\Model\PastellPropertiesSQL;
 
 class AdminSAEController extends Controller
 {
-    public function _actionBefore($controller, $action)
+    public function _actionBefore($controller, $action): void
     {
         $this->verifSuperAdmin();
         parent::_actionBefore($controller, $action);

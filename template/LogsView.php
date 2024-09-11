@@ -54,13 +54,15 @@ use S2lowLegacy\Class\DatePicker;
         <div class="form-group">
             <label for="date_debut" class="col-md-3 control-label">Date de début</label>
             <div class="col-md-3">
-                <?php $datePickerDebut = new DatePicker('date_debut', $date_debut);
-                echo $datePickerDebut->show(); ?>
+                <?php
+                echo $datePickerDebutHtml;
+                ?>
             </div>
             <label for="date-fin" class="col-md-3 control-label">Date de fin</label>
             <div class="col-md-3">
-                <?php $datePickerFin = new DatePicker('date_fin', $date_fin);
-                echo $datePickerFin->show(); ?>
+                <?php
+                echo $datePickerFinHtml;
+                ?>
             </div>
         </div>
         <div class="form-group">

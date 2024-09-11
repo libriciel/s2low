@@ -8,7 +8,7 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 class HeliosAPIController extends Controller
 {
-    public function _actionAfter()
+    public function _actionAfter(): void
     {
         /* Nothing to do*/
     }

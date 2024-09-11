@@ -19,7 +19,7 @@ class AuthenticationNounceController extends Controller
         parent::__construct($objectInstancier);
     }
 
-    public function _actionAfter()
+    public function _actionAfter(): void
     {
         /* Nothing to do*/
     }

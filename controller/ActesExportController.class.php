@@ -5,6 +5,7 @@ namespace S2lowLegacy\Controller;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
 use S2lowLegacy\Class\CSVOutput;
+use S2lowLegacy\Class\DatePicker;
 use S2lowLegacy\Model\AuthoritySQL;
 
 class ActesExportController extends Controller
@@ -14,7 +15,7 @@ class ActesExportController extends Controller
     public function indexAction()
     {
         $this->verifAdmin();
-        $this->{"title"} = "Actes - Export des informations";
+        $this->{'title'} = 'Actes - Export des informations';
         $this->setViewParameter('me', $this->me);
         $authoritySQL = $this->getObjectInstancier()->get(AuthoritySQL::class);
 
@@ -23,15 +24,17 @@ class ActesExportController extends Controller
         $this->authority_id = $this->getRecuperateurGet()->get('authority_id');
 
         if ($this->me->isSuper()) {
-            $this->{"authority_id_list"} = $authoritySQL->getAll();
+            $this->{'authority_id_list'} = $authoritySQL->getAll();
         } elseif ($this->me->isGroupAdmin()) {
-            $this->{"authority_id_list"} = $authoritySQL->getAllGroup($this->me->get('authority_group_id'));
+            $this->{'authority_id_list'} = $authoritySQL->getAllGroup($this->me->get('authority_group_id'));
         } else {
             $this->authority_id = $this->me->get('authority_id');
         }
+        $datePickerDebut = new DatePicker('date_debut', $date_debut ?: date('Y-m-d', strtotime('-1 month')));
+        $this->datePickerDebutHtml = $datePickerDebut->show();
 
-        $this->date_debut = $date_debut ?: date("Y-m-d", strtotime("-1 month"));
-        $this->date_fin =  $date_fin ?: date("Y-m-d");
+        $datePickerFin = new DatePicker('date_fin', $date_fin ?: date('Y-m-d'));
+        $this->datePickerFinHtml =  $datePickerFin->show();
     }
 
     public function handlerAction()

@@ -4,10 +4,10 @@ namespace S2lowLegacy\Class;
 
 class DatePicker
 {
-    private array $datePickerOptions = ["altFormat" => 'yy-mm-dd',"dateFormat" => 'dd MM yy'];
-    private string $inputDefaultValue = "";
+    private array $datePickerOptions = ['altFormat' => 'yy-mm-dd', 'dateFormat' => 'dd MM yy'];
+    private string $inputDefaultValue = "value = \"Choisir une date\"";
 
-    private string $hidenInputDefaultValue = "";
+    private string $hidenInputDefaultValue = '';
 
 
     public function __construct(
@@ -15,19 +15,17 @@ class DatePicker
         ?string $ansiDate = '',
         private readonly string $class = 'form-control',
     ) {
-        $dateInLetters = "";
+        $dateInLetters = '';
         if ($ansiDate) {
-            $dateInLetters = strftime("%d %B %Y", Helpers :: ansiDateToTimestamp($ansiDate));
+            $dateInLetters = strftime('%d %B %Y', Helpers :: ansiDateToTimestamp($ansiDate));
         }
 
-        $this->datePickerOptions["altField"] =  "#$name";
+        $this->datePickerOptions['altField'] =  "#$name";
         if ($ansiDate) {
             $this->inputDefaultValue = "value = \"$dateInLetters\"";
             $this->hidenInputDefaultValue = "value = \"$ansiDate\"";
-            $this->datePickerOptions["defaultDate"] = "new Date($ansiDate)";
-            $this->datePickerOptions["gotoCurrent"] = true;
-        } else {
-            $this->inputDefaultValue = "value = \"Choisir une date\"";
+            $this->datePickerOptions['defaultDate'] = "new Date($ansiDate)";
+            $this->datePickerOptions['gotoCurrent'] = true;
         }
     }
 

@@ -8,7 +8,7 @@ use S2lowLegacy\Model\AuthoritySQL;
 
 class ActesAPIController extends Controller
 {
-    public function _actionAfter()
+    public function _actionAfter(): void
     {
         /* Nothing to do*/
     }

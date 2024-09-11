@@ -18,7 +18,7 @@ use S2lowLegacy\Model\UserSQL;
 
 class AdminController extends Controller
 {
-    public function _actionBefore($controller, $action)
+    public function _actionBefore($controller, $action): void
     {
         parent::_actionBefore($controller, $action);
     }

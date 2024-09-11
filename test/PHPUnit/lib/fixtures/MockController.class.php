@@ -11,7 +11,7 @@ class MockController extends Controller
         $this->template_milieu = __DIR__ . "/MockMockTemplate.php";
     }
 
-    public function _actionAfter()
+    public function _actionAfter(): void
     {
         $this->render($this->template_milieu);
     }
