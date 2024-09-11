@@ -82,8 +82,11 @@ class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
         $actesMenageEnveloppeWorker = $this->getObjectInstancier()->get(ActesMenageEnveloppeWorker::class);
         $actesMenageEnveloppeWorker->setNbDayInDisk(0);
         $actesMenageEnveloppeWorker->work(false);
-        $this->assertFileExists($actes_path);
-        $this->assertDirectoryExists(dirname($actes_path));
+        static::assertFileDoesNotExist($actes_path);
+        static::assertFileExists(
+            $this->getObjectInstancier()->get('repertoireActesEnveloppeSansTransaction') . '/' . basename($actes_path)
+        );
+        static::assertDirectoryExists(dirname($actes_path));
     }
 
     /**

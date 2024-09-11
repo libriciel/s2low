@@ -12,15 +12,25 @@ class ActesCloudStorage implements ICloudStorable
 {
     public const CONTAINER_NAME = 'acte_envelope';
 
-    private $actesEnvelopeSQL;
-    private $actes_files_upload_root;
 
+    /**
+     * @throws \S2lowLegacy\Lib\UnrecoverableException
+     */
     public function __construct(
-        $actes_files_upload_root,
-        ActesEnvelopeSQL $actesEnvelopeSQL
+        private string $actes_files_upload_root,
+        private ActesEnvelopeSQL $actesEnvelopeSQL,
+        private string $repertoireActesEnveloppeSansTransaction
     ) {
-        $this->actesEnvelopeSQL = $actesEnvelopeSQL;
-        $this->actes_files_upload_root = $actes_files_upload_root;
+        if (!is_dir($actes_files_upload_root)) {
+            throw new UnrecoverableException(
+                "The directory '$actes_files_upload_root' does not exist"
+            );
+        }
+        if (!is_dir($repertoireActesEnveloppeSansTransaction)) {
+            throw new UnrecoverableException(
+                "The directory '$repertoireActesEnveloppeSansTransaction' does not exist"
+            );
+        }
     }
 
     public function getContainerName(): string
@@ -36,7 +46,7 @@ class ActesCloudStorage implements ICloudStorable
     public function getFilePathOnDisk(int $object_id): string
     {
         $envelope_info = $this->actesEnvelopeSQL->getInfo($object_id);
-        return $this->actes_files_upload_root . "/" . $envelope_info['file_path'];
+        return $this->actes_files_upload_root . '/' . $envelope_info['file_path'];
     }
 
     public function getFilePathOnCloud(int $object_id): string
@@ -52,7 +62,7 @@ class ActesCloudStorage implements ICloudStorable
      */
     public function getFilePathOnCloudWithFileOnDiskPath(string $file_on_disk_path): string
     {
-        $actes_root = rtrim($this->actes_files_upload_root, "/");
+        $actes_root = rtrim($this->actes_files_upload_root, '/');
         if (! preg_match("#$actes_root/(.*)#", $file_on_disk_path, $matches) || ! $matches[1]) {
             throw new UnrecoverableException("$file_on_disk_path doesn't match pattern $actes_root/(.*)");
         }
@@ -64,15 +74,15 @@ class ActesCloudStorage implements ICloudStorable
         $this->actesEnvelopeSQL->setEnveloppeNotAvailable($object_id);
     }
 
-    public function setInCloud(int $object_id, bool $is_in_cloud = true): void
+    public function setInCloud(int $object_id, bool $inCloud = true): void
     {
-        $this->actesEnvelopeSQL->setTransactionInCloud($object_id, $is_in_cloud);
+        $this->actesEnvelopeSQL->setTransactionInCloud($object_id, $inCloud);
     }
 
     public function getFinder(): Finder
     {
         $finder = new Finder();
-        $finder->in($this->actes_files_upload_root)->name("*.tar.gz");
+        $finder->in($this->actes_files_upload_root)->name('*.tar.gz');
         return $finder;
     }
 
@@ -86,6 +96,9 @@ class ActesCloudStorage implements ICloudStorable
         }
     }
 
+    /**
+     * @throws \S2lowLegacy\Lib\UnrecoverableException
+     */
     public function getObjectIdByFilePath(string $filepath): int
     {
         $filepath = $this->getFilePathOnCloudWithFileOnDiskPath($filepath);
@@ -109,6 +122,6 @@ class ActesCloudStorage implements ICloudStorable
 
     public function getDirectoryForFilesWithoutTransaction(): ?string
     {
-        return null;
+        return $this->repertoireActesEnveloppeSansTransaction;
     }
 }

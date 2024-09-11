@@ -189,6 +189,7 @@ class LegacyObjectsManager
 
 
         $objectInstancier->set("actes_files_upload_root", ACTES_FILES_UPLOAD_ROOT);
+        $objectInstancier->set("repertoireActesEnveloppeSansTransaction", ACTES_ENVELOPPE_SANSTRANSACTION);
         $objectInstancier->set("actes_appli_trigramme", ACTES_APPLI_TRIGRAMME);
         $objectInstancier->set("actes_appli_quadrigramme", ACTES_APPLI_QUADRIGRAMME);
 

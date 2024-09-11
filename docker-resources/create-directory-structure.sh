@@ -7,6 +7,7 @@ DIRECTORIES=("/data/tdt-workspace/actes" \
 "/data/tdt-workspace/uploads" \
 "/data/tdt-workspace/dia" \
 "/data/tdt-workspace/actes/uploads" \
+"/data/tdt-workspace/actes/sans_transaction" \
 "/data/tdt-workspace/actes/batchs" \
 "/data/tdt-workspace/actes/response_tmp" \
 "/data/tdt-workspace/actes/response_error" \
