@@ -3,6 +3,11 @@
  Override boostrap & general
 -----------------------------------------------
 */
+
+html {
+    font-size: 12px;
+}
+
 h1 {
     color: #FF6600;
     margin-top: 0;
