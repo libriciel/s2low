@@ -11,10 +11,10 @@ use S2lowLegacy\Model\PastellProperties;
 </p>
 <h2>Modification des propriétés SAE (Pastell) de <?php echo $authorityInfo['name']?></h2>
 
-<form class="form form-horizontal" action='admin_authority_sae_controler.php' method='post'>
+<form class="form" action='admin_authority_sae_controler.php' method='post'>
     <input type='hidden' name='id' value='<?php echo $id ?>' />
 
-    <div class="form-group">
+    <div class="form-group row">
         <label class="col-md-4 label-form" for="pastell_url">URL Pastell&nbsp;: </label>
         <div class="col-md-6">
             <input class="form-control"
@@ -26,7 +26,7 @@ use S2lowLegacy\Model\PastellProperties;
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group row">
         <label class="col-md-4 label-form" for="pastell_login">Identifiant de connexion&nbsp;: </label>
         <div class="col-md-6">
             <input class="form-control"
@@ -38,7 +38,7 @@ use S2lowLegacy\Model\PastellProperties;
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group row">
         <label class="col-md-4 label-form" for="pastell_password">Mot de passe&nbsp;: </label>
         <div class="col-md-6">
             <input class="form-control"
@@ -50,7 +50,7 @@ use S2lowLegacy\Model\PastellProperties;
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group row">
         <label class="col-md-4 label-form" for="pastell_id_e">Identifiant de l'entité (id_e) :</label>
         <div class="col-md-6">
             <input class="form-control"
@@ -66,7 +66,7 @@ use S2lowLegacy\Model\PastellProperties;
 
 
     <h3>Actes</h3>
-    <div class="form-group">
+    <div class="form-group row row">
         <label class="col-md-4 label-form" for="actes_flux_id">Identifiant du flux à créer&nbsp;(actes-generique par défaut): </label>
         <div class="col-md-6">
             <input class="form-control"
@@ -78,7 +78,7 @@ use S2lowLegacy\Model\PastellProperties;
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group row">
         <label class="col-md-4 label-form" for="actes_action">Action à déclencher&nbsp;: (send-archive par défaut)</label>
         <div class="col-md-6">
             <input class="form-control"
@@ -90,7 +90,7 @@ use S2lowLegacy\Model\PastellProperties;
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group row">
         <label class="col-md-4 label-form" for="actes_send_auto">Automatiser l'envoi&nbsp;: </label>
         <div class="col-md-6">
             <input
@@ -102,7 +102,7 @@ use S2lowLegacy\Model\PastellProperties;
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group row">
         <label class="col-md-4 label-form" for="actes_transaction_id_min">#ID minimum pour l'automatisation&nbsp;(inclu, min=0) : </label>
         <div class="col-md-6">
             <input class="form-control"
@@ -114,7 +114,7 @@ use S2lowLegacy\Model\PastellProperties;
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group row">
         <label class="col-md-4 label-form" for="actes_transaction_id_max">#ID maximum pour l'automatisation&nbsp;(inclu, max=2147483647): </label>
         <div class="col-md-6">
             <input class="form-control"
@@ -128,7 +128,7 @@ use S2lowLegacy\Model\PastellProperties;
 
 
     <h3>Hélios</h3>
-    <div class="form-group">
+    <div class="form-group row">
         <label class="col-md-4 label-form" for="helios_flux_id">Identifiant du flux à créer&nbsp;(helios-generique): </label>
         <div class="col-md-6">
             <input class="form-control"
@@ -140,7 +140,7 @@ use S2lowLegacy\Model\PastellProperties;
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group row">
         <label class="col-md-4 label-form" for="helios_action">Action à déclencher&nbsp;(send-archive par défaut): </label>
         <div class="col-md-6">
             <input class="form-control"
@@ -152,7 +152,7 @@ use S2lowLegacy\Model\PastellProperties;
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group row">
         <label class="col-md-4 label-form" for="helios_send_auto">Automatiser l'envoi&nbsp;: </label>
         <div class="col-md-6">
             <input
@@ -164,7 +164,7 @@ use S2lowLegacy\Model\PastellProperties;
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group row">
         <label class="col-md-4 label-form" for="helios_transaction_id_min">#ID minimum pour l'automatisation&nbsp;(inclu, min=0) : </label>
         <div class="col-md-6">
             <input class="form-control"
@@ -176,7 +176,7 @@ use S2lowLegacy\Model\PastellProperties;
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group row">
         <label class="col-md-4 label-form" for="helios_transaction_id_max">#ID maximum pour l'automatisation&nbsp;(inclu, max=2147483647): </label>
         <div class="col-md-6">
             <input class="form-control"
@@ -189,7 +189,7 @@ use S2lowLegacy\Model\PastellProperties;
     </div>
 
 
-    <div class="form-group">
+    <div class="form-group row">
         <input class="col-md-offset-4 col-md-6 btn btn-default" value="Modifier" type="submit" />
     </div>
 </form>

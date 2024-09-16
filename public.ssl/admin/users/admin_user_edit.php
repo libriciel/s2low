@@ -218,7 +218,7 @@ ob_start();
 <p id="back-user-btn"><a class="btn btn-default" href="admin_users.php">Retour liste utilisateurs</a></p>
 
 <h2>Informations générales</h2>
-<form class="form form-horizontal" 
+<form class="form"
         action="admin_user_edit_handler.php" 
         method="post" name="form" 
         enctype="multipart/form-data"  
@@ -238,7 +238,7 @@ ob_start();
         
         
 <?php foreach (array('name' => 'Nom', 'givenname' => "Prénom",'email' => "Adresse électronique","telephone" => "Téléphone") as $input_id => $input_label) : ?>
-<div class="form-group">
+<div class="form-group row">
     <label class="control-label col-md-4"><?php echo $input_label?> : </label>
     <div class="col-md-6">
         <input class="form-control" type="text" name="<?php echo $input_id ?>" value="<?php echo ($val = Helpers::getFromSession($input_id)) ? get_hecho($val) : get_hecho($him->get($input_id)); ?>" size="30" maxlength="60" />
@@ -247,7 +247,7 @@ ob_start();
 <?php endforeach;?>
 
 <h2>Authentification</h2>
-<div class="form-group">
+<div class="form-group row">
     <label class="control-label col-md-4">Méthode : </label>
     <div class="col-md-6">
         <select id="auth_method" name="auth_method">
@@ -300,7 +300,7 @@ ob_start();
 
 </script>
 
-<div class="form-group">
+<div class="form-group row">
     <label class="control-label col-md-4">Importer le certificat utilisateur (partie publique au format PEM) :</label>
     <div class="col-md-6">
         <input type="file" name="certificate" />
@@ -332,7 +332,7 @@ ob_start();
 
 <div id="login-form">
 <?php $input_label = "Login"; $input_id = "login"?>
-<div class="form-group">
+<div class="form-group row">
     <label class="control-label col-md-4"><?php echo $input_label?> : </label>
     <div class="col-md-6">
         <input class="form-control" type="text" id='<?php echo $input_id ?>' name="<?php echo $input_id ?>" value="<?php echo ($val = Helpers::getFromSession($input_id)) ? get_hecho($val) : get_hecho($him->get($input_id)); ?>" size="30" maxlength="128" />
@@ -340,7 +340,7 @@ ob_start();
 </div>  
     
 <?php foreach (array('password' => 'Mot de passe', 'password2' => "Mot de passe (à nouveau)") as $input_id => $input_label) : ?>
-<div class="form-group">
+<div class="form-group row">
     <label class="control-label col-md-4" for="<?php echo $input_id ?>"><?php echo $input_label?>: </label>
     <div class="col-md-6">
         <!-- disables autocomplete https://stackoverflow.com/questions/17781077/autocomplete-off-is-not-working-on-firefox -->
@@ -362,7 +362,7 @@ ob_start();
 <?php endforeach;?>
 </div>
 
-<div class="form-group" id='rgs2-form'>
+<div class="form-group row" id='rgs2-form'>
     <label class="control-label col-md-4">Certificat complémentaire (format PEM) :</label>
     <div class="col-md-6">
         <?php if ($certificat_rgs_2_etoiles_info) : ?>
@@ -382,7 +382,7 @@ ob_start();
 
 <h2>Droits</h2>
 
-<div class="form-group">
+<div class="form-group row">
     <label class="control-label col-md-4">État :</label>
     <div class="col-md-6 ">
     <?php echo $doc->getHTMLSelect("status", $status_type_list, $him_status); ?>
@@ -390,7 +390,7 @@ ob_start();
 </div>
 
 <?php if ($me->isGroupAdminOrSuper()) :?>
-    <div class="form-group">
+    <div class="form-group row">
         <label class="control-label col-md-4">Collectivité :</label>
         <div class="col-md-6">
             <?php if (! $mod || $new_id) : ?>
@@ -410,7 +410,7 @@ ob_start();
     </div>
 <?php endif;?>
 
-<div class="form-group">
+<div class="form-group row">
     <label class="control-label col-md-4">Rôle :</label>
     <div class="col-md-6">
         <?php echo $doc->getHTMLSelect("role", $roles_list, $him_role); ?>
@@ -418,7 +418,7 @@ ob_start();
 </div>
 
 <?php if ($me->isSuper()) : ?>
-    <div class="form-group">
+    <div class="form-group row">
         <label class="control-label col-md-4">Groupe (pour un administrateur de groupe) :</label>
         <div class="col-md-6">
             <?php echo $doc->getHTMLSelect("authority_group_id", $groups_list, $him->get("authority_group_id")); ?>
@@ -436,7 +436,7 @@ ob_start();
             $class = " class=\"inactive\"";
         }
         ?>
-        <div class="form-group">
+        <div class="form-group row">
             <label class="control-label col-md-4 <?php echo $class ?>"><?php echo $module["description"] ?> :</label>
             <div class="col-md-6  <?php echo $class ?>">
                  <?php echo $doc->getHTMLSelect("perm_" . $module["id"], $me->getPermTypes($module['specific_perms']), $him->getPerm($module["name"])) ?>
@@ -447,7 +447,7 @@ ob_start();
 
 
 
-<div class="form-group">
+<div class="form-group row">
     <button type="submit" class="col-md-offset-4 col-md-6 btn btn-default">
         <?php echo ($mod) ? "Valider les modifications" : "Ajouter l'utilisateur"; ?>
     </button>
@@ -497,9 +497,9 @@ ob_start();
     <?php endif ?>
     <br/><br/>
     
-    <form class="form form-horizontal" action='add-user-to-service.php' method='post'>
+    <form class="form" action='add-user-to-service.php' method='post'>
         <input type='hidden' name='id_user' value='<?php echo $him->getId() ?>' />
-        <div class="form-group">
+        <div class="form-group row">
             <label class="col-md-3 control-label"> 
                 Mettre dans le service : 
             </label>

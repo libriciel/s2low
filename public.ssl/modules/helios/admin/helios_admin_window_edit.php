@@ -87,7 +87,7 @@ if ($mod) {
 
 $html .= "</h2>\n";
 $html .= "<p>Les heures de début et de fin de la fenêtre sont toujours arrondies à l'heure pleine la plus proche (10h, 15h...).</p>";
-$html .= "<form class=\"form-horizontal window-edit-form\" action=\"" .
+$html .= "<form class=\"window-edit-form\" action=\"" .
     Helpers::getLink("/modules/helios/admin/helios_admin_window_edit_handler.php") .
     "\" method=\"post\" name=\"form\" onsubmit=\"javascript:return validateForm('window_start_date', 'Date de début', 'RisDate', 'window_start_hour', 'Heure de début', 'RisString', 'window_end_date', 'Date de fin', 'RisDate', 'window_end_hour', 'Heure de fin', 'RisString', 'rate_limit', 'Volume maximum', 'RisInt');\">\n";
 
@@ -110,7 +110,7 @@ if (empty($end_date) && $mod) {
 }
 
 // Début de la fenêtre
-$html .= "<div class=\"form-group\">\n";
+$html .= "<div class=\"form-group row\">\n";
 $html .= "<label class=\"col-md-4 control-label\">Début de la fenêtre</label>\n";
 $html .= "<div class=\"col-md-8\">\n";
 $html .= "<span class=\"form-inline\">";
@@ -122,7 +122,7 @@ $html .= "   </div>\n";
 $html .= "   </div>\n";
 
 // Fin de la fenêtre
-$html .= "<div class=\"form-group\">\n";
+$html .= "<div class=\"form-group row\">\n";
 $html .= "    <label class=\"col-md-4 control-label\">Fin de la fenêtre</label>\n";
 $html .= "    <div class=\"col-md-8\">\n";
 $html .= "<span class=\"form-inline\">";
@@ -138,14 +138,14 @@ if (empty($rate_limit) && $mod) {
     $rate_limit = $zeWin->get("rate_limit");
 }
 
-$html .= "<div class=\"form-group\">\n";
+$html .= "<div class=\"form-group row\">\n";
 $html .= "    <label for=\"rate-limit\" class=\"col-md-4 control-label\">Volume maximum par heure en octets</label>\n";
 $html .= "    <div class=\"col-md-4\">\n";
 $html .= "        <input id=\"rate-limit\" class=\"form-control\" name=\"rate_limit\" type=\"text\" value=\"" . $rate_limit . "\"/>\n";
 $html .= "        <span class=\"help-block\">0 pour interdire la transmission</span>\n";
 $html .= "    </div>\n";
 $html .= "</div>\n";
-$html .= "<div class=\"form-group\">";
+$html .= "<div class=\"form-group row\">";
 $html .= "<button type=\"submit\" class=\"col-md-offset-4 col-md-4 btn btn-default\">Soumettre</button>\n";
 $html .= "</div>\n";
 $html .= "</form>\n";

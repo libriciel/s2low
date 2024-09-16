@@ -19,9 +19,9 @@ $twig = new Environment($loader); ?>
 
 <div id="filtering-area">
     <h2>Filtrage</h2>
-    <form class="form-horizontal" action="actes_export_handler.php">
+    <form action="actes_export_handler.php">
         <?php if ($me->isGroupAdminOrSuper()) : ?>
-            <div class="form-group">
+            <div class="form-group row">
                 <label for="authority_id" class="col-md-3 control-label">Collectivité</label>
                 <div class="col-md-3">
                     <select class="form-control zselect_authorities" name="authority_id" id="authority_id">
@@ -38,7 +38,7 @@ $twig = new Environment($loader); ?>
             <input type="hidden" name="authority_id" value="<?php hecho($authority_id) ?>"/>
         <?php endif;?>
 
-        <div class="form-group">
+        <div class="form-group row">
             <label for="date_debut" class="col-md-3 control-label">Date de début</label>
             <div class="col-md-3">
             <?php
@@ -55,7 +55,7 @@ $twig = new Environment($loader); ?>
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group row">
             <button class="btn btn-primary col-md-offset-3 col-md-3" type="submit">Exporter</button>
         </div>
     </form>

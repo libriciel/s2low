@@ -76,7 +76,7 @@ $html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" .
 ob_start();
 ?>
 <h2 id ="import_desc">Import d'un fichier</h2>
-<form class="form-horizontal import-file-form form col-md-offset-1" method="POST" enctype="multipart/form-data" action="/modules/helios/helios_script_reception.php" >
+<form class="import-file-form form col-md-offset-1" method="POST" enctype="multipart/form-data" action="/modules/helios/helios_script_reception.php" >
     <table class="data-table table table-striped" aria-describedby="import_desc" >
         <tr>
             <th scope="col">

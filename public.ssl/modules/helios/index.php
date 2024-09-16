@@ -250,8 +250,8 @@ ob_start();
 
 <h2 class="toggle_title" onclick="javascript:toggle_visibility('filtering-area');">Filtrage</h2>
 <div id="filtering-area">
-    <form role="form" class="form-horizontal" action="<?php echo Helpers::getLink('/modules/helios/index.php'); ?>" method="get">
-        <div class="form-group">
+    <form role="form" action="<?php echo Helpers::getLink('/modules/helios/index.php'); ?>" method="get">
+        <div class="form-group row">
             <label class="col-md-3 control-label" for="status">État</label>
             <div class="col-md-3">
                 <?php echo $doc->getHTMLSelect('status', $status, $fstatus)  ?>
@@ -262,7 +262,7 @@ ob_start();
                     value="<?php hecho((mb_strlen($fnum) > 0) ? $fnum : '');?>" />
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row">
             <label class="col-md-3" for="min_submission_date">Date de postage minimale</label>
             <div class="col-md-3">
                 <?php echo (new DatePicker("min_submission_date", $fmin_submission_date))->show() ?>
@@ -273,7 +273,7 @@ ob_start();
                 <?php echo (new DatePicker("min_ack_date", $fmin_ack_date))->show() ?>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row">
             <label class="col-md-3" for="max_submission_date">Date de postage maximale</label>
             <div class="col-md-3">
                 <?php echo (new DatePicker("max_submission_date", $fmax_submission_date))->show() ?>
@@ -283,7 +283,7 @@ ob_start();
                 <?php echo (new DatePicker("max_ack_date", $fmax_ack_date))->show() ?>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row">
 
             <?php if ($me->isGroupAdminOrSuper()) : ?>
                 <label for="authority" class="col-md-3 control-label">Collectivité</label>
@@ -307,7 +307,7 @@ ob_start();
             </div>
 
         </div>
-        <div class="form-group">
+        <div class="form-group row">
             <button type="submit" class="col-md-offset-3 col-md-3 btn btn-default">Filtrer</button>
             <a href="<?php echo Helpers::getLink("/modules/helios/index.php");?>" class="col-md-offset-3 col-md-3 btn btn-default">Remise à zéro</a>
         </div>

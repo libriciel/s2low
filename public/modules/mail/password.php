@@ -33,9 +33,9 @@ $doc->DisplayHead();
 
     <div id="filtering-area" >
 
-        <form name="mailpsw" action="index.php?mail_emis_id=<?php hecho($mail_emis_id);?>" method="POST" class="form-horizontal">
+        <form name="mailpsw" action="index.php?mail_emis_id=<?php hecho($mail_emis_id);?>" method="POST">
 
-            <div class="form-group">
+            <div class="form-group row">
                 <label for="mdp" class="col-md-4 control-label">Mot de passe</label>
                 <div class="col-md-4">
                     <input type='password' name='mdp' id="mdp"/>
@@ -43,7 +43,7 @@ $doc->DisplayHead();
 
             </div>
 
-            <div class="form-group">
+            <div class="form-group row">
                 <button type="submit" class="col-md-offset-3 col-md-3 btn btn-default" onclick="checkDownloadPW();" >Accéder au contenu</button>
             </div>
 

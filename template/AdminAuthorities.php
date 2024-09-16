@@ -13,8 +13,8 @@ use S2lowLegacy\Class\Helpers;
 
 <div id="filtering-area">
     <h2>Filtrage</h2>
-    <form class="form-horizontal" action="admin_authorities.php" method="get" role="form">
-        <div class="form-group">
+    <form action="admin_authorities.php" method="get" role="form">
+        <div class="form-group row">
             <label for="type" class="col-md-3 control-label">Type</label>
             <div class="col-md-3">
                 <select name="type" class="form-control">
@@ -45,7 +45,7 @@ use S2lowLegacy\Class\Helpers;
                 />
             </div>
         </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <?php if ($groupe_list) : ?>
                 <label for="group" class="col-md-3 control-label">Groupe</label>
                 <div class="col-md-3">
@@ -77,7 +77,7 @@ use S2lowLegacy\Class\Helpers;
             </div>
             </div>
 
-        <div class="form-group">
+        <div class="form-group row">
             <label for="name-contain" class="col-md-3 control-label">SIREN</label>
             <div class="col-md-3">
                 <input
@@ -92,7 +92,7 @@ use S2lowLegacy\Class\Helpers;
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group row">
             <button class="btn btn-default col-md-offset-3 col-md-3" type="submit">Filtrer</button>
         </div>
     </form>

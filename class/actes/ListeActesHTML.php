@@ -153,8 +153,8 @@ class ListeActesHTML
         <button id="collapse-all" onclick="javascript:collapse_area('filtering-area');" class="toggle-action">Tout replier<span class="hidden-info">le formulaire de filtrage</span></button>
     </h2>
     <div id="filtering-area" >
-    <form action="<?php echo Helpers::getLink('/modules/actes/index.php'); ?>" method="get" role="form" class="form-horizontal">
-            <div class="form-group">
+    <form action="<?php echo Helpers::getLink('/modules/actes/index.php'); ?>" method="get" role="form">
+            <div class="form-group row">
                 <label for="type" class="col-md-3 control-label">Type de transaction</label>
                 <div class="col-md-3">
                     <?php $this->getHTMLSelect('type', $this->transTypes, $this->ftype) ?>
@@ -164,7 +164,7 @@ class ListeActesHTML
                     <?php $this->getHTMLSelect('nature', $this->transNatures, $this->fnature) ?>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <label for="status" class="col-md-3 control-label">État</label>
                 <div class="col-md-3">
                     <?php $this->getHTMLSelect('status', $this->status, $this->fstatus) ?>
@@ -174,13 +174,13 @@ class ListeActesHTML
                     <input id="number" class="form-control" type="text" name="num" size="20" maxlength="25" value="<?php hecho($this->fnum) ?>" />
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <label for="object" class="col-md-offset-6 col-md-3 control-label">L'objet contient</label>
                 <div class="col-md-3">
                     <input id="object" class="form-control" type="text" name="objet" size="20" maxlength="25" value="<?php hecho($this->objet) ?>" />
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <label for="min_submission_date" class="col-md-3">Date de postage minimale</label>
                 <div class="col-md-3">
                     <?php $this->datePicker($this->fmin_submission_date, 'min_submission_date') ?>
@@ -190,7 +190,7 @@ class ListeActesHTML
                     <?php $this->datePicker($this->fmin_ack_date, 'min_ack_date') ?>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <label for="max_submission_date" class="col-md-3">Date de postage maximale</label>
                 <div class="col-md-3">
                     <?php $this->datePicker($this->fmax_submission_date, 'max_submission_date') ?>
@@ -201,14 +201,14 @@ class ListeActesHTML
                 </div>
             </div>
             <?php if ($this->allCollectivite) : ?>
-            <div class="form-group">
+            <div class="form-group row">
                 <label for="authority" class="col-md-3 control-label">Collectivité</label>
                 <div class="col-md-3">
                     <?php $this->getHTMLSelect('authority', $this->allCollectivite, $this->filtreAuthority, 'zselect_authorities') ?>
                 </div>
             </div>
             <?php endif;?>
-            <div class="form-group">
+            <div class="form-group row">
                 <button type="submit" class="col-md-offset-3 col-md-3 btn btn-default">Filtrer</button>
                 <a href="<?php echo Helpers::getLink('/modules/actes/index.php'); ?>" class="col-md-offset-3 col-md-3 btn btn-default">
                     Remise à zéro

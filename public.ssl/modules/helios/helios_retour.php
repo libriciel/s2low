@@ -115,13 +115,13 @@ if ($module->getParam("paper") == "on") {
 //filtrage aria
 $html .= "<h2 class=\"toggle_title\" onclick=\"javascript:toggle_visibility('filtering_area');\">Filtrage</h2>\n";
 $html .= "<div id=\"filtering_area\">\n";
-$html .= "<form class=\"form-horizontal\" action=\"" . Helpers::getLink("/modules/helios/helios_retour.php") . "\" method=\"get\">\n";
+$html .= "<form action=\"" . Helpers::getLink("/modules/helios/helios_retour.php") . "\" method=\"get\">\n";
 
 if (empty($fstatus)) {
     $fstatus = 0; //par defaut état selectionnée
 }
 
-$html .= "<div class=\"form-group\">\n";
+$html .= "<div class=\"form-group row\">\n";
 $html .= "<label class=\"col-md-3 control-label\" for=\"status\">Etat</label>\n";
 $html .= "<div class=\"col-md-3\">" . $doc->getHTMLSelect("status", array(0 => "non lu", 1 => "lu", 2 => "tous les états"), $fstatus) . "</div>\n";
 $html .= "<label class=\"col-md-3 control-label\" for=\"filename-contain\">Le nom de fichier contient</label>";
@@ -137,7 +137,7 @@ $html .= " /></div>\n</div>\n";
 //des autres options...
 //les dates
 //date minimale de postage
-$html .= "<div class=\"form-group\">\n";
+$html .= "<div class=\"form-group row\">\n";
 $html .= "<label class=\"col-md-3\" for=\"min_submission_date\">Date de réception minimale</label>\n";
 $html .= "<div class=\"col-md-3\">";
 $datePickerMin = new DatePicker('min_submission_date', $fmin_submission_date);
@@ -156,7 +156,7 @@ $html .= "</div>\n</div>\n";
 if ($me->isGroupAdminOrSuper()) {
     ob_start();
     ?>
-    <div class="form-group">
+    <div class="form-group row">
 
         <label for="authority" class="col-md-3 control-label">Collectivité</label>
 
@@ -183,7 +183,7 @@ if ($me->isGroupAdminOrSuper()) {
     $cond = " ORDER BY authorities.name ASC";
     $html .= "<div class=\"col-md-3\">" . $doc->getHTMLSelect("authority", Authority :: getAuthoritiesIdName( " ORDER BY authorities.name ASC"), $fauthority) . "</div>\n</div>\n";*/
 }
-$html .= "<div class=\"form-group\">";
+$html .= "<div class=\"form-group row\">";
 $html .= "    <button type=\"submit\" class=\"col-md-offset-3 col-md-3 btn btn-default\">Filtrer</button>";
 $html .= "    <a href=\"" . Helpers::getLink("/modules/helios/helios_retour.php") . "\" class=\"col-md-offset-3 col-md-3 btn btn-default\">Remise à zéro</a>";
 $html .= "</div>";

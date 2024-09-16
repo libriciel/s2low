@@ -20,8 +20,8 @@ use S2lowLegacy\Class\DatePicker;
 
 <div id="filtering_area">
     <h2>Filtrage</h2>
-    <form class="form-horizontal" action="logs_view.php" method="get" role="form">
-        <div class="form-group">
+    <form action="logs_view.php" method="get" role="form">
+        <div class="form-group row">
             <label for="module" class="col-md-3 control-label">Module</label>
             <div class="col-md-3">
                 <select name="module" class="form-control">
@@ -51,7 +51,7 @@ use S2lowLegacy\Class\DatePicker;
                 </select>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row">
             <label for="date_debut" class="col-md-3 control-label">Date de début</label>
             <div class="col-md-3">
                 <?php $datePickerDebut = new DatePicker('date_debut', $date_debut);
@@ -63,7 +63,7 @@ use S2lowLegacy\Class\DatePicker;
                 echo $datePickerFin->show(); ?>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row">
             <label for="msg-contain" class="col-md-3 control-label">Message contient</label>
             <div class="col-md-3">
                 <input
@@ -78,7 +78,7 @@ use S2lowLegacy\Class\DatePicker;
             </div>
         </div>
         <?php if ($this->me->isAdmin()) : ?>
-            <div class="form-group">
+            <div class="form-group row">
                 <?php   if ($this->me->isGroupAdminOrSuper()) : ?>
                     <label for="collectivity-choice" class="col-md-3 control-label">Collectivité</label>
                     <div class="col-md-3">
@@ -101,7 +101,7 @@ use S2lowLegacy\Class\DatePicker;
                 </div>
             </div>
         <?php endif; ?>
-        <div class="form-group">
+        <div class="form-group row">
             <button type="submit" class="col-md-offset-3 col-md-3 btn btn-default">Filtrer</button>
         </div>
     </form>

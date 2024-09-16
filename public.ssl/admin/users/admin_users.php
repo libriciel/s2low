@@ -135,8 +135,8 @@ ob_start();?>
 </div>
 <div id="filtering-area">
     <h2>Filtrage</h2>
-        <form action="admin_users.php" method="get" class="form-horizontal">
-        <div class="form-group">
+        <form action="admin_users.php" method="get">
+        <div class="form-group row">
             <label for="role" class="col-md-3 control-label">Le rôle est</label>
             <div class="col-md-3"><?php echo $doc->getHTMLSelect('role', User::ROLES_DESCR, $frole) ?></div>
             <label for="name" class="col-md-3 control-label">Le nom contient</label>
@@ -154,7 +154,7 @@ ob_start();?>
         </div>
         
         <?php if ($me->isGroupAdminOrSuper()) : ?>
-            <div class="form-group">
+            <div class="form-group row">
                 <label for="authority" class="col-md-3 control-label">Collectivité</label>
                 <div class="col-md-3">
                     <select class="form-control zselect_authorities" name="authority" id="authority">
@@ -173,7 +173,7 @@ ob_start();?>
         <?php endif;?>
     
         <?php if ($me->isSuper()) : ?>
-            <div class="form-group">
+            <div class="form-group row">
                 <label for="group" class="col-md-3 control-label">Groupe</label>
                 <div class="col-md-3">
                     <?php echo $doc->getHTMLSelect('group', Group::getGroupsIdName(), $fgroup) ?>
@@ -181,7 +181,7 @@ ob_start();?>
             </div>
         <?php endif; ?>
         
-        <div class="form-group">
+        <div class="form-group row">
             <button class="btn btn-default col-md-offset-3 col-md-3" type="submit">Filtrer</button>
         </div>
     </form>

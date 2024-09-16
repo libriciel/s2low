@@ -32,9 +32,9 @@
 ?>
     <h2 class="toggle_title" onclick="javascript:toggle_visibility('filtering_area');">Filtrage</h2>
     <div id="filtering_area">
-            <form action="index.php?command=list" accept-charset="utf-8" role="form" class="form-horizontal">
+            <form action="index.php?command=list" accept-charset="utf-8" role="form">
                 <input type="hidden" name="search" value="1" />
-                <div class="form-group">
+                <div class="form-group row">
                     <label for="state-type" class="col-md-2 control-label">Type d'état</label>
                     <div class="col-md-4">
                         <select id="state-type" class="form-control" name="etat">
@@ -57,7 +57,7 @@
                         <input id="subject" class="form-control" type="text" name="sujet" size="20" value='<?php hecho($sujet) ?>' />
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <label for="send_date_from" class="col-md-2 control-label">Date d'envoi à partir du </label>
                     <div class="col-md-4 sub-date">
                         <?php echo (new DatePicker('SendDateFrom', $SendDateFrom))->show();?>
@@ -67,7 +67,7 @@
                         <?php echo (new DatePicker('SendDateTo', $SendDateTo))->show();?>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
                     <button type="submit" class="col-md-offset-2 col-md-2 btn btn-default">Filtrer</button>
                     <a href="index.php?command=list" class="col-md-offset-4 col-md-2 btn btn-default">Remise à zéro</a>
                 </div>

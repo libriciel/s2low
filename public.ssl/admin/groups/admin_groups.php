@@ -67,8 +67,8 @@ $html .= "<a href=\"" . Helpers::getLink("/admin/groups/admin_group_edit.php\" c
 $html .= "<a href=\"" . Helpers::getLink("/admin/groups/list_groups.php\" class=\"btn btn-primary\">Liste des groupes</a>\n");
 $html .= "<div id=\"filtering-area\">\n";
 $html .= "<h2>Filtrage</h2>\n";
-$html .= "<form class=\"form form-horizontal\" action=\"admin_groups.php\" method=\"get\">\n";
-$html .= "<div class=\"form-group\">\n";
+$html .= "<form class=\"form \" action=\"admin_groups.php\" method=\"get\">\n";
+$html .= "<div class=\"form-group row\">\n";
 $html .= "<label for=\"name-contain\" class=\"col-md-2 control-label\">Le nom contient</label>\n";
 $html .= "<div class=\"col-md-3\"><input id=\"name-contain\" class=\"form-control\" type=\"text\" name=\"name\" size=\"20\" maxlength=\"25\"";
 
@@ -78,7 +78,7 @@ if (mb_strlen($fname ?? '') > 0) {
 
 $html .= " /></div>\n";
 $html .= "</div>\n";
-$html .= "<div class=\"form-group\">\n";
+$html .= "<div class=\"form-group row \">\n";
 $html .= "<button class=\"btn btn-default col-md-offset-2 col-md-3\" type=\"submit\">Filtrer</button>\n";
 $html .= "</div>\n";
 $html .= "</form>\n";

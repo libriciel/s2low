@@ -67,7 +67,7 @@ ob_start();?>
 (<?php hecho($authorities[$authority_id])?>)
                        <?php endif;?></h2>
 
-<form action='add-service-user.php' method='post' class="form-horizontal">
+<form action='add-service-user.php' method='post'>
 <input type='hidden' name='authority_id' value='<?php echo $authority_id ?>'/>
 <label for='name'> Ajouter un service </label> 
 <input type='text' name='name' id='name'/>

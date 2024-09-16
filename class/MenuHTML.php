@@ -15,7 +15,7 @@ class MenuHTML
     {
         ob_start();
         ?>
-        <div class="well sidebar-nav">
+        <div class="card card-body bg-light sidebar-nav">
                     <?php if ($userInfo) : ?>
                         <?php $this->displayUserMenu($userInfo, $modulesInfo) ; ?>
                     <?php else : ?>
@@ -83,7 +83,7 @@ class MenuHTML
             <br/><a href='<?php echo Helpers::getLink("logout.php")?>'>déconnexion</a>
             <?php endif;?>
                     </div>
-                    <ul class="text-menu nav">
+                    <ul class="text-menu nav flex-column">
             <?php if (in_array($userInfo['role'], array('SADM','GADM','ADM'))) : ?>
             <li class="menu-list-title">Administration</li>
             <?php endif;?>

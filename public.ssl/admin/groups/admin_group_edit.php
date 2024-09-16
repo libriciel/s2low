@@ -64,7 +64,7 @@ $html .= "<h1>Gestion groupe de collectivités</h1>\n";
 $html .= "<p id=\"back-transaction-btn\"><a href=\"" . Helpers::getLink("/admin/groups/admin_groups.php\" class=\"btn btn-default\">Retour liste groupes</a></p>\n");
 
 $html .= "<h2>" . $modStr . " groupe de collectivités</h2>\n";
-$html .= "<form class=\"form form-horizontal\" action=\"" . Helpers::getLink("/admin/groups/admin_group_edit_handler.php\" method=\"post\" name=\"form\" enctype=\"multipart/form-data\" onsubmit=\"javascript:return validateForm(" . $group->getValidationTrio('name', 'status') . ")\">\n");
+$html .= "<form class=\"form\" action=\"" . Helpers::getLink("/admin/groups/admin_group_edit_handler.php\" method=\"post\" name=\"form\" enctype=\"multipart/form-data\" onsubmit=\"javascript:return validateForm(" . $group->getValidationTrio('name', 'status') . ")\">\n");
 
 if ($mod) {
     $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $group->getId() . "\" />\n";
@@ -72,13 +72,13 @@ if ($mod) {
 } else {
     $html .= "<input type=\"hidden\" name=\"mode\" value=\"create\" />\n";
 }
-$html .= "<div class=\"form-group\">\n";
+$html .= "<div class=\"form-group row\">\n";
 $html .= "<label for=\"name\" class=\"col-md-3 control-label\">Nom</label>\n";
 $html .= "  <div class=\"col-md-4\"><input id=\"name\" class=\"form-control\" type=\"text\" name=\"name\" value=\"";
 $html .= ($mod) ? get_hecho($group->get("name")) : Helpers::getFromSession("name");
 $html .= "\" size=\"30\" maxlength=\"60\" /></div>\n";
 $html .= " </div>\n";
-$html .= "<div class=\"form-group\">\n";
+$html .= "<div class=\"form-group row\">\n";
 $html .= "<label for=\"status\" class=\"col-md-3 control-label\">État</label>\n";
 $html .= "  <div class=\"col-md-4\">";
 
@@ -87,14 +87,14 @@ $status = ($mod) ? $group->get("status") : Helpers::getFromSession("status");
 $html .= $doc->getHTMLSelect("status", $group->get("statusTypes"), $status);
 $html .= "  </div>\n";
 $html .= " </div>\n";
-$html .= "<div class=\"form-group\">\n";
+$html .= "<div class=\"form-group row\">\n";
 $html .= "<label for=\"siren-file\" class=\"col-md-3 control-label\">Liste des SIREN autorisés</label>\n";
 $html .= "  <div class=\"col-md-4\">";
 $html .= "  <input id=\"siren-file\" type=\"file\" name=\"siren_file\" size=\"30\" maxlength=\"255\" />";
 $html .= "  </div>\n";
 $html .= " </div>\n";
 
-$html .= "<div class=\"form-group\">\n";
+$html .= "<div class=\"form-group row\">\n";
 $html .= "<button type=\"submit\" class=\"col-md-offset-3 col-md-4 btn btn-default\">";
 $html .= ($mod) ? "Valider les modifications" : "Ajouter le groupe";
 $html .= "</button>\n";
@@ -119,9 +119,9 @@ if ($api) {
 $html .= "<h2>Liste des SIREN autorisés pour ce groupe</h2>\n";
 
 if ($mod) {
-      $html .= "<form class=\"form form-horizontal\" action=\"" . Helpers::getLink("/admin/groups/add-siren-controler.php\" method=\"post\">\n");
+      $html .= "<form class=\"form \" action=\"" . Helpers::getLink("/admin/groups/add-siren-controler.php\" method=\"post\">\n");
       $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $group->getId() . "\" />\n";
-      $html .= "<div class=\"form-group\">\n";
+      $html .= "<div class=\"form-group row\">\n";
     $html .= "  <label for=\"add-siren\" class=\"col-md-3 control-label\">Ajouter un numéro SIREN</label>\n";
     $html .= "  <div class=\"col-md-4\">";
     $html .= "  <input id=\"add-siren\" class=\"form-control\" name=\"siren\" size=\"30\" maxlength=\"255\" />";

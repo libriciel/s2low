@@ -41,9 +41,9 @@ use S2lowLegacy\Class\Helpers;
     <?php endif;?>
 </div>
 <br/><br/>
-<form class="form form-horizontal" action='add-parent.php' method='post'>
+<form class="form" action='add-parent.php' method='post'>
     <input type='hidden' name='id' value='<?php echo $id?>'>
-    <div class="form-group">
+    <div class="form-group row">
         <label class="label-form col-md-4" for="service_id">Mettre dans le groupe parent :</label>
         <div class="col-md-4">
             <select id="service_id" name='service_id' class='form-control'>
