@@ -54,7 +54,11 @@ h2 > a {
     font-weight: normal;
 }
 
-
+.btn-primary {
+    color: #ffffff;
+    background-color: #428bca;
+    border-color: #357ebd;
+}
 
 
 /*
@@ -106,6 +110,11 @@ h2 > a {
  Template : nav bar
 -----------------------------------------------
 */
+
+.sidebar-nav {
+    background-image: -webkit-gradient(linear,left 0,left 100%,from(#e8e8e8),to(#f5f5f5));
+}
+
 .text-menu.nav > li > a {
     padding : 0 0 0 15px;
 }

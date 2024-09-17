@@ -15,7 +15,7 @@ class MenuHTML
     {
         ob_start();
         ?>
-        <div class="card card-body bg-light sidebar-nav">
+        <div class="card card-body sidebar-nav">
                     <?php if ($userInfo) : ?>
                         <?php $this->displayUserMenu($userInfo, $modulesInfo) ; ?>
                     <?php else : ?>
