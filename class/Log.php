@@ -228,10 +228,6 @@ class Log extends DataObject
                 return false;
             }
 
-            if (! $this->writeTimestampToFile($timestampFile)) {
-                return false;
-            }
-
             if (! @chdir($tmpDir)) {
                 $this->errorMsg =  "Erreur système de fichiers";
                 return false;
@@ -338,25 +334,6 @@ class Log extends DataObject
         $log = implode("**||**", $data);
 
         return $log;
-    }
-
-
-  /**
-   * \brief Méthode d'écriture de l'horodatage dans un fichier
-   * \return True en cas de succès, false sinon
-   */
-    public function writeTimestampToFile($timestampFile)
-    {
-        if (isset($this->timestamp) && ! empty($this->timestamp)) {
-            if (! file_put_contents($timestampFile, $this->timestamp)) {
-                $this->errorMsg = "Erreur système de fichiers.";
-                return false;
-            }
-
-            return true;
-        }
-
-        return false;
     }
 
   /**********************/
