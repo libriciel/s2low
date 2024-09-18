@@ -24,7 +24,8 @@ use S2lowLegacy\Class\User;
 
 // Suppression collectivité désactivée en production
 if (MODE == "prod") {
-    header("Location: " . WEBSITE);
+    header('Location: ' . WEBSITE);
+    exit;
 }
 
 $me = new User();
