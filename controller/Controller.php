@@ -3,6 +3,7 @@
 namespace S2lowLegacy\Controller;
 
 use Exception;
+use LogSeverity;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\User;
@@ -307,7 +308,7 @@ class Controller
 
     public function log($message)
     {
-        Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, $this->me->get("role"), false, $this->me);
+        Log::newEntry(LOG_ISSUER_NAME, $message, LogSeverity::INFO, false, $this->me->get('role'), false, $this->me);
     }
 
     /**

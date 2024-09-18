@@ -82,7 +82,7 @@ if (mb_strlen($new_param_name) > 0 && mb_strlen($new_param_description) > 0 && m
 
 if (! $modules->save()) {
     $msg = "Erreur lors de l'enregistrement du module :\n" . $modules->getErrorMsg();
-    if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, $me->get("role"), false, $me)) {
+    if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::ERROR, false, $me->get("role"), false, $me)) {
         $msg .= "\nErreur de journalisation.";
     }
 
@@ -92,7 +92,7 @@ if (! $modules->save()) {
 } else {
     $msg = ($modules->isNew()) ? "Création" : "Modification";
     $msg .= " du module " . $modules->get("name") . " (id=" . $modules->getId() . "). Résultat ok.";
-    if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
+    if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::INFO, false, $me->get("role"), false, $me)) {
         $msg .= "\nErreur de journalisation.";
     }
 

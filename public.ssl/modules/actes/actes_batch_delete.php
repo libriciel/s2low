@@ -68,7 +68,7 @@ if (! $me->isSuper()) {
 if (! $zeBatch->delete()) {
     $msg = "Erreur lors de la suppression du lot :\n" . $zeBatch->getErrorMsg();
 
-    if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
+    if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::ERROR, false, 'USER', $module->get("name"), $me)) {
         $msg .= "\nErreur de journalisation.";
     }
 
@@ -76,7 +76,7 @@ if (! $zeBatch->delete()) {
 } else {
     $msg = "Suppression du lot n°" . $zeBatch->getId() . ". Résultat ok.";
 
-    if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
+    if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::INFO, false, 'USER', $module->get("name"), $me)) {
         $msg .= "\nErreur de journalisation.";
     }
 

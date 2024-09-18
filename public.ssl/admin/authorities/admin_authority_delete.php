@@ -56,7 +56,7 @@ if (isset($id) && ! empty($id)) {
 
     if ($authority->delete()) {
         $msg = "Suppression de la collectivité " . $authority->get("name") . ". Résultat ok.";
-        if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
+        if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::INFO, false, $me->get("role"), false, $me)) {
             $msg .= "\nErreur de journalisation.";
         }
 
@@ -65,7 +65,7 @@ if (isset($id) && ! empty($id)) {
         exit();
     } else {
         $msg = "Erreur lors de la tentative de suppression de la collectivité<br />" . $authority->getErrorMsg();
-        if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, $me->get("role"), false, $me)) {
+        if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::ERROR, false, $me->get("role"), false, $me)) {
             $msg .= "\nErreur de journalisation.";
         }
 

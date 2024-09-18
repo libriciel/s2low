@@ -41,7 +41,7 @@ if (isset($id)) {
     $module = new Module($id);
     if ($module->delete()) {
         $msg = "Suppression du module " . $module->get("name") . ". Résultat ok.";
-        if (!Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
+        if (!Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::INFO, false, $me->get("role"), false, $me)) {
             $msg .= "\nErreur de journalisation.";
         }
 
@@ -50,7 +50,7 @@ if (isset($id)) {
         exit();
     } else {
         $msg = "Erreur lors de la tentative de suppression du module<br />" . $module->getErrorMsg();
-        if (!Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, $me->get("role"), false, $me)) {
+        if (!Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::ERROR, false, $me->get("role"), false, $me)) {
             $msg .= "\nErreur de journalisation.";
         }
 

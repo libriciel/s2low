@@ -3,6 +3,7 @@
 namespace S2low\Services\Helios;
 
 use Exception;
+use LogSeverity;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\Antivirus;
@@ -246,7 +247,7 @@ class HeliosEnvoiControler
     {
         $this->logger->info($message);
         $this->heliosTransactionsSQL->updateStatus($transaction_id, $status_id, $message);
-        Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, 'USER', 'helios', false, $user_id);
+        Log::newEntry(LOG_ISSUER_NAME, $message, LogSeverity::INFO, false, 'USER', 'helios', false, $user_id);
     }
 
     /**
@@ -263,7 +264,7 @@ class HeliosEnvoiControler
             $this->logger->info("La fenêtre d'envoie est pleine \n");
             if (! $transactionInfo['warning_sent'] && $this->heliosTransactionsSQL->mustSendWarning($transaction_id)) {
                 $message = "La transaction Helios $transaction_id est en attente depuis plus de 48H !";
-                Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, 'USER', 'helios', false, $transactionInfo['user_id']);
+                Log::newEntry(LOG_ISSUER_NAME, $message, LogSeverity::INFO, false, 'USER', 'helios', false, $transactionInfo['user_id']);
                 $this->logger->info($message);
                 $mail = $this->mailerFactory->getInstance();
                 $mail->addRecipient(EMAIL_ADMIN);

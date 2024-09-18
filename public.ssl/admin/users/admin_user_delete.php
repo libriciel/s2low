@@ -54,7 +54,7 @@ if (isset($id) && ! empty($id)) {
     } else {
         if ($him->delete()) {
             $msg = "Suppression de l'utilisateur " . $him->getPrettyName() . ". Résultat ok.";
-            if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
+            if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::INFO, false, $me->get("role"), false, $me)) {
                 $msg .= "\nErreur de journalisation.";
             }
 
@@ -63,7 +63,7 @@ if (isset($id) && ! empty($id)) {
             exit();
         } else {
             $msg = "Erreur lors de la tentative de suppression de l'utilisateur\n" . $him->getErrorMsg();
-            if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, $me->get("role"), false, $me)) {
+            if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::ERROR, false, $me->get("role"), false, $me)) {
                 $msg .= "\nErreur de journalisation.";
             }
 

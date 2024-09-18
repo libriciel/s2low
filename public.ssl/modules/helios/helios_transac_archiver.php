@@ -33,7 +33,7 @@ if (
     ! Log::newEntry(
         LOG_ISSUER_NAME,
         $msg,
-        1,
+        LogSeverity::INFO,
         false,
         'USER',
         'helios',

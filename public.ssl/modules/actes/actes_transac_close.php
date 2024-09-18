@@ -108,20 +108,20 @@ foreach ($liste_id as $id) {
         $result = $actesPrepareEnvoiSAE->setArchiveEnAttenteEnvoiSEA($me->getId(), $id);
         if ($result) {
             $msg = "Programmation de l'envoi de la transaction $id à Pastell\n";
-            $severity = 1;
+            $severity = LogSeverity::INFO;
             $status = 0;
         } else {
             $msg = "Erreur lors de l'envoi de la transaction $id à Pastell : " . $actesPrepareEnvoiSAE->getLastError();
-            $severity = 3;
+            $severity = LogSeverity::ERROR;
             $status = 1;
         }
     } elseif (! $trans->setNewStatus($new_status_id, "Fermeture par l'utilisateur " . $me->getPrettyName())) {
         $msg = 'Erreur lors de la tentative de passage de la transaction n°' . $trans->getId() . " vers l'état " . $types[$new_status_id] . ".\n";
-        $severity = 3;
+        $severity = LogSeverity::ERROR;
         $status = 1;
     } else {
         $msg = 'Passage de la transaction n°' . $trans->getId() . " à l'état « " . $types[$new_status_id] . " ». Résultat ok.\n";
-        $severity = 1;
+        $severity = LogSeverity::INFO;
         $status = 0;
     }
 

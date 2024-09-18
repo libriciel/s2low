@@ -2,43 +2,38 @@
 
 namespace S2lowLegacy\Class;
 
+use LogSeverity;
+use S2lowLegacy\Lib\ObjectInstancierFactory;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\UserSQL;
 
 class Log extends DataObject
 {
-    protected $objectName = "logs";
-    protected $prettyName = "Entrée de journal";
+    protected string $objectName = 'logs';
+    protected string $prettyName = 'Entrée de journal';
 
-    protected $date;
-    protected $module;
-    protected $severity;
-    protected $issuer;
-    protected $user_id;
-    protected $visibility;
-    protected $message;
-    protected $timestamp;
+    protected string $date;
+    protected ?string $module = null;
+    protected string $severity;
+    protected string $issuer;
+    protected ?int $user_id = null;
+    protected ?string $visibility = null;
+    protected string $message;
+    protected string $timestamp;
 
-    protected $dbFields = array( "date" => array( "descr" => "Date", "type" => "isDate", "mandatory" => true),
-                         "module" => array( "descr" => "Module", "type" => "isString", "mandatory" => false),
-                         "severity" => array( "descr" => "Sévérité", "type" => "isString", "mandatory" => true),
-                         "issuer" => array( "descr" => "Émetteur de l'entrée", "type" => "isString", "mandatory" => false),
-                         "user_id" => array( "descr" => "Identifiant de l'utilisateur", "type" => "isInt", "mandatory" => false),
-                         "visibility" => array( "descr" => "Visibilité", "type" => "isString", "mandatory" => false),
-                         "message" => array( "descr" => "Message", "type" => "isString", "mandatory" => true),
-                         "timestamp" => array( "descr" => "Horodatage", "type" => "isString", "mandatory" => false),
-                            "authority_id" => array("descr" => "Authority","type" => "isInt","mandatory" => false),
-                            "authority_group_id" => array("descr" => "Authority group","type" => "isInt","mandatory" => false),
-                            "message_horodate" => array("descr" => "Message horodate","type" => "isString","mandatory" => false),
-                         );
-
-    protected $severities = array( 0 => "DEBUG",
-                           1 => "INFO",
-                           2 => "WARNING",
-                           3 => "ERROR",
-                           4 => "CRITICAL"
-                           );
+    protected array $dbFields = ['date' => ['descr' => 'Date', 'type' => 'isDate', 'mandatory' => true],
+                         'module' => ['descr' => 'Module', 'type' => 'isString', 'mandatory' => false],
+                         'severity' => ['descr' => 'Sévérité', 'type' => 'isString', 'mandatory' => true],
+                         'issuer' => ['descr' => "Émetteur de l'entrée", 'type' => 'isString', 'mandatory' => false],
+                         'user_id' => ['descr' => "Identifiant de l'utilisateur", 'type' => 'isInt', 'mandatory' => false],
+                         'visibility' => ['descr' => 'Visibilité', 'type' => 'isString', 'mandatory' => false],
+                         'message' => ['descr' => 'Message', 'type' => 'isString', 'mandatory' => true],
+                         'timestamp' => ['descr' => 'Horodatage', 'type' => 'isString', 'mandatory' => false],
+                            'authority_id' => ['descr' => 'Authority', 'type' => 'isInt', 'mandatory' => false],
+                            'authority_group_id' => ['descr' => 'Authority group', 'type' => 'isInt', 'mandatory' => false],
+                            'message_horodate' => ['descr' => 'Message horodate', 'type' => 'isString', 'mandatory' => false],
+    ];
 
   /**
    * \brief Constructeur d'une entrée de log
@@ -63,37 +58,44 @@ class Log extends DataObject
    * \param $user objet User (optionnel) : Utilisateur concerné par l'entrée de journal (vide par défaut)
    * \return True en cas de succès, false sinon
    */
-    public static function newEntry($issuer, $message, $severity, $date = false, $visibility = false, $module = false, $user = false, $userid = false)
-    {
+    public static function newEntry(
+        string $issuer,
+        string $message,
+        LogSeverity $severity,
+        string|false $date = false,
+        string|false $visibility = false,
+        string|false $module = false,
+        User|false $user = false,
+        int|false $userid = false
+    ): bool {
         $logEntry = new Log();
-        $logEntry->set("issuer", $issuer);
-        $logEntry->set("message", $message);
-        $logEntry->set("severity", $severity);
+        $logEntry->set('issuer', $issuer);
+        $logEntry->set('message', $message);
+        $logEntry->set('severity', $severity->value);
         if (! $date) {
             $date = date('Y-m-d H:i:s');
         }
 
-        $logEntry->set("date", $date);
+        $logEntry->set('date', $date);
 
         if ($module) {
-            $logEntry->set("module", $module);
+            $logEntry->set('module', $module);
         }
 
 
         if ($user) {
-            /** @var User $user */
             $userid = $user->getId();
         }
 
         if ($userid) {
-            $logEntry->set("user_id", $userid);
+            $logEntry->set('user_id', $userid);
         }
         if ($visibility) {
-            $logEntry->set("visibility", $visibility);
+            $logEntry->set('visibility', $visibility);
         }
 
 
-        $sqlQuery = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(SQLQuery::class);
+        $sqlQuery = ObjectInstancierFactory::getObjetInstancier()->get(SQLQuery::class);
 
         $authority_id = false;
         $authority_group_id = false;
@@ -112,8 +114,8 @@ class Log extends DataObject
             }
         }
 
-        $logEntry->set("authority_id", $authority_id);
-        $logEntry->set("authority_group_id", $authority_group_id);
+        $logEntry->set('authority_id', $authority_id);
+        $logEntry->set('authority_group_id', $authority_group_id);
 
       // Enregistrement de l'entrée pour déterminer son id
         if (! $logEntry->save()) {
@@ -126,7 +128,7 @@ class Log extends DataObject
             return false;
         }
 
-        $logEntry->set("timestamp", $timestamp);
+        $logEntry->set('timestamp', $timestamp);
         $logEntry->set('message_horodate', $message_horodate);
 
         if (! $logEntry->save()) {
@@ -153,7 +155,7 @@ class Log extends DataObject
    * \brief Méthode qui détermine si un utilisateur a la permission de visualiser l'entrée de journal courante
    * \param $user User : Objet utilisateur concerné
    */
-    public function canView($user)
+    public function canView($user): bool
     {
         if ($user->isSuper()) {
             return true;
@@ -167,8 +169,8 @@ class Log extends DataObject
                     if ($this->visibility != 'SADM') {
                         return true;
                     }
+                    // Un utilisateur peut voir tout ce qui n'est pas en visibilité 'ADM', 'GADM' et 'SADM'
                 } else {
-                  // Un utilisateur peut voir tout ce qui n'est pas en visibilité 'ADM', 'GADM' et 'SADM'
                     if ($this->visibility != 'SADM' && $this->visibility != 'ADM' && $this->visibility != 'GADM') {
                         return true;
                     }
@@ -179,9 +181,9 @@ class Log extends DataObject
                 $owner = new User($this->user_id);
                 $owner->init();
 
-                $hisAuthority = new Authority($owner->get("authority_id"));
+                $hisAuthority = new Authority($owner->get('authority_id'));
 
-                if (($user->isGroupAdmin() && $hisAuthority->isInGroup($user->get("authority_group_id"))) || ($user->isAuthorityAdmin() && $user->get("authority_id") == $owner->get("authority_id"))) {
+                if (($user->isGroupAdmin() && $hisAuthority->isInGroup($user->get('authority_group_id'))) || ($user->isAuthorityAdmin() && $user->get('authority_id') == $owner->get('authority_id'))) {
                     return true;
                 }
             }
@@ -207,9 +209,9 @@ class Log extends DataObject
    * \brief Méthode de génération et d'envoi d'une archive contenant le fichier de l'entrée de log et son horodatage
    * \return True en cas succès, false sinon
    */
-    public function sendArchive()
+    public function sendArchive(): bool
     {
-        if (isset($this->id) && ! empty($this->id)) {
+        if (! empty($this->id)) {
             $tmpDir = '/tmp/tedetis_web_export_timestamp';
 
             for ($i = 0; $i <= 8; $i++) {
@@ -217,25 +219,25 @@ class Log extends DataObject
             }
 
             if (! @mkdir($tmpDir)) {
-                $this->errorMsg = "Erreur système de fichiers";
+                $this->errorMsg = 'Erreur système de fichiers';
                 return false;
             }
 
-            $logFile = $tmpDir . "/tedetis_journal_" . $this->id . ".log";
-            $timestampFile = $logFile . ".sig";
+            $logFile = $tmpDir . '/tedetis_journal_' . $this->id . '.log';
+            $timestampFile = $logFile . '.sig';
 
             if (! $this->writeLogEntryToFile($logFile, $this->retrieveMessageHorodate())) {
                 return false;
             }
 
             if (! @chdir($tmpDir)) {
-                $this->errorMsg =  "Erreur système de fichiers";
+                $this->errorMsg = 'Erreur système de fichiers';
                 return false;
             }
 
           // Génération de l'archive zip
-            $zipFile = "tedetis_journal_" . $this->id . ".zip";
-            $cmd = "/usr/bin/zip -9 " . $zipFile . " " . basename($logFile) . " " . basename($timestampFile);
+            $zipFile = 'tedetis_journal_' . $this->id . '.zip';
+            $cmd = '/usr/bin/zip -9 ' . $zipFile . ' ' . basename($logFile) . ' ' . basename($timestampFile);
 
             exec($cmd, $out, $ret);
 
@@ -243,14 +245,14 @@ class Log extends DataObject
                 $return_status = false;
             } else {
               // Envoi du fichier
-                header("Content-type: application/zip");
+                header('Content-type: application/zip');
                 header('Content-disposition: attachment; filename="' . $zipFile . '"');
               // Celles-ci pour IE
-                header("Expires: 0");
-                header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
-                header("Pragma: public");
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate, post-check=0,pre-check=0');
+                header('Pragma: public');
 
-                if (! @readfile($tmpDir . "/" . $zipFile)) {
+                if (! @readfile($tmpDir . '/' . $zipFile)) {
                     $this->errorMsg =  "Erreur d'envoi du fichier archive.";
                     $return_status = false;
                 } else {
@@ -258,7 +260,7 @@ class Log extends DataObject
                 }
 
                 if (! Helpers::deleteFromFS($zipFile)) {
-                    $this->errorMsg = "Erreur système de fichiers";
+                    $this->errorMsg = 'Erreur système de fichiers';
                     return false;
                 }
             }
@@ -266,7 +268,7 @@ class Log extends DataObject
           // Suprression des fichiers temporaires
           // Bien laissé le répertoire à la fin
             if (! Helpers::deleteFromFS($logFile, $timestampFile, $tmpDir)) {
-                $this->errorMsg =  "Erreur système de fichiers";
+                $this->errorMsg = 'Erreur système de fichiers';
                 return false;
             }
 
@@ -280,10 +282,10 @@ class Log extends DataObject
    * \brief Méthode d'écriture de l'entrée de journal dans un fichier
    * \return True en cas de succès, false sinon
    */
-    public function writeLogEntryToFile($logFile, $data)
+    public function writeLogEntryToFile($logFile, $data): bool
     {
         if (! file_put_contents($logFile, $data)) {
-            $this->errorMsg = "Erreur système de fichiers.";
+            $this->errorMsg = 'Erreur système de fichiers.';
             return false;
         }
 
@@ -306,7 +308,7 @@ class Log extends DataObject
         $data[] = $this->message;
 
 
-        $log = implode("**||**", $data);
+        $log = implode('**||**', $data);
 
         return $log;
     }
@@ -315,7 +317,7 @@ class Log extends DataObject
      *  Méthode d'obtention de l'entrée de log en format concaténé pour horodatage
      * @return string La chaîne de tous les champs séparés par '**||**'
      */
-    public function retrieveMessageHorodate()
+    public function retrieveMessageHorodate(): string
     {
         if ($this->get('message_horodate')) {
             return $this->get('message_horodate');
@@ -331,26 +333,8 @@ class Log extends DataObject
         $data[] = $this->message;
 
 
-        $log = implode("**||**", $data);
+        $log = implode('**||**', $data);
 
         return $log;
-    }
-
-  /**********************/
-  /* Méthodes statiques */
-  /**********************/
-
-  /**
-   * \brief Méthode d'obtention d'une liste d'entrées de journal
-   * \param $cond (optionnel) chaîne Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
-   * \return Tableau des entrées de journal
-  */
-    public function getLogEntriesList($cond = "")
-    {
-        if (! $this->pagerInit('logs.id, logs.date, logs.module, logs.severity, logs.issuer, logs.user_id, logs.message, logs.timestamp', 'logs LEFT JOIN users ON logs.user_id=users.id LEFT JOIN authorities ON users.authority_id=authorities.id', $cond)) {
-            return false;
-        }
-
-        return $this->data;
     }
 }

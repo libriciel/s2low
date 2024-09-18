@@ -30,7 +30,7 @@ $msg = "Programmation de l'envoi de la transaction $id à Pastell";
 
 $_SESSION['error'] = $msg;
 
-if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "actes", false, $initData->connexion->getId())) {
+if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::INFO, false, 'USER', "actes", false, $initData->connexion->getId())) {
     $_SESSION['error'] .= "\nErreur de journalisation.\n";
 }
 

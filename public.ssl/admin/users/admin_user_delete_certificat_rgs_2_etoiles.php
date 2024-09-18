@@ -56,7 +56,7 @@ $userSQL->deleteCertificateRGS2Etoiles($him->getId());
 
 $msg = "Modification ";
 $msg .= " de l'utilisateur " . $him->getPrettyName() . " (id=" . $him->getId() . "). Résultat ok.";
-if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
+if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::INFO, false, $me->get('role'), false, $me)) {
     $msg .= "\nErreur de journalisation.";
 }
 

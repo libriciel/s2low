@@ -1,7 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\model;
+
+use LogSeverity;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Model\LogsSQL;
+use S2lowTestCase;
 
 class LogsSQLTest extends S2lowTestCase
 {
@@ -13,7 +19,7 @@ class LogsSQLTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Log::newEntry("test", "message de test", 1, false, "USER", "actes", false, 6);
+        Log::newEntry('test', 'message de test', LogSeverity::INFO, false, 'USER', 'actes', false, 6);
         $this->logsSQL = new LogsSQL($this->getSQLQuery());
     }
 

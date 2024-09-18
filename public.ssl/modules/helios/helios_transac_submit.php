@@ -61,7 +61,7 @@ $htw->set("date", date('Y-m-d H:i:s'));
 if (!$htw->save(true)) {
     $msg = "Erreur de l'initialisaton de l'accès à la table helios_transactions_workflow.";
     $_SESSION["error"] = $msg;
-    if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
+    if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::ERROR, false, 'USER', $module->get("name"), $me)) {
         $_SESSION["error"] .= "\nErreur de journalisation.";
     }
     header("Location: " . Helpers::getLink("/modules/helios/index.php"));
@@ -72,7 +72,7 @@ $heliosTransactionSQL->setLastStatusId($id);
 
 
 $msg = "Préparation de la télétransmission Transaction n°" . $id . ". Résultat ok.";
-if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
+if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::INFO, false, 'USER', $module->get("name"), $me)) {
     $msg .= "\nErreur de journalisation.";
 }
 

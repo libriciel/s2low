@@ -205,7 +205,7 @@ class MailPeer
         if (! $db->exec($sql, [$transId])) {
             $message[] = "Erreur lors de la suppression de mail_transaction";
         }
-        Log :: newEntry(LOG_ISSUER_NAME, "Suppression du mail {$objet} (id=$transId)", 1, false, 'USER', $module->get("name"), $me);
+        Log :: newEntry(LOG_ISSUER_NAME, "Suppression du mail {$objet} (id=$transId)", LogSeverity::INFO, false, 'USER', $module->get("name"), $me);
 
         return $message;
     }

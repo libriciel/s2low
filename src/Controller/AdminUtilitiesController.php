@@ -2,6 +2,7 @@
 
 namespace S2low\Controller;
 
+use LogSeverity;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\UserToEmailAdressConverter;
@@ -96,9 +97,7 @@ class AdminUtilitiesController extends AbstractController
         $msg .= 'Envoi OK : ' . implode(', ', $result['recipient_ok']) . "\n";
         $msg .= 'Envoi KO : ' . implode(', ', $result['recipient_ko']) . "\n";
 
-        $status = 1;
-
-        if (!Log::newEntry(LOG_ISSUER_NAME, $msg, $status, false, 'SADM', $module_info['name'], $this->legacyController->getUser())) {
+        if (!Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::INFO, false, 'SADM', $module_info['name'], $this->legacyController->getUser())) {
             $msg .= "\nErreur de journalisation.";
         }
 

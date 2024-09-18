@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use LogSeverity;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Log;
@@ -212,7 +213,7 @@ class ActesNotification
                 $authority_info['siren'],
                 $transactionInfo['type']
             );
-        Log::newEntry(LOG_ISSUER_NAME, $message_log, 1, false, "USER", "actes", false, $transactionInfo['user_id']);
+        Log::newEntry(LOG_ISSUER_NAME, $message_log, LogSeverity::INFO, false, "USER", "actes", false, $transactionInfo['user_id']);
     }
 
     /**

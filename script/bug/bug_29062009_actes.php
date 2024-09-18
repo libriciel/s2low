@@ -38,7 +38,7 @@ while ($row = $result->get_next_row()) {
     if ($cpt['count']) {
         echo " -- Déjà dans la base";
     } else {
-        Log::newEntry('TdT', $msg, 1, $row['date'], 'USER', 'actes', false, $row['user_id']);
+        Log::newEntry('TdT', $msg, LogSeverity::INFO, $row['date'], 'USER', 'actes', false, $row['user_id']);
         echo " -- Ajouté dans la base";
     }
     echo "\n";

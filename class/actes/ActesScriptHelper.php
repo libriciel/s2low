@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use LogSeverity;
 use S2lowLegacy\Class\Log;
 
 class ActesScriptHelper
@@ -69,7 +70,7 @@ class ActesScriptHelper
                     $info['type']
                 );
 
-            Log::newEntry(LOG_ISSUER_NAME, $message_log, 1, false, "USER", "actes", false, $info['user_id']);
+            Log::newEntry(LOG_ISSUER_NAME, $message_log, LogSeverity::INFO, false, "USER", "actes", false, $info['user_id']);
         }
     }
 

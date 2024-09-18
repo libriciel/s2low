@@ -26,7 +26,7 @@ if (isset($id) && ! empty($id)) {
     $group = new Group($id);
     if ($group->delete()) {
         $msg = "Suppression du groupe " . $group->get("name") . ". Résultat ok.";
-        if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
+        if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::INFO, false, $me->get("role"), false, $me)) {
             $msg .= "\nErreur de journalisation.";
         }
 
@@ -35,7 +35,7 @@ if (isset($id) && ! empty($id)) {
         exit();
     } else {
         $msg = "Erreur lors de la tentative de suppression du groupe" . $group->getErrorMsg();
-        if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, $me->get("role"), false, $me)) {
+        if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::ERROR, false, $me->get("role"), false, $me)) {
             $msg .= "\nErreur de journalisation.";
         }
 

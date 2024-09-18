@@ -94,6 +94,6 @@ class MailMessageEmis extends DataObject
 
         $date = date('Y-m-d H:i:s');
         $message = sprintf("Dossier %s retiré le %s par %s", $mailTransaction->getObjet(), $date, $this->getEmail());
-        Log::newEntry(LOG_ISSUER_NAME, $message, 1, $date, 'USER', "mail", false, $mailTransaction->getUser_id());
+        Log::newEntry(LOG_ISSUER_NAME, $message, LogSeverity::INFO, $date, 'USER', "mail", false, $mailTransaction->getUser_id());
     }
 }

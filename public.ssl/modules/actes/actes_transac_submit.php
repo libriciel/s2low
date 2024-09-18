@@ -150,7 +150,7 @@ if (! $env->save()) {
     $env->deleteArchiveFile();
     $msg = "Erreur lors de l'enregistrement de l'enveloppe :\n" . $env->getErrorMsg();
 
-    if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
+    if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::ERROR, false, 'USER', $module->get("name"), $me)) {
         $msg .= "\nErreur de journalisation.";
     }
 
@@ -167,7 +167,7 @@ foreach ($transacs as $trans) {
 
     if (! $trans->save()) {
         $msg = "Erreur lors de l'enregistrement de la transaction.\n" . $trans->getErrorMsg();
-        if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
+        if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::ERROR, false, 'USER', $module->get("name"), $me)) {
             $msg .= "\nErreur de journalisation.";
         }
 
@@ -186,7 +186,7 @@ if (count($classifRequests) > 0) {
     foreach ($classifRequests as $classifRequest) {
         if (! $classifRequest->save()) {
             $msg = "Erreur lors de l'enregistrement de la requête de classification.\n" . $classifRequest->getErrorMsg();
-            if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
+            if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::ERROR, false, 'USER', $module->get("name"), $me)) {
                 $msg .= "\nErreur de journalisation.";
             }
 
@@ -204,7 +204,7 @@ if (count($classifRequests) > 0) {
 $msg = "Importation fichier archive réussie. Enveloppe n°" . $env->getId() . " contenant " . count($transacs);
 $msg .= (count($transacs) > 1) ? " transactions créée." : " transaction créée.";
 
-if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
+if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::INFO, false, 'USER', $module->get("name"), $me)) {
     $msg .= "\nErreur de journalisation.";
 }
 

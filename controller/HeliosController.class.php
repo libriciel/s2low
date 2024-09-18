@@ -4,6 +4,7 @@ namespace S2lowLegacy\Controller;
 
 use DOMDocument;
 use Exception;
+use LogSeverity;
 use S2low\Services\Helios\HeliosAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\helios\HeliosStorePESAllerWorker;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
@@ -169,7 +170,7 @@ class HeliosController extends Controller
         $heliosTransactionSQL->updateStatus($id_transaction, $state, $message);
 
         $msg = "Création de la transation n°" . $id_transaction . ". Résultat ok.";
-        Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', self::MODULE_NAME, false, $user_id);
+        Log :: newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::INFO, false, 'USER', self::MODULE_NAME, false, $user_id);
 
         $workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
         $workerScript->putJobByClassName(HeliosStorePESAllerWorker::class, $id_transaction);

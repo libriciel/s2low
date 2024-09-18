@@ -272,7 +272,7 @@ class MailController
 
     public function logError()
     {
-        $result = Log :: newEntry(LOG_ISSUER_NAME, $this->lastError, 3, false, 'USER', $this->module->get("name"), $this->me);
+        $result = Log :: newEntry(LOG_ISSUER_NAME, $this->lastError, LogSeverity::ERROR, false, 'USER', $this->module->get("name"), $this->me);
         if (! $result) {
             $this->lastError .= "\nErreur de journalisation.";
         }
@@ -446,7 +446,7 @@ class MailController
             return false;
         }
         $msg = "Envoi de mail réussi.";
-        if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $this->module->get("name"), $this->me)) {
+        if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::INFO, false, 'USER', $this->module->get("name"), $this->me)) {
             $this->lastError = "\nErreur de journalisation.";
 
             return false;

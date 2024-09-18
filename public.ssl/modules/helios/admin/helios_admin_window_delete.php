@@ -49,7 +49,7 @@ if (isset($id)) {
     $zeWin = new HeliosTransmissionWindow($id);
     if ($zeWin->delete()) {
         $msg = "Suppression de la fenêtre de transmission " . $zeWin->getId() . ". Résultat ok.";
-        if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), $module->get("name"), $me)) {
+        if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::INFO, false, $me->get("role"), $module->get("name"), $me)) {
             $msg .= "\nErreur de journalisation.";
         }
 
@@ -58,7 +58,7 @@ if (isset($id)) {
         exit();
     } else {
         $msg = "Erreur lors de la tentative de suppression de la fenêtre de transmission<br />" . $zeWin->getErrorMsg();
-        if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, $me->get("role"), $module->get("name"), $me)) {
+        if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::ERROR, false, $me->get("role"), $module->get("name"), $me)) {
             $msg .= "\nErreur de journalisation.";
         }
 

@@ -120,7 +120,7 @@ if (
     ! Log::newEntry(
         LOG_ISSUER_NAME,
         $msg4journal,
-        1,
+        LogSeverity::INFO,
         false,
         'USER',
         "actes",

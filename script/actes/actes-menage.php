@@ -35,7 +35,7 @@ foreach ($allEnvelopes as $envelopeInfo) {
         ActesStatusSQL::STATUS_DETRUITE,
         $msg
     );
-    Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "actes", false, $envelopeInfo['user_id']);
+    Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::INFO, false, 'USER', "actes", false, $envelopeInfo['user_id']);
 
     echo $msg . "\n";
     if ($sigtermHandler->isSigtermCalled()) {

@@ -213,6 +213,7 @@ services:
     exclude:
       - '../class/include.php'
       - '../class/util.php'
+      - '../class/LogSeverity.php'
     autowire: true
     autoconfigure: true
     public: true

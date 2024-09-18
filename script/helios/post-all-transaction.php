@@ -45,6 +45,6 @@ foreach ($all_info as $info) {
     $me->init();
 
 
-    Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', 'helios', $me);
+    Log :: newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::INFO, false, 'USER', 'helios', $me);
     echo $msg . "\n";
 }

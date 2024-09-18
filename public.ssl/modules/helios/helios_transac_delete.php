@@ -33,11 +33,11 @@ if (
     !Log :: newEntry(
         LOG_ISSUER_NAME,
         $msg,
-        1,
+        LogSeverity::INFO,
         false,
         'USER',
         $moduleData->module_name,
-        null,
+        false,
         $initData->userInfo['id']
     )
 ) {

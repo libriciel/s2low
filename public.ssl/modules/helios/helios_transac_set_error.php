@@ -31,7 +31,7 @@ $heliosTransactionSQL->updateStatus($id, -1, $message);
 Log::newEntry(
     LOG_ISSUER_NAME,
     $message,
-    1,
+    LogSeverity::INFO,
     false,
     'USER',
     'helios',

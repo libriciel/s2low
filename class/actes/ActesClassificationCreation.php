@@ -5,6 +5,7 @@ namespace S2lowLegacy\Class\actes;
 use ActesClassification;
 use ActesEnvelope;
 use ActesTransaction;
+use LogSeverity;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Log;
@@ -142,7 +143,7 @@ class ActesClassificationCreation
         $result = $env->save();
         if (! $result) {
             $this->lastMessage = "Erreur lors de l'enregistrement de l'enveloppe&nbsp;:\n" . $env->getErrorMsg();
-            $this->logLastMessage(3);
+            $this->logLastMessage(LogSeverity::ERROR);
             return false;
         }
 
@@ -150,7 +151,7 @@ class ActesClassificationCreation
         $result = $trans->save();
         if (! $result) {
             $this->lastMessage  = "Erreur lors de l'enregistrement de la transaction&nbsp;:\n" . $trans->getErrorMsg();
-            $this->logLastMessage(3);
+            $this->logLastMessage(LogSeverity::ERROR);
             $env->deleteArchiveFile();
             $env->delete();
             return false;
@@ -169,7 +170,7 @@ class ActesClassificationCreation
         }
 
         $this->lastMessage = "Création de l'enveloppe n°" . $env->getId() . " contenant une demande de classification. Résultat OK.";
-        $this->logLastMessage(1);
+        $this->logLastMessage(LogSeverity::INFO);
 
         $objectInstancier = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
 

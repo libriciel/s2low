@@ -107,7 +107,7 @@ for ($i = 1; $i <= $nb_signature; $i++) {
     if (! $trans->save()) {
         $msg =  "Erreur de l'enregistrement de la signature.";
 
-        if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get('name'), $me)) {
+        if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::ERROR, false, 'USER', $module->get('name'), $me)) {
             $_SESSION['error'] .= "\nErreur de journalisation.";
         }
         $_SESSION['error'] = $msg;

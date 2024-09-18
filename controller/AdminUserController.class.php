@@ -3,6 +3,7 @@
 namespace S2lowLegacy\Controller;
 
 use Exception;
+use LogSeverity;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Log;
@@ -335,7 +336,7 @@ class AdminUserController extends Controller
 
         if (! $him->save()) {
             $msg = "Erreur lors de l'enregistrement de l'utilisateur :\n" . $him->getErrorMsg();
-            if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, $me->get("role"), false, $me)) {
+            if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::ERROR, false, $me->get('role'), false, $me)) {
                 $msg .= "\nErreur de journalisation.";
             }
 
@@ -375,7 +376,7 @@ class AdminUserController extends Controller
         }
 
 
-        if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
+        if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::INFO, false, $me->get("role"), false, $me)) {
             $msg .= "\nErreur de journalisation.";
         }
 

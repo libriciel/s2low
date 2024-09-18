@@ -158,7 +158,7 @@ $env->purgeFiles();
 if (! $env->save()) {
     $msg = "Erreur lors de l'enregistrement de l'enveloppe&nbsp;:\n" . $env->getErrorMsg();
 
-    if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
+    if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::ERROR, false, 'USER', $module->get('name'), $me)) {
         $msg .= "\nErreur de journalisation.";
     }
 
@@ -170,7 +170,7 @@ $trans->set("envelope_id", $env->getId());
 if (! $trans->save()) {
     $msg = "Erreur lors de l'enregistrement de la transaction.<br />" . $trans->getErrorMsg();
 
-    if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
+    if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::ERROR, false, 'USER', $module->get("name"), $me)) {
         $msg .= "\nErreur de journalisation.";
     }
 
@@ -181,7 +181,7 @@ if (! $trans->save()) {
 } else {
     $msg = "Création transaction d'annulation réussie. Enveloppe n°" . $env->getId() . " créée.";
 
-    if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
+    if (! Log::newEntry(LOG_ISSUER_NAME, $msg, LogSeverity::INFO, false, 'USER', $module->get("name"), $me)) {
         $msg .= "\nErreur de journalisation.";
     }
 
