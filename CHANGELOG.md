@@ -1,6 +1,12 @@
 # Changelog
 
-## 5.0.42
+## 5.0.43 - 2024-09-18
+
+### Corrections
+
+- Corriger les redirections #1218
+
+## 5.0.42 - 2024-09-16
 
 ### Évolutions
 
@@ -19,6 +25,10 @@
 ### Sécurité
 
 - Mise à jour des headers HTTP #1212
+
+### Limitations connues
+
+- Problème de redirections qui bloquent en particulier l'identification par login/mdp
 
 ## 5.0.41 2024-06-20
 

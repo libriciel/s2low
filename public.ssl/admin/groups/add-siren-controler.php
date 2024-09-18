@@ -1,6 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Lib\LuhnKey;
 use S2lowLegacy\Lib\Recuperateur;
 use S2lowLegacy\Lib\Siren;
@@ -8,49 +9,50 @@ use S2lowLegacy\Lib\SirenFactory;
 use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 use S2lowLegacy\Model\GroupSQL;
 
-require_once(__DIR__ . "/../../../init/init-www.php");
-/** @var  $sirenFactory SirenFactory */
-$sirenFactory = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SirenFactory::class);
+require_once(__DIR__ . '/../../../init/init-www.php');
+/** @var  SirenFactory $sirenFactory */
+$sirenFactory = LegacyObjectsManager::getLegacyObjectInstancier()->get(SirenFactory::class);
 
 if (! $droit->isSuperAdmin($userInfo)) {
-    header("Location: index.php");
+    header('Location: index.php');
     exit;
 }
 
 
 $recuperateur = new Recuperateur($_POST);
 
-$id = $recuperateur->get("id");
-$siren = $sirenFactory->get($recuperateur->get("siren"));
+$id = $recuperateur->get('id');
+$siren = $sirenFactory->get($recuperateur->get('siren'));
 
 $authorityGroup = new GroupSQL($sqlQuery);
 
 if (!(is_numeric($id) && floatval($id) == intval(floatval($id)))) {
-    $_SESSION["error"] = "L'id fournie n'est pas un entier.";
-    header("Location: " . WEBSITE_SSL);
+    $_SESSION['error'] = "L'id fournie n'est pas un entier.";
+    header('Location: ' . WEBSITE_SSL);
     exit;
 }
 
 if (empty($authorityGroup->getInfo($id))) {
-    $_SESSION["error"] = "Le groupe $id n'existe pas.";
-    header("Location: " . WEBSITE_SSL);
+    $_SESSION['error'] = "Le groupe $id n'existe pas.";
+    header('Location: ' . WEBSITE_SSL);
     exit;
 }
 
 if (!$siren->isValid()) {
-    $_SESSION["error"] = "Le siren ne semble  pas valide.";
-    header("Location: " . Helpers::getLink("/admin/groups/admin_group_edit.php?id=$id"));
+    $_SESSION['error'] = 'Le siren ne semble  pas valide.';
+    header('Location: ' . Helpers::getLink("/admin/groups/admin_group_edit.php?id=$id"));
     exit;
 }
 
 $authorityGroupSirenSQL = new AuthorityGroupSirenSQL($sqlQuery);
 
 if ($authorityGroupSirenSQL->exist($id, $siren->getValue())) {
-    $_SESSION["error"] = "Le siren existe déjà dans ce groupe";
-    header("Location: " . Helpers::getLink("/admin/groups/admin_group_edit.php?id=$id"));
+    $_SESSION["error"] = 'Le siren existe déjà dans ce groupe';
+    header('Location: ' . Helpers::getLink("/admin/groups/admin_group_edit.php?id=$id"));
     exit;
 }
 
 $authorityGroupSirenSQL->add($id, $siren->getValue());
-$_SESSION["error"] = "Le siren a été ajouté";
-header("Location: " . Helpers::getLink("/admin/groups/admin_group_edit.php?id=$id"));
+$_SESSION['error'] = 'Le siren a été ajouté';
+header('Location: ' . Helpers::getLink("/admin/groups/admin_group_edit.php?id=$id"));
+exit;

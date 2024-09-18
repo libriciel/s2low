@@ -24,3 +24,4 @@ $logger->critical("Test du déclenchement d'une erreur critique", ['user' => $me
 
 $_SESSION["error"] = "Une erreur critique a été déclenchée. Envoi d'un mail à " . EMAIL_ADMIN_TECHNIQUE;
 header("Location: " . Helpers::getLink("/admin/utilities/"));
+exit;
