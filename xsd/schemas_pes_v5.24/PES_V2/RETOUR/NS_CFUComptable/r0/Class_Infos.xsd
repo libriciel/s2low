@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified" attributeFormDefault="unqualified" vc:minVersion="1.1">
+    <xs:include schemaLocation="Simple_Type.xsd"/>
+    <xs:include schemaLocation="Commun_CFU.xsd"/> 
+    <!-- MàJ 20/02/2020 : Demande DGCL
+    Sortie du bloc Infos dans une xsd spécifique -->
+    <xs:complexType name="TInfos">
+        <xs:annotation>
+            <xs:documentation>Informations de l'en-tête du comptable</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Nomenclature" type="TNomenclature" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Codification nomenclature du budget</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Exercice" type="TAnnee" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Exercice de rattachement du budget</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Edition" type="TEdition" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>References de l'edition comptable pour identifier les xsl a appliquer</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Collectivite" type="TBudget" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Informations relatives à la collectivite<br/>Selon les nomenclatures (integre ou non), peut etre le BP, un BR ou un BA</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Gestion" type="TGestion" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Nom et dates de gestion des comptables. Non fourni avec l'état des CCA.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Tresorerie" type="TTresorerie" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Contient les informations relatives à la trésorerie : Codique...</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Caractere" type="Base_Texte100"  minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Caractère du compte de gestion : évaluatif .... (M21)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="BudgetRattachement" type="TBudget"  minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Informations sur le budget de rattachement en cas de BA avec ou sans automatie financière.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="BudgetAnnexe" type="TBudget" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Informations sur tous les Budgets Annexes de la collectivite</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NatFonc" type="TNatFonc" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Vote par nature ou par fonction. Non fourni pour l'état des CCA.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NatVot" type="TNatVote" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Niveau de vote : article ou chapitre. Non fourni pour l'état des CCA.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Sommaire" type="TSommaire" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Enchainement des etats du CG ou de CFU</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="SommairePlus" type="TSommairePlus" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Enchaînement des états comptables du CG ou CFU sur pieces</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Balise supplémentaire quelconque, pour les besoins d'évolution</xs:documentation>
+                </xs:annotation>
+            </xs:any>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

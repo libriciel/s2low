@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.w3.org/2000/09/xmldsig#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://uri.etsi.org/01903/v1.1.1#" schemaLocation="xades/XAdES-core-schema.xsd"/>
+	<xs:include schemaLocation="xmldsig/xmldsig-core-schema.xsd"/>
+	
+	<xs:complexType name="PESSignatureType">
+		<xs:complexContent>
+			<xs:restriction base="ds:SignatureType">
+				<xs:sequence>
+					<xs:element ref="ds:SignedInfo"/>
+					<xs:element ref="ds:SignatureValue"/>
+					<xs:element ref="ds:KeyInfo" minOccurs="0"/>
+					<xs:element ref="ds:Object" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:restriction>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:group name="PESSignatureGroup">
+		<xs:sequence>
+			<xs:element name="Signature" type="ds:PESSignatureType"/>
+		</xs:sequence>
+	</xs:group>
+</xs:schema>

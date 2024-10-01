@@ -1,10 +1,11 @@
 # Changelog
 
-## 5.0.44 - 
+## 5.0.44 - 2024-10-21
 
 ### Évolutions
 
 - [Actes] Transférer les enveloppes sans transaction dans un répertoire dédié #972
+- Prise en compte de la version 5.24 du schema XSD Pes Aller #1220
 
 ### Corrections
 

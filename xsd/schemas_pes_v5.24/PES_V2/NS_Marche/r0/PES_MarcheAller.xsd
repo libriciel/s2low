@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) by Partage CPD (D° GLE DES FINANCES PUBLIQUES) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/marche/r0/aller" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/marche/r0/aller" elementFormDefault="unqualified">
+  <!-- Directives d'inclusion -->
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="Class_MarcheAller.xsd" />
+  <xs:include schemaLocation="Class_Concession.xsd" />
+  <xs:complexType name="TPES_MarcheAller">
+    <xs:sequence>
+      <xs:element name="EnTeteMarche">
+        <xs:annotation>
+          <xs:documentation>En-tête.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="IdVer" type="cm:Base_Num2">
+              <xs:annotation>
+                <xs:documentation>Numéro de version - Mettre à « 2 ».
+Si le numéro de version est erroné, rejet de l'ensemble du flux PESMarche.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <!--<xs:element name="Marches" type="TMarches" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Marché public.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Concessions" type="TConcessions" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Contrat de concession.</xs:documentation>
+        </xs:annotation>
+      </xs:element>-->
+      <xs:choice>
+        <xs:annotation>
+          <xs:documentation>Le PES Marche Aller doit avoir au moins un Marché ou une Concession.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element name="Marches" type="TMarches">
+            <xs:annotation>
+              <xs:documentation>Marché public.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Concessions" type="TConcessions" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Contrat de concession.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:sequence>
+          <xs:element name="Concessions" type="TConcessions">
+            <xs:annotation>
+              <xs:documentation>Contrat de concession.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

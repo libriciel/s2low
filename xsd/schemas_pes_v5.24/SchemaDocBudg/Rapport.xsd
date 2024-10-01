@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://projets.admisource.gouv.fr/xemelios/namespaces#anomally" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:attribute name="V" type="xs:string" />
+  <xs:element name="DocumentRapport">
+    <xs:annotation>
+      <xs:documentation>Rapport d'anomalies</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+</xs:schema>
