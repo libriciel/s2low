@@ -1,7 +1,7 @@
 <?php
 
-if (!defined("RENDER_STARTING_TIME")) {
-    define("RENDER_STARTING_TIME", microtime(true));
+if (!defined('RENDER_STARTING_TIME')) {
+    define('RENDER_STARTING_TIME', microtime(true));
 }
 $debut = microtime(true);
 
@@ -14,28 +14,28 @@ if (php_sapi_name() != 'cli') {
  *
  */
 
-function hecho($message, $quot_style = ENT_QUOTES)
+function hecho($message, $quot_style = ENT_QUOTES): void
 {
-    echo get_hecho($message, $quot_style, "utf-8");
+    echo get_hecho($message, $quot_style);
 }
 
-function get_hecho($message, $quot_style = ENT_QUOTES, $encoding = "utf-8")
+function get_hecho($message, $quot_style = ENT_QUOTES, $encoding = 'utf-8'): string
 {
     return htmlspecialchars($message ?? '', $quot_style, $encoding);
 }
 
-if (defined("TESTING_ENVIRONNEMENT") && TESTING_ENVIRONNEMENT) {
+if (defined('TESTING_ENVIRONNEMENT') && TESTING_ENVIRONNEMENT) {
 
-    function exit_wrapper($status = "")
+    function exit_wrapper($status = '')
     {
-        $message = "exit() called";
+        $message = 'exit() called';
         if ($status) {
             $message .= " with status $status";
         }
         throw new Exception($message);
     }
 
-    function header_wrapper($string, $replace = true, $http_response_code = null)
+    function header_wrapper($string, $replace = true, $http_response_code = null): void
     {
         echo "header('$string','$replace','$http_response_code') called\n";
     }
@@ -45,20 +45,30 @@ if (defined("TESTING_ENVIRONNEMENT") && TESTING_ENVIRONNEMENT) {
         //don't sleep
     }
 
+    function header_remove_wrapper()
+    {
+        //don't sleep
+    }
+
 } else {
 
-    function exit_wrapper($status = "")
+    function exit_wrapper($status = ''): void
     {
         exit($status);
     }
 
-    function header_wrapper($string, $replace = true, $http_response_code = null)
+    function header_wrapper($string, $replace = true, $http_response_code = null): void
     {
         header($string, $replace, $http_response_code);
     }
 
-    function sleep_wrapper($seconds)
+    function sleep_wrapper($seconds): void
     {
         sleep($seconds);
+    }
+
+    function header_remove_wrapper(): void
+    {
+        header_remove();
     }
 }

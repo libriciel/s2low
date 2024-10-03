@@ -14,21 +14,22 @@ class LegacyController extends AbstractController
         $_SERVER['SCRIPT_NAME'] = $requestPath;
         $_SERVER['SCRIPT_FILENAME'] = $legacyScript;
 
-        chdir(\dirname($legacyScript));
+        chdir(dirname($legacyScript));
 
-        \ob_start();
+        ob_start();
         try {
             require $legacyScript;
         } catch (Exception $e) {
-            \var_dump($e->getMessage());
+            var_dump($e->getMessage());
         }
-        $content = (string)\ob_get_clean();
+        $content = (string)ob_get_clean();
 
         $headers = [];
-        foreach (\headers_list() as $header) {
-            $trimmed = \explode(': ', $header);
+        foreach (headers_list() as $header) {
+            $trimmed = explode(': ', $header);
             $headers[$trimmed[0]] = $trimmed[1];
         }
+        header_remove_wrapper();
         return new Response($content, 200, $headers);
     }
 }

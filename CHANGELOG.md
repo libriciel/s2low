@@ -15,6 +15,7 @@
 ### Corrections
 
 - Corriger les redirections #1218
+- Supprimer les headers en doublon #1221
 
 ## 5.0.42 - 2024-09-16
 
