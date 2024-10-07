@@ -12,6 +12,7 @@ interface ICloudStorable
     public function getAllObjectIdToStore(): array;
 
     public function getFilePathOnDisk(int $object_id): string;
+    public function getDirectoryForFilesWithoutTransaction(): ?string;
 
     public function getFilePathOnCloud(int $object_id): string;
 

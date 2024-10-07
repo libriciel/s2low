@@ -182,6 +182,12 @@ class CloudStorage
             $filePathOnCloudWithFileOnDiskPath = $this->getFilePathOnCloudWithFileOnDiskPath($file->getRealPath());
             $this->logger->debug('File path on cloud : ' . $filePathOnCloudWithFileOnDiskPath);
 
+            if ($filePathOnCloudWithFileOnDiskPath === '') { # fileExistsOnCloud retourne true à un argument vide ...
+                $this->logger->debug(
+                    "File {$file->getFilename()} a un nom sur cloud vide ($filePathOnCloudWithFileOnDiskPath)"
+                );
+                continue;
+            }
             if (
                 ! $this->openStackSwiftWrapper->fileExistsOnCloud(
                     $this->iCloudStorable->getContainerName(),
@@ -326,6 +332,7 @@ class CloudStorage
         $object_id = $this->iCloudStorable->getObjectIdByFilePath($file->getRealPath());
         if (!$object_id) {
             $this->logger->notice('Unable to find object id for the file ' . $file->getRealPath());
+            $this->moveToOrphelinsDirectory($file);
             return;
         }
         if (!$this->iCloudStorable->isAvailable($object_id)) {
@@ -363,5 +370,28 @@ class CloudStorage
             );
             throw $e;
         }
+    }
+
+    /**
+     * @param \SplFileInfo $file
+     */
+    private function moveToOrphelinsDirectory(SplFileInfo $file): void
+    {
+        if ($this->iCloudStorable->getDirectoryForFilesWithoutTransaction() === null) {
+            $this->logger->info(
+                'File ' . $file->getRealPath() . ' : destination directory ' . $this->iCloudStorable->getDirectoryForFilesWithoutTransaction() . ' not found'
+            );
+            return;
+        }
+        $destination = $this->iCloudStorable->getDirectoryForFilesWithoutTransaction() . '/' . $file->getFilename();
+        if (
+            !rename(
+                $file->getRealPath(),
+                $destination
+            )
+        ) {
+            $this->logger->info("File $file : rename KO");
+        }
+        $this->logger->info("rename done to $destination");
     }
 }

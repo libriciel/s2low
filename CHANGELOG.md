@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.44 - 
+
+### Évolutions
+
+- [Actes] Transférer les enveloppes sans transaction dans un répertoire dédié #972
+
 ## 5.0.43 - 2024-09-18
 
 ### Corrections

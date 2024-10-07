@@ -3,6 +3,7 @@
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
 use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SessionWrapper;
@@ -17,6 +18,9 @@ class TestEnvironmentManager
      */
     private static $sqlQueryStatic;
 
+    /**
+     * @throws \Exception
+     */
     public function setUp()
     {
         $this->getConnection();
@@ -88,7 +92,10 @@ class TestEnvironmentManager
         // WARNING : PAS SUR DE LA MANIP
         $this->getObjectInstancier()->set(S2lowLogger::class, new  S2lowLogger($monologLogger));
 
-        $this->getObjectInstancier()->set('image_for_stamp', SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg");
+        $this->getObjectInstancier()->set('image_for_stamp', SITEROOT . 'public.ssl/custom/images/bandeau-s2low-190.jpg');
+        $this->getObjectInstancier()->set('repertoirePesAllerSansTransaction', '');
+        $tmpFolder = new TmpFolder();
+        $this->getObjectInstancier()->set('repertoireActesEnveloppeSansTransaction', $tmpFolder->create());
     }
 
     public function getConnection()

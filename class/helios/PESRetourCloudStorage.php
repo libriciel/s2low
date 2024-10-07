@@ -99,4 +99,9 @@ class PESRetourCloudStorage implements ICloudStorable
     {
         return $this->heliosRetourSQL->isInCloud($object_id);
     }
+
+    public function getDirectoryForFilesWithoutTransaction(): ?string
+    {
+        return null;
+    }
 }

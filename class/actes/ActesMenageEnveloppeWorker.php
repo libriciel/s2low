@@ -13,9 +13,9 @@ class ActesMenageEnveloppeWorker implements IWorker
     public const QUEUE_NAME = 'actes-enveloppe-menage';
     private const NB_DAYS_IN_DISK = 15;
 
-    private $cloudStorageFactory;
-    private $cloudStorage;
-    private $nb_days_in_disk;
+    private CloudStorageFactory $cloudStorageFactory;
+    private ?CloudStorage $cloudStorage = null;
+    private int $nb_days_in_disk;
 
     public function __construct(CloudStorageFactory $cloudStorageFactory)
     {
@@ -27,9 +27,9 @@ class ActesMenageEnveloppeWorker implements IWorker
      * @return CloudStorage
      * @throws UnrecoverableException
      */
-    private function getCloudStorage()
+    private function getCloudStorage(): CloudStorage
     {
-        if (! $this->cloudStorage) {
+        if (is_null($this->cloudStorage)) {
             $this->cloudStorage = $this->cloudStorageFactory
                 ->getInstanceByClassName(ActesCloudStorage::class);
         }
@@ -39,20 +39,20 @@ class ActesMenageEnveloppeWorker implements IWorker
 
     public function getQueueName()
     {
-        return sprintf("%s-%s", self::QUEUE_NAME, gethostname());
+        return sprintf('%s-%s', self::QUEUE_NAME, gethostname());
     }
 
-    public function getData($id)
+    public function getData($id): int
     {
         return $id;
     }
 
-    public function getAllId()
+    public function getAllId(): array
     {
         return [1];
     }
 
-    public function setNbDayInDisk(int $nb_days_in_disk)
+    public function setNbDayInDisk(int $nb_days_in_disk): void
     {
         $this->nb_days_in_disk = $nb_days_in_disk;
     }
@@ -62,17 +62,17 @@ class ActesMenageEnveloppeWorker implements IWorker
      * @return void
      * @throws Exception
      */
-    public function work($data)
+    public function work($data): void
     {
         $this->getCloudStorage()->deleteFilesOnDisk($this->nb_days_in_disk, true);
     }
 
-    public function getMutexName($data)
+    public function getMutexName($data): string
     {
         return $this->getQueueName();
     }
 
-    public function isDataValid($data)
+    public function isDataValid($data): bool
     {
         return true;
     }

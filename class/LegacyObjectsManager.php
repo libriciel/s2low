@@ -10,7 +10,7 @@ use S2lowLegacy\Class\actes\ActesPdf;
 use S2lowLegacy\Class\actes\ActesPdfLegacy;
 use S2lowLegacy\Class\actes\IActesPdf;
 use S2lowLegacy\Class\helios\PESAcquitCloudStorage;
-use S2lowLegacy\Class\helios\PesAllerStorage;
+use S2lowLegacy\Class\helios\PESAllerCloudStorage;
 use S2lowLegacy\Class\helios\PESRetourCloudStorage;
 use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
 use S2lowLegacy\Lib\Environnement;
@@ -171,7 +171,7 @@ class LegacyObjectsManager
         $openStackContainerStore = new OpenStackContainerStore($openStackContainerWrapperFactory);
 
         $openStackContainerStore->addConfiguration(ActesEnvelopeStorage::CONTAINER_NAME, $openStackConfigActes);
-        $openStackContainerStore->addConfiguration(PesAllerStorage::CONTAINER_NAME, $openStackConfigHelios);
+        $openStackContainerStore->addConfiguration(PESAllerCloudStorage::CONTAINER_NAME, $openStackConfigHelios);
         $openStackContainerStore->addConfiguration(PESAcquitCloudStorage::CONTAINER_NAME, $openStackConfigHeliosAcquit);
         $openStackContainerStore->addConfiguration(PESRetourCloudStorage::CONTAINER_NAME, $openStackConfigHeliosRetour);
         $openStackContainerStore->addConfiguration(MailIncludedFilesCloudStorage::CONTAINER_NAME, $openStackConfigMailsec);
@@ -189,6 +189,7 @@ class LegacyObjectsManager
 
 
         $objectInstancier->set("actes_files_upload_root", ACTES_FILES_UPLOAD_ROOT);
+        $objectInstancier->set("repertoireActesEnveloppeSansTransaction", ACTES_ENVELOPPE_SANSTRANSACTION);
         $objectInstancier->set("actes_appli_trigramme", ACTES_APPLI_TRIGRAMME);
         $objectInstancier->set("actes_appli_quadrigramme", ACTES_APPLI_QUADRIGRAMME);
 

@@ -339,6 +339,11 @@ if (!defined('ACTES_FILES_UPLOAD_ROOT')) {
         define('ACTES_FILES_UPLOAD_ROOT', WORKSPACE_DIRECTORY . 'actes/uploads');
 }
 
+// Répertoire de stockage des vieux fichiers envoyés par les utilisateurs (archives .tar.gz) sans transaction associée
+if (!defined('ACTES_ENVELOPPE_SANSTRANSACTION')) {
+    define('ACTES_ENVELOPPE_SANSTRANSACTION', WORKSPACE_DIRECTORY . 'actes/sans_transaction');
+}
+
 // Répertoire de stockage des fichiers constituant les lots
 if (!defined('ACTES_BATCHES_UPLOAD_ROOT')) {
         define('ACTES_BATCHES_UPLOAD_ROOT', WORKSPACE_DIRECTORY . 'actes/batchs');
