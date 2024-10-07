@@ -82,7 +82,7 @@ class HeliosMenageWorkerTest extends S2lowTestCase
     public function testWorkWithoutTransactionId(): void
     {
         $pes_aller_path = $this->createPesAller(true);
-        $this->swift->/*expects(self::once())->*/method('fileExistsOnCloud')->willReturn(false);
+        $this->swift->expects(self::atLeastOnce())->method('fileExistsOnCloud')->willReturn(false);
         $this->worker->work(1);
         static::assertFileDoesNotExist($pes_aller_path);
         static::assertFileExists(
@@ -104,7 +104,7 @@ class HeliosMenageWorkerTest extends S2lowTestCase
     public function testWorkExistsInCloud(): void
     {
         $pes_aller_path = $this->createPesAller(true);
-        $this->swift->/*expects(self::once())->*/method('fileExistsOnCloud')->willReturn(true);
+        $this->swift->expects(self::atLeastOnce())->method('fileExistsOnCloud')->willReturn(true);
         $this->worker->work(1);
         static::assertFileDoesNotExist($pes_aller_path);
         static::assertFileDoesNotExist(
@@ -122,7 +122,7 @@ class HeliosMenageWorkerTest extends S2lowTestCase
     public function testWorkWithTransaction(): void
     {
         $pes_aller_path = $this->createPesAller(true);
-        $this->swift->/*expects(self::once())->*/method('fileExistsOnCloud')->willReturn(false);
+        $this->swift->expects(self::atLeastOnce())->method('fileExistsOnCloud')->willReturn(false);
         $transaction_id = $this->createTransaction();
         $this->transactionsSQL->setTransactionInCloud($transaction_id, true);
         $this->transactionsSQL->setTransactionAvailable($transaction_id, false);

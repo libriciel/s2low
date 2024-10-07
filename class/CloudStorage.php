@@ -182,7 +182,7 @@ class CloudStorage
             $filePathOnCloudWithFileOnDiskPath = $this->getFilePathOnCloudWithFileOnDiskPath($file->getRealPath());
             $this->logger->debug('File path on cloud : ' . $filePathOnCloudWithFileOnDiskPath);
 
-            if (empty($filePathOnCloudWithFileOnDiskPath)) { # fileExistsOnCloud retourne true à un argument vide ...
+            if ($filePathOnCloudWithFileOnDiskPath === '') { # fileExistsOnCloud retourne true à un argument vide ...
                 $this->logger->debug(
                     "File {$file->getFilename()} a un nom sur cloud vide ($filePathOnCloudWithFileOnDiskPath)"
                 );
@@ -373,11 +373,11 @@ class CloudStorage
     }
 
     /**
-     * @param $file
+     * @param \SplFileInfo $file
      */
     private function moveToOrphelinsDirectory(SplFileInfo $file): void
     {
-        if (is_null($this->iCloudStorable->getDirectoryForFilesWithoutTransaction())) {
+        if ($this->iCloudStorable->getDirectoryForFilesWithoutTransaction() === null) {
             $this->logger->info(
                 'File ' . $file->getRealPath() . ' : destination directory ' . $this->iCloudStorable->getDirectoryForFilesWithoutTransaction() . ' not found'
             );
@@ -390,9 +390,8 @@ class CloudStorage
                 $destination
             )
         ) {
-            echo "oups";
             $this->logger->info("File $file : rename KO");
         }
-        echo "rename done to $destination";
+        $this->logger->info("rename done to $destination");
     }
 }

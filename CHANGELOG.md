@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.44 - 
+
+### Évolutions
+
+- [Actes] Transférer les enveloppes sans transaction dans un répertoire dédié #972
+
 ## 5.0.43 - 2024-09-18
 
 ### Corrections
@@ -13,7 +19,6 @@
 - Permettre de transformer une commande legacy en S2lowLegacyCommandInSymfonyContainer instanciée comme un controlleur par Symfony #1127
 - Création du rôle "Archiviste" #1199
 - Permettre de régler l'agraphage OCSP (OCSP Stapling) par virtual host #1209
-- [Actes] Transférer les enveloppes sans transaction dans un répertoire dédié #972
 
 ### Ajouts
 
