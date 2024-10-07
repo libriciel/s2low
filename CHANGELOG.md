@@ -9,13 +9,13 @@
 ### Corrections
 
 - Corriger des paginations dans admin_authorities.php #1218
+- Supprimer les headers en doublon #1221
 
 ## 5.0.43 - 2024-09-18
 
 ### Corrections
 
 - Corriger les redirections #1218
-- Supprimer les headers en doublon #1221
 
 ## 5.0.42 - 2024-09-16
 
