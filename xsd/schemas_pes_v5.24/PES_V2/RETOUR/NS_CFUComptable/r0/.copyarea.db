@@ -1,0 +1,12 @@
+ClearCase CopyAreaDB|4
+VOBSOCLE\PES_XSD\PES_V2\Externe\Schemas_PES\PES_V2\RETOUR\NS_CFUComptable\r0
+2
+8
+18:Class_LigneComptable.xsd|1|18ee17e9cb7|326c|2413bab5|bf94fc55fb1911ee8c815254005216c0|0
+f:Simple_Type.xsd|1|18ee17ee363|8ad9|db735391|bc04fc41fb1911ee8c815254005216c0|0
+e:Commun_CFU.xsd|1|18d79d77073|1dc5|cce8b0f5|ba6acf588dba11ec9223525400473d7b|0
+19:Class_EnteteComptable.xsd|1|18d79d77064|354|871319b1|d25182d88af911eb8fbc525400473d7b|0
+1b:Class_DocumentComptable.xsd|1|18d79d77073|48b|a8cc91ad|a46adce45fae11ea9b96525400473d7b|0
+f:Class_Infos.xsd|1|18d79d770a8|138f|e6c2da6d|d5f183508af911eb8fbc525400473d7b|0
+19:Class_BudgetComptable.xsd|1|18d79d77064|522|5a19bedc|d2d182e88af911eb8fbc525400473d7b|0
+15:DocumentComptable.xsd|1|18d79d77092|31d|641b0a32|d30182f08af911eb8fbc525400473d7b|0

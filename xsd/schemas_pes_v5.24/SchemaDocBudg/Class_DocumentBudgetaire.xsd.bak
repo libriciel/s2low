@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:ano="http://projets.admisource.gouv.fr/xemelios/namespaces#anomally" xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" elementFormDefault="qualified">
+  <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="Class_Signature.xsd" />
+  <xs:import namespace="http://projets.admisource.gouv.fr/xemelios/namespaces#anomally" schemaLocation="Rapport.xsd" />
+  <xs:include schemaLocation="Class_Budget.xsd" />
+<!--   <xs:include schemaLocation="Class_LigneBudget.xsd" /> -->
+<!--   <xs:include schemaLocation="Class_PJReference.xsd" /> -->
+<!--   <xs:include schemaLocation="CommunBudget.xsd" /> -->
+<!--   <xs:include schemaLocation="Simple_Type.xsd" /> -->
+  <xs:include schemaLocation="Class_Scellement.xsd" />
+  <xs:complexType name="TDocumentBudgetaire">
+    <xs:sequence>
+      <xs:element name="VersionSchema" type="Base_Version">
+        <xs:annotation>
+          <xs:documentation>Version du schéma à laquelle le document se conforme.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="BlocEditeur" type="TBlocEditeur" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Bloc réservé à l'éditeur. Peut contenir tout type d'information, du simple texte comme des informations structurées.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="VersionOutil" type="TVersionOutil" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Version de l'outil ayant permis la première visualisation du document.
+Cette balise peut être multiple.
+Elle est composée de deux attributs, un attribut version et un attribut outil. Si la balise VersionOutil est présente, les deux attributs sont obligatoires.
+- Attribut version : Type Texte ; Chaîne de caractères qui peut contenir des chiffres, des lettres majuscules  ou minuscules, ainsi que "+", "_ "et "." n fois
+- Attribut outil : Type Texte 30. Chaîne de caractères qui peut contenir des chiffres, des lettres majuscules  ou minuscules, ainsi que "+", "_ "et "." n fois.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Scellement" type="TScellement" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Elément technique permettant d'indiquer qu'un flux a été scellé.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="EnTeteDocBudgetaire" type="TEnTeteDocBudgetaire">
+        <xs:annotation>
+          <xs:documentation>Entête du document décrivant le poste comptable et la collectivité.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Budget" type="TBudget">
+        <xs:annotation>
+          <xs:documentation>Précision : les blocs Annexes et Informations générales, blocs enfants de Budget ne sont pas décrits car ils ne sont pas utilisés dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="ano:DocumentRapport" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Non décrit car non utilisé dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:group ref="ds:PESSignatureGroup" minOccurs="0" />
+    </xs:sequence>
+    <xs:attribute name="identifiant" type="V_Texte30" use="optional">
+      <xs:annotation>
+        <xs:documentation>L'identifiant du document bugdetaire</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TEnTeteDocBudgetaire">
+    <xs:annotation>
+      <xs:documentation>Entête du document décrivant le poste comptable et la collectivité.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="DteStr" type="Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date d'émission de la structure</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LibellePoste" type="Base_Texte100">
+        <xs:annotation>
+          <xs:documentation>Libellé du poste comptable</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdPost" type="Base_Texte7">
+        <xs:annotation>
+          <xs:documentation>Identifiant du poste comptable (numéro codique).
+Doit exister dans Hélios, à défaut rejet du document budgétaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LibelleColl" type="Base_Texte100">
+        <xs:annotation>
+          <xs:documentation>Libellé de la collectivité</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdColl" type="Base_Siret-Siren" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Identifiant numérique permanent du budget collectivité (Identifiant SIRET).
+Obligatoire pour Hélios.
+Doit correspondre au  numero de SIRET du budget collectivité défini dans Hélios, à défaut rejet du document budgétaire.
+Ne doit contenir que des chiffres, taille minimum 9, maximum 14.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FinJur" type="Base_Num20" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Finess Juridique ; obligatoire pour M21 et M22, et doit correspondre au FinJur du budget collectivité défini dans Hélios. A défaut, rejet du document budgétaire.
+Si la balise est présente pour une nomenclature différente de M21 ou M22, rejet du document budgétaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatCEPL" type="Base_Texte100">
+        <xs:annotation>
+          <xs:documentation>Nature juridique de la CEPL</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Departement" type="Base_Texte3" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Numéro du département, sur 3 caractères.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TBlocEditeur" mixed="true">
+    <xs:annotation>
+      <xs:documentation>Bloc réservé à l'éditeur. Peut contenir tout type d'information, du simple texte comme des informations structurées.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="CodeEditeur" type="Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Réservé à l'éditeur ; peut contenir tout type d'information.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:any namespace="##any" minOccurs="0" maxOccurs="unbounded" processContents="skip">
+        <xs:annotation>
+          <xs:documentation>Peut contenir tout type d'information. Cette balise peut être multiple.</xs:documentation>
+        </xs:annotation>
+      </xs:any>
+    </xs:sequence>
+    <xs:anyAttribute namespace="http://www.w3.org/XML/1998/namespace" processContents="skip" />
+  </xs:complexType>
+  <xs:complexType name="TVersionOutil">
+    <xs:attribute name="outil" type="V_Texte30" use="required">
+      <xs:annotation>
+        <xs:documentation>L'identifiant de l'outil</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="version" type="V_Version" use="required">
+      <xs:annotation>
+        <xs:documentation>Version de l'outil</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>

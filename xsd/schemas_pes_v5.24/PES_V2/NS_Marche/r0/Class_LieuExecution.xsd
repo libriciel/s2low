@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="CommunMarche.xsd" />
+  <xs:complexType name="TLieuExecution">
+    <xs:annotation>
+      <xs:documentation>Lieu d'exécution des prestations (marché public ou contrat de concession).</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="CodeLieuExecution" type="cm:Base_Texte5">
+        <xs:annotation>
+          <xs:documentation>Code du lieu d'exécution (code postal, commune, canton, arrondissement, département, région , pays).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypeCode" type="TTypeCode">
+        <xs:annotation>
+          <xs:documentation>Type de code pour désigner le lieu d'exécution. Hormis « Code postal », les codes sont des codes géographiques gérés par l'INSEE.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NomLieuExecution" type="cm:Base_Texte50">
+        <xs:annotation>
+          <xs:documentation>Nom du lieu d'exécution, si possible dérivé du code INSEE (très important si l'identifiant du lieu est un code postal, car un code postal peut recouvrir plusieurs communes).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

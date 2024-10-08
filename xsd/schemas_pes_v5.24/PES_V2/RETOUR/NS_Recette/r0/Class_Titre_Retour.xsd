@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour" schemaLocation="../../Class_SchemasCommuns_Retour.xsd" />
+  <xs:include schemaLocation="CommunRecette_Retour.xsd" />
+  <xs:complexType name="TBlocPiece">
+    <xs:sequence>
+      <xs:element name="CodServ" type="cm:Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code d'identification du service de l'ordonnateur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdPce" type="cm:Base_Num13">
+        <xs:annotation>
+          <xs:documentation>Identifiant de la pièce. Pour le contexte « Type de bordereau = 05 _ P503 » ou Type de Bordereau = 04_  Bordereau de régularisation » cette balise renvoie l'identifiant de l' encaissement avant émission de titre.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypPce" type="TTypPce">
+        <xs:annotation>
+          <xs:documentation>Type de pièce. Pour le contexte « Type de bordereau = 05_P503 » ou « Type de bordereau = 04_Bordereau de régularisation » cette balise renvoie au type de pièce 13- Demande émission de titre
+
+Note : dans le cas d'un TypPiece = 13 dans un flux retour, la valeur de la balise IdPiece transmise devra être reprise dans le flux ALLER de régularisation émis par l'ordonnateur ( balise IdPceOrig)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NatPce" type="TNatPce">
+        <xs:annotation>
+          <xs:documentation>Nature de la pièce.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Obj" type="cm:Base_Texte160" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Zone libre décrivant l'objet de la pièce : correspond à l'objet du titre, ou à l'identification du règlement pour les encaissements à régulariser.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DtePcePec" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de prise en charge de la pièce.
+Remarque :
+- Un titre vérifiant DtePcePec et DtePceRej renseignées est un titre qui a été rejeté suite à annulation de prise en charge dans Hélios ; dans ce cas, le titre ne pourra pas être ré-émis par l'ordonnateur avec le même identifiant de pièce (IdPce).
+- Un titre vérifiant DtePcePec non renseignée et DtePceRej renseignée est un titre qui a été rejeté en Visa Recette depuis la bannette dans Hélios ; dans ce cas, après correction par l'ordonnateur le titre pourra être ré-émis par l'ordonnateur avec le même identifiant de pièce (IdPce).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="EtatPce" type="TEtatPce">
+        <xs:annotation>
+          <xs:documentation>Information retour sur l'état de la pièce.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ObsEtat" type="cm:Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Observation sur l'état de la pièce : codification des motifs. Possibilité de transmettre une pluralité de codification, avec le « - » tiret comme caractère séparateur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Commentaire" type="cm:Base_Texte400" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Commentaire saisi par le Comptable lors du visa.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DtePceRej" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date du rejet de la pièce de recette.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DtePceInst" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de la mise en instance de la pièce de recette.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InfoORMC" type="TInfoORMC" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoORMC">
+    <xs:annotation>
+      <xs:documentation>Ce bloc est valorisé pour les  Titre ORMC  et les rôles-titres</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="NumDette" type="cm:Base_Texte15" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Numéro de dette attribué au débiteur par l'ordonnateur – ce numéro correspond au NuméroFacture de l'article de rôle dans Hélios.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Per" type="cm:Base_Num1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Complément au numéro de dette attribué au débiteur.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Cle1" type="cm:Base_Num1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Clé de contrôle de l'article de rôle. Réservée aux titres ORMC et restituée telle que fournie à l'aller.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Cle2" type="cm:Base_Alphanum1" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Clé de contrôle de l'article de rôle. Réservée aux titres ORMC et restituée telle que fournie à l'aller.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+
