@@ -6,6 +6,10 @@
 
 - [Actes] Transférer les enveloppes sans transaction dans un répertoire dédié #972
 
+### Corrections
+
+- Corriger des paginations dans admin_authorities.php #1218
+
 ## 5.0.43 - 2024-09-18
 
 ### Corrections

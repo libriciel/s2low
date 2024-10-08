@@ -38,7 +38,7 @@ class LegacyRouteCollection
         );
     }
 
-    public function addRouteWithSymfonyContainer(string $routeName, string $path, string $className, array $routeOptions = []): void
+    public function addRouteWithSymfonyContainer(string $routeName, string $path, string $requestPath, string $className, array $routeOptions = []): void
     {
         $this->routeCollection->add(
             $routeName,
@@ -46,6 +46,7 @@ class LegacyRouteCollection
                 $path,
                 [
                     '_controller' => "$className::generateResponse",
+                    'requestPath' => $requestPath
                 ],
                 $routeOptions
             )

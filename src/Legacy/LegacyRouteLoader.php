@@ -28,7 +28,7 @@ class LegacyRouteLoader extends Loader
 
     private function trimPathToAccomodateVFS(string $path): string
     {
-        return preg_replace("#(?<!vfs:)//#", "/", $path);
+        return preg_replace('#(?<!vfs:)//#', '/', $path);
     }
 
     private function findLegacyRoutes(string $baseDirPath): Finder
@@ -39,7 +39,7 @@ class LegacyRouteLoader extends Loader
             ];
         return (new Finder())->files()
             ->in($baseDirPath)
-            ->name("*.php")
+            ->name('*.php')
             ->filter(function (SplFileInfo $file) use ($excludedFiles) {
                 return !in_array($file->getPathname(), $excludedFiles);
             });
@@ -63,14 +63,14 @@ class LegacyRouteLoader extends Loader
         }
 
         $collection->add(
-            "homepage",
+            'homepage',
             '/',
             '/index.php',
             $this->trimPathToAccomodateVFS("$this->legacy_ssl_path/index.old.php")
         );
 
         $collection->add(
-            "homepage_full",
+            'homepage_full',
             '/index.php',
             '/index.php',
             $this->trimPathToAccomodateVFS("$this->legacy_ssl_path/index.old.php")
@@ -93,32 +93,32 @@ class LegacyRouteLoader extends Loader
         $shortFilename = basename($relativePathname, '.php');
         $routeName = sprintf(
             'app_legacy_%s',
-            ltrim(str_replace('/', '_', $legacyScriptFile->getRelativePath() . "/" . $shortFilename), "_")
+            ltrim(str_replace('/', '_', $legacyScriptFile->getRelativePath() . '/' . $shortFilename), '_')
         );
 
         $collection->add($routeName, $relativePathname, $relativePathname, $this->trimPathToAccomodateVFS($legacyScriptFile->getPathname()));
-        $collection->add($routeName . "doubleslash", "/{slash}/" . $relativePathname, $relativePathname, $this->trimPathToAccomodateVFS($legacyScriptFile->getPathname()), ["slash" => "\/?"]);
+        $collection->add($routeName . 'doubleslash', '/{slash}/' . $relativePathname, $relativePathname, $this->trimPathToAccomodateVFS($legacyScriptFile->getPathname()), ['slash' => '\/?']);
 
-        if ($shortFilename === "index") {
+        if ($shortFilename === 'index') {
             $collection->add(
-                $routeName . "index",
-                preg_replace("#index\.php#", "", $relativePathname),
+                $routeName . 'index',
+                preg_replace('#index\.php#', '', $relativePathname),
                 $relativePathname,
                 $this->trimPathToAccomodateVFS($legacyScriptFile->getPathname())
             );
         }
     }
 
-    private function addRouteForLegacyCommand(string $className, mixed $legacyScriptFile, LegacyRouteCollection $collection)
+    private function addRouteForLegacyCommand(string $className, mixed $legacyScriptFile, LegacyRouteCollection $collection): void
     {
         $relativePathname = $legacyScriptFile->getRelativePathname();
         $shortFilename = basename($relativePathname, '.php');
         $routeName = sprintf(
             'app_legacy_%s',
-            ltrim(str_replace('/', '_', $legacyScriptFile->getRelativePath() . "/" . $shortFilename), "_")
+            ltrim(str_replace('/', '_', $legacyScriptFile->getRelativePath() . '/' . $shortFilename), '_')
         );
 
-        $collection->addRouteWithSymfonyContainer($routeName, $relativePathname, $className);
-        $collection->addRouteWithSymfonyContainer($routeName . "doubleslash", "/{slash}/" . $relativePathname, $className);
+        $collection->addRouteWithSymfonyContainer($routeName, $relativePathname, $relativePathname, $className);
+        $collection->addRouteWithSymfonyContainer($routeName . 'doubleslash', '/{slash}/' . $relativePathname, $relativePathname, $className);
     }
 }
