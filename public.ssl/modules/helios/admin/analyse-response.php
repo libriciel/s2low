@@ -44,3 +44,4 @@ ob_end_clean();
 $_SESSION['error'] .= "<br/>" . nl2br($message);
 
 header("Location: responses-helios-error.php");
+exit();

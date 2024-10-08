@@ -27,3 +27,4 @@ if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', "helios", false, $c
 }
 
 header("Location: helios_transac_show.php?id=$id");
+exit();

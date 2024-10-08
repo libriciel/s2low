@@ -93,7 +93,9 @@ try {
 if (count($all_transaction_id) == 1) {
     $_SESSION["error"] = "La signature a été enregistrée";
     header("Location:  " . Helpers::getLink("/modules/actes/actes_transac_show.php?id={$all_transaction_id[0]}"));
+    exit();
 } else {
     $_SESSION["error"] = "Les signatures ont été enregistrées";
     header("Location:  " . Helpers::getLink("/modules/actes/index.php"));
+    exit();
 }
