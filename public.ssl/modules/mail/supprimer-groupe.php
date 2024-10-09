@@ -32,3 +32,4 @@ $groupe->delete();
 
 $_SESSION['last_message'] = "Le groupe $name a été supprimé";
 header("Location: index.php?command=annuaire");
+exit();

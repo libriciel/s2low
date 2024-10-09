@@ -33,3 +33,4 @@ $annuaire->import($uploader);
 $_SESSION['last_annuaire'] = $annuaire;
 
 header("Location: import_annuaire_result.php");
+exit();

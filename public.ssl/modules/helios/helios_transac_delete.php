@@ -25,3 +25,4 @@ if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module_name, null
 
 $_SESSION['error'] = $msg;
 header("Location: index.php");
+exit();

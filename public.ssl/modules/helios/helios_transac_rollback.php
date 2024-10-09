@@ -36,3 +36,4 @@ $workerScript->putJobByQueueName(HeliosAnalyseFichierAEnvoyerWorker::QUEUE_NAME,
 
 $_SESSION['error'] = $message;
 header("Location: helios_transac_show.php?id=$id");
+exit();

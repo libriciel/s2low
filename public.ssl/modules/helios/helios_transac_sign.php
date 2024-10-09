@@ -71,6 +71,7 @@ for ($i = 1; $i <= $nb_signature; $i++) {
     if ($trans->get('last_status_id') != 13) {
         $_SESSION["error"] = "Le fichier PES ne peut plus être signé à ce moment-là (status : " . $trans->get('last_status_id') . ")";
         header("Location:  " . Helpers::getLink("/modules/helios/helios_transac_show.php?id=$id"));
+        exit();
     }
 
 
@@ -121,7 +122,9 @@ for ($i = 1; $i <= $nb_signature; $i++) {
 if ($nb_signature > 1) {
     $_SESSION["error"] = "Les signatures ont été enregistrées";
     header("Location:  " . Helpers::getLink("/modules/helios/index.php"));
+    exit();
 } else {
     $_SESSION["error"] = "La signature a été enregistrée";
     header("Location:  " . Helpers::getLink("/modules/helios/helios_transac_show.php?id=$id"));
+    exit();
 }

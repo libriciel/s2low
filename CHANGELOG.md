@@ -11,6 +11,7 @@
 
 - Corriger des paginations dans admin_authorities.php #1218
 - Supprimer les headers en doublon #1221
+- Corriger les redirections #1222
 
 ## 5.0.43 - 2024-09-18
 

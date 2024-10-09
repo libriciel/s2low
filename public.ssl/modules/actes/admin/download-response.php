@@ -23,4 +23,5 @@ try {
 } catch (Exception $e) {
     $_SESSION['error'] = $e->getMessage();
     header("Location: responses-actes-error.php");
+    exit();
 }
