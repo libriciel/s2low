@@ -17,24 +17,15 @@ class Initialisation
     public const DROITSACTES = ['CS','TT'];
     public const MODULENAMEHELIOS = 'helios';
     public const MODULENAMEMAIL = 'mail';
-    private UserSQL $userSQL;
-    private ModuleSQL $moduleSQL;
-    private AuthoritySQL $authoritySQL;
-    private GroupSQL $groupSQL;
 
     public function __construct(
-        protected ObjectInstancier $objectInstancier,
-        protected string $html,
-        protected JSONoutput $jsonOutput,
-        protected SQLQuery $sqlQuery,
-        protected FrontController $frontController,
-        protected Droit $droit,
-        protected S2lowRedirect $s2lowRedirect
+        private readonly ModuleSQL $moduleSQL,
+        private readonly UserSQL $userSQL,
+        private readonly AuthoritySQL $authoritySQL,
+        private readonly GroupSQL $groupSQL,
+        private readonly Droit $droit,
+        private readonly S2lowRedirect $s2lowRedirect
     ) {
-        $this->moduleSQL = new ModuleSQL($this->sqlQuery);
-        $this->userSQL = new UserSQL($this->sqlQuery);
-        $this->authoritySQL = new AuthoritySQL($this->sqlQuery);
-        $this->groupSQL = new GroupSQL($this->sqlQuery);
     }
 
     /**

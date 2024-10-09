@@ -45,7 +45,7 @@ if (empty($authorityGroup->getInfo($id))) {
 }
 
 if (!$siren->isValid()) {
-    $_SESSION['error'] = "Le siren $siren->getValue() ne semble  pas valide.";
+    $_SESSION['error'] = 'Le siren ' . $siren->getValue() . ' ne semble  pas valide.';
     header('Location: ' . Helpers::getLink("/admin/groups/admin_group_edit.php?id=$id"));
     exit;
 }

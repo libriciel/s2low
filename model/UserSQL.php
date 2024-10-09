@@ -28,7 +28,7 @@ class UserSQL extends SQL
         return $name ? "$givenname $name" : $login;
     }
 
-    public function getInfo($id)
+    public function getInfo($id): array
     {
         if (!$id) {
             return array();
