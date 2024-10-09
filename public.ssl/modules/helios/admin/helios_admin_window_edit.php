@@ -102,19 +102,22 @@ if (empty($start_date) && $mod) {
     $start_hour = date('H:i:s', Helpers::getTimestampFromBDDDate($zeWin->get("window_start_date")));
 }
 
-$end_date = Helpers::getFromSession("window_end_date");
-$end_hour = Helpers::getFromSession("window_end_hour");
+$end_date = Helpers::getFromSession('window_end_date');
+$end_hour = Helpers::getFromSession('window_end_hour');
 if (empty($end_date) && $mod) {
     $end_date = date('Y-m-d', Helpers::getTimestampFromBDDDate($zeWin->get("window_end_date")));
     $end_hour = date('H:i:s', Helpers::getTimestampFromBDDDate($zeWin->get("window_end_date")));
 }
+
+$html .= "<p>$start_date</p>";
+$html .= "<p>$end_date</p>";
 
 // Début de la fenêtre
 $html .= "<div class=\"form-group\">\n";
 $html .= "<label class=\"col-md-4 control-label\">Début de la fenêtre</label>\n";
 $html .= "<div class=\"col-md-8\">\n";
 $html .= "<span class=\"form-inline\">";
-$html .= (new DatePicker("window_start_date", "", "form-inline"))->show();
+$html .= (new DatePicker("window_start_date", $start_date, "form-inline"))->show();
 $html .= "<input class=\"timepicker form-inline\" href=\"#timepicker\" id=\"window_start_hour\" name=\"window_start_hour\"></input>";
 $html .= "<script type=\"text/javascript\">\n $(document).ready(function(){ $('#window_start_hour').timepicker({timeFormat: 'HH:mm:ss',defaultTime: '$start_hour'}); });</script>";
 $html .= "</span>\n";
@@ -126,7 +129,7 @@ $html .= "<div class=\"form-group\">\n";
 $html .= "    <label class=\"col-md-4 control-label\">Fin de la fenêtre</label>\n";
 $html .= "    <div class=\"col-md-8\">\n";
 $html .= "<span class=\"form-inline\">";
-$html .= (new DatePicker("window_end_date", "", "form-inline"))->show();
+$html .= (new DatePicker("window_end_date", $end_date, "form-inline"))->show();
 $html .= "<input class=\"timepicker form-inline\" href=\"#timepicker\" id=\"window_end_hour\" name=\"window_end_hour\" ></input>";
 $html .= "<script type=\"text/javascript\">\n $(document).ready(function(){ $('#window_end_hour').timepicker({timeFormat: 'HH:mm:ss',defaultTime: '$end_hour'}); });</script>";
 $html .= "</span>\n";
