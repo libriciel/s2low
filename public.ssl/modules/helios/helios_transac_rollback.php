@@ -1,39 +1,47 @@
 <?php
 
 use S2low\Services\Helios\HeliosAnalyseFichierAEnvoyerWorker;
+use S2lowLegacy\Class\Droit;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\Recuperateur;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-require_once(dirname(__FILE__) . "/../../../init/init-www-helios.php");
+/** @var Initialisation $initialisation */
+/** @var \S2lowLegacy\Class\Droit $droit */
+/** @var HeliosTransactionsSQL $transactionSQL */
+/** @var WorkerScript $workerScript */
 
-if (! $droit->isSuperAdmin($userInfo)) {
-    header("Location: index.php");
-    exit;
+[$initialisation,$droit,$transactionSQL,$workerScript] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,Droit::class,HeliosTransactionsSQL::class,WorkerScript::class]);
+
+$initData = $initialisation->doInit();
+$initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
+
+if (! $droit->isSuperAdmin($initData->userInfo)) {
+    $_SESSION['error'] = "Réservé au super admin";
+    header('Location: index.php');
+    exit_wrapper();
 }
 $recuperateur = new Recuperateur($_POST);
 
 $id = $recuperateur->getInt('id');
-
-$transactionSQL = new HeliosTransactionsSQL($sqlQuery);
-
 $transactionInfo = $transactionSQL->getInfo($id);
 
 $message = "La transaction $id est de nouveau à l'état posté.";
 
 $transactionSQL->updateStatus($id, HeliosTransactionsSQL::POSTE, $message);
-$transactionSQL->setInfoFromPESAller($id, array(
+$transactionSQL->setInfoFromPESAller($id, [
     'nom_fic' => null,
     'cod_col' => null,
     'cod_bud' => null,
     'id_post' => null
-));
+]);
 
-/** @var WorkerScript $workerScript */
-$workerScript = $objectInstancier->get(WorkerScript::class);
 $workerScript->putJobByQueueName(HeliosAnalyseFichierAEnvoyerWorker::QUEUE_NAME, $id);
 
 
 $_SESSION['error'] = $message;
-header("Location: helios_transac_show.php?id=$id");
-exit();
+header_wrapper("Location: helios_transac_show.php?id=$id");
+exit_wrapper();

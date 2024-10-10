@@ -4,60 +4,65 @@ namespace S2low\Controller;
 
 use Exception;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
+use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Lib\PesAller;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HeliosAdminController extends AbstractController
 {
-    /**
-     * @var \S2lowLegacy\Model\HeliosTransactionsSQL
-     */
     private HeliosTransactionsSQL $heliosTransactionsSQL;
+    private Initialisation $initialisation;
+    private string $pAppli;
+    private MailerSymfonyFactory $mailerSymfonyFactory;
 
     public function __construct(
         HeliosTransactionsSQL $heliosTransactionsSQL,
         MailerSymfonyFactory $mailerSymfonyFactory,
-        string $helios_ftp_p_appli
+        string $helios_ftp_p_appli,
+        Initialisation $initialisation
     ) {
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
         $this->mailerSymfonyFactory = $mailerSymfonyFactory;
         $this->pAppli = $helios_ftp_p_appli;
+        $this->initialisation = $initialisation;
     }
 
     /**
      * @Route("/modules/helios/admin/transmis-non-acquitte-by-mail.php",name="app_modules_helios_admin_transmis_non_acquitte_by_mail")
      * @throws Exception
      */
-    public function transmisNonAcquitteParMail(): \Symfony\Component\HttpFoundation\RedirectResponse
+    public function transmisNonAcquitteParMail(): RedirectResponse
     {
-        require_once(__DIR__ . '/../../init/init-www-helios.php');
+        $initData = $this->initialisation->doInit();
+        $this->initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
 
-        if ($userInfo['role'] != 'SADM') {
-            $_SESSION["error"] = "Super admin only !";
+        if ($initData->userInfo['role'] != 'SADM') {
+            $_SESSION['error'] = 'Super admin only !';
             return parent::redirect(WEBSITE);
         }
 
         $transactions_list_Gateway = $this->heliosTransactionsSQL->getNonAcquitteWithPasstransStatus(
             false,
-            date("Y-m-d")
+            date('Y-m-d')
         );
         $transactions_list_Passtrans = $this->heliosTransactionsSQL->getNonAcquitteWithPasstransStatus(
             true,
-            date("Y-m-d")
+            date('Y-m-d')
         );
 
 
         if (count($transactions_list_Gateway) && count($transactions_list_Passtrans)) {
-            $subject =  "Aucune transaction n est reste en transmis";
+            $subject = 'Aucune transaction n est reste en transmis';
         } else {
             $transactionsTransmises = count($transactions_list_Gateway) + count($transactions_list_Passtrans);
             $subject = $transactionsTransmises . " transactions sont restees a l'etat transmis.";
         }
 
         ob_start();
-        $output = fopen("php://output", "w");
+        $output = fopen('php://output', 'w');
 
         echo "Gateway \n";
         foreach ($transactions_list_Gateway as $line) {
@@ -92,10 +97,10 @@ class HeliosAdminController extends AbstractController
         ob_end_clean();
 
         $mail = $this->mailerSymfonyFactory->getInstance();
-        $mail->addRecipient($userInfo['email']);
+        $mail->addRecipient($initData->userInfo['email']);
         $mail->sendMail($subject, $content);
 
-        $_SESSION['error'] = "Mail envoye a {$userInfo['email']}";
-        return parent::redirect("transmis-non-acquitte.php");
+        $_SESSION['error'] = "Mail envoye a {$initData->userInfo['email']}";
+        return parent::redirect('transmis-non-acquitte.php');
     }
 }

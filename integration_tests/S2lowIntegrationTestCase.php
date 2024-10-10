@@ -10,7 +10,7 @@ use S2lowLegacy\Lib\SQLQuery;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class S2lowIntegrationTest extends WebTestCase
+class S2lowIntegrationTestCase extends WebTestCase
 {
     /** @var SQLQuery */
     protected SQLQuery $sqlQuery;
@@ -31,23 +31,22 @@ class S2lowIntegrationTest extends WebTestCase
      */
     protected function setUp(): void
     {
-        parent::setUp();
-        LegacyObjectsManager::resetObjectInstancier();
-        $_SESSION = [];
-        ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());    //DatabasePool utilise ObjectInstancier
-        $this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);            // On en crée un le temps de MàJ la BDD
-        $this->sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST); // On le ressettera ensuite
-        $this->sqlQuery->setDatabaseHost(DB_HOST_TEST);
-        ObjectInstancierFactory::getObjetInstancier()->set(SQLQuery::class, $this->sqlQuery);
-        $this->pemCertificateFactory = new PemCertificateFactory();
-        $this->sqlQuery->exec(file_get_contents(__DIR__ . '/fixtures/s2low-test-init.sql'));
+        $this->setUpWithoutDeletingObjectInstancier();
         ObjectInstancierFactory::resetObjectInstancier();    //DatabasePool utilise ObjectInstancier
+    }
+
+    protected function tearDown(): void
+    {
+        // Evite le message postgres phpunit désolé, trop de clients sont déjà connectés
+        // TODO : ce disconnect serait-il nécessaire ailleurs ?
+        $this->sqlQuery->disconnect();
+        parent::tearDown();
     }
 
     /**
      * @throws \Exception
      */
-    public function setUpUser(string $certificatPem, string $certificatHash): void
+    public function setUpUserInDB(string $certificatPem, string $certificatHash): void
     {
         $sql = "INSERT INTO users VALUES (1, 'eric@sigmalis.com', 'test_subject', 'test_issuer', 'Pommateau', 'Eric', NULL, 'SADM', 1, 1, ?, NULL, NULL, NULL, 1, NULL, NULL, ?, ?)";
         $this->sqlQuery->query($sql, [$certificatPem, $certificatPem, $certificatHash]);
@@ -65,7 +64,7 @@ class S2lowIntegrationTest extends WebTestCase
      * @param string $certificatSansBegin
      * @return \Symfony\Bundle\FrameworkBundle\KernelBrowser
      */
-    protected function setUpClient(string $certificatPem, string $certificatSansBegin): KernelBrowser
+    protected function setUpUserCertInServer(string $certificatPem, string $certificatSansBegin): KernelBrowser
     {
         $serverVariables = [
             'SSL_CLIENT_VERIFY' => 'ssl_client_verify',
@@ -78,9 +77,59 @@ class S2lowIntegrationTest extends WebTestCase
         foreach ($serverVariables as $key => $value) {
             $_SERVER[$key] = $value;         // Le client Symfony ne set pas la session, utilisée par l'appli...
         }
+        self::ensureKernelShutdown();
         return static::createClient(
             [],
             $serverVariables
         );
+    }
+
+    /**
+     * @return SQLQuery
+     */
+    public function getSQLQuery(): SQLQuery
+    {
+        return $this->sqlQuery;
+    }
+
+    /**
+     * @return \Symfony\Bundle\FrameworkBundle\KernelBrowser
+     * @throws \Exception
+     */
+    protected function setUpUser(): \Symfony\Bundle\FrameworkBundle\KernelBrowser
+    {
+        $certificatePem = $this->pemCertificateFactory->getFromString(
+            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
+        );
+
+        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
+        $client = $this->setUpUserCertInServer(
+            $certificatePem->getContent(),
+            $certificatePem->getContentStrippedFromBegin()
+        );
+
+        ObjectInstancierFactory::resetObjectInstancier();
+        return $client;
+    }
+
+    /**
+     * @return void
+     */
+    protected function setUpWithoutDeletingObjectInstancier(): void
+    {
+        parent::setUp();
+        LegacyObjectsManager::resetObjectInstancier();
+        $_SESSION = [];
+        $_GET = [];
+        $_POST = [];
+        //$_SERVER = [];
+        $_SERVER['QUERY_STRING'] = '';
+        ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());    //DatabasePool utilise ObjectInstancier
+        $this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);            // On en crée un le temps de MàJ la BDD
+        $this->sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST); // On le ressettera ensuite
+        $this->sqlQuery->setDatabaseHost(DB_HOST_TEST);
+        ObjectInstancierFactory::getObjetInstancier()->set(SQLQuery::class, $this->sqlQuery);
+        $this->pemCertificateFactory = new PemCertificateFactory();
+        $this->sqlQuery->exec(file_get_contents(__DIR__ . '/fixtures/s2low-test-init.sql'));
     }
 }

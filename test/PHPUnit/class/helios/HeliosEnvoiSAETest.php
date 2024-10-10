@@ -12,6 +12,11 @@ class HeliosEnvoiSAETest extends S2lowTestCase
     use HeliosUtilitiesTestTrait;
     use PastellConfigurationTestTrait;
 
+    public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
+    {
+        return $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+    }
+
     /**
      * @return string
      * @throws Exception

@@ -3,14 +3,24 @@
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\PagerHTML;
 use S2lowLegacy\Lib\FancyDate;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-require_once(__DIR__ . '/../../init/init-www-helios.php');
+/** @var Initialisation $initialisation */
+/** @var ActesTransactionsSQL $actesTransactionsSQL */
+/** @var HeliosTransactionsSQL $heliosTransactionsSQL */
 
-if ($userInfo['role'] != 'SADM') {
+[$initialisation,$actesTransactionsSQL,$heliosTransactionsSQL ] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,ActesTransactionsSQL::class,HeliosTransactionsSQL::class]);
+
+$initData = $initialisation->doInit();
+$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
+
+if ($initData->userInfo['role'] != 'SADM') {
     $_SESSION['error'] = 'Super admin only !';
     header('Location: ' . Helpers::getLink('connexion-status'));
     exit();
@@ -18,10 +28,8 @@ if ($userInfo['role'] != 'SADM') {
 
 //nombre de transaction/mois
 
-$actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
 $nb_transactions_actes_list = $actesTransactionsSQL->getNbTransactionByMonth();
 
-$heliosTransactionsSQL = new HeliosTransactionsSQL($sqlQuery);
 $nb_transactions_helios_list = $heliosTransactionsSQL->getNbTransactionByMonth();
 
 
@@ -39,7 +47,7 @@ $doc->setTitle("Console d'administration");
 $doc->openContainer();
 
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
 $doc->closeSideBar();
 
 

@@ -8,105 +8,108 @@ use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\ModulePermission;
 use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Controller\ActesSAEController;
 use S2lowLegacy\Controller\LibersignController;
-use S2lowLegacy\Lib\FrontController;
-use S2lowLegacy\Lib\JSONoutput;
-use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\ObjectInstancierFactory;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\AuthoritySQL;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var Initialisation $initialisation */
+/** @var ActesTypePJSQL $actesTypePJSQL */
+/** @var SQLQuery $sqlQuery */
+/** @var ActesSAEController $actesSAEController */
+list($initialisation,$actesTypePJSQL, $sqlQuery,$actesSAEController,$libersignController) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, 'html', JSONoutput::class, SQLQuery::class, FrontController::class]
+        [Initialisation::class, ActesTypePJSQL::class, SQLQuery::class, ActesSAEController::class, LibersignController::class]
     );
 
-require_once(__DIR__ . "/../../../init/init-www-actes.php");
+$initData = $initialisation->doInit();
+$initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
 $loader = new FilesystemLoader(__DIR__ . '/../../../templates');
 $twig = new Environment($loader);
 
-$actesTypePJSQL = $objectInstancier->get(ActesTypePJSQL::class);
-
-$actionHtml = "";
+$actionHtml = '';
 
 // Instanciation du module courant
 $module = new Module();
-if (!$module->initByName("actes")) {
-    $_SESSION["error"] = "Erreur d'initialisation du module";
-    header("Location: " . WEBSITE_SSL);
-    exit();
+if (!$module->initByName('actes')) {
+    $_SESSION['error'] = "Erreur d'initialisation du module";
+    header_wrapper('Location: ' . WEBSITE_SSL);
+    exit_wrapper();
 }
 
 $me = new User();
 
 if (!$me->authenticate()) {
-    $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
-    exit();
+    $_SESSION['error'] = "Échec de l'authentification";
+    header('Location: ' . Helpers::getLink('connexion-status'));
+    exit_wrapper();
 }
 
-if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
-    $_SESSION["error"] = "Accès refusé";
-    header("Location: " . WEBSITE_SSL);
-    exit();
+if (!$module->isActive() || !$me->canAccess($module->get('name'))) {
+    $_SESSION['error'] = 'Accès refusé';
+    header('Location: ' . WEBSITE_SSL);
+    exit_wrapper();
 }
 
-$id = intval(Helpers :: getVarFromGet("id"));
+$id = intval(Helpers :: getVarFromGet('id'));
 if (empty($id)) {
-    $_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
-    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
-    exit();
+    $_SESSION['error'] = "Pas d'identifiant de transaction spécifié";
+    header_wrapper('Location: ' . Helpers::getLink('/modules/actes/index.php'));
+    exit_wrapper();
 }
 
 $trans = new ActesTransaction();
 $trans->setId($id);
 if (! $trans->init()) {
-    $_SESSION["error"] = "Erreur d'initialisation de la transaction.";
-    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
-    exit();
+    $_SESSION['error'] = "Erreur d'initialisation de la transaction.";
+    header('Location: ' . Helpers::getLink('/modules/actes/index.php'));
+    exit_wrapper();
 }
 
-$envelope = new ActesEnvelope($trans->get("envelope_id"));
+$envelope = new ActesEnvelope($trans->get('envelope_id'));
 $envelope->init();
 
-$owner = new User($envelope->get("user_id"));
+$owner = new User($envelope->get('user_id'));
 $owner->init();
 
 
 $serviceUser = new ServiceUser(DatabasePool::getInstance());
-$permission = new ModulePermission($serviceUser, "actes");
+$permission = new ModulePermission($serviceUser, 'actes');
 
 if (! $permission->canView($me, $owner)) {
-    $_SESSION["error"] = "Accès refusé";
-    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
-    exit();
+    $_SESSION['error'] = 'Accès refusé';
+    header('Location: ' . Helpers::getLink('/modules/actes/index.php'));
+    exit_wrapper();
 }
 
-$myAuthority = new Authority($me->get("authority_id"));
+$myAuthority = new Authority($me->get('authority_id'));
 $transNatures = ActesTransaction :: getTransactionNaturesIdDescr();
 
 $status_list = ActesTransaction :: getStatusList();
 $workflow = $trans->fetchWorkflow();
 
 
-$transactionTypes = $trans->get("transactionTypes") ;
+$transactionTypes = $trans->get('transactionTypes') ;
 $transStatus = $trans->getCurrentStatus();
 
-$authoritySQL = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(AuthoritySQL::class);
+$authoritySQL = ObjectInstancierFactory::getObjetInstancier()->get(AuthoritySQL::class);
 $authority_info = $authoritySQL->getInfo($trans->get('authority_id'));
 
 $doc = new HTMLLayout();
 
 
-$doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jquery.js") . "\"></script>");
-$doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jqueryui.js") . "\"></script>");
+$doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink('/jsmodules/jquery.js') . "\"></script>");
+$doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink('/jsmodules/jqueryui.js') . "\"></script>");
 
 
 $doc->setTitle("Tedetis : visualisation d'une transaction");
@@ -122,9 +125,9 @@ $html = "<p id=\"back-transaction-btn\"><a href=\"" . Helpers::getLink("/modules
 $html .= "<h2>Détails de la transaction</h2>\n";
 $html .= "<div class=\"data_table\">\n";
 $html .= "<table class=\"data table table-bordered\">\n";
-$html .= $doc->getHTMLArrayline("Type de transaction", $transactionTypes[$trans->get("type")]);
+$html .= $doc->getHTMLArrayline('Type de transaction', $transactionTypes[$trans->get('type')]);
 if ($trans->get("type_reponse")) {
-    $html .= $doc->getHTMLArrayline("Type de réponse", ActesTransaction::getTypeReponse($trans->get("type"), $trans->get("type_reponse")));
+    $html .= $doc->getHTMLArrayline('Type de réponse', ActesTransaction::getTypeReponse($trans->get("type"), $trans->get("type_reponse")));
 }
 
 if ($me->isSuper()) {
@@ -554,7 +557,6 @@ if ($me->isSuper() && $transStatus == ActesStatusSQL::STATUS_ENVOYE_AU_SAE) {
 }
 
 if ($me->isSuper()) {
-    $actesSAEController = $objectInstancier->get(ActesSAEController::class);
     $status_cible_list = $actesSAEController->getActionPossible($transStatus);
     foreach ($status_cible_list as $new_status_id) {
         $libelle_status = ActesStatusSQL::getStatusLibelle($new_status_id);
@@ -660,7 +662,6 @@ if ($transStatus == 18 && $me->checkDroit("actes", "CS")) {
 
 
     $tab_included_files = array_slice($tab_included_files, 0, 1);
-    $libersignController = new LibersignController($objectInstancier);
 
 
     $html .= "<h2>Signature de l'acte</h2>";

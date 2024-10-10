@@ -1,12 +1,21 @@
 <?php
 
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\PagerHTML;
+use S2lowLegacy\Lib\SQLQuery;
 
-require_once(__DIR__ . '/../../../init/init-www-helios.php');
+/** @var Initialisation $initialisation */
 
-if ($userInfo['role'] != 'SADM') {
+[$initialisation,$sqlQuery ] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,SQLQuery::class]);
+
+$initData = $initialisation->doInit();
+$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
+
+if ($initData->userInfo['role'] != 'SADM') {
     $_SESSION['error'] = 'Super admin only !';
     header('Location: ' . WEBSITE);
     exit();
@@ -38,7 +47,7 @@ $doc->setTitle('Tedetis : module helios statistique');
 $doc->openContainer();
 
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
 
 $doc->closeSideBar();
 

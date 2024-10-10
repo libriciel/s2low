@@ -19,6 +19,10 @@ class PesAllerStorageTest extends S2lowTestCase
 
     private const SHA1_EXEMPLE = 'ab3321d34d3fb32b52332befa534c9854fff677b';
 
+    public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
+    {
+        return $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+    }
     /**
      * @param bool $fileExistsOnCloud
      * @return string

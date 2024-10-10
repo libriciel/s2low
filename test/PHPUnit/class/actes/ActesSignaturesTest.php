@@ -52,4 +52,9 @@ class ActesSignaturesTest extends S2lowTestCase
         $tmpFolder->delete($tmp_dir);
         $tmpFolder->delete($result_dir);
     }
+
+    public function getActesTransactionsSQL(): ActesTransactionsSQL
+    {
+        return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+    }
 }

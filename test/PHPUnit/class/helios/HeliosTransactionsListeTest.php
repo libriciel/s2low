@@ -1,11 +1,16 @@
 <?php
 
 use S2lowLegacy\Class\helios\HeliosTransactionsListe;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 class HeliosTransactionsListeTest extends S2lowTestCase
 {
     use HeliosUtilitiesTestTrait;
 
+    public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
+    {
+        return $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+    }
     public function heliosTransactionListe(): HeliosTransactionsListe
     {
         return $this->getObjectInstancier()->get(HeliosTransactionsListe::class);

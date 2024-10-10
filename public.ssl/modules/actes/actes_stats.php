@@ -1,26 +1,34 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesStatistiques;
+use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
 
-require_once(__DIR__ . "/../../../init/init-www-actes.php");
+/** @var Initialisation $initialisation */
+/** @var ActesStatistiques $actesStatistiques */
+/** @var Droit $droit */
+[$initialisation,$actesStatistiques,$droit ] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,ActesStatistiques::class, Droit::class]);
 
-$actesStatistiques = new ActesStatistiques($sqlQuery);
+$initData = $initialisation->doInit();
+$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
 
-$title = "Statistiques de transmission des enveloppes ";
-if ($droit->isSuperAdmin($userInfo)) {
+$title = 'Statistiques de transmission des enveloppes ';
+if ($droit->isSuperAdmin($initData->userInfo)) {
     $title .= " pour l'ensemble des collectivités";
-} elseif ($droit->isGroupAdmin($userInfo)) {
-    $title .= "pour le groupe " . $groupeInfo["name"];
-    $actesStatistiques->setGroup($userInfo['authority_group_id']);
-} elseif ($droit->isAuthorityAdmin($userInfo)) {
-    $title .= " pour la collectivité " . $authorityInfo["name"];
-    $actesStatistiques->setAuthority($userInfo['authority_id']);
+} elseif ($droit->isGroupAdmin($initData->userInfo)) {
+    $title .= 'pour le groupe ' . $initData->groupeInfo['name'];
+    $actesStatistiques->setGroup($initData->userInfo['authority_group_id']);
+} elseif ($droit->isAuthorityAdmin($initData->userInfo)) {
+    $title .= ' pour la collectivité ' . $initData->authorityInfo['name'];
+    $actesStatistiques->setAuthority($initData->userInfo['authority_id']);
 } else {
-    $title .= " pour l'utilisateur " . $userInfo['pretty_name'];
-    $actesStatistiques->setUser($connexion->getId());
+    $title .= " pour l'utilisateur " . $initData->userInfo['pretty_name'];
+    $actesStatistiques->setUser($initData->connexion->getId());
 }
 
 $statInfo = $actesStatistiques->getInfo();
@@ -29,16 +37,16 @@ $statInfo = $actesStatistiques->getInfo();
 $currentMonth = date('Y-m-01 00:00:00');
 $currentYear = date('Y-01-01 00:00:00');
 
-$filter = array();
+$filter = [];
 
 $menuHTML = new MenuHTML();
 
 
 $doc = new HTMLLayout();
-$doc->setTitle("Statistiques - ACTES - S²low");
+$doc->setTitle('Statistiques - ACTES - S²low');
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 
@@ -49,9 +57,9 @@ ob_start();
             <dl>
                 <?php
                 foreach (
-                    array(date("Y-m-01") => "Depuis le début du mois",
-                    date("Y-01-01") =>
-                    "Depuis le début de l'année", "1970-01-01" => "En totalité") as $date => $titre
+                    [date('Y-m-01') => 'Depuis le début du mois',
+                    date('Y-01-01') =>
+                    "Depuis le début de l'année", '1970-01-01' => 'En totalité'] as $date => $titre
                 ) :
                     ?>
                     <dt><?php echo $titre ?>&nbsp;:</dt>

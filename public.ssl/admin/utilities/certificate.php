@@ -1,23 +1,31 @@
 <?php
 
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\Recuperateur;
+use S2lowLegacy\Lib\SQLQuery;
 
-require_once(__DIR__ . "/../../../init/init-www.php");
+/** @var Initialisation $initialisation */
+/** @var SQLQuery $sqlQuery */
+[$initialisation, $sqlQuery] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, SQLQuery::class]);
+
+$initData = $initialisation->doInit();
 
 
 $me = new User();
 
 if (!$me->authenticate()) {
-    $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    $_SESSION['error'] = "Échec de l'authentification";
+    header('Location: ' . Helpers::getLink('connexion-status'));
     exit();
 }
 
 if (!$me->isSuper()) {
-    $_SESSION["error"] = "Accès refusé";
-    header("Location: " . WEBSITE_SSL);
+    $_SESSION['error'] = 'Accès refusé';
+    header('Location: ' . WEBSITE_SSL);
     exit();
 }
 
@@ -35,12 +43,12 @@ if ($type == 'rgs') {
 }
 
 if (!file_exists($file)) {
-    $_SESSION["error"] = "Accès refusé";
-    header("Location: certitificate_list.php");
+    $_SESSION['error'] = 'Accès refusé';
+    header('Location: certitificate_list.php');
     exit();
 }
 
-header("Content-type: text/plain");
-header("Content-disposition: attachment; filename=$name");
+header_wrapper('Content-type: text/plain');
+header_wrapper("Content-disposition: attachment; filename=$name");
 
 readfile($file);

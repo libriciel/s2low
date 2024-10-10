@@ -75,9 +75,10 @@ class LegacyObjectsManager
             ->addFrom(TDT_FROM_EMAIL)
             ->addTo(EMAIL_ADMIN_TECHNIQUE);
 
-        $mailHandler = new SymfonyMailerHandler($mailer, $email, Logger::CRITICAL);
-
-        $logger->pushHandler($mailHandler);
+        if (!TESTING_ENVIRONNEMENT) {
+            $mailHandler = new SymfonyMailerHandler($mailer, $email, Logger::CRITICAL);
+            $logger->pushHandler($mailHandler);
+        }
 
 
         $objectInstancier->set(Logger::class, $logger);

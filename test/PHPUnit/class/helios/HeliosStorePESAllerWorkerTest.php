@@ -9,13 +9,17 @@ use HeliosUtilitiesTestTrait;
 use S2lowLegacy\Class\CloudStorage;
 use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\helios\HeliosStorePESAllerWorker;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
 use S2lowTestCase;
 
 class HeliosStorePESAllerWorkerTest extends S2lowTestCase
 {
     use HeliosUtilitiesTestTrait;
 
-
+    public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
+    {
+        return $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+    }
     public function testGetAllId()
     {
         $transaction_id = $this->createTransaction();

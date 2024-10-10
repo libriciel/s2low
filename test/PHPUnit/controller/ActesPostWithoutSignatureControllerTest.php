@@ -82,4 +82,9 @@ class ActesPostWithoutSignatureControllerTest extends S2lowTestCase
             );
         }
     }
+
+    protected function getActesTransactionsSQL(): ActesTransactionsSQL
+    {
+        return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+    }
 }

@@ -17,7 +17,7 @@ class ActesTransactionsSQLTest extends S2lowTestCase
     /**
      * @return ActesTransactionsSQL
      */
-    private function getActesTransactionsSQL()
+    protected function getActesTransactionsSQL(): ActesTransactionsSQL
     {
         return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
     }

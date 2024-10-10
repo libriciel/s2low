@@ -1,14 +1,24 @@
 <?php
 
+use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\S2lowRedirect;
 
-require_once(dirname(__FILE__) . "/../../../../init/init-www-actes.php");
+/** @var Initialisation $initialisation */
+/** @var Droit $droit */
+/** @var S2lowRedirect $s2lowRedirect */
+[$initialisation,$droit,$s2lowRedirect] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, Droit::class,S2lowRedirect::class]);
 
-if (! $droit->isSuperAdmin($userInfo)) {
-    $objectInstancier->get(S2lowRedirect::class)->redirect("/", "Accès refusé");
+$initData = $initialisation->doInit();
+$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+
+if (! $droit->isSuperAdmin($initData->userInfo)) {
+    $s2lowRedirect->redirect('/', 'Accès refusé');
 }
 
 
@@ -16,11 +26,11 @@ $menuHTML = new MenuHTML();
 
 $doc = new HTMLLayout();
 
-$doc->setTitle("Utilitaires module ACTES");
+$doc->setTitle('Utilitaires module ACTES');
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 

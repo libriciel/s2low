@@ -208,4 +208,9 @@ class ActesArchiveControlerTest extends S2lowTestCase
         $actesRetriever->method('getPath')->willReturn(false);
         $this->getObjectInstancier()->set(ActesRetriever::class, $actesRetriever);
     }
+
+    public function getActesTransactionsSQL(): ActesTransactionsSQL
+    {
+        return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+    }
 }

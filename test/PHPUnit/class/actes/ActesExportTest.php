@@ -123,4 +123,9 @@ class ActesExportTest extends S2lowTestCase
         $log_records = $this->getLogRecords();
         $this->assertEquals("Aucune transaction ne correspond aux critères", $log_records[2]['message']);
     }
+
+    public function getActesTransactionsSQL(): ActesTransactionsSQL
+    {
+        return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+    }
 }

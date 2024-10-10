@@ -3,6 +3,7 @@
 use S2lowLegacy\Class\helios\HeliosAPIController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 class HeliosAPIControllerTest extends S2lowTestCase
 {
@@ -90,5 +91,10 @@ class HeliosAPIControllerTest extends S2lowTestCase
             __DIR__ . "/fixtures/nbTransactionPerAuthoritiesFailed.json",
             $data
         );
+    }
+
+    public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
+    {
+        return $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
     }
 }

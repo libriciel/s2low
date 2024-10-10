@@ -4,28 +4,56 @@ use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Controller\LibersignController;
+use S2lowLegacy\Model\ModuleSQL;
 
-require_once(__DIR__ . "/../../../init/init-www-actes.php");
+/** @var Initialisation $initialisation */
+/** @var ModuleSQL $moduleSQL */
+/** @var ActesTransactionsSQL $actesTransactionSQL */
+/** @var ActesIncludedFileSQL $actesIncludedFileSQL */
+/** @var LibersignController $libersignController */
+/** @var string $html */
 
-if (! $moduleSQL->hasDroit($moduleInfo['id'], $connexion->getId(), 'CS')) {
-    Helpers::returnAndExit(1, "Vous ne disposez pas du droit de signature.", Helpers::getLink("/modules/actes/index.php"));
+[
+        $initialisation,
+    $moduleSQL,
+    $actesTransactionSQL,
+    $actesIncludedFileSQL,
+    $libersignController,
+    $html
+] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(
+        [
+                    Initialisation::class,
+                ModuleSQL::class,
+                ActesTransactionsSQL::class,
+                ActesIncludedFileSQL::class,
+                LibersignController::class,
+                'html'
+            ]
+    );
+
+$initData = $initialisation->doInit();
+$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+
+if (! $moduleSQL->hasDroit($moduleData->moduleInfo['id'], $initData->connexion->getId(), 'CS')) {
+    Helpers::returnAndExit(1, 'Vous ne disposez pas du droit de signature.', Helpers::getLink('/modules/actes/index.php'));
 }
 
-$liste_id = Helpers::getVarFromPost("liste_id");
+$liste_id = Helpers::getVarFromPost('liste_id');
 
 if (!$liste_id) {
-    Helpers::returnAndExit(1, "Vous devez sélectionner au moins une transaction à signer.", Helpers::getLink("/modules/actes/index.php"));
+    Helpers::returnAndExit(1, "Vous devez sélectionner au moins une transaction à signer.", Helpers::getLink('/modules/actes/index.php'));
 }
 
-$actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);
-$actesIncludedFileSQL = new ActesIncludedFileSQL($sqlQuery);
 $transaction_list = array();
 
 foreach ($liste_id as $transaction_id) {
      $transactionInfo = $actesTransactionSQL->getInfo($transaction_id);
-    if ($transactionInfo['authority_id'] != $userInfo['authority_id']) {
+    if ($transactionInfo['authority_id'] != $initData->userInfo['authority_id']) {
         Helpers::returnAndExit(1, "Vous n'avez pas le droit de signature sur la transaciton n°{$transactionInfo['id']}", Helpers::getLink("/modules/actes/index.php"));
     }
 
@@ -40,7 +68,7 @@ $doc = new HTMLLayout();
 $doc->setTitle("Tedetis : Signature de plusieurs Actes");
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userInfo, $modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 
@@ -87,7 +115,6 @@ $html .= "<h3>Signature de l'acte</h3>";
 
 $id = 999;
 ob_start();
-$libersignController = new LibersignController($objectInstancier);
 $libersignController->displayLibersignJS();
 
 ?>

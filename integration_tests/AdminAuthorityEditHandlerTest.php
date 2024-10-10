@@ -10,7 +10,7 @@ use S2lowLegacy\Class\LegacyObjectsManager;
 /**
  *
  */
-class AdminAuthorityEditHandlerTest extends S2lowIntegrationTest
+class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
 {
     /**
      * @throws \Exception
@@ -21,9 +21,9 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTest
             file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
 
-        $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
+        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
 
-        $client = $this->setUpClient(
+        $client = $this->setUpUserCertInServer(
             $certificatePem->getContent(),
             $certificatePem->getContentStrippedFromBegin()
         );                                                           // 2/ Le client ne modifie pas la variable _SERVER
@@ -98,9 +98,9 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTest
             file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
 
-        $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
+        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
 
-        $client = $this->setUpClient(
+        $client = $this->setUpUserCertInServer(
             $certificatePem->getContent(),
             $certificatePem->getContentStrippedFromBegin()
         );                                                           // 2/ Le client ne modifie pas la variable _SERVER
@@ -178,9 +178,9 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTest
             file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
 
-        $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
+        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
 
-        $client = $this->setUpClient(
+        $client = $this->setUpUserCertInServer(
             $certificatePem->getContent(),
             $certificatePem->getContentStrippedFromBegin()
         );                                                           // 2/ Le client ne modifie pas la variable _SERVER
@@ -231,7 +231,7 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTest
         static::assertSame($expected, $authority->get('helios_use_passtrans'));
     }
 
-    public function heliosPasstrans()
+    public function heliosPasstrans(): iterable
     {
         // On créé la collectivité : helios_use_passtrans doit correspondre à la valeur
         // de la variable d'environnement

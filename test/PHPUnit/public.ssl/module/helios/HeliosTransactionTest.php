@@ -21,6 +21,11 @@ class HeliosTransactionTest extends S2lowTestCase
         $this->heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
     }
 
+    public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
+    {
+        return $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+    }
+
     /**
      * Lorsqu'il n'y a aucune transaction, on a 0 transactions pour un volume de 0
      * @return void

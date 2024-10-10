@@ -45,4 +45,9 @@ class ActesTransactionsCloserTest extends S2lowTestCase
         $status_info = $actesTransactionsSQL->getLastStatusInfo($recenteTransactionId);
         static::assertSame(ActesStatusSQL::STATUS_TRANSMIS, $status_info['status_id']);
     }
+
+    protected function getActesTransactionsSQL(): ActesTransactionsSQL
+    {
+        return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+    }
 }

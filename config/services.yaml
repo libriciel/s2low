@@ -234,6 +234,21 @@ services:
     autoconfigure: false
     public: false
 
+  S2lowLegacy\Class\Initialisation:
+    autowire: false
+    autoconfigure: false
+    public: false
+
+  S2lowLegacy\Class\InitData:
+     autowire: false
+     autoconfigure: false
+     public: false
+
+  S2lowLegacy\Class\ModuleData:
+    autowire: false
+    autoconfigure: false
+    public: false
+
   S2lowLegacy\Class\helios\HeliosFilesFactory:
     autowire: false
     autoconfigure: false

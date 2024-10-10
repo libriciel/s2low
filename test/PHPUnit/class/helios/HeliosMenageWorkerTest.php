@@ -23,6 +23,10 @@ class HeliosMenageWorkerTest extends S2lowTestCase
     private OpenStackSwiftWrapper $swift;
     private HeliosTransactionsSQL $transactionsSQL;
 
+    public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
+    {
+        return $this->transactionsSQL;
+    }
     /**
      * @throws Exception
      */

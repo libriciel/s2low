@@ -7,6 +7,8 @@ use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\Connexion;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\ModulePermission;
@@ -18,26 +20,31 @@ use S2lowLegacy\Class\WorkerScript;
 /** @var WorkerScript $workerScript */
 /** @var ActesScriptHelper $actesScriptHelper */
 /** @var ActesTransactionsSQL $actesTransactionsSQL */
-list($workerScript, $actesScriptHelper,$actesTransactionsSQL) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var \S2lowLegacy\Class\Initialisation $initialisation */
+list(
+    $workerScript,
+    $actesScriptHelper,
+    $actesTransactionsSQL,
+    $initialisation
+    ) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [WorkerScript::class,ActesScriptHelper::class,ActesTransactionsSQL::class]
+        [WorkerScript::class,ActesScriptHelper::class,ActesTransactionsSQL::class, Initialisation::class]
     );
 
-require_once(__DIR__ . "/../../../init/init-www-actes.php");
 
 $actionHtml = "";
 
 
 function return_error_api($error_message)
 {
-    $return_error = Helpers :: getVarFromGet("url_return") ?: WEBSITE_SSL;
-    header("Location:  $return_error");
-    exit;
+    $return_error = Helpers :: getVarFromGet('url_return') ?: WEBSITE_SSL;
+    header_wrapper("Location:  $return_error");
+    exit_wrapper();
 }
 
 // Instanciation du module courant
 $module = new Module();
-if (!$module->initByName("actes")) {
+if (!$module->initByName('actes')) {
     return_error_api("Erreur d'intialisation du module");
 }
 
@@ -48,8 +55,8 @@ if (!$me->authenticate()) {
     return_error_api("Échec de l'authentification");
 }
 
-if (!$module->isActive() || !$me->checkDroit($module->get("name"), 'TT')) {
-    return_error_api("Accès refusé");
+if (!$module->isActive() || !$me->checkDroit($module->get('name'), 'TT')) {
+    return_error_api('Accès refusé');
 }
 
 
@@ -75,14 +82,14 @@ foreach ($id_list as $id) {
         continue;
     }
 
-    $envelope = new ActesEnvelope($trans->get("envelope_id"));
+    $envelope = new ActesEnvelope($trans->get('envelope_id'));
     $envelope->init();
 
-    $owner = new User($envelope->get("user_id"));
+    $owner = new User($envelope->get('user_id'));
     $owner->init();
 
     $serviceUser = new ServiceUser(DatabasePool::getInstance());
-    $permission = new ModulePermission($serviceUser, "actes");
+    $permission = new ModulePermission($serviceUser, 'actes');
 
     if (! $permission->canView($me, $owner)) {
         continue;
@@ -104,6 +111,6 @@ foreach ($id_list as $id) {
     Log::newEntry(LOG_ISSUER_NAME, $msg4journal, 1, false, 'USER', "actes", false, $connexion->getId());
 }
 
-$return_ok = Helpers :: getVarFromGet("url_return");
+$return_ok = Helpers :: getVarFromGet('url_return');
 header("Location:  $return_ok");
-exit;
+exit_wrapper();

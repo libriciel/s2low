@@ -257,4 +257,9 @@ class ActesApiControllerTest extends S2lowTestCase
     {
         return '{"status_id":"' . $status . '","authority_id":"1","offset":"0","limit":"100","transactions":[{';
     }
+
+    public function getActesTransactionsSQL(): ActesTransactionsSQL
+    {
+        return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+    }
 }

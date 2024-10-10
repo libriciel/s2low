@@ -7,6 +7,7 @@ use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\Connexion;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
@@ -19,20 +20,27 @@ use S2lowLegacy\Class\WorkerScript;
 /** @var WorkerScript $workerScript */
 /** @var ActesScriptHelper $actesScriptHelper */
 /** @var ActesTransactionsSQL $actesTransactionsSQL */
-list($workerScript,$actesScriptHelper,$actesTransactionsSQL ) = LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var Initialisation $initialisation */
+list(
+    $workerScript,
+    $actesScriptHelper,
+    $actesTransactionsSQL,
+    $initialisation
+    ) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [WorkerScript::class, ActesScriptHelper::class, ActesTransactionsSQL::class]
+        [WorkerScript::class, ActesScriptHelper::class, ActesTransactionsSQL::class, Initialisation::class]
     );
 
-require_once(__DIR__ . "/../../../init/init-www-actes.php");
+$initData = $initialisation->doInit();
+$initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
-$actionHtml = "";
+$actionHtml = '';
 
 // Instanciation du module courant
 $module = new Module();
-if (!$module->initByName("actes")) {
-    $_SESSION["error"] = "Erreur d'initialisation du module";
-    header("Location: " . WEBSITE_SSL);
+if (!$module->initByName('actes')) {
+    $_SESSION['error'] = "Erreur d'initialisation du module";
+    header('Location: ' . WEBSITE_SSL);
     exit();
 }
 
@@ -41,29 +49,30 @@ $connexion = new Connexion();
 $me = new User();
 
 if (!$me->authenticate()) {
-    $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    $_SESSION['error'] = "Échec de l'authentification";
+    header('Location: ' . Helpers::getLink('connexion-status'));
     exit();
 }
 
 
-if (!$module->isActive() || !$me->checkDroit($module->get("name"), 'TT')) {
-    $_SESSION["error"] = "Accès refusé";
-    header("Location: " . WEBSITE_SSL);
+if (!$module->isActive() || !$me->checkDroit($module->get('name'), 'TT')) {
+    $_SESSION['error'] = 'Accès refusé';
+    header('Location: ' . WEBSITE_SSL);
     exit();
 }
 
 $rgsConnexion = new RgsConnexion();
 if (! $rgsConnexion->isRgsConnexion()) {
-    $_SESSION["error"] = "La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}";
-    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
-    exit();
+    $_SESSION['error'] = 'La télétransmission nécessite un certificat RGS' .
+    "<br/>Erreur : {$rgsConnexion->getLastMessage()}";
+    header('Location: ' . Helpers::getLink('/modules/actes/index.php'));
+    exit_wrapper();
 }
 
-$id = Helpers :: getVarFromPost("id");
+$id = Helpers :: getVarFromPost('id');
 if (empty($id)) {
-    $_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
-    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
+    $_SESSION['error'] = "Pas d'identifiant de transaction spécifié";
+    header('Location: ' . Helpers::getLink('/modules/actes/index.php'));
     exit();
 }
 
@@ -71,23 +80,23 @@ if (empty($id)) {
 $trans = new ActesTransaction();
 $trans->setId($id);
 if (! $trans->init()) {
-    $_SESSION["error"] = "Erreur d'initialisation de la transaction.";
-    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
+    $_SESSION['error'] = "Erreur d'initialisation de la transaction.";
+    header('Location: ' . Helpers::getLink('/modules/actes/index.php'));
     exit();
 }
 
-$envelope = new ActesEnvelope($trans->get("envelope_id"));
+$envelope = new ActesEnvelope($trans->get('envelope_id'));
 $envelope->init();
 
-$owner = new User($envelope->get("user_id"));
+$owner = new User($envelope->get('user_id'));
 $owner->init();
 
 $serviceUser = new ServiceUser(DatabasePool::getInstance());
-$permission = new ModulePermission($serviceUser, "actes");
+$permission = new ModulePermission($serviceUser, 'actes');
 
 if (! $permission->canView($me, $owner)) {
-    $_SESSION["error"] = "Accès refusé";
-    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
+    $_SESSION['error'] = 'Accès refusé';
+    header('Location: ' . Helpers::getLink('/modules/actes/index.php'));
     exit();
 }
 
@@ -96,8 +105,8 @@ $msg = "La transaction a été postée par l'agent télétransmetteur {$me->getP
 
 $info = $actesTransactionsSQL->getInfo($id);
 if ($info['last_status_id'] != 17) {
-    $_SESSION["error"] = "La transaction n'est pas dans le statut « En attente d'être posté»";
-    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
+    $_SESSION['error'] = "La transaction n'est pas dans le statut « En attente d'être posté»";
+    header('Location: ' . Helpers::getLink('/modules/actes/index.php'));
     exit();
 }
 
@@ -107,7 +116,18 @@ $workerScript->putJobByClassName(ActesAntivirusWorker::class, $id);
 
 $msg4journal = $actesScriptHelper->getMessage($id, $msg);
 
-if (! Log::newEntry(LOG_ISSUER_NAME, $msg4journal, 1, false, 'USER', "actes", false, $connexion->getId())) {
+if (
+    ! Log::newEntry(
+        LOG_ISSUER_NAME,
+        $msg4journal,
+        1,
+        false,
+        'USER',
+        "actes",
+        false,
+        $connexion->getId()
+    )
+) {
     $msg .= "\nErreur de journalisation.\n";
 }
-Helpers :: returnAndExit(0, $msg, Helpers::getLink("/modules/actes/actes_transac_show.php?id=") . $id);
+Helpers :: returnAndExit(0, $msg, Helpers::getLink('/modules/actes/actes_transac_show.php?id=') . $id);
