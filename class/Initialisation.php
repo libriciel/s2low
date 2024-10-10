@@ -50,7 +50,7 @@ class Initialisation
         $authorityInfo = $this->authoritySQL->getInfo($userInfo['authority_id']);
 
 
-        $groupeInfo = false;
+        $groupeInfo = null;
         if ($authorityInfo['authority_group_id']) {
             $groupeInfo = $this->groupSQL->getInfo($authorityInfo['authority_group_id']);
         }

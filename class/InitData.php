@@ -9,7 +9,7 @@ class InitData
         public readonly ?User $me,
         public readonly array $userInfo,
         public readonly array $authorityInfo,
-        public readonly array $groupeInfo
+        public readonly ?array $groupeInfo
     ) {
     }
 }
