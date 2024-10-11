@@ -1,17 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
+use Libriciel\LibActes\ActesXSD;
+use Libriciel\LibActes\Utils\XSDValidationException;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
 
 class ActesTransactionTest extends S2lowTestCase
 {
     /** @var  ActesTransaction */
-    private $actesTransaction;
+    private ActesTransaction $actesTransaction;
 
-    private $pdf_filepath;
-    private $xml_filepath;
-    private $txt_filepath;
-    private $jpg_filepath;
+    private string $pdf_filepath;
+    private string $xml_filepath;
+    private string $txt_filepath;
+    private string $jpg_filepath;
 
     /**
      * @throws Exception
@@ -20,213 +24,219 @@ class ActesTransactionTest extends S2lowTestCase
     {
         parent::setUp();
         $this->actesTransaction = new ActesTransaction();
-        $this->actesTransaction->set("destDir", "toto");
+        $this->actesTransaction->set('destDir', 'toto');
 
-        $this->pdf_filepath = __DIR__ . "/../../../fixtures/vide.pdf";
-        $this->xml_filepath = __DIR__ . "/../../../fixtures/toto.xml";
-        $this->txt_filepath = __DIR__ . "/../../../fixtures/toto.txt";
-        $this->jpg_filepath = __DIR__ . "/../../../fixtures/test.jpg";
+        $this->pdf_filepath = __DIR__ . '/../../../fixtures/vide.pdf';
+        $this->xml_filepath = __DIR__ . '/../../../fixtures/toto.xml';
+        $this->txt_filepath = __DIR__ . '/../../../fixtures/toto.txt';
+        $this->jpg_filepath = __DIR__ . '/../../../fixtures/test.jpg';
     }
 
-    private function numberTest($number, $valide)
+    private function numberTest($number, $valide): void
     {
         $this->actesTransaction->set('number', $number);
         $this->actesTransaction->validate();
         $error_msg = $this->actesTransaction->getErrorMsg();
         $number_error = "Le champ Numéro de l'acte ne peut contenir que des chiffres, des lettres en majuscules et _";
         if ($valide) {
-            $this->assertStringNotContainsString($number_error, $error_msg);
+            static::assertStringNotContainsString($number_error, $error_msg);
         } else {
-            $this->assertStringContainsString($number_error, $error_msg);
+            static::assertStringContainsString($number_error, $error_msg);
         }
     }
 
-    public function testSetNumber()
+    public function testSetNumber(): void
     {
-        $this->numberTest("AXY_123", true);
+        $this->numberTest('AXY_123', true);
     }
 
-    public function testSetNumberIncorrect()
+    public function testSetNumberIncorrect(): void
     {
-        $this->numberTest("foo", false);
+        $this->numberTest('foo', false);
     }
 
-    public function testBugNumber()
+    public function testBugNumber(): void
     {
-        $this->numberTest("_123_AXY", false);
+        $this->numberTest('_123_AXY', false);
     }
 
-    private function validateAndRemoveFile($filename)
+    private function validateAndRemoveFile($filename): void
     {
         $actes_destination = ACTES_FILES_UPLOAD_ROOT . "/$filename";
-        $this->assertTrue(file_exists($actes_destination));
-        $this->assertTrue(unlink($actes_destination));
+        static::assertTrue(file_exists($actes_destination));
+        static::assertTrue(unlink($actes_destination));
     }
 
-    private function addActePDF()
+    private function addActePDF(): void
     {
         $dest_filename = mt_rand(0, mt_getrandmax());
-        $r = $this->actesTransaction->addActeFile("vide.pdf", "toto/$dest_filename", $this->pdf_filepath);
-        $this->assertTrue($r);
-        $this->validateAndRemoveFile("toto/{$dest_filename}.pdf");
+        $r = $this->actesTransaction->addActeFile('vide.pdf', "toto/$dest_filename", $this->pdf_filepath);
+        static::assertTrue($r);
+        $this->validateAndRemoveFile("toto/$dest_filename.pdf");
     }
 
-    private function addActeJPG()
+    private function addActeJPG(): void
     {
         $dest_filename = mt_rand(0, mt_getrandmax());
-        $r = $this->actesTransaction->addActeFile("test.jpg", "toto/$dest_filename", $this->jpg_filepath);
-        $this->assertTrue($r);
-        $this->validateAndRemoveFile("toto/{$dest_filename}.jpg");
+        $r = $this->actesTransaction->addActeFile('test.jpg', "toto/$dest_filename", $this->jpg_filepath);
+        static::assertTrue($r);
+        $this->validateAndRemoveFile("toto/$dest_filename.jpg");
     }
 
-    public function addActeXML()
+    public function addActeXML(): void
     {
         $dest_filename = mt_rand(0, mt_getrandmax());
-        $this->assertTrue($this->actesTransaction->addActeFile("toto.xml", "toto/$dest_filename", $this->xml_filepath));
-        $this->validateAndRemoveFile("toto/{$dest_filename}.xml");
+        static::assertTrue($this->actesTransaction->addActeFile('toto.xml', "toto/$dest_filename", $this->xml_filepath));
+        $this->validateAndRemoveFile("toto/$dest_filename.xml");
     }
 
-    private function addAnnexePDF()
+    private function addAnnexePDF(): void
     {
         $dest_filename2 = mt_rand(0, mt_getrandmax());
-        $this->assertTrue($this->actesTransaction->addAttachmentFile("vide.pdf", "toto/$dest_filename2", $this->pdf_filepath));
-        $this->validateAndRemoveFile("toto/{$dest_filename2}.pdf");
+        static::assertTrue($this->actesTransaction->addAttachmentFile('vide.pdf', "toto/$dest_filename2", $this->pdf_filepath));
+        $this->validateAndRemoveFile("toto/$dest_filename2.pdf");
     }
 
-    public function testAddFileActePDF()
+    public function testAddFileActePDF(): void
     {
         $this->addActePDF();
     }
 
-    public function testAddAnnexe()
+    /**
+     * @throws \Exception
+     */
+    public function testAddAnnexe(): void
     {
         $this->addActePDF();
         $this->addAnnexePDF();
         $this->addAnnexePDF();
         $file_list = $this->actesTransaction->fetchFilesList();
-        $this->assertEquals(2, count($file_list['attachment']));
+        static::assertEquals(2, count($file_list['attachment']));
     }
 
-    public function testAddJPGCourrierSimple()
+    public function testAddJPGCourrierSimple(): void
     {
         $this->actesTransaction->set('type', 3);
         $this->addActeJPG();
     }
 
-    public function testAddTextCourrierSimple()
+    public function testAddTextCourrierSimple(): void
     {
         $this->actesTransaction->set('type', 3);
-        $this->assertFalse($this->actesTransaction->addActeFile("toto.txt", "toto", $this->txt_filepath));
-        $this->assertEquals(
+        static::assertFalse($this->actesTransaction->addActeFile('toto.txt', 'toto', $this->txt_filepath));
+        static::assertEquals(
             "Le fichier de réponse \" toto.txt \" est de type \" application/x-empty \". Fichier PDF, XML, PNG ou JPEG requis.",
             $this->actesTransaction->getErrorMsg()
         );
     }
 
-    public function testAddActeTxt()
+    public function testAddActeTxt(): void
     {
         $this->actesTransaction->set('type', 1);
-        $this->assertFalse($this->actesTransaction->addActeFile("toto.txt", "toto", $this->txt_filepath));
-        $this->assertEquals(
+        static::assertFalse($this->actesTransaction->addActeFile('toto.txt', 'toto', $this->txt_filepath));
+        static::assertEquals(
             "Le fichier de l'acte \" toto.txt \" est de type \" application/x-empty \". Fichier PDF ou XML requis.",
             $this->actesTransaction->getErrorMsg()
         );
     }
 
-    private function setActesBudgetaire()
+    private function setActesBudgetaire(): void
     {
         $this->actesTransaction->set('nature_code', 5);
         $this->actesTransaction->set('classif1', 7);
         $this->actesTransaction->set('classif2', 1);
     }
 
-    public function testAddActesXML()
+    public function testAddActesXML(): void
     {
         $this->setActesBudgetaire();
         $this->addActeXML();
     }
 
-    public function testAddActesXMLBadNature()
+    public function testAddActesXMLBadNature(): void
     {
         $this->actesTransaction->set('type', 1);
         $dest_filename = mt_rand(0, mt_getrandmax());
-        $this->assertFalse($this->actesTransaction->addActeFile("toto.xml", "toto/$dest_filename", $this->xml_filepath));
-        $this->assertEquals("Seuls les documents budgétaires et financiers peuvent être au format XML.", $this->actesTransaction->getErrorMsg());
+        static::assertFalse($this->actesTransaction->addActeFile('toto.xml', "toto/$dest_filename", $this->xml_filepath));
+        static::assertEquals('Seuls les documents budgétaires et financiers peuvent être au format XML.', $this->actesTransaction->getErrorMsg());
     }
 
-    public function testAddActesXMLBadClassif()
+    public function testAddActesXMLBadClassif(): void
     {
         $this->actesTransaction->set('type', 1);
         $this->actesTransaction->set('nature_code', 5);
         $dest_filename = mt_rand(0, mt_getrandmax());
-        $this->assertFalse($this->actesTransaction->addActeFile("toto.xml", "toto/$dest_filename", $this->xml_filepath));
-        $this->assertEquals("Seule la classification 7.1 est autorisée pour la transmission au format XML", $this->actesTransaction->getErrorMsg());
+        static::assertFalse($this->actesTransaction->addActeFile('toto.xml', "toto/$dest_filename", $this->xml_filepath));
+        static::assertEquals('Seule la classification 7.1 est autorisée pour la transmission au format XML', $this->actesTransaction->getErrorMsg());
     }
 
-    public function testBadAttachment()
+    public function testBadAttachment(): void
     {
-        $this->assertFalse($this->actesTransaction->addAttachmentFile("toto.txt", "toto", $this->txt_filepath));
-        $this->assertEquals(
+        static::assertFalse($this->actesTransaction->addAttachmentFile('toto.txt', 'toto', $this->txt_filepath));
+        static::assertEquals(
             "Le fichier attaché \" toto.txt \" est de type \" application/x-empty \". Fichier PDF, XML, PNG ou JPEG requis.",
             $this->actesTransaction->getErrorMsg()
         );
     }
 
-    public function testAttachmentXML()
+    public function testAttachmentXML(): void
     {
         $this->setActesBudgetaire();
         $this->addActePDF();
         $dest_filename2 = mt_rand(0, mt_getrandmax());
-        $this->assertTrue($this->actesTransaction->addAttachmentFile("vide.xml", "toto/" . $dest_filename2, $this->xml_filepath));
-        $this->validateAndRemoveFile("toto/{$dest_filename2}.xml");
+        static::assertTrue($this->actesTransaction->addAttachmentFile('vide.xml', 'toto/' . $dest_filename2, $this->xml_filepath));
+        $this->validateAndRemoveFile("toto/$dest_filename2.xml");
     }
 
-    public function testAttachmentXMLNoBudgetaire()
+    public function testAttachmentXMLNoBudgetaire(): void
     {
         $this->addActePDF();
         $dest_filename2 = mt_rand(0, mt_getrandmax());
-        $this->assertTrue($this->actesTransaction->addAttachmentFile("vide.xml", "toto/" . $dest_filename2, $this->xml_filepath));
+        static::assertTrue($this->actesTransaction->addAttachmentFile('vide.xml', 'toto/' . $dest_filename2, $this->xml_filepath));
     }
 
-    public function testAddManyXMLAttachment()
+    public function testAddManyXMLAttachment(): void
     {
         $this->testAttachmentXML();
         $dest_filename2 = mt_rand(0, mt_getrandmax());
-        $this->assertTrue($this->actesTransaction->addAttachmentFile("vide.xml", "toto/" . $dest_filename2, $this->xml_filepath));
+        static::assertTrue($this->actesTransaction->addAttachmentFile('vide.xml', 'toto/' . $dest_filename2, $this->xml_filepath));
     }
 
     /**
      * @throws Exception
      * @throws \Libriciel\LibActes\Utils\XSDValidationException
      */
-    public function testgenerateActeXMLFile()
+    public function testgenerateActeXMLFile(): void
     {
         $this->addActePDF();
-        $this->actesTransaction->set('decision_date', "2013-04-05");
-        $this->actesTransaction->set('classification_date', "2013-04-05");
+        $this->actesTransaction->set('decision_date', '2013-04-05');
+        $this->actesTransaction->set('classification_date', '2013-04-05');
         $this->actesTransaction->set('nature_code', '1');
         $this->actesTransaction->set('objet', 'test');
         $this->actesTransaction->set('classif1', '1');
         $this->actesTransaction->set('classif2', '1');
 
-        $xml = $this->actesTransaction->generateActeXMLFile("toto");
+        $xml = $this->actesTransaction->generateActeXMLFile('toto');
 
-        $actesXSD = new \Libriciel\LibActes\ActesXSD();
+        $actesXSD = new ActesXSD();
 
         try {
             $actesXSD->validate($xml);
-        } catch (\Libriciel\LibActes\Utils\XSDValidationException $e) {
+        } catch (XSDValidationException $e) {
             echo $xml;
             print_r($e->getValidationErrors());
             throw $e;
         }
     }
 
-    public function testSave()
+    /**
+     * @throws \Exception
+     */
+    public function testSave(): void
     {
         $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
 
-        $envelope_id = $actesEnvelopeSQL->create(1, "000000000/20170721D/abc-EACT--210703385--20170612-2.tar.gz");
+        $envelope_id = $actesEnvelopeSQL->create(1, '000000000/20170721D/abc-EACT--210703385--20170612-2.tar.gz');
 
         $this->actesTransaction->set('envelope_id', $envelope_id);
         $this->actesTransaction->set('decision_date', '2017-08-29');
@@ -247,11 +257,11 @@ class ActesTransactionTest extends S2lowTestCase
 
         $dest_name = $this->actesTransaction->getStdFileName($env);
 
-        $this->actesTransaction->addActeFile("vide.pdf", $dest_name, $this->pdf_filepath);
+        $this->actesTransaction->addActeFile('vide.pdf', $dest_name, $this->pdf_filepath);
 
-        $dest_name = $this->actesTransaction->getStdFileName($env, true, "99_AU");
+        $dest_name = $this->actesTransaction->getStdFileName($env, true, '99_AU');
         $this->actesTransaction->addAttachmentFile(
-            "vide2.pdf",
+            'vide2.pdf',
             "$dest_name",
             $this->pdf_filepath,
             true,
@@ -267,25 +277,32 @@ class ActesTransactionTest extends S2lowTestCase
 
         $actesIncludedFileSQL = $this->getObjectInstancier()->get(ActesIncludedFileSQL::class);
         $file_list = $actesIncludedFileSQL->getAll($transaction_id);
-        $this->assertEquals("99_AU", $file_list[2]['code_pj']);
-        $this->assertEquals("99_AU-001-000000000-20170829-TEST-DE-1-1_2.pdf", $file_list[2]['filename']);
+        static::assertEquals('99_AU', $file_list[2]['code_pj']);
+        static::assertEquals('99_AU-001-000000000-20170829-TEST-DE-1-1_2.pdf', $file_list[2]['filename']);
     }
 
-    public function testGetTransactionNatureDescr()
+    /**
+     * @throws \Exception
+     */
+    public function testGetTransactionNatureDescr(): void
     {
-        $this->assertEquals(['short_descr' => 'DE','descr' => 'Deliberations'], ActesTransaction::getTransactionNatureDescr(1));
+        static::assertEquals(['short_descr' => 'DE','descr' => 'Deliberations'], ActesTransaction::getTransactionNatureDescr(1));
     }
-    public function testGetTransactionNatureDescrFailed()
+
+    /**
+     * @throws \Exception
+     */
+    public function testGetTransactionNatureDescrFailed(): void
     {
-        $this->assertFalse(ActesTransaction::getTransactionNatureDescr('Délibération'));
+        static::assertFalse(ActesTransaction::getTransactionNatureDescr('Délibération'));
     }
 
 
-    public function testSaveWithIncorectTypologie()
+    public function testSaveWithIncorectTypologie(): void
     {
         $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
 
-        $envelope_id = $actesEnvelopeSQL->create(1, "000000000/20170721D/abc-EACT--210703385--20170612-2.tar.gz");
+        $envelope_id = $actesEnvelopeSQL->create(1, '000000000/20170721D/abc-EACT--210703385--20170612-2.tar.gz');
 
         $this->actesTransaction->set('envelope_id', $envelope_id);
         $this->actesTransaction->set('decision_date', '2017-08-29');
@@ -306,18 +323,18 @@ class ActesTransactionTest extends S2lowTestCase
 
         $dest_name = $this->actesTransaction->getStdFileName($env);
 
-        $this->actesTransaction->addActeFile("vide.pdf", $dest_name, $this->pdf_filepath);
+        $this->actesTransaction->addActeFile('vide.pdf', $dest_name, $this->pdf_filepath);
 
-        $dest_name = $this->actesTransaction->getStdFileName($env, true, "code_pj_trop_grand");
+        $dest_name = $this->actesTransaction->getStdFileName($env, true, 'code_pj_trop_grand');
         $result = $this->actesTransaction->addAttachmentFile(
-            "vide2.pdf",
+            'vide2.pdf',
             "$dest_name",
             $this->pdf_filepath,
             true,
             'code_pj_trop_grand'
         );
-        $this->assertFalse($result);
-        $this->assertEquals(
+        static::assertFalse($result);
+        static::assertEquals(
             'Le code de la PJ doit faire 5 caractères',
             $this->actesTransaction->getErrorMsg()
         );
