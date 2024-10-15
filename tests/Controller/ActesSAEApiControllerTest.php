@@ -133,13 +133,13 @@ class ActesSAEApiControllerTest extends S2lowTestCase
             $this->actesSAEApiController
                 ->manageSAEState(new SAEStateTransitionRequest(
                     $created_trans_id,
-                    ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE
+                    ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE
                 ))
                 ->getContent()
         );
 
         static::assertSame(
-            ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
+            ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
             $this->actesTransactionsSQL->getInfo($created_trans_id)['last_status_id']
         );
     }
