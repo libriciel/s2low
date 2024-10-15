@@ -14,6 +14,7 @@
 - Corriger les redirections #1222
 - Faire apparaitre les dates de début et de fin à la définition des fenêtres Actes et Helios #1196
 - Permettre de renvoyer au SAE un acte au statut "Erreur lors de l'envoi au SAE" #1226a
+- Utiliser le format de date ISO 8601 comportant le fuseau horaire dans les exports de transactions #1211
 
 ## 5.0.43 - 2024-09-18
 
