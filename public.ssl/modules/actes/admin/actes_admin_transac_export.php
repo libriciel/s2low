@@ -16,7 +16,7 @@ if (! $module->initByName('actes')) {
 $me = new User();
 
 if (! $me->authenticate()) {
-    $_SESSION['error'] = "Échec de l'authentification";
+    $_SESSION["error"] = "Échec de l'authentification";
     header('Location: ' . Helpers::getLink('connexion-status'));
     exit();
 }
@@ -36,7 +36,7 @@ if (! $module->isActive() || ! $me->canAccess($module->get('name'))) {
 $history = ActesEnvelope::getEnvelopesHistory();
 
 $doc = new CSVLayout();
-$doc->addHeader('Date de transmission;Nom du fichier (.tar.gz.) transmis;Nom des fichiers contenus dans le fichier .tar.gz. transmis;SIREN de la collectivité émettrice;Département de la collectivité;Arrondissement de la collectivité');
+$doc->addHeader('Date de transmission;Heure de transmission;Fuseau horaire;Nom du fichier (.tar.gz.) transmis;Nom des fichiers contenus dans le fichier .tar.gz. transmis;SIREN de la collectivité émettrice;Département de la collectivité;Arrondissement de la collectivité');
 
 if (count($history) > 0) {
     foreach ($history as $env) {
@@ -46,7 +46,11 @@ if (count($history) > 0) {
         $timestamp = Helpers::getTimestampFromBDDDate($env['date']);
 
       // Date de transmission
-        $entry[] = date('c', $timestamp);
+        $entry[] = date('d-m-Y', $timestamp);
+      // Heure de transmission
+        $entry[] = date('H:i:s', $timestamp);
+      // Fuseau horaire
+        $entry[] = date('e', $timestamp);
       // Nom du .tar.gz
         $entry[] = basename($env['file_path']);
       // Nom des fichiers contenus dans l'archive
