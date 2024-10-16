@@ -15,13 +15,13 @@ class ActesSAEStateTransitionner
         ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
         ActesStatusSQL::STATUS_ARCHIVE_PAR_LE_SAE,
         ActesStatusSQL::STATUS_ENVOYE_AU_SAE,
-        ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE,
-        ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE
+        ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE
     ];
     private const ALLOWED_INPUT_STATUS = [
         ActesStatusSQL::STATUS_ACQUITTEMENT_RECU,
         ActesStatusSQL::STATUS_VALIDE,
-        ActesStatusSQL::STATUS_ENVOYE_AU_SAE
+        ActesStatusSQL::STATUS_ENVOYE_AU_SAE,
+        ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE
     ];
     private ActesTransactionsSQL $actesTransactionsSQL;
 
