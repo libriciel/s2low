@@ -20,29 +20,29 @@ use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
 $module = new Module();
-if (! $module->initByName("helios")) {
-    $_SESSION["error"] = "Erreur d'initialisation du module";
-    header("Location: " . WEBSITE_SSL);
+if (! $module->initByName('helios')) {
+    $_SESSION['error'] = "Erreur d'initialisation du module";
+    header('Location: ' . WEBSITE_SSL);
     exit();
 }
 
 $me = new User();
 
 if (! $me->authenticate()) {
-    $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    $_SESSION['error'] = "Échec de l'authentification";
+    header('Location: ' . Helpers::getLink('connexion-status'));
     exit();
 }
 
 if (! $me->isSuper()) {
-    $_SESSION["error"] = "Accès refusé";
-    header("Location: " . WEBSITE_SSL);
+    $_SESSION['error'] = 'Accès refusé';
+    header('Location: ' . WEBSITE_SSL);
     exit();
 }
 
-if (! $module->isActive() || ! $me->canAccess($module->get("name"))) {
-    $_SESSION["error"] = "Accès refusé";
-    header("Location: " . WEBSITE_SSL);
+if (! $module->isActive() || ! $me->canAccess($module->get('name'))) {
+    $_SESSION['error'] = 'Accès refusé';
+    header('Location: ' . WEBSITE_SSL);
     exit();
 }
 
@@ -50,24 +50,22 @@ $history = HeliosRetour::getRetourHistory();
 
 
 $doc = new CSVLayout();
-$doc->addHeader("Date de reception;Heure de recetpion;Nom du fichier transmis;SIREN de la collectivite destinataire;Empreinte sha1; Taille du fichier");
+$doc->addHeader('Date de reception;Nom du fichier transmis;SIREN de la collectivite destinataire;Empreinte sha1; Taille du fichier');
 
 if (count($history) > 0) {
     foreach ($history as $env) {
-        $entry = array();
-        $timestamp = Helpers::getTimestampFromBDDDate($env["date"]);
+        $entry = [];
+        $timestamp = Helpers::getTimestampFromBDDDate($env['date']);
 
       // Date de transmission
-        $entry[] = date("d-m-Y", $timestamp);
-      // Heure de transmission
-        $entry[] = date("H:i:s", $timestamp);
+        $entry[] = date('c', $timestamp);
       // Nom du fichier
-        $entry[] = $env["filename"];
+        $entry[] = $env['filename'];
       // SIREN de la collectivité
-        $entry[] = $env["siren"];
+        $entry[] = $env['siren'];
 
-        $entry [] = $env["sha1"];
-        $entry [] = $env["file_size"];
+        $entry [] = $env['sha1'];
+        $entry [] = $env['file_size'];
         $doc->addLine($entry);
     }
 }
