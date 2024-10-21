@@ -23,29 +23,29 @@ use S2lowLegacy\Class\User;
 
 // Instanciation du module courant
 $module = new Module();
-if (! $module->initByName("helios")) {
-    $_SESSION["error"] = "Erreur d'initialisation du module";
-    header("Location: " . WEBSITE_SSL);
+if (! $module->initByName('helios')) {
+    $_SESSION['error'] = "Erreur d'initialisation du module";
+    header('Location: ' . WEBSITE_SSL);
     exit();
 }
 
 $me = new User();
 
 if (! $me->authenticate()) {
-    $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    $_SESSION['error'] = "Échec de l'authentification";
+    header('Location: ' . Helpers::getLink('connexion-status'));
     exit();
 }
 
 if (! $me->isSuper()) {
-    $_SESSION["error"] = "Accès refusé";
-    header("Location: " . WEBSITE_SSL);
+    $_SESSION['error'] = 'Accès refusé';
+    header('Location: ' . WEBSITE_SSL);
     exit();
 }
 
-if (! $module->isActive() || ! $me->canAccess($module->get("name"))) {
-    $_SESSION["error"] = "Accès refusé";
-    header("Location: " . WEBSITE_SSL);
+if (! $module->isActive() || ! $me->canAccess($module->get('name'))) {
+    $_SESSION['error'] = 'Accès refusé';
+    header('Location: ' . WEBSITE_SSL);
     exit();
 }
 
@@ -53,31 +53,29 @@ $history = HeliosTransaction::getTransationHistory();
 
 
 $doc = new CSVLayout();
-$doc->addHeader("Date de transmission;Heure de transmission;Nom du fichier transmis;Empreinte SHA1;Taille du fichier (octets);SIREN de la collectivité émettrice;Département de la collectivité;Arrondissement de la collectivité");
+$doc->addHeader('Date de transmission;Nom du fichier transmis;Empreinte SHA1;Taille du fichier (octets);SIREN de la collectivité émettrice;Département de la collectivité;Arrondissement de la collectivité');
 
 if (count($history) > 0) {
     foreach ($history as $env) {
-        $entry = array();
+        $entry = [];
       // Récupération de la liste des fichiers pour cette enveloppe
-        $file = $env["filename"];
-        $timestamp = Helpers::getTimestampFromBDDDate($env["date"]);
+        $file = $env['filename'];
+        $timestamp = Helpers::getTimestampFromBDDDate($env['date']);
 
       // Date de transmission
-        $entry[] = date("d-m-Y", $timestamp);
-      // Heure de transmission
-        $entry[] = date("H:i:s", $timestamp);
+        $entry[] = date('c', $timestamp);
       // Nom du fichier
         $entry[] = $file;
       //sha1
-        $entry[] = $env["sha1"];
+        $entry[] = $env['sha1'];
       //taille fichier
-        $entry[] = $env["file_size"];
+        $entry[] = $env['file_size'];
       // SIREN de la collectivité
-        $entry[] = $env["siren"];
+        $entry[] = $env['siren'];
       // Département de la collectivité
-        $entry[] = "\"" . $env["department"] . "\"";
+        $entry[] = "\"" . $env['department'] . "\"";
       // Arrondissement de la collectivité
-        $entry[] = "\"" . $env["district"] . "\"";
+        $entry[] = "\"" . $env['district'] . "\"";
 
         $doc->addLine($entry);
     }
