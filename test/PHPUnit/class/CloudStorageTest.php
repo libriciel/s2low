@@ -9,14 +9,43 @@ use PHPUnit\Framework\MockObject\MockObject;
 use S2lowLegacy\Class\CloudStorage;
 use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\ICloudStorable;
+use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use Monolog\Logger;
 use S2lowTestCase;
 use Symfony\Component\Finder\Finder;
+use UnexpectedValueException;
 
 class CloudStorageTest extends S2lowTestCase
 {
+    private function getMailIncludedFilesCloudStorage(
+        string $file_path_on_disk,
+        string $getDirectoryForFilesWithoutTransaction = null,
+        string $getPathRelativeToUploadDir = null
+    ): MailIncludedFilesCloudStorage | MockObject {
+        $this->setOpenStackSwiftWrapper(false, false);
+        $iCloudStorable = $this->getMockBuilder(MailIncludedFilesCloudStorage::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $finder = new Finder();
+        $finder->in(dirname($file_path_on_disk));
+        $iCloudStorable->method('getFinder')->willReturn($finder);
+
+        $iCloudStorable->method('getDirectoryForFilesWithoutTransaction')
+            ->willReturn($getDirectoryForFilesWithoutTransaction);
+
+        $iCloudStorable->method('getPathRelativeToUploadDir')
+                ->willReturn($getPathRelativeToUploadDir);
+
+        $iCloudStorable->method('getObjectIdByFilePath')->willReturn(0);
+
+        $iCloudStorable->method('getFilePathOnCloudWithFileOnDiskPath')
+            ->willReturn(basename($file_path_on_disk));
+
+        return $iCloudStorable;
+    }
     private function getICloudStorable(
         string $file_path_on_disk,
         string $file_path_on_cloud = 'test42',
@@ -57,7 +86,7 @@ class CloudStorageTest extends S2lowTestCase
     /**
      * @throws Exception
      */
-    private function createFile(): string
+    private function createFile($inDir = false): string
     {
         $tmpFolder = new TmpFolder();
         $tmp_folder = $tmpFolder->create();
@@ -297,6 +326,88 @@ class CloudStorageTest extends S2lowTestCase
 
         $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0);
         $this->assertLogMessage('42 set to available', 3);
+    }
+
+    /**
+     * @dataProvider pathes
+     * @throws \Exception
+     */
+    public function testMoveToOrphelinsFile(string $path_relative_to_upload_dir)
+    {
+        $file_to_send = $this->createFile();
+
+        $tmpDir = new TmpFolder();
+        $files_without_transaction_dir = $tmpDir->create();
+        $iCloudStorable = $this->getMailIncludedFilesCloudStorage(
+            $file_to_send,
+            $files_without_transaction_dir,
+            $path_relative_to_upload_dir
+        );
+
+        $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0);
+        $this->assertMatchesRegularExpressionLogMessage('#Unable to find object id for the file#', 3);
+        $this->assertLogMessage(
+            "rename done to $path_relative_to_upload_dir in $files_without_transaction_dir",
+            4
+        );
+
+        static::assertFileDoesNotExist($file_to_send); //Le fichier original est supprimé
+        static::assertFileExists(
+            $files_without_transaction_dir . '/' . $path_relative_to_upload_dir
+        ); // Un fichier est créé dans le répertoire des fichiers sans transaction
+
+        $tmpDir->delete($files_without_transaction_dir);
+    }
+
+    public function pathes()
+    {
+        return [
+            ['bar.txt'],        // cas ou le fichier est directement dans le répertoire d'upload
+            ['foo/bar.txt']     // cas ou le fichier est dans un répertoire situé dans le répertoire d'upload
+        ];
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testMoveToOrphelinsFileTooManyDirectories()
+    {
+        $file_to_send = $this->createFile();
+
+        $tmpDir = new TmpFolder();
+        $files_without_transaction_dir = $tmpDir->create();
+        $iCloudStorable = $this->getMailIncludedFilesCloudStorage(
+            $file_to_send,
+            $files_without_transaction_dir,
+            'foo/bar/baz.txt'
+        );
+
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('cas non implémenté (trop de sous-répertoires dans foo/bar/baz.txt)');
+        $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0);
+        $tmpDir->delete($files_without_transaction_dir);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testMoveToOrphelinsFileAlreadyExists()
+    {
+        $file_to_send = $this->createFile();
+        $tmpDir = new TmpFolder();
+        $files_without_transaction_dir = $tmpDir->create();
+        $iCloudStorable = $this->getMailIncludedFilesCloudStorage(
+            $file_to_send,
+            $files_without_transaction_dir,
+            'bar.txt'
+        );
+
+        file_put_contents($files_without_transaction_dir . '/bar.txt', 'la place est prise');
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Le fichier $files_without_transaction_dir/bar.txt existe déjà");
+        $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0);
+        $tmpDir->delete($files_without_transaction_dir);
     }
 
     /** @dataProvider availabilityAndCloudProvider

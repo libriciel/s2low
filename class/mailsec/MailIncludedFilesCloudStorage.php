@@ -3,20 +3,26 @@
 namespace S2lowLegacy\Class\mailsec;
 
 use S2lowLegacy\Class\ICloudStorable;
+use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
 class MailIncludedFilesCloudStorage implements ICloudStorable
 {
-    public const CONTAINER_NAME = "mailsec_included_files";
+    public const CONTAINER_NAME = 'mailsec_included_files';
 
-    private $mailTransactionSQL;
-    private $mail_files_upload_root;
+    private MailTransactionSQL $mailTransactionSQL;
+    private string $mail_files_upload_root;
+    private string $mail_files_without_transac_dir;
 
-    public function __construct(MailTransactionSQL $mailTransactionSQL, $mail_files_upload_root)
-    {
+    public function __construct(
+        MailTransactionSQL $mailTransactionSQL,
+        string $mail_files_upload_root,
+        string $mail_files_without_transac_dir
+    ) {
         $this->mailTransactionSQL = $mailTransactionSQL;
         $this->mail_files_upload_root = $mail_files_upload_root;
+        $this->mail_files_without_transac_dir = $mail_files_without_transac_dir;
     }
 
     public function getContainerName(): string
@@ -32,7 +38,7 @@ class MailIncludedFilesCloudStorage implements ICloudStorable
     public function getFilePathOnDisk(int $object_id): string
     {
         $fn_donwload = $this->mailTransactionSQL->getFnDownload($object_id);
-        return sprintf("%s/%s/mail.zip", $this->mail_files_upload_root, $fn_donwload);
+        return sprintf('%s/%s/mail.zip', $this->mail_files_upload_root, $fn_donwload);
     }
 
     public function getFilePathOnCloud(int $object_id): string
@@ -57,12 +63,26 @@ class MailIncludedFilesCloudStorage implements ICloudStorable
 
     public function getFinder(): Finder
     {
-        $finder = new Finder();
-        $finder->in($this->mail_files_upload_root)->name("mail.zip");
-        return $finder;
+        $finder = (new Finder())
+            ->in($this->mail_files_upload_root)
+            ->name('mail.zip');
+
+        $dirtemp = $this->mail_files_without_transac_dir;
+
+        $relative_without_transac_dir = $this->getPathRelativeToUploadDir($dirtemp);
+
+        if ($relative_without_transac_dir === $this->mail_files_without_transac_dir) {
+            // Le répertoire contenant les fichiers sans transaction n'est pas contenu dans
+            // le répertoire contenant l'ensemble des fichiers
+            return $finder;
+        }
+
+        // Si le répertoire contenant les fichiers sans transaction est contenu dans
+        // le répertoire contenant l'ensemble des fichiers, on doit l'exclure.
+        return $finder->exclude($relative_without_transac_dir);
     }
 
-    public function deleteFileOnDisk(\SplFileInfo $file): void
+    public function deleteFileOnDisk(SplFileInfo $file): void
     {
         $filesystem = new Filesystem();
         $dirname = $file->getPath();
@@ -89,13 +109,26 @@ class MailIncludedFilesCloudStorage implements ICloudStorable
         return $this->mailTransactionSQL->isAvailable($object_id);
     }
 
-    public function isTransactionInCloud(int $object_id)
+    public function isTransactionInCloud(int $object_id): bool
     {
         return $this->mailTransactionSQL->isInCloud($object_id);
     }
 
     public function getDirectoryForFilesWithoutTransaction(): ?string
     {
-        return null;
+        return $this->mail_files_without_transac_dir;
+    }
+
+    /**
+     * @param string $dirtemp
+     * @return string|null
+     */
+    public function getPathRelativeToUploadDir(string $dirtemp): string|null
+    {
+        return preg_replace(
+            '#^' . preg_quote(realpath($this->mail_files_upload_root) . '/', '#') . '#',
+            '',
+            realpath($dirtemp)
+        );
     }
 }

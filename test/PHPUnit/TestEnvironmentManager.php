@@ -94,6 +94,8 @@ class TestEnvironmentManager
 
         $this->getObjectInstancier()->set('image_for_stamp', SITEROOT . 'public.ssl/custom/images/bandeau-s2low-190.jpg');
         $this->getObjectInstancier()->set('repertoirePesAllerSansTransaction', '');
+        $this->getObjectInstancier()->set('mail_files_upload_root', '');
+        $this->getObjectInstancier()->set('mail_files_without_transac_dir', '');
         $tmpFolder = new TmpFolder();
         $this->getObjectInstancier()->set('repertoireActesEnveloppeSansTransaction', $tmpFolder->create());
     }

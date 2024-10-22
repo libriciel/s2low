@@ -224,6 +224,7 @@ class LegacyObjectsManager
         $objectInstancier->set('actes_response_error_path', ACTES_RESPONSE_ERROR_PATH);
 
         $objectInstancier->set('mail_files_upload_root', MAIL_FILES_UPLOAD_ROOT);
+        $objectInstancier->set('mail_files_without_transac_dir', MAIL_FILES_WITHOUT_TRANSAC_DIR);
 
         $objectInstancier->set('pades_valid_url', PADES_VALID_URL);
         $objectInstancier->set('pdf_stamp_url', PDF_STAMP_URL);

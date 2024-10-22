@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.46
+
+### Évolutions
+
+- [Mail Sécurisé] Transférer les fichiers sans transaction dans un répertoire dédié #971
+
 ## 5.0.45 - 2024-10-25
 
 ### Corrections

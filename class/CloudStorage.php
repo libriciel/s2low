@@ -12,6 +12,7 @@ use S2lowLegacy\Lib\PausingQueueException;
 use S2lowLegacy\Lib\SigTermHandler;
 use S2lowLegacy\Lib\UnrecoverableException;
 use SplFileInfo;
+use UnexpectedValueException;
 
 /**
  *
@@ -383,15 +384,42 @@ class CloudStorage
             );
             return;
         }
-        $destination = $this->iCloudStorable->getDirectoryForFilesWithoutTransaction() . '/' . $file->getFilename();
+        $shortDestination = $file->getFilename();
+        if (method_exists($this->iCloudStorable, 'getPathRelativeToUploadDir')) {
+            $shortDestination =  $this->iCloudStorable->getPathRelativeToUploadDir($file->getPathname());
+        }
         if (
-            !rename(
-                $file->getRealPath(),
-                $destination
-            )
+            !$this->rename($file, $shortDestination, $this->iCloudStorable->getDirectoryForFilesWithoutTransaction())
         ) {
             $this->logger->info("File $file : rename KO");
+            return;
         }
-        $this->logger->info("rename done to $destination");
+        $this->logger->info(
+            "rename done to $shortDestination in " . $this->iCloudStorable->getDirectoryForFilesWithoutTransaction()
+        );
+    }
+
+    /**
+     * @param \SplFileInfo $file
+     * @param string $destination
+     * @return bool
+     */
+    private function rename(SplFileInfo $file, string $relative_destination, string $directory): bool
+    {
+        $destination = $directory . '/' . $relative_destination;
+        if (file_exists($destination)) {
+            throw new Exception("Le fichier $destination existe déjà");
+        }
+        $sub_directories = explode('/', $relative_destination);
+        if (count($sub_directories) > 2) {
+            throw new UnexpectedValueException("cas non implémenté (trop de sous-répertoires dans $relative_destination) ");
+        }
+        if (count($sub_directories) === 2) {
+            mkdir($directory . '/' . $sub_directories[0], 0700, true);
+        }
+        return rename(
+            $file->getRealPath(),
+            $destination
+        );
     }
 }
