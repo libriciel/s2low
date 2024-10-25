@@ -5,6 +5,7 @@
 ### Corrections
 
 - Corriger les paramètres du DatePicker pour permettre l'ajout d'acte #1229
+- Corriger les paramètres du DatePicker pour permettre l'édition des fenêtres #1230
 
 ## 5.0.44 - 2024-10-21
 
@@ -24,7 +25,7 @@
 
 ### Limitations connues
 
-- Impossible d'ajouter une acte
+- Impossible d'ajouter un acte ou d'éditer une fenêtre
 
 ## 5.0.43 - 2024-09-18
 
