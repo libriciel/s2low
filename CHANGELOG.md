@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.45 - 2024-10-25
+
+### Corrections
+
+- Corriger les paramètres du DatePicker pour permettre l'ajout d'acte #1229
+
 ## 5.0.44 - 2024-10-21
 
 ### Évolutions
@@ -15,6 +21,10 @@
 - Faire apparaitre les dates de début et de fin à la définition des fenêtres Actes et Helios #1196
 - Permettre de renvoyer au SAE un acte au statut "Erreur lors de l'envoi au SAE" #1226a
 - Utiliser le format de date ISO 8601 comportant le fuseau horaire dans les exports de transactions #1211
+
+### Limitations connues
+
+- Impossible d'ajouter une acte
 
 ## 5.0.43 - 2024-09-18
 
