@@ -297,6 +297,9 @@ $html .= "   <label for=\"decision_date\" class=\"control-label\">Date de la dé
 
 $decision_date = Helpers :: getFromSession("decision_date");
 
+if (is_null($decision_date)) {
+    $decision_date = '';
+}
 $datePicker = new DatePicker("decision_date", $decision_date);
 $html .= $datePicker->show();
 
