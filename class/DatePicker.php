@@ -3,37 +3,41 @@
 namespace S2lowLegacy\Class;
 
 use IntlDateFormatter;
+use JsonException;
 
 class DatePicker
 {
     public const FORMAT = 'dd MMMM yyyy';
-    private array $datePickerOptions = ["altFormat" => 'yy-mm-dd',"dateFormat" => 'dd MM yy'];
-    private string $inputDefaultValue = "";
+    private array $datePickerOptions = ['altFormat' => 'yy-mm-dd', 'dateFormat' => 'dd MM yy'];
+    private string $inputDefaultValue;
 
-    private string $hidenInputDefaultValue = "";
+    private string $hidenInputDefaultValue = '';
 
 
     public function __construct(
         private readonly string $name,
-        string $ansiDate = '',
+        ?string $ansiDate = '',
         private readonly string $class = 'form-control',
     ) {
         $dateInLetters = '';
-        if ($ansiDate !== '') {
+        if ($ansiDate !== null && $ansiDate !== '') {
             $dateInLetters = $this->getFormattedDate($ansiDate, self::FORMAT);
         }
 
-        $this->datePickerOptions["altField"] =  "#$name";
+        $this->datePickerOptions['altField'] =  "#$name";
         if ($ansiDate) {
             $this->inputDefaultValue = "value = \"$dateInLetters\"";
             $this->hidenInputDefaultValue = "value = \"$ansiDate\"";
-            $this->datePickerOptions["defaultDate"] = "new Date($ansiDate)";
-            $this->datePickerOptions["gotoCurrent"] = true;
+            $this->datePickerOptions['defaultDate'] = "new Date($ansiDate)";
+            $this->datePickerOptions['gotoCurrent'] = true;
         } else {
             $this->inputDefaultValue = "value = \"Choisir une date\"";
         }
     }
 
+    /**
+     * @throws JsonException
+     */
     public function show(): string
     {
         $options = json_encode($this->datePickerOptions, JSON_THROW_ON_ERROR);
