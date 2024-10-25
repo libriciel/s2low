@@ -52,4 +52,15 @@ class HeliosStatusSQL
 
         return $status_libelle_list[$status_id] ?? $status_id;
     }
+
+    /**
+     * @throws \Exception
+     */
+    function getAllStatusMod(): array
+    {
+        foreach ($this->getAllStatus() as $line) {
+            $result[$line['id']] = $line['name'];
+        }
+        return $result;
+    }
 }

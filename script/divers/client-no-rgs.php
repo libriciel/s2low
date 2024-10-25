@@ -19,7 +19,7 @@ $sql = "SELECT users.id,certificate,givenname,users.name,users.email, users.auth
 
 $sql_actes = "SELECT max(actes_transactions_workflow.date) FROM actes_transactions " .
         " JOIN actes_transactions_workflow ON actes_transactions.id=actes_transactions_workflow.transaction_id " .
-        " WHERE actes_transactions.user_id=? AND actes_transactions.type = 1";
+        " WHERE actes_transactions.user_id=? AND actes_transactions.type = '1'";
 
 $sql_helios = "SELECT max(helios_transactions_workflow.date) FROM helios_transactions " .
     " JOIN helios_transactions_workflow ON helios_transactions.id=helios_transactions_workflow.transaction_id " .

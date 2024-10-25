@@ -725,4 +725,31 @@ AND authorities.helios_use_passtrans = ?
 
         return $this->query($sql)[0]['voltransactions'] ?? 0;
     }
+
+    public function getTransactionsByDateAndStatus(int $status_from, string $date_min, string $date_max)
+    {
+        $sql = 'SELECT helios_transactions.id,authorities.name, helios_transactions.filename, helios_transactions.submission_date' .
+            'FROM helios_transactions' .
+            'JOIN authorities ON authorities.id=helios_transactions.authority_id' .
+            'JOIN helios_transactions_workflow' .
+            'ON helios_transactions_workflow.transaction_id = helios_transactions.id' .
+            'AND helios_transactions_workflow.status_id=helios_transactions.last_status_id' .
+            'WHERE last_status_id=?' .
+            'AND helios_transactions_workflow.date > ?' .
+            'AND helios_transactions_workflow.date < ?' .
+            'ORDER BY submission_date DESC;';
+
+        return $this->query($sql, $status_from, $date_min, $date_max);
+    }
+
+    public function getTransactionsInfosByDateAndStatus(int $status, string $debut, string $fin)
+    {
+        $sql = "SELECT xml_nomfic, date, helios_ftp_dest FROM helios_transactions " .
+            " JOIN helios_transactions_workflow ON helios_transactions.id = helios_transactions_workflow.transaction_id " .
+            " AND helios_transactions_workflow.status_id =helios_transactions.last_status_id " .
+            " JOIN authorities ON helios_transactions.authority_id=authorities.id " .
+            " WHERE last_status_id=? AND date > ? AND date < ?" ;
+
+        return $this->query($sql, $status, $debut, $fin);
+    }
 }
