@@ -1,11 +1,21 @@
 # Changelog
 
+## 5.0.46 - 2024-11-05
+
+### Corrections
+
+- Permettre l'envoi du mail récapitulant les transactions helios transmises depuis la console d'administration #1230
+
 ## 5.0.45 - 2024-10-25
 
 ### Corrections
 
 - Corriger les paramètres du DatePicker pour permettre l'ajout d'acte #1229
 - Corriger les paramètres du DatePicker pour permettre l'édition des fenêtres #1230
+
+### Limitations connues
+
+- Impossible d'envoyer le mail récapitulant les transactions helios transmises depuis la console d'administration
 
 ## 5.0.44 - 2024-10-21
 
