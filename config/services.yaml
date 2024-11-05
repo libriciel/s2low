@@ -235,9 +235,8 @@ services:
     public: false
 
   S2lowLegacy\Class\Initialisation:
-    autowire: false
-    autoconfigure: false
-    public: false
+    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
+    arguments: ['S2lowLegacy\Class\Initialisation']
 
   S2lowLegacy\Class\InitData:
      autowire: false
