@@ -2,12 +2,12 @@
 
 namespace S2lowLegacy\Class\mailsec;
 
-use S2lowLegacy\Class\ICloudStorable;
+use S2lowLegacy\Class\ICloudStorableWithLoseFiles;
 use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
-class MailIncludedFilesCloudStorage implements ICloudStorable
+class MailIncludedFilesCloudStorage implements ICloudStorableWithLoseFiles
 {
     public const CONTAINER_NAME = 'mailsec_included_files';
 
@@ -114,16 +114,12 @@ class MailIncludedFilesCloudStorage implements ICloudStorable
         return $this->mailTransactionSQL->isInCloud($object_id);
     }
 
-    public function getDirectoryForFilesWithoutTransaction(): ?string
+    public function getDirectoryForFilesWithoutTransaction(): string
     {
         return $this->mail_files_without_transac_dir;
     }
 
-    /**
-     * @param string $dirtemp
-     * @return string|null
-     */
-    public function getPathRelativeToUploadDir(string $dirtemp): string|null
+    public function getPathRelativeToUploadDir(string $dirtemp): string
     {
         return preg_replace(
             '#^' . preg_quote(realpath($this->mail_files_upload_root) . '/', '#') . '#',

@@ -86,7 +86,7 @@ class CloudStorageTest extends S2lowTestCase
     /**
      * @throws Exception
      */
-    private function createFile($inDir = false): string
+    private function createFile(): string
     {
         $tmpFolder = new TmpFolder();
         $tmp_folder = $tmpFolder->create();
@@ -100,7 +100,7 @@ class CloudStorageTest extends S2lowTestCase
      */
     public function testAllObjectIdToStore()
     {
-        static::assertEquals(
+        static::assertSame(
             [42],
             $this->getCloudStorage($this->getICloudStorable(''))->getAllObjectIdToStore()
         );
@@ -329,10 +329,10 @@ class CloudStorageTest extends S2lowTestCase
     }
 
     /**
-     * @dataProvider pathes
-     * @throws \Exception
+     * @dataProvider pathesProvider
+     * @throws Exception
      */
-    public function testMoveToOrphelinsFile(string $path_relative_to_upload_dir)
+    public function testMoveToOrphelinsFile(string $path_relative_to_upload_dir): void
     {
         $file_to_send = $this->createFile();
 
@@ -359,7 +359,7 @@ class CloudStorageTest extends S2lowTestCase
         $tmpDir->delete($files_without_transaction_dir);
     }
 
-    public function pathes()
+    public function pathesProvider(): iterable
     {
         return [
             ['bar.txt'],        // cas ou le fichier est directement dans le répertoire d'upload
@@ -370,7 +370,7 @@ class CloudStorageTest extends S2lowTestCase
     /**
      * @throws \Exception
      */
-    public function testMoveToOrphelinsFileTooManyDirectories()
+    public function testMoveToOrphelinsFileTooManyDirectories(): void
     {
         $file_to_send = $this->createFile();
 
@@ -391,7 +391,7 @@ class CloudStorageTest extends S2lowTestCase
     /**
      * @throws \Exception
      */
-    public function testMoveToOrphelinsFileAlreadyExists()
+    public function testMoveToOrphelinsFileAlreadyExists(): void
     {
         $file_to_send = $this->createFile();
         $tmpDir = new TmpFolder();
@@ -483,7 +483,7 @@ class CloudStorageTest extends S2lowTestCase
 
         $return = $cloudStorage->getFilePathOnCloudWithFileOnDiskPath($filePathOnDisk);
 
-        static::assertEquals(
+        static::assertSame(
             $filePathOnDisk,
             $return
         );
@@ -516,7 +516,7 @@ class CloudStorageTest extends S2lowTestCase
 
         $return = $cloudStorage->getFilePathOnCloudWithFileOnDiskPath($filePathOnDisk);
 
-        static::assertEquals(
+        static::assertSame(
             $filePathOnDisk,
             $return
         );
@@ -552,7 +552,7 @@ class CloudStorageTest extends S2lowTestCase
 
         $return = $cloudStorage->getFilePathOnCloudWithFileOnDiskPath($filePathOnDisk);
 
-        static::assertEquals(
+        static::assertSame(
             '/test/import//test.tar.gz',
             $return
         );
