@@ -64,10 +64,6 @@ class MailController
             case "savenewemail":
                 $this->executeSaveNewEmail();
                 break;
-            case "import_annuaire":
-                $this->exitIfNotAdmin();
-                $this->executeImportAnnuaire();
-                break;
             default:
                 $this->executeList();
         }

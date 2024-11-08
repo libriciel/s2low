@@ -1,6 +1,5 @@
 <?php
 
-use JetBrains\PhpStorm\NoReturn;
 use S2lowLegacy\Class\actes\ActesAntivirusWorker;
 use S2lowLegacy\Class\actes\ActesScriptHelper;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
@@ -29,11 +28,7 @@ list($workerScript, $actesTransactionsSQL, $actesScriptHelper, $connexion ) = Le
 $actionHtml = '';
 
 
-/**
- * @param $error_message
- * @return void
- */
-#[NoReturn] function return_error_api($error_message): void
+function return_error_api($error_message): never
 {
     $return_error = Helpers :: getVarFromGet('url_return');
     $return_error = str_replace('%%ERROR%%', 1, $return_error);
