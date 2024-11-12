@@ -329,7 +329,7 @@ class CloudStorageTest extends S2lowTestCase
     }
 
     /**
-     * @dataProvider pathesProvider
+     * @dataProvider pathsProvider
      * @throws Exception
      */
     public function testMoveToOrphelinsFile(string $path_relative_to_upload_dir): void
@@ -359,7 +359,7 @@ class CloudStorageTest extends S2lowTestCase
         $tmpDir->delete($files_without_transaction_dir);
     }
 
-    public function pathesProvider(): iterable
+    public function pathsProvider(): iterable
     {
         return [
             ['bar.txt'],        // cas ou le fichier est directement dans le répertoire d'upload

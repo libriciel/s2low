@@ -384,10 +384,6 @@ class CloudStorage
             );
             return;
         }
-        /*$shortDestination = $file->getFilename();
-        if (is_a($this->cloudStorable, ICloudStorableWithLoseFiles::class)) {
-            $shortDestination =  $this->cloudStorable->getPathRelativeToUploadDir($file->getPathname());
-        }*/
         $shortDestination = $this->cloudStorable->getDesiredPathInDirectoryForFilesWithoutTransaction($file);
         if (
             !$this->rename(
