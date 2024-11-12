@@ -2,8 +2,10 @@
 
 namespace S2lowLegacy\Class\helios;
 
+use Exception;
 use S2lowLegacy\Class\ICloudStorable;
 use S2lowLegacy\Model\HeliosRetourSQL;
+use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
@@ -103,5 +105,10 @@ class PESRetourCloudStorage implements ICloudStorable
     public function getDirectoryForFilesWithoutTransaction(): ?string
     {
         return null;
+    }
+
+    public function getDesiredPathInDirectoryForFilesWithoutTransaction(SplFileInfo $file): string
+    {
+        throw new Exception('Not implemented yet');
     }
 }

@@ -477,6 +477,10 @@ if (!defined('MAIL_FILES_UPLOAD_ROOT')) {
     define('MAIL_FILES_UPLOAD_ROOT', WORKSPACE_DIRECTORY . 'mail/');
 }
 
+if (!defined('MAIL_FILES_WITHOUT_TRANSAC_DIR')) {
+    define('MAIL_FILES_WITHOUT_TRANSAC_DIR', MAIL_FILES_UPLOAD_ROOT . 'sans_transaction/');
+}
+
 if (!defined('MAIL_TEDETIS_FROM')) {
     define('MAIL_TEDETIS_FROM', 's2low-mailsec@s2low.docker.libriciel.fr');
 }

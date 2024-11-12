@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use Exception;
 use S2lowLegacy\Class\ICloudStorable;
 use S2lowLegacy\Lib\UnrecoverableException;
 use SplFileInfo;
@@ -123,5 +124,13 @@ class ActesCloudStorage implements ICloudStorable
     public function getDirectoryForFilesWithoutTransaction(): ?string
     {
         return $this->repertoireActesEnveloppeSansTransaction;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function getDesiredPathInDirectoryForFilesWithoutTransaction(SplFileInfo $file): string
+    {
+        return $file->getFilename();
     }
 }

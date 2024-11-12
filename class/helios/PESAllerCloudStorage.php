@@ -98,4 +98,9 @@ class PESAllerCloudStorage implements ICloudStorable
     {
         return $this->repertoirePesAllerSansTransaction;
     }
+
+    public function getDesiredPathInDirectoryForFilesWithoutTransaction(SplFileInfo $file): string
+    {
+        return $file->getFilename();
+    }
 }

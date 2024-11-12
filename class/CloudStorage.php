@@ -12,13 +12,14 @@ use S2lowLegacy\Lib\PausingQueueException;
 use S2lowLegacy\Lib\SigTermHandler;
 use S2lowLegacy\Lib\UnrecoverableException;
 use SplFileInfo;
+use UnexpectedValueException;
 
 /**
  *
  */
 class CloudStorage
 {
-    private ICloudStorable $iCloudStorable;
+    private ICloudStorable $cloudStorable;
     private OpenStackSwiftWrapper $openStackSwiftWrapper;
     private Logger $logger;
     private bool $openstack_enable;
@@ -35,7 +36,7 @@ class CloudStorage
         Logger $logger,
         $openstack_enable
     ) {
-        $this->iCloudStorable = $iCloudStorable;
+        $this->cloudStorable = $iCloudStorable;
         $this->openStackSwiftWrapper = $openStackSwiftWrapper;
         $this->logger = $logger;
         $this->openstack_enable = $openstack_enable;
@@ -46,7 +47,7 @@ class CloudStorage
      */
     public function getAllObjectIdToStore(): array
     {
-        return $this->iCloudStorable->getAllObjectIdToStore();
+        return $this->cloudStorable->getAllObjectIdToStore();
     }
 
     /**
@@ -57,21 +58,21 @@ class CloudStorage
 
     public function storeObject(int $object_id): bool
     {
-        $file_path_on_disk = $this->iCloudStorable->getFilePathOnDisk($object_id);
-        $file_path_on_cloud = $this->iCloudStorable->getFilePathOnCloud($object_id);
+        $file_path_on_disk = $this->cloudStorable->getFilePathOnDisk($object_id);
+        $file_path_on_cloud = $this->cloudStorable->getFilePathOnCloud($object_id);
 
         if (! $file_path_on_disk) {
             $this->logger->error(
                 "Unable to store object #$object_id in cloud : file_path_on_disk not found !"
             );
-            $this->iCloudStorable->setNotAvailable($object_id);
+            $this->cloudStorable->setNotAvailable($object_id);
             return false;
         }
 
         if (! $file_path_on_cloud) {
             $error_message = "Unable to store object #$object_id in cloud : file_path_on_cloud not found ?!?";
             $this->logger->error($error_message);
-            $this->iCloudStorable->setNotAvailable($object_id);
+            $this->cloudStorable->setNotAvailable($object_id);
             return false;
         }
 
@@ -79,7 +80,7 @@ class CloudStorage
             $this->logger->error(
                 "Unable to store object #$object_id in cloud : file $file_path_on_disk did not exist !"
             );
-            $this->iCloudStorable->setNotAvailable($object_id);
+            $this->cloudStorable->setNotAvailable($object_id);
             return false;
         }
 
@@ -94,7 +95,7 @@ class CloudStorage
 
         if (
             !$this->openStackSwiftWrapper->sendFile(
-                $this->iCloudStorable->getContainerName(),
+                $this->cloudStorable->getContainerName(),
                 $file_path_on_disk,
                 $file_path_on_cloud
             )
@@ -105,7 +106,7 @@ class CloudStorage
 
         $this->logger->info("Check file : $file_path_on_cloud");
         $check = $this->openStackSwiftWrapper->fileExistsOnCloud(
-            $this->iCloudStorable->getContainerName(),
+            $this->cloudStorable->getContainerName(),
             $file_path_on_cloud
         );
         $this->logger->info("File present ? [$check]");
@@ -114,7 +115,7 @@ class CloudStorage
             return false;
         }
 
-        $this->iCloudStorable->setInCloud($object_id);
+        $this->cloudStorable->setInCloud($object_id);
 
         $this->logger->info("Stored object [OK] : $object_id");
         return true;
@@ -127,13 +128,13 @@ class CloudStorage
     public function deleteIfIsInCloud(int $object_id): bool
     {
 
-        $file_path_on_disk = $this->iCloudStorable->getFilePathOnDisk($object_id);
-        $file_path_on_cloud = $this->iCloudStorable->getFilePathOnCloud($object_id);
+        $file_path_on_disk = $this->cloudStorable->getFilePathOnDisk($object_id);
+        $file_path_on_cloud = $this->cloudStorable->getFilePathOnCloud($object_id);
 
         try {
             if (
                 !$this->openStackSwiftWrapper->fileExistsOnCloud(
-                    $this->iCloudStorable->getContainerName(),
+                    $this->cloudStorable->getContainerName(),
                     $file_path_on_cloud
                 )
             ) {
@@ -169,7 +170,7 @@ class CloudStorage
 
         $sigtermHandler = SigTermHandler::getInstance();
 
-        $finder = $this->iCloudStorable->getFinder();
+        $finder = $this->cloudStorable->getFinder();
 
         foreach ($finder as $file) {
             if ($sigtermHandler->isSigtermCalled()) {
@@ -190,7 +191,7 @@ class CloudStorage
             }
             if (
                 ! $this->openStackSwiftWrapper->fileExistsOnCloud(
-                    $this->iCloudStorable->getContainerName(),
+                    $this->cloudStorable->getContainerName(),
                     $filePathOnCloudWithFileOnDiskPath
                 )
             ) {
@@ -200,7 +201,7 @@ class CloudStorage
             }
             $this->logger->info("Deleting file : {$file->getRealPath()}");
             if ($do) {
-                $this->iCloudStorable->deleteFileOnDisk($file);
+                $this->cloudStorable->deleteFileOnDisk($file);
             }
         }
     }
@@ -233,7 +234,7 @@ class CloudStorage
     public function getPath(int $object_id): string | bool
     {
 
-        $file_path_on_disk = $this->iCloudStorable->getFilePathOnDisk($object_id);
+        $file_path_on_disk = $this->cloudStorable->getFilePathOnDisk($object_id);
         if (! $file_path_on_disk) {
             return false;
         }
@@ -245,7 +246,7 @@ class CloudStorage
             throw new Exception("Unable to retrieve $file_path_on_disk and no cloud storage enabled");
         }
 
-        $file_path_on_cloud = $this->iCloudStorable->getFilePathOnCloud($object_id);
+        $file_path_on_cloud = $this->cloudStorable->getFilePathOnCloud($object_id);
 
         $this->retrieveFromCloud($object_id, $file_path_on_cloud, $file_path_on_disk);
 
@@ -260,7 +261,7 @@ class CloudStorage
     public function getSize(int $object_id): array|bool
     {
 
-        $file_path_on_disk = $this->iCloudStorable->getFilePathOnDisk($object_id);
+        $file_path_on_disk = $this->cloudStorable->getFilePathOnDisk($object_id);
         if (! $file_path_on_disk) {
             return false;
         }
@@ -299,7 +300,7 @@ class CloudStorage
      */
     public function getFilePathOnCloudWithFileOnDiskPath(string $filePath): string
     {
-        $filePathOnCloudWithFileOnDiskPath = $this->iCloudStorable
+        $filePathOnCloudWithFileOnDiskPath = $this->cloudStorable
             ->getFilePathOnCloudWithFileOnDiskPath($filePath);
 
         $TempFilePathOnCloudWithFileOnDiskPath = str_replace(
@@ -310,12 +311,12 @@ class CloudStorage
 
         if (
             (!$this->openStackSwiftWrapper->fileExistsOnCloud(
-                $this->iCloudStorable->getContainerName(),
+                $this->cloudStorable->getContainerName(),
                 $filePathOnCloudWithFileOnDiskPath
             ))
             &&
             ($this->openStackSwiftWrapper->fileExistsOnCloud(
-                $this->iCloudStorable->getContainerName(),
+                $this->cloudStorable->getContainerName(),
                 $TempFilePathOnCloudWithFileOnDiskPath
             ))
         ) {
@@ -329,19 +330,19 @@ class CloudStorage
      */
     protected function handlerOlderFileNotInCloud(SplFileInfo $file): void
     {
-        $object_id = $this->iCloudStorable->getObjectIdByFilePath($file->getRealPath());
+        $object_id = $this->cloudStorable->getObjectIdByFilePath($file->getRealPath());
         if (!$object_id) {
             $this->logger->notice('Unable to find object id for the file ' . $file->getRealPath());
             $this->moveToOrphelinsDirectory($file);
             return;
         }
-        if (!$this->iCloudStorable->isAvailable($object_id)) {
-            $this->iCloudStorable->setAvailable($object_id, true);
+        if (!$this->cloudStorable->isAvailable($object_id)) {
+            $this->cloudStorable->setAvailable($object_id, true);
             $this->logger->info("$object_id set to available");
         }
-        if ($this->iCloudStorable->isTransactionInCloud($object_id)) {
+        if ($this->cloudStorable->isTransactionInCloud($object_id)) {
             $this->logger->info("$file [transaction $object_id] passé à is_in_cloud = false");
-            $this->iCloudStorable->setInCloud($object_id, false);
+            $this->cloudStorable->setInCloud($object_id, false);
         }
     }
 
@@ -359,7 +360,7 @@ class CloudStorage
             $this->logger->info("Retrieve object #$object_id from cloud ($file_path_on_cloud)");
 
             $this->openStackSwiftWrapper->retrieveFile(
-                $this->iCloudStorable->getContainerName(),
+                $this->cloudStorable->getContainerName(),
                 $file_path_on_disk,
                 $file_path_on_cloud
             );
@@ -373,25 +374,53 @@ class CloudStorage
     }
 
     /**
-     * @param \SplFileInfo $file
+     * @throws Exception
      */
     private function moveToOrphelinsDirectory(SplFileInfo $file): void
     {
-        if ($this->iCloudStorable->getDirectoryForFilesWithoutTransaction() === null) {
+        if ($this->cloudStorable->getDirectoryForFilesWithoutTransaction() === null) {
             $this->logger->info(
-                'File ' . $file->getRealPath() . ' : destination directory ' . $this->iCloudStorable->getDirectoryForFilesWithoutTransaction() . ' not found'
+                'File ' . $file->getRealPath() . ' : destination directory ' . $this->cloudStorable->getDirectoryForFilesWithoutTransaction() . ' not found'
             );
             return;
         }
-        $destination = $this->iCloudStorable->getDirectoryForFilesWithoutTransaction() . '/' . $file->getFilename();
+        $shortDestination = $this->cloudStorable->getDesiredPathInDirectoryForFilesWithoutTransaction($file);
         if (
-            !rename(
-                $file->getRealPath(),
-                $destination
+            !$this->rename(
+                $file,
+                $shortDestination,
+                $this->cloudStorable->getDirectoryForFilesWithoutTransaction()
             )
         ) {
             $this->logger->info("File $file : rename KO");
+            return;
         }
-        $this->logger->info("rename done to $destination");
+        $this->logger->info(
+            "rename done to $shortDestination in " . $this->cloudStorable->getDirectoryForFilesWithoutTransaction()
+        );
+    }
+
+    /**
+     * @param \SplFileInfo $file
+     * @param string $destination
+     * @return bool
+     */
+    private function rename(SplFileInfo $file, string $relative_destination, string $directory): bool
+    {
+        $destination = $directory . '/' . $relative_destination;
+        if (file_exists($destination)) {
+            throw new Exception("Le fichier $destination existe déjà");
+        }
+        $sub_directories = explode('/', $relative_destination);
+        if (count($sub_directories) > 2) {
+            throw new UnexpectedValueException("cas non implémenté (trop de sous-répertoires dans $relative_destination) ");
+        }
+        if (count($sub_directories) === 2) {
+            mkdir($directory . '/' . $sub_directories[0], 0700, true);
+        }
+        return rename(
+            $file->getRealPath(),
+            $destination
+        );
     }
 }
