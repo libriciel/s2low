@@ -13,6 +13,7 @@ interface ICloudStorable
 
     public function getFilePathOnDisk(int $object_id): string;
     public function getDirectoryForFilesWithoutTransaction(): ?string;
+    public function getDesiredPathInDirectoryForFilesWithoutTransaction(SplFileInfo $file): string;
 
     public function getFilePathOnCloud(int $object_id): string;
 

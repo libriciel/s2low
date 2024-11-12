@@ -36,7 +36,7 @@ class CloudStorageTest extends S2lowTestCase
         $iCloudStorable->method('getDirectoryForFilesWithoutTransaction')
             ->willReturn($getDirectoryForFilesWithoutTransaction);
 
-        $iCloudStorable->method('getPathRelativeToUploadDir')
+        $iCloudStorable->method('getDesiredPathInDirectoryForFilesWithoutTransaction')
                 ->willReturn($getPathRelativeToUploadDir);
 
         $iCloudStorable->method('getObjectIdByFilePath')->willReturn(0);
