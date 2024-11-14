@@ -179,7 +179,7 @@ class Parapheur
         $revoked = false;
 
         if ($ret != 0) {
-            self::$last_error = "Erreur de vérification des CRL";
+            $this->last_error = 'Erreur de vérification des CRL';
             return false;
         } else {
             foreach ($out as $line) {

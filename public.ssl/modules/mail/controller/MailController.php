@@ -64,10 +64,6 @@ class MailController
             case "savenewemail":
                 $this->executeSaveNewEmail();
                 break;
-            case "import_annuaire":
-                $this->exitIfNotAdmin();
-                $this->executeImportAnnuaire();
-                break;
             default:
                 $this->executeList();
         }
@@ -89,9 +85,17 @@ class MailController
 
      //---delete l'enregistment choisi.
      //FIXME : ca n'a rien à foutre là: faire un script intermédiaire
+        $db = DatabasePool::getInstance();
+        $mailList = new MailList($db, $this->me->getId());
+
         if ($deleteId != null) {
             foreach ($deleteId as $transId) {
-                MailPeer::DeleteMailTransation($transId);
+                $detail = $mailList->getDetail($transId);
+                if ($detail) {
+                    MailPeer::DeleteMailTransation($transId);
+                } else {
+                    $_SESSION['last_error'] = "ERROR: cette transaction n'existe pas";
+                }
             }
         }
      //----delete fini
