@@ -56,3 +56,4 @@ if (!$message) {
 $_SESSION['error'] .= '<br/>' . nl2br($message);
 
 header('Location: responses-actes-error.php');
+exit_wrapper();

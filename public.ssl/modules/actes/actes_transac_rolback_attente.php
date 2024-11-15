@@ -57,3 +57,4 @@ $workerScript->putJobByClassName($workerClassName, $info['envelope_id']);
 
 $_SESSION['error'] = $message;
 header_wrapper("Location: actes_transac_show.php?id=$id");
+exit_wrapper();

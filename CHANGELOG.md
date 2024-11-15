@@ -9,6 +9,7 @@
 ### Corrections
 
 - Permettre l'envoi du mail récapitulant les transactions helios transmises depuis la console d'administration #1231
+- Corriger les redirections #1234
 
 ## 5.0.45 - 2024-10-25
 

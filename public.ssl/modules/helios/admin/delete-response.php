@@ -32,3 +32,4 @@ try {
     $_SESSION['error'] = $e->getMessage();
 }
 header('Location: responses-helios-error.php');
+exit_wrapper();

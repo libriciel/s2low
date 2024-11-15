@@ -47,3 +47,4 @@ if (
 
 $_SESSION['error'] = $msg;
 header_wrapper('Location: index.php');
+exit_wrapper();
