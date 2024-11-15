@@ -30,3 +30,4 @@ try {
     $_SESSION['error'] = $e->getMessage();
 }
 header('Location: responses-actes-error.php');
+exit_wrapper();

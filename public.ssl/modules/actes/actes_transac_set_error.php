@@ -35,3 +35,4 @@ $actesScriptHelper->updateStatusAndLog(
 
 $_SESSION['error'] = "La transaction $id a été passée en erreur.";
 header_wrapper("Location: actes_transac_show.php?id=$id");
+exit_wrapper();
