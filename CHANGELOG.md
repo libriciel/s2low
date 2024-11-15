@@ -6,12 +6,20 @@
 
 - [Mail Sécurisé] Transférer les fichiers sans transaction dans un répertoire dédié #971
 
+### Corrections
+
+- Permettre l'envoi du mail récapitulant les transactions helios transmises depuis la console d'administration #1231
+
 ## 5.0.45 - 2024-10-25
 
 ### Corrections
 
 - Corriger les paramètres du DatePicker pour permettre l'ajout d'acte #1229
 - Corriger les paramètres du DatePicker pour permettre l'édition des fenêtres #1230
+
+### Limitations connues
+
+- Impossible d'envoyer le mail récapitulant les transactions helios transmises depuis la console d'administration
 
 ## 5.0.44 - 2024-10-21
 
