@@ -725,4 +725,36 @@ AND authorities.helios_use_passtrans = ?
 
         return $this->query($sql)[0]['voltransactions'] ?? 0;
     }
+
+    public function getListByStatusAndAuthority(
+        mixed $status_id,
+        int $authority_id,
+        mixed $offset,
+        mixed $limit,
+        ?string $min_submission_date = null,
+        ?string $max_submission_date = null
+    ) {
+        $offset = intval($offset);
+        $limit = intval($limit);
+        $sql = 'SELECT helios_transactions.id FROM helios_transactions ';
+        if ($min_submission_date !== null || $max_submission_date !== null) {
+            $sql .= 'JOIN helios_transactions_workflow ON transaction_id=helios_transactions.id';
+        }
+        $sql .= ' WHERE last_status_id=? AND authority_id = ?';
+        $data = [$status_id, $authority_id];
+        if ($min_submission_date !== null) {
+            $sql .= ' AND date >= ? ';
+            $data[] = $min_submission_date;
+        }
+        if ($max_submission_date !== null) {
+            $sql .= ' AND date <= ? ';
+            $data[] = $max_submission_date;
+        }
+        if ($min_submission_date !== null || $max_submission_date !== null) {
+            $sql .= 'AND status_id = ?';
+            $data[] = $status_id;
+        }
+        $sql .= " ORDER BY helios_transactions.id DESC OFFSET $offset LIMIT $limit";
+        return $this->query($sql, $data);
+    }
 }
