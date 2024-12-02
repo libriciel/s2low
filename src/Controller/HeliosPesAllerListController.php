@@ -14,7 +14,11 @@ class HeliosPesAllerListController extends AbstractController
     {
     }
     /**
-     * @Route("/modules/helios/api/list_pes_aller.php",name="app_modules_helios_api_list_pes_aller")
+     * @Route(
+     *     "/modules/helios/api/list_pes_aller.php",
+     *     name="app_modules_helios_api_list_pes_aller",
+     *     methods="GET"
+     * )
      */
     public function list(): JsonResponse
     {

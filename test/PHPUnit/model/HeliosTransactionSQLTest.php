@@ -403,7 +403,7 @@ class HeliosTransactionSQLTest extends S2lowTestCase
         );
     }
 
-    public function testgetListByStatusAndAuthority()
+    public function testgetListByStatusAndAuthority(): void
     {
         static::assertSame(
             $this->heliosTransactionSQL->getListByStatusAndAuthority(
