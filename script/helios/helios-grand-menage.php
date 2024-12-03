@@ -1,11 +1,12 @@
 <?php
 
-use S2lowLegacy\Class\helios\PesAllerStorage;
+use S2lowLegacy\Class\helios\PESAllerCloudStorage;
 use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Lib\SigTermHandler;
 use S2lowLegacy\Lib\SQLQuery;
 
-require_once(__DIR__ . "/../../init/init.php");
+require_once __DIR__ . '/../../init/init.php';
 list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [ObjectInstancier::class, SQLQuery::class]
@@ -15,7 +16,7 @@ list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::ge
 // mettre la chaine de caractère ok en second parametre pour faire la suppression
 // Attention, une fois qu'on a passé ce script, il ne sert plus à rien, il vaut mieux passer par helios-menage.php qui fonctionne avec beanstalked
 
-$openStackSwiftWrapper = $objectInstancier->get('OpenStackSwiftWrapper');
+$openStackSwiftWrapper = $objectInstancier->get(OpenStackSwiftWrapper::class);
 
 if (isset($argv[1])) {
     $nb_days = $argv[1];
@@ -50,7 +51,7 @@ while ($sqlQuery->hasMoreResult()) {
         echo "Le fichier n'existe pas... [PASS]\n";
         continue;
     }
-    if ($openStackSwiftWrapper->fileExistsOnCloud(PesAllerStorage::CONTAINER_NAME, $pes['sha1'])) {
+    if ($openStackSwiftWrapper->fileExistsOnCloud(PESAllerCloudStorage::CONTAINER_NAME, $pes['sha1'])) {
         echo "Le fichier existe sur le cloud, supression...\n";
         if ($confirm) {
             unlink($filename);
