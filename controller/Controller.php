@@ -200,11 +200,14 @@ class Controller
     // @codeCoverageIgnore
 
 
+    /**
+     * @throws \S2lowLegacy\Lib\RedirectException
+     */
     public function verifSuperAdmin()
     {
         $this->verifAdmin();
         if (! $this->me->isSuper()) {
-            $this->redirect(WEBSITE_SSL, "Accès refusé");
+            $this->redirect(WEBSITE_SSL, 'Accès refusé');
         } // @codeCoverageIgnore
     }
 

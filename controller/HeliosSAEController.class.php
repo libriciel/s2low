@@ -89,7 +89,10 @@ class HeliosSAEController extends Controller
      */
     public function changeStatusAction()
     {
-        $this->verifSuperAdmin();
+        if(!$this->me->isAdmin() || !$this->me->isArchivist())
+        {
+            $this->redirect(WEBSITE_SSL, 'Accès refusé');
+        }
         $transaction_id = $this->getRecuperateurPost()->get('transaction_id');
         $status_id = $this->getRecuperateurPost()->get('status_id');
 
@@ -97,8 +100,13 @@ class HeliosSAEController extends Controller
 
         $status_info = $heliosTransactionSQL->getLastStatusInfo($transaction_id);
 
+        if($this->me->isArchivist() && $this->me->get('authority_id') != $status_info['authority_id'])
+        {
+            $this->redirect(WEBSITE_SSL, 'Accès refusé');
+        }
+
         if (! $status_info) {
-            $this->redirect("/", "Cette transaction n'existe pas");
+            $this->redirect('/', "Cette transaction n'existe pas");
         }
 
         if ($this->isActionPossible($status_info['status_id'], $status_id)) {
@@ -107,9 +115,9 @@ class HeliosSAEController extends Controller
                 $status_id,
                 "Modification manuelle de l'état"
             );
-            $this->setMessage("Le status de la transaction a été modifiée");
+            $this->setMessage('Le status de la transaction a été modifiée');
         } else {
-            $this->setErrorMessage("Impossible de changer le status de la transaction");
+            $this->setErrorMessage('Impossible de changer le status de la transaction');
         }
 
         $this->redirect("/modules/helios/helios_transac_show.php?id=$transaction_id");
