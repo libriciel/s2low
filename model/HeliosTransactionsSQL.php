@@ -727,10 +727,10 @@ AND authorities.helios_use_passtrans = ?
     }
 
     public function getListByStatusAndAuthority(
-        ?int $status_id,
+        int $status_id,
         int $authority_id,
-        ?int $offset,
-        ?int $limit,
+        int $offset,
+        int $limit,
         ?string $min_submission_date = null,
         ?string $max_submission_date = null
     ) {

@@ -31,6 +31,8 @@ class HeliosPesAllerListControllerTest extends S2lowTestCase
         $mockRecuperateurGet = $this->getMockBuilder(Recuperateur::class)
             ->disableOriginalConstructor()->getMock();
 
+        $mockRecuperateurGet->method('getInt')->willReturn(0);
+
         $legacyController->method('getUser')->willReturn($this->mockUser);
         $legacyController->method('getRecuperateurGet')->willReturn($mockRecuperateurGet);
 
@@ -59,7 +61,7 @@ class HeliosPesAllerListControllerTest extends S2lowTestCase
         $this->mockUser->expects(static::once())->method('isArchivist')->willReturn(true);
 
         static::assertSame(
-            '{"status_id":"","authority_id":"0","offset":"","limit":"","transactions":[]}',
+            '{"status_id":"0","authority_id":"0","offset":"0","limit":"0","transactions":[]}',
             $this->heliosPesAllerListController->list()->getContent()
         );
     }
