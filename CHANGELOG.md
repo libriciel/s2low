@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.47 -
+
+### Évolutions
+
+- Permettre de lister les transactions pes aller pour un utilisateur archiviste #1232
+
 ## 5.0.46 - 2024-11-18
 
 ### Évolutions

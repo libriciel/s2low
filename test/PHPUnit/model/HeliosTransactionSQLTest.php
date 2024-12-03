@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
@@ -398,6 +400,19 @@ class HeliosTransactionSQLTest extends S2lowTestCase
                 date("Y-m-d", strtotime('tomorrow'))
             ),
             []
+        );
+    }
+
+    public function testgetListByStatusAndAuthority(): void
+    {
+        static::assertSame(
+            $this->heliosTransactionSQL->getListByStatusAndAuthority(
+                HeliosTransactionsSQL::POSTE,
+                1,
+                0,
+                100
+            ),
+            [['id' => $this->transaction_id]]
         );
     }
 }
