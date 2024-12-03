@@ -9,16 +9,12 @@ use S2lowLegacy\Lib\SQLQuery;
 
 class ActesSignature
 {
-    private $actesIncludedFileSQL;
-    private $actesTransactionSQL;
-    private $actesEnveloppeSQL;
-
-    public function __construct(SQLQuery $sqlQuery, ActesRetriever $actesRetriever)
-    {
-        $this->actesIncludedFileSQL = new ActesIncludedFileSQL($sqlQuery);
-        $this->actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);
-        $this->actesEnveloppeSQL = new ActesEnvelopeSQL($sqlQuery);
-        $this->actesRetriever = $actesRetriever;
+    public function __construct(
+        private readonly ActesIncludedFileSQL $actesIncludedFileSQL,
+        private readonly ActesTransactionsSQL $actesTransactionSQL,
+        private readonly ActesEnvelopeSQL $actesEnveloppeSQL,
+        private readonly ActesRetriever $actesRetriever,
+    ) {
     }
 
     /**

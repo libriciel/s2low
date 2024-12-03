@@ -9,8 +9,9 @@ class Layout
     public $header;
     public $body;
     public $title;
+    public $templateFile;
 
-  /**
+    /**
    * \brief Méthode permettant de définir le titre du document
    * \param $str chaîne : le titre du document
   */
@@ -36,10 +37,9 @@ class Layout
     {
         $this->body .= $str;
     }
+
   /**
-   *
-   * @param $templateFile: le template full path name correspond to the controller index.php
-   * @return void
+   * @deprecated 5.0.42, dead code
    */
     public function setTemplate($template): void
     {

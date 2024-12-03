@@ -23,12 +23,13 @@ class MailAnnuaire extends DataObject
     protected $user_id;
     protected $mail_address;
     protected $description;
+    protected $authority_id;
 
-    protected $dbFields =  array(
-    "authority_id"          => array( "descr" => "Identifiant mail", "type" => "isInt", "mandatory" => true),
-    "mail_address"  => array("descr" => "---", "type" => "isString", "mandatory" => true),
-    "description"   => array("descr" => "---", "type" => "isString", "mandatory" => true),
-    );
+    protected $dbFields = [
+        'authority_id' => ['descr' => 'Identifiant mail', 'type' => 'isInt', 'mandatory' => true],
+        'mail_address' => ['descr' => '---', 'type' => 'isString', 'mandatory' => true],
+        'description' => ['descr' => '---', 'type' => 'isString', 'mandatory' => true],
+    ];
 
     public function __construct($id = false)
     {

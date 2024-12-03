@@ -15,6 +15,7 @@ class User extends DataObject
     public const USER = 'USER';
     public const ARCH = 'ARCH';
 
+    protected $login;
     protected $objectName = "users";
     protected $prettyName = "Utilisateur";
 

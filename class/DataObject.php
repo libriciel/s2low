@@ -43,7 +43,10 @@ class DataObject
     protected $totalRecords;
 
     public $data;
-  //
+
+    protected $dbFields;
+    protected $objectName;
+
 
   /**
    * \brief Constructeur

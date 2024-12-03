@@ -49,6 +49,8 @@ class ActesTransaction extends DataObject
     protected $xmlObj;
     protected $rootDir;
     protected $destDir;
+    protected $related_id;
+    protected $user_id;
 
     protected $classification_string;
     protected $document_papier = 0;

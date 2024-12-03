@@ -70,65 +70,89 @@ class DataObjectTest extends S2lowTestCase
         $this->assertFalse($dataObject->delete());
     }
 
-    public function testValidate()
+    public function testValidate(): void
     {
         $dataObject = new DataObject();
-        $dataObject->dbFields = array();
+        $dataObject->set(
+            'dbFields',
+            [],
+        );
         $this->assertTrue($dataObject->validate());
     }
 
-    public function testValidateNotMandatory()
+    public function testValidateNotMandatory(): void
     {
         $dataObject = new DataObject();
-        $dataObject->dbFields = array("foo" => array('descr' => 'foo','mandatory' => true));
+        $dataObject->set(
+            'dbFields',
+            ['foo' => ['descr' => 'foo','mandatory' => true],],
+        );
         $this->assertFalse($dataObject->validate());
     }
 
-    public function testValidateUnique()
+    public function testValidateUnique(): void
     {
         $dataObject = new DataObject();
-        $dataObject->objectName = 'users';
-        $dataObject->dbFields = array("givenname" => array('descr' => 'givenname','mandatory' => true,'unique' => 'true'));
+        $dataObject->set('objectName', 'users');
+        $dataObject->set(
+            'dbFields',
+            ['givenname' => ['descr' => 'givenname','mandatory' => true,'unique' => 'true']],
+        );
         $dataObject->set('givenname', 'Alice');
         $this->assertFalse($dataObject->validate());
     }
 
-    public function testValidateIsInt()
+    public function testValidateIsInt(): void
     {
         $dataObject = new DataObject();
-        $dataObject->dbFields = array("foo" => array('descr' => 'foo','type' => 'isInt'));
+        $dataObject->set(
+            'dbFields',
+            ['foo' => ['descr' => 'foo','type' => 'isInt']],
+        );
         $dataObject->foo = 'bar';
         $this->assertFalse($dataObject->validate());
     }
 
-    public function testValidateIsFloat()
+    public function testValidateIsFloat(): void
     {
         $dataObject = new DataObject();
-        $dataObject->dbFields = array("foo" => array('descr' => 'foo','type' => 'isFloat'));
+        $dataObject->set(
+            'dbFields',
+            ['foo' => ['descr' => 'foo','type' => 'isFloat']],
+        );
         $dataObject->foo = 'bar';
         $this->assertFalse($dataObject->validate());
     }
 
-    public function testValidateIsEmail()
+    public function testValidateIsEmail(): void
     {
         $dataObject = new DataObject();
-        $dataObject->dbFields = array("foo" => array('descr' => 'foo','type' => 'isEmail'));
+        $dataObject->set(
+            'dbFields',
+            ['foo' => ['descr' => 'foo','type' => 'isEmail']],
+        );
         $dataObject->foo = 'bar';
         $this->assertFalse($dataObject->validate());
     }
 
-    public function testValidateMaxLength()
+    public function testValidateMaxLength(): void
     {
         $dataObject = new DataObject();
-        $dataObject->dbFields = array("foo" => array('descr' => 'foo','type' => 'foo','maxlength' => '1'));
+        $dataObject->set(
+            'dbFields',
+            ['foo' => ['descr' => 'foo','type' => 'foo','maxlength' => '1']],
+        );
         $dataObject->foo = 'bar';
         $this->assertFalse($dataObject->validate());
     }
 
-    public function testValidateRegexep()
+    public function testValidateRegexep(): void
     {
         $dataObject = new DataObject();
-        $dataObject->dbFields = array("foo" => array('descr' => 'foo','type' => 'foo','regexp' => '#/d+#','regexp_txt' => 'bar'));
+        $dataObject->set(
+            'dbFields',
+            ['foo' => ['descr' => 'foo','type' => 'foo','regexp' => '#/d+#','regexp_txt' => 'bar']],
+        );
         $dataObject->foo = 'bar';
         $this->assertFalse($dataObject->validate());
     }
