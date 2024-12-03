@@ -108,6 +108,9 @@ class Controller
         throw new RedirectException("Redirect to $url");
     }
 
+    /**
+     * @throws \S2lowLegacy\Lib\RedirectException
+     */
     public function redirect($url, $error_message = "")
     {
         if ($error_message) {

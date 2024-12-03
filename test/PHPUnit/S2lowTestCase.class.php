@@ -78,6 +78,11 @@ abstract class S2lowTestCase extends TestCase
         $this->testEnvironmentManager->setUserAuthentification();
     }
 
+    public function setArchAuthentification()
+    {
+        $this->testEnvironmentManager->setArchAuthentification();
+    }
+
     public function getLogRecords()
     {
         return $this->testEnvironmentManager->getLogRecords();

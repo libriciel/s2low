@@ -167,6 +167,7 @@ eprALP5oks/IqINKST3K68njxMHj/v/hduEkw0dJxD5J/ga9beBhZ2Soe7XqBuUv
 YNN6Z4fNWGHPgI7R6w==
 -----END CERTIFICATE-----
 ', NULL, NULL, NULL, 1, NULL, NULL, '', 'TYEhnCaGi5PLA6SNTryOFrCJ5pg=');
+INSERT INTO users VALUES (12, 'eric+12@sigmalis.com', 'adullact_arch', 'adullact_arch', 'Le Meur', 'Yohann', NULL, 'ARCH', 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '', 'hash_adullact_arch');
 INSERT INTO modules VALUES (1, 'actes', 'Module Actes', 'Transactions Actes', 1);
 INSERT INTO modules VALUES (2, 'helios', 'Module Helios', 'Transactions Helios', 1);
 INSERT INTO modules_authorities VALUES (1, 1, 1);

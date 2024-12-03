@@ -87,19 +87,22 @@ class HeliosSAEController extends Controller
     /**
      * @throws RedirectException
      */
-    public function changeStatusAction()
+    public function changeStatusAction(): void
     {
-        if (!$this->me->isAdmin() || !$this->me->isArchivist()) {
+        if (!$this->me->isAdmin() && !$this->me->isArchivist()) {
             $this->redirect(WEBSITE_SSL, 'Accès refusé');
         }
         $transaction_id = $this->getRecuperateurPost()->get('transaction_id');
         $status_id = $this->getRecuperateurPost()->get('status_id');
 
+        /** @var HeliosTransactionsSQL $heliosTransactionSQL */
         $heliosTransactionSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
 
         $status_info = $heliosTransactionSQL->getLastStatusInfo($transaction_id);
+        $transaction_info = $heliosTransactionSQL->getInfo($transaction_id);
 
-        if ($this->me->isArchivist() && $this->me->get('authority_id') != $status_info['authority_id']) {
+
+        if ($this->me->isArchivist() && $this->me->get('authority_id') != $transaction_info['authority_id']) {
             $this->redirect(WEBSITE_SSL, 'Accès refusé');
         }
 
