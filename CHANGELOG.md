@@ -5,6 +5,7 @@
 ### Évolutions
 
 - Permettre de lister les transactions pes aller pour un utilisateur archiviste #1232
+- Permettre à l'archiviste de modifier les status PES #1233
 
 ## 5.0.46 - 2024-11-18
 

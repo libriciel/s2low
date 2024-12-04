@@ -12,7 +12,7 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 class HeliosSAEController extends Controller
 {
-    const TRANSITIONS_DEFAUT = [
+    public const TRANSITIONS_DEFAUT = [
         HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE => [
             HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
             HeliosStatusSQL::ACCEPTER_PAR_LE_SAE
@@ -26,7 +26,7 @@ class HeliosSAEController extends Controller
             HeliosStatusSQL::ACCEPTER_PAR_LE_SAE
         ]
     ];
-    const TRANSITIONS_ARCHIVIST = [
+    public const TRANSITIONS_ARCHIVIST = [
         HeliosTransactionsSQL::INFORMATION_DISPONIBLE => [
             HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE
         ]
