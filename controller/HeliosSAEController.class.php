@@ -12,6 +12,26 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 class HeliosSAEController extends Controller
 {
+    const TRANSITIONS_DEFAUT = [
+        HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE => [
+            HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
+            HeliosStatusSQL::ACCEPTER_PAR_LE_SAE
+        ],
+        HeliosStatusSQL::ENVOYER_AU_SAE => [
+            HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
+            HeliosStatusSQL::ACCEPTER_PAR_LE_SAE
+        ],
+        HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE => [
+            HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
+            HeliosStatusSQL::ACCEPTER_PAR_LE_SAE
+        ]
+    ];
+    const TRANSITIONS_ARCHIVIST = [
+        HeliosTransactionsSQL::INFORMATION_DISPONIBLE => [
+            HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE
+        ]
+    ];
+
     /**
      * @throws RedirectException
      */
@@ -60,28 +80,11 @@ class HeliosSAEController extends Controller
     }
 
 
-    public function getActionPossible($status)
+    private function isActionPossible($statut_initial, $status_final, bool $isArchivist = false): bool
     {
-        $all_status = [
-            HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE => [
-                HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
-                HeliosStatusSQL::ACCEPTER_PAR_LE_SAE
-            ],
-            HeliosStatusSQL::ENVOYER_AU_SAE => [
-                HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
-                HeliosStatusSQL::ACCEPTER_PAR_LE_SAE
-            ],
-            HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE => [
-                HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
-                HeliosStatusSQL::ACCEPTER_PAR_LE_SAE
-            ]
-        ];
-        return $all_status[$status] ?? [];
-    }
-
-    private function isActionPossible($statut_initial, $status_final)
-    {
-        return in_array($status_final, $this->getActionPossible($statut_initial));
+        $transitionsPossibles = $this->getTransitionsPossibles($isArchivist);
+        $statusFinauxPossibles = $transitionsPossibles[$statut_initial] ?? [];
+        return in_array($status_final, $statusFinauxPossibles);
     }
 
     /**
@@ -110,7 +113,7 @@ class HeliosSAEController extends Controller
             $this->redirect('/', "Cette transaction n'existe pas");
         }
 
-        if ($this->isActionPossible($status_info['status_id'], $status_id)) {
+        if ($this->isActionPossible($status_info['status_id'], $status_id, $this->me->isArchivist())) {
             $heliosTransactionSQL->updateStatus(
                 $transaction_id,
                 $status_id,
@@ -154,5 +157,13 @@ class HeliosSAEController extends Controller
 
         $this->setMessage("L'état des transactions a été modifié");
         $this->redirect("/admin/authorities/admin_authority_sae_statistiques.php?id=$authority_id");
+    }
+
+    private function getTransitionsPossibles(bool $isArchivist): array
+    {
+        if (!$isArchivist) {
+            return self::TRANSITIONS_DEFAUT;
+        }
+        return self::TRANSITIONS_DEFAUT + self::TRANSITIONS_ARCHIVIST;
     }
 }
