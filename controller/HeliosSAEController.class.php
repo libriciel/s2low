@@ -82,8 +82,7 @@ class HeliosSAEController extends Controller
 
     private function isActionPossible($statut_initial, $status_final, bool $isArchivist = false): bool
     {
-        $transitionsPossibles = $this->getTransitionsPossibles($isArchivist);
-        $statusFinauxPossibles = $transitionsPossibles[$statut_initial] ?? [];
+        $statusFinauxPossibles = $this->getActionPossible($statut_initial, $isArchivist);
         return in_array($status_final, $statusFinauxPossibles);
     }
 
@@ -167,5 +166,17 @@ class HeliosSAEController extends Controller
             return self::TRANSITIONS_DEFAUT;
         }
         return self::TRANSITIONS_DEFAUT + self::TRANSITIONS_ARCHIVIST;
+    }
+
+    /**
+     * @param bool $isArchivist
+     * @param $statut_initial
+     * @return array
+     */
+    public function getActionPossible(int $statut_initial, bool $isArchivist = false): array
+    {
+        $transitionsPossibles = $this->getTransitionsPossibles($isArchivist);
+        $statusFinauxPossibles = $transitionsPossibles[$statut_initial] ?? [];
+        return $statusFinauxPossibles;
     }
 }
