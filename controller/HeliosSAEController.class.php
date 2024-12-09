@@ -92,6 +92,8 @@ class HeliosSAEController extends Controller
      */
     public function changeStatusAction(): void
     {
+        $this->verifUser();
+
         if (!$this->me->isAdmin() && !$this->me->isArchivist()) {
             $this->redirect(WEBSITE_SSL, 'Accès refusé');
         }
