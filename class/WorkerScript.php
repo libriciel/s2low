@@ -2,11 +2,7 @@
 
 namespace S2lowLegacy\Class;
 
-use Exception;
 use S2lowLegacy\Lib\ObjectInstancier;
-use S2lowLegacy\Lib\PausingQueueException;
-use S2lowLegacy\Lib\SigTermHandler;
-use S2lowLegacy\Lib\UnrecoverableException;
 use Pheanstalk\PheanstalkInterface;
 
 class WorkerScript
@@ -14,15 +10,10 @@ class WorkerScript
     private const MIN_EXECUTION_TIME_IN_SECONDS = 10; //uniquement pour le mode non beanstalked
 
 
-    /**
-     * TODO: remove unused SigTermHandlerFactory and RedisMutexWrapper
-     */
     public function __construct(
         private readonly BeanstalkdWrapper $beanstalkdWrapper,
         private readonly S2lowLogger $s2lowLogger,
-        private readonly SigTermHandlerFactory $sigTermHandlerFactory,
         private readonly ObjectInstancier $objectInstancier,
-        private readonly RedisMutexWrapper $redisMutexWrapper,
     ) {
     }
 
@@ -74,17 +65,11 @@ class WorkerScript
     }
 
 
-    /**
-     * @param \S2lowLegacy\Class\IWorker $IWorker
-     * @return int|string
-     */
     private function getTTR(string $IWorkerClassName): string|int
     {
         try {
             $delay = $IWorkerClassName::PHEANSTALK_TTR;
-        } catch (Exception $exception) {
-            $delay = PheanstalkInterface::DEFAULT_TTR;
-        } catch (\Error $error) {
+        } catch (\Throwable $exception) {
             $delay = PheanstalkInterface::DEFAULT_TTR;
         }
         return $delay;
