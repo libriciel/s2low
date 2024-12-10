@@ -65,6 +65,16 @@ lint:
     - cd /var/www/s2low
     - vendor/bin/phpcs
 
+phpstan:
+  stage: static-analysis
+  image : "$CONTAINER_IMAGE"
+  variables:
+    DONT_INIT_DATABASE: "true"
+    DONT_RETRIEVE_VALIDCA: "true"
+  script:
+    - cd /var/www/s2low
+    - vendor/bin/phpstan
+
 unit_test:
     stage: test
     image : "$CONTAINER_IMAGE"
