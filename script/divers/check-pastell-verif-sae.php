@@ -13,7 +13,7 @@ list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::ge
         [ObjectInstancier::class, SQLQuery::class]
     );
 
-function verif_sae(PastellWrapper $pastell, $listdocument, $last_action)
+function pastell_verif_sae(PastellWrapper $pastell, $listdocument, $last_action)
 {
     foreach ($listdocument as $document) {
         if ($document['last_action'] == $last_action) {
@@ -49,12 +49,12 @@ foreach ($list_col as $col) {
     $recherche = $pastell->listDocuments('actes-generique', $etat);
     if (!empty($recherche) && !array_key_exists('error-message', $recherche)) {
         print_r($recherche);//exit;
-        verif_sae($pastell, $recherche, $etat);
+        pastell_verif_sae($pastell, $recherche, $etat);
     }
 
     $recherche = $pastell->listDocuments('helios-generique');
     if (!empty($recherche) && !array_key_exists('error-message', $recherche)) {
         print_r($recherche);
-        verif_sae($pastell, $recherche, $etat);
+        pastell_verif_sae($pastell, $recherche, $etat);
     }
 }
