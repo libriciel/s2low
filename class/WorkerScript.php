@@ -2,11 +2,7 @@
 
 namespace S2lowLegacy\Class;
 
-use Exception;
 use S2lowLegacy\Lib\ObjectInstancier;
-use S2lowLegacy\Lib\PausingQueueException;
-use S2lowLegacy\Lib\SigTermHandler;
-use S2lowLegacy\Lib\UnrecoverableException;
 use Pheanstalk\PheanstalkInterface;
 
 class WorkerScript
@@ -14,24 +10,11 @@ class WorkerScript
     private const MIN_EXECUTION_TIME_IN_SECONDS = 10; //uniquement pour le mode non beanstalked
 
 
-
-    private $s2lowLogger;
-    private $beanstalkdWrapper;
-
-    private $objectInstancier;
-
     public function __construct(
-        BeanstalkdWrapper $beanstalkdWrapper,
-        S2lowLogger $s2lowLogger,
-        SigTermHandlerFactory $sigTermHandlerFactory,
-        ObjectInstancier $objectInstancier,
-        RedisMutexWrapper $redisMutexWrapper
+        private readonly BeanstalkdWrapper $beanstalkdWrapper,
+        private readonly S2lowLogger $s2lowLogger,
+        private readonly ObjectInstancier $objectInstancier,
     ) {
-        $this->s2lowLogger = $s2lowLogger;
-        $this->beanstalkdWrapper = $beanstalkdWrapper;
-        $this->sigTermHandlerFactory = $sigTermHandlerFactory;
-        $this->objectInstancier = $objectInstancier;
-        $this->redisMutexWrapper = $redisMutexWrapper;
     }
 
     public function putJob(IWorker $IWorker, $data)
@@ -82,17 +65,11 @@ class WorkerScript
     }
 
 
-    /**
-     * @param \S2lowLegacy\Class\IWorker $IWorker
-     * @return int|string
-     */
     private function getTTR(string $IWorkerClassName): string|int
     {
         try {
             $delay = $IWorkerClassName::PHEANSTALK_TTR;
-        } catch (Exception $exception) {
-            $delay = PheanstalkInterface::DEFAULT_TTR;
-        } catch (\Error $error) {
+        } catch (\Throwable $exception) {
             $delay = PheanstalkInterface::DEFAULT_TTR;
         }
         return $delay;

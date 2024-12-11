@@ -16,7 +16,6 @@ class TGZExtractor
         $command = "tar xvzf $archivePath --directory {$this->tmpFolder} $name";
         $status = exec($command);
         if (! $status) {
-            $this->lastError = "Impossible d'extraire le fichier $name";
             return false;
         }
         return true;

@@ -14,13 +14,14 @@ class MailMessageEmis extends DataObject
     protected $email;
     protected $type_envoi;
     protected $ack;
-    protected $dbFields =  array(
-        "mail_transaction_id" => array( "descr" => "Identifiant utilisateur", "type" => "isInt", "mandatory" => true),
-        "email"               => array("descr" => "---", "type" => "isString", "mandatory" => true),
-        "type_envoi"         => array("descr" => "---", "type" => "isString", "mandatory" => true),
-        "ack"                 => array("descr" => "---", "type" => "isBool", "mandatory" => true),
-        "ack_date"          => array("descr" => "pfff","type" => "isDate","mandatory" => false)
-    );
+    protected $ack_date;
+    protected $dbFields = [
+        'mail_transaction_id' => ['descr' => 'Identifiant utilisateur', 'type' => 'isInt', 'mandatory' => true],
+        'email' => ['descr' => '---', 'type' => 'isString', 'mandatory' => true],
+        'type_envoi' => ['descr' => '---', 'type' => 'isString', 'mandatory' => true],
+        'ack' => ['descr' => '---', 'type' => 'isBool', 'mandatory' => true],
+        'ack_date' => ['descr' => 'pfff', 'type' => 'isDate', 'mandatory' => false],
+    ];
 
 
     /**

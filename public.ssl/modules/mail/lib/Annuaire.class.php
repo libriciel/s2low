@@ -14,21 +14,20 @@ use S2lowLegacy\Class\Mailer;
 
 class Annuaire
 {
-    private $tabError;
-    private $tabOK;
-    private $tabAlreadyExist;
+    private array $tabError;
+    private array $tabOK;
+    private array $tabAlreadyExist;
 
     private $authority_id;
 
-    private $bd;
-
-    public function __construct(Database $bd, $authority_id)
-    {
-        $this->tabError = array();
-        $this->tabOk = array();
-        $this->tabAlreadyExist = array();
+    public function __construct(
+        private readonly Database $bd,
+        $authority_id,
+    ) {
+        $this->tabError = [];
+        $this->tabOK = [];
+        $this->tabAlreadyExist = [];
         $this->authority_id = $authority_id;
-        $this->bd = $bd;
     }
 
     public function mailExists($email)
