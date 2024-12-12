@@ -10,6 +10,7 @@ use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Class\helios\HeliosVerificationSAE;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class HeliosSAEController extends Controller
 {
@@ -90,11 +91,12 @@ class HeliosSAEController extends Controller
     /**
      * @throws RedirectException
      */
-    public function changeStatusAction(): void
+    public function changeStatusAction(): JsonResponse
     {
         $this->verifUser();
 
         try {
+            $failed = true;
             if (!$this->me->isAdmin() && !$this->me->isArchivist()) {
                 throw new FailedControllerActionException('Accès refusé', WEBSITE_SSL);
             }
@@ -121,6 +123,7 @@ class HeliosSAEController extends Controller
                     $status_id,
                     "Modification manuelle de l'état"
                 );
+                $failed = false;
                 $message = 'Le status de la transaction a été modifiée';
             } else {
                 $message = 'Impossible de changer le status de la transaction';
@@ -130,7 +133,13 @@ class HeliosSAEController extends Controller
             $redirectionUrl = $e->getUrl();
             $message = $e->getMessage();
         }
-        $this->redirect($redirectionUrl, $message);
+        if (!$this->isApiCall()) {
+            $this->redirect($redirectionUrl, $message);
+        }
+        if ($failed) {
+            return new JsonResponse(['error' => $message]);
+        }
+        return new JsonResponse(['success' => $message]);
     }
 
     /**

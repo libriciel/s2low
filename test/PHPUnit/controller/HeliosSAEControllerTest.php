@@ -46,6 +46,20 @@ class HeliosSAEControllerTest extends S2lowTestCase
         $this->heliosSAEController->changeStatusAction();
     }
 
+    /**
+     * @throws \S2lowLegacy\Lib\RedirectException
+     */
+    public function testUserCannotAccessApi(): void
+    {
+        $this->setUserAuthentification();
+        $this->initController();
+        $this->heliosSAEController->getRecuperateurPost()->set('api', true);
+        self::assertSame(
+            '{"error":"Acc\u00e8s refus\u00e9"}',
+            $this->heliosSAEController->changeStatusAction()->getContent()
+        );
+    }
+
     public function testSuperAdminNoTransaction(): void
     {
         $this->setSuperAdminAuthentication();
@@ -112,6 +126,32 @@ class HeliosSAEControllerTest extends S2lowTestCase
         static::assertSame(
             'Le status de la transaction a été modifiée',
             $this->getObjectInstancier()->get(Environnement::class)->session()->get('error')
+        );
+
+        static::assertSame(
+            HeliosStatusSQL::ACCEPTER_PAR_LE_SAE,
+            $this->getHeliosTransactionsSQL()->getLastStatusInfo($transaction_id)['status_id']
+        );
+    }
+
+    /**
+     * @throws \S2lowLegacy\Lib\RedirectException
+     */
+    public function testSuperAdminOneTransactionChangePossibleApi(): void
+    {
+        $this->setSuperAdminAuthentication();
+        $this->initController();
+
+        $transaction_id = $this->createTransaction(1, HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE);
+
+        $this->heliosSAEController->getRecuperateurPost()->set('api', true);
+        $this->heliosSAEController->getRecuperateurPost()->set('transaction_id', $transaction_id);
+        $this->heliosSAEController->getRecuperateurPost()->set('status_id', HeliosStatusSQL::ACCEPTER_PAR_LE_SAE);
+
+
+        static::assertSame(
+            '{"success":"Le status de la transaction a \u00e9t\u00e9 modifi\u00e9e"}',
+            $this->heliosSAEController->changeStatusAction()->getContent()
         );
 
         static::assertSame(
