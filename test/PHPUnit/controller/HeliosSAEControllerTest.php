@@ -42,7 +42,7 @@ class HeliosSAEControllerTest extends S2lowTestCase
         $this->setUserAuthentification();
         $this->initController();
         $this->expectException(RedirectException::class);
-        $this->expectExceptionMessage('Accès refusé');
+        $this->expectExceptionMessage('Redirect to ' . WEBSITE_SSL . ' with message : Accès refusé');
         $this->heliosSAEController->changeStatusAction();
     }
 
@@ -51,7 +51,7 @@ class HeliosSAEControllerTest extends S2lowTestCase
         $this->setSuperAdminAuthentication();
         $this->initController();
         $this->expectException(RedirectException::class);
-        $this->expectExceptionMessage('Cette transaction n\'existe pas');
+        $this->expectExceptionMessage('Redirect to / with message : Cette transaction n\'existe pas');
 
         $this->heliosSAEController->getRecuperateurPost()->set('transaction_id', 1);
         $this->heliosSAEController->getRecuperateurPost()->set('status_id', HeliosStatusSQL::POSTE);
@@ -73,6 +73,10 @@ class HeliosSAEControllerTest extends S2lowTestCase
             $this->heliosSAEController->changeStatusAction();
         } catch (RedirectException $exception) {
             self::assertInstanceOf(RedirectException::class, $exception);
+            self::assertSame(
+                "Redirect to /modules/helios/helios_transac_show.php?id=$transaction_id with message : Impossible de changer le status de la transaction",
+                $exception->getMessage()
+            );
         }
 
         static::assertSame(
@@ -99,7 +103,10 @@ class HeliosSAEControllerTest extends S2lowTestCase
         try {
             $this->heliosSAEController->changeStatusAction();
         } catch (RedirectException $exception) {
-            static::assertStringContainsString('Redirect to', $exception->getMessage());
+            static::assertStringContainsString(
+                "Redirect to /modules/helios/helios_transac_show.php?id=$transaction_id with message : ",
+                $exception->getMessage()
+            );
         }
 
         static::assertSame(
@@ -126,7 +133,10 @@ class HeliosSAEControllerTest extends S2lowTestCase
         try {
             $this->heliosSAEController->changeStatusAction();
         } catch (RedirectException $exception) {
-            static::assertStringContainsString('Redirect to', $exception->getMessage());
+            static::assertStringContainsString(
+                "Redirect to /modules/helios/helios_transac_show.php?id=$transaction_id with message : ",
+                $exception->getMessage()
+            );
         }
 
         static::assertSame(
@@ -153,8 +163,8 @@ class HeliosSAEControllerTest extends S2lowTestCase
         try {
             $this->heliosSAEController->changeStatusAction();
         } catch (RedirectException $exception) {
-            self::assertMatchesRegularExpression(
-                '%Accès refusé%',
+            self::assertEquals(
+                'Redirect to ' . WEBSITE_SSL . ' with message : Accès refusé',
                 $exception->getMessage(),
             );
         }

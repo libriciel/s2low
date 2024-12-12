@@ -4,6 +4,7 @@ namespace S2lowLegacy\Controller;
 
 use Exception;
 use S2lowLegacy\Class\actes\FilesNotFoundInCloudException;
+use S2lowLegacy\Class\FailedControllerActionException;
 use S2lowLegacy\Class\helios\HeliosEnvoiSAE;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Class\helios\HeliosVerificationSAE;
@@ -93,39 +94,43 @@ class HeliosSAEController extends Controller
     {
         $this->verifUser();
 
-        if (!$this->me->isAdmin() && !$this->me->isArchivist()) {
-            $this->redirect(WEBSITE_SSL, 'Accès refusé');
-        }
-        $transaction_id = $this->getRecuperateurPost()->get('transaction_id');
-        $status_id = $this->getRecuperateurPost()->get('status_id');
+        try {
+            if (!$this->me->isAdmin() && !$this->me->isArchivist()) {
+                throw new FailedControllerActionException('Accès refusé', WEBSITE_SSL);
+            }
+            $transaction_id = $this->getRecuperateurPost()->get('transaction_id');
+            $status_id = $this->getRecuperateurPost()->get('status_id');
 
         /** @var HeliosTransactionsSQL $heliosTransactionSQL */
-        $heliosTransactionSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+            $heliosTransactionSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
 
-        $status_info = $heliosTransactionSQL->getLastStatusInfo($transaction_id);
-        $transaction_info = $heliosTransactionSQL->getInfo($transaction_id);
+            $status_info = $heliosTransactionSQL->getLastStatusInfo($transaction_id);
+            $transaction_info = $heliosTransactionSQL->getInfo($transaction_id);
 
 
-        if ($this->me->isArchivist() && $this->me->get('authority_id') != $transaction_info['authority_id']) {
-            $this->redirect(WEBSITE_SSL, 'Accès refusé');
+            if ($this->me->isArchivist() && $this->me->get('authority_id') != $transaction_info['authority_id']) {
+                throw new FailedControllerActionException('Accès refusé', WEBSITE_SSL);
+            }
+
+            if (!$status_info) {
+                throw new FailedControllerActionException("Cette transaction n'existe pas", '/',);
+            }
+            if ($this->isActionPossible($status_info['status_id'], $status_id, $this->me->isArchivist())) {
+                $heliosTransactionSQL->updateStatus(
+                    $transaction_id,
+                    $status_id,
+                    "Modification manuelle de l'état"
+                );
+                $message = 'Le status de la transaction a été modifiée';
+            } else {
+                $message = 'Impossible de changer le status de la transaction';
+            }
+            $redirectionUrl = "/modules/helios/helios_transac_show.php?id=$transaction_id";
+        } catch (FailedControllerActionException $e) {
+            $redirectionUrl = $e->getUrl();
+            $message = $e->getMessage();
         }
-
-        if (! $status_info) {
-            $this->redirect('/', "Cette transaction n'existe pas");
-        }
-
-        if ($this->isActionPossible($status_info['status_id'], $status_id, $this->me->isArchivist())) {
-            $heliosTransactionSQL->updateStatus(
-                $transaction_id,
-                $status_id,
-                "Modification manuelle de l'état"
-            );
-            $this->setMessage('Le status de la transaction a été modifiée');
-        } else {
-            $this->setErrorMessage('Impossible de changer le status de la transaction');
-        }
-
-        $this->redirect("/modules/helios/helios_transac_show.php?id=$transaction_id");
+        $this->redirect($redirectionUrl, $message);
     }
 
     /**

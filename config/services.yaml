@@ -234,6 +234,11 @@ services:
     autoconfigure: false
     public: false
 
+  S2lowLegacy\Class\FailedControllerActionException:
+    autowire: false
+    autoconfigure: false
+    public: false
+
   S2lowLegacy\Class\Initialisation:
     factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
     arguments: ['S2lowLegacy\Class\Initialisation']
