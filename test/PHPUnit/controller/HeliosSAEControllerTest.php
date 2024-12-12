@@ -54,9 +54,16 @@ class HeliosSAEControllerTest extends S2lowTestCase
         $this->setUserAuthentification();
         $this->initController();
         $this->heliosSAEController->getRecuperateurPost()->set('api', true);
-        self::assertSame(
-            '{"error":"Acc\u00e8s refus\u00e9"}',
-            $this->heliosSAEController->changeStatusAction()->getContent()
+
+        try {
+                ob_start();
+                $this->heliosSAEController->changeStatusAction();
+        } catch (Exception $e) {
+            $result = ob_get_clean();
+        }
+        self::assertStringContainsString(
+            '{"status":"error","error-message":"Acc\u00e8s refus\u00e9"}',
+            $result
         );
     }
 
@@ -148,10 +155,16 @@ class HeliosSAEControllerTest extends S2lowTestCase
         $this->heliosSAEController->getRecuperateurPost()->set('transaction_id', $transaction_id);
         $this->heliosSAEController->getRecuperateurPost()->set('status_id', HeliosStatusSQL::ACCEPTER_PAR_LE_SAE);
 
+        try {
+            ob_start();
+            $this->heliosSAEController->changeStatusAction();
+        } catch (Exception $exception) {
+            $result = ob_get_clean();
+        }
 
-        static::assertSame(
-            '{"success":"Le status de la transaction a \u00e9t\u00e9 modifi\u00e9e"}',
-            $this->heliosSAEController->changeStatusAction()->getContent()
+        static::assertStringContainsString(
+            '{"status":"ok","message":"Le status de la transaction a \u00e9t\u00e9 modifi\u00e9e"}',
+            $result
         );
 
         static::assertSame(

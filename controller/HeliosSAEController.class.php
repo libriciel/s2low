@@ -8,6 +8,7 @@ use S2lowLegacy\Class\FailedControllerActionException;
 use S2lowLegacy\Class\helios\HeliosEnvoiSAE;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Class\helios\HeliosVerificationSAE;
+use S2lowLegacy\Lib\JSONoutput;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -90,6 +91,7 @@ class HeliosSAEController extends Controller
 
     /**
      * @throws RedirectException
+     * @throws \Exception
      */
     public function changeStatusAction(): JsonResponse
     {
@@ -136,10 +138,11 @@ class HeliosSAEController extends Controller
         if (!$this->isApiCall()) {
             $this->redirect($redirectionUrl, $message);
         }
+        $json = new JSONoutput();
         if ($failed) {
-            return new JsonResponse(['error' => $message]);
+            $json->displayErrorAndExit($message);
         }
-        return new JsonResponse(['success' => $message]);
+        $json->displayAndExit($message);
     }
 
     /**
