@@ -93,7 +93,7 @@ class HeliosSAEController extends Controller
      * @throws RedirectException
      * @throws \Exception
      */
-    public function changeStatusAction(): JsonResponse
+    public function changeStatusAction(): void
     {
         $this->verifUser();
 
@@ -130,13 +130,13 @@ class HeliosSAEController extends Controller
             } else {
                 $message = 'Impossible de changer le status de la transaction';
             }
-            $redirectionUrl = "/modules/helios/helios_transac_show.php?id=$transaction_id";
+            $redirection_url = "/modules/helios/helios_transac_show.php?id=$transaction_id";
         } catch (FailedControllerActionException $e) {
-            $redirectionUrl = $e->getUrl();
+            $redirection_url = $e->getUrl();
             $message = $e->getMessage();
         }
         if (!$this->isApiCall()) {
-            $this->redirect($redirectionUrl, $message);
+            $this->redirect($redirection_url, $message);
         }
         $json = new JSONoutput();
         if ($failed) {
