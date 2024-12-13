@@ -298,7 +298,7 @@ class User extends DataObject
         return isset($this->role) && $this->role == self::ARCH;
     }
 
-    public function archivistCanAccess(array|bool $transaction_info)
+    public function archivistCanAccess(array|bool $transaction_info): bool
     {
         if (!isset($transaction_info['authority_id'])) {
             return false;
