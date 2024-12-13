@@ -114,7 +114,7 @@ class HeliosSAEController extends Controller
 
             $transaction_info = $heliosTransactionSQL->getInfo($transaction_id);
 
-            if ($this->me->isArchivist() && $this->me->get('authority_id') != $transaction_info['authority_id']) {
+            if ($this->me->isArchivist() && !$this->me->archivistCanAccess($transaction_info)) {
                 throw new FailedControllerActionException('Accès refusé', WEBSITE_SSL);
             }
 

@@ -168,7 +168,7 @@ class HeliosSAEControllerTest extends S2lowTestCase
         $this->initController();
 
         $this->heliosSAEController->getRecuperateurPost()->set('api', true);
-        $this->heliosSAEController->getRecuperateurPost()->set('transaction_id', 3456709876);
+        $this->heliosSAEController->getRecuperateurPost()->set('transaction_id', 666);
         $this->heliosSAEController->getRecuperateurPost()->set('status_id', HeliosStatusSQL::ACCEPTER_PAR_LE_SAE);
 
         try {
@@ -242,6 +242,30 @@ class HeliosSAEControllerTest extends S2lowTestCase
         static::assertSame(
             HeliosStatusSQL::ACCEPTER_PAR_LE_SAE,
             $this->getHeliosTransactionsSQL()->getLastStatusInfo($transaction_id)['status_id']
+        );
+    }
+
+    public function testArchOneTransactionWrongTransactionNumber(): void
+    {
+        $this->setArchAuthentification();
+        $this->initController();
+
+        // On récupère un transaction_id sans transaction
+        $transaction_id = $this->createTransaction(1, HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE) + 1 ;
+
+        $this->heliosSAEController->getRecuperateurPost()->set('api', true);
+        $this->heliosSAEController->getRecuperateurPost()->set('transaction_id', $transaction_id);
+        $this->heliosSAEController->getRecuperateurPost()->set('status_id', HeliosStatusSQL::ACCEPTER_PAR_LE_SAE);
+
+        try {
+            ob_start();
+            $this->heliosSAEController->changeStatusAction();
+        } catch (Exception $e) {
+            $result = ob_get_clean();
+        }
+        self::assertStringContainsString(
+            '{"status":"error","error-message":"Acc\u00e8s refus\u00e9"',
+            $result
         );
     }
 
