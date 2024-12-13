@@ -207,7 +207,7 @@ class TestEnvironmentManager
         return $testHandler->getRecords();
     }
 
-    public function setArchAuthentification()
+    public function setArchAuthentification(): void
     {
         $this->setServerInfo([
             'SSL_CLIENT_VERIFY' => "SUCCESS",

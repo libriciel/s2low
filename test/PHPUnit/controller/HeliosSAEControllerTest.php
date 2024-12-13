@@ -141,6 +141,48 @@ class HeliosSAEControllerTest extends S2lowTestCase
         );
     }
 
+    public function testSuperAdminOneTransactionStringTransactionId(): void
+    {
+        $this->setSuperAdminAuthentication();
+        $this->initController();
+
+        $this->heliosSAEController->getRecuperateurPost()->set('api', true);
+        $this->heliosSAEController->getRecuperateurPost()->set('transaction_id', 'not working');
+        $this->heliosSAEController->getRecuperateurPost()->set('status_id', HeliosStatusSQL::ACCEPTER_PAR_LE_SAE);
+
+        try {
+            ob_start();
+            $this->heliosSAEController->changeStatusAction();
+        } catch (Exception $e) {
+            $result = ob_get_clean();
+        }
+        self::assertStringContainsString(
+            '{"status":"error","error-message":"transaction_id incorrect"}',
+            $result
+        );
+    }
+
+    public function testSuperAdminOneTransactionBadTransactionId(): void
+    {
+        $this->setSuperAdminAuthentication();
+        $this->initController();
+
+        $this->heliosSAEController->getRecuperateurPost()->set('api', true);
+        $this->heliosSAEController->getRecuperateurPost()->set('transaction_id', 3456709876);
+        $this->heliosSAEController->getRecuperateurPost()->set('status_id', HeliosStatusSQL::ACCEPTER_PAR_LE_SAE);
+
+        try {
+            ob_start();
+            $this->heliosSAEController->changeStatusAction();
+        } catch (Exception $e) {
+            $result = ob_get_clean();
+        }
+        self::assertStringContainsString(
+            '{"status":"error",',
+            $result
+        );
+    }
+
     /**
      * @throws \S2lowLegacy\Lib\RedirectException
      */

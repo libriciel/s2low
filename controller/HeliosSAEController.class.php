@@ -102,20 +102,23 @@ class HeliosSAEController extends Controller
             if (!$this->me->isAdmin() && !$this->me->isArchivist()) {
                 throw new FailedControllerActionException('Accès refusé', WEBSITE_SSL);
             }
-            $transaction_id = $this->getRecuperateurPost()->get('transaction_id');
-            $status_id = $this->getRecuperateurPost()->get('status_id');
+            $transaction_id = $this->getRecuperateurPost()->getInt('transaction_id');
+            $status_id = $this->getRecuperateurPost()->getInt('status_id');
+
+            if ($transaction_id === 0) {
+                throw new FailedControllerActionException('transaction_id incorrect', WEBSITE_SSL);
+            }
 
         /** @var HeliosTransactionsSQL $heliosTransactionSQL */
             $heliosTransactionSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
 
-            $status_info = $heliosTransactionSQL->getLastStatusInfo($transaction_id);
             $transaction_info = $heliosTransactionSQL->getInfo($transaction_id);
-
 
             if ($this->me->isArchivist() && $this->me->get('authority_id') != $transaction_info['authority_id']) {
                 throw new FailedControllerActionException('Accès refusé', WEBSITE_SSL);
             }
 
+            $status_info = $heliosTransactionSQL->getLastStatusInfo($transaction_id);
             if (!$status_info) {
                 throw new FailedControllerActionException("Cette transaction n'existe pas", '/',);
             }
@@ -134,7 +137,11 @@ class HeliosSAEController extends Controller
         } catch (FailedControllerActionException $e) {
             $redirection_url = $e->getUrl();
             $message = $e->getMessage();
+        } catch (Exception $e) {
+            $redirection_url = WEBSITE_SSL;
+            $message = $e->getMessage();
         }
+
         if (!$this->isApiCall()) {
             $this->redirect($redirection_url, $message);
         }
@@ -185,15 +192,9 @@ class HeliosSAEController extends Controller
         return self::TRANSITIONS_DEFAUT + self::TRANSITIONS_ARCHIVIST;
     }
 
-    /**
-     * @param bool $isArchivist
-     * @param $statut_initial
-     * @return array
-     */
     public function getActionPossible(int $statut_initial, bool $isArchivist = false): array
     {
         $transitionsPossibles = $this->getTransitionsPossibles($isArchivist);
-        $statusFinauxPossibles = $transitionsPossibles[$statut_initial] ?? [];
-        return $statusFinauxPossibles;
+        return $transitionsPossibles[$statut_initial] ?? [];
     }
 }
