@@ -15,8 +15,8 @@ use S2lowLegacy\Lib\Recuperateur;
 /** @var Initialisation $initialisation */
 /** @var ActesTransactionsSQL $actesTransactionSQL */
 
-[$initialisation,$actesTransactionSQL] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class,ActesTransactionsSQL::class]);
+[$initialisation, $actesTransactionSQL] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, ActesTransactionsSQL::class]);
 
 $initData = $initialisation->doInit();
 $initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
@@ -28,32 +28,28 @@ $id = $recuperateur->getInt('id');
 
 $module = new Module();
 if (!$module->initByName('actes')) {
-    $_SESSION['error'] = "Erreur d'initialisation du module";
-    header('Location: ' . WEBSITE_SSL);
-    exit();
+    Helpers::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
 }
 
 $me = new User();
 
 if (!$me->authenticate()) {
-    $_SESSION['error'] = "Échec de l'authentification";
-    header('Location: ' . Helpers::getLink('connexion-status'));
-    exit();
+    Helpers::returnAndExit(1, "Échec de l'authentification", Helpers::getLink('connexion-status'));
 }
 
 // TODO : vérifier si ce n'est pas redondant avec ce qui se passe dans doInit
 if (!$module->isActive() || !$me->canAccess($module->get('name'))) {
-    $_SESSION['error'] = 'Accès refusé';
-    header('Location: ' . WEBSITE_SSL);
-    exit();
+    Helpers::returnAndExit(1, 'Accès refusé', WEBSITE_SSL);
 }
 
 $trans = new ActesTransaction();
 $trans->setId($id);
-if (! $trans->init()) {
-    $_SESSION['error'] = "Erreur d'initialisation de la transaction.";
-    header('Location: ' . Helpers::getLink('/modules/actes/index.php'));
-    exit();
+if (!$trans->init()) {
+    Helpers::returnAndExit(
+        1,
+        "Erreur d'initialisation de la transaction.",
+        Helpers::getLink('/modules/actes/index.php')
+    );
 }
 
 $envelope = new ActesEnvelope($trans->get('envelope_id'));
@@ -65,19 +61,15 @@ $owner->init();
 $serviceUser = new ServiceUser(DatabasePool::getInstance());
 $permission = new ModulePermission($serviceUser, 'actes');
 
-if (! $permission->canView($me, $owner)) {
-    $_SESSION['error'] = 'Accès refusé';
-    header('Location: ' . Helpers::getLink('/modules/actes/index.php'));
-    exit();
+if (!$permission->canView($me, $owner)) {
+    Helpers::returnAndExit(1, 'Accès refusé', Helpers::getLink('/modules/actes/index.php'));
 }
 
 $info = $actesTransactionSQL->getStatusInfoWithFluxRetour($id, ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
 
-if (! $info) {
-    $_SESSION['error'] = "Cette transaction n'existe pas";
-    header('Location: index.php');
+if (!$info) {
+    Helpers::returnAndExit(1, "Cette transaction n'existe pas", 'index.php');
 }
-
 
 header_wrapper('Content-type: application/xml');
 echo $info['flux_retour'];
