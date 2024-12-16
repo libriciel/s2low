@@ -206,4 +206,14 @@ class TestEnvironmentManager
         $testHandler = $this->getObjectInstancier()->get(TestHandler::class);
         return $testHandler->getRecords();
     }
+
+    public function setArchAuthentification(): void
+    {
+        $this->setServerInfo([
+            'SSL_CLIENT_VERIFY' => "SUCCESS",
+            'SSL_CLIENT_S_DN' => "adullact_arch",
+            'SSL_CLIENT_I_DN' => "adullact_arch",
+            'TESTING_CERTIFICATE_HASH' => "hash_adullact_arch",
+        ]);
+    }
 }
