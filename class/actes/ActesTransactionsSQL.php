@@ -412,6 +412,7 @@ WHERE
         $limit,
         ?string $min_submission_date = null,
         ?string $max_submission_date = null,
+        ?int $type_acte
     ): array | false {
         $offset = intval($offset);
         $limit = intval($limit);
@@ -436,6 +437,12 @@ WHERE
             $sql .= "AND status_id = ?";
             $data[] = $status_id;
         }
+        if ($type_acte !== null) {
+            $sql .= "AND status_id = ?";
+            $data[] = $status_id;
+        }
+
+
         $sql .= " ORDER BY actes_transactions.id DESC OFFSET $offset LIMIT $limit";
         return $this->query($sql, $data);
     }
