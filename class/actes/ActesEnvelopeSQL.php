@@ -100,7 +100,7 @@ class ActesEnvelopeSQL extends SQL
 
     public function getByFilepath(string $filepath)
     {
-        $sql = "SELECT id FROM actes_envelopes WHERE file_path=?";
+        $sql = "SELECT id FROM actes_envelopes WHERE file_path LIKE ?";
         return $this->queryOne($sql, $filepath);
     }
 

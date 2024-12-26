@@ -164,6 +164,7 @@ class CloudStorage
     /**
      * @param int $no_access_during_nb_days
      * @param bool $do
+     * @throws Exception
      */
     public function deleteFilesOnDisk(int $no_access_during_nb_days = 9999, bool $do = true): void
     {
@@ -226,10 +227,10 @@ class CloudStorage
     /**
      * @param int $object_id
      * @return string|bool
-     * @throws \S2lowLegacy\Class\CloudStorageException
-     * @throws \S2lowLegacy\Lib\PausingQueueException
-     * @throws \S2lowLegacy\Lib\UnrecoverableException
-     * @throws \Exception
+     * @throws CloudStorageException
+     * @throws PausingQueueException
+     * @throws UnrecoverableException
+     * @throws Exception
      */
     public function getPath(int $object_id): string | bool
     {
@@ -327,6 +328,7 @@ class CloudStorage
 
     /**
      * @param mixed $file
+     * @throws Exception
      */
     protected function handlerOlderFileNotInCloud(SplFileInfo $file): void
     {
@@ -351,8 +353,8 @@ class CloudStorage
      * @param string $file_path_on_cloud
      * @param string $file_path_on_disk
      * @return void
-     * @throws \S2lowLegacy\Lib\PausingQueueException
-     * @throws \S2lowLegacy\Lib\UnrecoverableException|\S2lowLegacy\Class\CloudStorageException
+     * @throws PausingQueueException
+     * @throws UnrecoverableException|CloudStorageException
      */
     private function retrieveFromCloud(int $object_id, string $file_path_on_cloud, string $file_path_on_disk): void
     {
@@ -401,9 +403,11 @@ class CloudStorage
     }
 
     /**
-     * @param \SplFileInfo $file
-     * @param string $destination
+     * @param SplFileInfo $file
+     * @param string $relative_destination
+     * @param string $directory
      * @return bool
+     * @throws Exception
      */
     private function rename(SplFileInfo $file, string $relative_destination, string $directory): bool
     {

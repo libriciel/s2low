@@ -1,5 +1,6 @@
 <?php
 
+use PHPUnit\Framework\MockObject\MockObject;
 use S2lowLegacy\Class\actes\ActesEnvoiFichierWorker;
 use S2lowLegacy\Class\actes\ActesFileSender;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
@@ -102,7 +103,7 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
             ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,
             __DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz"
         );
-        /** @var PHPUnit_Framework_MockObject_MockObject $actesFileSender */
+        /** @var ActesFileSender | MockObject  $actesFileSender */
         $actesFileSender = $this->getObjectInstancier()->get(ActesFileSender::class);
 
         $actesFileSender->method("send")->willThrowException(new Exception("Erreur du mock"));
@@ -122,10 +123,11 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
     {
         $archive_name = basename($archive_path);
 
-        copy($archive_path, $this->tmp_dir . "/$archive_name");
+        copy($archive_path, $this->getObjectInstancier()->get('actes_files_upload_root') . "/$archive_name");
 
         $sql = "INSERT INTO actes_envelopes(user_id,file_path) VALUES(1,?) returning ID";
-        $envelope_id = $this->getSQLQuery()->queryOne($sql, basename($this->tmp_dir) . "/$archive_name");
+        //TODO : vérifier que c'est ok dans les logs s2low
+        $envelope_id = $this->getSQLQuery()->queryOne($sql, "/$archive_name");
 
 
         $sql = "INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,antivirus_check) VALUES (?,?,?,?,?) returning ID;";

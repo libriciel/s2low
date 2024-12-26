@@ -59,7 +59,7 @@ trait ActesUtilitiesTestTrait
         $this->getActesTransactionsSQL()->updateStatus($transaction_id, $status, '', $flux_retour, $date);
 
         if ($archive_path) {
-            $relative_path = basename($archive_path);
+            $relative_path = '/' . basename($archive_path);
             $destination = $this->getObjectInstancier()->get('actes_files_upload_root') . '/' . basename($archive_path);
             copy($archive_path, $destination);
             $sql = 'UPDATE actes_envelopes SET file_path=?,file_size=? WHERE id=?';

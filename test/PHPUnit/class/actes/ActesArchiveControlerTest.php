@@ -136,8 +136,9 @@ class ActesArchiveControlerTest extends S2lowTestCase
         static::assertSame(ActesStatusSQL::STATUS_ERREUR_SAE_DOC_INDISPONIBLES, $last_status_info['status_id']);
 
         $log_record = $this->getLogRecords();
+        //TODO : vérifier que c'est bien ok dans les logs s2low
         static::assertSame(
-            "Documents indisponibles pour la transaction $transaction_id  : Impossible de récupérer l'enveloppe abc-TACT--000000000--20170803-16.tar.gz",
+            "Documents indisponibles pour la transaction $transaction_id  : Impossible de récupérer l'enveloppe /abc-TACT--000000000--20170803-16.tar.gz",
             $log_record[count($log_record) - 1]['message']
         );
     }
