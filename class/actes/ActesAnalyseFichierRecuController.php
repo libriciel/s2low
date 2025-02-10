@@ -286,7 +286,11 @@ class ActesAnalyseFichierRecuController
         $archive_path = $this->generateZip($rep_path, $archiveData, $archive_folder);
 
 
-        $envelope_path = mb_substr($archive_path, mb_strlen($this->actes_files_upload_root));
+        $envelope_path = ltrim(
+            mb_substr($archive_path, mb_strlen($this->actes_files_upload_root)),
+            '/'
+        );
+
         $envelope_size = filesize($archive_path);
 
         $this->s2lowLogger->info("Archive enregistré dans $archive_path");

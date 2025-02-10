@@ -375,6 +375,32 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
     }
 
     /**
+     * [Correction bug]
+     * Il faut que le file_path contienne bien le chemin relatif de l'enveloppe ( pas de / au début)
+     * Sinon la correspondance fichier sur disque / id de l'enveloppe posera problème
+     * @throws Exception
+     */
+    public function testFile_pathEnveloppeCourrierSimple()
+    {
+        $transaction_id_orig = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
+        $this->mockGetBySirenAndNumeroInterne($transaction_id_orig);
+        mkdir($this->actes_files_upload_root . "/000000000/20170725A/", 0777, true);
+        $this->copyDirectoryToAnalysePath(__DIR__ . "/../fixtures/test-courrier-simple");
+        $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get(ActesAnalyseFichierRecuController::class);
+        $actesAnalyseFichierRecuController->analyseAll();
+
+        $actesEnveloppeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
+        $enveloppe_info = $actesEnveloppeSQL->getLastEnvelope();
+        var_dump($enveloppe_info['file_path']);
+        $this->assertEquals(
+            '000000000/20170725A/abc-TACT--SPREF0011-000000000-20170725-1.tar.gz',
+            $enveloppe_info['file_path']
+        );
+
+        $this->cleanAnalysePath();
+    }
+
+    /**
      * Après 15J, le repertoire risque d'être détruit...
      * @throws Exception
      */
