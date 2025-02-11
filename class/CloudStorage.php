@@ -327,6 +327,7 @@ class CloudStorage
 
     /**
      * @param mixed $file
+     * @throws \Exception
      */
     protected function handlerOlderFileNotInCloud(SplFileInfo $file): void
     {
@@ -408,6 +409,10 @@ class CloudStorage
     private function rename(SplFileInfo $file, string $relative_destination, string $directory): bool
     {
         $destination = $directory . '/' . $relative_destination;
+        if (file_exists($destination) && $this->filesAreSame($destination, $file)) {
+            unlink($file->getRealPath());
+            return true;
+        }
         if (file_exists($destination)) {
             throw new Exception("Le fichier $destination existe déjà");
         }
@@ -422,5 +427,18 @@ class CloudStorage
             $file->getRealPath(),
             $destination
         );
+    }
+
+    /**
+     * @param string $destination
+     * @param \SplFileInfo $file
+     * @return bool
+     */
+    private function filesAreSame(string $destination, SplFileInfo $file): bool
+    {
+        if (filesize($destination) != filesize($file->getRealPath())) {
+            return false;
+        }
+        return sha1_file($destination) === sha1_file($file->getRealPath());
     }
 }

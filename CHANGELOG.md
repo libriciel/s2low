@@ -8,6 +8,10 @@
 - Permettre à l'archiviste de modifier les status PES #1233
 - Permettre l'utilisation de `/modules/actes/actes_transac_get_ARActe.php` via API
 
+### Corrections
+
+- Supprimer l'exception envoyée par actes-enveloppe-menage en cas de fichier semblable déjà présent dans le répertoire sans transaction #1239
+
 ## 5.0.46 - 2024-11-18
 
 ### Évolutions
