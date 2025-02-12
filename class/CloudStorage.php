@@ -429,14 +429,9 @@ class CloudStorage
         );
     }
 
-    /**
-     * @param string $destination
-     * @param \SplFileInfo $file
-     * @return bool
-     */
     private function filesAreSame(string $destination, SplFileInfo $file): bool
     {
-        if (filesize($destination) != filesize($file->getRealPath())) {
+        if (filesize($destination) !== filesize($file->getRealPath())) {
             return false;
         }
         return sha1_file($destination) === sha1_file($file->getRealPath());
