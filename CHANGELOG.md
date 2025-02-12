@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.1.0 - 2025-02-12
+
+## Dépréciations
+
+- Outil de signature intégré
+- Utilisation des mails sécurisés (remplacés par les mails sécurisés de pastell)
+
 ## 5.0.47 - 2025-02-11
 
 ### Évolutions
