@@ -391,7 +391,7 @@ class CloudStorageTest extends S2lowTestCase
     /**
      * @throws \Exception
      */
-    public function testMoveToOrphelinsFileAlreadyExists(): void
+    public function testMoveToOrphelinsDifferentFileAlreadyExistsWithSameName(): void
     {
         $file_to_send = $this->createFile();
         $tmpDir = new TmpFolder();
@@ -407,6 +407,31 @@ class CloudStorageTest extends S2lowTestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("Le fichier $files_without_transaction_dir/bar.txt existe déjà");
         $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0);
+        $tmpDir->delete($files_without_transaction_dir);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testMoveToOrphelinsSameFileAlreadyExists(): void
+    {
+        $file_to_send = $this->createFile();
+        $tmpDir = new TmpFolder();
+        $files_without_transaction_dir = $tmpDir->create();
+        $iCloudStorable = $this->getMailIncludedFilesCloudStorage(
+            $file_to_send,
+            $files_without_transaction_dir,
+            'bar.txt'
+        );
+
+        file_put_contents(
+            $files_without_transaction_dir . '/bar.txt',
+            file_get_contents($file_to_send)
+        );
+
+        $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0);
+        static::assertFileDoesNotExist($file_to_send); //Le fichier original est supprimé
+
         $tmpDir->delete($files_without_transaction_dir);
     }
 
