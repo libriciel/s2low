@@ -43,7 +43,7 @@ services:
       PASV_MIN_PORT: ${PASV_MIN_PORT:-65000}
       PASV_MAX_PORT: ${PASV_MAX_PORT:-65004}
     volumes:
-      - ${SIMULATEUR_PASSTRANS_WORKSPACE_DIRECTORY:-ftp_passtrans_datadir}:/data/${HELIOS_FTP_LOGIN:-helios}/
+      - ${SIMULATEUR_WORKSPACE_DIRECTORY:-ftp_datadir}:/data/${HELIOS_FTP_LOGIN:-helios}/
 
   simulateur_passtrans:
     restart: unless-stopped
@@ -72,7 +72,7 @@ services:
       PASV_MIN_PORT: ${PASV_MIN_PORT:-65000}
       PASV_MAX_PORT: ${PASV_MAX_PORT:-65004}
     volumes:
-      - ${SIMULATEUR_WORKSPACE_DIRECTORY:-ftp_passtrans_datadir}:/data/${HELIOS_PASSTRANS_LOGIN:-helios-passtrans}/
+      - ${SIMULATEUR_PASSTRANS_WORKSPACE_DIRECTORY:-ftp_passtrans_datadir}:/data/${HELIOS_PASSTRANS_LOGIN:-helios-passtrans}/
 
   mail:
     restart: unless-stopped
