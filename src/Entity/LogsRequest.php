@@ -78,7 +78,7 @@ class LogsRequest
     private $authorityGroup;
 
     /**
-     * @var \Users
+     * @var Users
      *
      * @ORM\ManyToOne(targetEntity="Users")
      * @ORM\JoinColumns({

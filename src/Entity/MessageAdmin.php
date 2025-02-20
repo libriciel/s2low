@@ -92,7 +92,7 @@ class MessageAdmin
     private $userIdPublieur;
 
     /**
-     * @var \Users
+     * @var Users
      *
      * @ORM\ManyToOne(targetEntity="Users")
      * @ORM\JoinColumns({
