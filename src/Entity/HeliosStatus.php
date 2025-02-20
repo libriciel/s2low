@@ -1,0 +1,33 @@
+<?php
+
+namespace S2low\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * HeliosStatus
+ *
+ * @ORM\Table(name="helios_status")
+ * @ORM\Entity
+ */
+class HeliosStatus
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="SEQUENCE")
+     * @ORM\SequenceGenerator(sequenceName="helios_status_id_seq", allocationSize=1, initialValue=1)
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=64, nullable=false)
+     */
+    private $name;
+
+
+}

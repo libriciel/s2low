@@ -1,0 +1,64 @@
+<?php
+
+namespace S2low\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Nounce
+ *
+ * @ORM\Table(name="nounce", indexes={@ORM\Index(name="IDX_F5FE342281EC865B", columns={"authority_id"})})
+ * @ORM\Entity
+ */
+class Nounce
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="SEQUENCE")
+     * @ORM\SequenceGenerator(sequenceName="nounce_id_seq", allocationSize=1, initialValue=1)
+     */
+    private $id;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="nounce", type="string", length=255, nullable=true)
+     */
+    private $nounce;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="login", type="string", length=255, nullable=true)
+     */
+    private $login;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="hash", type="string", length=255, nullable=true)
+     */
+    private $hash;
+
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="creation", type="datetimetz", nullable=true)
+     */
+    private $creation;
+
+    /**
+     * @var Authorities
+     *
+     * @ORM\ManyToOne(targetEntity="Authorities")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="authority_id", referencedColumnName="id")
+     * })
+     */
+    private $authority;
+
+
+}
