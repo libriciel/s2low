@@ -42,5 +42,34 @@ class ModulesAuthorities
      */
     private $authority;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getModule(): ?Modules
+    {
+        return $this->module;
+    }
+
+    public function setModule(?Modules $module): static
+    {
+        $this->module = $module;
+
+        return $this;
+    }
+
+    public function getAuthority(): ?Authorities
+    {
+        return $this->authority;
+    }
+
+    public function setAuthority(?Authorities $authority): static
+    {
+        $this->authority = $authority;
+
+        return $this;
+    }
+
 
 }

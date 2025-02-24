@@ -2,6 +2,7 @@
 
 namespace S2low\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -52,6 +53,59 @@ class AuthoritySiret
      * })
      */
     private $authority;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getSiret(): ?string
+    {
+        return $this->siret;
+    }
+
+    public function setSiret(?string $siret): static
+    {
+        $this->siret = $siret;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\DateTimeInterface $date): static
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function isBlocked(): ?bool
+    {
+        return $this->isBlocked;
+    }
+
+    public function setIsBlocked(bool $isBlocked): static
+    {
+        $this->isBlocked = $isBlocked;
+
+        return $this;
+    }
+
+    public function getAuthority(): ?Authorities
+    {
+        return $this->authority;
+    }
+
+    public function setAuthority(?Authorities $authority): static
+    {
+        $this->authority = $authority;
+
+        return $this;
+    }
 
 
 }

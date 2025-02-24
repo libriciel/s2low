@@ -2,6 +2,7 @@
 
 namespace S2low\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -96,6 +97,119 @@ class LogsRequest
      * })
      */
     private $user;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getState(): ?int
+    {
+        return $this->state;
+    }
+
+    public function setState(int $state): static
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    public function getDateDemande(): ?\DateTimeInterface
+    {
+        return $this->dateDemande;
+    }
+
+    public function setDateDemande(\DateTimeInterface $dateDemande): static
+    {
+        $this->dateDemande = $dateDemande;
+
+        return $this;
+    }
+
+    public function getDateTraitement(): ?\DateTimeInterface
+    {
+        return $this->dateTraitement;
+    }
+
+    public function setDateTraitement(?\DateTimeInterface $dateTraitement): static
+    {
+        $this->dateTraitement = $dateTraitement;
+
+        return $this;
+    }
+
+    public function getDateDebut(): ?\DateTimeInterface
+    {
+        return $this->dateDebut;
+    }
+
+    public function setDateDebut(\DateTimeInterface $dateDebut): static
+    {
+        $this->dateDebut = $dateDebut;
+
+        return $this;
+    }
+
+    public function getDateFin(): ?\DateTimeInterface
+    {
+        return $this->dateFin;
+    }
+
+    public function setDateFin(\DateTimeInterface $dateFin): static
+    {
+        $this->dateFin = $dateFin;
+
+        return $this;
+    }
+
+    public function getAuthority(): ?Authorities
+    {
+        return $this->authority;
+    }
+
+    public function setAuthority(?Authorities $authority): static
+    {
+        $this->authority = $authority;
+
+        return $this;
+    }
+
+    public function getAuthorityGroup(): ?AuthorityGroups
+    {
+        return $this->authorityGroup;
+    }
+
+    public function setAuthorityGroup(?AuthorityGroups $authorityGroup): static
+    {
+        $this->authorityGroup = $authorityGroup;
+
+        return $this;
+    }
+
+    public function getUserIdDemandeur(): ?Users
+    {
+        return $this->userIdDemandeur;
+    }
+
+    public function setUserIdDemandeur(?Users $userIdDemandeur): static
+    {
+        $this->userIdDemandeur = $userIdDemandeur;
+
+        return $this;
+    }
+
+    public function getUser(): ?Users
+    {
+        return $this->user;
+    }
+
+    public function setUser(?Users $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
 
 
 }

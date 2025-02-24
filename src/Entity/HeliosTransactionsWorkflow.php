@@ -2,6 +2,7 @@
 
 namespace S2low\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -49,6 +50,59 @@ class HeliosTransactionsWorkflow
      * @ORM\Column(name="message", type="string", length=512, nullable=false)
      */
     private $message;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getTransactionId(): ?int
+    {
+        return $this->transactionId;
+    }
+
+    public function setTransactionId(int $transactionId): static
+    {
+        $this->transactionId = $transactionId;
+
+        return $this;
+    }
+
+    public function getStatusId(): ?int
+    {
+        return $this->statusId;
+    }
+
+    public function setStatusId(int $statusId): static
+    {
+        $this->statusId = $statusId;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): static
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(string $message): static
+    {
+        $this->message = $message;
+
+        return $this;
+    }
 
 
 }

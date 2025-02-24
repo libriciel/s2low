@@ -84,5 +84,106 @@ class AuthorityPastellConfig
      */
     private $authority;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getIdFlux(): ?string
+    {
+        return $this->idFlux;
+    }
+
+    public function setIdFlux(string $idFlux): static
+    {
+        $this->idFlux = $idFlux;
+
+        return $this;
+    }
+
+    public function getAction(): ?string
+    {
+        return $this->action;
+    }
+
+    public function setAction(string $action): static
+    {
+        $this->action = $action;
+
+        return $this;
+    }
+
+    public function isAuto(): ?bool
+    {
+        return $this->isAuto;
+    }
+
+    public function setIsAuto(bool $isAuto): static
+    {
+        $this->isAuto = $isAuto;
+
+        return $this;
+    }
+
+    public function getDestination(): ?string
+    {
+        return $this->destination;
+    }
+
+    public function setDestination(?string $destination): static
+    {
+        $this->destination = $destination;
+
+        return $this;
+    }
+
+    public function getTransactionIdMin(): ?int
+    {
+        return $this->transactionIdMin;
+    }
+
+    public function setTransactionIdMin(?int $transactionIdMin): static
+    {
+        $this->transactionIdMin = $transactionIdMin;
+
+        return $this;
+    }
+
+    public function getTransactionIdMax(): ?int
+    {
+        return $this->transactionIdMax;
+    }
+
+    public function setTransactionIdMax(int $transactionIdMax): static
+    {
+        $this->transactionIdMax = $transactionIdMax;
+
+        return $this;
+    }
+
+    public function getModule(): ?Modules
+    {
+        return $this->module;
+    }
+
+    public function setModule(?Modules $module): static
+    {
+        $this->module = $module;
+
+        return $this;
+    }
+
+    public function getAuthority(): ?Authorities
+    {
+        return $this->authority;
+    }
+
+    public function setAuthority(?Authorities $authority): static
+    {
+        $this->authority = $authority;
+
+        return $this;
+    }
+
 
 }

@@ -42,5 +42,34 @@ class MailUserGroupe
      */
     private $idGroupe;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getIdUser(): ?MailAnnuaire
+    {
+        return $this->idUser;
+    }
+
+    public function setIdUser(?MailAnnuaire $idUser): static
+    {
+        $this->idUser = $idUser;
+
+        return $this;
+    }
+
+    public function getIdGroupe(): ?MailGroupe
+    {
+        return $this->idGroupe;
+    }
+
+    public function setIdGroupe(?MailGroupe $idGroupe): static
+    {
+        $this->idGroupe = $idGroupe;
+
+        return $this;
+    }
+
 
 }

@@ -49,5 +49,46 @@ class UsersPerms
      */
     private $user;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getPerm(): ?string
+    {
+        return $this->perm;
+    }
+
+    public function setPerm(?string $perm): static
+    {
+        $this->perm = $perm;
+
+        return $this;
+    }
+
+    public function getModule(): ?Modules
+    {
+        return $this->module;
+    }
+
+    public function setModule(?Modules $module): static
+    {
+        $this->module = $module;
+
+        return $this;
+    }
+
+    public function getUser(): ?Users
+    {
+        return $this->user;
+    }
+
+    public function setUser(?Users $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
 
 }

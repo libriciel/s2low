@@ -2,6 +2,7 @@
 
 namespace S2low\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -104,6 +105,143 @@ class LogsHistorique
      * })
      */
     private $authorityGroup;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\DateTimeInterface $date): static
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function getSeverity(): ?int
+    {
+        return $this->severity;
+    }
+
+    public function setSeverity(?int $severity): static
+    {
+        $this->severity = $severity;
+
+        return $this;
+    }
+
+    public function getModule(): ?string
+    {
+        return $this->module;
+    }
+
+    public function setModule(?string $module): static
+    {
+        $this->module = $module;
+
+        return $this;
+    }
+
+    public function getIssuer(): ?string
+    {
+        return $this->issuer;
+    }
+
+    public function setIssuer(?string $issuer): static
+    {
+        $this->issuer = $issuer;
+
+        return $this;
+    }
+
+    public function getUserId(): ?int
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(?int $userId): static
+    {
+        $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function getVisibility(): ?string
+    {
+        return $this->visibility;
+    }
+
+    public function setVisibility(?string $visibility): static
+    {
+        $this->visibility = $visibility;
+
+        return $this;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): static
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
+    public function getTimestamp(): ?string
+    {
+        return $this->timestamp;
+    }
+
+    public function setTimestamp(?string $timestamp): static
+    {
+        $this->timestamp = $timestamp;
+
+        return $this;
+    }
+
+    public function getMessageHorodate(): ?string
+    {
+        return $this->messageHorodate;
+    }
+
+    public function setMessageHorodate(?string $messageHorodate): static
+    {
+        $this->messageHorodate = $messageHorodate;
+
+        return $this;
+    }
+
+    public function getAuthority(): ?Authorities
+    {
+        return $this->authority;
+    }
+
+    public function setAuthority(?Authorities $authority): static
+    {
+        $this->authority = $authority;
+
+        return $this;
+    }
+
+    public function getAuthorityGroup(): ?AuthorityGroups
+    {
+        return $this->authorityGroup;
+    }
+
+    public function setAuthorityGroup(?AuthorityGroups $authorityGroup): static
+    {
+        $this->authorityGroup = $authorityGroup;
+
+        return $this;
+    }
 
 
 }

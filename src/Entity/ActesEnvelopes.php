@@ -2,6 +2,7 @@
 
 namespace S2low\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -126,6 +127,191 @@ class ActesEnvelopes
      * @ORM\Column(name="not_available", type="boolean", nullable=false)
      */
     private $notAvailable = false;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getUserId(): ?int
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(?int $userId): static
+    {
+        $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function getSubmissionDate(): ?\DateTimeInterface
+    {
+        return $this->submissionDate;
+    }
+
+    public function setSubmissionDate(?\DateTimeInterface $submissionDate): static
+    {
+        $this->submissionDate = $submissionDate;
+
+        return $this;
+    }
+
+    public function getSiren(): ?string
+    {
+        return $this->siren;
+    }
+
+    public function setSiren(?string $siren): static
+    {
+        $this->siren = $siren;
+
+        return $this;
+    }
+
+    public function getDepartment(): ?string
+    {
+        return $this->department;
+    }
+
+    public function setDepartment(?string $department): static
+    {
+        $this->department = $department;
+
+        return $this;
+    }
+
+    public function getDistrict(): ?string
+    {
+        return $this->district;
+    }
+
+    public function setDistrict(?string $district): static
+    {
+        $this->district = $district;
+
+        return $this;
+    }
+
+    public function getAuthorityTypeCode(): ?int
+    {
+        return $this->authorityTypeCode;
+    }
+
+    public function setAuthorityTypeCode(?int $authorityTypeCode): static
+    {
+        $this->authorityTypeCode = $authorityTypeCode;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getTelephone(): ?string
+    {
+        return $this->telephone;
+    }
+
+    public function setTelephone(?string $telephone): static
+    {
+        $this->telephone = $telephone;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getFilePath(): ?string
+    {
+        return $this->filePath;
+    }
+
+    public function setFilePath(?string $filePath): static
+    {
+        $this->filePath = $filePath;
+
+        return $this;
+    }
+
+    public function getFileSize(): ?int
+    {
+        return $this->fileSize;
+    }
+
+    public function setFileSize(?int $fileSize): static
+    {
+        $this->fileSize = $fileSize;
+
+        return $this;
+    }
+
+    public function getReturnMail(): ?string
+    {
+        return $this->returnMail;
+    }
+
+    public function setReturnMail(?string $returnMail): static
+    {
+        $this->returnMail = $returnMail;
+
+        return $this;
+    }
+
+    public function getWarningSent(): ?string
+    {
+        return $this->warningSent;
+    }
+
+    public function setWarningSent(?string $warningSent): static
+    {
+        $this->warningSent = $warningSent;
+
+        return $this;
+    }
+
+    public function isInCloud(): ?bool
+    {
+        return $this->isInCloud;
+    }
+
+    public function setIsInCloud(bool $isInCloud): static
+    {
+        $this->isInCloud = $isInCloud;
+
+        return $this;
+    }
+
+    public function isNotAvailable(): ?bool
+    {
+        return $this->notAvailable;
+    }
+
+    public function setNotAvailable(bool $notAvailable): static
+    {
+        $this->notAvailable = $notAvailable;
+
+        return $this;
+    }
 
 
 }

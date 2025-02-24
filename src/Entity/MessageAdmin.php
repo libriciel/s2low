@@ -2,6 +2,7 @@
 
 namespace S2low\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -100,6 +101,131 @@ class MessageAdmin
      * })
      */
     private $userIdRetireur;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getTitre(): ?string
+    {
+        return $this->titre;
+    }
+
+    public function setTitre(string $titre): static
+    {
+        $this->titre = $titre;
+
+        return $this;
+    }
+
+    public function getNiveau(): ?int
+    {
+        return $this->niveau;
+    }
+
+    public function setNiveau(?int $niveau): static
+    {
+        $this->niveau = $niveau;
+
+        return $this;
+    }
+
+    public function getDatePublication(): ?\DateTimeInterface
+    {
+        return $this->datePublication;
+    }
+
+    public function setDatePublication(?\DateTimeInterface $datePublication): static
+    {
+        $this->datePublication = $datePublication;
+
+        return $this;
+    }
+
+    public function getDateRetrait(): ?\DateTimeInterface
+    {
+        return $this->dateRetrait;
+    }
+
+    public function setDateRetrait(?\DateTimeInterface $dateRetrait): static
+    {
+        $this->dateRetrait = $dateRetrait;
+
+        return $this;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(string $message): static
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
+    public function isPublie(): ?bool
+    {
+        return $this->isPublie;
+    }
+
+    public function setIsPublie(?bool $isPublie): static
+    {
+        $this->isPublie = $isPublie;
+
+        return $this;
+    }
+
+    public function isRetire(): ?bool
+    {
+        return $this->isRetire;
+    }
+
+    public function setIsRetire(?bool $isRetire): static
+    {
+        $this->isRetire = $isRetire;
+
+        return $this;
+    }
+
+    public function getUser(): ?Users
+    {
+        return $this->user;
+    }
+
+    public function setUser(?Users $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getUserIdPublieur(): ?Users
+    {
+        return $this->userIdPublieur;
+    }
+
+    public function setUserIdPublieur(?Users $userIdPublieur): static
+    {
+        $this->userIdPublieur = $userIdPublieur;
+
+        return $this;
+    }
+
+    public function getUserIdRetireur(): ?Users
+    {
+        return $this->userIdRetireur;
+    }
+
+    public function setUserIdRetireur(?Users $userIdRetireur): static
+    {
+        $this->userIdRetireur = $userIdRetireur;
+
+        return $this;
+    }
 
 
 }

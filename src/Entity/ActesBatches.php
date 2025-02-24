@@ -2,6 +2,7 @@
 
 namespace S2low\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -63,6 +64,83 @@ class ActesBatches
      * @ORM\Column(name="next_suffix", type="integer", nullable=true)
      */
     private $nextSuffix;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getUserId(): ?int
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(?int $userId): static
+    {
+        $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function getSubmissionDate(): ?\DateTimeInterface
+    {
+        return $this->submissionDate;
+    }
+
+    public function setSubmissionDate(?\DateTimeInterface $submissionDate): static
+    {
+        $this->submissionDate = $submissionDate;
+
+        return $this;
+    }
+
+    public function getStorageDir(): ?string
+    {
+        return $this->storageDir;
+    }
+
+    public function setStorageDir(?string $storageDir): static
+    {
+        $this->storageDir = $storageDir;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getNumPrefix(): ?string
+    {
+        return $this->numPrefix;
+    }
+
+    public function setNumPrefix(?string $numPrefix): static
+    {
+        $this->numPrefix = $numPrefix;
+
+        return $this;
+    }
+
+    public function getNextSuffix(): ?int
+    {
+        return $this->nextSuffix;
+    }
+
+    public function setNextSuffix(?int $nextSuffix): static
+    {
+        $this->nextSuffix = $nextSuffix;
+
+        return $this;
+    }
 
 
 }

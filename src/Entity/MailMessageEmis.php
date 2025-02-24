@@ -2,6 +2,7 @@
 
 namespace S2low\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -56,6 +57,71 @@ class MailMessageEmis
      * @ORM\Column(name="ack_date", type="datetimetz", nullable=true)
      */
     private $ackDate;
+
+    public function getId(): ?string
+    {
+        return $this->id;
+    }
+
+    public function getMailTransactionId(): ?int
+    {
+        return $this->mailTransactionId;
+    }
+
+    public function setMailTransactionId(int $mailTransactionId): static
+    {
+        $this->mailTransactionId = $mailTransactionId;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getTypeEnvoi(): ?string
+    {
+        return $this->typeEnvoi;
+    }
+
+    public function setTypeEnvoi(string $typeEnvoi): static
+    {
+        $this->typeEnvoi = $typeEnvoi;
+
+        return $this;
+    }
+
+    public function isAck(): ?bool
+    {
+        return $this->ack;
+    }
+
+    public function setAck(bool $ack): static
+    {
+        $this->ack = $ack;
+
+        return $this;
+    }
+
+    public function getAckDate(): ?\DateTimeInterface
+    {
+        return $this->ackDate;
+    }
+
+    public function setAckDate(?\DateTimeInterface $ackDate): static
+    {
+        $this->ackDate = $ackDate;
+
+        return $this;
+    }
 
 
 }

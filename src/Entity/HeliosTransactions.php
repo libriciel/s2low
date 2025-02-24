@@ -2,6 +2,7 @@
 
 namespace S2low\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -188,6 +189,287 @@ class HeliosTransactions
      * })
      */
     private $user;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getFilename(): ?string
+    {
+        return $this->filename;
+    }
+
+    public function setFilename(string $filename): static
+    {
+        $this->filename = $filename;
+
+        return $this;
+    }
+
+    public function getFileSize(): ?int
+    {
+        return $this->fileSize;
+    }
+
+    public function setFileSize(?int $fileSize): static
+    {
+        $this->fileSize = $fileSize;
+
+        return $this;
+    }
+
+    public function getSiren(): ?string
+    {
+        return $this->siren;
+    }
+
+    public function setSiren(?string $siren): static
+    {
+        $this->siren = $siren;
+
+        return $this;
+    }
+
+    public function getSha1(): ?string
+    {
+        return $this->sha1;
+    }
+
+    public function setSha1(?string $sha1): static
+    {
+        $this->sha1 = $sha1;
+
+        return $this;
+    }
+
+    public function getWarningSent(): ?int
+    {
+        return $this->warningSent;
+    }
+
+    public function setWarningSent(?int $warningSent): static
+    {
+        $this->warningSent = $warningSent;
+
+        return $this;
+    }
+
+    public function getUrlArchivage(): ?string
+    {
+        return $this->urlArchivage;
+    }
+
+    public function setUrlArchivage(?string $urlArchivage): static
+    {
+        $this->urlArchivage = $urlArchivage;
+
+        return $this;
+    }
+
+    public function getSubmissionDate(): ?\DateTimeInterface
+    {
+        return $this->submissionDate;
+    }
+
+    public function setSubmissionDate(?\DateTimeInterface $submissionDate): static
+    {
+        $this->submissionDate = $submissionDate;
+
+        return $this;
+    }
+
+    public function getXmlNomfic(): ?string
+    {
+        return $this->xmlNomfic;
+    }
+
+    public function setXmlNomfic(?string $xmlNomfic): static
+    {
+        $this->xmlNomfic = $xmlNomfic;
+
+        return $this;
+    }
+
+    public function getAcquitFilename(): ?string
+    {
+        return $this->acquitFilename;
+    }
+
+    public function setAcquitFilename(?string $acquitFilename): static
+    {
+        $this->acquitFilename = $acquitFilename;
+
+        return $this;
+    }
+
+    public function getCompleteName(): ?string
+    {
+        return $this->completeName;
+    }
+
+    public function setCompleteName(?string $completeName): static
+    {
+        $this->completeName = $completeName;
+
+        return $this;
+    }
+
+    public function getSaeTransferIdentifier(): ?string
+    {
+        return $this->saeTransferIdentifier;
+    }
+
+    public function setSaeTransferIdentifier(?string $saeTransferIdentifier): static
+    {
+        $this->saeTransferIdentifier = $saeTransferIdentifier;
+
+        return $this;
+    }
+
+    public function getLastStatusId(): ?int
+    {
+        return $this->lastStatusId;
+    }
+
+    public function setLastStatusId(?int $lastStatusId): static
+    {
+        $this->lastStatusId = $lastStatusId;
+
+        return $this;
+    }
+
+    public function getArchiveUrl(): ?string
+    {
+        return $this->archiveUrl;
+    }
+
+    public function setArchiveUrl(?string $archiveUrl): static
+    {
+        $this->archiveUrl = $archiveUrl;
+
+        return $this;
+    }
+
+    public function isSignatureTechnique(): ?bool
+    {
+        return $this->signatureTechnique;
+    }
+
+    public function setSignatureTechnique(bool $signatureTechnique): static
+    {
+        $this->signatureTechnique = $signatureTechnique;
+
+        return $this;
+    }
+
+    public function getXmlCodCol(): ?string
+    {
+        return $this->xmlCodCol;
+    }
+
+    public function setXmlCodCol(?string $xmlCodCol): static
+    {
+        $this->xmlCodCol = $xmlCodCol;
+
+        return $this;
+    }
+
+    public function getXmlIdPost(): ?string
+    {
+        return $this->xmlIdPost;
+    }
+
+    public function setXmlIdPost(?string $xmlIdPost): static
+    {
+        $this->xmlIdPost = $xmlIdPost;
+
+        return $this;
+    }
+
+    public function getXmlCodBud(): ?string
+    {
+        return $this->xmlCodBud;
+    }
+
+    public function setXmlCodBud(?string $xmlCodBud): static
+    {
+        $this->xmlCodBud = $xmlCodBud;
+
+        return $this;
+    }
+
+    public function isInCloud(): ?bool
+    {
+        return $this->isInCloud;
+    }
+
+    public function setIsInCloud(bool $isInCloud): static
+    {
+        $this->isInCloud = $isInCloud;
+
+        return $this;
+    }
+
+    public function isNotAvailable(): ?bool
+    {
+        return $this->notAvailable;
+    }
+
+    public function setNotAvailable(bool $notAvailable): static
+    {
+        $this->notAvailable = $notAvailable;
+
+        return $this;
+    }
+
+    public function isPesAcquitIsInCloud(): ?bool
+    {
+        return $this->pesAcquitIsInCloud;
+    }
+
+    public function setPesAcquitIsInCloud(bool $pesAcquitIsInCloud): static
+    {
+        $this->pesAcquitIsInCloud = $pesAcquitIsInCloud;
+
+        return $this;
+    }
+
+    public function isPesAcquitNotAvailable(): ?bool
+    {
+        return $this->pesAcquitNotAvailable;
+    }
+
+    public function setPesAcquitNotAvailable(bool $pesAcquitNotAvailable): static
+    {
+        $this->pesAcquitNotAvailable = $pesAcquitNotAvailable;
+
+        return $this;
+    }
+
+    public function getAuthority(): ?Authorities
+    {
+        return $this->authority;
+    }
+
+    public function setAuthority(?Authorities $authority): static
+    {
+        $this->authority = $authority;
+
+        return $this;
+    }
+
+    public function getUser(): ?Users
+    {
+        return $this->user;
+    }
+
+    public function setUser(?Users $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
 
 
 }

@@ -2,6 +2,7 @@
 
 namespace S2low\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -69,6 +70,83 @@ class ActesBatchFiles
      * })
      */
     private $batch;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getFilename(): ?string
+    {
+        return $this->filename;
+    }
+
+    public function setFilename(?string $filename): static
+    {
+        $this->filename = $filename;
+
+        return $this;
+    }
+
+    public function getFilesize(): ?int
+    {
+        return $this->filesize;
+    }
+
+    public function setFilesize(?int $filesize): static
+    {
+        $this->filesize = $filesize;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getSignature(): ?string
+    {
+        return $this->signature;
+    }
+
+    public function setSignature(?string $signature): static
+    {
+        $this->signature = $signature;
+
+        return $this;
+    }
+
+    public function getTransaction(): ?ActesTransactions
+    {
+        return $this->transaction;
+    }
+
+    public function setTransaction(?ActesTransactions $transaction): static
+    {
+        $this->transaction = $transaction;
+
+        return $this;
+    }
+
+    public function getBatch(): ?ActesBatches
+    {
+        return $this->batch;
+    }
+
+    public function setBatch(?ActesBatches $batch): static
+    {
+        $this->batch = $batch;
+
+        return $this;
+    }
 
 
 }

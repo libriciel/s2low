@@ -2,6 +2,7 @@
 
 namespace S2low\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -42,6 +43,47 @@ class ActesEnvelopeSerials
      * @ORM\Column(name="serial", type="integer", nullable=true)
      */
     private $serial;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getAuthorityId(): ?int
+    {
+        return $this->authorityId;
+    }
+
+    public function setAuthorityId(?int $authorityId): static
+    {
+        $this->authorityId = $authorityId;
+
+        return $this;
+    }
+
+    public function getResetDate(): ?\DateTimeInterface
+    {
+        return $this->resetDate;
+    }
+
+    public function setResetDate(?\DateTimeInterface $resetDate): static
+    {
+        $this->resetDate = $resetDate;
+
+        return $this;
+    }
+
+    public function getSerial(): ?int
+    {
+        return $this->serial;
+    }
+
+    public function setSerial(?int $serial): static
+    {
+        $this->serial = $serial;
+
+        return $this;
+    }
 
 
 }

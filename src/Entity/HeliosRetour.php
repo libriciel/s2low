@@ -2,6 +2,7 @@
 
 namespace S2low\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -94,6 +95,131 @@ class HeliosRetour
      * })
      */
     private $authority;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getSiren(): ?string
+    {
+        return $this->siren;
+    }
+
+    public function setSiren(?string $siren): static
+    {
+        $this->siren = $siren;
+
+        return $this;
+    }
+
+    public function getFilename(): ?string
+    {
+        return $this->filename;
+    }
+
+    public function setFilename(?string $filename): static
+    {
+        $this->filename = $filename;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\DateTimeInterface $date): static
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getSiret(): ?string
+    {
+        return $this->siret;
+    }
+
+    public function setSiret(?string $siret): static
+    {
+        $this->siret = $siret;
+
+        return $this;
+    }
+
+    public function getSha1(): ?string
+    {
+        return $this->sha1;
+    }
+
+    public function setSha1(?string $sha1): static
+    {
+        $this->sha1 = $sha1;
+
+        return $this;
+    }
+
+    public function isInCloud(): ?bool
+    {
+        return $this->isInCloud;
+    }
+
+    public function setIsInCloud(bool $isInCloud): static
+    {
+        $this->isInCloud = $isInCloud;
+
+        return $this;
+    }
+
+    public function isNotAvailable(): ?bool
+    {
+        return $this->notAvailable;
+    }
+
+    public function setNotAvailable(bool $notAvailable): static
+    {
+        $this->notAvailable = $notAvailable;
+
+        return $this;
+    }
+
+    public function getFileSize(): ?int
+    {
+        return $this->fileSize;
+    }
+
+    public function setFileSize(?int $fileSize): static
+    {
+        $this->fileSize = $fileSize;
+
+        return $this;
+    }
+
+    public function getAuthority(): ?Authorities
+    {
+        return $this->authority;
+    }
+
+    public function setAuthority(?Authorities $authority): static
+    {
+        $this->authority = $authority;
+
+        return $this;
+    }
 
 
 }

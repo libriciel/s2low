@@ -46,5 +46,46 @@ class ServiceUser
      */
     private $parent;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getAuthorityId(): ?int
+    {
+        return $this->authorityId;
+    }
+
+    public function setAuthorityId(?int $authorityId): static
+    {
+        $this->authorityId = $authorityId;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getParent(): ?self
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?self $parent): static
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
 
 }

@@ -29,5 +29,22 @@ class HeliosTransmissionWindows
      */
     private $rateLimit;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getRateLimit(): ?int
+    {
+        return $this->rateLimit;
+    }
+
+    public function setRateLimit(?int $rateLimit): static
+    {
+        $this->rateLimit = $rateLimit;
+
+        return $this;
+    }
+
 
 }

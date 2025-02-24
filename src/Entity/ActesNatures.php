@@ -36,5 +36,34 @@ class ActesNatures
      */
     private $descr;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getShortDescr(): ?string
+    {
+        return $this->shortDescr;
+    }
+
+    public function setShortDescr(?string $shortDescr): static
+    {
+        $this->shortDescr = $shortDescr;
+
+        return $this;
+    }
+
+    public function getDescr(): ?string
+    {
+        return $this->descr;
+    }
+
+    public function setDescr(?string $descr): static
+    {
+        $this->descr = $descr;
+
+        return $this;
+    }
+
 
 }

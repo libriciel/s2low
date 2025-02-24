@@ -2,6 +2,7 @@
 
 namespace S2low\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -42,6 +43,47 @@ class MailErrors
      * @ORM\Column(name="message_retour", type="text", nullable=true)
      */
     private $messageRetour;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getMailMessageEmisId(): ?string
+    {
+        return $this->mailMessageEmisId;
+    }
+
+    public function setMailMessageEmisId(?string $mailMessageEmisId): static
+    {
+        $this->mailMessageEmisId = $mailMessageEmisId;
+
+        return $this;
+    }
+
+    public function getDateRegistered(): ?\DateTimeInterface
+    {
+        return $this->dateRegistered;
+    }
+
+    public function setDateRegistered(?\DateTimeInterface $dateRegistered): static
+    {
+        $this->dateRegistered = $dateRegistered;
+
+        return $this;
+    }
+
+    public function getMessageRetour(): ?string
+    {
+        return $this->messageRetour;
+    }
+
+    public function setMessageRetour(?string $messageRetour): static
+    {
+        $this->messageRetour = $messageRetour;
+
+        return $this;
+    }
 
 
 }
