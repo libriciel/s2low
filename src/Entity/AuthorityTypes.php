@@ -39,5 +39,34 @@ class AuthorityTypes
      */
     private $parentType;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getParentType(): ?self
+    {
+        return $this->parentType;
+    }
+
+    public function setParentType(?self $parentType): static
+    {
+        $this->parentType = $parentType;
+
+        return $this;
+    }
+
 
 }

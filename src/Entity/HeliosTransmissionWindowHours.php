@@ -2,6 +2,7 @@
 
 namespace S2low\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -52,6 +53,59 @@ class HeliosTransmissionWindowHours
      * })
      */
     private $transmissionWindow;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getWindowBegin(): ?\DateTimeInterface
+    {
+        return $this->windowBegin;
+    }
+
+    public function setWindowBegin(?\DateTimeInterface $windowBegin): static
+    {
+        $this->windowBegin = $windowBegin;
+
+        return $this;
+    }
+
+    public function getWindowEnd(): ?\DateTimeInterface
+    {
+        return $this->windowEnd;
+    }
+
+    public function setWindowEnd(?\DateTimeInterface $windowEnd): static
+    {
+        $this->windowEnd = $windowEnd;
+
+        return $this;
+    }
+
+    public function getConsumed(): ?int
+    {
+        return $this->consumed;
+    }
+
+    public function setConsumed(?int $consumed): static
+    {
+        $this->consumed = $consumed;
+
+        return $this;
+    }
+
+    public function getTransmissionWindow(): ?HeliosTransmissionWindows
+    {
+        return $this->transmissionWindow;
+    }
+
+    public function setTransmissionWindow(?HeliosTransmissionWindows $transmissionWindow): static
+    {
+        $this->transmissionWindow = $transmissionWindow;
+
+        return $this;
+    }
 
 
 }

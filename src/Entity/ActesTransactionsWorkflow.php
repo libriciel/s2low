@@ -2,6 +2,7 @@
 
 namespace S2low\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -69,6 +70,83 @@ class ActesTransactionsWorkflow
      * })
      */
     private $status;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\DateTimeInterface $date): static
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): static
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
+    public function getFluxRetour()
+    {
+        return $this->fluxRetour;
+    }
+
+    public function setFluxRetour($fluxRetour): static
+    {
+        $this->fluxRetour = $fluxRetour;
+
+        return $this;
+    }
+
+    public function getFluxRetourTexte(): ?string
+    {
+        return $this->fluxRetourTexte;
+    }
+
+    public function setFluxRetourTexte(?string $fluxRetourTexte): static
+    {
+        $this->fluxRetourTexte = $fluxRetourTexte;
+
+        return $this;
+    }
+
+    public function getTransaction(): ?ActesTransactions
+    {
+        return $this->transaction;
+    }
+
+    public function setTransaction(?ActesTransactions $transaction): static
+    {
+        $this->transaction = $transaction;
+
+        return $this;
+    }
+
+    public function getStatus(): ?ActesStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?ActesStatus $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
 
 
 }

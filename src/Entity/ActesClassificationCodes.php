@@ -60,5 +60,70 @@ class ActesClassificationCodes
      */
     private $parent;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getAuthorityId(): ?int
+    {
+        return $this->authorityId;
+    }
+
+    public function setAuthorityId(int $authorityId): static
+    {
+        $this->authorityId = $authorityId;
+
+        return $this;
+    }
+
+    public function getLevel(): ?int
+    {
+        return $this->level;
+    }
+
+    public function setLevel(?int $level): static
+    {
+        $this->level = $level;
+
+        return $this;
+    }
+
+    public function getCode(): ?int
+    {
+        return $this->code;
+    }
+
+    public function setCode(?int $code): static
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getParent(): ?self
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?self $parent): static
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
 
 }

@@ -36,5 +36,34 @@ class AuthorityGroups
      */
     private $status;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
 
 }

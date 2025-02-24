@@ -53,5 +53,58 @@ class ModulesParams
      */
     private $module;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getValue(): ?string
+    {
+        return $this->value;
+    }
+
+    public function setValue(?string $value): static
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getModule(): ?Modules
+    {
+        return $this->module;
+    }
+
+    public function setModule(?Modules $module): static
+    {
+        $this->module = $module;
+
+        return $this;
+    }
+
 
 }

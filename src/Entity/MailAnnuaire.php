@@ -43,5 +43,46 @@ class MailAnnuaire
      */
     private $description;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getAuthorityId(): ?int
+    {
+        return $this->authorityId;
+    }
+
+    public function setAuthorityId(int $authorityId): static
+    {
+        $this->authorityId = $authorityId;
+
+        return $this;
+    }
+
+    public function getMailAddress(): ?string
+    {
+        return $this->mailAddress;
+    }
+
+    public function setMailAddress(string $mailAddress): static
+    {
+        $this->mailAddress = $mailAddress;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
 
 }

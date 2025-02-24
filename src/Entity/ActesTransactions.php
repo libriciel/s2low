@@ -2,6 +2,7 @@
 
 namespace S2low\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -209,6 +210,323 @@ class ActesTransactions
      * })
      */
     private $relatedTransaction;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getNatureCode(): ?string
+    {
+        return $this->natureCode;
+    }
+
+    public function setNatureCode(?string $natureCode): static
+    {
+        $this->natureCode = $natureCode;
+
+        return $this;
+    }
+
+    public function getNatureDescr(): ?string
+    {
+        return $this->natureDescr;
+    }
+
+    public function setNatureDescr(?string $natureDescr): static
+    {
+        $this->natureDescr = $natureDescr;
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(?string $title): static
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getSubject(): ?string
+    {
+        return $this->subject;
+    }
+
+    public function setSubject(?string $subject): static
+    {
+        $this->subject = $subject;
+
+        return $this;
+    }
+
+    public function getNumber(): ?string
+    {
+        return $this->number;
+    }
+
+    public function setNumber(?string $number): static
+    {
+        $this->number = $number;
+
+        return $this;
+    }
+
+    public function getClassification(): ?string
+    {
+        return $this->classification;
+    }
+
+    public function setClassification(?string $classification): static
+    {
+        $this->classification = $classification;
+
+        return $this;
+    }
+
+    public function getClassificationDate(): ?\DateTimeInterface
+    {
+        return $this->classificationDate;
+    }
+
+    public function setClassificationDate(?\DateTimeInterface $classificationDate): static
+    {
+        $this->classificationDate = $classificationDate;
+
+        return $this;
+    }
+
+    public function getDecisionDate(): ?\DateTimeInterface
+    {
+        return $this->decisionDate;
+    }
+
+    public function setDecisionDate(?\DateTimeInterface $decisionDate): static
+    {
+        $this->decisionDate = $decisionDate;
+
+        return $this;
+    }
+
+    public function getUniqueId(): ?string
+    {
+        return $this->uniqueId;
+    }
+
+    public function setUniqueId(?string $uniqueId): static
+    {
+        $this->uniqueId = $uniqueId;
+
+        return $this;
+    }
+
+    public function isAutoBroadcasted(): ?bool
+    {
+        return $this->autoBroadcasted;
+    }
+
+    public function setAutoBroadcasted(?bool $autoBroadcasted): static
+    {
+        $this->autoBroadcasted = $autoBroadcasted;
+
+        return $this;
+    }
+
+    public function getArchiveUrl(): ?string
+    {
+        return $this->archiveUrl;
+    }
+
+    public function setArchiveUrl(?string $archiveUrl): static
+    {
+        $this->archiveUrl = $archiveUrl;
+
+        return $this;
+    }
+
+    public function getBroadcastEmails(): ?string
+    {
+        return $this->broadcastEmails;
+    }
+
+    public function setBroadcastEmails(?string $broadcastEmails): static
+    {
+        $this->broadcastEmails = $broadcastEmails;
+
+        return $this;
+    }
+
+    public function getBroadcastSendSources(): ?int
+    {
+        return $this->broadcastSendSources;
+    }
+
+    public function setBroadcastSendSources(?int $broadcastSendSources): static
+    {
+        $this->broadcastSendSources = $broadcastSendSources;
+
+        return $this;
+    }
+
+    public function isBroadcasted(): ?bool
+    {
+        return $this->broadcasted;
+    }
+
+    public function setBroadcasted(?bool $broadcasted): static
+    {
+        $this->broadcasted = $broadcasted;
+
+        return $this;
+    }
+
+    public function getTypeReponse(): ?int
+    {
+        return $this->typeReponse;
+    }
+
+    public function setTypeReponse(?int $typeReponse): static
+    {
+        $this->typeReponse = $typeReponse;
+
+        return $this;
+    }
+
+    public function getLastStatusId(): ?int
+    {
+        return $this->lastStatusId;
+    }
+
+    public function setLastStatusId(?int $lastStatusId): static
+    {
+        $this->lastStatusId = $lastStatusId;
+
+        return $this;
+    }
+
+    public function getUserId(): ?int
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(?int $userId): static
+    {
+        $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function getAuthorityId(): ?int
+    {
+        return $this->authorityId;
+    }
+
+    public function setAuthorityId(?int $authorityId): static
+    {
+        $this->authorityId = $authorityId;
+
+        return $this;
+    }
+
+    public function getSaeTransferIdentifier(): ?string
+    {
+        return $this->saeTransferIdentifier;
+    }
+
+    public function setSaeTransferIdentifier(?string $saeTransferIdentifier): static
+    {
+        $this->saeTransferIdentifier = $saeTransferIdentifier;
+
+        return $this;
+    }
+
+    public function isAntivirusCheck(): ?bool
+    {
+        return $this->antivirusCheck;
+    }
+
+    public function setAntivirusCheck(?bool $antivirusCheck): static
+    {
+        $this->antivirusCheck = $antivirusCheck;
+
+        return $this;
+    }
+
+    public function getClassificationString(): ?string
+    {
+        return $this->classificationString;
+    }
+
+    public function setClassificationString(?string $classificationString): static
+    {
+        $this->classificationString = $classificationString;
+
+        return $this;
+    }
+
+    public function isDocumentPapier(): ?bool
+    {
+        return $this->documentPapier;
+    }
+
+    public function setDocumentPapier(bool $documentPapier): static
+    {
+        $this->documentPapier = $documentPapier;
+
+        return $this;
+    }
+
+    public function isLu(): ?bool
+    {
+        return $this->lu;
+    }
+
+    public function setLu(bool $lu): static
+    {
+        $this->lu = $lu;
+
+        return $this;
+    }
+
+    public function getEnvelope(): ?ActesEnvelopes
+    {
+        return $this->envelope;
+    }
+
+    public function setEnvelope(?ActesEnvelopes $envelope): static
+    {
+        $this->envelope = $envelope;
+
+        return $this;
+    }
+
+    public function getRelatedTransaction(): ?self
+    {
+        return $this->relatedTransaction;
+    }
+
+    public function setRelatedTransaction(?self $relatedTransaction): static
+    {
+        $this->relatedTransaction = $relatedTransaction;
+
+        return $this;
+    }
 
 
 }

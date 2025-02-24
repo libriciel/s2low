@@ -2,6 +2,7 @@
 
 namespace S2low\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -84,6 +85,119 @@ class MailTransaction
      * @ORM\Column(name="not_available", type="boolean", nullable=false)
      */
     private $notAvailable = false;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getUserId(): ?int
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(int $userId): static
+    {
+        $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function getObjet(): ?string
+    {
+        return $this->objet;
+    }
+
+    public function setObjet(string $objet): static
+    {
+        $this->objet = $objet;
+
+        return $this;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(string $message): static
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
+    public function getFnDownload(): ?string
+    {
+        return $this->fnDownload;
+    }
+
+    public function setFnDownload(?string $fnDownload): static
+    {
+        $this->fnDownload = $fnDownload;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getDateEnvoi(): ?\DateTimeInterface
+    {
+        return $this->dateEnvoi;
+    }
+
+    public function setDateEnvoi(?\DateTimeInterface $dateEnvoi): static
+    {
+        $this->dateEnvoi = $dateEnvoi;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(?string $password): static
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function isInCloud(): ?bool
+    {
+        return $this->isInCloud;
+    }
+
+    public function setIsInCloud(bool $isInCloud): static
+    {
+        $this->isInCloud = $isInCloud;
+
+        return $this;
+    }
+
+    public function isNotAvailable(): ?bool
+    {
+        return $this->notAvailable;
+    }
+
+    public function setNotAvailable(bool $notAvailable): static
+    {
+        $this->notAvailable = $notAvailable;
+
+        return $this;
+    }
 
 
 }

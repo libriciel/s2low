@@ -42,5 +42,34 @@ class ServiceUserContent
      */
     private $idUser;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getIdService(): ?ServiceUser
+    {
+        return $this->idService;
+    }
+
+    public function setIdService(?ServiceUser $idService): static
+    {
+        $this->idService = $idService;
+
+        return $this;
+    }
+
+    public function getIdUser(): ?Users
+    {
+        return $this->idUser;
+    }
+
+    public function setIdUser(?Users $idUser): static
+    {
+        $this->idUser = $idUser;
+
+        return $this;
+    }
+
 
 }

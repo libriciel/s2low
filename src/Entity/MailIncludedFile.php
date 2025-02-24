@@ -50,5 +50,58 @@ class MailIncludedFile
      */
     private $filesize;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getMailTransactionId(): ?int
+    {
+        return $this->mailTransactionId;
+    }
+
+    public function setMailTransactionId(int $mailTransactionId): static
+    {
+        $this->mailTransactionId = $mailTransactionId;
+
+        return $this;
+    }
+
+    public function getFilename(): ?string
+    {
+        return $this->filename;
+    }
+
+    public function setFilename(string $filename): static
+    {
+        $this->filename = $filename;
+
+        return $this;
+    }
+
+    public function getFiletype(): ?string
+    {
+        return $this->filetype;
+    }
+
+    public function setFiletype(string $filetype): static
+    {
+        $this->filetype = $filetype;
+
+        return $this;
+    }
+
+    public function getFilesize(): ?int
+    {
+        return $this->filesize;
+    }
+
+    public function setFilesize(int $filesize): static
+    {
+        $this->filesize = $filesize;
+
+        return $this;
+    }
+
 
 }

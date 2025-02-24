@@ -39,5 +39,34 @@ class AuthorityGroupSiren
      */
     private $authorityGroup;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getSiren(): ?string
+    {
+        return $this->siren;
+    }
+
+    public function setSiren(?string $siren): static
+    {
+        $this->siren = $siren;
+
+        return $this;
+    }
+
+    public function getAuthorityGroup(): ?AuthorityGroups
+    {
+        return $this->authorityGroup;
+    }
+
+    public function setAuthorityGroup(?AuthorityGroups $authorityGroup): static
+    {
+        $this->authorityGroup = $authorityGroup;
+
+        return $this;
+    }
+
 
 }
