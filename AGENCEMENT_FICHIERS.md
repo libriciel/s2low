@@ -8,13 +8,13 @@
 |   |   |-- /Exception (Exception rattaché a des models)
 |   |-- /Application
 |   |   |-- /Service (Services orchestrant la logique fonctionnel. Utilisation d'adapter, d'entite, de models)
+|   |   |-- /Entity
+|   |   |   |   EntityA
+|   |   |   |   EntityB
 |   |-- /Persistence
-|   |   |   |-- /Entity
-|   |   |   |   |   EntityA
-|   |   |   |   |   EntityB
-|   |   |   |-- /Repository
-|   |   |   |   |   RepositoriesA
-|   |   |   |   |   RepositoriesB
+|   |   |-- /Repository
+|   |   |   |   RepositoriesA
+|   |   |   |   RepositoriesB
 |   |-- /Adapter
 |   |   |-- /HttpClient (Client API externes)
 |   |   |   |   ClientA.php
