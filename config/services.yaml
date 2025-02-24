@@ -44,11 +44,18 @@ services:
     resource: '../src/*'
     exclude: '../src/Kernel.php'
 
+  S2low\Infrastructure\Adapter\ClamScanner:
+    arguments:
+      $clamScanBinary: '%env(ANTIVIRUS_COMMAND)%'
+
+
+  S2low\Command\CommandTest:
+    arguments:
+      $appEnv: '%env(APP_ENV)%'
+
   S2low\Command\RebuildQueueCommand:
     arguments:
       - !tagged_iterator s2low.queue_rebuilding_worker
-
-
 
   S2low\Services\LogTimestampTokenGarbage:
     arguments:
