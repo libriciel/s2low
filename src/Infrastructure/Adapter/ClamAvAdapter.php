@@ -7,13 +7,17 @@ use S2low\Domain\Port\AntivirusFilesScannerInterface;
 use Symfony\Component\Filesystem\Exception\RuntimeException;
 use Symfony\Component\Process\Process;
 
-class ClamScanner implements AntivirusFilesScannerInterface
+class ClamAvAdapter implements AntivirusFilesScannerInterface
 {
     private string $clamScanBinary;
 
     public function __construct(string $clamScanBinary)
     {
         $this->clamScanBinary = $clamScanBinary;
+
+        if (!file_exists($clamScanBinary) || !is_executable($clamScanBinary)) {
+            throw new RuntimeException("L'exécutable ClamAV '{$clamScanBinary}' est introuvable ou non exécutable.");
+        }
     }
 
     /**
@@ -21,12 +25,17 @@ class ClamScanner implements AntivirusFilesScannerInterface
      * @return bool
      * @throws \RuntimeException|VirusDetectedException
      */
-    public function scan(string $filePath): Bool {
+    public function scan(string $filePath): bool {
         if (!file_exists($filePath)) {
             throw new RuntimeException("Le fichier '{$filePath}' est introuvable.");
         }
 
+        if (!is_readable($filePath)) {
+            throw new RuntimeException("Le fichier '{$filePath}' est illisible.");
+        }
+
         $process = new Process([$this->clamScanBinary, $filePath]);
+        $process->setTimeout(60);
         $process->run();
 
         if ($this->virusIsDetected($process->getExitCode())) {

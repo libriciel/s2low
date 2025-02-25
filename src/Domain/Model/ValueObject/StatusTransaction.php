@@ -7,6 +7,7 @@ enum StatusTransaction: int
     case CREE = 1;
     case ERREUR = -1;
     case TRANSMIS = 3;
+    case RECU = 4;
 
     public function label(): string
     {
@@ -14,6 +15,7 @@ enum StatusTransaction: int
             self::CREE => 'Posté',
             self::ERREUR => 'Erreur',
             self::TRANSMIS => 'Transmis',
+            self::RECU => 'Acquittement reçu',
         };
     }
 }

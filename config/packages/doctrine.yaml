@@ -19,8 +19,8 @@ doctrine:
             App:
                 type: annotation
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Entity'
-                prefix: 'S2low\Entity'
+                dir: '%kernel.project_dir%/src/Infrastructure/Persistence/Entity'
+                prefix: 'S2low\Infrastructure\Persistence\Entity'
                 alias: S2low
 
 when@test:
