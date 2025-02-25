@@ -2,7 +2,6 @@
 
 namespace S2low\Infrastructure\Persistence\Mapper;
 
-use phpseclib3\Exception\FileNotFouxndException;
 use Psr\Log\LoggerInterface;
 use S2low\Domain\Contract\CloudStorageInterface;
 use S2low\Domain\Exception\CloudStorageDownloadException;
