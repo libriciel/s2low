@@ -1,6 +1,6 @@
 <?php
 
-namespace S2low\Domain\Service;
+namespace S2low\Domain\Contract;
 
 interface AntivirusFilesScannerInterface
 {
