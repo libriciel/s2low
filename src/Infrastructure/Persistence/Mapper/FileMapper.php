@@ -27,13 +27,9 @@ class FileMapper
         if (!file_exists($localPath)) {
             try {
                 $this->cloudStorage->downloadToLocalPathDestination(BucketName::ACTE_ENVELOPPE, $path, $localPath);
-            } catch (CloudStorageDownloadException $e) {
+            } catch (CloudStorageDownloadException | CloudStorageFileNotFoundException $e) {
                 $this->logger->error($e->getMessage());
                 throw $e;
-            } catch (CloudStorageFileNotFoundException $e) {
-                $this->logger->error($e->getMessage());
-                throw $e;
-                // TODO faire 2 traitements disctincts ou merge les deux
             }
         }
 
