@@ -3,7 +3,7 @@
 namespace S2low\Infrastructure\Adapter;
 
 use S2low\Domain\Exception\VirusDetectedException;
-use S2low\Domain\Service\AntivirusFilesScannerInterface;
+use S2low\Domain\Contract\AntivirusFilesScannerInterface;
 use Symfony\Component\Filesystem\Exception\RuntimeException;
 use Symfony\Component\Process\Process;
 
@@ -23,7 +23,7 @@ class ClamScanner implements AntivirusFilesScannerInterface
      */
     public function scan(string $filePath): Bool {
         if (!file_exists($filePath)) {
-            throw new RuntimeException("Le fichier n'existe pas : {$filePath}");
+            throw new RuntimeException("Le fichier '{$filePath}' est introuvable.");
         }
 
         $process = new Process([$this->clamScanBinary, $filePath]);
@@ -54,17 +54,18 @@ class ClamScanner implements AntivirusFilesScannerInterface
             } else {
                 $virusName = "nom inconnu";
             }
+
             throw new VirusDetectedException($filePath, $virusName);
         }
     }
 
     /**
-     * @param int $returnCode
+     * @param int $exitCode
      * @return bool
      */
-    private function virusIsDetected(int $returnCode): bool
+    private function virusIsDetected(int $exitCode): bool
     {
-        return $returnCode === 1;
+        return $exitCode === 1;
     }
 
     /**
