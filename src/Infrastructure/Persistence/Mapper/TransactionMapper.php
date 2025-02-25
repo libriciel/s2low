@@ -5,9 +5,9 @@ namespace S2low\Infrastructure\Persistence\Mapper;
 use S2low\Domain\Model\Transaction\Transaction;
 use S2low\Domain\Model\ValueObject\ProtocolTransaction;
 use S2low\Domain\Model\ValueObject\StatusTransaction;
-use S2low\Entity\ActesEnvelopes;
-use S2low\Entity\ActesStatus;
-use S2low\Entity\ActesTransactions;
+use S2low\Infrastructure\Persistence\Entity\ActesEnvelopes;
+use S2low\Infrastructure\Persistence\Entity\ActesStatus;
+use S2low\Infrastructure\Persistence\Entity\ActesTransactions;
 
 class TransactionMapper
 {

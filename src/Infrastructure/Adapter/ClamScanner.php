@@ -3,7 +3,7 @@
 namespace S2low\Infrastructure\Adapter;
 
 use S2low\Domain\Exception\VirusDetectedException;
-use S2low\Domain\Contract\AntivirusFilesScannerInterface;
+use S2low\Domain\Port\AntivirusFilesScannerInterface;
 use Symfony\Component\Filesystem\Exception\RuntimeException;
 use Symfony\Component\Process\Process;
 
