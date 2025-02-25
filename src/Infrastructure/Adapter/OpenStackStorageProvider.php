@@ -2,7 +2,7 @@
 
 namespace S2low\Infrastructure\Adapter;
 
-use S2low\Domain\Contract\CloudStorageInterface;
+use S2low\Domain\Port\CloudStorageInterface;
 use S2low\Domain\Model\ValueObject\DownloadResult;
 
 class OpenStackStorageProvider implements CloudStorageInterface

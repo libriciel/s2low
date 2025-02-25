@@ -3,7 +3,7 @@
 namespace S2low\Infrastructure\Persistence\Mapper;
 
 use Psr\Log\LoggerInterface;
-use S2low\Domain\Contract\CloudStorageInterface;
+use S2low\Domain\Port\CloudStorageInterface;
 use S2low\Domain\Exception\CloudStorageDownloadException;
 use S2low\Domain\Exception\CloudStorageFileNotFoundException;
 use S2low\Infrastructure\Adapter\Enum\BucketName;

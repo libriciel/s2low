@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityNotFoundException;
 use Psr\Log\LoggerInterface;
 use S2low\Domain\Exception\BadStatusTransactionException;
 use S2low\Domain\Exception\VirusDetectedException;
-use S2low\Domain\Contract\AntivirusFilesScannerInterface;
+use S2low\Domain\Port\AntivirusFilesScannerInterface;
 use S2low\Domain\Model\ValueObject\StatusTransaction;
 use S2low\Domain\Repository\TransactionRepositoryInterface;
 

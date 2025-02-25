@@ -8,9 +8,9 @@ use S2low\Domain\Model\Transaction\Transaction;
 use S2low\Domain\Model\ValueObject\ProtocolTransaction;
 use S2low\Domain\Model\ValueObject\StatusTransaction;
 use S2low\Domain\Repository\TransactionRepositoryInterface;
-use S2low\Entity\ActesStatus;
-use S2low\Entity\ActesTransactions;
-use S2low\Entity\ActesTransactionsWorkflow;
+use S2low\Infrastructure\Persistence\Entity\ActesStatus;
+use S2low\Infrastructure\Persistence\Entity\ActesTransactions;
+use S2low\Infrastructure\Persistence\Entity\ActesTransactionsWorkflow;
 use S2low\Infrastructure\Persistence\Mapper\TransactionMapper;
 
 
