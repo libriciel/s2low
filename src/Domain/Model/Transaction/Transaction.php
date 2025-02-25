@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class Transaction
 {
-    public const STATUS_EN_ERREUR = -1;
     private int $id;
     private File $acteFile;
     private ProtocolTransaction $protocolTransaction;
@@ -27,6 +26,7 @@ class Transaction
     public function __construct()
     {
     }
+
 
     public function getId(): int
     {
