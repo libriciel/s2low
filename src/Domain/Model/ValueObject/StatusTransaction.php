@@ -8,9 +8,6 @@ enum StatusTransaction: int
     case ERREUR = -1;
     case TRANSMIS = 3;
 
-    /**
-     * Retourne un libellé lisible pour chaque statut.
-     */
     public function label(): string
     {
         return match ($this) {
