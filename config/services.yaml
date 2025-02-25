@@ -44,7 +44,7 @@ services:
     resource: '../src/*'
     exclude: '../src/Kernel.php'
 
-  S2low\Infrastructure\Adapter\ClamScanner:
+  S2low\Infrastructure\Adapter\ClamAvAdapter:
     arguments:
       $clamScanBinary: '%env(ANTIVIRUS_COMMAND)%'
 
