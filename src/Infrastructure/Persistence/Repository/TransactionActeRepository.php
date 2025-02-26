@@ -4,8 +4,7 @@ namespace S2low\Infrastructure\Persistence\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
-use S2low\Domain\Model\Transaction\Transaction;
-use S2low\Domain\Model\ValueObject\ProtocolTransaction;
+use S2low\Domain\Model\Transaction\DTO\TransactionPersistenceDTO;
 use S2low\Domain\Model\ValueObject\StatusTransaction;
 use S2low\Domain\Repository\TransactionRepositoryInterface;
 use S2low\Infrastructure\Persistence\Entity\ActesStatus;
@@ -14,7 +13,7 @@ use S2low\Infrastructure\Persistence\Entity\ActesTransactionsWorkflow;
 use S2low\Infrastructure\Persistence\Mapper\TransactionMapper;
 
 
-class TransactionRepository implements TransactionRepositoryInterface
+class TransactionActeRepository implements TransactionRepositoryInterface
 {
 
     private EntityManagerInterface $entityManager;
@@ -28,50 +27,48 @@ class TransactionRepository implements TransactionRepositoryInterface
 
     /**
      * @param $acteId
-     * @return Transaction
+     * @return TransactionPersistenceDTO
      * @throws EntityNotFoundException
      */
-    public function findTransactionFromActeId($acteId): Transaction {
+    public function findById($acteId): TransactionPersistenceDTO {
         $acte = $this->entityManager->find(ActesTransactions::class, $acteId);
 
         if ($acte === null) {
             throw new EntityNotFoundException("L'acte avec l'ID $acteId n'a pas été trouvé.");
         }
 
+        //TODO recuperer la liste des AcctesTransaction Workflow
+        throw new \Exception("TODO A FAIRE");
+            $acteWorkflow = $this->entityManager->find(ActesTransactionsWorkflow::class, $acte->getId());
+        // voir ce que cela renvois
+
+
         $acteStatus = $this->entityManager->find(ActesStatus::class, $acte->getLastStatusId());
         $enveloppe = $acte->getEnvelope();
 
-        return $this->transactionMapper->mapToTransaction($acte, $enveloppe, $acteStatus);
+        return $this->transactionMapper->mapToTransaction($acte, $enveloppe, $acteStatus, $acteWorkflow);
     }
 
     /**
-     * @param Transaction $transaction
+     * @param TransactionPersistenceDTO $transactionPersistenceDTO
      * @return void
      */
-    public function updateTransactionAnalyseAntivirusPositive(Transaction $transaction): void
+    public function save(TransactionPersistenceDTO $transactionPersistenceDTO): void
     {
-        match($transaction->getProtocolTransaction()) {
-            ProtocolTransaction::ACTE => $this->updateActeVirusDetected($transaction),
-            ProtocolTransaction::HELIOS => $this->updateHeliosVirusDetected($transaction)
-        };
-    }
+        $acteTransactions = $this->entityManager->find(ActesTransactions::class, $transactionPersistenceDTO->id);
+//        $acteStatus = $this->entityManager->find(ActesStatus::class, $transaction->status);
 
-    public function updateTransactionAnalyseAntivirusNegative(Transaction $transaction) : void
-    {
-        match($transaction->getProtocolTransaction()) {
-            ProtocolTransaction::ACTE => $this->updateActeAnalyseAntivirusNegative($transaction),
-            ProtocolTransaction::HELIOS => $this->updateHeliosAnalyseAntivirusNegative($transaction)
-        };
+        $this->updateActe($transactionPersistenceDTO);
+        $this->updateActesTransactionsWorkflow($acteTransactions, $transactionPersistenceDTO);
     }
-
 
     /**
-     * @param Transaction $transaction
+     * @param TransactionPersistenceDTO $transactionDTO
      * @return void
      */
-    private function updateActeVirusDetected(Transaction $transaction): void
+    public function updateTransactionAnalyseAntivirusPositive(TransactionPersistenceDTO $transactionDTO): void
     {
-        $acteTransactions = $this->entityManager->find(ActesTransactions::class, $transaction->getId());
+        $acteTransactions = $this->entityManager->find(ActesTransactions::class, $transactionDTO->getId());
         $acteStatus = $this->entityManager->find(ActesStatus::class, StatusTransaction::ERREUR);
 
         $acteTransactions->setAntivirusCheck(true);
@@ -89,12 +86,7 @@ class TransactionRepository implements TransactionRepositoryInterface
         $this->entityManager->flush();
     }
 
-    private function updateHeliosVirusDetected(Transaction $transaction)
-    {
-
-    }
-
-    private function updateActeAnalyseAntivirusNegative(Transaction $transaction): void
+    public function updateTransactionAnalyseAntivirusNegative(TransactionPersistenceDTO $transaction) : void
     {
         $acteTransactions = $this->entityManager->find(ActesTransactions::class, $transaction->getId());
         $acteTransactions->setAntivirusCheck(true);
@@ -102,8 +94,24 @@ class TransactionRepository implements TransactionRepositoryInterface
         $this->entityManager->flush();
     }
 
-    private function updateHeliosAnalyseAntivirusNegative(Transaction $transaction) : void
+    private function updateActesTransactionsWorkflow(ActesTransactions $acteTransactions, TransactionPersistenceDTO $transactionPersistenceDTO): void
     {
+        if ($acteTransactions->getLastStatusId() !== $transactionPersistenceDTO->status)
+        {
+            $acteStatus = $this->entityManager->find(ActesStatus::class, StatusTransaction::ERREUR);
 
+            $acteTransactionsWorkflow = new ActesTransactionsWorkflow();
+            $acteTransactionsWorkflow->setTransaction($acteTransactions);
+            $acteTransactionsWorkflow->setStatus($acteStatus);
+            $acteTransactionsWorkflow->setDate(new \DateTimeImmutable());
+            $acteTransactionsWorkflow->setMessage("L'archive est infectée par un virus. Retour de l'antivirus.");
+        }
     }
+
+    private function updateActe(TransactionPersistenceDTO $transactionPersistenceDTO)
+    {
+        //TODO
+        throw new \Exception("TODO A FAIRE");
+    }
+
 }
