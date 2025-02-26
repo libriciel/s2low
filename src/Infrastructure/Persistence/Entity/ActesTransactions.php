@@ -212,7 +212,7 @@ class ActesTransactions
      */
     private $relatedTransaction;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }

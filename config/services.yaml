@@ -42,15 +42,13 @@ services:
 # ---------------------------------------------------------------------------------------------------------------------
   S2low\:
     resource: '../src/*'
-    exclude: '../src/Kernel.php'
+    exclude:
+      - '../src/Kernel.php'
+      - '../src/Domain/Model/*'
 
   S2low\Infrastructure\Adapter\ClamAvAdapter:
     arguments:
       $clamScanBinary: '%env(ANTIVIRUS_COMMAND)%'
-
-  S2low\Infrastructure\Persistence\Mapper\FileMapper:
-    arguments:
-      $acteFilesUploadRoot: '%env(ACTES_FILES_UPLOAD_ROOT)%'
 
   S2low\Command\CommandTest:
     arguments:

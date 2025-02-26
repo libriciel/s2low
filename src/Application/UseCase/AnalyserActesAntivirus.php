@@ -4,11 +4,8 @@ namespace S2low\Application\UseCase;
 
 use Doctrine\ORM\EntityNotFoundException;
 use Psr\Log\LoggerInterface;
-use S2low\Domain\Exception\BadStatusTransactionException;
 use S2low\Domain\Exception\VirusDetectedException;
-use S2low\Domain\Model\Transaction\Transaction;
 use S2low\Domain\Port\AntivirusFilesScannerInterface;
-use S2low\Domain\Model\ValueObject\StatusTransaction;
 use S2low\Domain\Repository\TransactionRepositoryInterface;
 
 class AnalyserActesAntivirus
@@ -20,7 +17,7 @@ class AnalyserActesAntivirus
     public function __construct(
         TransactionRepositoryInterface $transactionRepository,
         AntivirusFilesScannerInterface $scanner,
-        LoggerInterface $logger
+        LoggerInterface                $logger,
     )
     {
         $this->scanner = $scanner;
@@ -31,41 +28,28 @@ class AnalyserActesAntivirus
 
     /**
      * @param $transactionId
-     * @return bool
+     * @return void
      * @throws EntityNotFoundException
      */
-    public function execute($transactionId) : bool {
-        $transaction = $this->transactionRepository->findTransactionFromActeId($transactionId);
-
-        if ($transaction->getStatus() !== StatusTransaction::CREE) {
-            throw new BadStatusTransactionException($transactionId, StatusTransaction::CREE, $transaction->getStatus());
-        }
-
-        $filePath = $transaction->getActeFile()->getPath();
+    public function execute($transactionId) : void
+    {
+        $transactionDTO = $this->transactionRepository->findById($transactionId);
+        $transaction = $transactionDTO->toModel();
 
         try {
-            $this->scanner->scan($filePath);
+            $transaction->scanWith($this->scanner);
+
+            $transaction->analyseAntivirusPositive();
             $this->logger->info("Le scan antivirus de la transaction {transactionId} s'est terminé avec succès.", [
                 'transactionId' => $transactionId
             ]);
 
-            $this->transactionRepository->updateTransactionAnalyseAntivirusNegative($transaction);
-            return true;
-
         } catch (VirusDetectedException $exception) {
-            $this->handleVirusDetection($transaction, $exception);
-            return false;
+            $transaction->analyseAntivirusNegative();
+            $this->logger->warning($exception->getMessage());
         }
-    }
 
-    /**
-     * @param VirusDetectedException $exception
-     * @param Transaction $transaction
-     * @return void
-     */
-    public function handleVirusDetection(Transaction $transaction, VirusDetectedException $exception): void
-    {
-        $this->logger->warning($exception->getMessage());
-        $this->transactionRepository->updateTransactionAnalyseAntivirusPositive($transaction);
+        $transactionDto = $transaction->toPersistenceDto();
+        $this->transactionRepository->save($transactionDto);
     }
 }
