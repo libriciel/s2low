@@ -2,6 +2,7 @@
 
 namespace S2low\Domain\Model\Transaction;
 
+use S2low\Domain\Model\Transaction\DTO\TransactionStatusHistoryPersistenceDTO;
 use S2low\Domain\Model\ValueObject\DateUpdateStatusTransaction;
 use S2low\Domain\Model\ValueObject\StatusTransaction;
 
@@ -11,14 +12,14 @@ class TransactionStatusHistory
     private int $transactionId;
     private StatusTransaction $status;
     private DateUpdateStatusTransaction $date;
-    private int $message;
+    private string $message;
 
     public function __construct(
          int|null $id,
          int $transactionId,
          StatusTransaction $status,
          DateUpdateStatusTransaction $date,
-         int $message,
+         string $message,
     )
     {
         $this->id = $id;

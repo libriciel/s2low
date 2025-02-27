@@ -3,7 +3,7 @@
 namespace S2low\Domain\Model\Transaction\DTO;
 
 use S2low\Domain\Model\Transaction\Transaction;
-use S2low\Domain\Model\Transaction\TransactionStatusListUpdatePersistenceDTO;
+use S2low\Domain\Model\Transaction\DTO\TransactionStatusListUpdatePersistenceDTO;
 use S2low\Domain\Model\ValueObject\ProtocolTransaction;
 use S2low\Domain\Model\ValueObject\StatusTransaction;
 

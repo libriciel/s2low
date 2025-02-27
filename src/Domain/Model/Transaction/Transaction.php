@@ -21,7 +21,7 @@ use S2low\Domain\Port\AntivirusFilesScannerInterface;
 class Transaction
 {
     private ?int $id;
-    private DocumentMetier $documentMetier;
+    private DocumentMetier $archive;
     private ProtocolTransaction $protocolTransaction;
     private StatusTransaction $status;
     private TransactionStatusListUpdate $transactionStatusListUpdate;
@@ -35,48 +35,43 @@ class Transaction
     )
     {
         $this->id = $id;
-        $this->documentMetier = $documentMetier;
+        $this->archive = $documentMetier;
         $this->protocolTransaction = $protocolTransaction;
         $this->status = $status;
         $this->transactionStatusListUpdate = $transactionStatusListUpdate;
     }
 
     /**
+     * @param $goodStatus
      * @return void
-     * @throws BadStatusTransactionException
      */
-    public function readyToScanOrThrow() : void
+    public function assertStatusIs($goodStatus) : void
     {
-        if ( $this->status !== StatusTransaction::CREE ) {
-            throw new BadStatusTransactionException($this->id, StatusTransaction::CREE, $this->status);
+        if ( $this->status !== $goodStatus ) {
+            throw new BadStatusTransactionException($this->id, $goodStatus, $this->status);
         }
-    }
-
-    public function scanWith(AntivirusFilesScannerInterface $scanner): void
-    {
-        $this->readyToScanOrThrow();
-        $this->documentMetier->scanWith($scanner);
     }
 
     public function analyseAntivirusPositive(): void
     {
-        $this->documentMetier->markInfected();
+        $this->archive->markInfected();
+        $this->archive->antivirusCheck();
         $this->updateStatusTo(
             StatusTransaction::ERREUR,
             "L'archive est infectée par un virus. Retour de l'antivirus."
         );
     }
 
-    public function analyseAntivirusNegative()
+    public function analyseAntivirusNegative(): void
     {
-        // TODO
+        $this->archive->antivirusCheck();
     }
 
     public function toPersistenceDto(): TransactionPersistenceDTO
     {
         return new TransactionPersistenceDTO(
             $this->id,
-            $this->documentMetier->toPersistenceDto(),
+            $this->archive->toPersistenceDto(),
             $this->protocolTransaction,
             $this->status,
             $this->transactionStatusListUpdate->toPersistenceDto()
@@ -95,5 +90,10 @@ class Transaction
                 $statusUpdateMessage,
             )
         );
+    }
+
+    public function getArchive(): DocumentMetier
+    {
+        return $this->archive;
     }
 }

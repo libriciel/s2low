@@ -13,8 +13,6 @@ interface TransactionRepositoryInterface
      * @throws EntityNotFoundException
      */
     public function findById(string $acteId): TransactionPersistenceDTO;
-    public function updateTransactionAnalyseAntivirusPositive(TransactionPersistenceDTO $transactionDTO): void;
-    public function updateTransactionAnalyseAntivirusNegative(TransactionPersistenceDTO $transaction) : void;
     public function save(TransactionPersistenceDTO $transactionPersistenceDTO);
 
 }

@@ -2,6 +2,8 @@
 
 namespace S2low\Domain\Model\Transaction;
 
+use S2low\Domain\Model\Transaction\DTO\TransactionStatusListUpdatePersistenceDTO;
+
 class TransactionStatusListUpdate
 {
     private array $transactionStatusList;
@@ -28,6 +30,6 @@ class TransactionStatusListUpdate
             $transactionStatusList[] = $transactionStatusHistory->toPersistenceDto();
         }
 
-        return new TransactionStatusListUpdatePersistenceDTO($transactionStatusList);
+        return new TransactionStatusListUpdatePersistenceDTO(...$transactionStatusList);
     }
 }
