@@ -7,26 +7,44 @@ use S2low\Domain\Model\Transaction\DTO\TransactionPersistenceDTO;
 use S2low\Domain\Model\ValueObject\ProtocolTransaction;
 use S2low\Domain\Model\ValueObject\StatusTransaction;
 use S2low\Infrastructure\Persistence\Entity\ActesEnvelopes;
-use S2low\Infrastructure\Persistence\Entity\ActesStatus;
 use S2low\Infrastructure\Persistence\Entity\ActesTransactions;
-use S2low\Infrastructure\Persistence\Entity\ActesTransactionsWorkflow;
 
 class TransactionMapper
 {
-    public function mapToTransaction(ActesTransactions $acte, ActesEnvelopes $enveloppe, ActesStatus $acteStatus, ActesTransactionsWorkflow $actesTransactionsWorkflow): TransactionPersistenceDTO
+    private TransactionStatusListUpdateMapper $transactionStatusListUpdateMapper;
+
+    /**
+     * @param TransactionStatusListUpdateMapper $transactionStatusListUpdateMapper
+     */
+    public function __construct(TransactionStatusListUpdateMapper$transactionStatusListUpdateMapper)
     {
-        $documentMetierDto =  new DocumentMetierPersistenceDTO(
+        $this->transactionStatusListUpdateMapper = $transactionStatusListUpdateMapper;
+    }
+
+
+    public function mapToTransaction(
+        ActesTransactions $acte,
+        ActesEnvelopes $enveloppe,
+        string $prefixArchivePath,
+        Array $actesHistoriqueStatut
+    ): TransactionPersistenceDTO
+    {
+        $archive =  new DocumentMetierPersistenceDTO(
             $enveloppe->getFilePath(),
+            false,
+            $acte->isLu(),
             $acte->isAntivirusCheck(),
-            $acte->isLu()
+            $prefixArchivePath
         );
+
+        $transactionStatusListUpdatePersistenceDto = $this->transactionStatusListUpdateMapper->mapToTransactionStatusListUpdatePersistenceDTO($actesHistoriqueStatut);
 
         return new TransactionPersistenceDTO(
             $acte->getId(),
-            $documentMetierDto,
+            $archive,
             ProtocolTransaction::ACTE,
             StatusTransaction::from($acte->getLastStatusId()),
-            //TODO recuperer la liste des AcctesTransaction Workflow
+            $transactionStatusListUpdatePersistenceDto
         );
     }
 }

@@ -1,7 +1,8 @@
 <?php
 
-namespace S2low\Domain\Model\Transaction;
+namespace S2low\Domain\Model\Transaction\DTO;
 
+use S2low\Domain\Model\Transaction\TransactionStatusHistory;
 use S2low\Domain\Model\ValueObject\DateUpdateStatusTransaction;
 use S2low\Domain\Model\ValueObject\StatusTransaction;
 
@@ -11,8 +12,8 @@ class TransactionStatusHistoryPersistenceDTO
         public int $id,
         public int $transactionId,
         public string $status,
-        public string $date,
-        public int $message)
+        public \DateTimeImmutable $date,
+        public string $message)
     {
     }
 

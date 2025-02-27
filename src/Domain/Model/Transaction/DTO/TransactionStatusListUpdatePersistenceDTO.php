@@ -1,20 +1,18 @@
 <?php
 
-namespace S2low\Domain\Model\Transaction;
+namespace S2low\Domain\Model\Transaction\DTO;
 
-use S2low\Domain\Model\Transaction\DTO\TransactionPersistenceDTO;
+use S2low\Domain\Model\Transaction\TransactionStatusListUpdate;
 
 class TransactionStatusListUpdatePersistenceDTO
 {
-    /**
-     * @var array|TransactionPersistenceDTO[]
-     */
+
     public array $transactionStatusList;
 
     /**
      * @param array $transactionStatusList
      */
-    public function __construct(TransactionPersistenceDTO ...$transactionStatusList)
+    public function __construct(TransactionStatusHistoryPersistenceDTO ...$transactionStatusList)
     {
         $this->transactionStatusList = $transactionStatusList;
     }
@@ -30,4 +28,14 @@ class TransactionStatusListUpdatePersistenceDTO
             ...$transactionStatusList
         );
     }
+
+    public function getMostRecent() {
+        $copyList = $this->transactionStatusList;
+        usort($copyList, function ($a, $b) {
+            return $b->date <=> $a->date;
+        });
+
+        return $copyList[0];
+    }
+
 }

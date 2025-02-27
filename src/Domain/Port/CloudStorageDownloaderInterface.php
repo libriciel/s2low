@@ -3,16 +3,15 @@
 namespace S2low\Domain\Port;
 
 use S2low\Domain\Exception\CloudStorageDownloadException;
-use S2low\Domain\Model\ValueObject\DownloadResult;
 
-interface CloudStorageInterface
+interface CloudStorageDownloaderInterface
 {
     /**
      * @param string $bucketName
      * @param string $remoteFilePath
      * @param string $localPathDestination
-     * @return DownloadResult
+     * @return void
      * @throws CloudStorageDownloadException
      */
-    public function downloadToLocalPathDestination(string $bucketName, string $remoteFilePath, string $localPathDestination): DownloadResult;
+    public function downloadFile(string $bucketName, string $remoteFilePath, string $localPathDestination): void;
 }

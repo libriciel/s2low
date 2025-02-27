@@ -9,7 +9,9 @@ class DocumentMetierPersistenceDTO
     public function __construct(
         public readonly string $path,
         public readonly bool $hasVirus,
-        public readonly bool $isReadByUser
+        public readonly bool $isReadByUser,
+        public readonly bool $antivirusChecked,
+        public readonly string $prefix,
     ){
     }
 
@@ -18,7 +20,9 @@ class DocumentMetierPersistenceDTO
         return new DocumentMetier(
             $this->path,
             $this->hasVirus,
-            $this->isReadByUser
+            $this->isReadByUser,
+            $this->antivirusChecked,
+            $this->prefix
         );
     }
 }

@@ -6,7 +6,7 @@ class DateUpdateStatusTransaction
 {
     private \DateTimeImmutable $date;
 
-    public function __construct(string $date = new \DateTimeImmutable())
+    public function __construct(\DateTimeImmutable $date = new \DateTimeImmutable())
     {
         $this->date = $date;
     }

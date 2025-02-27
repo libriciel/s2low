@@ -50,6 +50,17 @@ services:
     arguments:
       $clamScanBinary: '%env(ANTIVIRUS_COMMAND)%'
 
+  S2low\Infrastructure\Adapter\OpenStackAdapter:
+    arguments:
+      $authUrl: '%env(OPENSTACK_AUTH_URL)%'
+      $region: '%env(OPENSTACK_REGION)%'
+      $username: '%env(OPENSTACK_USERNAME)%'
+      $password: '%env(OPENSTACK_PASSWORD)%'
+
+  S2low\Infrastructure\Persistence\Repository\TransactionActeRepository:
+    arguments:
+      $acteUploadRootDir: '%env(ACTES_FILES_UPLOAD_ROOT)%'
+
   S2low\Command\CommandTest:
     arguments:
       $appEnv: '%env(APP_ENV)%'

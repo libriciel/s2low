@@ -4,13 +4,16 @@ namespace S2low\Application\UseCase;
 
 use Doctrine\ORM\EntityNotFoundException;
 use Psr\Log\LoggerInterface;
+use S2low\Domain\Exception\BadStatusTransactionException;
+use S2low\Domain\Exception\DocumentMetierNotFoundException;
 use S2low\Domain\Exception\VirusDetectedException;
+use S2low\Domain\Model\ValueObject\StatusTransaction;
 use S2low\Domain\Port\AntivirusFilesScannerInterface;
 use S2low\Domain\Repository\TransactionRepositoryInterface;
 
 class AnalyserActesAntivirus
 {
-    private AntivirusFilesScannerInterface $scanner;
+    private AntivirusFilesScannerInterface $antivirus;
     private TransactionRepositoryInterface $transactionRepository;
     private LoggerInterface $logger;
 
@@ -20,7 +23,7 @@ class AnalyserActesAntivirus
         LoggerInterface                $logger,
     )
     {
-        $this->scanner = $scanner;
+        $this->antivirus = $scanner;
         $this->transactionRepository = $transactionRepository;
         $this->logger = $logger;
     }
@@ -37,15 +40,24 @@ class AnalyserActesAntivirus
         $transaction = $transactionDTO->toModel();
 
         try {
-            $transaction->scanWith($this->scanner);
+            $archive = $transaction->getArchive();
+            $transaction->assertStatusIs(StatusTransaction::CREE);
+            $archive->assertIsValid();
 
-            $transaction->analyseAntivirusPositive();
+            $this->antivirus->scan($archive->getAbsolutePath());
+
+            $transaction->analyseAntivirusNegative();
             $this->logger->info("Le scan antivirus de la transaction {transactionId} s'est terminé avec succès.", [
                 'transactionId' => $transactionId
             ]);
 
         } catch (VirusDetectedException $exception) {
-            $transaction->analyseAntivirusNegative();
+            $transaction->analyseAntivirusPositive();
+            $this->logger->warning($exception->getMessage());
+        } catch (
+            BadStatusTransactionException |
+            DocumentMetierNotFoundException $exception
+        ) {
             $this->logger->warning($exception->getMessage());
         }
 
