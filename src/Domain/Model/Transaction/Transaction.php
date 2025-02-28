@@ -7,16 +7,6 @@ use S2low\Domain\Model\Transaction\DTO\TransactionPersistenceDTO;
 use S2low\Domain\Model\ValueObject\DateUpdateStatusTransaction;
 use S2low\Domain\Model\ValueObject\ProtocolTransaction;
 use S2low\Domain\Model\ValueObject\StatusTransaction;
-use S2low\Domain\Port\AntivirusFilesScannerInterface;
-//    private UniqueId $uniqueId;
-//    private TransactionType $type;
-//    private StatutTransaction $statut;
-//    private Nature $nature;
-//    private EnveloppeArchive $enveloppeArchive;
-//    private Classification $classification;
-//    private Collectivite $collectivite;
-//    private Date $dateDeLaDecision;
-//    private string $commentaire;
 
 class Transaction
 {
