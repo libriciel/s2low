@@ -46,6 +46,7 @@ services:
       - '../src/Kernel.php'
       - '../src/Domain/Model/*'
 
+#=============# NEW CODE #============#
   S2low\Infrastructure\Adapter\ClamAvAdapter:
     arguments:
       $clamScanBinary: '%env(ANTIVIRUS_COMMAND)%'
@@ -61,6 +62,11 @@ services:
     arguments:
       $acteUploadRootDir: '%env(ACTES_FILES_UPLOAD_ROOT)%'
 
+  analyser_actes_antivirus:
+    alias: 'S2low\Application\UseCase\AnalyserActesAntivirus'
+    public: true
+
+#==============# OLD CODE #=============#
   S2low\Command\CommandTest:
     arguments:
       $appEnv: '%env(APP_ENV)%'
@@ -394,8 +400,8 @@ services:
 
   S2lowLegacy\Class\actes\ActesAntivirusWorker:
     tags: ['s2low.queue_rebuilding_worker']
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\actes\ActesAntivirusWorker' ]
+    factory: ['S2lowLegacy\Class\LegacyObjectsManager', 'getObject']
+    arguments: ['S2lowLegacy\Class\actes\ActesAntivirusWorker']
 
   S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker:
     tags: ['s2low.queue_rebuilding_worker']
