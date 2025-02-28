@@ -74,7 +74,7 @@ class TransactionActeRepository implements TransactionRepositoryInterface
 
         $acteTransactions = $this->updateActe($acteTransactions, $transactionPersistenceDTO);
 
-        if ($acteTransactions->getLastStatusId() !== $transactionPersistenceDTO->status) {
+        if ($acteTransactions->getLastStatusId() !== $transactionPersistenceDTO->status->value) {
             $acteTransactionsWorkflow = $this->updateActesTransactionsWorkflow($acteTransactions, $transactionPersistenceDTO);
             $this->entityManager->persist($acteTransactionsWorkflow);
         }

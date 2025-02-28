@@ -3,6 +3,8 @@
 namespace S2low\Infrastructure\Adapter;
 
 use OpenStack\OpenStack;
+use S2low\Domain\Exception\CloudStorageDownloadException;
+use S2low\Domain\Exception\CreateNewFileException;
 
 class OpenStackAdapter
 {
@@ -33,6 +35,10 @@ class OpenStackAdapter
         $this->container = $service->getContainer($containerName);
     }
 
+    /**
+     * @throws CreateNewFileException
+     * @throws CloudStorageDownloadException
+     */
     public function download($remoteFilePath, $localPathDestination): void
     {
         $object = $this->container->getObject($remoteFilePath);
@@ -40,10 +46,14 @@ class OpenStackAdapter
         $fileStream = fopen($localPathDestination, 'w');
 
         if (!$fileStream) {
-            throw new \RuntimeException("Impossible d'écrire dans le fichier local : $localPathDestination");
+            throw new CreateNewFileException($localPathDestination);
         }
 
-        $object->download(['stream' => $fileStream]);
+        try {
+            $object->download(['stream' => $fileStream]);
+        } catch (\Exception $e) {
+            throw new CloudStorageDownloadException($localPathDestination, $e->getMessage());
+        }
 
         fclose($fileStream);
     }

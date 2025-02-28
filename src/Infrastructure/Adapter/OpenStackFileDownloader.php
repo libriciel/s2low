@@ -3,6 +3,8 @@
 namespace S2low\Infrastructure\Adapter;
 
 use Psr\Log\LoggerInterface;
+use S2low\Domain\Exception\CloudStorageDownloadException;
+use S2low\Domain\Exception\CreateNewFileException;
 use S2low\Domain\Port\CloudStorageDownloaderInterface;
 
 class OpenStackFileDownloader implements CloudStorageDownloaderInterface
@@ -27,10 +29,10 @@ class OpenStackFileDownloader implements CloudStorageDownloaderInterface
             $this->openStackAdapter->config($containerName);
             $this->openStackAdapter->download($remoteFilePath, $localPathDestination);
 
-            $this->logger->info("Fichier téléchargé avec succès : $localPathDestination");
+            $this->logger->info("Fichier '$localPathDestination' téléchargé avec succès.");
 
-        } catch (\Exception $e) {
-            $this->logger->error("Erreur lors du téléchargement du fichier : " . $e->getMessage());
+        } catch (CreateNewFileException | CloudStorageDownloadException $e) {
+            $this->logger->error($e->getMessage());
         }
     }
 }

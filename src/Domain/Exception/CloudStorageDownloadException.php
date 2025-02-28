@@ -4,8 +4,8 @@ namespace S2low\Domain\Exception;
 
 class CloudStorageDownloadException extends \RuntimeException
 {
-    public function __construct(string $filePath)
+    public function __construct(string $filePath, string $message = "")
     {
-        parent::__construct("Une erreur est survenue lors du téléchargement du fichier '$filePath'");
+        parent::__construct("Une erreur est survenue lors du téléchargement du fichier '$filePath'.\n" . $message);
     }
 }

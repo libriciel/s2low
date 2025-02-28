@@ -2,6 +2,8 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use S2low\Application\UseCase\AnalyserActesAntivirus;
+use S2low\Application\UseCase\LegacyServiceContainer;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\S2lowLogger;
@@ -13,27 +15,17 @@ class ActesAntivirusWorker implements IWorker
     public const QUEUE_NAME = 'actes-antivirus';
 
     private $actesTransactionSQL;
-    private $actesRetriever;
-    private $actesEnvelopeSQL;
-
-    private $antivirus;
-
     private $logger;
 
     private $workerScript;
 
+
     public function __construct(
-        ActesTransactionsSQL $actesTransactionSQL,
-        ActesRetriever $actesRetriever,
-        ActesEnvelopeSQL $actesEnvelopeSQL,
-        Antivirus $antivirus,
-        S2lowLogger $s2lowLogger,
-        WorkerScript $workerScript
+        ActesTransactionsSQL   $actesTransactionSQL,
+        S2lowLogger            $s2lowLogger,
+        WorkerScript           $workerScript,
     ) {
         $this->actesTransactionSQL = $actesTransactionSQL;
-        $this->actesRetriever = $actesRetriever;
-        $this->actesEnvelopeSQL = $actesEnvelopeSQL;
-        $this->antivirus = $antivirus;
         $this->logger = $s2lowLogger;
         $this->workerScript = $workerScript;
     }
@@ -77,35 +69,19 @@ class ActesAntivirusWorker implements IWorker
     public function work($data)
     {
         $transaction_id = $data;
-        $this->logger->info("Traitement transaction $transaction_id");
-
         $transaction_info = $this->actesTransactionSQL->getInfo($transaction_id);
-        if ($transaction_info['antivirus_check']) {
-            $this->logger->notice("La transaction $transaction_id a déjà été analysé par l'antivirus");
-            return true;
-        }
 
-        $envelope_info = $this->actesEnvelopeSQL->getInfo($transaction_info["envelope_id"]);
+        /*
+         * Entree du nouveau code
+         */
+        $legacyServiceContainer = LegacyServiceContainer::getServiceContainer();
+        $analyserActesAntivirusService = $legacyServiceContainer->get('analyser_actes_antivirus');
 
-        $archive_path = $this->actesRetriever->getPath($envelope_info['file_path']);
-        if (! $this->antivirus->checkArchiveSanity($archive_path)) {
-            $message = $this->antivirus->getLastError();
-            $this->logger->notice(
-                "Un virus a été trouvé pour la transaction $transaction_id",
-                [$message]
-            );
-            $this->actesTransactionSQL->updateStatus(
-                $transaction_id,
-                ActesStatusSQL::STATUS_EN_ERREUR,
-                $message
-            );
-            return false;
-        }
+        $analyserActesAntivirusService->execute($transaction_id);
+        /*
+         * Fin du nouveau code
+         */
 
-        $this->actesTransactionSQL->setAntivirusCheck($transaction_id);
-        $this->logger->info(
-            "La transaction $transaction_id ne contient pas de virus"
-        );
 
         $this->workerScript->putJobByClassName(
             ActesAnalyseFichierAEnvoyerWorker::class,
@@ -128,5 +104,10 @@ class ActesAntivirusWorker implements IWorker
     public function end()
     {
         // TODO: Implement end() method.
+    }
+
+    public function setAnalyserActesAntivirus(AnalyserActesAntivirus $analyserActesAntivirus)
+    {
+        $this->analyserActesAntivirus = $analyserActesAntivirus;
     }
 }
