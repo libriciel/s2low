@@ -2,7 +2,6 @@
 
 namespace S2low\Application\UseCase;
 
-use Doctrine\ORM\EntityNotFoundException;
 use Psr\Log\LoggerInterface;
 use S2low\Domain\Exception\BadStatusTransactionException;
 use S2low\Domain\Exception\DocumentMetierNotFoundException;
@@ -32,7 +31,6 @@ class AnalyserActesAntivirus
     /**
      * @param $transactionId
      * @return void
-     * @throws EntityNotFoundException
      */
     public function execute($transactionId) : void
     {
