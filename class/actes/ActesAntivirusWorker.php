@@ -72,7 +72,7 @@ class ActesAntivirusWorker implements IWorker
         $transaction_info = $this->actesTransactionSQL->getInfo($transaction_id);
 
         /*
-         * Entree du nouveau code
+         * Debut du nouveau code
          */
         $legacyServiceContainer = LegacyServiceContainer::getServiceContainer();
         $analyserActesAntivirusService = $legacyServiceContainer->get('analyser_actes_antivirus');

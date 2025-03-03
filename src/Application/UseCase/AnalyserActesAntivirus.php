@@ -6,7 +6,6 @@ use Psr\Log\LoggerInterface;
 use S2low\Domain\Exception\BadStatusTransactionException;
 use S2low\Domain\Exception\DocumentMetierNotFoundException;
 use S2low\Domain\Exception\VirusDetectedException;
-use S2low\Domain\Model\ValueObject\StatusTransaction;
 use S2low\Domain\Port\AntivirusFilesScannerInterface;
 use S2low\Domain\Repository\TransactionRepositoryInterface;
 
@@ -38,19 +37,20 @@ class AnalyserActesAntivirus
         $transaction = $transactionDTO->toModel();
 
         try {
-            $archive = $transaction->getArchive();
-            $transaction->assertStatusIs(StatusTransaction::CREE);
-            $archive->assertIsValid();
+            $transaction->readyToBeScannedOrThrow();
 
-            $this->antivirus->scan($archive->getAbsolutePath());
+            $this->antivirus->scan(
+                $transaction->getArchive()->getAbsolutePath()
+            );
 
-            $transaction->analyseAntivirusNegative();
+            $transaction->confirmVirusAbsence();
+
             $this->logger->info("Le scan antivirus de la transaction {transactionId} s'est terminé avec succès.", [
                 'transactionId' => $transactionId
             ]);
 
         } catch (VirusDetectedException $exception) {
-            $transaction->analyseAntivirusPositive();
+            $transaction->reportVirusPresence();
             $this->logger->warning($exception->getMessage());
         } catch (
             BadStatusTransactionException |

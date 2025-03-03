@@ -3,6 +3,7 @@
 namespace S2low\Domain\Model\Transaction;
 
 use S2low\Domain\Exception\BadStatusTransactionException;
+use S2low\Domain\Exception\DocumentMetierNotFoundException;
 use S2low\Domain\Model\Transaction\DTO\TransactionPersistenceDTO;
 use S2low\Domain\Model\ValueObject\DateUpdateStatusTransaction;
 use S2low\Domain\Model\ValueObject\ProtocolTransaction;
@@ -42,7 +43,7 @@ class Transaction
         }
     }
 
-    public function analyseAntivirusPositive(): void
+    public function reportVirusPresence(): void
     {
         $this->archive->markInfected();
         $this->archive->antivirusCheck();
@@ -52,7 +53,7 @@ class Transaction
         );
     }
 
-    public function analyseAntivirusNegative(): void
+    public function confirmVirusAbsence(): void
     {
         $this->archive->antivirusCheck();
     }
@@ -85,5 +86,15 @@ class Transaction
     public function getArchive(): DocumentMetier
     {
         return $this->archive;
+    }
+
+    /**
+     * @return void
+     * @throws BadStatusTransactionException | DocumentMetierNotFoundException
+     */
+    public function readyToBeScannedOrThrow(): void
+    {
+        $this->assertStatusIs(StatusTransaction::CREE);
+        $this->archive->assertFileIsValid();
     }
 }
