@@ -45,9 +45,9 @@ class DocumentMetier
         );
     }
 
-    public function assertIsValid(): void
+    public function assertFileIsValid(): void
     {
-        if (file_exists($this->path)){
+        if (!file_exists($this->getAbsolutePath())){
             throw new DocumentMetierNotFoundException($this->path);
         }
     }
