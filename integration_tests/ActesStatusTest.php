@@ -28,7 +28,7 @@ class ActesStatusTest extends S2lowIntegrationTestCase
 
     public function testActesStatusAreOk()
     {
-        $responseModel ='
+        $responseModel = '
         {
           "-1": "Erreur",
           "0": "Annul\u00e9",
