@@ -1,5 +1,5 @@
 <?php
-namespace S2low\Application\UseCase;
+namespace S2low\Legacy;
 
 use S2low\Kernel;
 use Symfony\Component\Dotenv\Dotenv;

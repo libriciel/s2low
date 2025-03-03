@@ -3,7 +3,7 @@
 namespace S2lowLegacy\Class\actes;
 
 use S2low\Application\UseCase\AnalyserActesAntivirus;
-use S2low\Application\UseCase\LegacyServiceContainer;
+use S2low\Legacy\LegacyServiceContainer;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\S2lowLogger;
