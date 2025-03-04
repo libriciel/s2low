@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.1 -
+
+### Corrections
+
+- Correction de la correspondance simulateur/ftp pour les instances de développement #1240
+
 ## 5.1.0 - 2025-02-12
 
 ## Dépréciations
