@@ -47,6 +47,7 @@ services:
       - '../src/Domain/Model/*'
 
 #=============# NEW CODE #============#
+
   S2low\Infrastructure\Adapter\ClamAvAdapter:
     arguments:
       $clamScanBinary: '%env(ANTIVIRUS_COMMAND)%'
@@ -67,10 +68,6 @@ services:
     public: true
 
 #==============# OLD CODE #=============#
-  S2low\Command\CommandTest:
-    arguments:
-      $appEnv: '%env(APP_ENV)%'
-
   S2low\Command\RebuildQueueCommand:
     arguments:
       - !tagged_iterator s2low.queue_rebuilding_worker
