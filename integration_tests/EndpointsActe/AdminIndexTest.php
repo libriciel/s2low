@@ -41,7 +41,7 @@ class AdminIndexTest extends S2lowIntegrationTestCase
 
         $response = $client->getResponse();
 
-        static::assertStringContainsString("Administration",$response->getContent());
+        static::assertStringContainsString("Administration", $response->getContent());
     }
 
 
@@ -55,6 +55,6 @@ class AdminIndexTest extends S2lowIntegrationTestCase
 
         $response = $client->getResponse();
 
-        static::assertStringNotContainsString("Administration",$response->getContent());
+        static::assertStringNotContainsString("Administration", $response->getContent());
     }
 }
