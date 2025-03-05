@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace IntegrationTests;
+namespace IntegrationTests\EndpointsActe;
 
 use Exception;
+use IntegrationTests\S2lowIntegrationTestCase;
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
@@ -22,7 +23,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
     {
         $this->setUpWithoutDeletingObjectInstancier();
         $this->actesTransactionsSQL = ObjectInstancierFactory::getObjetInstancier()->get(ActesTransactionsSQL::class);
-        ObjectInstancierFactory::resetObjectInstancier();    //DatabasePool utilise ObjectInstancier
+        ObjectInstancierFactory::resetObjectInstancier();
     }
     protected function tearDown(): void
     {
@@ -40,34 +41,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
     {
         return $this->actesTransactionsSQL;
     }
-    /**
-     * @throws Exception
-     * TODO : corriger, bug dans cette fonctionnalité
-     * https://gitlab.libriciel.fr/libriciel/pole-plate-formes/s2low/s2low/-/issues/1200
-     */
-    /*
-    public function testActesForceClassification(): void
-    {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
 
-        $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpClient(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
-
-        $crawler = $client->request('GET', 'modules/actes/admin/actes_force_classifiction.php');
-        static::assertMatchesRegularExpression(
-            '#KO#',
-            $crawler->html()
-        );
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
-    }
-    */
     /**
      * @throws Exception
      */
@@ -121,21 +95,6 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
         $crawler = $client->request('GET', 'modules/actes/admin/download-response.php');
         static::assertMatchesRegularExpression(
             '#enveloppe.tar.gz#',
-            $crawler->html()
-        );
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function testActesAdminIndex(): void
-    {
-        $client = $this->setUpUser();
-
-        $crawler = $client->request('GET', 'modules/actes/admin/index.php');
-        static::assertMatchesRegularExpression(
-            '#Utilitaires - ACTES#',
             $crawler->html()
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
