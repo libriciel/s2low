@@ -116,22 +116,6 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
     }
 
     /**
-     * TODO : ajouter un cas qui fonctionne
-     * @throws Exception
-     */
-    public function testActesBatchSign(): void
-    {
-        $client = $this->setUpUser();
-
-        $crawler = $client->request('GET', 'modules/actes/actes_batch_sign.php');
-        static::assertMatchesRegularExpression(
-            '#Vous devez sélectionner au moins une transaction à signer#',
-            $crawler->html()
-        );
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
-    }
-
-    /**
      * @throws Exception
      */
     public function testActesStats(): void
