@@ -12,6 +12,8 @@ use S2lowLegacy\Model\UsersPermsSQL;
 
 class BatchSignTest extends S2lowIntegrationTestCase
 {
+    const BATCH_SIGN_ENDPOINT = "modules/actes/actes_batch_sign.php";
+
     use ActesUtilitiesTestTrait;
 
     private ?ActesTransactionsSQL $actesTransactionsSQL;
@@ -31,16 +33,16 @@ class BatchSignTest extends S2lowIntegrationTestCase
     public function testShouldReturnSuccessResponse(): void
     {
         $client = $this->getAuthenticatedClientWithUserLoggedAs(User::USER);
-        $client->request('GET', 'modules/actes/actes_batch_sign.php');
+        $client->request('GET', self::BATCH_SIGN_ENDPOINT);
 
         static::assertResponseIsSuccessful();
     }
 
     public function testShouldRedirectIndexWithErrorMessage(): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs("USER");
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(User::USER);
 
-        $client->request('GET', 'modules/actes/actes_batch_sign.php');
+        $client->request('GET', self::BATCH_SIGN_ENDPOINT);
         $response = $client->getResponse();
 
         static::assertStringContainsString(
@@ -58,7 +60,7 @@ class BatchSignTest extends S2lowIntegrationTestCase
 
         $client->request(
             'POST',
-            'modules/actes/actes_batch_sign.php',
+            self::BATCH_SIGN_ENDPOINT,
             [
                 'liste_id[]' => $transaction_id,
             ]
@@ -74,7 +76,7 @@ class BatchSignTest extends S2lowIntegrationTestCase
     public function testShouldErrorIfNotGoodPerms()
     {
         $client = $this->getAuthenticatedClientWithUserLoggedAs(User::USER, UsersPermsSQL::PERM_VISUALISATION);
-        $client->request('GET', 'modules/actes/actes_batch_sign.php');
+        $client->request('GET', self::BATCH_SIGN_ENDPOINT);
 
         $response = $client->getResponse();
 

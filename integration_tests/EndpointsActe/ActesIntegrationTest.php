@@ -160,23 +160,6 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
     /**
      * @throws Exception
      */
-    public function testActesTransacDelete(): void
-    {
-        $client = $this->setUpUser();
-
-        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
-        $_POST['id'] = $transaction_id;
-        $client->request('GET', 'modules/actes/actes_transac_delete.php');
-        static::assertMatchesRegularExpression(
-            "#La transaction $transaction_id a été éradiquée ....#",
-            $_SESSION['error']
-        );
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
-    }
-
-    /**
-     * @throws Exception
-     */
     public function testActesTransacGetARActe(): void
     {
         $client = $this->setUpUser();

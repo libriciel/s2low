@@ -8,7 +8,6 @@ use Exception;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 
 /**
@@ -71,7 +70,36 @@ trait ActesUtilitiesTestTrait
         $sql = 'UPDATE actes_transactions SET unique_id=? WHERE id=?';
         $this->getSQLQuery()->query($sql, $unique_id, $transaction_id);
 
+        $this->createActeIncludedFiles($transaction_id, $envelope_id);
+
         return $transaction_id;
+    }
+
+    private function createActeIncludedFiles($transactionId, $envelopeId)
+    {
+        $sql = "INSERT INTO actes_included_files (
+            envelope_id,
+            transaction_id,
+            filename,
+            filetype,
+            filesize,
+            posted_filename,
+            sha1,
+            code_pj
+        ) VALUES (?,?,?,?,?,?,?,?)
+        ";
+
+        return $this->getSQLQuery()->queryOne(
+            $sql,
+            $envelopeId,
+            $transactionId,
+            "PDFTest.pdf",
+            "application/pdf",
+            10407,
+            "PDFTest.pdf",
+            "7c839d1ba8f47aee14839d087d7dd67f68c36778",
+            "99_AI"
+        );
     }
 
     /**
