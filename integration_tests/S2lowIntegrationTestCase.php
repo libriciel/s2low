@@ -3,10 +3,12 @@
 namespace IntegrationTests;
 
 use S2lowLegacy\Class\LegacyObjectsManager;
+use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\UsersPermsSQL;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -96,20 +98,20 @@ class S2lowIntegrationTestCase extends WebTestCase
      */
     protected function setUpUser(): \Symfony\Bundle\FrameworkBundle\KernelBrowser
     {
-        return $this->setUpUserAs('SADM');
+        return $this->setUpUserAs(User::SADM, UsersPermsSQL::PERM_MODIFICATION);
     }
 
     /**
      * @return \Symfony\Bundle\FrameworkBundle\KernelBrowser
      * @throws \Exception
      */
-    protected function setUpUserAs(string $role): \Symfony\Bundle\FrameworkBundle\KernelBrowser
+    protected function setUpUserAs(string $role, string $permissions): \Symfony\Bundle\FrameworkBundle\KernelBrowser
     {
         $certificatePem = $this->pemCertificateFactory->getFromString(
             file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
 
-        $this->createUserAs($role, $certificatePem->getContent(), $certificatePem->getHash());
+        $this->createUserAs($role, $certificatePem->getContent(), $certificatePem->getHash(), $permissions);
         $client = $this->setUpUserCertInServer(
             $certificatePem->getContent(),
             $certificatePem->getContentStrippedFromBegin()
@@ -140,7 +142,7 @@ class S2lowIntegrationTestCase extends WebTestCase
         $this->sqlQuery->exec(file_get_contents(__DIR__ . '/fixtures/s2low-test-init.sql'));
     }
 
-    private function createUserAs(string $role, string $certificatPem, string $certificatHash): void
+    private function createUserAs(string $role, string $certificatPem, string $certificatHash, string $permissions = UsersPermsSQL::PERM_MODIFICATION): void
     {
         $userId = $this->getNextCreatedUserId();
 
@@ -153,19 +155,19 @@ class S2lowIntegrationTestCase extends WebTestCase
         $sql = "INSERT INTO users VALUES ($userId, 'eric@sigmalis.com', 'test_subject', 'test_issuer', 'Pommateau', 'Eric', NULL, '$role', 1, 1, ?, NULL, NULL, NULL, 1, NULL, NULL, ?, ?)";
         $this->sqlQuery->query($sql, [$certificatPem, $certificatPem, $certificatHash]);
 
-        $sql1 = "INSERT INTO users_perms VALUES ($userPermActeId, 1, $userId, 'RW'); -- Permission RW sur le module Actes";
+        $sql1 = "INSERT INTO users_perms VALUES ($userPermActeId, 1, $userId, '$permissions'); -- Permission RW sur le module Actes";
         $this->sqlQuery->query($sql1);
-        $sql2 = "INSERT INTO users_perms VALUES ($userPermHeliosId, 2, $userId, 'RW'); -- Permission RW sur le module Helios";
+        $sql2 = "INSERT INTO users_perms VALUES ($userPermHeliosId, 2, $userId, '$permissions'); -- Permission RW sur le module Helios";
         $this->sqlQuery->query($sql2);
-        $sql3 = "INSERT INTO users_perms VALUES ($userPermMailId, 3, $userId, 'RW'); -- Permission RW sur le module Mail";
+        $sql3 = "INSERT INTO users_perms VALUES ($userPermMailId, 3, $userId, '$permissions'); -- Permission RW sur le module Mail";
         $this->sqlQuery->query($sql3);
     }
 
     /**
      * @throws \Exception
      */
-    protected function getAuthenticatedClientWithUserLoggedAs(string $role): KernelBrowser
+    protected function getAuthenticatedClientWithUserLoggedAs(string $role = User::USER, string $permissions = UsersPermsSQL::PERM_MODIFICATION): KernelBrowser
     {
-        return $this->setUpUserAs($role);
+        return $this->setUpUserAs($role, $permissions);
     }
 }
