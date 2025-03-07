@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace IntegrationTests\EndpointsActe;
+namespace IntegrationTests\EndpointsActeHtml;
 
 use Exception;
 use IntegrationTests\S2lowIntegrationTestCase;

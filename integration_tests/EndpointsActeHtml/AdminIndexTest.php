@@ -1,6 +1,6 @@
 <?php
 
-namespace IntegrationTests\EndpointsActe;
+namespace IntegrationTests\EndpointsActeHtml;
 
 use IntegrationTests\S2lowIntegrationTestCase;
 use S2low\Enum\UserRole;
