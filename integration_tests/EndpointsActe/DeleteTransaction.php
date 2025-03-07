@@ -33,12 +33,18 @@ class DeleteTransaction extends S2lowIntegrationTestCase
         $client = $this->getAuthenticatedClientWithUserLoggedAs(User::SADM);
 
         $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
+
         $_POST['id'] = $transactionId;
         $client->request('GET', 'modules/actes/actes_transac_delete.php');
-        static::assertStringContainsString(
-            "La transaction $transactionId a été éradiquée",
-            $_SESSION['error']
-        );
+
+        static::assertTrue($this->transactionIsDeleted($transactionId));
+    }
+
+    private function transactionIsDeleted($transactionId): bool
+    {
+        $transaction = $this->getActesTransactionsSQL()->getInfo($transactionId);
+
+        return $transaction == false;
     }
 
 }
