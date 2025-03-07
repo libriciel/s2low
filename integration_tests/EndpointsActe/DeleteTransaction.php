@@ -4,9 +4,9 @@ namespace IntegrationTests\EndpointsActe;
 
 use IntegrationTests\S2lowIntegrationTestCase;
 use PHPUnit\ActesUtilitiesTestTrait;
+use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 
 class DeleteTransaction extends S2lowIntegrationTestCase
@@ -30,7 +30,7 @@ class DeleteTransaction extends S2lowIntegrationTestCase
 
     public function testShouldDeleteTransaction(): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(User::SADM);
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::SuperAdministrateur);
 
         $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
 

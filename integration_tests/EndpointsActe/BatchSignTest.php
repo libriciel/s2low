@@ -4,11 +4,11 @@ namespace IntegrationTests\EndpointsActe;
 
 use IntegrationTests\S2lowIntegrationTestCase;
 use PHPUnit\ActesUtilitiesTestTrait;
+use S2low\Enum\ModulePermission;
+use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
-use S2lowLegacy\Model\UsersPermsSQL;
 
 class BatchSignTest extends S2lowIntegrationTestCase
 {
@@ -32,7 +32,7 @@ class BatchSignTest extends S2lowIntegrationTestCase
 
     public function testShouldReturnSuccessResponse(): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(User::USER);
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
         $client->request('GET', self::BATCH_SIGN_ENDPOINT);
 
         static::assertResponseIsSuccessful();
@@ -40,7 +40,7 @@ class BatchSignTest extends S2lowIntegrationTestCase
 
     public function testShouldRedirectIndexWithErrorMessage(): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(User::USER);
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
 
         $client->request('GET', self::BATCH_SIGN_ENDPOINT);
         $response = $client->getResponse();
@@ -53,7 +53,7 @@ class BatchSignTest extends S2lowIntegrationTestCase
 
     public function testShouldDisplayUiToSignActes(): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(User::USER, UsersPermsSQL::PERM_MODIFICATION);
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur, ModulePermission::Modification);
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
 
         $_POST["liste_id"] = [$transaction_id];
@@ -75,7 +75,7 @@ class BatchSignTest extends S2lowIntegrationTestCase
 
     public function testShouldErrorIfNotGoodPerms()
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(User::USER, UsersPermsSQL::PERM_VISUALISATION);
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur, ModulePermission::Visualisation);
         $client->request('GET', self::BATCH_SIGN_ENDPOINT);
 
         $response = $client->getResponse();

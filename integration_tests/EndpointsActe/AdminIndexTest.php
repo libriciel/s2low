@@ -3,7 +3,7 @@
 namespace IntegrationTests\EndpointsActe;
 
 use IntegrationTests\S2lowIntegrationTestCase;
-use S2lowLegacy\Class\User;
+use S2low\Enum\UserRole;
 
 class AdminIndexTest extends S2lowIntegrationTestCase
 {
@@ -11,22 +11,22 @@ class AdminIndexTest extends S2lowIntegrationTestCase
 
     public static function rolesButNotSADMProvider(): \Generator
     {
-        yield 'En tant que Utilisateur' => [User::USER];
-        yield 'En tant que Administrateur' => [User::ADM];
-        yield 'En tant que Arch' => [User::ARCH];
-        yield 'En tant que Gadm' => [User::GADM];
+        yield 'En tant que Utilisateur' => [UserRole::Utilisateur];
+        yield 'En tant que Administrateur' => [UserRole::AdministrateurCollectivite];
+        yield 'En tant que Arch' => [UserRole::Archiviste];
+        yield 'En tant que Gadm' => [UserRole::AdministrateurGroupe];
     }
 
     public static function rolesSADMProvider(): \Generator
     {
-        yield 'En tant que Super Administrateur' => [User::SADM];
+        yield 'En tant que Super Administrateur' => [UserRole::SuperAdministrateur];
     }
 
     /**
      * @dataProvider rolesButNotSADMProvider
      * @dataProvider rolesSADMProvider
      */
-    public function testShouldReturnSuccessResponse(string $role): void
+    public function testShouldReturnSuccessResponse(UserRole $role): void
     {
         $client = $this->getAuthenticatedClientWithUserLoggedAs($role);
         $client->request('GET', self::ADMIN_INDEX);
@@ -36,7 +36,7 @@ class AdminIndexTest extends S2lowIntegrationTestCase
 
     public function testShouldReturnRightContentWhenAuthenticatedAsSuperAdmin(): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(User::SADM);
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::SuperAdministrateur);
         $client->request('GET', self::ADMIN_INDEX);
 
         $response = $client->getResponse();
@@ -48,7 +48,7 @@ class AdminIndexTest extends S2lowIntegrationTestCase
     /**
      * @dataProvider rolesButNotSADMProvider
      */
-    public function testShouldDenyAccessWhenNotAuthenticatedAsAdmin(string $role): void
+    public function testShouldDenyAccessWhenNotAuthenticatedAsAdmin(UserRole $role): void
     {
         $client = $this->getAuthenticatedClientWithUserLoggedAs($role);
         $client->request('GET', self::ADMIN_INDEX);
