@@ -6,31 +6,35 @@ namespace PHPUnit\lib;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
-use S2lowLegacy\Lib\PesAller;
+use S2lowLegacy\Lib\PesAllerReader;
 
 class PesAllerTest extends TestCase
 {
-    private PesAller $pesAller;
+    private PesAllerReader $pesAllerReader;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->pesAller = new PesAller();
+        $this->pesAllerReader = new PesAllerReader();
     }
 
     /**
      * @throws Exception
      * @dataProvider bonsPesAllers
      */
-    public function testGetPmsg(string $path, string $P_MSG): void
+    public function testGetPmsg(string $path, bool $isPesAcquitRetour, string $codColl, string $codBud, string $idPost): void
     {
-        static::assertEquals($P_MSG, $this->pesAller->getP_MSG($path));
+        $pesAllerData = $this->pesAllerReader->getPesAllerData($path);
+        static::assertEquals($isPesAcquitRetour, $pesAllerData->isPesAcquitRetour());
+        static::assertEquals($codColl, $pesAllerData->getCodCol());
+        static::assertEquals($codBud, $pesAllerData->getCodBud());
+        static::assertEquals($idPost, $pesAllerData->getIdPost());
     }
     public function bonsPesAllers(): array
     {
         return [
-            [ __DIR__ . '/fixtures/HELIOS_SIMU_ALR2_1444811220_681372666.xml','PES#123#034000#12'],
-            [__DIR__ . '/fixtures/PES_ACQUIT_RETOUR.xml', 'PES#007#123456#12']
+            [ __DIR__ . '/fixtures/HELIOS_SIMU_ALR2_1444811220_681372666.xml',false,'123','12','034000'],
+            [__DIR__ . '/fixtures/PES_ACQUIT_RETOUR.xml', true,'007','12','123456']
         ];
     }
 
@@ -42,7 +46,7 @@ class PesAllerTest extends TestCase
     {
         self::expectException(Exception::class);
         self::expectExceptionMessage($message);
-        $this->pesAller->getP_MSG($path);
+        $this->pesAllerReader->getPesAllerData($path);
     }
 
     public function mauvaisPesAllers(): array

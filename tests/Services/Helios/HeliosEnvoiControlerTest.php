@@ -1,5 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
+namespace S2low\Tests\Services\Helios;
+
+use Exception;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnection;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionBuilder;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionConfiguration;
@@ -7,29 +12,26 @@ use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionMode;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager;
 use S2low\Services\Helios\HeliosEnvoiControler;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
+use S2low\Tests\S2lowSymfonyWebTestCase;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\helios\FichierCompteur;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Controller\HeliosController;
+use S2lowLegacy\Lib\HeliosNamesGenerator;
+use S2lowLegacy\Lib\PesAllerReader;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\AuthoritySiretSQL;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-class HeliosEnvoiControlerTest extends \S2low\Tests\S2lowSymfonyWebTestCase
+class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
 {
-    private $testStreamUrl;
-
-    /** @var  HeliosController */
-    private $heliosController;
-
-    /** @var  HeliosEnvoiControler */
-    private $heliosEnvoiControler;
-
-    /** @var  TmpFolder */
-    private $tmpFolder;
+    private string $testStreamUrl;
+    private HeliosController $heliosController;
+    private HeliosEnvoiControler $heliosEnvoiControler;
+    private TmpFolder $tmpFolder;
 
     /**
      * @throws Exception
@@ -82,10 +84,13 @@ class HeliosEnvoiControlerTest extends \S2low\Tests\S2lowSymfonyWebTestCase
                     "std_response_server_path",
                     "helios_ftp_p_appli"
                 ),
-                $this->dgfipConnectionBuilderMock
+                $this->dgfipConnectionBuilderMock,
+                new PesAllerReader()
             ),
             new FichierCompteur($this->counterDir . '/counter.txt'),
             $this->getContainer()->get(S2lowLogger::class),
+            new PesAllerReader(),
+            new HeliosNamesGenerator()
         );
     }
 
@@ -485,5 +490,31 @@ class HeliosEnvoiControlerTest extends \S2low\Tests\S2lowSymfonyWebTestCase
         ob_start();
         $this->heliosEnvoiControler->validateOneTransaction($id_t);
         ob_end_clean();
+    }
+
+    /**
+     * Quand on envoie une transaction d'une autorité non Passtrans sur la file non passtrans, elle est
+     * correctement envoyée :
+     * 1/ les paramètres du serveur sont corrects (std_server, etc)
+     * 2/ sendFileOnUniqueConnection est bien appelé avec un nommage correct
+     * 3/ le passage à transmis se fait bien
+     * @return void
+     */
+    public function testSendOnePesAcquitRetour()
+    {
+        $id_t = $this->createPesAllerToSend("PES_ACQUIT_RETOUR.xml");
+        $this->heliosEnvoiControler->sendOneTransaction($id_t, false);
+        $heliosTransaction = new HeliosTransactionsSQL($this->getSQLQuery());
+
+        $info = $heliosTransaction->getInfo($id_t);
+        $this->assertEquals(
+            HeliosTransactionsSQL::TRANSMIS_SANS_ACK,
+            $info['last_status_id']
+        );
+        $last_status_info = $heliosTransaction->getLastStatusInfo($id_t);
+        $this->assertEquals(
+            "Transaction $id_t transmise au serveur.",
+            $last_status_info['message']
+        );
     }
 }

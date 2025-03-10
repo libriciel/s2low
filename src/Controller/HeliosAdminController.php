@@ -5,7 +5,7 @@ namespace S2low\Controller;
 use Exception;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\Initialisation;
-use S2lowLegacy\Lib\PesAller;
+use S2lowLegacy\Lib\PesAllerReader;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -22,7 +22,8 @@ class HeliosAdminController extends AbstractController
         HeliosTransactionsSQL $heliosTransactionsSQL,
         MailerSymfonyFactory $mailerSymfonyFactory,
         string $helios_ftp_p_appli,
-        Initialisation $initialisation
+        Initialisation $initialisation,
+        private PesAllerReader $pesAllerReader
     ) {
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
         $this->mailerSymfonyFactory = $mailerSymfonyFactory;
@@ -79,7 +80,7 @@ class HeliosAdminController extends AbstractController
             $p_dest = $line['helios_ftp_dest'];
             $pAppli = $this->pAppli;
 
-            $p_msg = (new PesAller())->getP_MSGFromParameters(
+            $p_msg = $this->pesAllerReader->getP_MSGFromParameters(
                 $line['xml_cod_col'],
                 $line['xml_id_post'],
                 $line['xml_cod_bud']

@@ -13,8 +13,9 @@ use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\WorkerScript;
+use S2lowLegacy\Lib\HeliosNamesGenerator;
 use S2lowLegacy\Lib\PemCertificateFactory;
-use S2lowLegacy\Lib\PesAller;
+use S2lowLegacy\Lib\PesAllerReader;
 use S2lowLegacy\Lib\PKCS12;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Lib\X509Certificate;
@@ -28,30 +29,21 @@ use ZipArchive;
 
 class HeliosEnvoiControler
 {
-    private $sqlQuery;
-    private $heliosTransactionsSQL;
-    private $authoritySQL;
-    private $fichierCompteur;
-    private $heliosTransmissionWindowsSQL;
+    private SQLQuery $sqlQuery;
+    private HeliosTransactionsSQL $heliosTransactionsSQL;
+    private AuthoritySQL $authoritySQL;
+    private FichierCompteur $fichierCompteur;
+    private HeliosTransmissionWindowsSQL $heliosTransmissionWindowsSQL;
 
     private $do_not_verify_nom_fic_unicity;
 
-    private $pesAllerRetriever;
+    private PesAllerRetriever $pesAllerRetriever;
 
-    private $antivirus;
+    private Antivirus $antivirus;
 
-    private $workerScript;
-    /**
-     * @var \S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager
-     */
+    private WorkerScript $workerScript;
     private DGFiPConnectionsManager $heliosConnectionsConfigurationManager;
-    /**
-     * @var \S2low\Services\MailActesNotifications\MailerSymfonyFactory
-     */
     private MailerSymfonyFactory $mailerFactory;
-    /**
-     * @var \S2lowLegacy\Class\S2lowLogger
-     */
     private S2lowLogger $logger;
 
     public function __construct(
@@ -62,7 +54,9 @@ class HeliosEnvoiControler
         MailerSymfonyFactory $mailerSymfonyFactory,
         DGFiPConnectionsManager $heliosConnectionsConfigurationManager,
         FichierCompteur $fichierCompteur,
-        S2lowLogger $logger
+        S2lowLogger $logger,
+        private PesAllerReader $pesAllerReader,
+        private HeliosNamesGenerator $MSGProducer
     ) {
         $this->sqlQuery = $sqlQuery;
         $this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
@@ -306,9 +300,9 @@ class HeliosEnvoiControler
             return;
         }
 
-        $pesAller = new PesAller();
         try {
-            $p_msg = $pesAller->getP_MSG($file_path);
+            $pesAllerData = $this->pesAllerReader->getPesAllerData($file_path);
+            $p_msg = $this->MSGProducer->getP_MSGFromPesAllerData($pesAllerData);
         } catch (Exception $e) {
             $message = "Transaction $transaction_id : " . $e->getMessage();
             $this->updateStatus($transaction_id, HeliosTransactionsSQL::ERREUR, $message, $transactionInfo['user_id']);
@@ -343,7 +337,12 @@ class HeliosEnvoiControler
 
         $passtransMessage = $usePasstrans ? " [Passtrans]" : "";
         $message = "Transaction $transaction_id transmise au serveur." . $passtransMessage;
-        $this->updateStatus($transaction_id, HeliosTransactionsSQL::TRANSMIS, $message, $transactionInfo['user_id']);
+        $this->updateStatus(
+            $transaction_id,
+            $this->getStatutApresTransmission($pesAllerData->isPesAcquitRetour()),
+            $message,
+            $transactionInfo['user_id']
+        );
 
         $this->heliosTransmissionWindowsSQL->addFile($transactionInfo['file_size']);
 
@@ -351,6 +350,14 @@ class HeliosEnvoiControler
             unlink($file_to_send);
         }
         unlink($file_path_with_complete_name);
+    }
+
+    private function getStatutApresTransmission(bool $isPesAcquitRetour)
+    {
+        if ($isPesAcquitRetour) {
+            return HeliosTransactionsSQL::TRANSMIS_SANS_ACK;
+        }
+        return HeliosTransactionsSQL::TRANSMIS;
     }
 
     private function createCompleteName($siren)
