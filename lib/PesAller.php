@@ -6,15 +6,23 @@ use Exception;
 
 class PesAller
 {
-    public function getP_MSG($pes_aller_path)
+    /**
+     * @throws Exception
+     */
+    public function getP_MSG($pes_aller_path): string
     {
         $pes_xml = simplexml_load_file($pes_aller_path, 'SimpleXMLElement', LIBXML_PARSEHUGE);
-        if (is_null($pes_xml) || is_null($pes_xml->EnTetePES) || is_null($pes_xml->EnTetePES->CodCol)) {    //Quickfix php8
-            throw new Exception("La balise EnTetePES/CodCol n'est pas présente ou est vide");
+        if (!$pes_xml || empty($pes_xml->EnTetePES)) {
+            throw new Exception("La balise EnTetePES n'est pas présente ou est vide");
         }
-        $cod_col = $pes_xml->EnTetePES->CodCol['V'];
+        if ($pes_xml->getName() === 'PES_ACQUIT_RETOUR') {
+            $cod_col = $pes_xml->EnTetePES->CodColl['V'];
+        } else {
+            $cod_col = $pes_xml->EnTetePES->CodCol['V'];
+        }
+
         if (! $cod_col) {
-            throw new Exception("La balise EnTetePES/CodCol n'est pas présente ou est vide");
+            throw new Exception('La balise EnTetePES/CodCol ou EnTetePES/CodColl n\'est pas présente ou est vide');
         }
         $id_post = $pes_xml->EnTetePES->IdPost['V'];
         if (! $id_post) {
@@ -35,6 +43,6 @@ class PesAller
      */
     public function getP_MSGFromParameters(string $cod_col, string $id_post, string $cod_bud): string
     {
-        return "PES#" . $cod_col . "#" . $id_post . "#" . $cod_bud;
+        return 'PES#' . $cod_col . '#' . $id_post . '#' . $cod_bud;
     }
 }
