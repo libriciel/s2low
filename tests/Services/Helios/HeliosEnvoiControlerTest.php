@@ -150,6 +150,21 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
         $this->assertEquals("Transaction $id_t : Le CodCol est trop long", $last_status_info['message']);
     }
 
+    public function testPasDeNomFic()
+    {
+        $this->workerScript->expects($this->never())->method('putJobByQueueName');
+        $id_t = $this->validatePesAller("pes_aller_PasDeNomFic.xml");
+
+        $heliosTransaction = new HeliosTransactionsSQL($this->getSQLQuery());
+        $info = $heliosTransaction->getInfo($id_t);
+        $this->assertEquals(HeliosTransactionsSQL::ERREUR, $info['last_status_id']);
+        $last_status_info = $heliosTransaction->getLastStatusInfo($id_t);
+        $this->assertEquals(
+            "Transaction $id_t : La balise Enveloppe/Parametre/NomFic n'est pas présente ou est vide",
+            $last_status_info['message']
+        );
+    }
+
     /**
      * @throws Exception
      */
