@@ -16,7 +16,6 @@ use S2lowLegacy\Lib\SQLQuery;
  * Date: 21/08/2018
  * Time: 11:41
  */
-
 trait ActesUtilitiesTestTrait
 {
     /**
@@ -70,7 +69,6 @@ trait ActesUtilitiesTestTrait
         $sql = 'UPDATE actes_transactions SET unique_id=? WHERE id=?';
         $this->getSQLQuery()->query($sql, $unique_id, $transaction_id);
 
-        $this->createActeIncludedFiles($transaction_id, $envelope_id);
 
         return $transaction_id;
     }
@@ -132,6 +130,7 @@ trait ActesUtilitiesTestTrait
     {
         $this->getActesTransactionsSQL()->updateStatus($transaction_id, $status_id, $message, '', $date);
     }
+
     abstract protected function getActesTransactionsSQL(): ActesTransactionsSQL;
 
     abstract public function getSQLQuery(): SQLQuery;
