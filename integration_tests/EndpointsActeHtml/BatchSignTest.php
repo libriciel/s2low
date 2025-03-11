@@ -54,20 +54,21 @@ class BatchSignTest extends S2lowIntegrationTestCase
     public function testShouldDisplayUiToSignActes(): void
     {
         $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur, ModulePermission::Modification);
-        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+        $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+        $this->createActeIncludedFiles($transactionId);
 
-        $_POST["liste_id"] = [$transaction_id];
+        $_POST["liste_id"] = [$transactionId];
 
         $client->request(
             'POST',
             self::BATCH_SIGN_ENDPOINT,
             [
-                'liste_id[]' => $transaction_id,
+                'liste_id[]' => $transactionId,
             ]
         );
 
         $response = $client->getResponse();
-
+        var_dump($response->getContent());
         static::assertStringContainsString(
             'ACTES - Signature de plusieurs Actes',
             $response->getContent()

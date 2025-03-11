@@ -73,8 +73,11 @@ trait ActesUtilitiesTestTrait
         return $transaction_id;
     }
 
-    private function createActeIncludedFiles($transactionId, $envelopeId)
+    private function createActeIncludedFiles($transactionId)
     {
+        $sql = "SELECT id FROM actes_envelopes WHERE user_id = 1 AND siren='000000000'";
+        $enveloppeId = $this->getSQLQuery()->queryOne($sql);
+
         $sql = "INSERT INTO actes_included_files (
             envelope_id,
             transaction_id,
@@ -89,7 +92,7 @@ trait ActesUtilitiesTestTrait
 
         return $this->getSQLQuery()->queryOne(
             $sql,
-            $envelopeId,
+            $enveloppeId,
             $transactionId,
             "PDFTest.pdf",
             "application/pdf",
