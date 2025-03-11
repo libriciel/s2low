@@ -5,6 +5,7 @@
 ### Évolutions
 
 - Permettre de poster les Pes Acquit Retour #1156
+- Permettre de configurer la configuration Apache SSLInsecureRenegotiation #1244
 
 ### Corrections
 
