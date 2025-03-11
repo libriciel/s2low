@@ -53,5 +53,4 @@ class CancelTransactionTest extends S2lowIntegrationTestCase
         static::assertSame('OK', $content[0]);
         static::assertNotEmpty($content[1]);
     }
-
 }

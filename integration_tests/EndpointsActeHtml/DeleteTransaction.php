@@ -45,5 +45,4 @@ class DeleteTransaction extends S2lowIntegrationTestCase
 
         return $transaction == false;
     }
-
 }
