@@ -25,6 +25,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
         $this->actesTransactionsSQL = ObjectInstancierFactory::getObjetInstancier()->get(ActesTransactionsSQL::class);
         ObjectInstancierFactory::resetObjectInstancier();
     }
+
     protected function tearDown(): void
     {
         if ($this->enveloppeInErrorPath !== '' && file_exists($this->enveloppeInErrorPath)) {
@@ -51,7 +52,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
         $enveloppeName = 'enveloppe';
         $this->copyEnveloppeToErrorDirectory($enveloppeName);
         $_GET['file'] = $enveloppeName; // Comme l'objet Récupérateur est set dans le script, ça ne fonctionne pas
-                                      // autrement ( le client Symfony ne set pas _GET )
+        // autrement ( le client Symfony ne set pas _GET )
         $client->request(
             'GET',
             'modules/actes/admin/analyse-response.php'
@@ -197,11 +198,11 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
     {
         $client = $this->setUpUser();
 
-            $crawler = $client->request('GET', 'modules/actes/actes_transac_post_confirm_api_multi.php');
-            static::assertMatchesRegularExpression(
-                '#exit\(\) called#',
-                $crawler->html()
-            );
+        $crawler = $client->request('GET', 'modules/actes/actes_transac_post_confirm_api_multi.php');
+        static::assertMatchesRegularExpression(
+            '#exit\(\) called#',
+            $crawler->html()
+        );
 
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
@@ -331,15 +332,15 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
         $this->enveloppeInErrorPath = "/data/tdt-workspace/actes/response_error/$enveloppeName/";
         mkdir($this->enveloppeInErrorPath);
         copy(
-            __DIR__ . '/../test/PHPUnit/class/fixtures/test-courrier-simple/034-000000000-20170701-20170725A-AI-2-1_0.xml',
+            __DIR__ . '/../../test/PHPUnit/class/fixtures/test-courrier-simple/034-000000000-20170701-20170725A-AI-2-1_0.xml',
             $this->enveloppeInErrorPath . '/034-000000000-20170701-20170725A-AI-2-1_0.xml'
         );
         copy(
-            __DIR__ . '/../test/PHPUnit/class/fixtures/test-courrier-simple/TACT--SPREF0011-000000000-20170725-1.xml',
+            __DIR__ . '/../../test/PHPUnit/class/fixtures/test-courrier-simple/TACT--SPREF0011-000000000-20170725-1.xml',
             $this->enveloppeInErrorPath . '/TACT--SPREF0011-000000000-20170725-1.xml'
         );
         copy(
-            __DIR__ . '/../test/PHPUnit/class/fixtures/test-courrier-simple/034-000000000-20170701-20170725A-AI-2-1_1.pdf',
+            __DIR__ . '/../../test/PHPUnit/class/fixtures/test-courrier-simple/034-000000000-20170701-20170725A-AI-2-1_1.pdf',
             $this->enveloppeInErrorPath . '/034-000000000-20170701-20170725A-AI-2-1_1.pdf'
         );
     }
