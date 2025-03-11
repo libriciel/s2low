@@ -46,9 +46,9 @@ class BatchSignTest extends S2lowIntegrationTestCase
         $response = $client->getResponse();
 
         static::assertStringContainsString(
-            'Vous devez sélectionner au moins une transaction à signer', $response->getContent()
+            'Vous devez sélectionner au moins une transaction à signer',
+            $response->getContent()
         );
-
     }
 
     public function testShouldDisplayUiToSignActes(): void
@@ -69,7 +69,8 @@ class BatchSignTest extends S2lowIntegrationTestCase
         $response = $client->getResponse();
 
         static::assertStringContainsString(
-            'ACTES - Signature de plusieurs Actes', $response->getContent()
+            'ACTES - Signature de plusieurs Actes',
+            $response->getContent()
         );
     }
 
@@ -81,7 +82,8 @@ class BatchSignTest extends S2lowIntegrationTestCase
         $response = $client->getResponse();
 
         static::assertStringContainsString(
-            'Vous ne disposez pas du droit de signature', $response->getContent()
+            'Vous ne disposez pas du droit de signature',
+            $response->getContent()
         );
     }
 }
