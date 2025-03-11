@@ -7,7 +7,7 @@ use S2low\Enum\UserRole;
 
 class AdminIndexTest extends S2lowIntegrationTestCase
 {
-    const ADMIN_INDEX = 'modules/actes/admin/index.php';
+    private const ADMIN_INDEX = 'modules/actes/admin/index.php';
 
     public static function rolesButNotSADMProvider(): \Generator
     {

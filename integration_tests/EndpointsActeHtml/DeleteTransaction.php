@@ -11,10 +11,9 @@ use S2lowLegacy\Lib\ObjectInstancierFactory;
 
 class DeleteTransaction extends S2lowIntegrationTestCase
 {
-    private ?ActesTransactionsSQL $actesTransactionsSQL;
-
     use ActesUtilitiesTestTrait;
 
+    private ?ActesTransactionsSQL $actesTransactionsSQL;
 
     protected function setUp(): void
     {

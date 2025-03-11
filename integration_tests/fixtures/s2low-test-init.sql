@@ -47,12 +47,19 @@ INSERT INTO actes_status VALUES (1, 'Posté');
 INSERT INTO actes_status VALUES (2, 'En attente de transmission');
 INSERT INTO actes_status VALUES (3, 'Transmis');
 INSERT INTO actes_status VALUES (4, 'Acquittement reçu');
+INSERT INTO actes_status VALUES (5, 'Validé');
+INSERT INTO actes_status VALUES (6, 'Refusé');
+INSERT INTO actes_status VALUES (7, 'Document reçu');
+INSERT INTO actes_status VALUES (8, 'Acquittement envoyé');
+INSERT INTO actes_status VALUES (9, 'Document envoyé');
+INSERT INTO actes_status VALUES (10, 'Refus d''envoi');
+INSERT INTO actes_status VALUES (11, 'Acquittement de document reçu');
+INSERT INTO actes_status VALUES (12, 'Envoyé au SAE');
 INSERT INTO actes_status VALUES (13, 'Archivé par le SAE');
 INSERT INTO actes_status VALUES (14, 'Erreur lors de l''archivage');
 INSERT INTO actes_status VALUES (19, 'En attente de transmission au SAE');
 INSERT INTO actes_status VALUES (20, 'Erreur lors de l''envoi au SAE');
 INSERT INTO actes_status VALUES (21, 'Document reçu (pas d''AR)');
-INSERT INTO actes_status VALUES (12, 'Envoyé au SAE');
 INSERT INTO actes_status VALUES (18, 'En attente d''être signé');
 
 -- Création des modules

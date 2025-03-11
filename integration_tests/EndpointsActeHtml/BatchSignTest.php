@@ -12,9 +12,9 @@ use S2lowLegacy\Lib\ObjectInstancierFactory;
 
 class BatchSignTest extends S2lowIntegrationTestCase
 {
-    const BATCH_SIGN_ENDPOINT = "modules/actes/actes_batch_sign.php";
-
     use ActesUtilitiesTestTrait;
+
+    private const BATCH_SIGN_ENDPOINT = "modules/actes/actes_batch_sign.php";
 
     private ?ActesTransactionsSQL $actesTransactionsSQL;
 
