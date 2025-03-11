@@ -38,8 +38,8 @@ class CancelTransactionTest extends S2lowIntegrationTestCase
 
         // A Supprimer lors du refacto de l'api.
         // Lorsque l'endpoint sera geré par les controllers symfony
-            $_POST['api'] = $api;
-            $_POST['id'] = $id;
+        $_POST['api'] = $api;
+        $_POST['id'] = $id;
         //
 
         $client->request('POST', '/modules/actes/actes_transac_cancel.php', [
