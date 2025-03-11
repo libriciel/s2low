@@ -29,7 +29,7 @@ class HeliosTransactionsSQL extends SQL
 
     public const DETRUITE = 22;
 
-    public const TRANSMIS_SANS_ACK = 23;
+    public const TRANSMIS_SANS_ACK = 24;
 
     private const SEND_WARNING_AFTER_SECOND = 172800;
 

@@ -23,4 +23,9 @@ class HeliosNamesGenerator
             $data->getCodBud()
         );
     }
+
+    public function createCompleteName(string $siren, string $numero)
+    {
+        return "PESALR2_{$siren}_" . date('ymd') . "_{$numero}.xml";
+    }
 }

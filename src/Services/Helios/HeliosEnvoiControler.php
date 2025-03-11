@@ -17,7 +17,6 @@ use S2lowLegacy\Lib\HeliosNamesGenerator;
 use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\PesAllerReader;
 use S2lowLegacy\Lib\PKCS12;
-use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Lib\XadesSignature;
 use S2lowLegacy\Lib\XadesSignatureParser;
@@ -29,49 +28,37 @@ use ZipArchive;
 
 class HeliosEnvoiControler
 {
-    private SQLQuery $sqlQuery;
-    private HeliosTransactionsSQL $heliosTransactionsSQL;
-    private AuthoritySQL $authoritySQL;
-    private FichierCompteur $fichierCompteur;
-    private HeliosTransmissionWindowsSQL $heliosTransmissionWindowsSQL;
-
-    private $do_not_verify_nom_fic_unicity;
-
-    private PesAllerRetriever $pesAllerRetriever;
-
-    private Antivirus $antivirus;
-
-    private WorkerScript $workerScript;
-    private DGFiPConnectionsManager $heliosConnectionsConfigurationManager;
-    private MailerSymfonyFactory $mailerFactory;
-    private S2lowLogger $logger;
+    private bool $do_not_verify_nom_fic_unicity = false;
+    private XadesSignature $xadesSignature;
 
     public function __construct(
-        SQLQuery $sqlQuery,
-        PesAllerRetriever $pesAllerRetriever,
-        Antivirus $antivirus,
-        WorkerScript $workerScript,
-        MailerSymfonyFactory $mailerSymfonyFactory,
-        DGFiPConnectionsManager $heliosConnectionsConfigurationManager,
-        FichierCompteur $fichierCompteur,
-        S2lowLogger $logger,
-        private PesAllerReader $pesAllerReader,
-        private HeliosNamesGenerator $MSGProducer
+        private readonly AuthoritySiretSQL $authoritySiretSQL,
+        private readonly HeliosTransactionsSQL $heliosTransactionsSQL,
+        private readonly AuthoritySQL $authoritySQL,
+        private readonly HeliosTransmissionWindowsSQL $heliosTransmissionWindowsSQL,
+        private readonly PesAllerRetriever $pesAllerRetriever,
+        private readonly Antivirus $antivirus,
+        private readonly WorkerScript $workerScript,
+        private readonly MailerSymfonyFactory $mailerFactory,
+        private readonly DGFiPConnectionsManager $heliosConnectionsConfigurationManager,
+        private readonly FichierCompteur $fichierCompteur,
+        private readonly S2lowLogger $logger,
+        private readonly PesAllerReader $pesAllerReader,
+        private readonly HeliosNamesGenerator $namesGenerator,
+        VerifyPemCertificateFactory $verifyPemFactory
     ) {
-        $this->sqlQuery = $sqlQuery;
-        $this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
-        $this->authoritySQL = new AuthoritySQL($sqlQuery);
-        $this->fichierCompteur = $fichierCompteur;
-        $this->heliosTransmissionWindowsSQL = new HeliosTransmissionWindowsSQL($sqlQuery);
-        $this->pesAllerRetriever = $pesAllerRetriever;
-        $this->antivirus = $antivirus;
-        $this->workerScript = $workerScript;
-        $this->mailerFactory = $mailerSymfonyFactory;
-        $this->heliosConnectionsConfigurationManager = $heliosConnectionsConfigurationManager;
-        $this->logger = $logger;
+        $this->xadesSignature = new XadesSignature(
+            XMLSEC1_PATH,
+            new PKCS12(),
+            new X509Certificate(),
+            EXTENDED_VALIDCA_PATH,
+            new XadesSignatureParser(),
+            new PemCertificateFactory(),
+            $verifyPemFactory->get(EXTENDED_VALIDCA_PATH)
+        );
     }
 
-    public function setDoNotVerifyNomFicUnicity($do_not_verify_nom_fic_unicity)
+    public function setDoNotVerifyNomFicUnicity(bool $do_not_verify_nom_fic_unicity): void
     {
         $this->do_not_verify_nom_fic_unicity = $do_not_verify_nom_fic_unicity;
     }
@@ -80,7 +67,7 @@ class HeliosEnvoiControler
     /**
      * @throws \Exception
      */
-    public function validateOneTransaction($transaction_id)
+    public function validateOneTransaction($transaction_id): void
     {
         libxml_use_internal_errors(true);
         $transactionInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
@@ -148,35 +135,25 @@ class HeliosEnvoiControler
             $this->updateStatus($transaction_id, HeliosTransactionsSQL::ERREUR, $message, $transactionInfo['user_id']);
             return;
         }
-        $verifyPemFactory = new VerifyPemCertificateFactory();
-        $xadesSignature = new XadesSignature(
-            XMLSEC1_PATH,
-            new PKCS12(),
-            new X509Certificate(),
-            EXTENDED_VALIDCA_PATH,
-            new XadesSignatureParser(),
-            new PemCertificateFactory(),
-            $verifyPemFactory->get(EXTENDED_VALIDCA_PATH)
-        );
 
         if (sha1_file($file_path) != $transactionInfo['sha1']) {
             $this->updateStatus(
                 $transaction_id,
                 HeliosTransactionsSQL::ERREUR,
-                "Le fichier a été modifé depuis son postage sur la plateforme",
+                'Le fichier a été modifé depuis son postage sur la plateforme',
                 $transactionInfo['user_id']
             );
             return;
         }
 
-        if ($xadesSignature->isSigned($file_path)) {
+        if ($this->xadesSignature->isSigned($file_path)) {
             try {
-                $xadesSignature->verify($file_path);
+                $this->xadesSignature->verify($file_path);
             } catch (Exception $exception) {
                 $this->updateStatus(
                     $transaction_id,
                     HeliosTransactionsSQL::ERREUR,
-                    "La signature du fichier est invalide : " . $exception->getMessage(),
+                    'La signature du fichier est invalide : ' . $exception->getMessage(),
                     $transactionInfo['user_id']
                 );
                 return;
@@ -197,13 +174,10 @@ class HeliosEnvoiControler
             return;
         }
 
-
-
         $siret = $pes_xml->EnTetePES->IdColl['V'];
-        $authoritySiret = new AuthoritySiretSQL($this->sqlQuery);
-        $authoritySiret->add($transactionInfo['authority_id'], $siret);
+        $this->authoritySiretSQL->add($transactionInfo['authority_id'], $siret);
 
-        $usePasstransMsg = $authorityInfo['helios_use_passtrans'] ? " [Passtrans]" : "";
+        $usePasstransMsg = $authorityInfo['helios_use_passtrans'] ? ' [Passtrans]' : '';
         $message = "Transaction $transaction_id dans la file d'attente" . $usePasstransMsg;
         $this->updateStatus($transaction_id, HeliosTransactionsSQL::ATTENTE, $message, $transactionInfo['user_id']);
 
@@ -216,13 +190,13 @@ class HeliosEnvoiControler
         libxml_use_internal_errors(false);
     }
 
-    private function isInIso8859($pes_content)
+    private function isInIso8859($pes_content): bool|int
     {
         $first_line = mb_substr($pes_content, 0, 50);
-        return preg_match("#ISO-8859-1#i", $first_line);
+        return preg_match('#ISO-8859-1#i', $first_line);
     }
 
-    private function verifNomFicUnicity($authorityInfo, $info_from_pes_aller)
+    private function verifNomFicUnicity($authorityInfo, $info_from_pes_aller): bool
     {
         if ($this->do_not_verify_nom_fic_unicity) { //ARE YOU SURE ?
             if ($authorityInfo['helios_do_not_verify_nom_fic_unicity']) { //VERY SURE ?
@@ -236,7 +210,7 @@ class HeliosEnvoiControler
         );
     }
 
-    private function updateStatus($transaction_id, $status_id, $message, $user_id)
+    private function updateStatus($transaction_id, $status_id, $message, $user_id): void
     {
         $this->logger->info($message);
         $this->heliosTransactionsSQL->updateStatus($transaction_id, $status_id, $message);
@@ -244,9 +218,9 @@ class HeliosEnvoiControler
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    public function sendOneTransaction($transaction_id, bool $usePasstrans)
+    public function sendOneTransaction($transaction_id, bool $usePasstrans): void
     {
         $file_sending_repository = HELIOS_FILES_UPLOAD_TMP;
 
@@ -261,7 +235,7 @@ class HeliosEnvoiControler
                 $this->logger->info($message);
                 $mail = $this->mailerFactory->getInstance();
                 $mail->addRecipient(EMAIL_ADMIN);
-                $mail->sendMail("Transaction Helios bloquée", $message);
+                $mail->sendMail('Transaction Helios bloquée', $message);
                 $this->heliosTransactionsSQL->setSendWarning($transaction_id);
             }
             return;
@@ -269,13 +243,16 @@ class HeliosEnvoiControler
 
         $authorityInfo = $this->authoritySQL->getInfo($transactionInfo['authority_id']);
 
-        $completeName = $this->createCompleteName($transactionInfo['siren']);
+        $completeName = $this->namesGenerator->createCompleteName(
+            $transactionInfo['siren'],
+            $this->fichierCompteur->getNumero()
+        );
         $this->heliosTransactionsSQL->setCompleteName($transaction_id, $completeName);
         $this->logger->info("Nom du fichier à envoyer : $completeName");
 
         $file_path = $this->pesAllerRetriever->getPath($transactionInfo['sha1']);
 
-        $file_path_with_complete_name = $file_sending_repository . "/" . $completeName;
+        $file_path_with_complete_name = $file_sending_repository . '/' . $completeName;
         if (! copy($file_path, $file_path_with_complete_name)) {
             $this->logger->error("Transaction $transaction_id : échec de la copie...: cp $file_path $file_path_with_complete_name");
             return;
@@ -302,7 +279,7 @@ class HeliosEnvoiControler
 
         try {
             $pesAllerData = $this->pesAllerReader->getPesAllerData($file_path);
-            $p_msg = $this->MSGProducer->getP_MSGFromPesAllerData($pesAllerData);
+            $p_msg = $this->namesGenerator->getP_MSGFromPesAllerData($pesAllerData);
         } catch (Exception $e) {
             $message = "Transaction $transaction_id : " . $e->getMessage();
             $this->updateStatus($transaction_id, HeliosTransactionsSQL::ERREUR, $message, $transactionInfo['user_id']);
@@ -313,7 +290,7 @@ class HeliosEnvoiControler
             return;
         }
 
-        if (! $authorityInfo["helios_ftp_dest"]) {
+        if (! $authorityInfo['helios_ftp_dest']) {
             $message = "Transaction $transaction_id : les propriétés Helios FTP ne sont pas configurées correctement";
             $this->updateStatus($transaction_id, HeliosTransactionsSQL::ERREUR, $message, $transactionInfo['user_id']);
             unlink($file_path_with_complete_name);
@@ -321,21 +298,21 @@ class HeliosEnvoiControler
         }
 
         try {
-            if ($authorityInfo["helios_use_passtrans"] != $usePasstrans) {
+            if ($authorityInfo['helios_use_passtrans'] != $usePasstrans) {
                 $message = "Transaction $transaction_id : la transaction a été aiguillée sur la mauvaise file passtrans";
                 $this->updateStatus($transaction_id, HeliosTransactionsSQL::ERREUR, $message, $transactionInfo['user_id']);
                 unlink($file_path_with_complete_name);
                 return;
             }
             $this->heliosConnectionsConfigurationManager
-                ->get($usePasstrans)->sendFileOnUniqueConnection($authorityInfo["helios_ftp_dest"], $p_msg, $file_to_send);
+                ->get($usePasstrans)->sendFileOnUniqueConnection($authorityInfo['helios_ftp_dest'], $p_msg, $file_to_send);
         } catch (Exception $e) {
             $this->logger->error("Transaction $transaction_id: Erreur lors du postage de la transaction Helios $transaction_id : " . $e->getMessage());
             unlink($file_path_with_complete_name);
             return;
         }
 
-        $passtransMessage = $usePasstrans ? " [Passtrans]" : "";
+        $passtransMessage = $usePasstrans ? ' [Passtrans]' : '';
         $message = "Transaction $transaction_id transmise au serveur." . $passtransMessage;
         $this->updateStatus(
             $transaction_id,
@@ -352,7 +329,7 @@ class HeliosEnvoiControler
         unlink($file_path_with_complete_name);
     }
 
-    private function getStatutApresTransmission(bool $isPesAcquitRetour)
+    private function getStatutApresTransmission(bool $isPesAcquitRetour): int
     {
         if ($isPesAcquitRetour) {
             return HeliosTransactionsSQL::TRANSMIS_SANS_ACK;
@@ -360,25 +337,18 @@ class HeliosEnvoiControler
         return HeliosTransactionsSQL::TRANSMIS;
     }
 
-    private function createCompleteName($siren)
-    {
-        $numero = $this->fichierCompteur->getNumero();
-        $date = date("ymd");
-        return "PESALR2_{$siren}_{$date}_{$numero}.xml";
-    }
-
 
     public function rollback($transaction_id)
     {
     }
 
-    public function extratInfoFromPESAller(SimpleXMLElement $pes_xml)
+    public function extratInfoFromPESAller(SimpleXMLElement $pes_xml): array
     {
-        $info['nom_fic'] = strval($pes_xml->Enveloppe->Parametres->NomFic['V']);
-        $info['cod_col'] = strval($pes_xml->EnTetePES->CodCol['V']);
-        $info['cod_bud'] = strval($pes_xml->EnTetePES->CodBud['V']);
-        $info['id_post'] = strval($pes_xml->EnTetePES->IdPost['V']);
-        return $info;
+        $info_pes['nom_fic'] = strval($pes_xml->Enveloppe->Parametres->NomFic['V']);
+        $info_pes['cod_col'] = strval($pes_xml->EnTetePES->CodCol['V']);
+        $info_pes['cod_bud'] = strval($pes_xml->EnTetePES->CodBud['V']);
+        $info_pes['id_post'] = strval($pes_xml->EnTetePES->IdPost['V']);
+        return $info_pes;
     }
 
 
