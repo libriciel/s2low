@@ -25,10 +25,10 @@ class PesAllerTest extends TestCase
     public function testGetPmsg(string $path, bool $isPesAcquitRetour, string $codColl, string $codBud, string $idPost): void
     {
         $pesAllerData = $this->pesAllerReader->getPesAllerData($path);
-        static::assertEquals($isPesAcquitRetour, $pesAllerData->isPesAcquitRetour());
-        static::assertEquals($codColl, $pesAllerData->getCodCol());
-        static::assertEquals($codBud, $pesAllerData->getCodBud());
-        static::assertEquals($idPost, $pesAllerData->getIdPost());
+        static::assertSame($isPesAcquitRetour, $pesAllerData->isPesAcquitRetour);
+        static::assertSame($codColl, $pesAllerData->cod_col);
+        static::assertSame($codBud, $pesAllerData->cod_bud);
+        static::assertSame($idPost, $pesAllerData->id_post);
     }
     public function bonsPesAllers(): array
     {
@@ -44,8 +44,8 @@ class PesAllerTest extends TestCase
      */
     public function testGetPmsgBadPesAller(string $path, string $message)
     {
-        self::expectException(Exception::class);
-        self::expectExceptionMessage($message);
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage($message);
         $this->pesAllerReader->getPesAllerData($path);
     }
 

@@ -192,8 +192,8 @@ class HeliosEnvoiControler
 
     private function isInIso8859($pes_content): bool|int
     {
-        $first_line = mb_substr($pes_content, 0, 50);
-        return preg_match('#ISO-8859-1#i', $first_line);
+        $first_line = strtoupper(mb_substr($pes_content, 0, 50));
+        return str_contains($first_line, 'ISO-8859-1');
     }
 
     private function verifNomFicUnicity($authorityInfo, $info_from_pes_aller): bool
@@ -316,7 +316,7 @@ class HeliosEnvoiControler
         $message = "Transaction $transaction_id transmise au serveur." . $passtransMessage;
         $this->updateStatus(
             $transaction_id,
-            $this->getStatutApresTransmission($pesAllerData->isPesAcquitRetour()),
+            $this->getStatutApresTransmission($pesAllerData->isPesAcquitRetour),
             $message,
             $transactionInfo['user_id']
         );

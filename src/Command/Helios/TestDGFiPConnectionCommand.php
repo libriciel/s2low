@@ -30,8 +30,8 @@ class TestDGFiPConnectionCommand extends Command
     public function __construct(
         DGFiPConnectionsManager $DGFiPConnectionsManager,
         DGFiPConnectionBuilder $connectionBuilder,
-        private PesAllerReader $pesAllerReader,
-        private HeliosNamesGenerator $producer
+        private readonly PesAllerReader $pesAllerReader,
+        private readonly HeliosNamesGenerator $producer
     ) {
         parent::__construct();
         $this->DGFiPConnectionsManager = $DGFiPConnectionsManager;
