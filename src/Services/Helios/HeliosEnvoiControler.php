@@ -190,7 +190,7 @@ class HeliosEnvoiControler
         libxml_use_internal_errors(false);
     }
 
-    private function isInIso8859($pes_content): bool|int
+    private function isInIso8859($pes_content): bool
     {
         $first_line = strtoupper(mb_substr($pes_content, 0, 50));
         return str_contains($first_line, 'ISO-8859-1');
