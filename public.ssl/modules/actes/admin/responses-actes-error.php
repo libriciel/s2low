@@ -2,6 +2,7 @@
 
 use S2lowLegacy\Class\actes\ActesResponsesError;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -9,9 +10,10 @@ use S2lowLegacy\Class\PagerHTML;
 
 /** @var Initialisation $initialisation */
 /** @var ActesResponsesError $actesResponsesError */
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
 
-[$initialisation,$actesResponsesError] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class,ActesResponsesError::class]);
+[$initialisation,$actesResponsesError, $HTMLLayoutFactory] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,ActesResponsesError::class,HTMLLayoutFactory::class],);
 
 $initData = $initialisation->doInit();
 $moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
@@ -30,7 +32,7 @@ $errorFileIterator = $actesResponsesError->getFilesystemIterator();
 $menuHTML = new MenuHTML();
 $pagerHTML  = new PagerHTML();
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $doc->setTitle("Console d'administration");
 

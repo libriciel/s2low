@@ -6,6 +6,7 @@ use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\helios\HeliosTransactionsListe;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -20,9 +21,10 @@ use S2lowLegacy\Model\AuthoritySQL;
 /** @var Droit $droit */
 /** @var HeliosTransactionsListe $heliosTransactionsListe */
 /** @var AuthoritySQL $authoritySQL */
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
 
-[$initialisation, $droit,$heliosTransactionsListe,$authoritySQL] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class, HeliosTransactionsListe::class,AuthoritySQL::class]);
+[$initialisation, $droit,$heliosTransactionsListe,$authoritySQL, $HTMLLayoutFactory] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, Droit::class, HeliosTransactionsListe::class,AuthoritySQL::class,HTMLLayoutFactory::class]);
 
 $initData = $initialisation->doInit();
 $moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
@@ -198,7 +200,7 @@ EOJS;
 $menuHTML = new MenuHTML();
 $pagerHTML  = new PagerHTML();
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 $doc->addHeader($js);
 
 $doc->addHeader("<script src=\"" . Helpers::getLink('/jsmodules/jquery.js') . "\" type=\"text/javascript\"></script>\n");

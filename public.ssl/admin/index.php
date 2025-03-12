@@ -4,6 +4,7 @@ use S2lowLegacy\Class\actes\ActesResponsesError;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\helios\HeliosResponsesError;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -15,15 +16,17 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 /** @var HeliosTransactionsSQL $heliosTransactionsSQL */
 /** @var ActesTransactionsSQL $actesTransactionsSQL */
 /** @var ActesResponsesError $actesResponsesError */
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
 
 [
         $initialisation,
     $heliosTransactionsSQL,
     $actesTransactionsSQL,
-    $actesResponsesError
+    $actesResponsesError,
+    $HTMLLayoutFactory
 ] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [Initialisation::class,HeliosTransactionsSQL::class,ActesTransactionsSQL::class,ActesResponsesError::class]
+        [Initialisation::class,HeliosTransactionsSQL::class,ActesTransactionsSQL::class,ActesResponsesError::class, HTMLLayoutFactory::class],
     );
 
 $initData = $initialisation->doInit();
@@ -78,7 +81,7 @@ $nb_actes_transmis_4hours_before = $actesTransactionsSQL
 $menuHTML = new MenuHTML();
 $pagerHTML  = new PagerHTML();
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $doc->setTitle("Console d'administration");
 

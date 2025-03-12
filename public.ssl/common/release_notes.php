@@ -1,9 +1,13 @@
 <?php
 
 use S2lowLegacy\Class\Helpers;
-use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\ParsedownExtended;
+
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
+$HTMLLayoutFactory = LegacyObjectsManager::getLegacyObjectInstancier()->get(HTMLLayoutFactory::class);
 
 $me = new User();
 
@@ -13,7 +17,7 @@ if (!$me->authenticate()) {
     exit();
 }
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $doc->setTitle("Logiciel S²LOW : Notes de publication");
 

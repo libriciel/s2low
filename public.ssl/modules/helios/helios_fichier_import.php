@@ -3,10 +3,14 @@
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Class\User;
 
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
+$HTMLLayoutFactory = LegacyObjectsManager::getLegacyObjectInstancier()->get(HTMLLayoutFactory::class);
 $module = new Module();
 if (!$module->initByName("helios")) {
     $_SESSION["error"] = "Erreur d'initialisation du module";
@@ -45,7 +49,7 @@ if (! $rgsConnexion->isRgsConnexion()) {
 
 $myAuthority = new Authority($me->get("authority_id"));
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $js = <<<EOJS
 <script type="text/javascript">

@@ -1,13 +1,15 @@
 <?php
 
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\S2lowRedirect;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Model\UserSQL;
 
-list(    $s2lowRedirect ,$userSQL) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list(    $s2lowRedirect ,$userSQL, $HTMLLayoutFactory) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [S2lowRedirect::class, UserSQL::class]
+        [S2lowRedirect::class, UserSQL::class, HTMLLayoutFactory::class]
     );
 
 $x509Certificate = new X509Certificate();
@@ -19,7 +21,7 @@ if (! $allUser) {
     $s2lowRedirect->redirect("/", "Certificat invalide");
 }
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $doc->setTitle(WEBSITE_TITLE);
 

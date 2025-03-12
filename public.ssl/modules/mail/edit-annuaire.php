@@ -2,6 +2,7 @@
 
 use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\mailsec\MailAnnuaireSQL;
@@ -11,10 +12,11 @@ use S2lowLegacy\Lib\Recuperateur;
 /** @var Initialisation $initialisation */
 /** @var Droit $droit */
 /** @var MailAnnuaireSQL $mailAnnuaireSQL */
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
 
 
-[$initialisation,$droit,$mailAnnuaireSQL] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class,MailAnnuaireSQL::class]);
+[$initialisation,$droit,$mailAnnuaireSQL, $HTMLLayoutFactory] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, Droit::class,MailAnnuaireSQL::class, HTMLLayoutFactory::class]);
 
 $initData = $initialisation->doInit();
 $moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEMAIL);
@@ -35,7 +37,7 @@ if (! $info) {
     $info = array("email" => "","description" => "");
 }
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 $doc->setTitle(($id ? "Edition" : "Ajout") . " d'un contact de l'annuaire - Mail sécurisé - S²low");
 
 $doc->openContainer();

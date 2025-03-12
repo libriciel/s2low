@@ -8,6 +8,7 @@ use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
@@ -26,9 +27,17 @@ use Twig\Loader\FilesystemLoader;
 /** @var ActesTypePJSQL $actesTypePJSQL */
 /** @var SQLQuery $sqlQuery */
 /** @var ActesSAEController $actesSAEController */
-list($initialisation,$actesTypePJSQL, $sqlQuery,$actesSAEController,$libersignController) = LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var HTMLLayoutFactory $HTMLLayoutFactory  */
+list($initialisation,$actesTypePJSQL, $sqlQuery,$actesSAEController,$libersignController,$HTMLLayoutFactory)
+    = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [Initialisation::class, ActesTypePJSQL::class, SQLQuery::class, ActesSAEController::class, LibersignController::class]
+        [
+                Initialisation::class,
+            ActesTypePJSQL::class,
+            SQLQuery::class, ActesSAEController::class,
+            LibersignController::class,
+            HTMLLayoutFactory::class
+        ]
     );
 
 $initData = $initialisation->doInit();
@@ -105,7 +114,7 @@ $transStatus = $trans->getCurrentStatus();
 $authoritySQL = ObjectInstancierFactory::getObjetInstancier()->get(AuthoritySQL::class);
 $authority_info = $authoritySQL->getInfo($trans->get('authority_id'));
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 
 $doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink('/jsmodules/jquery.js') . "\"></script>");

@@ -3,12 +3,17 @@
 use S2lowLegacy\Class\Group;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\JSONoutput;
 
-list($html, $jsonOutput) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var string html */
+/** @var JSONoutput $jsonOutput */
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
+list($html, $jsonOutput, $HTMLLayoutFactory) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        ['html', JSONoutput::class]
+        ['html', JSONoutput::class, HTMLLayoutFactory::class]
     );
 
 $me = new User();
@@ -50,7 +55,7 @@ if ($api) {
     exit;
 }
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $doc->setTitle("Tedetis : gestion des groupes de collectivités");
 

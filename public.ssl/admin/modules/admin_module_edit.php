@@ -2,10 +2,15 @@
 
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
-$html = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get('html');
+/** @var string $html */
+/** @var \S2lowLegacy\Class\HTMLLayoutFactory $HTMLLayoutFactory */
+list($html, $HTMLLayoutFactory) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(['html',HTMLLayoutFactory::class]);
 
 $me = new User();
 
@@ -39,7 +44,7 @@ if (! $mod) {
     exit();
 }
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $doc->addHeader("<script src=\"/" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 

@@ -4,11 +4,15 @@
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Class\User;
 
-$html = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get('html');
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
+list($html,$HTMLLayoutFactory) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(['html',HTMLLayoutFactory::class]);
 
 // Instanciation du module courant
 $module = new Module();
@@ -48,7 +52,7 @@ if (! $rgsConnexion->isRgsConnexion()) {
 
 $myAuthority = new Authority($me->get("authority_id"));
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $js = <<<EOJS
 <script type="text/javascript">

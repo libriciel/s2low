@@ -4,6 +4,7 @@ use S2lowLegacy\Class\helios\HeliosSignature;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -17,6 +18,7 @@ use S2lowLegacy\Model\ModuleSQL;
 /** @var PesAllerRetriever $pesAllerRetriever */
 /** @var LibersignController $libersignController */
 /** @var string $html */
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
 
 [
         $initialisation,
@@ -24,7 +26,8 @@ use S2lowLegacy\Model\ModuleSQL;
     $heliosTransactionSQL,
     $pesAllerRetriever,
     $libersignController,
-    $html
+    $html,
+    $HTMLLayoutFactory
 ] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([
             Initialisation::class,
@@ -32,7 +35,8 @@ use S2lowLegacy\Model\ModuleSQL;
         HeliosTransactionsSQL::class,
         PesAllerRetriever::class,
         LibersignController::class,
-        'html'
+        'html',
+        HTMLLayoutFactory::class
         ]);
 
 $initData = $initialisation->doInit();
@@ -91,7 +95,7 @@ foreach ($liste_id as $transaction_id) {
 
 $menuHTML = new MenuHTML();
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 $doc->setTitle('Tedetis : Signature de plusieurs fichier PES');
 $doc->openContainer();
 $doc->openSideBar();

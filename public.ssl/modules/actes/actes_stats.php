@@ -3,6 +3,7 @@
 use S2lowLegacy\Class\actes\ActesStatistiques;
 use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -10,8 +11,10 @@ use S2lowLegacy\Class\MenuHTML;
 /** @var Initialisation $initialisation */
 /** @var ActesStatistiques $actesStatistiques */
 /** @var Droit $droit */
-[$initialisation,$actesStatistiques,$droit ] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class,ActesStatistiques::class, Droit::class]);
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
+
+[$initialisation,$actesStatistiques,$droit, $HTMLLayoutFactory ] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,ActesStatistiques::class, Droit::class, HTMLLayoutFactory::class]);
 
 $initData = $initialisation->doInit();
 $moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
@@ -42,7 +45,7 @@ $filter = [];
 $menuHTML = new MenuHTML();
 
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 $doc->setTitle('Statistiques - ACTES - S²low');
 $doc->openContainer();
 $doc->openSideBar();

@@ -2,6 +2,7 @@
 
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -10,8 +11,10 @@ use S2lowLegacy\Lib\SQLQuery;
 
 /** @var Initialisation $initialisation */
 /** @var SQLQuery $sqlQuery */
-[$initialisation, $sqlQuery] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, SQLQuery::class]);
+
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
+[$initialisation, $sqlQuery, $HTMLLayoutFactory] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, SQLQuery::class, HTMLLayoutFactory::class]);
 
 $initData = $initialisation->doInit();
 
@@ -39,7 +42,7 @@ $groups_list = $sqlQuery->query($sql);
 
 $menuHTML = new MenuHTML();
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 $doc->setTitle('Configuration de la connexion SAE - S²low');
 $doc->openContainer();
 $doc->openSideBar();

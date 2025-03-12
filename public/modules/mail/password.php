@@ -1,12 +1,15 @@
 <?php
 
 use S2lowLegacy\Class\Helpers;
-use Legacy\MailLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 
 require_once('../../../init/init.php');
-\S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
+LegacyObjectsManager::setLegacyObjectInstancier();
+/** @var \S2lowLegacy\Class\HTMLLayoutFactory $HTMLLayoutFactory */
+$HTMLLayoutFactory = LegacyObjectsManager::getLegacyObjectInstancier()->get(HTMLLayoutFactory::class);
 
-$doc = new MailLayout('xhtml_mail.tpl.php');
+$doc = $HTMLLayoutFactory->createMailLayout('xhtml_mail.tpl.php');
 $doc->setTitle(WEBSITE_TITLE);
 $mail_emis_id = Helpers::getVarFromGet("mail_emis_id");
 

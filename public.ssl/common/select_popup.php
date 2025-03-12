@@ -3,7 +3,12 @@
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\User;
+
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
+$HTMLLayoutFactory = LegacyObjectsManager::getLegacyObjectInstancier()->get(HTMLLayoutFactory::class);
 
 $me = new User();
 
@@ -17,10 +22,10 @@ $type = Helpers::getVarFromGet("type", true);
 
 $myAuthority = new Authority($me->get("authority_id"));
 
-$doc = new HTMLLayout("xhtml_simple.tpl.php");
-$doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jquery.js") . "\"></script>");
+$doc = $HTMLLayoutFactory->createHTMLLayout('xhtml_simple.tpl.php');
+$doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink('/jsmodules/jquery.js') . "\"></script>");
 
-$doc->setTitle("Tedetis : sélection attribut");
+$doc->setTitle('Tedetis : sélection attribut');
 
 $html = "<div id=\"attribute_list\">\n";
 

@@ -4,6 +4,7 @@ use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -23,7 +24,8 @@ use S2lowLegacy\Model\ModuleSQL;
     $actesTransactionSQL,
     $actesIncludedFileSQL,
     $libersignController,
-    $html
+    $html,
+    $HTMLLayoutFactory
 ] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [
@@ -32,7 +34,8 @@ use S2lowLegacy\Model\ModuleSQL;
                 ActesTransactionsSQL::class,
                 ActesIncludedFileSQL::class,
                 LibersignController::class,
-                'html'
+                'html',
+                HTMLLayoutFactory::class
             ]
     );
 
@@ -64,7 +67,7 @@ foreach ($liste_id as $transaction_id) {
 
 $menuHTML = new MenuHTML();
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->getHTMLLayout($menuHTML);
 $doc->setTitle("Tedetis : Signature de plusieurs Actes");
 $doc->openContainer();
 $doc->openSideBar();

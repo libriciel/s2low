@@ -7,6 +7,8 @@ use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\ModulePermission;
 use S2lowLegacy\Class\ServiceUser;
@@ -15,9 +17,14 @@ use S2lowLegacy\Controller\HeliosSAEController;
 use S2lowLegacy\Controller\LibersignController;
 use S2lowLegacy\Model\AuthoritySQL;
 
-list($heliosSAEController, $pesAllerRetriever, $libersignController ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var HeliosSAEController $heliosSAEController */
+/** @var PesAllerRetriever $pesAllerRetriever */
+/** @var LibersignController $libersignController */
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
+list($heliosSAEController, $pesAllerRetriever, $libersignController, $HTMLLayoutFactory ) =
+    LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [HeliosSAEController::class, PesAllerRetriever::class, LibersignController::class]
+        [HeliosSAEController::class, PesAllerRetriever::class, LibersignController::class, HTMLLayoutFactory::class]
     );
 
 $module = new Module();
@@ -97,7 +104,7 @@ if ($me->isSuper()) {
 }
 
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $doc->setTitle("Helios : visualisation de transactions pour un fichier");
 $doc->addBody("<div class=\"container\"><div class=\"row\">");

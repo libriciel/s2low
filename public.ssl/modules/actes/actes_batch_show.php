@@ -18,9 +18,13 @@
 // Instanciation du module courant
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
-use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
+
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
+$HTMLLayoutFactory = LegacyObjectsManager::getLegacyObjectInstancier()->get(HTMLLayoutFactory::class);
 
 $module = new Module();
 if (! $module->initByName("actes")) {
@@ -80,7 +84,7 @@ if (! $me->isSuper()) {
     }
 }
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $doc->setTitle("Tedetis : visualisation d'un lot");
 

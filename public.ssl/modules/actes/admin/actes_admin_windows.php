@@ -2,10 +2,14 @@
 
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
-$html = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get('html');
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
+list($html,$HTMLLayoutFactory) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->get((['html',HtmlLayoutFactory::class]));
 
 // Instanciation du module courant
 $module = new Module();
@@ -29,7 +33,7 @@ if (! $me->isSuper() || ! $module->isActive() || ! $me->canAccess($module->get("
     exit();
 }
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 $win = new ActesTransmissionWindow();
 $windows = $win->getWindowsList();
 

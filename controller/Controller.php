@@ -4,6 +4,7 @@ namespace S2lowLegacy\Controller;
 
 use Exception;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\Environnement;
@@ -215,9 +216,12 @@ class Controller
     }
 
 
+    /**
+     * @throws Exception
+     */
     public function renderDefault()
     {
-        $doc = new HTMLLayout();
+        $doc = $this->getHTMLLayoutFactory()->createHTMLLayout();
         $doc->setTitle($this->getViewParameter('title'));
 
         $doc->openContainer();
@@ -327,5 +331,13 @@ class Controller
     public function getUser(): User
     {
         return $this->me;
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getHTMLLayoutFactory(): HTMLLayoutFactory
+    {
+        return $this->objectInstancier->get(HTMLLayoutFactory::class);
     }
 }

@@ -6,6 +6,8 @@ use S2lowLegacy\Class\AvailableSirensByGroup;
 use S2lowLegacy\Class\Group;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\ObjectInstancier;
@@ -13,9 +15,15 @@ use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 use S2lowLegacy\Model\AuthorityTypesSQL;
 use S2lowLegacy\Model\GroupSQL;
 
-list($objectInstancier, $html, $availableSirensByGroup ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var string $html */
+/** @var AvailableSirensByGroup $availableSirensByGroup */
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
+/** @var AuthorityTypesSQL $authorityTypesSQL */
+/** @var ActesConventions $actesConventions */
+
+list($html, $availableSirensByGroup, $HTMLLayoutFactory,$authorityTypesSQL,$actesConventions ) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, 'html', AvailableSirensByGroup::class]
+        ['html', AvailableSirensByGroup::class, HTMLLayoutFactory::class,AuthorityTypesSQL::class,ActesConventions::class]
     );
 
 $me = new User();
@@ -70,10 +78,6 @@ if (($mod && $me->isGroupAdmin() && ! $authority->isInGroup($me->get("authority_
     exit();
 }
 
-/** @var ObjectInstancier $objectInstancier */
-/** @var AuthorityTypesSQL $authorityTypesSQL */
-
-$authorityTypesSQL = $objectInstancier->get(AuthorityTypesSQL::class);
 $authority_types_info = $authorityTypesSQL->getInfo($authority->get("authority_type_id"));
 try {
     $authority_type_name = $authority_types_info['id'] . "&nbsp;-&nbsp;" . $authority_types_info['description'] ;
@@ -83,7 +87,7 @@ try {
 
 /****************/
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 
@@ -271,8 +275,6 @@ if ($me->isGroupAdminOrSuper()) {
 } else {
     $html .= $authority->getDeptDistrString();
 }
-
-$actesConventions = $objectInstancier->get(ActesConventions::class);
 
 $html .= "  </div>\n";
 $html .= " </div>\n";

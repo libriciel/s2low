@@ -3,12 +3,16 @@
 use S2lowLegacy\Class\actes\ActesTypePJSQL;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
-list($actesTypePJSQL, $html) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var ActesTypePJSQL $actesTypePJSQL */
+/** @var string $html */
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
+list($actesTypePJSQL, $html, $HTMLLayoutFactory) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ActesTypePJSQL::class, 'html']
+        [ActesTypePJSQL::class, 'html',HtmlLayoutFactory::class],
     );
 
 $batchMode = false;
@@ -59,7 +63,7 @@ $typeReponse = array(
             3 => "Rejet explicite d'une lettre d'observations")
 );
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 

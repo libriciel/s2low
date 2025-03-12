@@ -6,6 +6,7 @@ use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -18,10 +19,11 @@ use S2lowLegacy\Model\AuthoritySQL;
 /** @var Initialisation $initialisation */
 /** @var Droit $droit */
 /** @var TransactionSQL $transactionSQL */
-/** @var \S2lowLegacy\Model\AuthoritySQL $authoritySQL */
+/** @var AuthoritySQL $authoritySQL */
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
 
-[$initialisation, $droit,  $transactionSQL,$authoritySQL] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class, TransactionSQL::class, AuthoritySQL::class]);
+[$initialisation, $droit,  $transactionSQL,$authoritySQL, $HTMLLayoutFactory] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, Droit::class, TransactionSQL::class, AuthoritySQL::class, HTMLLayoutFactory::class]);
 
 $initData = $initialisation->doInit();
 $moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
@@ -117,7 +119,7 @@ if ($droit->isSuperAdmin($initData->userInfo)) {
 $listeActesHTML->setCritere($transTypes, $ftype, $transNatures, $fnature, $status, $fstatus, $fnum, $objet);
 $listeActesHTML->setDate($fmin_submission_date, $fmin_ack_date, $fmax_submission_date, $fmax_ack_date, $fancyDate);
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 $doc->setTitle('Liste des transactions - ACTES - S²low');
 $doc->addHeader(
     "<script type=\"text/javascript\" src=\"" . Helpers::getLink('/jsmodules/jquery.js') . "\">" .

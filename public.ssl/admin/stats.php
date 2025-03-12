@@ -3,6 +3,7 @@
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -13,9 +14,10 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 /** @var Initialisation $initialisation */
 /** @var ActesTransactionsSQL $actesTransactionsSQL */
 /** @var HeliosTransactionsSQL $heliosTransactionsSQL */
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
 
-[$initialisation,$actesTransactionsSQL,$heliosTransactionsSQL ] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class,ActesTransactionsSQL::class,HeliosTransactionsSQL::class]);
+[$initialisation,$actesTransactionsSQL,$heliosTransactionsSQL, $HTMLLayoutFactory ] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,ActesTransactionsSQL::class,HeliosTransactionsSQL::class, HTMLLayoutFactory::class]);
 
 $initData = $initialisation->doInit();
 $moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
@@ -40,7 +42,7 @@ $fancyDate = new FancyDate();
 $menuHTML = new MenuHTML();
 $pagerHTML  = new PagerHTML();
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $doc->setTitle("Console d'administration");
 

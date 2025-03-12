@@ -3,6 +3,7 @@
 use S2lowLegacy\Class\CloudStorage;
 use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
 use Legacy\MailLayout;
@@ -10,6 +11,8 @@ use S2lowLegacy\Lib\ObjectInstancierFactory;
 
 require_once('../../../init/init.php');
 LegacyObjectsManager::setLegacyObjectInstancier();
+/** @var \S2lowLegacy\Class\HTMLLayoutFactory $HTMLLayoutFactory */
+$HTMLLayoutFactory = LegacyObjectsManager::getLegacyObjectInstancier()->get(HTMLLayoutFactory::class);
 
 $mail_emis_id = Helpers::getVarFromGet('mail_emis_id');
 $password = Helpers::getVarFromPost('mdp');
@@ -50,7 +53,7 @@ $mailCC = $mailTransaction->getEmailByType(MailMessageEmis::TYPE_MAIL_CC);
 $fndownload = $mailTransaction->getFNDownload();
 $mailIncludeFileArray = MailPeer::GetIncludeFiles($mail_id);
 
-$doc = new MailLayout('xhtml_mail.tpl.php');
+$doc = $HTMLLayoutFactory->createMailLayout('xhtml_mail.tpl.php');
 $doc->setTitle(WEBSITE_TITLE);
 
 /** @var CloudStorage $cloudStorage */

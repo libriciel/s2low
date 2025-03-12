@@ -18,10 +18,14 @@
 use S2lowLegacy\Class\DatePicker;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
-$html = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get('html');
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
+list($html,$HTMLLayoutFactory) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray(['html', HTMLLayoutFactory::class]);
 
 // Instanciation du module courant
 $module = new Module();
@@ -62,7 +66,7 @@ if (isset($id) && ! empty($id)) {
     }
 }
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jquery.js") . '"></script>');
 $doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jqueryui.js") . '"></script>');

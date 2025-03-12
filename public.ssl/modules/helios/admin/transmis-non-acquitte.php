@@ -1,6 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -9,8 +10,9 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 /** @var Initialisation $initialisation */
 /** @var HeliosTransactionsSQL $heliosTransactionsSQL */
-[$initialisation,$heliosTransactionsSQL] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class,HeliosTransactionsSQL::class]);
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
+[$initialisation,$heliosTransactionsSQL, $HTMLLayoutFactory] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,HeliosTransactionsSQL::class, HTMLLayoutFactory::class]);
 
 $initData = $initialisation->doInit();
 $moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
@@ -28,7 +30,7 @@ $transactions_list = $heliosTransactionsSQL->getNonAcquitte();
 $menuHTML = new MenuHTML();
 $pagerHTML  = new PagerHTML();
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $doc->setTitle("Console d'administration");
 

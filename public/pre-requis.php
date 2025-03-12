@@ -1,11 +1,14 @@
 <?php
 
-use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 
 require_once("../init/init.php");
-\S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
+LegacyObjectsManager::setLegacyObjectInstancier();
+/** @var \S2lowLegacy\Class\HTMLLayoutFactory $HTMLLayoutFactory */
+$HTMLLayoutFactory = LegacyObjectsManager::getLegacyObjectInstancier()->get(HTMLLayoutFactory::class);
 
-$doc = new HTMLLayout('xhtml_prerequis.tpl.php');
+$doc = $HTMLLayoutFactory->createHTMLLayout('xhtml_prerequis.tpl.php');
 
 
 

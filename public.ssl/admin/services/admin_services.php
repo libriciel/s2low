@@ -2,8 +2,12 @@
 
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\LegacyObjectsManager;
 
 include("init-services.php");
+/** @var \S2lowLegacy\Class\HTMLLayoutFactory $HTMLLayoutFactory */
+$HTMLLayoutFactory = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->get(HTMLLayout::class);
 
 $authority_id = null;
 
@@ -36,7 +40,7 @@ if ($authority_id) {
     $groupes = $serviceUser->getServiceUser($authority_id);
 }
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $doc->setTitle("Tedetis : gestion des services");
 

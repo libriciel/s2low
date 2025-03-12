@@ -5,13 +5,16 @@ use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Group;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 /** @var HeliosTransactionsSQL $heliosTransactionsSQL */
-$heliosTransactionsSQL = LegacyObjectsManager::getObject(HeliosTransactionsSQL::class);
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
+list($heliosTransactionsSQL, $HTMLLayoutFactory) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([HeliosTransactionsSQL::class,HTMLLayoutFactory::class]);
 
 $module = new Module();
 if (! $module->initByName("helios")) {
@@ -65,7 +68,7 @@ $yearTransmitted = $heliosTransactionsSQL->countTransactions($author_filter, tru
 $yearVol = $heliosTransactionsSQL->countTransactionVol($author_filter, false, false, true);
 $yearVolTransmitted = $heliosTransactionsSQL->countTransactionVol($author_filter, true, false, true);
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $doc->setTitle("Tedetis : Hélios - Statistiques");
 

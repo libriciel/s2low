@@ -4,11 +4,15 @@ use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Group;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\JSONoutput;
 
-$jsonOutput = LegacyObjectsManager::getLegacyObjectInstancier()->get(JSONoutput::class);
+/** @var JSONoutput $jsonOutput */
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
+list($jsonOutput,$HTMLLayoutFactory) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->get([JSONoutput::class, HTMLLayoutFactory::class]);
 
 $me = new User();
 
@@ -110,7 +114,7 @@ if ($me->isGroupAdminOrSuper()) {
 
 /*****************/
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $doc->setTitle('Tedetis : gestion des utilisateurs');
 

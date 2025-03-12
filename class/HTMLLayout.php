@@ -16,22 +16,25 @@
 
 namespace S2lowLegacy\Class;
 
+use S2lowLegacy\Lib\ObjectInstancierFactory;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\ModuleSQL;
 use S2lowLegacy\Model\UserSQL;
+use Twig\Environment;
 
 class HTMLLayout extends Layout
 {
     protected $template = false;
-
     private $errorDisabled;
+    private Environment $twig;
 
 
-    public function __construct($template = false)
+    public function __construct(Environment $twig, $template = false)
     {
+        $this->twig = $twig;
         if ($template) {
             $this->template = $template;
-        } elseif (defined("DEFAULT_HTML_TEMPLATE")) {
+        } elseif (defined('DEFAULT_HTML_TEMPLATE')) {
             $this->template = DEFAULT_HTML_TEMPLATE;
         }
     }
@@ -113,7 +116,7 @@ class HTMLLayout extends Layout
     public function buildMenu(User $user = null, $displayInline = false)
     {
 
-        $sqlQuery = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(SQLQuery::class);
+        $sqlQuery = ObjectInstancierFactory::getObjetInstancier()->get(SQLQuery::class);
 
         $userSQL = new UserSQL($sqlQuery);
         $userInfo = $userSQL->getInfo($user->getId());
@@ -145,7 +148,7 @@ class HTMLLayout extends Layout
             $html .= "                <a href=\"mailto:" . WEBMASTER . "\" class=\"link-white\">Webmaster</a> - \n";
         }
 
-        if (defined("SUPPORT_URL")) {
+        if (defined('SUPPORT_URL')) {
             $html .= "                <a href=\"" . SUPPORT_URL . "\" class=\"link-white\">Support</a> - \n";
         }
 
@@ -155,7 +158,7 @@ class HTMLLayout extends Layout
         $html .= "                    Offre S²LOW - <a href=\"" . Helpers::getLink("/common/release_notes.php\">\n") .
             $versionningInfo['version-complete'] . "</a>\n";
 
-        if (defined(RENDER_STARTING_TIME)) {
+        if (defined('RENDER_STARTING_TIME')) {
             $html .= " - " . round(1000 * (microtime(true) - RENDER_STARTING_TIME)) . " ms\n";
         }
 
@@ -358,15 +361,6 @@ class HTMLLayout extends Layout
         <?php
         unset($_SESSION["error"]);
     }
-
-
-    public function displayTemplate($layout, $templateFile)
-    {
-        $this->includeErrors();
-        require_once(HTML_TEMPLATE_PATH . "/" . "new.generic.tpl.php");
-    }
-
-
     public function addCSS($css)
     {
         $this->addHeader("<link rel='stylesheet' type='text/css' href='$css' />");

@@ -1,7 +1,13 @@
 <?php
 
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MailInit;
 use Legacy\MailLayout;
+
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
+$HTMLLayoutFactory = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->get(HTMLLayoutFactory::class);
 
 list($module, $me, $myAuthority) = MailInit::getIdentificationParameters();
 
@@ -9,7 +15,8 @@ if (! $me->isAuthorityAdmin()) {
         exit;
 }
 
-$doc = new MailLayout();
+$doc = $HTMLLayoutFactory->createMailLayout();
+
 $doc->disableError();
 $doc->setTitle("Gestion du carnet d'adresses");
 

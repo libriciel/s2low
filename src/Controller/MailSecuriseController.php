@@ -4,6 +4,7 @@ namespace S2low\Controller;
 
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MailInit;
 use Exception;
@@ -20,18 +21,20 @@ use Symfony\Component\Routing\Annotation\Route;
 class MailSecuriseController extends AbstractController
 {
     private MailLayout $doc;
-    /**
-     * @var \S2low\Services\MailSecurises\MailSecuriseNotification
-     */
     private MailSecuriseNotification $mailSecuriseNotification;
     private Module $module;
     private User $me;
     private Authority $myAuthority;
+    private HTMLLayoutFactory $HTMLLayoutFactory;
 
-    public function __construct(MailLayout $mailLayout, MailSecuriseNotification $mailSecuriseNotification)
-    {
+    public function __construct(
+        MailLayout $mailLayout,
+        MailSecuriseNotification $mailSecuriseNotification,
+        HTMLLayoutFactory $HTMLLayoutFactory
+    ) {
         $this->doc = $mailLayout;
         $this->mailSecuriseNotification = $mailSecuriseNotification;
+        $this->HTMLLayoutFactory = $HTMLLayoutFactory;
         LegacyObjectsManager::setLegacyObjectInstancier();
         list($this->module, $this->me, $this->myAuthority) = MailInit::getIdentificationParameters();
     }
@@ -48,7 +51,7 @@ class MailSecuriseController extends AbstractController
 
         $doc = $this->doc;
         if (!$api) {
-            $this->doc = new MailLayout("xhtml_mail_ssl.tpl.php");
+            $this->doc = $this->HTMLLayoutFactory->createMailLayout('xhtml_mail_ssl.tpl.php');
         }
 
         //commencer de distribuer des information.

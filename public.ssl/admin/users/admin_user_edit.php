@@ -5,6 +5,8 @@ use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Group;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
@@ -16,9 +18,13 @@ use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Model\UserSQL;
 
-list($objectInstancier, $html, $jsonOutput,$sqlQuery, $frontController) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var JSONoutput $jsonOutput */
+/** @var SQLQuery $sqlQuery */
+/** @var FrontController $frontController */
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
+list($html, $jsonOutput,$sqlQuery, $frontController, $HTMLLayoutFactory) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, 'html', JSONoutput::class, SQLQuery::class, FrontController::class]
+        ['html', JSONoutput::class, SQLQuery::class, FrontController::class, HTMLLayoutFactory::class],
     );
 
 
@@ -195,7 +201,7 @@ $certificate_rgs_2_etoiles = $him->get('certificate_rgs_2_etoiles');
 $certificat_rgs_2_etoiles_info = $x509Certificate->getInfo($certificate_rgs_2_etoiles);
 
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 

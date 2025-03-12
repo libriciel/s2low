@@ -3,6 +3,7 @@
 use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -11,8 +12,9 @@ use S2lowLegacy\Class\S2lowRedirect;
 /** @var Initialisation $initialisation */
 /** @var Droit $droit */
 /** @var S2lowRedirect $s2lowRedirect */
-[$initialisation,$droit,$s2lowRedirect] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class,S2lowRedirect::class]);
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
+[$initialisation,$droit,$s2lowRedirect, $HTMLLayoutFactory] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, Droit::class,S2lowRedirect::class,HTMLLayoutFactory::class]);
 
 $initData = $initialisation->doInit();
 $moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
@@ -24,7 +26,7 @@ if (! $droit->isSuperAdmin($initData->userInfo)) {
 
 $menuHTML = new MenuHTML();
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $doc->setTitle('Utilitaires module ACTES');
 

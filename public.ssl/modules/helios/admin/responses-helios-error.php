@@ -2,6 +2,7 @@
 
 use S2lowLegacy\Class\helios\HeliosResponsesError;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -9,7 +10,10 @@ use S2lowLegacy\Class\PagerHTML;
 
 /** @var Initialisation $initialisation */
 
-$initialisation = LegacyObjectsManager::getLegacyObjectInstancier()->get(Initialisation::class);
+/** @var Initialisation $initialisation */
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
+list($initialisation,$HTMLLayoutFactory) = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,HTMLLayoutFactory::class]);
 
 $initData = $initialisation->doInit();
 $moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
@@ -30,7 +34,7 @@ $errorFileIterator = $heliosResponsesError->getFilesystemIterator();
 $menuHTML = new MenuHTML();
 $pagerHTML  = new PagerHTML();
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $doc->setTitle("Console d'administration");
 

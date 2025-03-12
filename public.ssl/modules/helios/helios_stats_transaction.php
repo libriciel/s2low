@@ -1,6 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -8,9 +9,11 @@ use S2lowLegacy\Class\PagerHTML;
 use S2lowLegacy\Lib\SQLQuery;
 
 /** @var Initialisation $initialisation */
+/** @var SQLQuery $sqlQuery */
+/** @var HTMLLayoutFactory $HTMLLayoutFactory */
 
-[$initialisation,$sqlQuery ] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class,SQLQuery::class]);
+[$initialisation,$sqlQuery, $HTMLLayoutFactory ] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,SQLQuery::class, HTMLLayoutFactory::class]);
 
 $initData = $initialisation->doInit();
 $moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
@@ -40,7 +43,7 @@ $sql = 'SELECT count(*) FROM helios_transactions WHERE last_status_id=3';
 $menuHTML = new MenuHTML();
 $pagerHTML  = new PagerHTML();
 
-$doc = new HTMLLayout();
+$doc = $HTMLLayoutFactory->createHTMLLayout();
 
 $doc->setTitle('Tedetis : module helios statistique');
 
