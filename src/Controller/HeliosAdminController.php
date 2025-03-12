@@ -5,7 +5,7 @@ namespace S2low\Controller;
 use Exception;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\Initialisation;
-use S2lowLegacy\Lib\PesAllerReader;
+use S2lowLegacy\Lib\HeliosNamesGenerator;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -13,22 +13,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class HeliosAdminController extends AbstractController
 {
-    private HeliosTransactionsSQL $heliosTransactionsSQL;
-    private Initialisation $initialisation;
-    private string $pAppli;
-    private MailerSymfonyFactory $mailerSymfonyFactory;
-
     public function __construct(
-        HeliosTransactionsSQL $heliosTransactionsSQL,
-        MailerSymfonyFactory $mailerSymfonyFactory,
-        string $helios_ftp_p_appli,
-        Initialisation $initialisation,
-        private PesAllerReader $pesAllerReader
+        private readonly HeliosTransactionsSQL $heliosTransactionsSQL,
+        private readonly MailerSymfonyFactory $mailerSymfonyFactory,
+        private readonly string $helios_ftp_p_appli,
+        private readonly Initialisation $initialisation,
+        private readonly HeliosNamesGenerator $namesGenerator
     ) {
-        $this->heliosTransactionsSQL = $heliosTransactionsSQL;
-        $this->mailerSymfonyFactory = $mailerSymfonyFactory;
-        $this->pAppli = $helios_ftp_p_appli;
-        $this->initialisation = $initialisation;
     }
 
     /**
@@ -55,7 +46,7 @@ class HeliosAdminController extends AbstractController
         );
 
 
-        if (count($transactions_list_Gateway) && count($transactions_list_Passtrans)) {
+        if ((count($transactions_list_Gateway) + count($transactions_list_Passtrans)) === 0) {
             $subject = 'Aucune transaction n est reste en transmis';
         } else {
             $transactionsTransmises = count($transactions_list_Gateway) + count($transactions_list_Passtrans);
@@ -78,9 +69,9 @@ class HeliosAdminController extends AbstractController
             unset($line['id']);
             unset($line['filename']);
             $p_dest = $line['helios_ftp_dest'];
-            $pAppli = $this->pAppli;
+            $pAppli = $this->helios_ftp_p_appli;
 
-            $p_msg = $this->pesAllerReader->getP_MSGFromParameters(
+            $p_msg = $this->namesGenerator->getP_MSGFromParameters(
                 $line['xml_cod_col'],
                 $line['xml_id_post'],
                 $line['xml_cod_bud']
