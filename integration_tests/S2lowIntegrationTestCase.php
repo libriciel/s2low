@@ -105,8 +105,10 @@ class S2lowIntegrationTestCase extends WebTestCase
      * @return \Symfony\Bundle\FrameworkBundle\KernelBrowser
      * @throws \Exception
      */
-    protected function setUpUserAs(UserRole $role, ModulePermission $permissions): \Symfony\Bundle\FrameworkBundle\KernelBrowser
-    {
+    protected function setUpUserAs(
+        UserRole $role,
+        ModulePermission $permissions
+    ): \Symfony\Bundle\FrameworkBundle\KernelBrowser {
         $certificatePem = $this->pemCertificateFactory->getFromString(
             file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
@@ -117,7 +119,6 @@ class S2lowIntegrationTestCase extends WebTestCase
             $certificatePem->getContentStrippedFromBegin()
         );
 
-        ObjectInstancierFactory::resetObjectInstancier();
         return $client;
     }
 
@@ -142,8 +143,12 @@ class S2lowIntegrationTestCase extends WebTestCase
         $this->sqlQuery->exec(file_get_contents(__DIR__ . '/fixtures/s2low-test-init.sql'));
     }
 
-    private function createUserAs(UserRole $role, string $certificatPem, string $certificatHash, ModulePermission $permissions = ModulePermission::Modification): void
-    {
+    private function createUserAs(
+        UserRole $role,
+        string $certificatPem,
+        string $certificatHash,
+        ModulePermission $permissions = ModulePermission::Modification
+    ): void {
         $userId = $this->getNextCreatedUserId();
 
         $constMaximumUsersCreated = 100000;
@@ -166,8 +171,10 @@ class S2lowIntegrationTestCase extends WebTestCase
     /**
      * @throws \Exception
      */
-    protected function getAuthenticatedClientWithUserLoggedAs(UserRole $role = UserRole::Utilisateur, ModulePermission $permissions = ModulePermission::Modification): KernelBrowser
-    {
+    protected function getAuthenticatedClientWithUserLoggedAs(
+        UserRole $role = UserRole::Utilisateur,
+        ModulePermission $permissions = ModulePermission::Modification
+    ): KernelBrowser {
         return $this->setUpUserAs($role, $permissions);
     }
 }
