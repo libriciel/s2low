@@ -11,6 +11,7 @@ use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\SQLQuery;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class S2lowIntegrationTestCase extends WebTestCase
 {
@@ -176,5 +177,10 @@ class S2lowIntegrationTestCase extends WebTestCase
         ModulePermission $permissions = ModulePermission::Modification
     ): KernelBrowser {
         return $this->setUpUserAs($role, $permissions);
+    }
+
+    protected function headerReturnXMLFile(Response $response): bool
+    {
+        return str_contains($response->getContent(), 'Content-type: text/xml');
     }
 }
