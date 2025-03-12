@@ -25,9 +25,6 @@ class GetNewUniqueEnveloppeNumber extends S2lowIntegrationTestCase
         $client->request('GET', '/modules/actes/actes_transac_get_env_serial.php');
 
         $response = $client->getResponse();
-        $content = $response->getContent();
-
-        $response = $client->getResponse();
         $content = explode("\n", trim($response->getContent()));
 
         static::assertSame('OK', $content[0]);
