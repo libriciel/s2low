@@ -8,7 +8,7 @@ use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 
-class ClassificationTransactionTest extends S2lowIntegrationTestCase
+class UpdateClassificationTransactionTest extends S2lowIntegrationTestCase
 {
     use ActesUtilitiesTestTrait;
 
