@@ -20,10 +20,7 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 class HeliosAdminControllerTest extends TestCase
 {
     private MockObject|HeliosTransactionsSQL $heliosTransactionsSQLMock;
-    private MailerSymfonyFactory|MockObject $mailerSymfonyFactoryMock;
-    private Initialisation|MockObject $initialisationMock;
     private HeliosAdminController $heliosAdminController;
-    private InitData $initData;
     private MockObject|MailerSymfony $mailerSymfony;
 
     public function __construct(?string $name = null, array $data = [], $dataName = '')
@@ -31,11 +28,11 @@ class HeliosAdminControllerTest extends TestCase
         parent::__construct($name, $data, $dataName);
         $this->heliosTransactionsSQLMock = $this->getMockBuilder(HeliosTransactionsSQL::class)->disableOriginalConstructor()->getMock();
 
-        $this->mailerSymfonyFactoryMock = $this->getMockBuilder(MailerSymfonyFactory::class)->disableOriginalConstructor()->getMock();
+        $mailerSymfonyFactoryMock = $this->getMockBuilder(MailerSymfonyFactory::class)->disableOriginalConstructor()->getMock();
         $this->mailerSymfony = $this->getMockBuilder(MailerSymfony::class)->disableOriginalConstructor()->getMock();
-        $this->mailerSymfonyFactoryMock->method('getInstance')->willReturn($this->mailerSymfony);
+        $mailerSymfonyFactoryMock->method('getInstance')->willReturn($this->mailerSymfony);
 
-        $this->initData = new InitData(
+        $initData = new InitData(
             $this->getMockBuilder(Connexion::class)->disableOriginalConstructor()->getMock(),
             $this->getMockBuilder(User::class)->disableOriginalConstructor()->getMock(),
             ['role' => 'SADM','email' => 'em@a.il'],
@@ -43,14 +40,14 @@ class HeliosAdminControllerTest extends TestCase
             []
         );
 
-        $this->initialisationMock = $this->getMockBuilder(Initialisation::class)->disableOriginalConstructor()->getMock();
-        $this->initialisationMock->method('doInit')->willReturn($this->initData);
+        $initialisationMock = $this->getMockBuilder(Initialisation::class)->disableOriginalConstructor()->getMock();
+        $initialisationMock->method('doInit')->willReturn($initData);
 
         $this->heliosAdminController = new HeliosAdminController(
             $this->heliosTransactionsSQLMock,
-            $this->mailerSymfonyFactoryMock,
+            $mailerSymfonyFactoryMock,
             'pAppli',
-            $this->initialisationMock,
+            $initialisationMock,
             new HeliosNamesGenerator()
         );
     }
@@ -58,7 +55,7 @@ class HeliosAdminControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testAucuneTransaction()
+    public function testAucuneTransaction(): void
     {
         $this->heliosTransactionsSQLMock->method('getNonAcquitteWithPasstransStatus')
             ->willReturnOnConsecutiveCalls([], []);
@@ -72,7 +69,7 @@ class HeliosAdminControllerTest extends TestCase
     /**
      * @throws Exception
      */
-    public function testTransactionGateway()
+    public function testTransactionGateway(): void
     {
         $this->heliosTransactionsSQLMock->method('getNonAcquitteWithPasstransStatus')
             ->willReturnOnConsecutiveCalls([
@@ -103,7 +100,7 @@ Passtrans
     /**
      * @throws Exception
      */
-    public function testTransactionPasstrans()
+    public function testTransactionPasstrans(): void
     {
         $this->heliosTransactionsSQLMock->method('getNonAcquitteWithPasstransStatus')
             ->willReturnOnConsecutiveCalls([], [[
