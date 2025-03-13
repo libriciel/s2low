@@ -1,27 +1,61 @@
 <?php
 
-use S2lowLegacy\Lib\PesAller;
+declare(strict_types=1);
 
-class PesAllerTest extends PHPUnit_Framework_TestCase
+namespace PHPUnit\lib;
+
+use Exception;
+use PHPUnit\Framework\TestCase;
+use S2lowLegacy\Lib\PesAllerReader;
+
+class PesAllerTest extends TestCase
 {
-    private $pesAller;
+    private PesAllerReader $pesAllerReader;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->pesAller = new PesAller();
+        $this->pesAllerReader = new PesAllerReader();
     }
 
-    public function testGetPmsg()
+    /**
+     * @throws Exception
+     * @dataProvider bonsPesAllers
+     */
+    public function testGetPmsg(string $path, bool $isPesAcquitRetour, string $codColl, string $codBud, string $idPost): void
     {
-        $pes_aller_path = __DIR__ . "/fixtures/HELIOS_SIMU_ALR2_1444811220_681372666.xml";
-        $this->assertEquals("PES#123#034000#12", $this->pesAller->getP_MSG($pes_aller_path));
+        $pesAllerData = $this->pesAllerReader->getPesAllerData($path);
+        static::assertSame($isPesAcquitRetour, $pesAllerData->isPesAcquitRetour);
+        static::assertSame($codColl, $pesAllerData->cod_col);
+        static::assertSame($codBud, $pesAllerData->cod_bud);
+        static::assertSame($idPost, $pesAllerData->id_post);
+    }
+    public function bonsPesAllers(): array
+    {
+        return [
+            [ __DIR__ . '/fixtures/HELIOS_SIMU_ALR2_1444811220_681372666.xml',false,'123','12','034000'],
+            [__DIR__ . '/fixtures/PES_ACQUIT_RETOUR.xml', true,'007','12','123456']
+        ];
     }
 
-    public function testGetPmsgBadPesAller()
+    /**
+     * @throws Exception
+     * @dataProvider mauvaisPesAllers
+     */
+    public function testGetPmsgBadPesAller(string $path, string $message)
     {
-        $pes_aller_path = __DIR__ . "/fixtures/test.xml";
-        $this->setExpectedException("Exception", "La balise EnTetePES/CodCol n'est pas présente ou est vide");
-        $this->pesAller->getP_MSG($pes_aller_path);
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage($message);
+        $this->pesAllerReader->getPesAllerData($path);
+    }
+
+    public function mauvaisPesAllers(): array
+    {
+        return [
+            [__DIR__ . '/fixtures/test.xml', 'La balise EnTetePES n\'est pas présente ou est vide'],
+            [__DIR__ . '/fixtures/HELIOS_SIMU_ALR2_NoCodBud.xml','La balise EnTetePES/CodBud n\'est pas présente ou est vide' ],
+            [__DIR__ . '/fixtures/HELIOS_SIMU_ALR2_NoCodColl.xml', 'La balise EnTetePES/CodCol ou EnTetePES/CodColl n\'est pas présente ou est vide'],
+            [__DIR__ . '/fixtures/HELIOS_SIMU_ALR2_NoIdPost.xml', 'La balise EnTetePES/IdPost n\'est pas présente ou est vide']
+        ];
     }
 }

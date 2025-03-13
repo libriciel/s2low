@@ -2,6 +2,10 @@
 
 ## 5.1.1 -
 
+### Évolutions
+
+- Permettre de poster les Pes Acquit Retour #1156
+
 ### Corrections
 
 - Correction de la correspondance simulateur/ftp pour les instances de développement #1240

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<n:PES_ACQUIT_RETOUR xmlns:n="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/aller/ack">
+    <Enveloppe>
+        <Parametres>
+            <Version V="1"/>
+            <TypFic V="PES2R_DEP"/>
+            <NomFic V="PES2R_DEP_P_000_00_000000_00000000_2025010107_20250101010000.xml"/>
+        </Parametres>
+    </Enveloppe>
+    <EnTetePES>
+        <DteStr V="2025-01-01"/>
+        <IdPost V="123456"/>
+        <LibellePoste V="UNDEPARTEMENT"/>
+        <IdColl V="49101169800033"/>
+        <CodColl V="007"/>
+        <CodBud V="12"/>
+        <LibelleColBud V="LIBELLECODBUD"/>
+    </EnTetePES>
+    <ACQUIT_RETOUR>
+        <EnTeteAcquit_Retour>
+            <IdVer V="2"/>
+        </EnTeteAcquit_Retour>
+        <ElementACQUIT_RETOUR>
+            <DomaineAckRetour V="13"/>
+            <NomFichierRetour V="PES2R_DEP_P_710_20_044090_20250307_20250307_20250308182309.xml"/>
+            <TypRestit V="02"/>
+            <DateAcquit V="2025-03-10"/>
+        </ElementACQUIT_RETOUR>
+    </ACQUIT_RETOUR>
+</n:PES_ACQUIT_RETOUR>
