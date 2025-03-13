@@ -20,7 +20,6 @@ use S2lowLegacy\Class\User;
  * Auteur   Date       Commentaire
  *
  */
-
 class ActesBatch extends DataObject
 {
     protected $objectName = "actes_batches";
@@ -32,40 +31,40 @@ class ActesBatch extends DataObject
     protected $num_prefix;
     protected $next_suffix;
 
-    protected $dbFields = array (
-    "description" => array (
-      "descr" => "Intitulé du lot",
-      "type" => "isString",
-      "mandatory" => true
-    ),
-    "storage_dir" => array (
-      "descr" => "Répertoire de stockage sur le serveur",
-      "type" => "isString",
-      "mandatory" => false
-    ),
-    "submission_date" => array (
-      "descr" => "Date de soumission du lot",
-      "type" => "isDate",
-      "mandatory" => true
-    ),
-    "user_id" => array (
-      "descr" => "Utilisateur propriétaire du lot",
-      "type" => "isInt",
-      "mandatory" => true
-    ),
-    "num_prefix" => array (
-      "descr" => "Préfixe numéro interne transactions",
-      "type" => "isString",
-      "mandatory" => false
-    ),
-    "next_suffix" => array (
-      "descr" => "Prochain suffixe du numéro interne",
-      "type" => "isInt",
-      "mandatory" => false
-    )
+    protected $dbFields = array(
+        "description" => array(
+            "descr" => "Intitulé du lot",
+            "type" => "isString",
+            "mandatory" => true
+        ),
+        "storage_dir" => array(
+            "descr" => "Répertoire de stockage sur le serveur",
+            "type" => "isString",
+            "mandatory" => false
+        ),
+        "submission_date" => array(
+            "descr" => "Date de soumission du lot",
+            "type" => "isDate",
+            "mandatory" => true
+        ),
+        "user_id" => array(
+            "descr" => "Utilisateur propriétaire du lot",
+            "type" => "isInt",
+            "mandatory" => true
+        ),
+        "num_prefix" => array(
+            "descr" => "Préfixe numéro interne transactions",
+            "type" => "isString",
+            "mandatory" => false
+        ),
+        "next_suffix" => array(
+            "descr" => "Prochain suffixe du numéro interne",
+            "type" => "isInt",
+            "mandatory" => false
+        )
     );
 
-  /** @var ActesBatchFile[] */
+    /** @var ActesBatchFile[] */
     protected $batchFiles;
     protected $unprocessedBatchFiles;
     private bool $asNew;
@@ -78,22 +77,22 @@ class ActesBatch extends DataObject
     public function __construct($id = false, bool $asNew = false)
     {
         $this->asNew = $asNew;
-        parent :: __construct($id);
+        parent:: __construct($id);
     }
 
-  /**
-   * \brief Méthode initialisant l'entité avec l'identifiant courant
-   * \return true si succès, false sinon
-  */
+    /**
+     * \brief Méthode initialisant l'entité avec l'identifiant courant
+     * \return true si succès, false sinon
+     */
     public function init()
     {
-        return $this->initBatchFiles() && parent :: init();
+        return $this->initBatchFiles() && parent:: init();
     }
 
-  /**
-   * \brief Initialisation du répertoire de stockage (création)
-   * \return True en cas de succès, false sinon
-   */
+    /**
+     * \brief Initialisation du répertoire de stockage (création)
+     * \return True en cas de succès, false sinon
+     */
     public function initStorage()
     {
         if (isset($this->user_id) && isset($this->id)) {
@@ -104,7 +103,10 @@ class ActesBatch extends DataObject
 
             $this->storage_dir = $authority->get("siren") . "/" . $this->id;
 
-            if ($this->storage_dir == "/" || !Helpers :: createDirTree(ACTES_BATCHES_UPLOAD_ROOT . "/" . $this->storage_dir, ACTES_BATCHES_UPLOAD_ROOT)) {
+            if ($this->storage_dir == "/" || !Helpers:: createDirTree(
+                    ACTES_BATCHES_UPLOAD_ROOT . "/" . $this->storage_dir,
+                    ACTES_BATCHES_UPLOAD_ROOT
+                )) {
                 $this->errorMsg = "Erreur de création du répertoire de stockage du lot.";
                 return false;
             }
@@ -115,10 +117,10 @@ class ActesBatch extends DataObject
         return true;
     }
 
-  /**
-   * \brief Nettoyage du répertoire de stockage
-   * \return True en cas de succès, false sinon
-   */
+    /**
+     * \brief Nettoyage du répertoire de stockage
+     * \return True en cas de succès, false sinon
+     */
     public function purgeStorage()
     {
         foreach ($this->batchFiles as $batchFile) {
@@ -127,31 +129,31 @@ class ActesBatch extends DataObject
             }
         }
 
-        if (!Helpers :: deleteFromFS(ACTES_BATCHES_UPLOAD_ROOT . "/" . $this->storage_dir)) {
+        if (!Helpers:: deleteFromFS(ACTES_BATCHES_UPLOAD_ROOT . "/" . $this->storage_dir)) {
             return false;
         }
 
         return true;
     }
 
-  /**
-   * \brief Suppression du répertoire de stockage
-   * \return True en cas de succès, false sinon
-   */
+    /**
+     * \brief Suppression du répertoire de stockage
+     * \return True en cas de succès, false sinon
+     */
     public function deleteStorage()
     {
-        return Helpers :: deleteFromFS(ACTES_BATCHES_UPLOAD_ROOT . "/" . $this->storage_dir);
+        return Helpers:: deleteFromFS(ACTES_BATCHES_UPLOAD_ROOT . "/" . $this->storage_dir);
     }
 
-  /**
-   * \brief Initialisation des fichiers associés à un lot
-   */
+    /**
+     * \brief Initialisation des fichiers associés à un lot
+     */
     public function initBatchFiles()
     {
         if (isset($this->id)) {
-            $this->batchFiles = array ();
+            $this->batchFiles = array();
 
-            $fileIds = ActesBatchFile :: getFilesIdForBatch($this->id);
+            $fileIds = ActesBatchFile:: getFilesIdForBatch($this->id);
 
             foreach ($fileIds as $fileId) {
                 $batchFile = new ActesBatchFile($fileId);
@@ -167,10 +169,10 @@ class ActesBatch extends DataObject
         }
     }
 
-  /**
-   * \brief Récupération des fichiers associés à un lot
-   * \return Un tableau de ActesBatchFile associé au lot
-   */
+    /**
+     * \brief Récupération des fichiers associés à un lot
+     * \return Un tableau de ActesBatchFile associé au lot
+     */
     public function getBatchFiles()
     {
         if (!isset($this->batchFiles)) {
@@ -187,7 +189,11 @@ class ActesBatch extends DataObject
      */
     public function getBatchesList($cond = "")
     {
-        if (!$this->pagerInit('DISTINCT actes_batches.id, actes_batches.user_id, actes_batches.submission_date, actes_batches.storage_dir, actes_batches.num_prefix, actes_batches.description', 'actes_batches', $cond)) {
+        if (!$this->pagerInit(
+            'DISTINCT actes_batches.id, actes_batches.user_id, actes_batches.submission_date, actes_batches.storage_dir, actes_batches.num_prefix, actes_batches.description',
+            'actes_batches',
+            $cond
+        )) {
             return false;
         }
 
@@ -196,7 +202,7 @@ class ActesBatch extends DataObject
 
     /**
      * Méthode d'obtention de la liste des lots et tous leurs attributs pour un utilisateur
-     * @param int $user_id  Identifiant de l'utilisateur
+     * @param int $user_id Identifiant de l'utilisateur
      * @return array|bool Tableau des lots
      */
     public function getBatchesListForUser($user_id)
@@ -205,20 +211,20 @@ class ActesBatch extends DataObject
             return $this->getBatchesList(" WHERE actes_batches.user_id=" . $user_id);
         }
 
-        return array ();
+        return array();
     }
 
-  /**
-   * \brief Méthode de rafraichissement de la liste des fichiers du lot restant à traiter
-   * \return Tableau des fichiers restant à traiter
-   */
+    /**
+     * \brief Méthode de rafraichissement de la liste des fichiers du lot restant à traiter
+     * \return Tableau des fichiers restant à traiter
+     */
     private function refreshUnprocessedFiles()
     {
         if (!isset($this->batchFiles)) {
             $this->initBatchFiles();
         }
 
-        $this->unprocessedBatchFiles = array ();
+        $this->unprocessedBatchFiles = array();
 
         foreach ($this->batchFiles as $file) {
             if (!$file->isProcessed()) {
@@ -227,10 +233,10 @@ class ActesBatch extends DataObject
         }
     }
 
-  /**
-   * \brief Méthode d'obtention de la liste des fichiers du lot restant à traiter
-   * \return Tableau des fichiers restant à traiter
-   */
+    /**
+     * \brief Méthode d'obtention de la liste des fichiers du lot restant à traiter
+     * \return Tableau des fichiers restant à traiter
+     */
     public function getUnprocessedFiles()
     {
         if (!isset($this->unprocessedBatchFiles)) {
@@ -240,10 +246,10 @@ class ActesBatch extends DataObject
         return $this->unprocessedBatchFiles;
     }
 
-  /**
-   * \brief Méthode d'obtention du nombre de fichiers du lot restant à traiter
-   * \return Le nombre de fichier restant à traiter dans le lot
-   */
+    /**
+     * \brief Méthode d'obtention du nombre de fichiers du lot restant à traiter
+     * \return Le nombre de fichier restant à traiter dans le lot
+     */
     public function getUnprocessedFilesCount()
     {
         if (!isset($this->unprocessedBatchFiles)) {
@@ -253,10 +259,10 @@ class ActesBatch extends DataObject
         return count($this->unprocessedBatchFiles);
     }
 
-  /**
-   * \brief Méthode d'obtention du nombre de fichiers du lot
-   * \return Le nombre de fichier dans le lot
-   */
+    /**
+     * \brief Méthode d'obtention du nombre de fichiers du lot
+     * \return Le nombre de fichier dans le lot
+     */
     public function getAllFilesCount()
     {
         if (!isset($this->batchFiles)) {
@@ -266,10 +272,10 @@ class ActesBatch extends DataObject
         return count($this->batchFiles);
     }
 
-  /**
-   * \brief Méthode d'obtention de la liste des fichiers du lot restant à traiter sous forme id/name
-   * \return Tableau des fichiers restant à traiter, clef=id, valeur=nom fichier
-   */
+    /**
+     * \brief Méthode d'obtention de la liste des fichiers du lot restant à traiter sous forme id/name
+     * \return Tableau des fichiers restant à traiter, clef=id, valeur=nom fichier
+     */
     public function getUnprocessedFilesIdName()
     {
         if (!isset($this->unprocessedBatchFiles)) {
@@ -279,10 +285,10 @@ class ActesBatch extends DataObject
         return $this->getFilesIdName($this->unprocessedBatchFiles);
     }
 
-  /**
-   * \brief Méthode d'obtention de la liste des fichiers du lot sous forme id/name
-   * \return Tableau des fichiers, clef=id, valeur=nom fichier
-   */
+    /**
+     * \brief Méthode d'obtention de la liste des fichiers du lot sous forme id/name
+     * \return Tableau des fichiers, clef=id, valeur=nom fichier
+     */
     public function getAllFilesIdName()
     {
         if (!isset($this->batchFiles)) {
@@ -299,7 +305,7 @@ class ActesBatch extends DataObject
      */
     private function getFilesIdName($files)
     {
-        $retFiles = array ();
+        $retFiles = array();
 
         if (is_array($files)) {
             foreach ($files as $file) {
@@ -347,10 +353,10 @@ class ActesBatch extends DataObject
         return $nextId;
     }
 
-  /**
-   * \brief
-   * \return
-   */
+    /**
+     * \brief
+     * \return
+     */
 
     /**
      * Récupération du prochain suffixe pour le numéro interne
@@ -362,7 +368,7 @@ class ActesBatch extends DataObject
         if (isset($this->id)) {
             $next_suffix = 1;
 
-          // On récupère le suffixe
+            // On récupère le suffixe
             $sql = "SELECT next_suffix FROM actes_batches WHERE id= ? FOR UPDATE";
 
             $result = $this->db->select($sql, [$this->id]);
@@ -396,7 +402,7 @@ class ActesBatch extends DataObject
             if ($next_suffix != null) {
                 $sql = "UPDATE actes_batches SET next_suffix= ? WHERE id= ?";
 
-                if (!$this->db->exec($sql, [$next_suffix + 1,$this->id])) {
+                if (!$this->db->exec($sql, [$next_suffix + 1, $this->id])) {
                     $this->errorMsg = "Erreur d'accès base de données.";
                     return $this->errorMsg;
                 }
@@ -419,7 +425,7 @@ class ActesBatch extends DataObject
         $ret_value = true;
 
         if (is_array($files)) {
-          // Copie du tableau pour recherche des signatures
+            // Copie du tableau pour recherche des signatures
             $filesDup = $files;
 
             $this->errorMsg = "<span style='font-weight:bold;color:red;'>Echec de la cr&eacute;ation du lot.</span><br />\n";
@@ -439,19 +445,21 @@ class ActesBatch extends DataObject
 
                 // On ne traite pas individuellement les fichiers de signature
                 if (!preg_match("/\.sig$/", $filename)) {
-                    if (is_uploaded_file($file["tmp_name"])) {
+                    if (is_uploaded_file_wrapper($file["tmp_name"])) {
                         // Vérification du type de fichier
-                        $type = Helpers :: getFileType($file["tmp_name"]);
+                        $type = Helpers:: getFileType($file["tmp_name"]);
                         $trace = Trace::getInstance();
 
-                        $trace->log("Récuperation de " . $file['name'] . " - type : " . $type  . " - tmp_name : " . $file["tmp_name"]);
+                        $trace->log(
+                            "Récuperation de " . $file['name'] . " - type : " . $type . " - tmp_name : " . $file["tmp_name"]
+                        );
 
 
                         if ($type != "application/pdf") {
                             $this->errorMsg .= "Le fichier <span style='font-weight:bold;'>" . $filename . "</span> n'est pas du type requis ($type). <span style='font-weight:bold;'>Seuls les fichiers PDF sont autoris&eacute;s.</span><br />\n";
                             $ret_value = false;
                         } else {
-                      // On recherche un fichier de signature associé
+                            // On recherche un fichier de signature associé
                             $foundSig = false;
                             $sign = "";
                             reset($filesDup);
@@ -523,14 +531,14 @@ class ActesBatch extends DataObject
         }
 
         if ($new) {
-          // Si nouveau lot, création répertoire de stockage
+            // Si nouveau lot, création répertoire de stockage
             if (!$this->initStorage()) {
                 return false;
             }
         }
 
-      //echo $sql;
-      //exit();
+        //echo $sql;
+        //exit();
 
         if (!$this->db->begin()) {
             $this->errorMsg = "Erreur lors de l'initialisation de la transaction.";
@@ -543,11 +551,11 @@ class ActesBatch extends DataObject
             return false;
         }
 
-      // Définition du répertoire de stockage
+        // Définition du répertoire de stockage
         if (
             !$this->db->exec(
                 "UPDATE actes_batches SET storage_dir=? WHERE id= ?",
-                [$this->storage_dir,$this->id]
+                [$this->storage_dir, $this->id]
             )
         ) {
             $this->errorMsg = "Erreur lors de la définition du répertoire de stockage du lot.";
@@ -605,25 +613,26 @@ class ActesBatch extends DataObject
             return false;
         }
 
-      // Suppression des fichiers inclus
+        // Suppression des fichiers inclus
         if (!isset($this->batchFiles)) {
             $this->initBatchFiles();
         }
 
         foreach ($this->batchFiles as $batchFile) {
             if (!$batchFile->delete()) {
-                $this->errorMsg = "Erreur lors de la suppression des fichiers associés au lot : " . $batchFile->getErrorMsg();
+                $this->errorMsg = "Erreur lors de la suppression des fichiers associés au lot : " . $batchFile->getErrorMsg(
+                    );
                 $this->db->rollback();
                 return false;
             }
         }
 
-      // Suppression du répertoire de stockage
+        // Suppression du répertoire de stockage
         if (!$this->deleteStorage()) {
             return false;
         }
 
-        if (!parent :: delete()) {
+        if (!parent:: delete()) {
             return false;
         }
 
