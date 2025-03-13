@@ -328,7 +328,7 @@ if (isset($actePDFFile) || $batchMode) {
                 $readFile = false;
             }
         } else {
-            if (isset($actePDFFileSign["tmp_name"]) && is_uploaded_file($actePDFFileSign["tmp_name"])) {
+            if (isset($actePDFFileSign["tmp_name"]) && is_uploaded_file_wrapper($actePDFFileSign["tmp_name"])) {
                 $signFile = $actePDFFileSign["tmp_name"];
                 $readFile = true;
             }
