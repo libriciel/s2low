@@ -7,7 +7,7 @@ use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 
-class GetNewUniqueEnveloppeNumber extends S2lowIntegrationTestCase
+class GetNewUniqueEnveloppeNumberTest extends S2lowIntegrationTestCase
 {
     use ActesUtilitiesTestTrait;
 
