@@ -32,7 +32,7 @@ class ActesStatusSQL
 
     public const STATUS_ERREUR_LORS_DE_L_ARCHIVAGE = 14;
     public const STATUS_EN_ATTENTE_D_ETRE_SIGNEE = 18;
-
+    public const STATUS_EN_ATTENTE_D_ETRE_POSTE = 17;
     public const STATUS_DETRUITE = 16;
 
     public function __construct(private readonly SQLQuery $sqlQuery)

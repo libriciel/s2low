@@ -117,6 +117,8 @@ INSERT INTO actes_status
 VALUES (21, 'Document reçu (pas d''AR)');
 INSERT INTO actes_status
 VALUES (18, 'En attente d''être signé');
+INSERT INTO actes_status
+VALUES (17, 'En attente d''être posté');
 
 -- Création des modules
 INSERT INTO modules
