@@ -3,8 +3,6 @@
 namespace IntegrationTests;
 
 use S2lowLegacy\Class\LegacyObjectsManager;
-use S2lowLegacy\Lib\ObjectInstancier;
-use S2lowLegacy\Lib\ObjectInstancierFactory;
 use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\SQLQuery;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -12,7 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class S2lowIntegrationTestCase extends WebTestCase
 {
-    /** @var SQLQuery */
     protected SQLQuery $sqlQuery;
     protected PemCertificateFactory $pemCertificateFactory;
 
@@ -31,14 +28,30 @@ class S2lowIntegrationTestCase extends WebTestCase
      */
     protected function setUp(): void
     {
-        $this->setUpWithoutDeletingObjectInstancier();
-        ObjectInstancierFactory::resetObjectInstancier();    //DatabasePool utilise ObjectInstancier
+        $_SESSION = [];
+        $_GET = [];
+        $_POST = [];
+        $_SERVER['QUERY_STRING'] = '';
+        $this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);
+        $this->sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST);
+        $this->sqlQuery->setDatabaseHost(DB_HOST_TEST);
+        $this->pemCertificateFactory = new PemCertificateFactory();
+        $this->sqlQuery->exec(file_get_contents(__DIR__ . '/fixtures/s2low-test-init.sql'));
+        parent::setUp();
     }
 
     protected function tearDown(): void
     {
+        self::ensureKernelShutdown();
+        LegacyObjectsManager::resetObjectInstancier(); //Evite les interactions entre tests via
+        // L'objectInstancier.
+        // Normalement on ne devrait pas modifier l'ObjectInstancier pour les tests d'intégration
+        // Mais on ne sait jamais ...
+        $_SESSION = [];
+        $_GET = [];
+        $_POST = [];
+        $_SERVER['QUERY_STRING'] = '';
         // Evite le message postgres phpunit désolé, trop de clients sont déjà connectés
-        // TODO : ce disconnect serait-il nécessaire ailleurs ?
         $this->sqlQuery->disconnect();
         parent::tearDown();
     }
@@ -108,28 +121,6 @@ class S2lowIntegrationTestCase extends WebTestCase
             $certificatePem->getContentStrippedFromBegin()
         );
 
-        ObjectInstancierFactory::resetObjectInstancier();
         return $client;
-    }
-
-    /**
-     * @return void
-     */
-    protected function setUpWithoutDeletingObjectInstancier(): void
-    {
-        parent::setUp();
-        LegacyObjectsManager::resetObjectInstancier();
-        $_SESSION = [];
-        $_GET = [];
-        $_POST = [];
-        //$_SERVER = [];
-        $_SERVER['QUERY_STRING'] = '';
-        ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());    //DatabasePool utilise ObjectInstancier
-        $this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);            // On en crée un le temps de MàJ la BDD
-        $this->sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST); // On le ressettera ensuite
-        $this->sqlQuery->setDatabaseHost(DB_HOST_TEST);
-        ObjectInstancierFactory::getObjetInstancier()->set(SQLQuery::class, $this->sqlQuery);
-        $this->pemCertificateFactory = new PemCertificateFactory();
-        $this->sqlQuery->exec(file_get_contents(__DIR__ . '/fixtures/s2low-test-init.sql'));
     }
 }

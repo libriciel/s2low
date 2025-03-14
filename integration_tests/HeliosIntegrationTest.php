@@ -18,9 +18,8 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
 
     protected function setUp(): void
     {
-        $this->setUpWithoutDeletingObjectInstancier();
-        $this->heliosTransactionsSQL = ObjectInstancierFactory::getObjetInstancier()->get(HeliosTransactionsSQL::class);
-        ObjectInstancierFactory::resetObjectInstancier();
+        parent::setUp();
+        $this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
     }
 
     protected function tearDown(): void
