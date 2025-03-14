@@ -7,7 +7,8 @@ use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionBuilder;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionConfiguration;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnector;
-use S2lowLegacy\Lib\PesAller;
+use S2lowLegacy\Lib\HeliosNamesGenerator;
+use S2lowLegacy\Lib\PesAllerReader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -19,13 +20,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class TestDGFiPConnectionCommand extends Command
 {
-    /**
-     * @var \S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager
-     */
     private DGFiPConnectionsManager $DGFiPConnectionsManager;
-    /**
-     * @var \S2low\Services\Helios\DGFiPConnection\DGFiPConnectionBuilder
-     */
     private DGFiPConnectionBuilder $connectionBuilder;
 
     /**
@@ -34,7 +29,9 @@ class TestDGFiPConnectionCommand extends Command
      */
     public function __construct(
         DGFiPConnectionsManager $DGFiPConnectionsManager,
-        DGFiPConnectionBuilder $connectionBuilder
+        DGFiPConnectionBuilder $connectionBuilder,
+        private readonly PesAllerReader $pesAllerReader,
+        private readonly HeliosNamesGenerator $producer
     ) {
         parent::__construct();
         $this->DGFiPConnectionsManager = $DGFiPConnectionsManager;
@@ -203,8 +200,7 @@ class TestDGFiPConnectionCommand extends Command
             $p_dest = $input->getOption('p_dest');
             $pAppli = $input->getOption('pAppli') ?? $defaultConfiguration->getHeliosFtpAppli();
 
-            $pesAller = new PesAller();
-            $p_msg = $pesAller->getP_MSG($file_path);
+            $p_msg = $this->producer->getP_MSGFromPesAllerData($this->pesAllerReader->getPesAllerData($file_path));
 
             $io->title("Envoi de  de {$file_path}\n");
             $io->definitionList(

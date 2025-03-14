@@ -151,6 +151,9 @@ services:
   S2lowLegacy\Lib\OpenStackContainerFetcher:
     autowire: false #Pas un service, est renvoyé par une factory
 
+  S2lowLegacy\Lib\PesAllerData:
+    autowire: false #Pas un service, est renvoyé par une factory
+
   S2lowLegacy\Lib\Siren:
     autowire: false #Pas un service, est renvoyé par une factory
 

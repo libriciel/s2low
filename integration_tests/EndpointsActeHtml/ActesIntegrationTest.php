@@ -21,11 +21,9 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
 
     protected function setUp(): void
     {
-        $this->setUpWithoutDeletingObjectInstancier();
-        $this->actesTransactionsSQL = ObjectInstancierFactory::getObjetInstancier()->get(ActesTransactionsSQL::class);
-        ObjectInstancierFactory::resetObjectInstancier();
+        parent::setUp();
+        $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
     }
-
     protected function tearDown(): void
     {
         if ($this->enveloppeInErrorPath !== '' && file_exists($this->enveloppeInErrorPath)) {
