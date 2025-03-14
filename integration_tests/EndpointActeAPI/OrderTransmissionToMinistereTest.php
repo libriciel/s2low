@@ -27,7 +27,7 @@ class OrderTransmissionToMinistereTest extends S2lowIntegrationTestCase
         return $this->actesTransactionsSQL;
     }
 
-    public function testShouldReturnOk(): void
+    public function testShouldReturnRightHeader(): void
     {
         $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
 
