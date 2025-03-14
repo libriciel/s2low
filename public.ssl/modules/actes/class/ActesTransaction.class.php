@@ -6,6 +6,7 @@ use S2lowLegacy\Class\actes\ActesClassificationCodesSQL;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\DataObject;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\TypeActe;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
@@ -499,9 +500,9 @@ SQL;
    * \param $use_serial boolean (optionnel) : Ajouter le numéro de série à la fin du nom de fichier puis l'incrémenter (true par défaut)
    * \return Le nom du fichier sans extension
    */
-    public function getStdFileName($env, $use_serial = true, $code_pj = '')
+    public function getStdFileName(ActesEnvelope $env, $use_serial = true, $code_pj = '')
     {
-        if ($this->type == 6) {
+        if ($this->type == TypeActe::Annulation->value) {
             $trans = $this->related_transaction;
         } else {
             $trans = $this;
@@ -525,41 +526,41 @@ SQL;
 
       // Date de l'acte YYYYMMDD
         $name .= "-";
-        if ($this->type != 7) {
+        if ($this->type != TypeActe::DemandeDeClassification->value) {
             $name .= date("Ymd", Helpers :: ansiDateToTimestamp($trans->decision_date));
         }
 
       // Numéro de l'acte interne à la collectivité
         $name .= "-";
-        if ($this->type != 7) {
+        if ($this->type != TypeActe::DemandeDeClassification->value) {
             $name .= $trans->number;
         }
 
       // Code de la nature de l'acte
         $name .= "-";
-        if ($this->type != 7) {
+        if ($this->type != TypeActe::DemandeDeClassification->value) {
             $name .= $nature_descr["short_descr"];
         }
 
       // Type de message
         switch ($this->type) {
-            case "1":
+            case TypeActe::TransmissionActe->value:
                 $name .= "-1-1";
                 break;
-            case "2":
+            case TypeActe::CourrierSimple->value:
                 $name .= "-2-2";
                 break;
-            case "3":
+            case TypeActe::DemandePieceComplementaire->value:
                 $name .= "-3-" . $this->type_reponse;
                 break;
-            case "4":
+            case TypeActe::LettreDObservation->value:
                 $name .= "-4-" . $this->type_reponse;
                 break;
-            case "6":
+            case TypeActe::Annulation->value:
                 $name .= "-6-1";
                 break;
             break;
-            case "7":
+            case TypeActe::DemandeDeClassification->value:
                 $name .= "-7-1";
                 break;
         }

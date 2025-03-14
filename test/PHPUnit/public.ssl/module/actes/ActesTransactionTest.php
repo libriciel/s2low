@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
+use S2lowLegacy\Class\TypeActe;
 
 class ActesTransactionTest extends S2lowTestCase
 {
@@ -321,5 +324,80 @@ class ActesTransactionTest extends S2lowTestCase
             'Le code de la PJ doit faire 5 caractères',
             $this->actesTransaction->getErrorMsg()
         );
+    }
+
+    /**
+     * @dataProvider typeProvider
+     */
+    public function testFileNameAccordingToType(int $type, string $expectedName): void
+    {
+        $this->actesTransaction->set('type', $type);
+        $this->actesTransaction->set('decision_date', '2013-04-05');
+        $this->actesTransaction->set('nature_code', '1');
+
+        $env = new ActesEnvelope();
+        $env->set('department', '001');
+        $env->set('siren', '000000000');
+        static::assertEquals($expectedName, $this->actesTransaction->getStdFileName($env));
+    }
+
+    public function typeProvider(): iterable
+    {
+        return [
+            [TypeActe::TransmissionActe->value, 'toto/001-000000000-20130405--DE-1-1_1'],
+            [TypeActe::CourrierSimple->value, 'toto/001-000000000-20130405--DE-2-2_1'],
+            [TypeActe::DemandeDeClassification->value, 'toto/001-000000000----7-1_1']
+        ];
+    }
+
+    /**
+     * L'annulation nécessite une transaction associée
+     * Il faut donc tester à part.
+     */
+    public function testFileNameAnnulation(): void
+    {
+        $this->actesTransaction->set('type', TypeActe::Annulation->value);
+
+        $relatedTransaction = new ActesTransaction();
+        $relatedTransaction->set('decision_date', '2013-04-05');
+        $relatedTransaction->set('nature_code', '1');
+
+        $this->actesTransaction->set('related_transaction', $relatedTransaction);
+
+        $env = new ActesEnvelope();
+        $env->set('department', '001');
+        $env->set('siren', '000000000');
+
+        $this->actesTransaction->set('type', 6);
+        static::assertEquals('toto/001-000000000-20130405--DE-6-1_1', $this->actesTransaction->getStdFileName($env));
+    }
+
+    /**
+     * Les lettres d'observation et les demandes complémentaires utilisent un type de réponse
+     * Il faut donc un test séparé.
+     * @dataProvider typeProviderWithResponseType
+     */
+    public function testFileNameAccordingToTypeWithResponseType(int $type, int $type_response, string $expectedName)
+    {
+
+        $this->actesTransaction->set('type', $type);
+        $this->actesTransaction->set('decision_date', '2013-04-05');
+        $this->actesTransaction->set('nature_code', '1');
+        $this->actesTransaction->set('type_reponse', $type_response);
+
+        $env = new ActesEnvelope();
+        $env->set('department', '001');
+        $env->set('siren', '000000000');
+        $this->assertEquals($expectedName, $this->actesTransaction->getStdFileName($env));
+    }
+
+    public function typeProviderWithResponseType()
+    {
+        return [
+            [TypeActe::LettreDObservation->value,1, 'toto/001-000000000-20130405--DE-4-1_1'],
+            [TypeActe::LettreDObservation->value,2, 'toto/001-000000000-20130405--DE-4-2_1'],
+            [TypeActe::DemandePieceComplementaire->value,1, 'toto/001-000000000-20130405--DE-3-1_1'],
+            [TypeActe::DemandePieceComplementaire->value,2, 'toto/001-000000000-20130405--DE-3-2_1']
+        ];
     }
 }
