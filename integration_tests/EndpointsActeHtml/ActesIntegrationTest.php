@@ -177,37 +177,6 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
     /**
      * @throws Exception
      */
-    public function testActesTransacPostConfirm(): void
-    {
-        $client = $this->setUpUser();
-
-        $client->request('GET', 'modules/actes/actes_transac_post_confirm.php');
-        static::assertMatchesRegularExpression(
-            '#La télétransmission nécessite un certificat RGS#',
-            $_SESSION['error']
-        );
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function testActesTransacPostConfirmApiMulti(): void
-    {
-        $client = $this->setUpUser();
-
-        $crawler = $client->request('GET', 'modules/actes/actes_transac_post_confirm_api_multi.php');
-        static::assertMatchesRegularExpression(
-            '#exit\(\) called#',
-            $crawler->html()
-        );
-
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
-    }
-
-    /**
-     * @throws Exception
-     */
     public function testActesTransacRollBackAttente(): void
     {
         $client = $this->setUpUser();

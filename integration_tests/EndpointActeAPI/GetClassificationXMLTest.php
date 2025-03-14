@@ -16,8 +16,8 @@ class GetClassificationXMLTest extends S2lowIntegrationTestCase
 
     protected function setUp(): void
     {
-        $this->setUpWithoutDeletingObjectInstancier();
-        $this->actesTransactionsSQL = ObjectInstancierFactory::getObjetInstancier()->get(ActesTransactionsSQL::class);
+        parent::setUp();
+        $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
         ObjectInstancierFactory::resetObjectInstancier();
     }
 

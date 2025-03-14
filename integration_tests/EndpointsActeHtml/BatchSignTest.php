@@ -20,8 +20,8 @@ class BatchSignTest extends S2lowIntegrationTestCase
 
     protected function setUp(): void
     {
-        $this->setUpWithoutDeletingObjectInstancier();
-        $this->actesTransactionsSQL = ObjectInstancierFactory::getObjetInstancier()->get(ActesTransactionsSQL::class);
+        parent::setUp();
+        $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
         ObjectInstancierFactory::resetObjectInstancier();
     }
 
@@ -68,7 +68,6 @@ class BatchSignTest extends S2lowIntegrationTestCase
         );
 
         $response = $client->getResponse();
-        var_dump($response->getContent());
         static::assertStringContainsString(
             'ACTES - Signature de plusieurs Actes',
             $response->getContent()

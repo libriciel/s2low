@@ -35,7 +35,7 @@ list(
 $actionHtml = "";
 
 
-function return_error_api($error_message)
+function return_error_api_api_multi($error_message)
 {
     $return_error = Helpers :: getVarFromGet('url_return') ?: WEBSITE_SSL;
     header_wrapper("Location:  $return_error");
@@ -45,28 +45,30 @@ function return_error_api($error_message)
 // Instanciation du module courant
 $module = new Module();
 if (!$module->initByName('actes')) {
-    return_error_api("Erreur d'intialisation du module");
+    return_error_api_api_multi("Erreur d'intialisation du module");
 }
 
 $connexion = new Connexion();
 $me = new User();
 
 if (!$me->authenticate()) {
-    return_error_api("Échec de l'authentification");
+    return_error_api_api_multi("Échec de l'authentification");
 }
 
 if (!$module->isActive() || !$me->checkDroit($module->get('name'), 'TT')) {
-    return_error_api('Accès refusé');
+    return_error_api_api_multi('Accès refusé');
 }
 
 
 $rgsConnexion = new RgsConnexion();
 if (! $rgsConnexion->isRgsConnexion()) {
-    return_error_api("La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}");
+    return_error_api_api_multi(
+        "La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}"
+    );
 }
 
 if (empty($_GET['id'])) {
-    return_error_api("Pas d'identifiant de transaction spécifié");
+    return_error_api_api_multi("Pas d'identifiant de transaction spécifié");
 }
 
 if (is_array($_GET['id'])) {

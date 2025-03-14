@@ -17,8 +17,8 @@ class CancelTransactionTest extends S2lowIntegrationTestCase
 
     protected function setUp(): void
     {
-        $this->setUpWithoutDeletingObjectInstancier();
-        $this->actesTransactionsSQL = ObjectInstancierFactory::getObjetInstancier()->get(ActesTransactionsSQL::class);
+        parent::setUp();
+        $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
         ObjectInstancierFactory::resetObjectInstancier();
     }
 
@@ -36,11 +36,8 @@ class CancelTransactionTest extends S2lowIntegrationTestCase
         $api = 1;
         $id = $transactionId;
 
-        // A Supprimer lors du refacto de l'api.
-        // Lorsque l'endpoint sera geré par les controllers symfony
         $_POST['api'] = $api;
         $_POST['id'] = $id;
-        //
 
         $client->request('POST', '/modules/actes/actes_transac_cancel.php', [
             'api' => $api,
