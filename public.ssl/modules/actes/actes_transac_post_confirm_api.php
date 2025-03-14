@@ -28,7 +28,7 @@ list($workerScript, $actesTransactionsSQL, $actesScriptHelper, $connexion ) = Le
 $actionHtml = '';
 
 
-function return_error_api($error_message): never
+function return_error_api($error_message)
 {
     $return_error = Helpers :: getVarFromGet('url_return');
     $return_error = str_replace('%%ERROR%%', 1, $return_error);
