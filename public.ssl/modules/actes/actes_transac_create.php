@@ -337,7 +337,7 @@ if (isset($actePDFFile) || $batchMode) {
         if ($signFile) {
             if (!$trans->addActeSign($signFile, $readFile)) {
                 $errorMsg .= "Erreur lors du traitement de la signature du fichier " . $acteFileName . " :\n" . $trans->getErrorMsg(
-                    ) . "\n";
+                ) . "\n";
                 $fileImportError = true;
             }
         }
@@ -386,12 +386,14 @@ if (isset($acteAttachments)) {
             $fileImportError = true;
         } else {
             // Ajout de la signature si présente
-            if (isset($acteAttachmentsSign["tmp_name"][$i]) && is_uploaded_file_wrapper(
+            if (
+                isset($acteAttachmentsSign["tmp_name"][$i]) && is_uploaded_file_wrapper(
                     $acteAttachmentsSign["tmp_name"][$i]
-                )) {
+                )
+            ) {
                 if (!$trans->addAttachmentSign($acteAttachmentsSign["tmp_name"][$i])) {
                     $errorMsg .= "Erreur lors du traitement de la signature du fichier " . $acteAttachments["name"][$i] . " :\n" . $trans->getErrorMsg(
-                        ) . "\n";
+                    ) . "\n";
                     $fileImportError = true;
                 }
             }

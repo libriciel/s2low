@@ -218,7 +218,7 @@ if (count($classifRequests) > 0) {
     foreach ($classifRequests as $classifRequest) {
         if (!$classifRequest->save()) {
             $msg = "Erreur lors de l'enregistrement de la requête de classification.\n" . $classifRequest->getErrorMsg(
-                );
+            );
             if (!Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
                 $msg .= "\nErreur de journalisation.";
             }

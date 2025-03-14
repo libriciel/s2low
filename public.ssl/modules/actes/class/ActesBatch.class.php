@@ -103,10 +103,12 @@ class ActesBatch extends DataObject
 
             $this->storage_dir = $authority->get("siren") . "/" . $this->id;
 
-            if ($this->storage_dir == "/" || !Helpers:: createDirTree(
+            if (
+                $this->storage_dir == "/" || !Helpers:: createDirTree(
                     ACTES_BATCHES_UPLOAD_ROOT . "/" . $this->storage_dir,
                     ACTES_BATCHES_UPLOAD_ROOT
-                )) {
+                )
+            ) {
                 $this->errorMsg = "Erreur de création du répertoire de stockage du lot.";
                 return false;
             }
@@ -189,11 +191,13 @@ class ActesBatch extends DataObject
      */
     public function getBatchesList($cond = "")
     {
-        if (!$this->pagerInit(
-            'DISTINCT actes_batches.id, actes_batches.user_id, actes_batches.submission_date, actes_batches.storage_dir, actes_batches.num_prefix, actes_batches.description',
-            'actes_batches',
-            $cond
-        )) {
+        if (
+            !$this->pagerInit(
+                'DISTINCT actes_batches.id, actes_batches.user_id, actes_batches.submission_date, actes_batches.storage_dir, actes_batches.num_prefix, actes_batches.description',
+                'actes_batches',
+                $cond
+            )
+        ) {
             return false;
         }
 
@@ -621,7 +625,7 @@ class ActesBatch extends DataObject
         foreach ($this->batchFiles as $batchFile) {
             if (!$batchFile->delete()) {
                 $this->errorMsg = "Erreur lors de la suppression des fichiers associés au lot : " . $batchFile->getErrorMsg(
-                    );
+                );
                 $this->db->rollback();
                 return false;
             }
