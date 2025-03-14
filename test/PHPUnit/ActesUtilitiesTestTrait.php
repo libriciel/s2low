@@ -18,11 +18,12 @@ use S2lowLegacy\Lib\SQLQuery;
  */
 trait ActesUtilitiesTestTrait
 {
-    /**
-     * @throws Exception
-     */
-    protected function createTransaction(int $status, string $archive_path = '', ?string $date = '2017-07-01'): int
-    {
+    protected function createTransactionOfType(
+        int $status,
+        int $type = 1,
+        string $archive_path = '',
+        ?string $date = '2017-07-01'
+    ): int {
         $sql = "INSERT INTO actes_envelopes(user_id,siren,department) VALUES(1,'000000000','034') returning ID";
         $envelope_id = $this->getSQLQuery()->queryOne($sql);
 
@@ -35,8 +36,9 @@ trait ActesUtilitiesTestTrait
                                number,
                                nature_code,
                                type,
-                               classification
-                               ) VALUES (?,?,?,?,?,?,?,?,?) returning ID;';
+                               classification,
+                               classification_date
+                               ) VALUES (?,?,?,?,?,?,?,?,?,?) returning ID;';
         $transaction_id = $this->getSQLQuery()->queryOne(
             $sql,
             $envelope_id,
@@ -46,8 +48,9 @@ trait ActesUtilitiesTestTrait
             $date,
             '20170728C',
             3,
-            1,
-            '1.1.1'
+            $type,
+            '1.1.1',
+            '2015-08-28'
         );
 
         $flux_retour = '';
@@ -71,6 +74,13 @@ trait ActesUtilitiesTestTrait
 
 
         return $transaction_id;
+    }
+    /**
+     * @throws Exception
+     */
+    protected function createTransaction(int $status, string $archive_path = '', ?string $date = '2017-07-01'): int
+    {
+        return $this->createTransactionOfType($status, 1, $archive_path, $date);
     }
 
     private function createActeIncludedFiles($transactionId)
