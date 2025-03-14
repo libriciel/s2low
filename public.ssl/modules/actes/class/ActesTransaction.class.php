@@ -949,7 +949,7 @@ SQL;
       // Détermination du type de transaction
         switch (@ dom_import_simplexml($this->xmlObj)->nodeName) {
             case "actes:Acte":
-                $this->type = 1;
+                $this->type = TypeActe::TransmissionActe->value;
                 $acte_attr = $this->xmlObj->attributes($namespaces["actes"]);
             // Date de la décision
                 $this->decision_date = Helpers :: getFromXMLElt($acte_attr["Date"]);
@@ -1041,27 +1041,27 @@ SQL;
                 break;
 
             case "actes:ReponseCourrierSimple":
-                $rep = $this->setDataFromCourrier(2, $xmlFile);
+                $rep = $this->setDataFromCourrier(TypeActe::CourrierSimple->value, $xmlFile);
                 break;
 
             case "actes:RefusPieceComplementaire":
-                $rep = $this->setDataFromCourrier(3, $xmlFile, true);
+                $rep = $this->setDataFromCourrier(TypeActe::DemandePieceComplementaire->value, $xmlFile, true);
                 break;
 
             case "actes:PieceComplementaire":
-                $rep = $this->setDataFromCourrier(3, $xmlFile, false);
+                $rep = $this->setDataFromCourrier(TypeActe::DemandePieceComplementaire->value, $xmlFile, false);
                 break;
 
             case "actes:RejetLettreObservations":
-                $rep = $this->setDataFromCourrier(4, $xmlFile, true);
+                $rep = $this->setDataFromCourrier(TypeActe::LettreDObservation->value, $xmlFile, true);
                 break;
 
             case "actes:ReponseLettreObservations":
-                $rep = $this->setDataFromCourrier(4, $xmlFile, false);
+                $rep = $this->setDataFromCourrier(TypeActe::LettreDObservation->value, $xmlFile, false);
                 break;
 
             case "actes:Annulation":
-                $this->type = 6;
+                $this->type = TypeActe::Annulation->value;
                 $acte_attr = $this->xmlObj->attributes($namespaces["actes"]);
 
                 $this->unique_id = Helpers :: getFromXMLElt($acte_attr["IDActe"]);
@@ -1082,13 +1082,12 @@ SQL;
                 break;
 
             case "actes:DemandeClassification":
-                $this->type = 7;
+                $this->type = TypeActe::DemandeDeClassification->value;
                 break;
 
             default:
                 $this->errorMsg = "Mauvais type de transaction.";
                 return false;
-            break;
         }
         if ($rep == false) {
             return false;

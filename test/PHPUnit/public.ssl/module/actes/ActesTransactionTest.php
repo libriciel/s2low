@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Libriciel\LibActes\Utils\TmpDir;
+use S2lowLegacy\Class\actes\ActesClassificationCodesSQL;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
 use S2lowLegacy\Class\TypeActe;
@@ -427,7 +429,6 @@ class ActesTransactionTest extends S2lowTestCase
      */
     public function testGenerateMessageXMLReponseCourrier(int $type, ?int $type_response, string $expectedRoot): void
     {
-
         $this->actesTransaction->set('type', $type);
         $this->actesTransaction->set('type_reponse', $type_response);
         $this->actesTransaction->set('decision_date', '2013-04-05');
@@ -555,5 +556,50 @@ class ActesTransactionTest extends S2lowTestCase
             basename($this->actesTransaction->files['attachment'][0]['name']),
             $file_content
         );
+        unlink('/data/tdt-workspace/actes/uploads/test.xml_0.xml');
+    }
+
+    /**
+     * @dataProvider XMLfiles
+     */
+    public function testCreateFromXML(string $filename, int $type): void
+    {
+        $test_file_path = __DIR__ . "/../../../../../vendor/libriciel/tdt-lib-actes/tests/FichierXML/fixtures/$filename";
+        copy($test_file_path, ACTES_FILES_UPLOAD_ROOT . '/' . $filename);
+
+        $transaction = new ActesTransaction();
+        $transaction->createFromXML(
+            $filename,
+            $this->getObjectInstancier()->get(ActesClassificationCodesSQL::class)
+        );
+
+        unlink(ACTES_FILES_UPLOAD_ROOT . '/' . $filename);
+
+        self::assertSame(
+            $type,
+            $transaction->get('type')
+        );
+    }
+
+    public function XMLfiles(): iterable
+    {
+        return [
+            //actes:Acte
+          ['001-000000000-20170130-TEST42-DE-1-1_0.xml', TypeActe::TransmissionActe->value],
+            //actes:ReponseCourrierSimple
+            ['001-000000000-20170130-TEST42-DE-2-2_0.xml', TypeActe::CourrierSimple->value],
+            //actes:RefusPieceComplementaire
+            ['001-000000000-20170130-TEST42-DE-3-3_0.xml',TypeActe::DemandePieceComplementaire->value],
+            //actes:PieceComplementaire
+            ['001-000000000-20170130-TEST42-DE-3-4_0.xml',TypeActe::DemandePieceComplementaire->value],
+            //actes:RejetLettreObservations
+            ['001-000000000-20170130-TEST42-DE-4-3_0.xml',TypeActe::LettreDObservation->value],
+            //actes:ReponseLettreObservations
+            ['001-000000000-20170130-TEST42-DE-4-4_0.xml',TypeActe::LettreDObservation->value],
+            //actes:Annulation
+            ['001-000000000-20170130-TEST42-DE-6-1_0.xml',TypeActe::Annulation->value],
+            //actes:DemandeClassification
+            ['001-000000000----7-1_0.xml',TypeActe::DemandeDeClassification->value],
+        ];
     }
 }
