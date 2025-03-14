@@ -26,7 +26,7 @@ class GetClassificationXMLTest extends S2lowIntegrationTestCase
         return $this->actesTransactionsSQL;
     }
 
-    public function testShouldUpdateClassification(): void
+    public function testShouldReturnXML(): void
     {
         $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
 

@@ -34,7 +34,7 @@ class DownloadFileTest extends S2lowIntegrationTestCase
         return ObjectInstancierFactory::getObjetInstancier();
     }
 
-    public function testDownloadFile(): void
+    public function testShouldReturnFile(): void
     {
         $files = $this->getFiles();
 

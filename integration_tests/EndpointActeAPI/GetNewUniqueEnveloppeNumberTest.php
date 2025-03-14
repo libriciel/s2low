@@ -18,7 +18,7 @@ class GetNewUniqueEnveloppeNumberTest extends S2lowIntegrationTestCase
         return $this->actesTransactionsSQL;
     }
 
-    public function testShouldUpdateClassification(): void
+    public function testShouldReturnOk(): void
     {
         $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
 

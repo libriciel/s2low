@@ -27,7 +27,7 @@ class CreateTransactionTest extends S2lowIntegrationTestCase
         return $this->actesTransactionsSQL;
     }
 
-    public function testShouldCancelActeTransactionSuccessfully(): void
+    public function testShouldReturnOk(): void
     {
         $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
 
