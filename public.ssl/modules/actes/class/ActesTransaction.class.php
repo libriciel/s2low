@@ -681,20 +681,20 @@ SQL;
     public function generateMessageXMLFile($xml_name)
     {
         switch ($this->type) {
-            case "1":
+            case TypeActe::TransmissionActe->value:
                 $xml = $this->generateActeXMLFile($xml_name);
                 break;
 
-            case "2":
-            case "3":
-            case "4":
+            case TypeActe::CourrierSimple->value:
+            case TypeActe::DemandePieceComplementaire->value:
+            case TypeActe::LettreDObservation->value:
                 $xml = $this->generateReponseCourrierXMLFile($xml_name);
                 break;
 
-            case "6":
+            case TypeActe::Annulation->value:
                 $xml = $this->generateCancelXMLFile($xml_name);
                 break;
-            case "7":
+            case TypeActe::DemandeDeClassification->value:
                 $xml = $this->generateClassifRequestXMLFile($xml_name);
                 break;
             default:
@@ -729,7 +729,7 @@ SQL;
    * \param $xml_name chaîne : Nom du fichier à créer
    * \return Le XML généré ou false en cas d'échec
    */
-    public function generateActeXMLFile($xml_name)
+    public function generateActeXMLFile(string $xml_name): false|string
     {
         $xml_name .= "_0.xml";
 
@@ -793,10 +793,10 @@ SQL;
         $this->xmlFileName = $xml_name;
 
         switch ($this->type) {
-            case 2:
+            case TypeActe::CourrierSimple->value:
                 $root =  "ReponseCourrierSimple";
                 break;
-            case 3:
+            case TypeActe::DemandePieceComplementaire->value:
                 if ($this->type_reponse == ActesTransaction::TYPE_REFUS) {
                     $root = "RefusPieceComplementaire";
                 } elseif ($this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
@@ -806,7 +806,7 @@ SQL;
                     return false;
                 }
                 break;
-            case 4:
+            case TypeActe::LettreDObservation->value:
                 if ($this->type_reponse == ActesTransaction::TYPE_REFUS) {
                     $root = "RejetLettreObservations";
                 } elseif ($this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
@@ -828,7 +828,7 @@ SQL;
         $xml .= "actes:DateCourrierPref=\"" . $this->decision_date . "\" \n";
         $xml .= "actes:IDActe=\"" . Helpers :: escapeForXML($this->related_transaction->unique_id) . "\" > \n";
 
-        if ($this->type == 3 && $this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
+        if ($this->type == TypeActe::DemandePieceComplementaire->value && $this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
             $xml .= "<actes:Documents>";
         }
 
@@ -838,7 +838,7 @@ SQL;
         $xml .= "</actes:NomFichier>\n";
         $xml .= "</actes:Document>\n";
 
-        if ($this->type == 3 && $this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
+        if ($this->type == TypeActe::DemandePieceComplementaire->value && $this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
             if (isset($this->files["attachment"])) {
                 foreach ($this->files["attachment"] as $key => $file) {
                     $xml .= "  <actes:Document>\n";

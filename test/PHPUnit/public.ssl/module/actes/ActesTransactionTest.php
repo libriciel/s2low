@@ -400,4 +400,160 @@ class ActesTransactionTest extends S2lowTestCase
             [TypeActe::DemandePieceComplementaire->value,2, 'toto/001-000000000-20130405--DE-3-2_1']
         ];
     }
+
+    public function testGenerateMessageXMLActe()
+    {
+
+        $this->actesTransaction->set('type', TypeActe::TransmissionActe->value);
+        $this->actesTransaction->set('decision_date', '2013-04-05');
+        $this->actesTransaction->set('classification_date', '2013-04-05');
+        $this->actesTransaction->set('nature_code', '1');
+
+        $this->addActePDF();
+
+        $env = new ActesEnvelope();
+        $env->set('department', '001');
+        $env->set('siren', '000000000');
+
+        static::assertTrue($this->actesTransaction->generateMessageXMLFile('test.xml'));
+        $file_path = ACTES_FILES_UPLOAD_ROOT . '/' . $this->actesTransaction->get('xmlFileName');
+        static::assertFileExists($file_path);
+        // On vérifie que le type de message généré est correct
+        static::assertStringContainsString('<actes:Acte', file_get_contents($file_path));
+    }
+
+    /**
+     * @dataProvider typeReponseCourrier
+     */
+    public function testGenerateMessageXMLReponseCourrier(int $type, ?int $type_response, string $expectedRoot): void
+    {
+
+        $this->actesTransaction->set('type', $type);
+        $this->actesTransaction->set('type_reponse', $type_response);
+        $this->actesTransaction->set('decision_date', '2013-04-05');
+        $this->actesTransaction->set('classification_date', '2013-04-05');
+        $this->actesTransaction->set('nature_code', '1');
+
+        $this->addActePDF();
+
+        $env = new ActesEnvelope();
+        $env->set('department', '001');
+        $env->set('siren', '000000000');
+
+        $relatedTransaction = new ActesTransaction();
+        $relatedTransaction->set('decision_date', '2013-04-05');
+        $relatedTransaction->set('nature_code', '1');
+
+        $this->actesTransaction->set('related_transaction', $relatedTransaction);
+
+
+        static::assertTrue($this->actesTransaction->generateMessageXMLFile('test.xml'));
+        $file_path = ACTES_FILES_UPLOAD_ROOT . '/' . $this->actesTransaction->get('xmlFileName');
+        static::assertFileExists($file_path);
+        // On vérifie que le type de message généré est correct
+        static::assertStringContainsString('<actes:' . $expectedRoot, file_get_contents($file_path));
+    }
+
+    public function typeReponseCourrier(): iterable
+    {
+        return [
+            [TypeActe::CourrierSimple->value, null, 'ReponseCourrierSimple'],
+            [TypeActe::DemandePieceComplementaire->value, ActesTransaction::TYPE_REFUS, 'RefusPieceComplementaire'],
+            [TypeActe::LettreDObservation->value, ActesTransaction::TYPE_REFUS, 'RejetLettreObservations'],
+            [TypeActe::LettreDObservation->value, ActesTransaction::TYPE_ENVOIE, 'ReponseLettreObservations'],
+        ];
+    }
+
+    public function testGenerateMessageXMLAnnulation(): void
+    {
+
+        $this->actesTransaction->set('type', TypeActe::Annulation->value);
+        $this->actesTransaction->set('decision_date', '2013-04-05');
+        $this->actesTransaction->set('classification_date', '2013-04-05');
+        $this->actesTransaction->set('nature_code', '1');
+
+        $env = new ActesEnvelope();
+        $env->set('department', '001');
+        $env->set('siren', '000000000');
+
+        $relatedTransaction = new ActesTransaction();
+        $relatedTransaction->set('decision_date', '2013-04-05');
+        $relatedTransaction->set('nature_code', '1');
+        $relatedTransaction->set('unique_id', 'ACTE_A_ANNULER');
+
+        $this->actesTransaction->set('related_transaction', $relatedTransaction);
+
+        static::assertTrue($this->actesTransaction->generateMessageXMLFile('test.xml'));
+        $file_path = ACTES_FILES_UPLOAD_ROOT . '/' . $this->actesTransaction->get('xmlFileName');
+        static::assertFileExists($file_path);
+        $file_content = file_get_contents($file_path);
+        // On vérifie que le type de message généré est correct
+        static::assertStringContainsString('<actes:Annulation', $file_content);
+        // On vérifie que l'unique id de l'acte à annuler est correct
+        static::assertStringContainsString('actes:IDActe="ACTE_A_ANNULER"', $file_content);
+    }
+
+    public function testGenerateMessageXMLDemandeClassification(): void
+    {
+
+        $this->actesTransaction->set('type', TypeActe::DemandeDeClassification->value);
+        $this->actesTransaction->set('decision_date', '2013-04-05');
+        $this->actesTransaction->set('last_classification_date', '2013-04-05');
+        $this->actesTransaction->set('nature_code', '1');
+
+        $env = new ActesEnvelope();
+        $env->set('department', '001');
+        $env->set('siren', '000000000');
+
+        static::assertTrue($this->actesTransaction->generateMessageXMLFile('test.xml'));
+        $file_path = ACTES_FILES_UPLOAD_ROOT . '/' . $this->actesTransaction->get('xmlFileName');
+        static::assertFileExists($file_path);
+        $file_content = file_get_contents($file_path);
+        // On vérifie que le type de message généré est correct
+        static::assertStringContainsString('<actes:DemandeClassification', $file_content);
+        // On vérifie que la date de dernière classification est présente et correcte
+        static::assertStringContainsString(
+            '<actes:DateClassification>2013-04-05</actes:DateClassification>',
+            $file_content
+        );
+    }
+    public function testGenerateMessageXMLReponseCourrierEnvoi(): void
+    {
+        $this->actesTransaction->set('type', TypeActe::DemandePieceComplementaire->value);
+        $this->actesTransaction->set('type_reponse', ActesTransaction::TYPE_ENVOIE);
+        $this->actesTransaction->set('decision_date', '2013-04-05');
+        $this->actesTransaction->set('classification_date', '2013-04-05');
+        $this->actesTransaction->set('nature_code', '1');
+
+        $this->addActePDF();
+        $this->addAnnexePDF();
+
+        $env = new ActesEnvelope();
+        $env->set('department', '001');
+        $env->set('siren', '000000000');
+
+        $relatedTransaction = new ActesTransaction();
+        $relatedTransaction->set('decision_date', '2013-04-05');
+        $relatedTransaction->set('nature_code', '1');
+
+        $this->actesTransaction->set('related_transaction', $relatedTransaction);
+
+        static::assertTrue($this->actesTransaction->generateMessageXMLFile('test.xml'));
+        $file_path = ACTES_FILES_UPLOAD_ROOT . '/' . $this->actesTransaction->get('xmlFileName');
+        static::assertFileExists($file_path);
+        $file_content = file_get_contents($file_path);
+        // On vérifie que le type de message généré est correct
+        static::assertStringContainsString('<actes:PieceComplementaire', $file_content);
+        static::assertStringContainsString('<actes:Documents>', $file_content);
+        // On vérifie que le document principal est présent et correct
+        static::assertStringContainsString(
+            basename($this->actesTransaction->files['acte']['name']),
+            $file_content
+        );
+        // On vérifie que le document annexe est présent et correct
+        static::assertStringContainsString(
+            basename($this->actesTransaction->files['attachment'][0]['name']),
+            $file_content
+        );
+    }
 }
