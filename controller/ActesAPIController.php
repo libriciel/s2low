@@ -4,6 +4,7 @@ namespace S2lowLegacy\Controller;
 
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Model\AuthoritySQL;
 
 class ActesAPIController extends Controller
@@ -52,11 +53,11 @@ class ActesAPIController extends Controller
     {
         $this->verifUser();
 
-        $status_id = $this->getRecuperateurGet()->getInt('status_id');
-        $offset = $this->getRecuperateurGet()->getInt('offset');
-        $limit = $this->getRecuperateurGet()->getInt('limit', 100);
-        $min_submission_date = $this->getRecuperateurGet()->getDate('min_date');
-        $max_submission_date = $this->getRecuperateurGet()->getDate('max_date');
+        $status_id = Helpers::getVarFromGet("status_id");
+        $offset = Helpers::getVarFromGet("offset");
+        $limit = Helpers::getVarFromGet("limit") ?? 100;
+        $min_submission_date = Helpers::getVarFromGet("min_date");
+        $max_submission_date = Helpers::getVarFromGet("max_date");
 
         $authority_id = intval($this->me->get('authority_id'));
 
