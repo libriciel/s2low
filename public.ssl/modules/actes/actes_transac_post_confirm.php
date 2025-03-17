@@ -104,7 +104,7 @@ $msg = "La transaction a été postée par l'agent télétransmetteur {$me->getP
 
 
 $info = $actesTransactionsSQL->getInfo($id);
-if ($info['last_status_id'] != 17) {
+if ($info['last_status_id'] != ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_POSTEE) {
     $_SESSION['error'] = "La transaction n'est pas dans le statut « En attente d'être posté»";
     header('Location: ' . Helpers::getLink('/modules/actes/index.php'));
     exit();

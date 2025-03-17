@@ -3,6 +3,7 @@
 use S2low\Services\ProcessCommand\CommandLauncher;
 use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2lowLegacy\Class\actes\ActesClassificationCodesSQL;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\DataObject;
 use S2lowLegacy\Class\Helpers;
@@ -194,7 +195,7 @@ class ActesTransaction extends DataObject
     "5" => "Déféré au Tribunal Administratif",
     "6" => "Annulation",
     "7" => "Demande de classification"
-    );
+    );  // Utilisé !
     protected $en_attente;
     protected $is_en_attente_de_signature;
     private $fileNameSerial;
@@ -1159,7 +1160,7 @@ SQL;
             }
 
 
-            if ($type == 'acte' && $this->type == 1) {
+            if ($type == 'acte' && $this->type == TypeActe::TransmissionActe->value) {
                 if (! in_array($ext, array('pdf','xml'))) {
                     $this->errorMsg = "Le fichier de l'acte \" " . basename($name) . " \" est de type \" " . $mimeType . " \". Fichier PDF ou XML requis.";
                     return false;
@@ -1514,7 +1515,7 @@ SQL;
             $new = true;
         }
 
-        if ($this->type == 1) {
+        if ($this->type == TypeActe::TransmissionActe->value) {
             $done = false;
             $this->classification = "";
             $i = 1;
@@ -1538,7 +1539,7 @@ SQL;
 
       // Si la transaction n'est pas une transmission d'acte on désactive
       // le contrôle des champs car tous les champs ne sont plus obligatoire
-        if ($this->type != 1) {
+        if ($this->type != TypeActe::TransmissionActe->value) {
             $validate = false;
         }
 
@@ -1557,7 +1558,11 @@ SQL;
             $sql_verif = "SELECT actes_transactions.id FROM actes_transactions " .
                 " WHERE actes_transactions.number=? AND authority_id=?";
 
-            if ($this->type == 1 && $this->db->getOneValue($sql_verif, [$this->get('number'),$this->get('authority_id')])) {
+            if (
+                $this->type == TypeActe::TransmissionActe->value
+                &&
+                $this->db->getOneValue($sql_verif, [$this->get('number'),$this->get('authority_id')])
+            ) {
                 $this->errorMsg = "Une transaction avec le même numéro existe déjà dans la base.";
                 $this->db->rollback();
                 return false;
@@ -1573,11 +1578,11 @@ SQL;
         if ($new) {
           // Ajout de l'état initial
             if ($this->en_attente) {
-                $result_set_status = $this->setNewStatus(17, "Dépôt dans un état d'attente");
+                $result_set_status = $this->setNewStatus(ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_POSTEE, "Dépôt dans un état d'attente");
             } elseif ($this->is_en_attente_de_signature) {
-                $result_set_status = $this->setNewStatus(18, "En attente d'être signé");
+                $result_set_status = $this->setNewStatus(ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_SIGNEE, "En attente d'être signé");
             } else {
-                $result_set_status = $this->setNewStatus(1, "Dépôt initial");
+                $result_set_status = $this->setNewStatus(ActesStatusSQL::STATUS_POSTE, "Dépôt initial");
             }
             if (!$result_set_status) {
                 $this->errorMsg = "Erreur lors de la définition de l'état initial de la transaction.";

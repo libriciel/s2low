@@ -89,7 +89,7 @@ if (! $permission->canView($me, $owner)) {
 $msg = "La transaction a été postée par l'agent télétransmetteur {$me->getPrettyName()}";
 
 $info = $actesTransactionsSQL->getInfo($id);
-if ($info['last_status_id'] != 17) {
+if ($info['last_status_id'] != ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_POSTEE) {
     return_error_api("La transaction n'est pas dans le statut « En attente d'être posté»");
 }
 
