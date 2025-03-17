@@ -65,5 +65,4 @@ class GetActesOfSpecificStatusTest extends S2lowIntegrationTestCase
         static::assertArrayHasKey('transactions', $contentAsArray);
         static::assertCount(1, $contentAsArray['transactions']);
     }
-
 }
