@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Libriciel\LibActes\Utils\TmpDir;
 use S2lowLegacy\Class\actes\ActesClassificationCodesSQL;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
@@ -25,12 +24,12 @@ class ActesTransactionTest extends S2lowTestCase
     {
         parent::setUp();
         $this->actesTransaction = new ActesTransaction();
-        $this->actesTransaction->set("destDir", "toto");
+        $this->actesTransaction->set('destDir', 'toto');
 
-        $this->pdf_filepath = __DIR__ . "/../../../fixtures/vide.pdf";
-        $this->xml_filepath = __DIR__ . "/../../../fixtures/toto.xml";
-        $this->txt_filepath = __DIR__ . "/../../../fixtures/toto.txt";
-        $this->jpg_filepath = __DIR__ . "/../../../fixtures/test.jpg";
+        $this->pdf_filepath = __DIR__ . '/../../../fixtures/vide.pdf';
+        $this->xml_filepath = __DIR__ . '/../../../fixtures/toto.xml';
+        $this->txt_filepath = __DIR__ . '/../../../fixtures/toto.txt';
+        $this->jpg_filepath = __DIR__ . '/../../../fixtures/test.jpg';
     }
 
     private function numberTest($number, $valide)
@@ -601,5 +600,141 @@ class ActesTransactionTest extends S2lowTestCase
             //actes:DemandeClassification
             ['001-000000000----7-1_0.xml',TypeActe::DemandeDeClassification->value],
         ];
+    }
+
+    public function testsetDataFromCourrierWithExistingRelatedTransaction(): void
+    {
+        $filename = __DIR__ . '/fixtures/001-000000000-20170130-TEST42-DE-3-3_0.xml';
+
+        $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
+
+        $envelope_id = $actesEnvelopeSQL->create(1, '000000000/20170721D/abc-EACT--210703385--20170612-2.tar.gz');
+
+        $this->actesTransaction->set('envelope_id', $envelope_id);
+        $this->actesTransaction->set('decision_date', '2017-08-29');
+        $this->actesTransaction->set('classification_date', '2017-08-29');
+        $this->actesTransaction->set('classif1', '1');
+        $this->actesTransaction->set('classif2', '1');
+
+        $this->actesTransaction->set('type', '1');
+        $this->actesTransaction->set('nature_code', '1');
+        $this->actesTransaction->set('nature_descr', 'toto');
+        $this->actesTransaction->set('subject', 'TEST');
+        $this->actesTransaction->set('number', 'TEST');
+
+        $env = new ActesEnvelope();
+        $env->set('department', '001');
+        $env->set('siren', '000000000');
+
+        $dest_name = $this->actesTransaction->getStdFileName($env);
+
+        $this->actesTransaction->addActeFile('vide.pdf', $dest_name, $this->pdf_filepath);
+        $this->actesTransaction->getStdFileName($env, true, "99_AU");
+
+        $xml_name =  $this->actesTransaction->getStdFileName($env, false);
+
+        $this->actesTransaction->generateMessageXMLFile($xml_name);
+
+        $this->actesTransaction->set('unique_id', '032-213201601-20170616-ARP201706407-AI');
+        $this->actesTransaction->save();
+
+        mkdir(ACTES_FILES_UPLOAD_ROOT . '/testFiles/');
+        copy($filename, ACTES_FILES_UPLOAD_ROOT . '/testFiles/' . basename($filename));
+        copy(__DIR__ . '/fixtures/test_pdf.pdf', ACTES_FILES_UPLOAD_ROOT . '/testFiles/' . '001-000000000-20170130-TEST42-DE-3-3_1.pdf');
+
+
+        $transaction = new ActesTransaction();
+        $transaction->set('destDir', 'testFiles');
+        $transaction->createFromXML(
+            '/testFiles/' . basename($filename),
+            $this->getObjectInstancier()->get(ActesClassificationCodesSQL::class)
+        );
+
+
+        unlink(ACTES_FILES_UPLOAD_ROOT . '/testFiles/' . basename($filename));
+        unlink(ACTES_FILES_UPLOAD_ROOT . '/testFiles/' . '001-000000000-20170130-TEST42-DE-3-3_1.pdf');
+        rmdir(ACTES_FILES_UPLOAD_ROOT . '/testFiles/');
+
+        self::assertSame(
+            TypeActe::DemandePieceComplementaire->value,
+            $transaction->get('type')
+        );
+
+        self::assertSame(null, $transaction->getErrorMsg());
+        self::assertSame(
+            '/testFiles/001-000000000-20170130-TEST42-DE-3-3_1.pdf',
+            $transaction->get('files')['acte']['name']
+        );
+    }
+
+    public function testsetDataFromCourrierWithExistingRelatedTransaction2(): void
+    {
+        $filename = __DIR__ . '/fixtures/001-000000000-20170130-TEST42-DE-3-4_0.xml';
+        $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
+
+        $envelope_id = $actesEnvelopeSQL->create(1, '000000000/20170721D/abc-EACT--210703385--20170612-2.tar.gz');
+
+        $this->actesTransaction->set('envelope_id', $envelope_id);
+        $this->actesTransaction->set('decision_date', '2017-08-29');
+        $this->actesTransaction->set('classification_date', '2017-08-29');
+        $this->actesTransaction->set('classif1', '1');
+        $this->actesTransaction->set('classif2', '1');
+
+        $this->actesTransaction->set('type', TypeActe::TransmissionActe->value);
+        $this->actesTransaction->set('nature_code', '1');
+        $this->actesTransaction->set('nature_descr', 'toto');
+        $this->actesTransaction->set('subject', 'TEST');
+        $this->actesTransaction->set('number', 'TEST');
+
+
+        $env = new ActesEnvelope();
+        $env->set('department', '001');
+        $env->set('siren', '000000000');
+
+        $dest_name = $this->actesTransaction->getStdFileName($env);
+
+        $this->actesTransaction->addActeFile('vide.pdf', $dest_name, $this->pdf_filepath);
+
+        $this->actesTransaction->getStdFileName($env, true, '99_AU');
+        $xml_name =  $this->actesTransaction->getStdFileName($env, false);
+
+        $this->actesTransaction->generateMessageXMLFile($xml_name);
+
+        $this->actesTransaction->set('unique_id', '032-213201601-20170616-ARP201706407-AI');
+        $this->actesTransaction->save();
+
+        mkdir(ACTES_FILES_UPLOAD_ROOT . '/siren');
+        mkdir(ACTES_FILES_UPLOAD_ROOT . '/siren/import/');
+        copy($filename, ACTES_FILES_UPLOAD_ROOT . '/siren/import/' . basename($filename));
+        copy(__DIR__ . '/fixtures/test_pdf.pdf', ACTES_FILES_UPLOAD_ROOT . '/siren/import/001-000000000-20170130-TEST42-DE-3-4_1.pdf');
+        copy(__DIR__ . '/fixtures/test_pdf.pdf', ACTES_FILES_UPLOAD_ROOT .  '/siren/import/001-000000000-20170130-TEST42-DE-3-4_2.pdf');
+
+
+        $transaction = new ActesTransaction();
+        $transaction->set('destDir', '/siren/import/');
+        $transaction->createFromXML(
+            '/siren/import/' . basename($filename),
+            $this->getObjectInstancier()->get(ActesClassificationCodesSQL::class)
+        );
+
+
+        unlink(ACTES_FILES_UPLOAD_ROOT . '/siren/import/' . basename($filename));
+        unlink(ACTES_FILES_UPLOAD_ROOT . '/siren/import/001-000000000-20170130-TEST42-DE-3-4_1.pdf');
+        unlink(ACTES_FILES_UPLOAD_ROOT . '/siren/import/001-000000000-20170130-TEST42-DE-3-4_2.pdf');
+        rmdir(ACTES_FILES_UPLOAD_ROOT . '/siren/import');
+        rmdir(ACTES_FILES_UPLOAD_ROOT . '/siren');
+
+        self::assertSame(
+            TypeActe::DemandePieceComplementaire->value,
+            $transaction->get('type')
+        );
+
+        //TODO : il y a un bug
+        // 001-000000000-20170130-TEST42-DE-3-4_2.pdf devrait être dans les annexes
+        // et 001-000000000-20170130-TEST42-DE-3-4_1.pdf devrait figurer en fichier principal
+        self::assertSame(
+            '/siren/import/001-000000000-20170130-TEST42-DE-3-4_2.pdf',
+            $transaction->get('files')['acte']['name']
+        );
     }
 }

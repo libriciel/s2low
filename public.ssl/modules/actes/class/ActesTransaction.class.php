@@ -1042,23 +1042,23 @@ SQL;
                 break;
 
             case "actes:ReponseCourrierSimple":
-                $rep = $this->setDataFromCourrier(TypeActe::CourrierSimple->value, $xmlFile);
+                $rep = $this->setDataFromCourrier(TypeActe::CourrierSimple, $xmlFile);
                 break;
 
             case "actes:RefusPieceComplementaire":
-                $rep = $this->setDataFromCourrier(TypeActe::DemandePieceComplementaire->value, $xmlFile, true);
+                $rep = $this->setDataFromCourrier(TypeActe::DemandePieceComplementaire, $xmlFile, true);
                 break;
 
             case "actes:PieceComplementaire":
-                $rep = $this->setDataFromCourrier(TypeActe::DemandePieceComplementaire->value, $xmlFile, false);
+                $rep = $this->setDataFromCourrier(TypeActe::DemandePieceComplementaire, $xmlFile, false);
                 break;
 
             case "actes:RejetLettreObservations":
-                $rep = $this->setDataFromCourrier(TypeActe::LettreDObservation->value, $xmlFile, true);
+                $rep = $this->setDataFromCourrier(TypeActe::LettreDObservation, $xmlFile, true);
                 break;
 
             case "actes:ReponseLettreObservations":
-                $rep = $this->setDataFromCourrier(TypeActe::LettreDObservation->value, $xmlFile, false);
+                $rep = $this->setDataFromCourrier(TypeActe::LettreDObservation, $xmlFile, false);
                 break;
 
             case "actes:Annulation":
@@ -1275,10 +1275,10 @@ SQL;
         return true;
     }
 
-    private function setDataFromCourrier($type, $xmlFile, $isRefus = false)
+    private function setDataFromCourrier(TypeActe $type, $xmlFile, $isRefus = false)
     {
 
-        $this->type = $type;
+        $this->type = $type->value;
 
         $namespaces = $this->xmlObj->getDocNamespaces();
 
@@ -1303,7 +1303,7 @@ SQL;
 
         $this->number = $related_trans->get("number");
 
-        if ($type == 3 && $isRefus == false) {
+        if ($type == TypeActe::DemandePieceComplementaire && !$isRefus) {
             foreach ($actesItems->Documents->Document as $fichiers) {
                 $actePath = dirname($xmlFile) . "/" . Helpers :: getFromXMLElt($fichiers->NomFichier);
                 if (!$this->addActeFile($actePath, $actePath)) {

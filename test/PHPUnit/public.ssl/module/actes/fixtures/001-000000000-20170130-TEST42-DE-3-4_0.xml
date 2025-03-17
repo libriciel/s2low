@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<actes:PieceComplementaire xmlns:actes="http://www.interieur.gouv.fr/ACTES#v1.1-20040216" actes:IDActe="032-213201601-20170616-ARP201706407-AI" actes:DateCourrierPref="2017-06-17">
+  <actes:Documents>
+    <actes:Document>
+      <actes:NomFichier>001-000000000-20170130-TEST42-DE-3-4_1.pdf</actes:NomFichier>
+    </actes:Document>
+    <actes:Document>
+      <actes:NomFichier>001-000000000-20170130-TEST42-DE-3-4_2.pdf</actes:NomFichier>
+    </actes:Document>
+  </actes:Documents>
+</actes:PieceComplementaire>
