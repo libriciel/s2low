@@ -111,8 +111,8 @@ class ActesAPIController extends Controller
         $authorityInfo = $authoritySQL->getInfo($authority_id);
         $authority_group_id = $authorityInfo['authority_group_id'];
 
-        if ($this->me->isSuper() && $this->getRecuperateurGet()->getInt('authority_group_id')) {
-            $authority_group_id = $this->getRecuperateurGet()->getInt('authority_group_id');
+        if ($this->me->isSuper() && Helpers::getVarFromGet('authority_group_id')) {
+            $authority_group_id = Helpers::getVarFromGet('authority_group_id');
         }
 
         if (! $authority_group_id) {
@@ -122,8 +122,8 @@ class ActesAPIController extends Controller
 
         $this->verifGroupAdmin($authority_group_id);
 
-        $month = $this->getRecuperateurGet()->getInt('month', date('m', strtotime('last month')));
-        $year = $this->getRecuperateurGet()->getInt('year', date('Y', strtotime('last month')));
+        $month = Helpers::getVarFromGet('month') ?? date('m', strtotime('last month'));
+        $year = Helpers::getVarFromGet('year') ?? date('Y', strtotime('last month'));
 
         $min_date = "$year-$month-01";
         $max_date = date('Y-m-t', strtotime($min_date));
@@ -133,6 +133,7 @@ class ActesAPIController extends Controller
             $min_date,
             $max_date . 'T23:59:59'
         );
+
         $result = [
             'result' => 'ok',
             'message' => '',

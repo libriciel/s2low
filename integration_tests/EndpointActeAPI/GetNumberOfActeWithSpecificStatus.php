@@ -40,5 +40,6 @@ class GetNumberOfActeWithSpecificStatus extends S2lowIntegrationTestCase
         static::assertArrayHasKey('status_id', $contentAsArray);
         static::assertArrayHasKey('authority_id', $contentAsArray);
         static::assertArrayHasKey('nb_transactions', $contentAsArray);
+        static::assertEquals(0, $contentAsArray['nb_transactions']);
     }
 }

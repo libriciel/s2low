@@ -575,13 +575,14 @@ WHERE
             ];
         }
 
-        $sql = "SELECT authorities.id,authorities.name, COUNT(actes_transactions) As nb_transactions FROM authorities " .
-            " INNER JOIN actes_transactions ON actes_transactions.authority_id = authorities.id " .
-            " WHERE  authorities.authority_group_id =  ? " .
-            " AND actes_transactions.decision_date >= ? " .
-            " AND actes_transactions.decision_date <= ? " .
-            " GROUP BY authorities.id,authorities.name " .
-            " ORDER BY authorities.name";
+        $sql = "SELECT authorities.id, authorities.name, COUNT(actes_transactions) AS nb_transactions 
+        FROM authorities 
+        INNER JOIN actes_transactions ON actes_transactions.authority_id = authorities.id 
+        WHERE authorities.authority_group_id = ? 
+        AND actes_transactions.decision_date >= ? AT TIME ZONE 'Europe/Paris' AT TIME ZONE 'UTC'
+        AND actes_transactions.decision_date <= ? AT TIME ZONE 'Europe/Paris' AT TIME ZONE 'UTC'
+        GROUP BY authorities.id, authorities.name 
+        ORDER BY authorities.name";
         $count = $this->query($sql, $authority_group_id, $min_date, $max_date);
         foreach ($count as $count_info) {
             $result[$count_info['id']]['nb_transactions'] = $count_info['nb_transactions'];
