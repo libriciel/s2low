@@ -7,7 +7,7 @@ use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 
-class GetNumberOfActeWithSpecificStatus extends S2lowIntegrationTestCase
+class GetNumberOfActeWithSpecificStatusTest extends S2lowIntegrationTestCase
 {
     use ActesUtilitiesTestTrait;
 

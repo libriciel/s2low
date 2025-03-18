@@ -9,7 +9,7 @@ use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 
-class GetNumberOfActeByAuthoritiesAndDate extends S2lowIntegrationTestCase
+class GetNumberOfActeByAuthoritiesAndDateTest extends S2lowIntegrationTestCase
 {
     use ActesUtilitiesTestTrait;
 
@@ -35,7 +35,7 @@ class GetNumberOfActeByAuthoritiesAndDate extends S2lowIntegrationTestCase
         $thirdTransactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
 
         $collectiviteGroupId = 1;
-        $month = 6;
+        $month = 7;
         $year = 2017;
 
         $_GET['authority_group_id'] = $collectiviteGroupId;

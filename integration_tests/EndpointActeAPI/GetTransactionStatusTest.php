@@ -9,7 +9,7 @@ use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 
-class GetTransactionStatus extends S2lowIntegrationTestCase
+class GetTransactionStatusTest extends S2lowIntegrationTestCase
 {
     use ActesUtilitiesTestTrait;
 
