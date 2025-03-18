@@ -27,13 +27,33 @@ class CloseTransactionTest extends S2lowIntegrationTestCase
         return $this->actesTransactionsSQL;
     }
 
-    public function testShouldReturnOk(): void
+    public function changeStatusProvider(): array
+    {
+        return [
+            [
+                'valid',
+                'OK'
+            ],
+            [
+                'invalid',
+                'OK'
+            ],
+            [
+                'fgdg',
+                'KO'
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider changeStatusProvider
+     */
+    public function testShouldReturnOk($status, $responseMsg): void
     {
         $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
         $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
 
         $api = 1;
-        $status = 'valid';
 
         $_POST['api'] = $api;
         $_POST['id'] = $transactionId;
@@ -48,31 +68,6 @@ class CloseTransactionTest extends S2lowIntegrationTestCase
         $response = $client->getResponse();
         $content = explode("\n", trim($response->getContent()));
 
-        static::assertSame('OK', $content[0]);
-    }
-
-    public function testShouldUpdateTransactionStatutToDenied(): void
-    {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
-        $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
-
-        $api = 1;
-        $id = $transactionId;
-        $status = 'invalid';
-
-        $_POST['id'] = $id;
-        $_POST['status'] = $status;
-        $_POST['api'] = $api;
-
-        $client->request('POST', '/modules/actes/actes_transac_close.php', [
-            'api' => $api,
-            'id' => $id,
-            'status' => $status,
-        ]);
-
-        $response = $client->getResponse();
-        $content = explode("\n", trim($response->getContent()));
-
-        static::assertSame('OK', $content[0]);
+        static::assertSame($responseMsg, $content[0]);
     }
 }
