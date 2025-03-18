@@ -31,6 +31,7 @@ class GetUnreadPrefectureDocumentsTest extends S2lowIntegrationTestCase
     public function testShouldListUnreadPrefectureDocuments(): void
     {
         $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
+        
         $this->createTransactionOfType(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, self::DEMANDE_PIECES_COMPLEMENTAIRES);
         $this->createTransactionOfType(ActesStatusSQL::STATUS_VALIDE, self::DEMANDE_PIECES_COMPLEMENTAIRES);
 
@@ -38,7 +39,7 @@ class GetUnreadPrefectureDocumentsTest extends S2lowIntegrationTestCase
 
         $response = $client->getResponse();
         $contentArray = json_decode($response->getContent(), true);
-        var_dump($response->getContent());
+
         foreach ($contentArray as $document) {
             static::assertArrayHasKey('id', $document);
             static::assertArrayHasKey('type', $document);
