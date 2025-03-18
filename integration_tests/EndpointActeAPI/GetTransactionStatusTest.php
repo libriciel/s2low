@@ -73,7 +73,6 @@ class GetTransactionStatusTest extends S2lowIntegrationTestCase
         ]);
 
         $response = $client->getResponse();
-        var_dump($response->getContent());
 
         static::assertStringContainsString($shouldBeInHeader, $response->getContent());
     }

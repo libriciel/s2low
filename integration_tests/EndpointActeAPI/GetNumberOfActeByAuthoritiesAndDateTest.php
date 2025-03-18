@@ -27,12 +27,83 @@ class GetNumberOfActeByAuthoritiesAndDateTest extends S2lowIntegrationTestCase
         return $this->actesTransactionsSQL;
     }
 
-    public function testShouldReturnNumberOfTransactions(): void
+    protected function dataProvider(): array
+    {
+        return [
+            [
+                [
+                    'monthToRequest' => 7,
+                    'yearToRequest' => 2017,
+                    'nbTransactionToCreate' => 1,
+                    'nbTransactionToReturn' => 1,
+                ]
+            ],
+            [
+                [
+                    'monthToRequest' => 7,
+                    'yearToRequest' => 2017,
+                    'nbTransactionToCreate' => 3,
+                    'nbTransactionToReturn' => 3,
+                ]
+            ],
+            [
+                [
+                    'monthToRequest' => 5,
+                    'yearToRequest' => 2017,
+                    'nbTransactionToCreate' => 2,
+                    'nbTransactionToReturn' => 0,
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider dataProvider
+     */
+    public function testShouldReturnNumberOfTransactions($data): void
     {
         $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::SuperAdministrateur);
-        $firstTransactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
-        $secondTransactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
-        $thirdTransactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+
+        for ($i = $data['nbTransactionToCreate']; $i > 0; $i--) {
+            $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+        }
+
+        $collectiviteGroupId = 1;
+        $month = $data['monthToRequest'];
+        $year = $data['yearToRequest'];
+
+        $_GET['month'] = $month;
+        $_GET['year'] = $year;
+
+        $client->request('GET', '/modules/actes/api/nb_actes_by_authorities_and_date.php', [
+            'authority_group_id' => $collectiviteGroupId,
+            'month' => $month,
+            'year' => $year,
+        ]);
+
+        $response = $client->getResponse();
+        $content = explode("\n", trim($response->getContent()));
+        $contentAsArray = json_decode($content[0], true);
+        static::assertJson($content[0]);
+        static::assertArrayHasKey('result', $contentAsArray);
+        static::assertArrayHasKey('authority_group_id', $contentAsArray);
+        static::assertArrayHasKey('min_date', $contentAsArray);
+        static::assertArrayHasKey('min_date', $contentAsArray);
+
+        if ($data['nbTransactionToReturn'] === 0) {
+            static::assertCount(0, $contentAsArray['nbTransactionPerAuthorities']);
+        } else {
+            static::assertEquals(
+                $data['nbTransactionToReturn'],
+                $contentAsArray['nbTransactionPerAuthorities'][0]['nb_transactions']
+            );
+        }
+    }
+
+    public function testShouldExitIfNotAdmin(): void
+    {
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
+        $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
 
         $collectiviteGroupId = 1;
         $month = 7;
@@ -49,19 +120,6 @@ class GetNumberOfActeByAuthoritiesAndDateTest extends S2lowIntegrationTestCase
         ]);
 
         $response = $client->getResponse();
-        $content = explode("\n", trim($response->getContent()));
-
-        $contentAsArray = json_decode($content[0], true);
-        static::assertJson($content[0]);
-
-        static::assertArrayHasKey('result', $contentAsArray);
-        static::assertArrayHasKey('authority_group_id', $contentAsArray);
-        static::assertArrayHasKey('min_date', $contentAsArray);
-        static::assertArrayHasKey('max_date', $contentAsArray);
-        static::assertArrayHasKey('nbTransactionPerAuthorities', $contentAsArray);
-
-        $nbTransactions = $contentAsArray['nbTransactionPerAuthorities'][0]['nb_transactions'];
-
-        static::assertEquals(3, $nbTransactions);
+        static::assertStringContainsString('exit() called', $response->getContent());
     }
 }

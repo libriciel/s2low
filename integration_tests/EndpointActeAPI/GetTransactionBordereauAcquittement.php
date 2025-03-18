@@ -41,7 +41,6 @@ class GetTransactionBordereauAcquittement extends S2lowIntegrationTestCase
 
         $response = $client->getResponse();
 
-        var_dump($response->getContent());
         static::assertStringContainsString(
             "%PDF-1.3
 3 0 obj

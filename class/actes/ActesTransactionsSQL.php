@@ -584,6 +584,9 @@ WHERE
         GROUP BY authorities.id, authorities.name 
         ORDER BY authorities.name";
         $count = $this->query($sql, $authority_group_id, $min_date, $max_date);
+
+        $result = [];
+
         foreach ($count as $count_info) {
             $result[$count_info['id']]['nb_transactions'] = $count_info['nb_transactions'];
         }
