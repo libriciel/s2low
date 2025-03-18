@@ -9,7 +9,7 @@ class JSONoutput
     public function displayErrorAndExit($Errormessage)
     {
         $result['status'] = 'error';
-        $result['error-message'] = $Errormessage;;
+        $result['error-message'] = $Errormessage;
         $this->display($result);
         exit_wrapper();  // @codeCoverageIgnore
     }
@@ -17,7 +17,7 @@ class JSONoutput
     public function displayAndExit($message)
     {
         $result['status'] = 'ok';
-        $result['message'] = $message;;
+        $result['message'] = $message;
         $this->display($result);
         if (TESTING_ENVIRONNEMENT) {
             throw new Exception("Exit !");

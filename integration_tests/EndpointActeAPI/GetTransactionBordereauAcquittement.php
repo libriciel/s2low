@@ -51,5 +51,4 @@ class GetTransactionBordereauAcquittement extends S2lowIntegrationTestCase
             $response->getContent()
         );
     }
-
 }

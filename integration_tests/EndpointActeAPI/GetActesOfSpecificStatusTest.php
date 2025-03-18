@@ -87,7 +87,7 @@ class GetActesOfSpecificStatusTest extends S2lowIntegrationTestCase
         $statusId = ActesStatusSQL::STATUS_ACQUITTEMENT_RECU;
 
         $_GET['status_id'] = $statusId;
-        $_GET['offset'] = $data['offset'];;
+        $_GET['offset'] = $data['offset'];
         $_GET['limit'] = $data['limit'];
         $_GET['min_date'] = $data['minDate'];
         $_GET['max_date'] = $data['maxDate'];

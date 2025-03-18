@@ -48,5 +48,4 @@ class MarkPrefectureDocumentAsRead extends S2lowIntegrationTestCase
 
         static::assertSame('{"result":"ok"}', $content[0]);
     }
-
 }
