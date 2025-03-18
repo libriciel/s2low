@@ -681,25 +681,25 @@ SQL;
    */
     public function generateMessageXMLFile($xml_name)
     {
-        switch ($this->type) {
-            case TypeActe::TransmissionActe->value:
+        switch (TypeActe::tryFrom($this->type)) {
+            case TypeActe::TransmissionActe:
                 $xml = $this->generateActeXMLFile($xml_name);
                 break;
 
-            case TypeActe::CourrierSimple->value:
-            case TypeActe::DemandePieceComplementaire->value:
-            case TypeActe::LettreDObservation->value:
+            case TypeActe::CourrierSimple:
+            case TypeActe::DemandePieceComplementaire:
+            case TypeActe::LettreDObservation:
                 $xml = $this->generateReponseCourrierXMLFile($xml_name);
                 break;
 
-            case TypeActe::Annulation->value:
+            case TypeActe::Annulation:
                 $xml = $this->generateCancelXMLFile($xml_name);
                 break;
-            case TypeActe::DemandeDeClassification->value:
+            case TypeActe::DemandeDeClassification:
                 $xml = $this->generateClassifRequestXMLFile($xml_name);
                 break;
             default:
-                $this->errorMsg = "Mauvais type de transaction.";
+                $this->errorMsg = 'Mauvais type de transaction.';
                 return false;
         }
 

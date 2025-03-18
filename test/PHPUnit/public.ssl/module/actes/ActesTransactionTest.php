@@ -737,4 +737,14 @@ class ActesTransactionTest extends S2lowTestCase
             $transaction->get('files')['acte']['name']
         );
     }
+
+    public function testGenerateMessageXMLFileMauvaisType(): void
+    {
+        $this->actesTransaction->set('type', 666);
+        self::assertFalse($this->actesTransaction->generateMessageXMLFile('test'));
+        self::assertEquals(
+            'Mauvais type de transaction.',
+            $this->actesTransaction->getErrorMsg()
+        );
+    }
 }
