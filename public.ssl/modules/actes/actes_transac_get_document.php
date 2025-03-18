@@ -4,21 +4,21 @@ use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
-header("Content-type: text/plain");
+header_wrapper("Content-type: text/plain");
 
 // Instanciation du module courant
 $module = new Module();
-if (! $module->initByName("actes")) {
+if (!$module->initByName("actes")) {
     Helpers::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
 }
 
 $me = new User();
 
-if (! $me->authenticate()) {
+if (!$me->authenticate()) {
     Helpers::returnAndExit(1, "Échec de l'authentification", Helpers::getLink("connexion-status"));
 }
 
-if ($me->isSuper() || ! $module->isActive() || ! $me->canAccess($module->get("name"))) {
+if ($me->isSuper() || !$module->isActive() || !$me->canAccess($module->get("name"))) {
     Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 
@@ -29,9 +29,9 @@ if ($unique_id) {
     $transId = ActesTransaction::getTransactionFromUniqueId($unique_id);
 }
 
-if (! $transId) {
+if (!$transId) {
     echo "KO\nNuméro de transaction invalide.";
-    exit();
+    exit_wrapper();
 }
 
 $zeTrans = new ActesTransaction();
@@ -42,7 +42,7 @@ if ($zeTrans->init()) {
     $owner->init();
 } else {
     echo "KO\nNuméro de transaction invalide.";
-    exit();
+    exit_wrapper();
 }
 
 if ($zeTrans->get("type") == 1) {
@@ -55,5 +55,5 @@ if ($zeTrans->get("type") == 1) {
     }
 } else {
     $envId = $zeTrans->get("envelope_id");
-    header("Location: actes_download_file.php?env=$envId");
+    header_wrapper("Location: actes_download_file.php?env=$envId");
 }
