@@ -33,16 +33,16 @@ class CloseTransactionTest extends S2lowIntegrationTestCase
         $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
 
         $api = 1;
-        $id = $transactionId;
+        $status = 'valid';
 
         $_POST['api'] = $api;
-        $_POST['id'] = $id;
-        $_POST['status'] = 'valid';
+        $_POST['id'] = $transactionId;
+        $_POST['status'] = $status;
 
         $client->request('POST', '/modules/actes/actes_transac_close.php', [
             'api' => $api,
-            'id' => $id,
-            'status' => 'valid',
+            'id' => $transactionId,
+            'status' => $status,
         ]);
 
         $response = $client->getResponse();
@@ -58,15 +58,16 @@ class CloseTransactionTest extends S2lowIntegrationTestCase
 
         $api = 1;
         $id = $transactionId;
+        $status = 'invalid';
 
-        $_POST['api'] = $api;
         $_POST['id'] = $id;
-        $_POST['status'] = 'valid';
+        $_POST['status'] = $status;
+        $_POST['api'] = $api;
 
         $client->request('POST', '/modules/actes/actes_transac_close.php', [
             'api' => $api,
             'id' => $id,
-            'status' => 'invalid',
+            'status' => $status,
         ]);
 
         $response = $client->getResponse();
