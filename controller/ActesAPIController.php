@@ -53,9 +53,9 @@ class ActesAPIController extends Controller
     {
         $this->verifUser();
 
-        $status_id = Helpers::getVarFromGet("status_id");
-        $offset = Helpers::getVarFromGet("offset");
-        $limit = Helpers::getVarFromGet("limit") ?? 100;
+        $status_id = IntVal(Helpers::getVarFromGet("status_id"));
+        $offset = IntVal(Helpers::getVarFromGet("offset"));
+        $limit = IntVal(Helpers::getVarFromGet("limit")) == 0 ? 100 : IntVal(Helpers::getVarFromGet("limit"));
         $min_submission_date = Helpers::getVarFromGet("min_date");
         $max_submission_date = Helpers::getVarFromGet("max_date");
 
@@ -137,7 +137,7 @@ class ActesAPIController extends Controller
         $result = [
             'result' => 'ok',
             'message' => '',
-            'authority_group_id' => $authority_group_id,
+            'authority_group_id' => IntVal($authority_group_id),
             'min_date' => $min_date,
             'max_date' => $max_date,
             'nbTransactionPerAuthorities' => $nbTransactionPerAuthorities

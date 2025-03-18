@@ -406,10 +406,10 @@ WHERE
     }
 
     public function getListByStatusAndAuthority(
-        $status_id,
-        $authority_id,
-        $offset,
-        $limit,
+        int $status_id,
+        int $authority_id,
+        int $offset,
+        int $limit,
         ?string $min_submission_date = null,
         ?string $max_submission_date = null,
     ): array | false {
@@ -579,8 +579,8 @@ WHERE
         FROM authorities 
         INNER JOIN actes_transactions ON actes_transactions.authority_id = authorities.id 
         WHERE authorities.authority_group_id = ? 
-        AND actes_transactions.decision_date >= ? AT TIME ZONE 'Europe/Paris' AT TIME ZONE 'UTC'
-        AND actes_transactions.decision_date <= ? AT TIME ZONE 'Europe/Paris' AT TIME ZONE 'UTC'
+        AND actes_transactions.decision_date >= ?
+        AND actes_transactions.decision_date <= ?
         GROUP BY authorities.id, authorities.name 
         ORDER BY authorities.name";
         $count = $this->query($sql, $authority_group_id, $min_date, $max_date);

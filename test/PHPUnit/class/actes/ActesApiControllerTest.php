@@ -54,7 +54,9 @@ class ActesApiControllerTest extends S2lowTestCase
     {
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
         $this->setUserAuthentification();
-        $this->getEnvironment()->get()->set('status_id', ActesStatusSQL::STATUS_POSTE);
+
+        $statusId = ActesStatusSQL::STATUS_POSTE;
+        $_GET['status_id'] = $statusId;
 
         $this->getActesAPIController()->listActesAction();
 
@@ -77,9 +79,11 @@ class ActesApiControllerTest extends S2lowTestCase
         $id = $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
         $this->updateStatus($id, ActesStatusSQL::STATUS_TRANSMIS, 'message', '2017-08-01');
         $this->setUserAuthentification();
-        $this->getEnvironment()->get()->set('status_id', $status);
-        $this->getEnvironment()->get()->set('min_date', $minDate);
-        $this->getEnvironment()->get()->set('max_date', $maxDate);
+
+        $_GET['status_id'] = $status;
+        $_GET['min_date'] = $minDate;
+        $_GET['max_date'] = $maxDate;
+
         $this->getActesAPIController()->listActesAction();
 
         static::assertStringContainsString(
@@ -186,8 +190,9 @@ class ActesApiControllerTest extends S2lowTestCase
     public function testNbCreatedActesByAuthoritiesAndMonth(): void
     {
         $this->createTransaction(1);
-        $this->getEnvironment()->get()->set('month', '7');
-        $this->getEnvironment()->get()->set('year', '2017');
+
+        $_GET['month'] = '7';
+        $_GET['year'] = '2017';
 
         $this->setAdminGroupAuthentication();
         ob_start();
@@ -206,9 +211,11 @@ class ActesApiControllerTest extends S2lowTestCase
     public function testNbCreatedActesByAuthoritiesAndMonthGroupProvided(): void
     {
         $this->createTransaction(1);
-        $this->getEnvironment()->get()->set('month', '7');
-        $this->getEnvironment()->get()->set('year', '2017');
-        $this->getEnvironment()->get()->set('authority_group_id', '1');
+
+        $_GET['month'] = '7';
+        $_GET['year'] = '2017';
+        $_GET['authority_group_id'] = 1;
+
         $this->setSuperAdminAuthentication();
 
         ob_start();
@@ -228,9 +235,6 @@ class ActesApiControllerTest extends S2lowTestCase
     {
 
         $this->createTransaction(1);
-        $this->getEnvironment()->get()->set('month', '7');
-        $this->getEnvironment()->get()->set('year', '2017');
-        $this->getEnvironment()->get()->set('authority_group_id', '1');
         $this->setAdminGroupAuthentication();
         $sql = 'UPDATE authorities SET authority_group_id=NULL WHERE authority_group_id=1';
         $this->getObjectInstancier()->get(SQLQuery::class)->query($sql);
