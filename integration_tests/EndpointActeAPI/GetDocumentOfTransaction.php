@@ -14,8 +14,8 @@ class GetDocumentOfTransaction extends S2lowIntegrationTestCase
     use ActesUtilitiesTestTrait;
 
     private ?ActesTransactionsSQL $actesTransactionsSQL;
-    const TRANSMISSION_D_ACTE = 1;
-    const DEMANDE_PIECE_COMPLEMENTAIRES = 3;
+    private const TRANSMISSION_D_ACTE = 1;
+    private const DEMANDE_PIECE_COMPLEMENTAIRES = 3;
 
     protected function setUp(): void
     {
