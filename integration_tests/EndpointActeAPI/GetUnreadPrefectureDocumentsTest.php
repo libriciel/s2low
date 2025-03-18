@@ -14,7 +14,7 @@ class GetUnreadPrefectureDocumentsTest extends S2lowIntegrationTestCase
     use ActesUtilitiesTestTrait;
 
     private ?ActesTransactionsSQL $actesTransactionsSQL;
-    private const DEMANDE_PIECE_COMPLEMENTAIRES = 3;
+    private const DEMANDE_PIECES_COMPLEMENTAIRES = 3;
 
     protected function setUp(): void
     {
@@ -31,8 +31,8 @@ class GetUnreadPrefectureDocumentsTest extends S2lowIntegrationTestCase
     public function testShouldListUnreadPrefectureDocuments(): void
     {
         $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
-        $this->createTransactionOfType(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, self::DEMANDE_PIECE_COMPLEMENTAIRES);
-        $this->createTransactionOfType(ActesStatusSQL::STATUS_VALIDE, self::DEMANDE_PIECE_COMPLEMENTAIRES);
+        $this->createTransactionOfType(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, self::DEMANDE_PIECES_COMPLEMENTAIRES);
+        $this->createTransactionOfType(ActesStatusSQL::STATUS_VALIDE, self::DEMANDE_PIECES_COMPLEMENTAIRES);
 
         $client->request('GET', '/modules/actes/api/list_document_prefecture.php');
 
