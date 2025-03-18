@@ -33,7 +33,7 @@ class ActesAPIController extends Controller
     {
         $this->verifUser();
 
-        $status_id = $this->getRecuperateurGet()->getInt('status_id');
+        $status_id = intVal(Helpers::getVarFromGet('status_id'));
 
         $authority_id = intval($this->me->get('authority_id'));
 
