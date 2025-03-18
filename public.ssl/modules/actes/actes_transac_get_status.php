@@ -9,26 +9,26 @@ use S2lowLegacy\Class\User;
 $module = new Module();
 if (! $module->initByName('actes')) {
     echo "KO\nErreur d'initialisation du module";
-    exit();
+    exit_wrapper();
 }
 
 $me = new User();
 
 if (! $me->authenticate()) {
     echo "KO\nÉchec de l'authentification";
-    exit();
+    exit_wrapper();
 }
 
 if ($me->isGroupAdminOrSuper() || ! $module->isActive() || !$me->canEdit($module->get('name'))) {
     echo "KO\nAccès refusé";
-    exit();
+    exit_wrapper();
 }
 
 $myAuthority = new Authority($me->get('authority_id'));
 
 // Recuperation des variables du GET
 $transId = intval(Helpers::getVarFromGet('transaction'));
-$transUniqueId = Helpers::getVarFromGet('unique_id');
+$transUniqueId = intVal(Helpers::getVarFromGet('unique_id'));
 
 if (! empty($transUniqueId)) {
     $transId = ActesTransaction::getTransactionFromUniqueId($transUniqueId);
@@ -40,7 +40,7 @@ if (! empty($transId)) {
     $zeTrans->setId($transId);
 } else {
     echo "KO\nNuméro de transaction invalide.";
-    exit();
+    exit_wrapper();
 }
 
 if ($zeTrans->init()) {
@@ -48,13 +48,13 @@ if ($zeTrans->init()) {
     $owner->init();
 } else {
     echo "KO\nNuméro de transaction invalide.";
-    exit();
+    exit_wrapper();
 }
 
 $zeEnv = new ActesEnvelope($zeTrans->get('envelope_id'));
 if (! $zeEnv->init()) {
     echo "KO\nEnveloppe invalide.";
-    exit();
+    exit_wrapper();
 }
 
 // Vérification des permissions spécifiques à la transaction
@@ -66,7 +66,7 @@ if (
     ! $me->isArchivistFor($owner->get('authority_id'))
 ) {
         echo "KO\nAccès refusé";
-        exit();
+    exit_wrapper();
 }
 
 // Récupération statut
