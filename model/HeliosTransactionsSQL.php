@@ -93,31 +93,6 @@ class HeliosTransactionsSQL extends SQL
         $this->query($sql, $transfer_identifier, $transaction_id);
     }
 
-    /** @deprecated 4.0.4 */
-    public function getArchiveFromStatusWithSAE($status_id, $date)
-    {
-        $sql = "SELECT  *,helios_transactions.id as id FROM helios_transactions " .
-                " JOIN users ON helios_transactions.user_id = users.id " .
-                " JOIN authorities ON users.authority_id=authorities.id " .
-                " JOIN helios_transactions_workflow ON helios_transactions_workflow.transaction_id=helios_transactions.id" .
-                " AND helios_transactions_workflow.status_id=? " .
-                " WHERE last_status_id=? AND authorities.pastell_url IS NOT NULL AND authorities.pastell_url != '' " .
-                " AND helios_transactions_workflow.date>?";
-        return $this->query($sql, $status_id, $status_id, $date);
-    }
-
-    public function getIdFromStatusWithSAE($status_id, $date)
-    {
-        $sql = "SELECT  helios_transactions.id as id FROM helios_transactions " .
-            " JOIN users ON helios_transactions.user_id = users.id " .
-            " JOIN authorities ON users.authority_id=authorities.id " .
-            " JOIN helios_transactions_workflow ON helios_transactions_workflow.transaction_id=helios_transactions.id" .
-            " AND helios_transactions_workflow.status_id=? " .
-            " WHERE last_status_id=? AND authorities.pastell_url IS NOT NULL AND authorities.pastell_url != '' " .
-            " AND helios_transactions_workflow.date>?";
-        return $this->queryOneCol($sql, $status_id, $status_id, $date);
-    }
-
     public function setArchiveURL($transaction_id, $archive_url)
     {
         $sql = "UPDATE helios_transactions SET archive_url=? " .
