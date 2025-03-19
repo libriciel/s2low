@@ -15,6 +15,7 @@
  */
 
 // Instanciation du module courant
+use S2lowLegacy\Class\helios\HeliosTransmissionWindow;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\Module;

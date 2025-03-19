@@ -16,6 +16,7 @@
 
 // Configuration
 use S2lowLegacy\Class\DatePicker;
+use S2lowLegacy\Class\helios\HeliosTransmissionWindow;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\LegacyObjectsManager;

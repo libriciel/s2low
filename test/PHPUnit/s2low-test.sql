@@ -16,6 +16,8 @@ DELETE FROM actes_status;
 DELETE FROM helios_status;
 DELETE FROM actes_transmission_window_hours;
 DELETE FROM actes_transmission_windows;
+DELETE FROM helios_transmission_window_hours;
+DELETE FROM helios_transmission_windows;
 
 DELETE FROM helios_transactions;
 DELETE FROM helios_retour;

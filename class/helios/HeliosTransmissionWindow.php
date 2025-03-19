@@ -1,5 +1,7 @@
 <?php
 
+namespace S2lowLegacy\Class\helios;
+
 use S2lowLegacy\Class\DataObject;
 use S2lowLegacy\Class\Helpers;
 
@@ -20,12 +22,12 @@ use S2lowLegacy\Class\Helpers;
 
 class HeliosTransmissionWindow extends DataObject
 {
-    protected $objectName = "helios_transmission_windows";
+    protected $objectName = 'helios_transmission_windows';
 
     protected $rate_limit;
 
-    protected $dbFields = array( "rate_limit" => array( "descr" => "Limitation de débit", "type" => "isInt", "mandatory" => true)
-                               );
+    protected $dbFields = ['rate_limit' => ['descr' => 'Limitation de débit', "type" => "isInt", "mandatory" => true]
+    ];
 
     protected $window_start_date;
     protected $window_start_stamp;
@@ -43,11 +45,12 @@ class HeliosTransmissionWindow extends DataObject
         parent::__construct($id);
     }
 
-  /**
-   * \brief Méthode initialisant l'entité avec l'identifiant courant
-   * \return true si succès, false sinon
-  */
-    public function init()
+    /**
+     * \brief Méthode initialisant l'entité avec l'identifiant courant
+     * \return true si succès, false sinon
+     * @throws Exception
+     */
+    public function init(): bool
     {
         if (parent::init()) {
             $sql = "SELECT MIN(window_begin) AS min, MAX(window_end) AS max FROM helios_transmission_window_hours WHERE transmission_window_id = " . $this->id;
@@ -68,12 +71,13 @@ class HeliosTransmissionWindow extends DataObject
         return true;
     }
 
-  /**
-   * \brief Méthode d'enregistrement d'une entité dans la base de données
-   * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (true par défaut)
-   * \return true si succès, false sinon
-   */
-    public function save($validate = true, $return_rather_than_exec = false)
+    /**
+     * \brief Méthode d'enregistrement d'une entité dans la base de données
+     * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (true par défaut)
+     * \return true si succès, false sinon
+     * @throws Exception
+     */
+    public function save($validate = true, $return_rather_than_exec = false): bool
     {
         $new = false;
         if ($this->isNew()) {
@@ -92,10 +96,10 @@ class HeliosTransmissionWindow extends DataObject
         }
 
         if ($hours === false) {
-            $this->errorMsg = "Erreur de récupération des heures de la fenêtre.";
+            $this->errorMsg = 'Erreur de récupération des heures de la fenêtre.';
             return false;
         } elseif (count($hours) <= 0) {
-            $this->errorMsg = "La fenêtre a une durée nulle.";
+            $this->errorMsg = 'La fenêtre a une durée nulle.';
             return false;
         }
 
@@ -105,22 +109,22 @@ class HeliosTransmissionWindow extends DataObject
         }
 
         if (! $this->db->exec($saveSQLRequest->getRequest(), $saveSQLRequest->getParams())) {
-            $this->errorMsg = "Erreur lors de la sauvegarde de la fenêtre.";
+            $this->errorMsg = 'Erreur lors de la sauvegarde de la fenêtre.';
             $this->db->rollback();
             return false;
         }
       // Suppression des heures existante
-        $sql = "DELETE FROM helios_transmission_window_hours WHERE transmission_window_id=" . $this->id;
+        $sql = 'DELETE FROM helios_transmission_window_hours WHERE transmission_window_id=' . $this->id;
         if (! $this->db->exec($sql)) {
-            $this->errorMsg = "Erreur lors de la réinitialisation des heures de la fenêtre.";
+            $this->errorMsg = 'Erreur lors de la réinitialisation des heures de la fenêtre.';
             $this->db->rollback();
             return false;
         }
 
       // Insertion des heures de la fenêtre
         foreach ($hours as $hour) {
-            $sql = "INSERT INTO helios_transmission_window_hours (transmission_window_id, window_begin, window_end, consumed) VALUES (" . $this->id . ", '"
-            . $hour["window_begin"] . "', '" . $hour["window_end"] . "', " . $hour["consumed"] . ")";
+            $sql = 'INSERT INTO helios_transmission_window_hours (transmission_window_id, window_begin, window_end, consumed) VALUES (' . $this->id . ", '"
+            . $hour['window_begin'] . "', '" . $hour['window_end'] . "', " . $hour['consumed'] . ')';
 
             if (! $this->db->exec($sql)) {
                 $this->errorMsg = "Erreur lors de l'insertion des heures de la fenêtre.";
