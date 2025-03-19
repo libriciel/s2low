@@ -12,18 +12,20 @@ use S2lowLegacy\Class\WorkerScript;
 
 $errorMsg = "";
 
-function sortir_atrc($message, $api)
-{
-    global $related_id;
-    if ($api) {
-        echo "KO : " . $message;
-        exit;
-    } else {
-        Helpers:: returnAndExit(
-            1,
-            $message,
-            Helpers::getLink("/modules/actes/actes_transac_repondre.php?id=$related_id")
-        );
+if (!function_exists('sortir_atrc')) {
+    function sortir_atrc($message, $api)
+    {
+        global $related_id;
+        if ($api) {
+            echo "KO : " . $message;
+            exit;
+        } else {
+            Helpers:: returnAndExit(
+                1,
+                $message,
+                Helpers::getLink("/modules/actes/actes_transac_repondre.php?id=$related_id")
+            );
+        }
     }
 }
 

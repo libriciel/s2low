@@ -28,18 +28,53 @@ class RepondToMinistereDocumentTest extends S2lowIntegrationTestCase
         return $this->actesTransactionsSQL;
     }
 
-    public function test(): void
+    protected function dataProvider(): array
+    {
+        return [
+            [
+                [
+                    'typeEnvoi' => 3,
+                    'typeActe' => '12345',
+                    'typePj' => '12345',
+                    'natureCode' => '3',
+                    'stringInResponse' => 'OK',
+                ]
+            ],
+            [
+                [
+                    'typeEnvoi' => 3,
+                    'typeActe' => '1234',
+                    'typePj' => '12345',
+                    'natureCode' => '3',
+                    'stringInResponse' => 'Le code de la PJ doit faire 5 carac',
+                ]
+            ],
+            [
+                [
+                    'typeEnvoi' => 3,
+                    'typeActe' => '',
+                    'typePj' => '',
+                    'natureCode' => '',
+                    'stringInResponse' => 'typologie absente',
+                ]
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProvider
+     */
+    public function test($data): void
     {
         $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
 
         $transactionId = $this->createTransactionOfType(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, 2);
 
         $api = 1;
-        $id = $transactionId;
-        $typeEnvoie = 3;
-        $typeActe = "12345";
-        $typePj = "12345";
-        $natureCode = "3";
+        $typeEnvoie = $data['typeEnvoi'];
+        $typeActe = $data['typeActe'];
+        $typePj = $data['typePj'];
+        $natureCode = $data['natureCode'];
 
         $filePath = __DIR__ . '/../fixtures' . '/PDFTest.pdf';
         $fileName = 'PDFTest.pdf';
@@ -47,7 +82,7 @@ class RepondToMinistereDocumentTest extends S2lowIntegrationTestCase
         $fileError = UPLOAD_ERR_OK;
 
         $_POST['api'] = $api;
-        $_POST['id'] = $id;
+        $_POST['id'] = $transactionId;
         $_POST['type_envoie'] = $typeEnvoie;
         $_POST['type_acte'] = $typeActe;
         $_POST['type_pj'] = $typePj;
@@ -74,7 +109,7 @@ class RepondToMinistereDocumentTest extends S2lowIntegrationTestCase
             '/modules/actes/actes_transac_reponse_create.php',
             [
                 'api' => $api,
-                'id' => $id,
+                'id' => $transactionId,
                 'type_envoie' => $typeEnvoie,
                 'type_acte' => $typeActe,
                 'type_pj' => $typePj,
@@ -86,9 +121,6 @@ class RepondToMinistereDocumentTest extends S2lowIntegrationTestCase
         );
 
         $response = $client->getResponse();
-        $content = explode("\n", trim($response->getContent()));
-
-        static::assertSame('OK', $content[0]);
-        static::assertNotEmpty($content[1]);
+        static::assertStringContainsString($data['stringInResponse'], $response->getContent());
     }
 }
