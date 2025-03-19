@@ -555,9 +555,6 @@ services:
     public: true
     tags: ['s2low.queue_rebuilding_worker']
 
-  S2lowLegacy\Class\actes\ActesArchive:
-    autowire: false #Pas un service ??
-
   S2lowLegacy\Class\actes\ActesCloudStorage:
     public: true
     arguments:
