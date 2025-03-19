@@ -651,21 +651,21 @@ class Helpers
     }
 
     /**
-     * @param string $var
+     * @param string|null $var
      * @param bool $nullable
      * @param $name
-     * @return mixed
+     * @return string|null
      */
     public static function checkInt(?string $var, bool $nullable, $name): ?string
     {
         if (is_null($var) && !$nullable) {
             throw new UnexpectedValueException("$name est null ");
         }
-        if (is_null($var) && $nullable) {
-            return $var;
+        if (is_null($var)) {
+            return null;
         }
-        if ($var === "" && $nullable) {
-            return "";
+        if ($var === '' && $nullable) {
+            return '';
         }
         if (!ctype_digit($var) && !(is_null($var) && $nullable)) {
             throw new UnexpectedValueException("$name n'est pas un entier");

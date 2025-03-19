@@ -10,6 +10,10 @@
 
 - Correction de la correspondance simulateur/ftp pour les instances de développement #1240
 
+### Sécurité
+
+- Correction d'un message d'erreur trop verbeux #1246
+
 ## 5.1.0 - 2025-02-12
 
 ## Dépréciations

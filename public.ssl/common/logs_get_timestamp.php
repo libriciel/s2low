@@ -23,40 +23,46 @@ use S2lowLegacy\Class\User;
 $me = new User();
 
 if (! $me->authenticate()) {
-    $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    $_SESSION['error'] = "Échec de l'authentification";
+    header('Location: ' . Helpers::getLink('connexion-status'));
     exit();
 }
 
-$id = Helpers::getVarFromGet("id");
+try {
+    $log_id = Helpers::getIntFromGet('id');
+} catch (Exception $e) {
+    $_SESSION['error'] = $e->getMessage();
+    header('Location: ' . Helpers::getLink('/common/logs_view.php'));
+    exit();
+}
 
-$myAuthority = new Authority($me->get("authority_id"));
+$my_authority_id = new Authority($me->get('authority_id'));
 
 $log = new Log();
 
-if (isset($id) && ! empty($id)) {
-    $log->setId($id);
+if (! empty($log_id)) {
+    $log->setId($log_id);
     if (! $log->init()) {
-        $_SESSION["error"] = "Erreur lors de l'initialisation de l'entrée de journal.";
-        header("Location: " . Helpers::getLink("/common/logs_view.php"));
+        $_SESSION['error'] = "Erreur lors de l'initialisation de l'entrée de journal.";
+        header('Location: ' . Helpers::getLink('/common/logs_view.php'));
         exit();
     }
 } else {
-    $_SESSION["error"] = "Pas d'identifiant de log spécifié.";
-    header("Location: " . Helpers::getLink("/common/logs_view.php"));
+    $_SESSION['error'] = "Pas d'identifiant de log spécifié.";
+    header('Location: ' . Helpers::getLink('/common/logs_view.php'));
     exit();
 }
 
 // Vérification des permissions sur l'entrée de journal
 if (! $log->canView($me)) {
-    $_SESSION["error"] = "Accès refusé.";
-    header("Location: " . Helpers::getLink("/common/logs_view.php"));
+    $_SESSION['error'] = 'Accès refusé.';
+    header('Location: ' . Helpers::getLink('/common/logs_view.php'));
     exit();
 }
 
 if (! $log->sendArchive()) {
-    $_SESSION["error"] = "Erreur de récupération de l'entrée de log et de son horodatage.<br />" . $log->getErrorMsg();
-    header("Location: " . Helpers::getLink("/common/logs_view.php"));
+    $_SESSION['error'] = "Erreur de récupération de l'entrée de log et de son horodatage.<br />" . $log->getErrorMsg();
+    header('Location: ' . Helpers::getLink('/common/logs_view.php'));
 }
 
 exit();
