@@ -564,9 +564,11 @@ WHERE
         string $min_date,
         string $max_date
     ): array {
+        $result = [];
         $sql = "SELECT authorities.id,authorities.name FROM authorities " .
             " WHERE authority_group_id=? ORDER BY authorities.name";
         $authorities_list = $this->query($sql, $authority_group_id);
+
         foreach ($authorities_list as $authority_info) {
             $result[$authority_info['id']] = [
                 'authority_id' => $authority_info['id'],
@@ -584,8 +586,6 @@ WHERE
         GROUP BY authorities.id, authorities.name 
         ORDER BY authorities.name";
         $count = $this->query($sql, $authority_group_id, $min_date, $max_date);
-
-        $result = [];
 
         foreach ($count as $count_info) {
             $result[$count_info['id']]['nb_transactions'] = $count_info['nb_transactions'];

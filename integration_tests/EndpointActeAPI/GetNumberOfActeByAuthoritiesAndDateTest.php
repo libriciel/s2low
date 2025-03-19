@@ -84,20 +84,17 @@ class GetNumberOfActeByAuthoritiesAndDateTest extends S2lowIntegrationTestCase
         $response = $client->getResponse();
         $content = explode("\n", trim($response->getContent()));
         $contentAsArray = json_decode($content[0], true);
+
         static::assertJson($content[0]);
         static::assertArrayHasKey('result', $contentAsArray);
         static::assertArrayHasKey('authority_group_id', $contentAsArray);
         static::assertArrayHasKey('min_date', $contentAsArray);
         static::assertArrayHasKey('min_date', $contentAsArray);
 
-        if ($data['nbTransactionToReturn'] === 0) {
-            static::assertCount(0, $contentAsArray['nbTransactionPerAuthorities']);
-        } else {
-            static::assertEquals(
-                $data['nbTransactionToReturn'],
-                $contentAsArray['nbTransactionPerAuthorities'][0]['nb_transactions']
-            );
-        }
+        static::assertEquals(
+            $data['nbTransactionToReturn'],
+            $contentAsArray['nbTransactionPerAuthorities'][0]['nb_transactions']
+        );
     }
 
     public function testShouldExitIfNotAdmin(): void
