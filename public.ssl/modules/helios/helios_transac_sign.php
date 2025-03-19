@@ -13,6 +13,11 @@ use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
+/** @var Initialisation $initialisation */
+/** @var PesAllerRetriever $pesAllerRetriever */
+/** @var WorkerScript $workerScript */
+/** @var HeliosTransactionsSQL $heliosTransactionSQL */
+
 list($initialisation, $pesAllerRetriever,$workerScript, $heliosTransactionSQL ) =
     LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(

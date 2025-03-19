@@ -100,12 +100,6 @@ class HeliosTransactionsSQL extends SQL
         $this->query($sql, $archive_url, $transaction_id);
     }
 
-    public function getTransactionToDelete()    //TODO : il semblerait que ce ne soit pas utilisé ?
-    {
-        $sql = "SELECT * FROM helios_transactions WHERE last_status_id=10 OR last_status_id=6";
-        return $this->query($sql);
-    }
-
     public function getTransactionsADetruire($date)
     {
         $sql = 'SELECT helios_transactions.id FROM helios_transactions_workflow 
@@ -193,12 +187,6 @@ class HeliosTransactionsSQL extends SQL
         return $this->queryOne($sql, $nom_fic, $cod_col);
     }
 
-    public function setNomFic($transaction_id, $nom_fic)
-    {
-        $sql = "UPDATE helios_transactions SET xml_nomfic=? WHERE id=?";
-        $this->query($sql, $nom_fic, $transaction_id);
-    }
-
     public function setInfoFromPESAller($transaction_id, array $info)
     {
         $sql = "UPDATE helios_transactions SET xml_nomfic=?, xml_cod_col=?, xml_cod_bud=?, xml_id_post=? WHERE id=?";
@@ -241,12 +229,6 @@ class HeliosTransactionsSQL extends SQL
         $this->query($sql, $acquit_filename, $id);
     }
 
-    public function getAll()
-    {
-        $sql = "SELECT * FROM helios_transactions ORDER BY id";
-        return $this->query($sql);
-    }
-
     public function getWorkflow($transaction_id)
     {
         $sql = "SELECT * FROM helios_transactions_workflow WHERE transaction_id=? ORDER BY date";
@@ -263,12 +245,6 @@ class HeliosTransactionsSQL extends SQL
     {
         $sql = "SELECT id FROM helios_transactions WHERE id > ? ORDER BY id";
         return $this->queryOneCol($sql, $min_id);
-    }
-
-    public function setSignatureTechnique($transaction_id, $new_sha1, $new_file, $signature_technique = true)
-    {
-        $sql = "UPDATE helios_transactions SET sha1=?, file_size=?,signature_technique=? WHERE id=?";
-        $this->query($sql, $new_sha1, $new_file, $signature_technique, $transaction_id);
     }
 
     public function getNbByStatus($status_id)
@@ -312,12 +288,6 @@ class HeliosTransactionsSQL extends SQL
             " GROUP BY month" .
             " ORDER BY month DESC";
         return $this->query($sql);
-    }
-
-    public function getNextTransactionToSendInCloud()
-    {
-        $sql = "SELECT id,sha1,filename FROM helios_transactions WHERE is_in_cloud=FALSE ORDER BY id ASC LIMIT 1";
-        return $this->queryOne($sql);
     }
 
     public function setTransactionInCloud($id, bool $isInCloud = true)

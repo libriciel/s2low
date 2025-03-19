@@ -65,13 +65,6 @@ class HeliosTransactionSQLTest extends S2lowTestCase
         $this->assertEquals("http://www.google.fr", $info['archive_url']);
     }
 
-    public function testGetTransationToDelete()
-    {
-        $this->heliosTransactionSQL->updateStatus($this->transaction_id, HeliosTransactionsSQL::ACCEPTE_SAE, "test");
-        $transaction_list = $this->heliosTransactionSQL->getTransactionToDelete();
-        $this->assertEquals($this->transaction_id, $transaction_list[0]['id']);
-    }
-
     public function testGetTransationsADetruireAjd()   // Les transactions crées aujourd'hui ne peuvent pas être détruites ajd
     {
         $this->heliosTransactionSQL->updateStatus($this->transaction_id, HeliosTransactionsSQL::INFORMATION_DISPONIBLE, "test");
@@ -192,12 +185,6 @@ class HeliosTransactionSQLTest extends S2lowTestCase
         $this->heliosTransactionSQL->setAcquitFilename($this->transaction_id, self::FILENAME);
         $info = $this->heliosTransactionSQL->getInfo($this->transaction_id);
         $this->assertEquals(self::FILENAME, $info['acquit_filename']);
-    }
-
-    public function testGetAll()
-    {
-        $info = $this->heliosTransactionSQL->getAll();
-        $this->assertEquals($this->transaction_id, $info[0]['id']);
     }
 
     public function testGetWorkflow()

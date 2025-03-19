@@ -8,6 +8,10 @@ use S2lowLegacy\Class\helios\HeliosPurge;
 
 require_once(__DIR__ . '/../../init/init.php');
 
+/** @var S2lowLogger $s2lowLogger */
+/** @var HeliosTransactionsSQL $heliosTransactionSQL */
+/** @var HeliosSAEDateManager $heliosSAEDateManager */
+/** @var HeliosPurge $heliosPurge */
 list($s2lowLogger, $heliosTransactionSQL, $heliosSAEDateManager, $heliosPurge ) =
     LegacyObjectsManager::getLegacyObjectInstancier()->getArray([
         S2lowLogger::class, HeliosTransactionsSQL::class, HeliosSAEDateManager::class, HeliosPurge::class

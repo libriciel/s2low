@@ -127,6 +127,7 @@ class AdminSAEController extends Controller
                 $authority_id
             );
 
+        /** @var HeliosTransactionsSQL $heliosTransactionsSQL */
         $heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
 
         $this->{'helios_nb_en_retard'} =

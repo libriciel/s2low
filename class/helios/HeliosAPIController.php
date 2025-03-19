@@ -13,7 +13,7 @@ class HeliosAPIController extends Controller
         /* Nothing to do*/
     }
 
-    private function getHeliosTransactionsSQL()
+    private function getHeliosTransactionsSQL(): HeliosTransactionsSQL
     {
         return $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
     }
