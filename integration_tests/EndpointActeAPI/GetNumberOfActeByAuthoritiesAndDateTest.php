@@ -117,6 +117,6 @@ class GetNumberOfActeByAuthoritiesAndDateTest extends S2lowIntegrationTestCase
         ]);
 
         $response = $client->getResponse();
-        static::assertStringContainsString('exit() called', $response->getContent());
+        static::assertEquals('', $response->getContent());
     }
 }

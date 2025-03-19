@@ -101,8 +101,11 @@ class Controller
         if ($url_arg) {
             $url .= "?$url_arg";
         }
-        header_wrapper("Location: $url");
-        exit_wrapper();
+        if (!TESTING_ENVIRONNEMENT) {
+            header("Location: $url");
+            exit();
+        }
+        throw new RedirectException("Redirect to $url");
     }
 
     /**
@@ -127,6 +130,9 @@ class Controller
             $json->displayErrorAndExit($error_message);
         } //@codeCoverageIgnore
         $this->setErrorMessage($error_message);
+        if (TESTING_ENVIRONNEMENT) {
+            throw new RedirectException("Redirect to $url_redirect with message : $error_message");
+        }
         $this->redirectSSL($url_redirect);
     }
 
