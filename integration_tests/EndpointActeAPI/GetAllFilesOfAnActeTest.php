@@ -27,12 +27,27 @@ class GetAllFilesOfAnActeTest extends S2lowIntegrationTestCase
         return $this->actesTransactionsSQL;
     }
 
-    public function testShouldReturnOk(): void
+    protected function transactionIdsProvider(): array
+    {
+        return [
+            [true, 'PDFTest.pdf'],
+            [false, 'Numéro de transaction invalide'],
+        ];
+    }
+
+    /**
+     * @dataProvider transactionIdsProvider
+     */
+    public function testShouldReturnOk($isRealTransaction, $stringInResponse): void
     {
         $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
 
-        $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
-        $this->createActeIncludedFiles($transactionId);
+        if ($isRealTransaction) {
+            $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+            $this->createActeIncludedFiles($transactionId);
+        } else {
+            $transactionId = 121414;
+        }
 
         $_GET['transaction'] = $transactionId;
 
@@ -46,12 +61,10 @@ class GetAllFilesOfAnActeTest extends S2lowIntegrationTestCase
         );
 
         $response = $client->getResponse();
-        $content = explode("\n", trim($response->getContent()));
 
-        static::assertNotSame('KO', $content[0]);
-        static::assertJson($content[0]);
+        static::assertStringContainsString($stringInResponse, $response->getContent());
 
-        $files = json_decode($response->getContent(), true);
+        $files = json_decode($response->getContent(), true) ?? [];
 
         foreach ($files as $file) {
             static::assertArrayHasKey('id', $file);
