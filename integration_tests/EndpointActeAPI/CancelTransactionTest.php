@@ -27,25 +27,38 @@ class CancelTransactionTest extends S2lowIntegrationTestCase
         return $this->actesTransactionsSQL;
     }
 
-    public function testShouldReturnOk(): void
+    protected function dataprovider(): array
+    {
+        return [
+            [true, 'OK'],
+            [false, 'KO'],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProvider
+     */
+    public function testShouldReturnOk($isRealTransactionId, $stringInResponse): void
     {
         $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
 
-        $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+        if ($isRealTransactionId) {
+            $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+        } else {
+            $transactionId = 23664;
+        }
 
         $api = 1;
-        $id = $transactionId;
 
         $_POST['api'] = $api;
-        $_POST['id'] = $id;
+        $_POST['id'] = $transactionId;
 
         $client->request('POST', '/modules/actes/actes_transac_cancel.php', [
             'api' => $api,
-            'id' => $id,
+            'id' => $transactionId,
         ]);
 
         $response = $client->getResponse();
-
-        static::assertStringContainsString('OK', $response->getContent());
+        static::assertStringContainsString($stringInResponse, $response->getContent());
     }
 }
