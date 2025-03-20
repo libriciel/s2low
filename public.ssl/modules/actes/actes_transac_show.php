@@ -13,6 +13,7 @@ use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\ModulePermission;
 use S2lowLegacy\Class\ServiceUser;
+use S2lowLegacy\Class\TypeActe;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Controller\ActesSAEController;
 use S2lowLegacy\Controller\LibersignController;
@@ -146,8 +147,8 @@ $html .= $doc->getHTMLArrayline("Dossier suivi par", $user_td);
 
 
 // Contenu différent en fonction du type de transaction
-switch ($trans->get("type")) {
-    case 1:
+switch ($trans->getType()) {
+    case TypeActe::TransmissionActe:
         $html .= $doc->getHTMLArrayline("Nature de l'acte", $transNatures[$trans->get("nature_code")]);
         $html .= $doc->getHTMLArrayline("Numéro de l'acte", get_hecho($trans->get("number")));
         $html .= $doc->getHTMLArrayline("Date de la décision", Helpers :: getDateFromBDDDate($trans->get("decision_date")));
@@ -184,10 +185,10 @@ switch ($trans->get("type")) {
         $html .= $doc->getHTMLArrayline("Notification", $notification);
         break;
 
-    case 2:
-    case 3:
-    case 4:
-    case 5:
+    case TypeActe::CourrierSimple:
+    case TypeActe::DemandePieceComplementaire:
+    case TypeActe::LettreDObservation:
+    case TypeActe::DefereAuTribunalAdministratif:
         $related_trans = new ActesTransaction($trans->get("related_transaction_id"));
         $related_trans->init();
 
@@ -214,14 +215,14 @@ switch ($trans->get("type")) {
 
         break;
 
-    case 6:
+    case TypeActe::Annulation:
         $related_trans = new ActesTransaction($trans->get("related_transaction_id"));
         $related_trans->init();
 
         $html .= $doc->getHTMLArrayline("Acte à annuler", "<a href=\"" . Helpers::getLink("/modules/actes/actes_transac_show.php?id=" . $related_trans->getId() . "\">" . $related_trans->get("unique_id") . "</a>"));
         break;
 
-    case 7:
+    case TypeActe::DemandeDeClassification:
         break;
 }
 
@@ -236,7 +237,7 @@ $archiveDeleted = false;
   $archiveDeleted = true;
 }*/
 if (
-    $trans->get("type") == 6 ||
+    $trans->isType(TypeActe::Annulation) ||
 
      $status == 5 ||
      $status == 6 ||
@@ -433,7 +434,7 @@ if (!$me->isSuper() && $me->checkDroit($module->get("name"), 'CS') &&  $permissi
 
   // Formulaire de notification a posteriori
   // Affichés quand la transaction a été acquittée par le MIAT et non notifiée
-    if ($trans->get("type") == 1 && $transStatus == 4 && ! $trans->get("broadcasted")) {
+    if ($trans->isType(TypeActe::TransmissionActe) && $transStatus == 4 && ! $trans->get("broadcasted")) {
       // adresses emails de diffusion
 
 
@@ -478,7 +479,7 @@ if (!$me->isSuper() && $me->checkDroit($module->get("name"), 'CS') &&  $permissi
 if (!$trans->hasPendingCancelTrans()) {
     // Boutons de cloture de la transaction
     // Affichés quand la transaction a été acquittée par le MIAT
-    if ($trans->get("type") == 1 && $transStatus == 4 && !  $me->isGroupAdminOrSuper()) {
+    if ($trans->isType(TypeActe::TransmissionActe) && $transStatus == 4 && !  $me->isGroupAdminOrSuper()) {
         if ($trans->canValidate()) {
             $actionHtml .= "<div class=\"action\">\n";
             $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ? Cette action est non réversible et est sous votre entière responsabilité.' . "');\" method=\"post\">\n");
@@ -505,7 +506,7 @@ if (!$trans->hasPendingCancelTrans()) {
     $authoritySQL = new AuthoritySQL($sqlQuery);
     $authorityInfo = $authoritySQL->getInfo($transactionsInfo['authority_id']);
 
-    if ($trans->get("type") == 1 && in_array($transStatus, array(4,5,14,20)) && $trans->canValidate()) {
+    if ($trans->isType(TypeActe::TransmissionActe) && in_array($transStatus, [4,5,14,20]) && $trans->canValidate()) {
          $actionHtml .= "<div class=\"action\">\n";
           $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_archiver.php\"  method=\"post\" id='form_send_sae'>\n");
           $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
@@ -575,7 +576,7 @@ if ($me->isSuper()) {
 // Bouton d'annulation en fonction du type et de l'état
 // Doit être une transaction de transmission d'acte
 // et être dans l'état Acquittement reçu
-if ($trans->get("type") == 1 && $transStatus == 4  && $me->checkDroit("actes", "TT") && !  $me->isGroupAdminOrSuper()) {
+if ($trans->isType(TypeActe::TransmissionActe) && $transStatus == 4  && $me->checkDroit("actes", "TT") && !  $me->isGroupAdminOrSuper()) {
     $actionHtml .= "<div class=\"action\">\n";
     if (!$trans->hasPendingCancelTrans()) {
         if ($module->getParam("paper") == "on") {
@@ -595,7 +596,7 @@ if ($trans->get("type") == 1 && $transStatus == 4  && $me->checkDroit("actes", "
 
 // Boutons de réponse à un courrier
 
-if (in_array($transStatus, array(7,8,21)) && $trans->get("type") != 5  && $me->checkDroit("actes", "CS")) {
+if (in_array($transStatus, [7,8,21]) && !$trans->isType(TypeActe::DefereAuTribunalAdministratif)  && $me->checkDroit('actes', 'CS')) {
       $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_repondre.php\" method=\"post\">\n");
       $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Répondre : </label>\n";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
@@ -633,7 +634,7 @@ if ($me->isSuper()) {
 
 
 
-    if (in_array($transStatus, array(3,-1))  && $trans->get("type") == 1) {
+    if (in_array($transStatus, [3,-1])  && $trans->isType(TypeActe::TransmissionActe)  && $me->checkDroit("actes", "CS")) {
         $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_rolback_attente.php\" onsubmit=\"return confirm('Êtes-vous certain de vouloir faire cela ? ')\" method=\"post\">\n");
         $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer à En attente de transmission </label>\n";
         $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";

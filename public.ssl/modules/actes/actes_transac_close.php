@@ -7,6 +7,7 @@ use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\TypeActe;
 use S2lowLegacy\Class\User;
 
 /** @var Initialisation $initialisation */
@@ -70,7 +71,7 @@ foreach ($liste_id as $id) {
         Helpers::returnAndExit(1, "Erreur d'initialisation de la transaction.", Helpers::getLink('/modules/actes/index.php'));
     }
 
-    if ($trans->get('type') != 1) {
+    if (!$trans->isType(TypeActe::TransmissionActe)) {
         Helpers::returnAndExit(1, 'Ce type de transaction ne peut pas être cloturé.', Helpers::getLink('/modules/actes/actes_transac_show.php?id=') . $rel_trans->getId());
     }
 

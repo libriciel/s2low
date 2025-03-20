@@ -9,6 +9,7 @@ use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\TypeActe;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\WorkerScript;
 
@@ -251,7 +252,7 @@ class ActesClassificationCreation
     {
         $last_classification_date = ActesClassification::getLastRevisionDate($this->authority->getId());
         $trans = new ActesTransaction();
-        $trans->set("type", "7");
+        $trans->setType(TypeActe::DemandeDeClassification);
         if (! $force) {
             $trans->set("last_classification_date", $last_classification_date);
         }

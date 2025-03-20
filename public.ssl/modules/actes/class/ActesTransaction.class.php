@@ -681,7 +681,7 @@ SQL;
    */
     public function generateMessageXMLFile($xml_name)
     {
-        switch (TypeActe::tryFrom($this->type)) {
+        switch ($this->getType()) {
             case TypeActe::TransmissionActe:
                 $xml = $this->generateActeXMLFile($xml_name);
                 break;
@@ -1837,5 +1837,20 @@ SQL;
     public function setEnAttenteDeSignature($is_en_attente_de_signature)
     {
         $this->is_en_attente_de_signature = $is_en_attente_de_signature;
+    }
+
+    public function isType(TypeActe $type): bool
+    {
+        return $this->getType() === $type;
+    }
+
+    public function setType(TypeActe $type)
+    {
+        $this->type = $type->value;
+    }
+
+    public function getType(): ?TypeActe
+    {
+        return TypeActe::tryFrom($this->type);
     }
 }
