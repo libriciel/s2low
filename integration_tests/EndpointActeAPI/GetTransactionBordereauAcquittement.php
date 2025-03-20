@@ -19,7 +19,6 @@ class GetTransactionBordereauAcquittement extends S2lowIntegrationTestCase
     {
         parent::setUp();
         $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-        ObjectInstancierFactory::resetObjectInstancier();
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -29,12 +28,11 @@ class GetTransactionBordereauAcquittement extends S2lowIntegrationTestCase
 
     public function testShouldReturnOk(): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
-
         $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
 
         $_GET['trans_id'] = $transactionId;
 
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
         $client->request('GET', '/modules/actes/actes_create_pdf.php', [
             'trans_id' => $transactionId
         ]);

@@ -20,7 +20,6 @@ class MarkPrefectureDocumentAsRead extends S2lowIntegrationTestCase
     {
         parent::setUp();
         $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-        ObjectInstancierFactory::resetObjectInstancier();
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -30,8 +29,6 @@ class MarkPrefectureDocumentAsRead extends S2lowIntegrationTestCase
 
     public function testShouldReturnOk(): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
-
         $transactionId = $this->createTransactionOfType(
             ActesStatusSQL::STATUS_ACQUITTEMENT_RECU,
             self::DEMANDE_PIECES_COMPLEMENTAIRES
@@ -39,6 +36,7 @@ class MarkPrefectureDocumentAsRead extends S2lowIntegrationTestCase
 
         $_GET['transaction_id'] = '$transactionId';
 
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
         $client->request('GET', '/modules/actes/api/document_prefecture_mark_as_read.php', [
             'transaction_id' => $transactionId,
         ]);

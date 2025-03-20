@@ -18,7 +18,6 @@ class GetStatusTest extends S2lowIntegrationTestCase
     {
         parent::setUp();
         $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-        ObjectInstancierFactory::resetObjectInstancier();
         $this->client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
     }
 

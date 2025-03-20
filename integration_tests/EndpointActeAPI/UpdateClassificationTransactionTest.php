@@ -20,11 +20,10 @@ class UpdateClassificationTransactionTest extends S2lowIntegrationTestCase
 
     public function testShouldUpdateClassification(): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
-
         $api = 1;
         $_POST['api'] = $api;
 
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
         $client->request('POST', '/modules/actes/actes_classification_request.php', [
             'api' => $api,
         ]);

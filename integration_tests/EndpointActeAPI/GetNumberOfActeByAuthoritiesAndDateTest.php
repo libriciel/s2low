@@ -19,7 +19,6 @@ class GetNumberOfActeByAuthoritiesAndDateTest extends S2lowIntegrationTestCase
     {
         parent::setUp();
         $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-        ObjectInstancierFactory::resetObjectInstancier();
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -62,8 +61,6 @@ class GetNumberOfActeByAuthoritiesAndDateTest extends S2lowIntegrationTestCase
      */
     public function testShouldReturnNumberOfTransactions($data): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::SuperAdministrateur);
-
         for ($i = $data['nbTransactionToCreate']; $i > 0; $i--) {
             $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
         }
@@ -75,6 +72,7 @@ class GetNumberOfActeByAuthoritiesAndDateTest extends S2lowIntegrationTestCase
         $_GET['month'] = $month;
         $_GET['year'] = $year;
 
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::SuperAdministrateur);
         $client->request('GET', '/modules/actes/api/nb_actes_by_authorities_and_date.php', [
             'authority_group_id' => $collectiviteGroupId,
             'month' => $month,
@@ -91,7 +89,7 @@ class GetNumberOfActeByAuthoritiesAndDateTest extends S2lowIntegrationTestCase
         static::assertArrayHasKey('min_date', $contentAsArray);
         static::assertArrayHasKey('min_date', $contentAsArray);
 
-        static::assertEquals(
+        static::assertSame(
             $data['nbTransactionToReturn'],
             $contentAsArray['nbTransactionPerAuthorities'][0]['nb_transactions']
         );
@@ -117,6 +115,6 @@ class GetNumberOfActeByAuthoritiesAndDateTest extends S2lowIntegrationTestCase
         ]);
 
         $response = $client->getResponse();
-        static::assertEquals('', $response->getContent());
+        static::assertSame('', $response->getContent());
     }
 }

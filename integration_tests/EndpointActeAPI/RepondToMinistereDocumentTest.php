@@ -20,7 +20,6 @@ class RepondToMinistereDocumentTest extends S2lowIntegrationTestCase
     {
         parent::setUp();
         $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-        ObjectInstancierFactory::resetObjectInstancier();
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -66,8 +65,6 @@ class RepondToMinistereDocumentTest extends S2lowIntegrationTestCase
      */
     public function test($data): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
-
         $transactionId = $this->createTransactionOfType(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, 2);
 
         $api = 1;
@@ -104,6 +101,7 @@ class RepondToMinistereDocumentTest extends S2lowIntegrationTestCase
             true
         );
 
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
         $client->request(
             'POST',
             '/modules/actes/actes_transac_reponse_create.php',

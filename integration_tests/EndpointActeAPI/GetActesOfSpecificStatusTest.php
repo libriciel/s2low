@@ -76,8 +76,6 @@ class GetActesOfSpecificStatusTest extends S2lowIntegrationTestCase
      */
     public function testShouldReturnOk($data): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::SuperAdministrateur);
-
         $this->createTransaction(ActesStatusSQL::STATUS_VALIDE);
 
         for ($i = $data['nbTransactionToCreate']; $i > 0; $i--) {
@@ -92,6 +90,7 @@ class GetActesOfSpecificStatusTest extends S2lowIntegrationTestCase
         $_GET['min_date'] = $data['minDate'];
         $_GET['max_date'] = $data['maxDate'];
 
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::SuperAdministrateur);
         $client->request('GET', '/modules/actes/api/list_actes.php', [
             'status_id' => $statusId,
             'offset' => $data['offset'],
@@ -114,8 +113,8 @@ class GetActesOfSpecificStatusTest extends S2lowIntegrationTestCase
         static::assertArrayHasKey('transactions', $contentAsArray);
         static::assertCount($data['nbTransactionToReturn'], $contentAsArray['transactions']);
 
-        static::assertEquals($statusId, $contentAsArray['status_id']);
-        static::assertEquals($data['offset'], $contentAsArray['offset']);
-        static::assertEquals($data['limit'], $contentAsArray['limit']);
+        static::assertSame($statusId, intVal($contentAsArray['status_id']));
+        static::assertSame($data['offset'], intVal($contentAsArray['offset']));
+        static::assertSame($data['limit'], intVal($contentAsArray['limit']));
     }
 }

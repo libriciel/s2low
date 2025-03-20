@@ -21,7 +21,6 @@ class GetDocumentOfTransaction extends S2lowIntegrationTestCase
     {
         parent::setUp();
         $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-        ObjectInstancierFactory::resetObjectInstancier();
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -42,11 +41,11 @@ class GetDocumentOfTransaction extends S2lowIntegrationTestCase
      */
     public function testShouldGetDocument($transactionType, $strInHeader, $strNotInHeader): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
         $transactionId = $this->createTransactionOfType(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, $transactionType);
 
         $_GET['id'] = $transactionId;
 
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
         $client->request('GET', '/modules/actes/actes_transac_get_document.php', [
             'id' => $transactionId
         ]);

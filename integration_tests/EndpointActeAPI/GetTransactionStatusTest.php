@@ -19,7 +19,6 @@ class GetTransactionStatusTest extends S2lowIntegrationTestCase
     {
         parent::setUp();
         $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-        ObjectInstancierFactory::resetObjectInstancier();
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -60,14 +59,13 @@ class GetTransactionStatusTest extends S2lowIntegrationTestCase
         $shouldBeInHeader,
         $transactionId,
     ): void {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs($userRole);
-
         if ($transactionId === null) {
             $transactionId = $this->createTransaction($status);
         }
 
         $_GET['transaction'] = $transactionId;
 
+        $client = $this->getAuthenticatedClientWithUserLoggedAs($userRole);
         $client->request('GET', '/modules/actes/actes_transac_get_status.php', [
             'transaction' => $transactionId,
         ]);

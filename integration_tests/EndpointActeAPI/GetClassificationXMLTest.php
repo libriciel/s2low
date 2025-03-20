@@ -18,7 +18,6 @@ class GetClassificationXMLTest extends S2lowIntegrationTestCase
     {
         parent::setUp();
         $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-        ObjectInstancierFactory::resetObjectInstancier();
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -28,11 +27,10 @@ class GetClassificationXMLTest extends S2lowIntegrationTestCase
 
     public function testShouldReturnXML(): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
-
         $api = 1;
         $_POST['api'] = $api;
 
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
         $client->request('POST', '/modules/actes/actes_classification_fetch.php', [
             'api' => $api,
         ]);

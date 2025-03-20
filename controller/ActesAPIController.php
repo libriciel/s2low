@@ -33,7 +33,7 @@ class ActesAPIController extends Controller
     {
         $this->verifUser();
 
-        $status_id = intVal(Helpers::getVarFromGet('status_id'));
+        $status_id = $this->getRecuperateurGet()->getInt('status_id');
 
         $authority_id = intval($this->me->get('authority_id'));
 
@@ -53,11 +53,11 @@ class ActesAPIController extends Controller
     {
         $this->verifUser();
 
-        $status_id = IntVal(Helpers::getVarFromGet("status_id"));
-        $offset = IntVal(Helpers::getVarFromGet("offset"));
-        $limit = IntVal(Helpers::getVarFromGet("limit")) == 0 ? 100 : IntVal(Helpers::getVarFromGet("limit"));
-        $min_submission_date = Helpers::getVarFromGet("min_date");
-        $max_submission_date = Helpers::getVarFromGet("max_date");
+        $status_id = $this->getRecuperateurGet()->getInt('status_id');
+        $offset = $this->getRecuperateurGet()->getInt('offset');
+        $limit = $this->getRecuperateurGet()->getInt('limit', 100);
+        $min_submission_date = $this->getRecuperateurGet()->getDate('min_date');
+        $max_submission_date = $this->getRecuperateurGet()->getDate('max_date');
 
         $authority_id = intval($this->me->get('authority_id'));
 
@@ -111,8 +111,8 @@ class ActesAPIController extends Controller
         $authorityInfo = $authoritySQL->getInfo($authority_id);
         $authority_group_id = $authorityInfo['authority_group_id'];
 
-        if ($this->me->isSuper() && Helpers::getVarFromGet('authority_group_id')) {
-            $authority_group_id = Helpers::getVarFromGet('authority_group_id');
+        if ($this->me->isSuper() && $this->getRecuperateurGet()->getInt('authority_group_id')) {
+            $authority_group_id = $this->getRecuperateurGet()->getInt('authority_group_id');
         }
 
         if (! $authority_group_id) {
@@ -122,8 +122,8 @@ class ActesAPIController extends Controller
 
         $this->verifGroupAdmin($authority_group_id);
 
-        $month = Helpers::getVarFromGet('month') ?? date('m', strtotime('last month'));
-        $year = Helpers::getVarFromGet('year') ?? date('Y', strtotime('last month'));
+        $month = $this->getRecuperateurGet()->getInt('month', date('m', strtotime('last month')));
+        $year = $this->getRecuperateurGet()->getInt('year', date('Y', strtotime('last month')));
 
         $min_date = "$year-$month-01";
         $max_date = date('Y-m-t', strtotime($min_date));
@@ -133,11 +133,10 @@ class ActesAPIController extends Controller
             $min_date,
             $max_date . 'T23:59:59'
         );
-
         $result = [
             'result' => 'ok',
             'message' => '',
-            'authority_group_id' => IntVal($authority_group_id),
+            'authority_group_id' => $authority_group_id,
             'min_date' => $min_date,
             'max_date' => $max_date,
             'nbTransactionPerAuthorities' => $nbTransactionPerAuthorities

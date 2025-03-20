@@ -19,7 +19,6 @@ class CancelTransactionTest extends S2lowIntegrationTestCase
     {
         parent::setUp();
         $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-        ObjectInstancierFactory::resetObjectInstancier();
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -40,8 +39,6 @@ class CancelTransactionTest extends S2lowIntegrationTestCase
      */
     public function testShouldReturnOk($isRealTransactionId, $stringInResponse): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
-
         if ($isRealTransactionId) {
             $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
         } else {
@@ -53,6 +50,7 @@ class CancelTransactionTest extends S2lowIntegrationTestCase
         $_POST['api'] = $api;
         $_POST['id'] = $transactionId;
 
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
         $client->request('POST', '/modules/actes/actes_transac_cancel.php', [
             'api' => $api,
             'id' => $transactionId,

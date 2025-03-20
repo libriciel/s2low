@@ -19,7 +19,6 @@ class OrderTransmissionOfMultipleActeToMinisterTest extends S2lowIntegrationTest
     {
         parent::setUp();
         $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-        ObjectInstancierFactory::resetObjectInstancier();
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -29,8 +28,6 @@ class OrderTransmissionOfMultipleActeToMinisterTest extends S2lowIntegrationTest
 
     public function testShouldReturnRightHeader(): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
-
         $firstTransactionId = $this->createTransaction(ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_POSTE);
         $secondTransactionId = $this->createTransaction(ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_POSTE);
 
@@ -40,6 +37,7 @@ class OrderTransmissionOfMultipleActeToMinisterTest extends S2lowIntegrationTest
         $_GET['id'] = $ids;
         $_GET['url_return'] = $urlReturn;
 
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
         $client->request('GET', '/modules/actes/actes_transac_post_confirm_api_multi.php', [
             'id[]' => $ids,
             'url_return' => $urlReturn,

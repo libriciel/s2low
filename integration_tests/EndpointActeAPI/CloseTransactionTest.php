@@ -19,7 +19,6 @@ class CloseTransactionTest extends S2lowIntegrationTestCase
     {
         parent::setUp();
         $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-        ObjectInstancierFactory::resetObjectInstancier();
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -50,15 +49,15 @@ class CloseTransactionTest extends S2lowIntegrationTestCase
      */
     public function testShouldReturnOk($status, $responseMsg): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
         $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
 
         $api = 1;
-
         $_POST['api'] = $api;
         $_POST['id'] = $transactionId;
         $_POST['status'] = $status;
 
+
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
         $client->request('POST', '/modules/actes/actes_transac_close.php', [
             'api' => $api,
             'id' => $transactionId,

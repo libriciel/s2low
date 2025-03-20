@@ -19,7 +19,6 @@ class OrderTransmissionToMinistereTest extends S2lowIntegrationTestCase
     {
         parent::setUp();
         $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-        ObjectInstancierFactory::resetObjectInstancier();
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -29,8 +28,6 @@ class OrderTransmissionToMinistereTest extends S2lowIntegrationTestCase
 
     public function testShouldReturnRightHeader(): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
-
         $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_POSTE);
 
         $id = $transactionId;
@@ -39,6 +36,7 @@ class OrderTransmissionToMinistereTest extends S2lowIntegrationTestCase
         $_GET['id'] = $id;
         $_GET['url_return'] = $urlReturn;
 
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
         $client->request('GET', '/modules/actes/actes_transac_post_confirm_api.php', [
             'id' => $id,
             'url_return' => $urlReturn,

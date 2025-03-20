@@ -19,7 +19,6 @@ class ChangeActeSaeStatus extends S2lowIntegrationTestCase
     {
         parent::setUp();
         $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-        ObjectInstancierFactory::resetObjectInstancier();
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -92,8 +91,6 @@ class ChangeActeSaeStatus extends S2lowIntegrationTestCase
         string $arrayValueAnswer,
         int $codeResponse
     ): void {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs($userRole);
-
         $transactionId = $this->createTransaction($acteStatusDepart);
 
         $statusId = $acteStatusDestination;
@@ -101,6 +98,7 @@ class ChangeActeSaeStatus extends S2lowIntegrationTestCase
         $_POST['transaction_id'] = $transactionId;
         $_POST['status_id'] = $statusId;
 
+        $client = $this->getAuthenticatedClientWithUserLoggedAs($userRole);
         $client->request('POST', '/modules/actes/api/actes_sae_status.php', [
             'transaction_id' => $transactionId,
             'status_id' => $statusId,
@@ -113,7 +111,7 @@ class ChangeActeSaeStatus extends S2lowIntegrationTestCase
         static::assertJson($content[0]);
         $contentAsArray = json_decode($content[0], true);
         static::assertArrayHasKey($arrayKeyAnswer, $contentAsArray);
-        static::assertEquals($arrayValueAnswer, $contentAsArray[$arrayKeyAnswer]);
+        static::assertSame($arrayValueAnswer, $contentAsArray[$arrayKeyAnswer]);
         static::assertResponseStatusCodeSame($codeResponse);
     }
 }

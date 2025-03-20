@@ -19,7 +19,6 @@ class GetAllFilesOfAnActeTest extends S2lowIntegrationTestCase
     {
         parent::setUp();
         $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-        ObjectInstancierFactory::resetObjectInstancier();
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -40,8 +39,6 @@ class GetAllFilesOfAnActeTest extends S2lowIntegrationTestCase
      */
     public function testShouldReturnOk($isRealTransaction, $stringInResponse): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
-
         if ($isRealTransaction) {
             $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
             $this->createActeIncludedFiles($transactionId);
@@ -51,6 +48,7 @@ class GetAllFilesOfAnActeTest extends S2lowIntegrationTestCase
 
         $_GET['transaction'] = $transactionId;
 
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
         $client->request(
             'GET',
             '/modules/actes/actes_transac_get_files_list.php',
