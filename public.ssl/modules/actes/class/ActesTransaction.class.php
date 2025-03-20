@@ -8,7 +8,6 @@ use S2lowLegacy\Class\actes\TypeTransmission;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\DataObject;
 use S2lowLegacy\Class\Helpers;
-use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
 use S2lowLegacy\Class\XMLHelper;
@@ -16,7 +15,8 @@ use S2lowLegacy\Lib\PemCertificateFactory;
 
 class ActesTransaction extends DataObject
 {
-    //Constante pour les messages 3 et 4
+    //Constante pour les messages
+    // DemandePieceComplementaire et LettreDObservation
     public const TYPE_REFUS = 3;
     public const TYPE_ENVOIE = 4;
     public const NUMBER_REGEXP = '/^([A-Z0-9][A-Z0-9_]{0,13})?[A-Z0-9]$/';
@@ -229,27 +229,6 @@ class ActesTransaction extends DataObject
     }
 
   /**
-   * \brief Méthode de récupération des différentes natures de transaction
-   * \return Un tableau de natures de transaction
-   */
-    public static function getTransactionNatures()
-    {
-        $sql = "SELECT id, short_descr, descr FROM actes_natures ORDER BY descr ASC";
-
-        $db = DatabasePool :: getInstance();
-
-        $result = $db->select($sql);
-
-        $types = array ();
-
-        if (!$result->isError()) {
-            return $result->get_all_row();
-        }
-
-        return false;
-    }
-
-  /**
    * \brief Méthode de récupération des natures de transaction
    * \return Un tableau de natures de transaction
    *
@@ -274,44 +253,6 @@ class ActesTransaction extends DataObject
         }
 
         return $types;
-    }
-
-  /**
-   * \brief Méthode d'obtention de la liste des transactions et tous leurs attributs
-   * \param $cond (optionnel) chaîne : Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
-   * \return tableau des transactions
-   * @deprecated 5.0.42, dead code
-  */
-    public static function getTransactionsList($cond = "")
-    {
-      // TODO: utiliser le pager pour multipages
-        $sql = <<<SQL
-SELECT actes_transactions.id,
-       actes_transactions.envelope_id,
-       actes_transactions.type,
-       actes_transactions.related_transaction_id,
-       actes_transactions.nature_code,
-       actes_transactions.nature_descr,
-       actes_transactions.subject,
-       actes_transactions.number,
-       actes_transactions.classification,
-       actes_transactions.classification_date,
-       actes_transactions.decision_date,
-       actes_transactions.unique_id,
-       actes_transactions.archive_url
-FROM actes_transactions 
-SQL;
-        $sql .= ' ' . $cond;
-
-        $db = DatabasePool :: getInstance();
-
-        $result = $db->select($sql);
-
-        if (!$result->isError()) {
-            return $result->get_all_rows();
-        }
-
-        return array ();
     }
 
   /**
@@ -409,20 +350,6 @@ SQL;
     }
 
   /**
-   * \brief Méthode qui détermine si une transaction est considérée comme étant fermée
-   * \return L'identifiant de l'état courant de la transaction
-   */
-    public function isClose()
-    {
-        $currentStatus = $this->getCurrentStatus();
-        if ($currentStatus <= 0 || ($this->type == 7 && $currentStatus > 2) || ($this->type != 7 && $currentStatus > 4)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-  /**
    * \brief Méthode d'obtention de l'état courant d'un transaction
    * \return L'identifiant de l'état courant de la transaction
    */
@@ -456,25 +383,6 @@ SQL;
         }
         $row = $result->get_next_row();
         return $row["message"];
-    }
-
-  /**
-   * \brief Méthode pour déterminer si la transaction est déjà passée par un état donné
-   * \return True si la transaction est passé par cet état, false sinon
-   */
-    public function hasStatus($status_id)
-    {
-        if (isset($this->id) && !empty($this->id)) {
-            $sql = "SELECT id FROM actes_transactions_workflow atw WHERE atw.status_id=" . $status_id . " AND atw.transaction_id=" . $this->id;
-
-            $result = $this->db->select($sql);
-
-            if (!$result->isError() && $result->num_row() == 1) {
-                return true;
-            }
-
-            return false;
-        }
     }
 
   /**
@@ -1717,53 +1625,6 @@ SQL;
         return true;
     }
 
-  /**
-   * \brief Méthode avertissant le moteur transactionnel qu'une nouvelle transaction est a traiter
-   * \return True en cas de succès, false sinon
-   *
-   * Non utilisée
-   */
-    public function warnTransactionalEngine()
-    {
-        if (isset($this->id) && !empty($this->id)) {
-            $cHandle = curl_init(ACTES_NEW_TRANS_URL . "?id=" . $this->id);
-
-            curl_setopt($cHandle, CURLOPT_RETURNTRANSFER, true);
-
-            $ret = curl_exec($cHandle);
-
-            curl_close($cHandle);
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-  /**
-   * \brief Méthode déterminant si un utilisateur peut modifier la transaction courante
-   * \param $user objet User : utilisateur considéré
-   * \return True en cas d'authorisation, false sinon
-   */
-    public function userCanEdit($user)
-    {
-        if ($user->isSuper()) {
-            return true;
-        }
-
-        $owner = new User($this->user_id);
-        $owner->init();
-
-        $envelope = new ActesEnvelope($this->envelope_id);
-        $envelope->init();
-
-        if (!($user->isAuthorityAdmin() && $user->get("authority_id") == $owner->get("authority_id")) && !($user->getId() == $envelope->get("user_id") && $user->canEdit('actes'))) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     public function getCourrierInfo()
     {
         $renvoie = array();
@@ -1788,22 +1649,6 @@ SQL;
             }
         }
         return $renvoie;
-    }
-
-  /**
-   * @param:
-   * @return:
-   *
-   */
-    public function removeTransmisStatus()
-    {
-        $sql = "DELETE FROM actes_transactions_workflow where transaction_id=" . $this->id . "and status_id=3";
-
-        $db = DatabasePool :: getInstance();
-
-        $result = $db->exec($sql);
-
-        return $result;
     }
 
     /**
