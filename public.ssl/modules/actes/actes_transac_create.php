@@ -15,11 +15,10 @@ use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\WorkerScript;
-use S2lowLegacy\Class\XMLHelper;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 
-$tooManyAnnexes =  error_get_last()["message"] == "Maximum number of allowable file uploads has been exceeded";
+$tooManyAnnexes = error_get_last()["message"] == "Maximum number of allowable file uploads has been exceeded";
 
 list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([ObjectInstancier::class, SQLQuery::class]);
@@ -27,73 +26,88 @@ list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::ge
 $errorMsg = "";
 $extraRedirect = "";
 if (empty($_POST)) {     // La taille est déterminée dans la conf apache par post_max_size, qui serait récupérable par ini_get_all()["post_max_size"]["local_value"] non par ACTES_ARCHIVE_MAX_SIZE.
-    Helpers :: returnAndExit(1, "La taille totale des fichiers est trop importante (max : " . ACTES_ARCHIVE_MAX_SIZE . ")", Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
+    Helpers:: returnAndExit(
+        1,
+        "La taille totale des fichiers est trop importante (max : " . ACTES_ARCHIVE_MAX_SIZE . ")",
+        Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect
+    );
 }
 if ($tooManyAnnexes) {
-    Helpers :: returnAndExit(1, "Le nombre d'annexes est trop important (max : " . ini_get_all()["max_file_uploads"]["local_value"] . ")", Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
+    Helpers:: returnAndExit(
+        1,
+        "Le nombre d'annexes est trop important (max : " . ini_get_all()["max_file_uploads"]["local_value"] . ")",
+        Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect
+    );
 }
 
 // Instanciation du module courant
 $module = new Module();
 if (!$module->initByName("actes")) {
-    Helpers :: returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
+    Helpers:: returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
 }
 
 $me = new User();
 
 if (!$me->authenticate()) {
-    Helpers :: returnAndExit(1, "Échec de l'authentification", Helpers::getLink("connexion-status"));
+    Helpers:: returnAndExit(1, "Échec de l'authentification", Helpers::getLink("connexion-status"));
 }
 
-if ($me->isGroupAdminOrSuper() || !$module->isActive() || ! $me->checkDroit($module->get("name"), 'CS')) {
-    Helpers :: returnAndExit(1, "Accès refusé", WEBSITE_SSL);
+if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->checkDroit($module->get("name"), 'CS')) {
+    Helpers:: returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 
 if ($module->getParam("paper") == "on") {
-    Helpers :: returnAndExit(1, "Mode « papier » actif. Accès interdit.", Helpers::getLink("/modules/actes/"));
+    Helpers:: returnAndExit(1, "Mode « papier » actif. Accès interdit.", Helpers::getLink("/modules/actes/"));
 }
 
 $must_signed = Helpers::getVarFromPost("must_signed", true);
 
 $rgsConnexion = new RgsConnexion();
-if (! $must_signed && ! $rgsConnexion->isRgsConnexion()) {
-    Helpers :: returnAndExit(1, "La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}", Helpers::getLink("/modules/actes/"));
+if (!$must_signed && !$rgsConnexion->isRgsConnexion()) {
+    Helpers:: returnAndExit(
+        1,
+        "La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}",
+        Helpers::getLink("/modules/actes/")
+    );
 }
 
 
 $myAuthority = new Authority($me->get("authority_id"));
 
 // Recuperation des variables du POST
-$nature_code = Helpers :: getVarFromPost("nature_code", true);
-$en_attente = Helpers :: getVarFromPost("en_attente", true);
+$nature_code = Helpers:: getVarFromPost("nature_code", true);
+$en_attente = Helpers:: getVarFromPost("en_attente", true);
 
 for ($i = 1; $i <= 5; $i++) {
-    ${ "classif" . $i } = Helpers :: getIntFromPost("classif" . $i, true, true);
+    ${"classif" . $i} = Helpers:: getIntFromPost("classif" . $i, true, true);
 }
 
-$number = Helpers :: getVarFromPost("number", true);
+$number = Helpers:: getVarFromPost("number", true);
 
 // Vérification que le numéro respecte la regexp
 if (!preg_match(ActesTransaction::NUMBER_REGEXP, $number)) {
-    Helpers :: returnAndExit(1, "Le numéro n'est pas correct", Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
+    Helpers:: returnAndExit(
+        1,
+        "Le numéro n'est pas correct",
+        Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect
+    );
 }
 
-$decision_date = Helpers :: getVarFromPost("decision_date", true);
+$decision_date = Helpers:: getVarFromPost("decision_date", true);
 
 if (strtotime($decision_date) > time()) {
-    Helpers :: returnAndExit(1, "La date de décision est une date dans le futur", WEBSITE_SSL);
+    Helpers:: returnAndExit(1, "La date de décision est une date dans le futur", WEBSITE_SSL);
 }
 
-$document_papier =  Helpers :: getVarFromPost("document_papier", true) ? 1 : 0;
+$document_papier = Helpers:: getVarFromPost("document_papier", true) ? 1 : 0;
 
-$subject = Helpers :: getVarFromPost("subject", true, true);
+$subject = Helpers:: getVarFromPost("subject", true, true);
 
 try {
-    $batchFileId = Helpers :: getIntFromPost("batchfile", true);
+    $batchFileId = Helpers:: getIntFromPost("batchfile", true);
 } catch (Exception $exception) {
-    Helpers :: returnAndExit(1, $exception->getMessage(), WEBSITE_SSL);
+    Helpers:: returnAndExit(1, $exception->getMessage(), WEBSITE_SSL);
 }
-
 
 
 if (isset($_FILES['acte_pdf_file'])) {
@@ -117,9 +131,9 @@ $type_acte = Helpers::getVarFromPost('type_acte', true);
 $type_pj = Helpers::getVarFromPost('type_pj', true);
 
 
-$auto_broadcast_email = Helpers :: getVarFromPost("show_broadcast_email", true);
-$broadcast_send_sources = Helpers :: getVarFromPost("send_sources", true);
-$broadcast_string = Helpers :: getVarFromPost("broadcast_email", true);
+$auto_broadcast_email = Helpers:: getVarFromPost("show_broadcast_email", true);
+$broadcast_send_sources = Helpers:: getVarFromPost("send_sources", true);
+$broadcast_string = Helpers:: getVarFromPost("broadcast_email", true);
 
 
 if ($broadcast_string) {
@@ -128,7 +142,7 @@ if ($broadcast_string) {
     $broadcast_emails = false;
 }
 
-$processNextBatch = Helpers :: getVarFromPost("process_next_batch_file", true);
+$processNextBatch = Helpers:: getVarFromPost("process_next_batch_file", true);
 
 $processNextBatch = (isset($processNextBatch) && $processNextBatch == "on") ? true : false;
 $extraRedirect = "";
@@ -143,7 +157,7 @@ if (isset($batchFileId) && is_numeric($batchFileId)) {
             $owner = new User($zeBatch->get("user_id"));
             $owner->init();
 
-          // Vérification des permissions sur le lot
+            // Vérification des permissions sur le lot
             if (
                 ($me->isAuthorityAdmin() && $me->get("authority_id") == $owner->get("authority_id")) ||
                 ($me->getId() == $owner->getId())
@@ -154,18 +168,22 @@ if (isset($batchFileId) && is_numeric($batchFileId)) {
         }
     }
 
-  // Les vérifs ont échouées
+    // Les vérifs ont échouées
     if (!$batchMode) {
-        Helpers :: returnAndExit(1, "Échec de la transaction en mode lot.", Helpers::getLink("/modules/actes/actes_batch_handle.php"));
+        Helpers:: returnAndExit(
+            1,
+            "Échec de la transaction en mode lot.",
+            Helpers::getLink("/modules/actes/actes_batch_handle.php")
+        );
     }
 }
 
 $env = new ActesEnvelope();
 $trans = new ActesTransaction();
-$transNatures = ActesTransaction :: getTransactionNaturesIdDescr();
+$transNatures = ActesTransaction:: getTransactionNaturesIdDescr();
 
 // Définition des adresses de retour
-$retMail = array ();
+$retMail = array();
 $retMail[] = ACTES_TDT_MAIL_ADDRESS;
 
 if ($me->get("email")) {
@@ -208,15 +226,15 @@ $trans->setEnAttente($en_attente);
 
 $classification = array();
 for ($i = 1; $i <= 5; $i++) {
-    $trans->set("classif" . $i, ${ "classif" . $i });
-    $classification[] = ${ "classif" . $i };
+    $trans->set("classif" . $i, ${"classif" . $i});
+    $classification[] = ${"classif" . $i};
 }
 
 $actesClassificationCodesSQL = new ActesClassificationCodesSQL($sqlQuery);
 $classification_description = $actesClassificationCodesSQL->getDescription($myAuthority->getId(), $classification);
 $trans->set("classification_string", $classification_description);
 
-$trans->set("classification_date", ActesClassification :: getLastRevisionDate($myAuthority->getId()));
+$trans->set("classification_date", ActesClassification:: getLastRevisionDate($myAuthority->getId()));
 
 
 $trans->set("decision_date", $decision_date);
@@ -230,12 +248,15 @@ $trans->set("broadcasted", 'FALSE');
 
 // Vérification qu'une transaction ayant le même numéro interne n'existe pas déjà
 if (!$trans->isUnique($myAuthority->getId())) {
-    Helpers :: returnAndExit(1, "Un acte portant le même numéro interne existe déjà dans la base de données.\nIl faut peut-être ajouter un suffixe au numéro.", Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
+    Helpers:: returnAndExit(
+        1,
+        "Un acte portant le même numéro interne existe déjà dans la base de données.\nIl faut peut-être ajouter un suffixe au numéro.",
+        Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect
+    );
 }
 
 // Destination de création des fichiers
 $dest = $env->get("siren") . "/" . $trans->get("number") . "/";
-
 
 
 $trans->set("destDir", $dest);
@@ -248,7 +269,11 @@ $fileImportError = false;
 $uploader = new FileUploader();
 
 if (!$batchMode && empty($actePDFFile)) {
-    Helpers:: returnAndExit(1, "Aucun fichier acte n'a été posté ", Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
+    Helpers:: returnAndExit(
+        1,
+        "Aucun fichier acte n'a été posté ",
+        Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect
+    );
 }
 
 // Validation du type des fichiers uploadés
@@ -258,15 +283,19 @@ if (isset($actePDFFile) || $batchMode) {
         $acteFilePath = $zeBatchFile->getAbsoluteFilePath();
         $acteFileName = $zeBatchFile->getDisplayName();
     } else {
-        if (! $uploader->verifOK("acte_pdf_file")) {
-            Helpers :: returnAndExit(1, "Erreur lors de la récéption du fichier : " . $uploader->getLastError(), Helpers::getLink("/modules/actes/actes_transac_add.php"));
+        if (!$uploader->verifOK("acte_pdf_file")) {
+            Helpers:: returnAndExit(
+                1,
+                "Erreur lors de la récéption du fichier : " . $uploader->getLastError(),
+                Helpers::getLink("/modules/actes/actes_transac_add.php")
+            );
         }
         $acteFilePath = $actePDFFile["tmp_name"];
         $acteFileName = $actePDFFile["name"];
     }
 
     if (empty($type_acte)) {
-        Helpers :: returnAndExit(
+        Helpers:: returnAndExit(
             1,
             "Erreur lors de la réception du fichier $acteFileName : typologie absente",
             Helpers::getLink("/modules/actes/actes_transac_add.php")
@@ -275,12 +304,12 @@ if (isset($actePDFFile) || $batchMode) {
 
     if (empty($type_acte)) {
         $correspondance_nature_type = array(
-          '1' => '99_DE',
-          '2' => '99_AR',
-          '3' => '99_AI',
-          '4' => '99_DC',
-          '5' => '99_BU',
-          '6' => '99_AU',
+            '1' => '99_DE',
+            '2' => '99_AR',
+            '3' => '99_AI',
+            '4' => '99_DC',
+            '5' => '99_BU',
+            '6' => '99_AU',
         );
         $type_acte = $correspondance_nature_type[$nature_code];
     }
@@ -290,7 +319,7 @@ if (isset($actePDFFile) || $batchMode) {
         $errorMsg .= "Erreur de validation du fichier de l'acte :\n" . $trans->getErrorMsg() . "\n";
         $fileImportError = true;
     } else {
-      // Ajout de la signature si présente
+        // Ajout de la signature si présente
         $signFile = null;
         if ($batchMode) {
             $sign = $zeBatchFile->get("signature");
@@ -299,7 +328,7 @@ if (isset($actePDFFile) || $batchMode) {
                 $readFile = false;
             }
         } else {
-            if (isset($actePDFFileSign["tmp_name"]) && is_uploaded_file($actePDFFileSign["tmp_name"])) {
+            if (isset($actePDFFileSign["tmp_name"]) && is_uploaded_file_wrapper($actePDFFileSign["tmp_name"])) {
                 $signFile = $actePDFFileSign["tmp_name"];
                 $readFile = true;
             }
@@ -307,7 +336,8 @@ if (isset($actePDFFile) || $batchMode) {
 
         if ($signFile) {
             if (!$trans->addActeSign($signFile, $readFile)) {
-                $errorMsg .= "Erreur lors du traitement de la signature du fichier " . $acteFileName . " :\n" . $trans->getErrorMsg() . "\n";
+                $errorMsg .= "Erreur lors du traitement de la signature du fichier " . $acteFileName . " :\n" . $trans->getErrorMsg(
+                ) . "\n";
                 $fileImportError = true;
             }
         }
@@ -316,17 +346,21 @@ if (isset($actePDFFile) || $batchMode) {
 
 // Fichiers des pièces jointes
 if (isset($acteAttachments)) {
-    if (! $uploader->verifOKAll("acte_attachments")) {
-        Helpers :: returnAndExit(1, "Erreur lors de la réception du fichier : " . $uploader->getLastError(), Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
+    if (!$uploader->verifOKAll("acte_attachments")) {
+        Helpers:: returnAndExit(
+            1,
+            "Erreur lors de la réception du fichier : " . $uploader->getLastError(),
+            Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect
+        );
     }
 
     for ($i = 0; $i < count($acteAttachments["tmp_name"]); $i++) {
-        if (! mb_strlen($acteAttachments["tmp_name"][$i])) {
+        if (!mb_strlen($acteAttachments["tmp_name"][$i])) {
             continue;
         }
 
         if (empty($type_pj[$i])) {
-            Helpers :: returnAndExit(
+            Helpers:: returnAndExit(
                 1,
                 "Erreur lors de la réception du fichier annexe {$acteAttachments["name"][$i]} : typologie absente",
                 Helpers::getLink("/modules/actes/actes_transac_add.php")
@@ -351,10 +385,15 @@ if (isset($acteAttachments)) {
             $errorMsg .= "Erreur de validation d'un fichier de pièce jointe :\n" . $trans->getErrorMsg() . "\n";
             $fileImportError = true;
         } else {
-          // Ajout de la signature si présente
-            if (isset($acteAttachmentsSign["tmp_name"][$i]) && is_uploaded_file($acteAttachmentsSign["tmp_name"][$i])) {
+            // Ajout de la signature si présente
+            if (
+                isset($acteAttachmentsSign["tmp_name"][$i]) && is_uploaded_file_wrapper(
+                    $acteAttachmentsSign["tmp_name"][$i]
+                )
+            ) {
                 if (!$trans->addAttachmentSign($acteAttachmentsSign["tmp_name"][$i])) {
-                    $errorMsg .= "Erreur lors du traitement de la signature du fichier " . $acteAttachments["name"][$i] . " :\n" . $trans->getErrorMsg() . "\n";
+                    $errorMsg .= "Erreur lors du traitement de la signature du fichier " . $acteAttachments["name"][$i] . " :\n" . $trans->getErrorMsg(
+                    ) . "\n";
                     $fileImportError = true;
                 }
             }
@@ -364,13 +403,17 @@ if (isset($acteAttachments)) {
 
 
 if ($fileImportError) {
-    Helpers :: returnAndExit(1, $errorMsg, Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
+    Helpers:: returnAndExit(1, $errorMsg, Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
 }
 
 // Génération du fichier XML de l'acte
 $xml_name = $trans->getStdFileName($env, false);
 if (!$trans->generateMessageXMLFile($xml_name)) {
-    Helpers :: returnAndExit(1, "Erreur lors de la génération de l'acte : " . $trans->getErrorMsg(), Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
+    Helpers:: returnAndExit(
+        1,
+        "Erreur lors de la génération de l'acte : " . $trans->getErrorMsg(),
+        Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect
+    );
 }
 
 $env->addTransaction($trans);
@@ -382,16 +425,29 @@ $serialNumber = $actesEnvelopeSerial->getNext($authority_id);
 
 // Génération du fichier XML de l'enveloppe
 if (!$env->generateEnvelopeXMLFile($serialNumber)) {
-    Helpers :: returnAndExit(1, "Erreur lors de la génération de l'enveloppe. " . $env->getErrorMsg(), Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
+    Helpers:: returnAndExit(
+        1,
+        "Erreur lors de la génération de l'enveloppe. " . $env->getErrorMsg(),
+        Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect
+    );
 }
 
 // Création de l'archive .tar.gz
 if (!$env->generateArchiveFile()) {
-    Helpers :: returnAndExit(1, "Erreur lors de la génération de l'archive.\n" . $env->getErrorMsg(), Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
+    Helpers:: returnAndExit(
+        1,
+        "Erreur lors de la génération de l'archive.\n" . $env->getErrorMsg(),
+        Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect
+    );
 }
 
 if (!$env->checkArchiveSize()) {
-    Helpers :: returnAndExit(1, "la taille d'archive générée n'est pas conforme. filename=" . $env->get("file_path") . "\n" . $env->getErrorMsg(), Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
+    Helpers:: returnAndExit(
+        1,
+        "la taille d'archive générée n'est pas conforme. filename=" . $env->get("file_path") . "\n" . $env->getErrorMsg(
+        ),
+        Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect
+    );
 }
 
 /*if (!$env->checkArchiveSanity()) {
@@ -405,11 +461,11 @@ $env->purgeFiles();
 
 if (!$env->save()) {
     $msg = "Erreur lors de l'enregistrement de l'enveloppe :\n" . $env->getErrorMsg();
-    if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
+    if (!Log:: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
         $msg .= "\nErreur de journalisation.";
     }
 
-    Helpers :: returnAndExit(1, $msg, Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
+    Helpers:: returnAndExit(1, $msg, Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
 }
 
 $trans->set("envelope_id", $env->getId());
@@ -421,26 +477,26 @@ if ($must_signed) {
 
 if (!$trans->save()) {
     $msg = "Erreur lors de l'enregistrement de la transaction :\n" . $trans->getErrorMsg();
-    if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
+    if (!Log:: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
         $msg .= "\nErreur de journalisation.";
     }
 
     $env->deleteArchiveFile();
     $env->delete();
-    Helpers :: returnAndExit(1, $msg, Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
+    Helpers:: returnAndExit(1, $msg, Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect);
 }
 
 
-  $msg = "Création de l'enveloppe n°" . $env->getId() . ". Résultat ok.";
-if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
+$msg = "Création de l'enveloppe n°" . $env->getId() . ". Résultat ok.";
+if (!Log:: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
     $msg .= "\nErreur de journalisation.";
 }
 
-  // Message réservé à l'appel via API
-  // Id de la transaction créée
-  $apiMsg = $trans->getId() . "\n";
+// Message réservé à l'appel via API
+// Id de la transaction créée
+$apiMsg = $trans->getId() . "\n";
 
-  $nextBatchFileId = null;
+$nextBatchFileId = null;
 if ($batchMode) {
     if ($processNextBatch) {
         $nextBatchFileId = $zeBatch->getNextUnprocessedId($zeBatchFile->getId());
@@ -459,7 +515,7 @@ if ($batchMode) {
     if (!$zeBatchFile->save()) {
         $msg .= "\nErreur lors de la cloture du fichier de lot.";
     } else {
-      // Suppression physique du fichier
+        // Suppression physique du fichier
         if (!$zeBatchFile->deleteFile()) {
             $msg .= "\nErreur lors de la suppression du fichier de lot.";
         }
@@ -478,8 +534,18 @@ if ($info_actes['last_status_id'] == ActesStatusSQL::STATUS_POSTE) {
 }
 
 if ($nextBatchFileId) {
-    Helpers :: returnAndExit(0, $msg, Helpers::getLink("/modules/actes/actes_transac_add.php?batchfile=") . $nextBatchFileId, $apiMsg);
+    Helpers:: returnAndExit(
+        0,
+        $msg,
+        Helpers::getLink("/modules/actes/actes_transac_add.php?batchfile=") . $nextBatchFileId,
+        $apiMsg
+    );
 } else {
-    Helpers :: purgeTempSession();
-    Helpers :: returnAndExit(0, $msg, Helpers::getLink("/modules/actes/actes_transac_show.php?id=") . $trans->getId(), $apiMsg);
+    Helpers:: purgeTempSession();
+    Helpers:: returnAndExit(
+        0,
+        $msg,
+        Helpers::getLink("/modules/actes/actes_transac_show.php?id=") . $trans->getId(),
+        $apiMsg
+    );
 }

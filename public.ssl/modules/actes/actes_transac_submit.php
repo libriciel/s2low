@@ -12,21 +12,21 @@ use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\WorkerScript;
 
 [$workerScript, $actesClassificationCodesSQL] = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([WorkerScript::class,\S2lowLegacy\Class\actes\ActesClassificationCodesSQL::class]);
+    ->getArray([WorkerScript::class, \S2lowLegacy\Class\actes\ActesClassificationCodesSQL::class]);
 
 // Instanciation du module courant
 $module = new Module();
-if (! $module->initByName("actes")) {
+if (!$module->initByName("actes")) {
     Helpers::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
 }
 
 $me = new User();
 
-if (! $me->authenticate()) {
+if (!$me->authenticate()) {
     Helpers::returnAndExit(1, "Échec de l'authentification", Helpers::getLink("connexion-status"));
 }
 
-if ($me->isSuper() || ! $module->isActive() || !$me->canEdit($module->get("name"))) {
+if ($me->isSuper() || !$module->isActive() || !$me->canEdit($module->get("name"))) {
     Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 
@@ -39,17 +39,29 @@ $myAuthority = new Authority($me->get("authority_id"));
 // Recuperation des variables du POST
 $enveloppe = $_FILES["enveloppe"];
 
-if (! is_array($enveloppe) || count($enveloppe) <= 0) {
-    Helpers::returnAndExit(1, "Pas de fichier archive spécifié.", Helpers::getLink("/modules/actes/actes_transac_import.php"));
+if (!is_array($enveloppe) || count($enveloppe) <= 0) {
+    Helpers::returnAndExit(
+        1,
+        "Pas de fichier archive spécifié.",
+        Helpers::getLink("/modules/actes/actes_transac_import.php")
+    );
 }
 
-if (! is_uploaded_file($enveloppe["tmp_name"])) {
-    Helpers::returnAndExit(1, "Envoi de fichier incorrect.", Helpers::getLink("/modules/actes/actes_transac_import.php"));
+if (!is_uploaded_file_wrapper($enveloppe["tmp_name"])) {
+    Helpers::returnAndExit(
+        1,
+        "Envoi de fichier incorrect.",
+        Helpers::getLink("/modules/actes/actes_transac_import.php")
+    );
 }
 
 $rgsConnexion = new RgsConnexion();
-if (! $rgsConnexion->isRgsConnexion()) {
-    Helpers :: returnAndExit(1, "La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}", Helpers::getLink("/modules/actes/"));
+if (!$rgsConnexion->isRgsConnexion()) {
+    Helpers:: returnAndExit(
+        1,
+        "La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}",
+        Helpers::getLink("/modules/actes/")
+    );
 }
 
 $actesNameArchive = new ActesNameArchive(ACTES_APPLI_TRIGRAMME, ACTES_APPLI_QUADRIGRAMME);
@@ -57,7 +69,11 @@ $actesNameArchive = new ActesNameArchive(ACTES_APPLI_TRIGRAMME, ACTES_APPLI_QUAD
 try {
     $actesNameArchive->verifNameOK($enveloppe['name']);
 } catch (Exception $e) {
-    Helpers:: returnAndExit(1, "L'archive n'a pas un nom valide : {$e->getMessage()}", Helpers::getLink("/modules/actes/actes_transac_import.php"));
+    Helpers:: returnAndExit(
+        1,
+        "L'archive n'a pas un nom valide : {$e->getMessage()}",
+        Helpers::getLink("/modules/actes/actes_transac_import.php")
+    );
 }
 
 $env = new ActesEnvelope();
@@ -78,7 +94,11 @@ $env->set("destDir", $dest);
 if (($xmlTransFiles = $env->importArchiveFile($enveloppe["name"], $enveloppe["tmp_name"])) === false) {
     $env->purgeFiles();
     $env->deleteArchiveFile();
-    Helpers::returnAndExit(1, "Erreur d'importation de l'enveloppe :\n" . $env->getErrorMsg(), Helpers::getLink("/modules/actes/actes_transac_import.php"));
+    Helpers::returnAndExit(
+        1,
+        "Erreur d'importation de l'enveloppe :\n" . $env->getErrorMsg(),
+        Helpers::getLink("/modules/actes/actes_transac_import.php")
+    );
 }
 
 // Création des transactions d'après les fichiers XML contenus dans l'enveloppe
@@ -94,24 +114,32 @@ foreach ($xmlTransFiles as $xmlFile) {
     $trans->set("authority_id", $me->get("authority_id"));
 
 
-    if (! $trans->createFromXML($xmlFile, $actesClassificationCodesSQL)) {
+    if (!$trans->createFromXML($xmlFile, $actesClassificationCodesSQL)) {
         $env->purgeFiles();
         $env->deleteArchiveFile();
-        Helpers::returnAndExit(1, "Erreur d'importation transaction : " . $trans->getErrorMsg(), Helpers::getLink("/modules/actes/actes_transac_import.php"));
+        Helpers::returnAndExit(
+            1,
+            "Erreur d'importation transaction : " . $trans->getErrorMsg(),
+            Helpers::getLink("/modules/actes/actes_transac_import.php")
+        );
     }
 
     $env->addTransaction($trans);
 
     if ($trans->get("type") == 1) {
-      // Vérification qu'une transaction ayant le même numéro interne n'existe pas déjà
-        if (! $trans->isUnique($myAuthority->getId())) {
+        // Vérification qu'une transaction ayant le même numéro interne n'existe pas déjà
+        if (!$trans->isUnique($myAuthority->getId())) {
             $env->purgeFiles();
             $env->deleteArchiveFile();
-            Helpers::returnAndExit(1, "Un numéro interne d'acte entre en conflit avec un acte existant dans la base de données.", Helpers::getLink("/modules/actes/actes_transac_import.php"));
+            Helpers::returnAndExit(
+                1,
+                "Un numéro interne d'acte entre en conflit avec un acte existant dans la base de données.",
+                Helpers::getLink("/modules/actes/actes_transac_import.php")
+            );
         }
     }
 
-  // En cas de demande de classification, création de la requête dans la table idoine
+    // En cas de demande de classification, création de la requête dans la table idoine
     if ($trans->get("type") == 7) {
         $classifRequest = new ActesClassification();
 
@@ -127,15 +155,19 @@ foreach ($xmlTransFiles as $xmlFile) {
 
 
 // Création de l'archive .tar.gz
-if (! $env->generateArchiveFile()) {
+if (!$env->generateArchiveFile()) {
     $env->purgeFiles();
     $env->deleteArchiveFile();
-    Helpers::returnAndExit(1, "Erreur lors de la regénération de l'archive.\n" . $env->getErrorMsg(), Helpers::getLink("/modules/actes/actes_transac_import.php"));
+    Helpers::returnAndExit(
+        1,
+        "Erreur lors de la regénération de l'archive.\n" . $env->getErrorMsg(),
+        Helpers::getLink("/modules/actes/actes_transac_import.php")
+    );
 }
 
 // Vérification taille après regénération
 // Le scan anti-virus a déjà été fait lors de l'import (gruik !!)
-if (! $env->checkArchiveSize()) {
+if (!$env->checkArchiveSize()) {
     $env->purgeFiles();
     $env->deleteArchiveFile();
     Helpers::returnAndExit(1, $env->getErrorMsg(), Helpers::getLink("/modules/actes/actes_transac_import.php"));
@@ -146,11 +178,11 @@ $env->purgeFiles();
 
 
 // Enregistrement de l'enveloppe
-if (! $env->save()) {
+if (!$env->save()) {
     $env->deleteArchiveFile();
     $msg = "Erreur lors de l'enregistrement de l'enveloppe :\n" . $env->getErrorMsg();
 
-    if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
+    if (!Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
         $msg .= "\nErreur de journalisation.";
     }
 
@@ -165,9 +197,9 @@ foreach ($transacs as $trans) {
     $trans->set("authority_id", $me->get("authority_id"));
 
 
-    if (! $trans->save()) {
+    if (!$trans->save()) {
         $msg = "Erreur lors de l'enregistrement de la transaction.\n" . $trans->getErrorMsg();
-        if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
+        if (!Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
             $msg .= "\nErreur de journalisation.";
         }
 
@@ -184,9 +216,10 @@ foreach ($transacs as $trans) {
 // Enregistrement des demandes de classification
 if (count($classifRequests) > 0) {
     foreach ($classifRequests as $classifRequest) {
-        if (! $classifRequest->save()) {
-            $msg = "Erreur lors de l'enregistrement de la requête de classification.\n" . $classifRequest->getErrorMsg();
-            if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
+        if (!$classifRequest->save()) {
+            $msg = "Erreur lors de l'enregistrement de la requête de classification.\n" . $classifRequest->getErrorMsg(
+            );
+            if (!Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
                 $msg .= "\nErreur de journalisation.";
             }
 
@@ -204,7 +237,7 @@ if (count($classifRequests) > 0) {
 $msg = "Importation fichier archive réussie. Enveloppe n°" . $env->getId() . " contenant " . count($transacs);
 $msg .= (count($transacs) > 1) ? " transactions créée." : " transaction créée.";
 
-if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
+if (!Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
     $msg .= "\nErreur de journalisation.";
 }
 
@@ -218,7 +251,6 @@ foreach ($transacs as $trans) {
 
 $workerScript->putJobByClassName(ActesStoreEnveloppeWorker::class, $env->getId());
 $workerScript->putJobByClassName(ActesAntivirusWorker::class, $trans->getId());
-
 
 
 Helpers::returnAndExit(0, $msg, Helpers::getLink("/modules/actes/index.php"), $apiMsg);

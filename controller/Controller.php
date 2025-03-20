@@ -101,7 +101,7 @@ class Controller
         if ($url_arg) {
             $url .= "?$url_arg";
         }
-        if (! TESTING_ENVIRONNEMENT) {
+        if (!TESTING_ENVIRONNEMENT) {
             header("Location: $url");
             exit();
         }
@@ -116,7 +116,7 @@ class Controller
         if ($error_message) {
             $this->setErrorMessage($error_message);
         }
-        if (! TESTING_ENVIRONNEMENT) {
+        if (!TESTING_ENVIRONNEMENT) {
             header("Location: $url");
             exit();
         }
@@ -135,6 +135,7 @@ class Controller
         }
         $this->redirectSSL($url_redirect);
     }
+
     //@codeCoverageIgnore
 
     public function displayAndExit($message, $url_redirect)
@@ -146,6 +147,7 @@ class Controller
         $this->setErrorMessage($message);
         $this->redirectSSL($url_redirect);
     }
+
     //@codeCoverageIgnore
 
 
@@ -159,12 +161,13 @@ class Controller
     {
         $this->verifUser();
 
-        if (! $this->me->isAdmin()) {
+        if (!$this->me->isAdmin()) {
             $this->displayErrorAndExit("Accès refusé", "");
         } // @codeCoverageIgnore
         if ($this->me->isSuper()) {
             return;
         }
+
         if ($authority_id) {
             $authoritySQL = new AuthoritySQL($this->getSQLQuery());
             $info = $authoritySQL->getInfo($authority_id);
@@ -177,7 +180,7 @@ class Controller
             } // @codeCoverageIgnore
 
             if ($info['id'] == $this->me->get('authority_id')) {
-                return ;
+                return;
             }
             $this->displayErrorAndExit("Accès refusé", "");
         } // @codeCoverageIgnore
@@ -209,7 +212,7 @@ class Controller
     public function verifSuperAdmin()
     {
         $this->verifAdmin();
-        if (! $this->me->isSuper()) {
+        if (!$this->me->isSuper()) {
             $this->redirect(WEBSITE_SSL, 'Accès refusé');
         } // @codeCoverageIgnore
     }
@@ -256,7 +259,10 @@ class Controller
     public function _actionBefore($controller, $action)
     {
         $this->setViewParameter('title', "S2low");
-        $this->setViewParameter('template_milieu', __DIR__ . "/../template/" . ucfirst($controller) . ucfirst($action) . ".php");
+        $this->setViewParameter(
+            'template_milieu',
+            __DIR__ . "/../template/" . ucfirst($controller) . ucfirst($action) . ".php"
+        );
         $this->setViewParameter('side_bar', false);
     }
 
@@ -274,7 +280,6 @@ class Controller
     {
         return $this->getEnvironnement()->post();
     }
-
 
 
     public function getFiles()

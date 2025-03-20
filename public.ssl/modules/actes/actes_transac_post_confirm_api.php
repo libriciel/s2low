@@ -28,13 +28,13 @@ list($workerScript, $actesTransactionsSQL, $actesScriptHelper, $connexion ) = Le
 $actionHtml = '';
 
 
-function return_error_api($error_message): never
+function return_error_api($error_message)
 {
     $return_error = Helpers :: getVarFromGet('url_return');
     $return_error = str_replace('%%ERROR%%', 1, $return_error);
     $return_error = str_replace('%%MESSAGE%%', $error_message, $return_error);
-    header("Location:  $return_error");
-    exit;
+    header_wrapper("Location:  $return_error");
+    exit_wrapper();
 }
 
 
@@ -104,5 +104,5 @@ $return_ok = Helpers :: getVarFromGet('url_return');
 $return_ok = str_replace('%%ERROR%%', 0, $return_ok);
 $return_ok = str_replace('%%MESSAGE%%', '', $return_ok);
 
-header("Location:  $return_ok");
-exit;
+header_wrapper("Location:  $return_ok");
+exit_wrapper();

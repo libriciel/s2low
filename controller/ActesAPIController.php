@@ -4,6 +4,7 @@ namespace S2lowLegacy\Controller;
 
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Model\AuthoritySQL;
 
 class ActesAPIController extends Controller

@@ -12,14 +12,20 @@ use S2lowLegacy\Class\WorkerScript;
 
 $errorMsg = "";
 
-function sortir_atrc($message, $api)
-{
-    global $related_id;
-    if ($api) {
-        echo "KO : " . $message;
-        exit;
-    } else {
-        Helpers :: returnAndExit(1, $message, Helpers::getLink("/modules/actes/actes_transac_repondre.php?id=$related_id"));
+if (!function_exists('sortir_atrc')) {
+    function sortir_atrc($message, $api)
+    {
+        global $related_id;
+        if ($api) {
+            echo "KO : " . $message;
+            exit;
+        } else {
+            Helpers:: returnAndExit(
+                1,
+                $message,
+                Helpers::getLink("/modules/actes/actes_transac_repondre.php?id=$related_id")
+            );
+        }
     }
 }
 
@@ -35,7 +41,7 @@ if ($api) {
 // Instanciation du module courant
 $module = new Module();
 if (!$module->initByName("actes")) {
-     sortir_atrc("Erreur d'initialisation du module", $api);
+    sortir_atrc("Erreur d'initialisation du module", $api);
 }
 
 $me = new User();
@@ -67,7 +73,7 @@ $type_acte = Helpers::getVarFromPost('type_acte', true);
 $type_pj = Helpers::getVarFromPost('type_pj', true);
 
 if (empty($type_acte)) {
-    Helpers :: returnAndExit(
+    Helpers:: returnAndExit(
         1,
         "Erreur lors de la réception du fichier : typologie absente",
         Helpers::getLink("/modules/actes/actes_transac_reponse.php?id=$related_id")
@@ -87,10 +93,8 @@ if (empty($type_acte)) {
 }
 
 
-
-
 $type_transaction = $related_trans->get("type");
-$type_envoie = Helpers :: getVarFromPost("type_envoie", true);
+$type_envoie = Helpers:: getVarFromPost("type_envoie", true);
 
 $actePDFFile = $_FILES["acte_pdf_file"];
 if (isset($_FILES["acte_pdf_file_sign"])) {
@@ -114,7 +118,7 @@ if (isset($_FILES["acte_attachments_sign"])) {
 $env = new ActesEnvelope();
 $trans = new ActesTransaction();
 
-$retMail = array ();
+$retMail = array();
 $retMail[] = ACTES_TDT_MAIL_ADDRESS;
 
 if ($me->get("email")) {
@@ -150,7 +154,7 @@ $trans->set("type_reponse", $type_envoie);
 $trans->set("user_id", $related_trans->get('user_id'));
 $trans->set("authority_id", $related_trans->get('authority_id'));
 $trans->set("classification", $related_trans->get('classification'));
-$trans->set("classification_date", $related_trans->get('classification_date'));
+$trans->set("classification_date", Helpers::getANSIDateFromBDDDate($related_trans->get('classification_date')));
 $trans->set("unique_id", $related_trans->get('unique_id'));
 
 
@@ -166,11 +170,11 @@ $fileImportError = false;
 // Validation du type des fichiers uploadés
 // Fichier de l'acte
 if (isset($actePDFFile)) {
-    if (is_uploaded_file($actePDFFile["tmp_name"])) {
+    if (is_uploaded_file_wrapper($actePDFFile["tmp_name"])) {
         $acteFilePath = $actePDFFile["tmp_name"];
         $acteFileName = $actePDFFile["name"];
     } else {
-         sortir_atrc("Envoi de fichier illégal.", $api);
+        sortir_atrc("Envoi de fichier illégal.", $api);
     }
 
     $dest_name = $trans->getStdFileName($env, true, $type_acte);
@@ -178,17 +182,18 @@ if (isset($actePDFFile)) {
         $errorMsg = "Erreur de validation du fichier de l'acte :\n" . $trans->getErrorMsg() . "\n";
         $fileImportError = true;
     } else {
-      // Ajout de la signature si présente
+        // Ajout de la signature si présente
         $signFile = null;
 
-        if (isset($actePDFFileSign["tmp_name"]) && is_uploaded_file($actePDFFileSign["tmp_name"])) {
+        if (isset($actePDFFileSign["tmp_name"]) && is_uploaded_file_wrapper($actePDFFileSign["tmp_name"])) {
             $signFile = $actePDFFileSign["tmp_name"];
             $readFile = true;
         }
 
         if ($signFile) {
             if (!$trans->addActeSign($signFile, $readFile)) {
-                $errorMsg .= "Erreur lors du traitement de la signature du fichier " . $acteFileName . " :\n" . $trans->getErrorMsg() . "\n";
+                $errorMsg .= "Erreur lors du traitement de la signature du fichier " . $acteFileName . " :\n" . $trans->getErrorMsg(
+                ) . "\n";
                 $fileImportError = true;
             }
         }
@@ -199,9 +204,9 @@ if (isset($actePDFFile)) {
 if (isset($acteAttachments)) {
     for ($i = 0; $i < count($acteAttachments["tmp_name"] ?: []); $i++) {
         if (mb_strlen($acteAttachments["tmp_name"][$i])) {
-            if (is_uploaded_file($acteAttachments["tmp_name"][$i])) {
+            if (is_uploaded_file_wrapper($acteAttachments["tmp_name"][$i])) {
                 if (empty($type_pj[$i])) {
-                    Helpers :: returnAndExit(
+                    Helpers:: returnAndExit(
                         1,
                         "Erreur lors de la réception du fichier annexe {$acteAttachments["name"][$i]} : typologie absente",
                         Helpers::getLink("/modules/actes/actes_transac_add.php")
@@ -209,19 +214,32 @@ if (isset($acteAttachments)) {
                 }
 
                 if (empty($type_pj[$i])) {
-                //Type par defaut des annexes
+                    //Type par defaut des annexes
                     $type_pj[$i] = '99_AU';
                 }
 
                 $dest_name = $trans->getStdFileName($env, true, $type_pj[$i]);
-                if (!$trans->addAttachmentFile($acteAttachments["name"][$i], $dest_name, $acteAttachments["tmp_name"][$i], true, $type_pj[$i])) {
-                      $errorMsg .= "Erreur de validation d'un fichier de pièce jointe :\n" . $trans->getErrorMsg() . "\n";
-                      $fileImportError = true;
+                if (
+                    !$trans->addAttachmentFile(
+                        $acteAttachments["name"][$i],
+                        $dest_name,
+                        $acteAttachments["tmp_name"][$i],
+                        true,
+                        $type_pj[$i]
+                    )
+                ) {
+                    $errorMsg .= "Erreur de validation d'un fichier de pièce jointe :\n" . $trans->getErrorMsg() . "\n";
+                    $fileImportError = true;
                 } else {
-                // Ajout de la signature si présente
-                    if (isset($acteAttachmentsSign["tmp_name"][$i]) && is_uploaded_file($acteAttachmentsSign["tmp_name"][$i])) {
+                    // Ajout de la signature si présente
+                    if (
+                        isset($acteAttachmentsSign["tmp_name"][$i]) && is_uploaded_file_wrapper(
+                            $acteAttachmentsSign["tmp_name"][$i]
+                        )
+                    ) {
                         if (!$trans->addAttachmentSign($acteAttachmentsSign["tmp_name"][$i])) {
-                            $errorMsg .= "Erreur lors du traitement de la signature du fichier " . $acteAttachments["name"][$i] . " :\n" . $trans->getErrorMsg() . "\n";
+                            $errorMsg .= "Erreur lors du traitement de la signature du fichier " . $acteAttachments["name"][$i] . " :\n" . $trans->getErrorMsg(
+                            ) . "\n";
                             $fileImportError = true;
                         }
                     }
@@ -232,7 +250,6 @@ if (isset($acteAttachments)) {
         }
     }
 }
-
 
 
 if ($fileImportError) {
@@ -273,7 +290,7 @@ $env->purgeFiles();
 
 if (!$env->save()) {
     $msg = "Erreur lors de l'enregistrement de l'enveloppe :\n" . $env->getErrorMsg();
-    if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
+    if (!Log:: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
         $msg .= "\nErreur de journalisation.";
     }
     sortir_atrc($msg, $api);
@@ -283,7 +300,7 @@ $trans->set("envelope_id", $env->getId());
 
 if (!$trans->save()) {
     $msg = "Erreur lors de l'enregistrement de la transaction :\n" . $trans->getErrorMsg();
-    if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
+    if (!Log:: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
         $msg .= "\nErreur de journalisation.";
     }
 
@@ -292,12 +309,12 @@ if (!$trans->save()) {
     sortir_atrc($msg, $api);
 } else {
     $msg = "Création de l'envelope n°" . $env->getId() . ". Résultat ok.";
-    if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
+    if (!Log:: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
         $msg .= "\nErreur de journalisation.";
     }
 
-  // Message réservé à l'appel via API
-  // Id de la transaction créée
+    // Message réservé à l'appel via API
+    // Id de la transaction créée
     $apiMsg = $trans->getId() . "\n";
 }
 
@@ -307,5 +324,10 @@ $workerScript->putJobByClassName(ActesAntivirusWorker::class, $trans->getId());
 if ($api) {
     echo "OK : id généré : " . $apiMsg;
 } else {
-    Helpers :: returnAndExit(0, $msg, Helpers::getLink("/modules/actes/actes_transac_show.php?id=") . $trans->getId(), $apiMsg);
+    Helpers:: returnAndExit(
+        0,
+        $msg,
+        Helpers::getLink("/modules/actes/actes_transac_show.php?id=") . $trans->getId(),
+        $apiMsg
+    );
 }

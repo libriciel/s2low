@@ -14,32 +14,30 @@ $id = Helpers :: getVarFromGet("trans_id");
 
 if (empty($id)) {
     $_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
-    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
-    exit();
+    header_wrapper("Location: " . Helpers::getLink("/modules/actes/index.php"));
+    exit_wrapper();
 }
-
-//FIXME : mettre ca dans un script d'initialisation ....
 
 // Instanciation du module courant
 $module = new Module();
 if (!$module->initByName("actes")) {
     $_SESSION["error"] = "Erreur d'initialisation du module";
-    header("Location: " . WEBSITE_SSL);
-    exit();
+    header_wrapper("Location: " . WEBSITE_SSL);
+    exit_wrapper();
 }
 
 $me = new User();
 
 if (!$me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
-    exit();
+    header_wrapper("Location: " . Helpers::getLink("connexion-status"));
+    exit_wrapper();
 }
 
 if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
     $_SESSION["error"] = "Accès refusé";
-    header("Location: " . WEBSITE_SSL);
-    exit();
+    header_wrapper("Location: " . WEBSITE_SSL);
+    exit_wrapper();
 }
 
 
@@ -47,8 +45,8 @@ $trans = new ActesTransaction();
 $trans->setId($id);
 if (! $trans->init()) {
     $_SESSION["error"] = "Erreur d'initialisation de la transaction.";
-    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
-    exit();
+    header_wrapper("Location: " . Helpers::getLink("/modules/actes/index.php"));
+    exit_wrapper();
 }
 
 $envelope = new ActesEnvelope($trans->get("envelope_id"));
@@ -62,8 +60,8 @@ $permission = new ModulePermission($serviceUser, "actes");
 
 if (! $permission->canView($me, $owner)) {
     $_SESSION["error"] = "Accès refusé";
-    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
-    exit();
+    header_wrapper("Location: " . Helpers::getLink("/modules/actes/index.php"));
+    exit_wrapper();
 }
 
 //passer les paramètre

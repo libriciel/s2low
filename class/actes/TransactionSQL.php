@@ -172,7 +172,6 @@ class TransactionSQL
         }
         $this->filter[] = "actes_transactions.subject ILIKE ?";
         $this->value[] = "%$objet%";
-        //$this->value[] = "$objet"; FIX #378
     }
 
     public function setDateMinSubmission($date)
@@ -308,7 +307,6 @@ class TransactionSQL
 
     public function getDonneesTransaction($id)
     {
-        //$sql = "SELECT decision_date, document_papier, unique_id, classification, classification_string,broadcasted,broadcast_emails FROM actes_transactions WHERE id = ?";
         $sql = "SELECT " .
             " users.name, users.givenname," .
             " authorities.name as authority_name, " .

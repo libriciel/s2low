@@ -8,7 +8,6 @@ use Exception;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 
 /**
@@ -17,14 +16,14 @@ use S2lowLegacy\Lib\SQLQuery;
  * Date: 21/08/2018
  * Time: 11:41
  */
-
 trait ActesUtilitiesTestTrait
 {
-    /**
-     * @throws Exception
-     */
-    protected function createTransaction(int $status, string $archive_path = '', ?string $date = '2017-07-01'): int
-    {
+    protected function createTransactionOfType(
+        int $status,
+        int $type = 1,
+        string $archive_path = '',
+        ?string $date = '2017-07-01'
+    ): int {
         $sql = "INSERT INTO actes_envelopes(user_id,siren,department) VALUES(1,'000000000','034') returning ID";
         $envelope_id = $this->getSQLQuery()->queryOne($sql);
 
@@ -37,8 +36,9 @@ trait ActesUtilitiesTestTrait
                                number,
                                nature_code,
                                type,
-                               classification
-                               ) VALUES (?,?,?,?,?,?,?,?,?) returning ID;';
+                               classification,
+                               classification_date
+                               ) VALUES (?,?,?,?,?,?,?,?,?,?) returning ID;';
         $transaction_id = $this->getSQLQuery()->queryOne(
             $sql,
             $envelope_id,
@@ -48,8 +48,9 @@ trait ActesUtilitiesTestTrait
             $date,
             '20170728C',
             3,
-            1,
-            '1.1.1'
+            $type,
+            '1.1.1',
+            '2015-08-28'
         );
 
         $flux_retour = '';
@@ -71,7 +72,45 @@ trait ActesUtilitiesTestTrait
         $sql = 'UPDATE actes_transactions SET unique_id=? WHERE id=?';
         $this->getSQLQuery()->query($sql, $unique_id, $transaction_id);
 
+
         return $transaction_id;
+    }
+    /**
+     * @throws Exception
+     */
+    protected function createTransaction(int $status, string $archive_path = '', ?string $date = '2017-07-01'): int
+    {
+        return $this->createTransactionOfType($status, 1, $archive_path, $date);
+    }
+
+    private function createActeIncludedFiles($transactionId)
+    {
+        $sql = "SELECT id FROM actes_envelopes WHERE user_id = 1 AND siren='000000000'";
+        $enveloppeId = $this->getSQLQuery()->queryOne($sql);
+
+        $sql = "INSERT INTO actes_included_files (
+            envelope_id,
+            transaction_id,
+            filename,
+            filetype,
+            filesize,
+            posted_filename,
+            sha1,
+            code_pj
+        ) VALUES (?,?,?,?,?,?,?,?)
+        ";
+
+        return $this->getSQLQuery()->queryOne(
+            $sql,
+            $enveloppeId,
+            $transactionId,
+            "99_AI-034-443061841-20250306-43636243-AI-1-1_1.pdf",
+            "application/pdf",
+            10407,
+            "PDFTest.pdf",
+            "7c839d1ba8f47aee14839d087d7dd67f68c36778",
+            "99_AI"
+        );
     }
 
     /**
@@ -104,6 +143,7 @@ trait ActesUtilitiesTestTrait
     {
         $this->getActesTransactionsSQL()->updateStatus($transaction_id, $status_id, $message, '', $date);
     }
+
     abstract protected function getActesTransactionsSQL(): ActesTransactionsSQL;
 
     abstract public function getSQLQuery(): SQLQuery;

@@ -10,7 +10,6 @@ class JSONoutput
     {
         $result['status'] = 'error';
         $result['error-message'] = $Errormessage;
-        ;
         $this->display($result);
         if (TESTING_ENVIRONNEMENT) {
             throw new Exception("Exit !");
@@ -22,7 +21,6 @@ class JSONoutput
     {
         $result['status'] = 'ok';
         $result['message'] = $message;
-        ;
         $this->display($result);
         if (TESTING_ENVIRONNEMENT) {
             throw new Exception("Exit !");

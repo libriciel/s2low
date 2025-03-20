@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace IntegrationTests;
+namespace IntegrationTests\EndpointsActeHtml;
 
 use Exception;
+use IntegrationTests\S2lowIntegrationTestCase;
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
@@ -39,34 +40,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
     {
         return $this->actesTransactionsSQL;
     }
-    /**
-     * @throws Exception
-     * TODO : corriger, bug dans cette fonctionnalité
-     * https://gitlab.libriciel.fr/libriciel/pole-plate-formes/s2low/s2low/-/issues/1200
-     */
-    /*
-    public function testActesForceClassification(): void
-    {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
 
-        $this->setUpUser($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpClient(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        ObjectInstancierFactory::resetObjectInstancier();
-
-        $crawler = $client->request('GET', 'modules/actes/admin/actes_force_classifiction.php');
-        static::assertMatchesRegularExpression(
-            '#KO#',
-            $crawler->html()
-        );
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
-    }
-    */
     /**
      * @throws Exception
      */
@@ -76,7 +50,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
         $enveloppeName = 'enveloppe';
         $this->copyEnveloppeToErrorDirectory($enveloppeName);
         $_GET['file'] = $enveloppeName; // Comme l'objet Récupérateur est set dans le script, ça ne fonctionne pas
-                                      // autrement ( le client Symfony ne set pas _GET )
+        // autrement ( le client Symfony ne set pas _GET )
         $client->request(
             'GET',
             'modules/actes/admin/analyse-response.php'
@@ -126,21 +100,6 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
     }
 
     /**
-     * @throws \Exception
-     */
-    public function testActesAdminIndex(): void
-    {
-        $client = $this->setUpUser();
-
-        $crawler = $client->request('GET', 'modules/actes/admin/index.php');
-        static::assertMatchesRegularExpression(
-            '#Utilitaires - ACTES#',
-            $crawler->html()
-        );
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
-    }
-
-    /**
      * @throws Exception
      */
     public function testResponsesActesError(): void
@@ -150,22 +109,6 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
         $crawler = $client->request('GET', 'modules/actes/admin/responses-actes-error.php');
         static::assertMatchesRegularExpression(
             '#mails reçus en erreur#',
-            $crawler->html()
-        );
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
-    }
-
-    /**
-     * TODO : ajouter un cas qui fonctionne
-     * @throws Exception
-     */
-    public function testActesBatchSign(): void
-    {
-        $client = $this->setUpUser();
-
-        $crawler = $client->request('GET', 'modules/actes/actes_batch_sign.php');
-        static::assertMatchesRegularExpression(
-            '#Vous devez sélectionner au moins une transaction à signer#',
             $crawler->html()
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
@@ -216,23 +159,6 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
     /**
      * @throws Exception
      */
-    public function testActesTransacDelete(): void
-    {
-        $client = $this->setUpUser();
-
-        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
-        $_POST['id'] = $transaction_id;
-        $client->request('GET', 'modules/actes/actes_transac_delete.php');
-        static::assertMatchesRegularExpression(
-            "#La transaction $transaction_id a été éradiquée ....#",
-            $_SESSION['error']
-        );
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
-    }
-
-    /**
-     * @throws Exception
-     */
     public function testActesTransacGetARActe(): void
     {
         $client = $this->setUpUser();
@@ -245,37 +171,6 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
             '#Acquittement très officiel#',
             $crawler->html()
         );
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function testActesTransacPostConfirm(): void
-    {
-        $client = $this->setUpUser();
-
-        $client->request('GET', 'modules/actes/actes_transac_post_confirm.php');
-        static::assertMatchesRegularExpression(
-            '#La télétransmission nécessite un certificat RGS#',
-            $_SESSION['error']
-        );
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function testActesTransacPostConfirmApiMulti(): void
-    {
-        $client = $this->setUpUser();
-
-            $crawler = $client->request('GET', 'modules/actes/actes_transac_post_confirm_api_multi.php');
-            static::assertMatchesRegularExpression(
-                '#exit\(\) called#',
-                $crawler->html()
-            );
-
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
 
@@ -404,15 +299,15 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
         $this->enveloppeInErrorPath = "/data/tdt-workspace/actes/response_error/$enveloppeName/";
         mkdir($this->enveloppeInErrorPath);
         copy(
-            __DIR__ . '/../test/PHPUnit/class/fixtures/test-courrier-simple/034-000000000-20170701-20170725A-AI-2-1_0.xml',
+            __DIR__ . '/../../test/PHPUnit/class/fixtures/test-courrier-simple/034-000000000-20170701-20170725A-AI-2-1_0.xml',
             $this->enveloppeInErrorPath . '/034-000000000-20170701-20170725A-AI-2-1_0.xml'
         );
         copy(
-            __DIR__ . '/../test/PHPUnit/class/fixtures/test-courrier-simple/TACT--SPREF0011-000000000-20170725-1.xml',
+            __DIR__ . '/../../test/PHPUnit/class/fixtures/test-courrier-simple/TACT--SPREF0011-000000000-20170725-1.xml',
             $this->enveloppeInErrorPath . '/TACT--SPREF0011-000000000-20170725-1.xml'
         );
         copy(
-            __DIR__ . '/../test/PHPUnit/class/fixtures/test-courrier-simple/034-000000000-20170701-20170725A-AI-2-1_1.pdf',
+            __DIR__ . '/../../test/PHPUnit/class/fixtures/test-courrier-simple/034-000000000-20170701-20170725A-AI-2-1_1.pdf',
             $this->enveloppeInErrorPath . '/034-000000000-20170701-20170725A-AI-2-1_1.pdf'
         );
     }
