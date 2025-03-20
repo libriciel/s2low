@@ -97,7 +97,6 @@ class GetNumberOfActeByAuthoritiesAndDateTest extends S2lowIntegrationTestCase
 
     public function testShouldExitIfNotAdmin(): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
         $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
 
         $collectiviteGroupId = 1;
@@ -108,6 +107,7 @@ class GetNumberOfActeByAuthoritiesAndDateTest extends S2lowIntegrationTestCase
         $_GET['month'] = $month;
         $_GET['year'] = $year;
 
+        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
         $client->request('GET', '/modules/actes/api/nb_actes_by_authorities_and_date.php', [
             'authority_group_id' => $collectiviteGroupId,
             'month' => $month,
