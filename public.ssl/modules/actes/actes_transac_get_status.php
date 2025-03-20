@@ -28,7 +28,7 @@ $myAuthority = new Authority($me->get('authority_id'));
 
 // Recuperation des variables du GET
 $transId = intval(Helpers::getVarFromGet('transaction'));
-$transUniqueId = intVal(Helpers::getVarFromGet('unique_id'));
+$transUniqueId = Helpers::getVarFromGet('unique_id');
 
 if (! empty($transUniqueId)) {
     $transId = ActesTransaction::getTransactionFromUniqueId($transUniqueId);

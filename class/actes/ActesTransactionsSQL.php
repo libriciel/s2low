@@ -406,15 +406,18 @@ WHERE
     }
 
     public function getListByStatusAndAuthority(
-        int $status_id,
-        int $authority_id,
-        int $offset,
-        int $limit,
+        $status_id,
+        $authority_id,
+        $offset,
+        $limit,
         ?string $min_submission_date = null,
         ?string $max_submission_date = null,
     ): array | false {
         $offset = intval($offset);
         $limit = intval($limit);
+        $authority_id = intval($authority_id);
+        $status_id = intval($status_id);
+
         $sql = "SELECT actes_transactions.id,subject,number,date(decision_date),nature_descr,classification,type FROM actes_transactions ";
         if ($min_submission_date !== null || $max_submission_date !== null) {
             $sql .= "JOIN actes_transactions_workflow ON transaction_id=actes_transactions.id";
