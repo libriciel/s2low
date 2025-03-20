@@ -2,16 +2,11 @@
 
 namespace S2lowLegacy\Class\actes;
 
-use Libriciel\LibActes\Utils\XSDValidationException;
-use S2lowLegacy\Class\S2lowLogger;
-use S2lowLegacy\Class\TmpFolder;
 use Exception;
 use finfo;
-use S2lowLegacy\Class\TypeActe;
-use S2lowLegacy\Lib\SigTermHandler;
 use Libriciel\LibActes\ArchiveData;
-use Libriciel\LibActes\FichierXML\MessageMetierARActes;
 use Libriciel\LibActes\FichierXML\MessageMetieAnomalieActe;
+use Libriciel\LibActes\FichierXML\MessageMetierARActes;
 use Libriciel\LibActes\FichierXML\MessageMetierARAnnulation;
 use Libriciel\LibActes\FichierXML\MessageMetierARPieceComplementaire;
 use Libriciel\LibActes\FichierXML\MessageMetierARReponseRejetLettreObservations;
@@ -21,6 +16,10 @@ use Libriciel\LibActes\FichierXML\MessageMetierDemandePieceComplementaire;
 use Libriciel\LibActes\FichierXML\MessageMetierLettreObservations;
 use Libriciel\LibActes\FichierXML\MessageMetierReponseClassificationSansChangement;
 use Libriciel\LibActes\FichierXML\MessageMetierRetourClassification;
+use Libriciel\LibActes\Utils\XSDValidationException;
+use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Lib\SigTermHandler;
 use UnexpectedValueException;
 
 class ActesAnalyseFichierRecuController
@@ -403,7 +402,7 @@ class ActesAnalyseFichierRecuController
     {
         $this->s2lowLogger->info("AR Actes trouvé pour l'envoi de piece complementaire : " . $fichierXML->id_actes);
 
-        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne, TypeActe::DemandePieceComplementaire, true);
+        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne, TypeTransmission::DemandePieceComplementaire, true);
 
         $this->s2lowLogger->info("$fichierXML->id_actes -> transaction_id = $transaction_id");
         $message = "Reçu par le {$this->actes_ministere_acronyme} le " . $fichierXML->date_reception;
@@ -426,7 +425,7 @@ class ActesAnalyseFichierRecuController
     {
         $this->s2lowLogger->info("AR Actes trouvé pour l'envoi d'une réponse ou d'un refus à une lettre d'observation : " . $fichierXML->id_actes);
 
-        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne, TypeActe::LettreDObservation, true);
+        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne, TypeTransmission::LettreDObservation, true);
 
         $this->s2lowLogger->info("$fichierXML->id_actes -> transaction_id = $transaction_id");
         $message = "Reçu par le {$this->actes_ministere_acronyme} le " . $fichierXML->date_reception;
@@ -532,7 +531,7 @@ class ActesAnalyseFichierRecuController
             $message,
             $xml
         );
-        $transaction_annulation_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne, TypeActe::Annulation);
+        $transaction_annulation_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne, TypeTransmission::Annulation);
 
         $this->updateStatus(
             $transaction_annulation_id,
@@ -564,7 +563,7 @@ class ActesAnalyseFichierRecuController
      * @return array|bool|mixed
      * @throws Exception
      */
-    private function getBySirenAndNumeroInterne($siren, $numeroInterne, TypeActe $type = TypeActe::TransmissionActe, $type_reponse_not_null = false)
+    private function getBySirenAndNumeroInterne($siren, $numeroInterne, TypeTransmission $type = TypeTransmission::TransmissionActe, $type_reponse_not_null = false)
     {
         $transaction_id = $this->actesTransactionsSQL->getBySirenAndNumeroInterne($siren, $numeroInterne, $type->value, $type_reponse_not_null);
         if (! $transaction_id) {

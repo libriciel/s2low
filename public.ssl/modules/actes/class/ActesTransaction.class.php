@@ -4,10 +4,10 @@ use S2low\Services\ProcessCommand\CommandLauncher;
 use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2lowLegacy\Class\actes\ActesClassificationCodesSQL;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\TypeTransmission;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\DataObject;
 use S2lowLegacy\Class\Helpers;
-use S2lowLegacy\Class\TypeActe;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
@@ -503,7 +503,7 @@ SQL;
    */
     public function getStdFileName(ActesEnvelope $env, $use_serial = true, $code_pj = '')
     {
-        if ($this->isType(TypeActe::Annulation)) {
+        if ($this->isType(TypeTransmission::Annulation)) {
             $trans = $this->related_transaction;
         } else {
             $trans = $this;
@@ -527,40 +527,40 @@ SQL;
 
       // Date de l'acte YYYYMMDD
         $name .= "-";
-        if (!$this->isType(TypeActe::DemandeDeClassification)) {
+        if (!$this->isType(TypeTransmission::DemandeDeClassification)) {
             $name .= date("Ymd", Helpers :: ansiDateToTimestamp($trans->decision_date));
         }
 
       // Numéro de l'acte interne à la collectivité
         $name .= "-";
-        if (!$this->isType(TypeActe::DemandeDeClassification)) {
+        if (!$this->isType(TypeTransmission::DemandeDeClassification)) {
             $name .= $trans->number;
         }
 
       // Code de la nature de l'acte
         $name .= "-";
-        if (!$this->isType(TypeActe::DemandeDeClassification)) {
+        if (!$this->isType(TypeTransmission::DemandeDeClassification)) {
             $name .= $nature_descr["short_descr"];
         }
 
       // Type de message
         switch ($this->getType()) {
-            case TypeActe::TransmissionActe:
+            case TypeTransmission::TransmissionActe:
                 $name .= "-1-1";
                 break;
-            case TypeActe::CourrierSimple:
+            case TypeTransmission::CourrierSimple:
                 $name .= "-2-2";
                 break;
-            case TypeActe::DemandePieceComplementaire:
+            case TypeTransmission::DemandePieceComplementaire:
                 $name .= "-3-" . $this->type_reponse;
                 break;
-            case TypeActe::LettreDObservation:
+            case TypeTransmission::LettreDObservation:
                 $name .= "-4-" . $this->type_reponse;
                 break;
-            case TypeActe::Annulation:
+            case TypeTransmission::Annulation:
                 $name .= "-6-1";
                 break;
-            case TypeActe::DemandeDeClassification:
+            case TypeTransmission::DemandeDeClassification:
                 $name .= "-7-1";
                 break;
         }
@@ -681,20 +681,20 @@ SQL;
     public function generateMessageXMLFile($xml_name)
     {
         switch ($this->getType()) {
-            case TypeActe::TransmissionActe:
+            case TypeTransmission::TransmissionActe:
                 $xml = $this->generateActeXMLFile($xml_name);
                 break;
 
-            case TypeActe::CourrierSimple:
-            case TypeActe::DemandePieceComplementaire:
-            case TypeActe::LettreDObservation:
+            case TypeTransmission::CourrierSimple:
+            case TypeTransmission::DemandePieceComplementaire:
+            case TypeTransmission::LettreDObservation:
                 $xml = $this->generateReponseCourrierXMLFile($xml_name);
                 break;
 
-            case TypeActe::Annulation:
+            case TypeTransmission::Annulation:
                 $xml = $this->generateCancelXMLFile($xml_name);
                 break;
-            case TypeActe::DemandeDeClassification:
+            case TypeTransmission::DemandeDeClassification:
                 $xml = $this->generateClassifRequestXMLFile($xml_name);
                 break;
             default:
@@ -793,10 +793,10 @@ SQL;
         $this->xmlFileName = $xml_name;
 
         switch ($this->getType()) {
-            case TypeActe::CourrierSimple:
+            case TypeTransmission::CourrierSimple:
                 $root =  "ReponseCourrierSimple";
                 break;
-            case TypeActe::DemandePieceComplementaire:
+            case TypeTransmission::DemandePieceComplementaire:
                 if ($this->type_reponse == ActesTransaction::TYPE_REFUS) {
                     $root = "RefusPieceComplementaire";
                 } elseif ($this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
@@ -806,7 +806,7 @@ SQL;
                     return false;
                 }
                 break;
-            case TypeActe::LettreDObservation:
+            case TypeTransmission::LettreDObservation:
                 if ($this->type_reponse == ActesTransaction::TYPE_REFUS) {
                     $root = "RejetLettreObservations";
                 } elseif ($this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
@@ -828,7 +828,7 @@ SQL;
         $xml .= "actes:DateCourrierPref=\"" . $this->decision_date . "\" \n";
         $xml .= "actes:IDActe=\"" . Helpers :: escapeForXML($this->related_transaction->unique_id) . "\" > \n";
 
-        if ($this->isType(TypeActe::DemandePieceComplementaire) && $this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
+        if ($this->isType(TypeTransmission::DemandePieceComplementaire) && $this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
             $xml .= "<actes:Documents>";
         }
 
@@ -838,7 +838,7 @@ SQL;
         $xml .= "</actes:NomFichier>\n";
         $xml .= "</actes:Document>\n";
 
-        if ($this->isType(TypeActe::DemandePieceComplementaire) && $this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
+        if ($this->isType(TypeTransmission::DemandePieceComplementaire) && $this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
             if (isset($this->files["attachment"])) {
                 foreach ($this->files["attachment"] as $key => $file) {
                     $xml .= "  <actes:Document>\n";
@@ -949,7 +949,7 @@ SQL;
       // Détermination du type de transaction
         switch (@ dom_import_simplexml($this->xmlObj)->nodeName) {
             case "actes:Acte":
-                $this->setType(TypeActe::TransmissionActe);
+                $this->setType(TypeTransmission::TransmissionActe);
                 $acte_attr = $this->xmlObj->attributes($namespaces["actes"]);
             // Date de la décision
                 $this->decision_date = Helpers :: getFromXMLElt($acte_attr["Date"]);
@@ -1041,27 +1041,27 @@ SQL;
                 break;
 
             case "actes:ReponseCourrierSimple":
-                $rep = $this->setDataFromCourrier(TypeActe::CourrierSimple, $xmlFile);
+                $rep = $this->setDataFromCourrier(TypeTransmission::CourrierSimple, $xmlFile);
                 break;
 
             case "actes:RefusPieceComplementaire":
-                $rep = $this->setDataFromCourrier(TypeActe::DemandePieceComplementaire, $xmlFile, true);
+                $rep = $this->setDataFromCourrier(TypeTransmission::DemandePieceComplementaire, $xmlFile, true);
                 break;
 
             case "actes:PieceComplementaire":
-                $rep = $this->setDataFromCourrier(TypeActe::DemandePieceComplementaire, $xmlFile, false);
+                $rep = $this->setDataFromCourrier(TypeTransmission::DemandePieceComplementaire, $xmlFile, false);
                 break;
 
             case "actes:RejetLettreObservations":
-                $rep = $this->setDataFromCourrier(TypeActe::LettreDObservation, $xmlFile, true);
+                $rep = $this->setDataFromCourrier(TypeTransmission::LettreDObservation, $xmlFile, true);
                 break;
 
             case "actes:ReponseLettreObservations":
-                $rep = $this->setDataFromCourrier(TypeActe::LettreDObservation, $xmlFile, false);
+                $rep = $this->setDataFromCourrier(TypeTransmission::LettreDObservation, $xmlFile, false);
                 break;
 
             case "actes:Annulation":
-                $this->setType(TypeActe::Annulation);
+                $this->setType(TypeTransmission::Annulation);
                 $acte_attr = $this->xmlObj->attributes($namespaces["actes"]);
 
                 $this->unique_id = Helpers :: getFromXMLElt($acte_attr["IDActe"]);
@@ -1082,7 +1082,7 @@ SQL;
                 break;
 
             case "actes:DemandeClassification":
-                $this->setType(TypeActe::DemandeDeClassification);
+                $this->setType(TypeTransmission::DemandeDeClassification);
                 break;
 
             default:
@@ -1159,7 +1159,7 @@ SQL;
             }
 
 
-            if ($type == 'acte' && $this->isType(TypeActe::TransmissionActe)) {
+            if ($type == 'acte' && $this->isType(TypeTransmission::TransmissionActe)) {
                 if (! in_array($ext, array('pdf','xml'))) {
                     $this->errorMsg = "Le fichier de l'acte \" " . basename($name) . " \" est de type \" " . $mimeType . " \". Fichier PDF ou XML requis.";
                     return false;
@@ -1274,7 +1274,7 @@ SQL;
         return true;
     }
 
-    private function setDataFromCourrier(TypeActe $type, $xmlFile, $isRefus = false)
+    private function setDataFromCourrier(TypeTransmission $type, $xmlFile, $isRefus = false)
     {
 
         $this->setType($type);
@@ -1302,7 +1302,7 @@ SQL;
 
         $this->number = $related_trans->get("number");
 
-        if ($type == TypeActe::DemandePieceComplementaire && !$isRefus) {
+        if ($type == TypeTransmission::DemandePieceComplementaire && !$isRefus) {
             foreach ($actesItems->Documents->Document as $fichiers) {
                 $actePath = dirname($xmlFile) . "/" . Helpers :: getFromXMLElt($fichiers->NomFichier);
                 if (!$this->addActeFile($actePath, $actePath)) {
@@ -1514,7 +1514,7 @@ SQL;
             $new = true;
         }
 
-        if ($this->isType(TypeActe::TransmissionActe)) {
+        if ($this->isType(TypeTransmission::TransmissionActe)) {
             $done = false;
             $this->classification = "";
             $i = 1;
@@ -1538,7 +1538,7 @@ SQL;
 
       // Si la transaction n'est pas une transmission d'acte on désactive
       // le contrôle des champs car tous les champs ne sont plus obligatoire
-        if (!$this->isType(TypeActe::TransmissionActe)) {
+        if (!$this->isType(TypeTransmission::TransmissionActe)) {
             $validate = false;
         }
 
@@ -1558,7 +1558,7 @@ SQL;
                 " WHERE actes_transactions.number=? AND authority_id=?";
 
             if (
-                $this->isType(TypeActe::TransmissionActe)
+                $this->isType(TypeTransmission::TransmissionActe)
                 &&
                 $this->db->getOneValue($sql_verif, [$this->get('number'),$this->get('authority_id')])
             ) {
@@ -1838,18 +1838,18 @@ SQL;
         $this->is_en_attente_de_signature = $is_en_attente_de_signature;
     }
 
-    public function isType(TypeActe $type): bool
+    public function isType(TypeTransmission $type): bool
     {
         return $this->getType() === $type;
     }
 
-    public function setType(TypeActe $type)
+    public function setType(TypeTransmission $type)
     {
         $this->type = $type->value;
     }
 
-    public function getType(): ?TypeActe
+    public function getType(): ?TypeTransmission
     {
-        return TypeActe::tryFrom($this->type);
+        return TypeTransmission::tryFrom($this->type);
     }
 }

@@ -3,12 +3,12 @@
 use S2lowLegacy\Class\actes\ActesAntivirusWorker;
 use S2lowLegacy\Class\actes\ActesNameArchive;
 use S2lowLegacy\Class\actes\ActesStoreEnveloppeWorker;
+use S2lowLegacy\Class\actes\TypeTransmission;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\RgsConnexion;
-use S2lowLegacy\Class\TypeActe;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\WorkerScript;
 
@@ -127,7 +127,7 @@ foreach ($xmlTransFiles as $xmlFile) {
 
     $env->addTransaction($trans);
 
-    if ($trans->isType(TypeActe::TransmissionActe)) {
+    if ($trans->isType(TypeTransmission::TransmissionActe)) {
         // Vérification qu'une transaction ayant le même numéro interne n'existe pas déjà
         if (!$trans->isUnique($myAuthority->getId())) {
             $env->purgeFiles();
@@ -141,7 +141,7 @@ foreach ($xmlTransFiles as $xmlFile) {
     }
 
     // En cas de demande de classification, création de la requête dans la table idoine
-    if ($trans->isType(TypeActe::DemandeDeClassification)) {
+    if ($trans->isType(TypeTransmission::DemandeDeClassification)) {
         $classifRequest = new ActesClassification();
 
         $classifRequest->set("requested_by", $me->getId());

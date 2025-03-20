@@ -3,12 +3,12 @@
 // Configuration
 use S2lowLegacy\Class\actes\ActesAntivirusWorker;
 use S2lowLegacy\Class\actes\ActesEnvelopeSerialSQL;
+use S2lowLegacy\Class\actes\TypeTransmission;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
-use S2lowLegacy\Class\TypeActe;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\WorkerScript;
 
@@ -54,7 +54,7 @@ if (isset($related_id) && ! empty($related_id)) {
 }
 
 // Vérification du type de transaction
-if (!$rel_trans->isType(TypeActe::TransmissionActe)) {
+if (!$rel_trans->isType(TypeTransmission::TransmissionActe)) {
     Helpers::returnAndExit(1, "Ce type de transaction ne peut pas être annulé.", Helpers::getLink("/modules/actes/actes_transac_show.php?id=") . $rel_trans->getId());
 }
 
@@ -111,7 +111,7 @@ $env->set("telephone", $telephone);
 $env->set("email", $me->get("email"));
 
 // Initialisation de la transaction
-$trans->setType(TypeActe::Annulation);
+$trans->setType(TypeTransmission::Annulation);
 $trans->set("related_transaction", $rel_trans);
 $trans->set("related_transaction_id", $related_id);
 $trans->set("number", $rel_trans->get("number"));

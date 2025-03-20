@@ -1,8 +1,8 @@
 <?php
 
-namespace S2lowLegacy\Class;
+namespace S2lowLegacy\Class\actes;
 
-enum TypeActe: int
+enum TypeTransmission: int
 {
     case TransmissionActe = 1;
     case CourrierSimple = 2;

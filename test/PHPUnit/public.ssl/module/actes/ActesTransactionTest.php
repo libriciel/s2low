@@ -5,7 +5,7 @@ declare(strict_types=1);
 use S2lowLegacy\Class\actes\ActesClassificationCodesSQL;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
-use S2lowLegacy\Class\TypeActe;
+use S2lowLegacy\Class\actes\TypeTransmission;
 
 class ActesTransactionTest extends S2lowTestCase
 {
@@ -113,13 +113,13 @@ class ActesTransactionTest extends S2lowTestCase
 
     public function testAddJPGCourrierSimple()
     {
-        $this->actesTransaction->setType(TypeActe::DemandePieceComplementaire);
+        $this->actesTransaction->setType(TypeTransmission::DemandePieceComplementaire);
         $this->addActeJPG();
     }
 
     public function testAddTextCourrierSimple()
     {
-        $this->actesTransaction->setType(TypeActe::DemandePieceComplementaire);
+        $this->actesTransaction->setType(TypeTransmission::DemandePieceComplementaire);
         $this->assertFalse($this->actesTransaction->addActeFile("toto.txt", "toto", $this->txt_filepath));
         $this->assertEquals(
             "Le fichier de réponse \" toto.txt \" est de type \" application/x-empty \". Fichier PDF, XML, PNG ou JPEG requis.",
@@ -129,7 +129,7 @@ class ActesTransactionTest extends S2lowTestCase
 
     public function testAddActeTxt()
     {
-        $this->actesTransaction->setType(TypeActe::TransmissionActe);
+        $this->actesTransaction->setType(TypeTransmission::TransmissionActe);
         $this->assertFalse($this->actesTransaction->addActeFile("toto.txt", "toto", $this->txt_filepath));
         $this->assertEquals(
             "Le fichier de l'acte \" toto.txt \" est de type \" application/x-empty \". Fichier PDF ou XML requis.",
@@ -152,7 +152,7 @@ class ActesTransactionTest extends S2lowTestCase
 
     public function testAddActesXMLBadNature()
     {
-        $this->actesTransaction->setType(TypeActe::TransmissionActe);
+        $this->actesTransaction->setType(TypeTransmission::TransmissionActe);
         $dest_filename = mt_rand(0, mt_getrandmax());
         $this->assertFalse($this->actesTransaction->addActeFile("toto.xml", "toto/$dest_filename", $this->xml_filepath));
         $this->assertEquals("Seuls les documents budgétaires et financiers peuvent être au format XML.", $this->actesTransaction->getErrorMsg());
@@ -160,7 +160,7 @@ class ActesTransactionTest extends S2lowTestCase
 
     public function testAddActesXMLBadClassif()
     {
-        $this->actesTransaction->setType(TypeActe::TransmissionActe);
+        $this->actesTransaction->setType(TypeTransmission::TransmissionActe);
         $this->actesTransaction->set('nature_code', 5);
         $dest_filename = mt_rand(0, mt_getrandmax());
         $this->assertFalse($this->actesTransaction->addActeFile("toto.xml", "toto/$dest_filename", $this->xml_filepath));
@@ -238,7 +238,7 @@ class ActesTransactionTest extends S2lowTestCase
         $this->actesTransaction->set('classif1', '1');
         $this->actesTransaction->set('classif2', '1');
 
-        $this->actesTransaction->setType(TypeActe::TransmissionActe);
+        $this->actesTransaction->setType(TypeTransmission::TransmissionActe);
         $this->actesTransaction->set('nature_code', '1');
         $this->actesTransaction->set('nature_descr', 'toto');
         $this->actesTransaction->set('subject', 'TEST');
@@ -297,7 +297,7 @@ class ActesTransactionTest extends S2lowTestCase
         $this->actesTransaction->set('classif1', '1');
         $this->actesTransaction->set('classif2', '1');
 
-        $this->actesTransaction->setType(TypeActe::TransmissionActe);
+        $this->actesTransaction->setType(TypeTransmission::TransmissionActe);
         $this->actesTransaction->set('nature_code', '1');
         $this->actesTransaction->set('nature_descr', 'toto');
         $this->actesTransaction->set('subject', 'TEST');
@@ -330,7 +330,7 @@ class ActesTransactionTest extends S2lowTestCase
     /**
      * @dataProvider typeProvider
      */
-    public function testFileNameAccordingToType(TypeActe $type, string $expectedName): void
+    public function testFileNameAccordingToType(TypeTransmission $type, string $expectedName): void
     {
         $this->actesTransaction->setType($type);
         $this->actesTransaction->set('decision_date', '2013-04-05');
@@ -345,9 +345,9 @@ class ActesTransactionTest extends S2lowTestCase
     public function typeProvider(): iterable
     {
         return [
-            [TypeActe::TransmissionActe, 'toto/001-000000000-20130405--DE-1-1_1'],
-            [TypeActe::CourrierSimple, 'toto/001-000000000-20130405--DE-2-2_1'],
-            [TypeActe::DemandeDeClassification, 'toto/001-000000000----7-1_1']
+            [TypeTransmission::TransmissionActe, 'toto/001-000000000-20130405--DE-1-1_1'],
+            [TypeTransmission::CourrierSimple, 'toto/001-000000000-20130405--DE-2-2_1'],
+            [TypeTransmission::DemandeDeClassification, 'toto/001-000000000----7-1_1']
         ];
     }
 
@@ -357,7 +357,7 @@ class ActesTransactionTest extends S2lowTestCase
      */
     public function testFileNameAnnulation(): void
     {
-        $this->actesTransaction->setType(TypeActe::Annulation);
+        $this->actesTransaction->setType(TypeTransmission::Annulation);
 
         $relatedTransaction = new ActesTransaction();
         $relatedTransaction->set('decision_date', '2013-04-05');
@@ -369,7 +369,7 @@ class ActesTransactionTest extends S2lowTestCase
         $env->set('department', '001');
         $env->set('siren', '000000000');
 
-        $this->actesTransaction->setType(TypeActe::Annulation);
+        $this->actesTransaction->setType(TypeTransmission::Annulation);
         static::assertEquals('toto/001-000000000-20130405--DE-6-1_1', $this->actesTransaction->getStdFileName($env));
     }
 
@@ -378,7 +378,7 @@ class ActesTransactionTest extends S2lowTestCase
      * Il faut donc un test séparé.
      * @dataProvider typeProviderWithResponseType
      */
-    public function testFileNameAccordingToTypeWithResponseType(TypeActe $type, int $type_response, string $expectedName)
+    public function testFileNameAccordingToTypeWithResponseType(TypeTransmission $type, int $type_response, string $expectedName)
     {
 
         $this->actesTransaction->setType($type);
@@ -395,17 +395,17 @@ class ActesTransactionTest extends S2lowTestCase
     public function typeProviderWithResponseType()
     {
         return [
-            [TypeActe::LettreDObservation,1, 'toto/001-000000000-20130405--DE-4-1_1'],
-            [TypeActe::LettreDObservation,2, 'toto/001-000000000-20130405--DE-4-2_1'],
-            [TypeActe::DemandePieceComplementaire,1, 'toto/001-000000000-20130405--DE-3-1_1'],
-            [TypeActe::DemandePieceComplementaire,2, 'toto/001-000000000-20130405--DE-3-2_1']
+            [TypeTransmission::LettreDObservation,1, 'toto/001-000000000-20130405--DE-4-1_1'],
+            [TypeTransmission::LettreDObservation,2, 'toto/001-000000000-20130405--DE-4-2_1'],
+            [TypeTransmission::DemandePieceComplementaire,1, 'toto/001-000000000-20130405--DE-3-1_1'],
+            [TypeTransmission::DemandePieceComplementaire,2, 'toto/001-000000000-20130405--DE-3-2_1']
         ];
     }
 
     public function testGenerateMessageXMLActe()
     {
 
-        $this->actesTransaction->setType(TypeActe::TransmissionActe);
+        $this->actesTransaction->setType(TypeTransmission::TransmissionActe);
         $this->actesTransaction->set('decision_date', '2013-04-05');
         $this->actesTransaction->set('classification_date', '2013-04-05');
         $this->actesTransaction->set('nature_code', '1');
@@ -426,7 +426,7 @@ class ActesTransactionTest extends S2lowTestCase
     /**
      * @dataProvider typeReponseCourrier
      */
-    public function testGenerateMessageXMLReponseCourrier(TypeActe $type, ?int $type_response, string $expectedRoot): void
+    public function testGenerateMessageXMLReponseCourrier(TypeTransmission $type, ?int $type_response, string $expectedRoot): void
     {
         $this->actesTransaction->setType($type);
         $this->actesTransaction->set('type_reponse', $type_response);
@@ -457,17 +457,17 @@ class ActesTransactionTest extends S2lowTestCase
     public function typeReponseCourrier(): iterable
     {
         return [
-            [TypeActe::CourrierSimple, null, 'ReponseCourrierSimple'],
-            [TypeActe::DemandePieceComplementaire, ActesTransaction::TYPE_REFUS, 'RefusPieceComplementaire'],
-            [TypeActe::LettreDObservation, ActesTransaction::TYPE_REFUS, 'RejetLettreObservations'],
-            [TypeActe::LettreDObservation, ActesTransaction::TYPE_ENVOIE, 'ReponseLettreObservations'],
+            [TypeTransmission::CourrierSimple, null, 'ReponseCourrierSimple'],
+            [TypeTransmission::DemandePieceComplementaire, ActesTransaction::TYPE_REFUS, 'RefusPieceComplementaire'],
+            [TypeTransmission::LettreDObservation, ActesTransaction::TYPE_REFUS, 'RejetLettreObservations'],
+            [TypeTransmission::LettreDObservation, ActesTransaction::TYPE_ENVOIE, 'ReponseLettreObservations'],
         ];
     }
 
     public function testGenerateMessageXMLAnnulation(): void
     {
 
-        $this->actesTransaction->setType(TypeActe::Annulation);
+        $this->actesTransaction->setType(TypeTransmission::Annulation);
         $this->actesTransaction->set('decision_date', '2013-04-05');
         $this->actesTransaction->set('classification_date', '2013-04-05');
         $this->actesTransaction->set('nature_code', '1');
@@ -496,7 +496,7 @@ class ActesTransactionTest extends S2lowTestCase
     public function testGenerateMessageXMLDemandeClassification(): void
     {
 
-        $this->actesTransaction->setType(TypeActe::DemandeDeClassification);
+        $this->actesTransaction->setType(TypeTransmission::DemandeDeClassification);
         $this->actesTransaction->set('decision_date', '2013-04-05');
         $this->actesTransaction->set('last_classification_date', '2013-04-05');
         $this->actesTransaction->set('nature_code', '1');
@@ -519,7 +519,7 @@ class ActesTransactionTest extends S2lowTestCase
     }
     public function testGenerateMessageXMLReponseCourrierEnvoi(): void
     {
-        $this->actesTransaction->setType(TypeActe::DemandePieceComplementaire);
+        $this->actesTransaction->setType(TypeTransmission::DemandePieceComplementaire);
         $this->actesTransaction->set('type_reponse', ActesTransaction::TYPE_ENVOIE);
         $this->actesTransaction->set('decision_date', '2013-04-05');
         $this->actesTransaction->set('classification_date', '2013-04-05');
@@ -584,21 +584,21 @@ class ActesTransactionTest extends S2lowTestCase
     {
         return [
             //actes:Acte
-          ['001-000000000-20170130-TEST42-DE-1-1_0.xml', TypeActe::TransmissionActe->value],
+          ['001-000000000-20170130-TEST42-DE-1-1_0.xml', TypeTransmission::TransmissionActe->value],
             //actes:ReponseCourrierSimple
-            ['001-000000000-20170130-TEST42-DE-2-2_0.xml', TypeActe::CourrierSimple->value],
+            ['001-000000000-20170130-TEST42-DE-2-2_0.xml', TypeTransmission::CourrierSimple->value],
             //actes:RefusPieceComplementaire
-            ['001-000000000-20170130-TEST42-DE-3-3_0.xml',TypeActe::DemandePieceComplementaire->value],
+            ['001-000000000-20170130-TEST42-DE-3-3_0.xml',TypeTransmission::DemandePieceComplementaire->value],
             //actes:PieceComplementaire
-            ['001-000000000-20170130-TEST42-DE-3-4_0.xml',TypeActe::DemandePieceComplementaire->value],
+            ['001-000000000-20170130-TEST42-DE-3-4_0.xml',TypeTransmission::DemandePieceComplementaire->value],
             //actes:RejetLettreObservations
-            ['001-000000000-20170130-TEST42-DE-4-3_0.xml',TypeActe::LettreDObservation->value],
+            ['001-000000000-20170130-TEST42-DE-4-3_0.xml',TypeTransmission::LettreDObservation->value],
             //actes:ReponseLettreObservations
-            ['001-000000000-20170130-TEST42-DE-4-4_0.xml',TypeActe::LettreDObservation->value],
+            ['001-000000000-20170130-TEST42-DE-4-4_0.xml',TypeTransmission::LettreDObservation->value],
             //actes:Annulation
-            ['001-000000000-20170130-TEST42-DE-6-1_0.xml',TypeActe::Annulation->value],
+            ['001-000000000-20170130-TEST42-DE-6-1_0.xml',TypeTransmission::Annulation->value],
             //actes:DemandeClassification
-            ['001-000000000----7-1_0.xml',TypeActe::DemandeDeClassification->value],
+            ['001-000000000----7-1_0.xml',TypeTransmission::DemandeDeClassification->value],
         ];
     }
 
@@ -616,7 +616,7 @@ class ActesTransactionTest extends S2lowTestCase
         $this->actesTransaction->set('classif1', '1');
         $this->actesTransaction->set('classif2', '1');
 
-        $this->actesTransaction->setType(TypeActe::TransmissionActe);
+        $this->actesTransaction->setType(TypeTransmission::TransmissionActe);
         $this->actesTransaction->set('nature_code', '1');
         $this->actesTransaction->set('nature_descr', 'toto');
         $this->actesTransaction->set('subject', 'TEST');
@@ -656,7 +656,7 @@ class ActesTransactionTest extends S2lowTestCase
         rmdir(ACTES_FILES_UPLOAD_ROOT . '/testFiles/');
 
         self::assertSame(
-            TypeActe::DemandePieceComplementaire->value,
+            TypeTransmission::DemandePieceComplementaire->value,
             $transaction->get('type')
         );
 
@@ -680,7 +680,7 @@ class ActesTransactionTest extends S2lowTestCase
         $this->actesTransaction->set('classif1', '1');
         $this->actesTransaction->set('classif2', '1');
 
-        $this->actesTransaction->setType(TypeActe::TransmissionActe);
+        $this->actesTransaction->setType(TypeTransmission::TransmissionActe);
         $this->actesTransaction->set('nature_code', '1');
         $this->actesTransaction->set('nature_descr', 'toto');
         $this->actesTransaction->set('subject', 'TEST');
@@ -725,7 +725,7 @@ class ActesTransactionTest extends S2lowTestCase
         rmdir(ACTES_FILES_UPLOAD_ROOT . '/siren');
 
         self::assertSame(
-            TypeActe::DemandePieceComplementaire->value,
+            TypeTransmission::DemandePieceComplementaire->value,
             $transaction->get('type')
         );
 
@@ -756,7 +756,7 @@ class ActesTransactionTest extends S2lowTestCase
         $this->actesTransaction->set('type', $type_as_int);
         self::assertSame(
             $isSame,
-            $this->actesTransaction->isType(TypeActe::TransmissionActe)
+            $this->actesTransaction->isType(TypeTransmission::TransmissionActe)
         );
     }
 
@@ -764,8 +764,8 @@ class ActesTransactionTest extends S2lowTestCase
     {
         return [
             [29620,false],
-            [TypeActe::TransmissionActe->value, true],
-            [TypeActe::DemandeDeClassification->value, false],
+            [TypeTransmission::TransmissionActe->value, true],
+            [TypeTransmission::DemandeDeClassification->value, false],
         ];
     }
 }

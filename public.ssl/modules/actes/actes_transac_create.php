@@ -6,6 +6,7 @@ use S2lowLegacy\Class\actes\ActesEnvelopeSerialSQL;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesStoreEnveloppeWorker;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\actes\TypeTransmission;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\FileUploader;
@@ -13,7 +14,6 @@ use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\RgsConnexion;
-use S2lowLegacy\Class\TypeActe;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\ObjectInstancier;
@@ -215,7 +215,7 @@ $env->set("email", $me->get("email"));
 $env->set("file_path", "");
 
 // Initialisation de la transaction
-$trans->setType(TypeActe::TransmissionActe);
+$trans->setType(TypeTransmission::TransmissionActe);
 $trans->set("nature_code", $nature_code);
 $trans->set("nature_descr", $transNatures[$nature_code]);
 $trans->set("subject", $subject);
