@@ -6,7 +6,7 @@ use IntegrationTests\S2lowIntegrationTestCase;
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Lib\ObjectInstancierFactory;
+use Symfony\Component\HttpFoundation\Response;
 
 class GetClassificationXMLTest extends S2lowIntegrationTestCase
 {
@@ -38,5 +38,10 @@ class GetClassificationXMLTest extends S2lowIntegrationTestCase
         $response = $client->getResponse();
 
         static::assertTrue($this->headerReturnXMLFile($response));
+    }
+
+    private function headerReturnXMLFile(Response $response): bool
+    {
+        return str_contains($response->getContent(), 'Content-type: text/xml');
     }
 }
