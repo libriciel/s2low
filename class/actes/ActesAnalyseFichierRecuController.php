@@ -402,7 +402,7 @@ class ActesAnalyseFichierRecuController
     {
         $this->s2lowLogger->info("AR Actes trouvé pour l'envoi de piece complementaire : " . $fichierXML->id_actes);
 
-        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne, TypeTransmission::DemandePieceComplementaire, true);
+        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne, TypeTransaction::DemandePieceComplementaire, true);
 
         $this->s2lowLogger->info("$fichierXML->id_actes -> transaction_id = $transaction_id");
         $message = "Reçu par le {$this->actes_ministere_acronyme} le " . $fichierXML->date_reception;
@@ -425,7 +425,7 @@ class ActesAnalyseFichierRecuController
     {
         $this->s2lowLogger->info("AR Actes trouvé pour l'envoi d'une réponse ou d'un refus à une lettre d'observation : " . $fichierXML->id_actes);
 
-        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne, TypeTransmission::LettreDObservation, true);
+        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne, TypeTransaction::LettreDObservation, true);
 
         $this->s2lowLogger->info("$fichierXML->id_actes -> transaction_id = $transaction_id");
         $message = "Reçu par le {$this->actes_ministere_acronyme} le " . $fichierXML->date_reception;
@@ -531,7 +531,7 @@ class ActesAnalyseFichierRecuController
             $message,
             $xml
         );
-        $transaction_annulation_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne, TypeTransmission::Annulation);
+        $transaction_annulation_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne, TypeTransaction::Annulation);
 
         $this->updateStatus(
             $transaction_annulation_id,
@@ -563,7 +563,7 @@ class ActesAnalyseFichierRecuController
      * @return array|bool|mixed
      * @throws Exception
      */
-    private function getBySirenAndNumeroInterne($siren, $numeroInterne, TypeTransmission $type = TypeTransmission::TransmissionActe, $type_reponse_not_null = false)
+    private function getBySirenAndNumeroInterne($siren, $numeroInterne, TypeTransaction $type = TypeTransaction::TransmissionActe, $type_reponse_not_null = false)
     {
         $transaction_id = $this->actesTransactionsSQL->getBySirenAndNumeroInterne($siren, $numeroInterne, $type->value, $type_reponse_not_null);
         if (! $transaction_id) {

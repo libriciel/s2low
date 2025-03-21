@@ -1,6 +1,6 @@
 <?php
 
-use S2lowLegacy\Class\actes\TypeTransmission;
+use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
@@ -46,7 +46,7 @@ if ($zeTrans->init()) {
     exit_wrapper();
 }
 
-if ($zeTrans->isType(TypeTransmission::TransmissionActe)) {
+if ($zeTrans->isType(TypeTransaction::TransmissionActe)) {
     $lesTransaction = $zeTrans->getCourrierInfo();
     foreach ($lesTransaction as $id => $value) {
         $t = new ActesTransaction();
