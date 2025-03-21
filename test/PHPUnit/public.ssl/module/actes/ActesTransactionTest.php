@@ -99,11 +99,13 @@ class ActesTransactionTest extends S2lowTestCase
 
     public function testAddFileActePDF()
     {
+        $this->actesTransaction->setType(TypeTransaction::TransmissionActe);
         $this->addActePDF();
     }
 
     public function testAddAnnexe()
     {
+        $this->actesTransaction->setType(TypeTransaction::TransmissionActe);
         $this->addActePDF();
         $this->addAnnexePDF();
         $this->addAnnexePDF();
@@ -146,6 +148,7 @@ class ActesTransactionTest extends S2lowTestCase
 
     public function testAddActesXML()
     {
+        $this->actesTransaction->setType(TypeTransaction::TransmissionActe);
         $this->setActesBudgetaire();
         $this->addActeXML();
     }
@@ -178,6 +181,7 @@ class ActesTransactionTest extends S2lowTestCase
 
     public function testAttachmentXML()
     {
+        $this->actesTransaction->setType(TypeTransaction::TransmissionActe);
         $this->setActesBudgetaire();
         $this->addActePDF();
         $dest_filename2 = mt_rand(0, mt_getrandmax());
@@ -187,6 +191,7 @@ class ActesTransactionTest extends S2lowTestCase
 
     public function testAttachmentXMLNoBudgetaire()
     {
+        $this->actesTransaction->setType(TypeTransaction::TransmissionActe);
         $this->addActePDF();
         $dest_filename2 = mt_rand(0, mt_getrandmax());
         $this->assertTrue($this->actesTransaction->addAttachmentFile("vide.xml", "toto/" . $dest_filename2, $this->xml_filepath));
@@ -205,6 +210,7 @@ class ActesTransactionTest extends S2lowTestCase
      */
     public function testgenerateActeXMLFile()
     {
+        $this->actesTransaction->setType(TypeTransaction::TransmissionActe);
         $this->addActePDF();
         $this->actesTransaction->set('decision_date', "2013-04-05");
         $this->actesTransaction->set('classification_date', "2013-04-05");
@@ -264,13 +270,16 @@ class ActesTransactionTest extends S2lowTestCase
         $xml_name =  $this->actesTransaction->getStdFileName($env, false);
 
         $this->actesTransaction->generateMessageXMLFile($xml_name);
-
         $this->actesTransaction->save();
 
         $transaction_id = $this->actesTransaction->getId();
 
         $actesIncludedFileSQL = $this->getObjectInstancier()->get(ActesIncludedFileSQL::class);
         $file_list = $actesIncludedFileSQL->getAll($transaction_id);
+        self::assertEquals(
+            $xml_name . '_0.xml',
+            $this->actesTransaction->get('xmlFileName')
+        );
         $this->assertEquals("99_AU", $file_list[2]['code_pj']);
         $this->assertEquals("99_AU-001-000000000-20170829-TEST-DE-1-1_2.pdf", $file_list[2]['filename']);
     }
@@ -416,8 +425,12 @@ class ActesTransactionTest extends S2lowTestCase
         $env->set('department', '001');
         $env->set('siren', '000000000');
 
-        static::assertTrue($this->actesTransaction->generateMessageXMLFile('test.xml'));
+        static::assertTrue($this->actesTransaction->generateMessageXMLFile('test'));
         $file_path = ACTES_FILES_UPLOAD_ROOT . '/' . $this->actesTransaction->get('xmlFileName');
+        static::assertSame(
+            'test_0.xml',
+            $this->actesTransaction->get('xmlFileName')
+        );
         static::assertFileExists($file_path);
         // On vérifie que le type de message généré est correct
         static::assertStringContainsString('<actes:Acte', file_get_contents($file_path));
@@ -447,8 +460,12 @@ class ActesTransactionTest extends S2lowTestCase
         $this->actesTransaction->set('related_transaction', $relatedTransaction);
 
 
-        static::assertTrue($this->actesTransaction->generateMessageXMLFile('test.xml'));
+        static::assertTrue($this->actesTransaction->generateMessageXMLFile('test'));
         $file_path = ACTES_FILES_UPLOAD_ROOT . '/' . $this->actesTransaction->get('xmlFileName');
+        static::assertSame(
+            'test_0.xml',
+            $this->actesTransaction->get('xmlFileName')
+        );
         static::assertFileExists($file_path);
         // On vérifie que le type de message généré est correct
         static::assertStringContainsString('<actes:' . $expectedRoot, file_get_contents($file_path));
@@ -483,8 +500,12 @@ class ActesTransactionTest extends S2lowTestCase
 
         $this->actesTransaction->set('related_transaction', $relatedTransaction);
 
-        static::assertTrue($this->actesTransaction->generateMessageXMLFile('test.xml'));
+        static::assertTrue($this->actesTransaction->generateMessageXMLFile('test'));
         $file_path = ACTES_FILES_UPLOAD_ROOT . '/' . $this->actesTransaction->get('xmlFileName');
+        static::assertSame(
+            'test_0.xml',
+            $this->actesTransaction->get('xmlFileName')
+        );
         static::assertFileExists($file_path);
         $file_content = file_get_contents($file_path);
         // On vérifie que le type de message généré est correct
@@ -505,8 +526,12 @@ class ActesTransactionTest extends S2lowTestCase
         $env->set('department', '001');
         $env->set('siren', '000000000');
 
-        static::assertTrue($this->actesTransaction->generateMessageXMLFile('test.xml'));
+        static::assertTrue($this->actesTransaction->generateMessageXMLFile('test'));
         $file_path = ACTES_FILES_UPLOAD_ROOT . '/' . $this->actesTransaction->get('xmlFileName');
+        static::assertEquals(
+            'test_0.xml',
+            $this->actesTransaction->get('xmlFileName')
+        );
         static::assertFileExists($file_path);
         $file_content = file_get_contents($file_path);
         // On vérifie que le type de message généré est correct
@@ -538,8 +563,12 @@ class ActesTransactionTest extends S2lowTestCase
 
         $this->actesTransaction->set('related_transaction', $relatedTransaction);
 
-        static::assertTrue($this->actesTransaction->generateMessageXMLFile('test.xml'));
+        static::assertTrue($this->actesTransaction->generateMessageXMLFile('test'));
         $file_path = ACTES_FILES_UPLOAD_ROOT . '/' . $this->actesTransaction->get('xmlFileName');
+        static::assertSame(
+            'test_0.xml',
+            $this->actesTransaction->get('xmlFileName')
+        );
         static::assertFileExists($file_path);
         $file_content = file_get_contents($file_path);
         // On vérifie que le type de message généré est correct
@@ -555,7 +584,7 @@ class ActesTransactionTest extends S2lowTestCase
             basename($this->actesTransaction->files['attachment'][0]['name']),
             $file_content
         );
-        unlink('/data/tdt-workspace/actes/uploads/test.xml_0.xml');
+        unlink('/data/tdt-workspace/actes/uploads/test_0.xml');
     }
 
     /**
@@ -655,9 +684,17 @@ class ActesTransactionTest extends S2lowTestCase
         unlink(ACTES_FILES_UPLOAD_ROOT . '/testFiles/' . '001-000000000-20170130-TEST42-DE-3-3_1.pdf');
         rmdir(ACTES_FILES_UPLOAD_ROOT . '/testFiles/');
 
+        static::assertSame(
+            $xml_name . '_0.xml',
+            $this->actesTransaction->get('xmlFileName')
+        );
         self::assertSame(
             TypeTransaction::DemandePieceComplementaire->value,
             $transaction->get('type')
+        );
+        self::assertSame(
+            $xml_name . '_0.xml',
+            $this->actesTransaction->get('xmlFileName')
         );
 
         self::assertSame(null, $transaction->getErrorMsg());
@@ -727,6 +764,10 @@ class ActesTransactionTest extends S2lowTestCase
         self::assertSame(
             TypeTransaction::DemandePieceComplementaire->value,
             $transaction->get('type')
+        );
+        self::assertSame(
+            $xml_name . '_0.xml',
+            $this->actesTransaction->get('xmlFileName')
         );
 
         //TODO : il y a un bug

@@ -614,6 +614,9 @@ class ActesTransaction extends DataObject
             return false;
         }
 
+        $xml_name .= "_0.xml";
+        $this->xmlFileName = $xml_name;
+
         if (!Helpers :: createDirTree(dirname($this->rootDir . "/" . $this->xmlFileName))) {
             $this->errorMsg = "Erreur système de fichiers (createDirTree).";
             return false;
@@ -639,10 +642,6 @@ class ActesTransaction extends DataObject
    */
     public function generateActeXMLFile(string $xml_name): false|string
     {
-        $xml_name .= "_0.xml";
-
-        $this->xmlFileName = $xml_name;
-
         $xml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
         $xml .= "<actes:Acte\n";
         $xml .= "xmlns:actes=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216\"\n";
@@ -697,9 +696,6 @@ class ActesTransaction extends DataObject
 
     public function generateReponseCourrierXMLFile($xml_name)
     {
-        $xml_name .= "_0.xml";
-        $this->xmlFileName = $xml_name;
-
         switch ($this->getType()) {
             case TypeTransaction::CourrierSimple:
                 $root =  "ReponseCourrierSimple";
@@ -769,10 +765,6 @@ class ActesTransaction extends DataObject
    */
     public function generateCancelXMLFile($xml_name)
     {
-        $xml_name .= "_0.xml";
-
-        $this->xmlFileName = $xml_name;
-
         $xml = null;
 
         if (!empty($this->related_transaction->unique_id)) {
@@ -797,11 +789,6 @@ class ActesTransaction extends DataObject
    */
     public function generateClassifRequestXMLFile($xml_name)
     {
-        $xml_name .= "_0.xml";
-
-        $this->xmlFileName = $xml_name;
-
-
         $xml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
         $xml .= "<actes:DemandeClassification \n";
         $xml .= "xmlns:actes=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216\"\n";
