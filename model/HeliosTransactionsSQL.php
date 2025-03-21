@@ -12,15 +12,15 @@ class HeliosTransactionsSQL extends SQL
     public const POSTE = 1;
     public const ATTENTE = 2;
     public const TRANSMIS = 3;
-    public const ACQUITTER = 4;
-    public const VALIDER = 5; //non utilisé
-    public const REFUSER = 6;
+    public const ACQUITTE = 4;
+    public const VALIDE = 5;
+    public const REFUSE = 6;
     public const EN_TRAITEMENT = 7;
     public const INFORMATION_DISPONIBLE = 8;
 
-    public const ENVOYER_AU_SAE = 9;
+    public const ENVOYE_AU_SAE = 9;
     public const ACCEPTE_SAE = 10;
-    public const REFUSER_SAE = 11;
+    public const REFUSE_SAE = 11;
     public const ATTENTE_POSTEE = 14;
     public const ATTENTE_SIGNEE = 13;
 
@@ -438,9 +438,9 @@ class HeliosTransactionsSQL extends SQL
     {
 
         $blockingStatuses = [
-            HeliosTransactionsSQL::ENVOYER_AU_SAE,
+            HeliosTransactionsSQL::ENVOYE_AU_SAE,
             HeliosTransactionsSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
-            HeliosTransactionsSQL::REFUSER_SAE
+            HeliosTransactionsSQL::REFUSE_SAE
         ];
 
         $statusToSend = HeliosTransactionsSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE;

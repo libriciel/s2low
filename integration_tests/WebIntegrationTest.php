@@ -22,7 +22,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testCertificate(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
 
         $_GET = ['name' => 'ac-libriciel-personnel-g2.pem'];// 2/ Le client symfony ne modifie pas la variable _SERVER
         $crawler = $client->request('GET', 'admin/utilities/certificate.php');
@@ -39,7 +39,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testAddSirenController(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
 
         $_POST = [ 'id' => '1','siren' => '212901136'];
 
@@ -58,7 +58,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testListGroups(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
 
         $crawler = $client->request('POST', '/admin/groups/list_groups.php');
         static::assertMatchesRegularExpression(     //Le groupe de test est bien présent dans la page
@@ -73,7 +73,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testListCertificates(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
 
         $crawler = $client->request('GET', 'admin/utilities/certificate_list.php');
         static::assertMatchesRegularExpression(     //L'AC personnel ADULLACT G2 est bien présent'
@@ -88,7 +88,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testInfoConnexion(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
 
         $crawler = $client->request('GET', 'api/info-connexion.php');
         static::assertMatchesRegularExpression(     //On a bien le mail de l'user
@@ -103,7 +103,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testConnexion()
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
 
         $crawler = $client->request('GET', 'api/test-connexion.php');
         static::assertMatchesRegularExpression(     //On a bien le mail de l'user
@@ -118,7 +118,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testRGS(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
 
         $crawler = $client->request('GET', 'api/test-rgs.php');
         static::assertMatchesRegularExpression(     //Le certificat n'est pas RGS => KO
@@ -133,7 +133,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testAncienSystemeNotif(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
 
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'admin/ancien_systeme_notif.php');
@@ -149,7 +149,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testAdminIndex(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'admin/index.php');
         static::assertMatchesRegularExpression(
@@ -164,7 +164,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testPasDeSAE(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'admin/pas-de-sae.php');
         static::assertMatchesRegularExpression(
@@ -179,7 +179,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testStats(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'admin/stats.php');
         static::assertMatchesRegularExpression(
@@ -194,7 +194,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testEditAnnuaire(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'modules/mail/edit-annuaire.php');
         static::assertMatchesRegularExpression(

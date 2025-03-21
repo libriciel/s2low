@@ -46,7 +46,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesAnalyseResponse(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
         $enveloppeName = 'enveloppe';
         $this->copyEnveloppeToErrorDirectory($enveloppeName);
         $_GET['file'] = $enveloppeName; // Comme l'objet Récupérateur est set dans le script, ça ne fonctionne pas
@@ -67,7 +67,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testDeleteResponse(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
         $enveloppeName = 'enveloppe';
         $this->copyEnveloppeToErrorDirectory($enveloppeName);
         $_GET['file'] = $enveloppeName; // Comme l'objet Récupérateur est set dans le script, ça ne fonctionne pas
@@ -86,7 +86,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testDownloadResponse(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
         $enveloppeName = 'enveloppe';
         $this->copyEnveloppeToErrorDirectory($enveloppeName);
         $_GET['file'] = $enveloppeName; // Comme l'objet Récupérateur est set dans le script, ça ne fonctionne pas
@@ -104,7 +104,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testResponsesActesError(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
 
         $crawler = $client->request('GET', 'modules/actes/admin/responses-actes-error.php');
         static::assertMatchesRegularExpression(
@@ -119,7 +119,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesStats(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
 
         $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
         $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
@@ -143,7 +143,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacArchiver(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
 
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
 
@@ -161,7 +161,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacGetARActe(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
 
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
         $_GET['id'] = $transaction_id;
@@ -179,7 +179,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacRollBackAttente(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
 
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
         $_POST['id'] = $transaction_id;
@@ -201,7 +201,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacSetError(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
         $_POST['id'] = $transaction_id;
 
@@ -222,7 +222,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacShow(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
 
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
         $_GET['id'] = $transaction_id;
@@ -241,7 +241,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacSign(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
 
         $client->request('GET', 'modules/actes/actes_transac_sign.php');
         static::assertMatchesRegularExpression(
@@ -256,7 +256,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesIndex(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
         $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
 
         $crawler = $client->request('GET', 'modules/actes/index.php');
@@ -276,7 +276,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacClose(): void
     {
-        $client = $this->setUpUser();
+        $client = $this->getAuthenticatedClientWithSAdminUser();
 
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
         $_POST['id'] = $transaction_id;
