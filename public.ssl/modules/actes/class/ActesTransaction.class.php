@@ -1485,7 +1485,7 @@ class ActesTransaction extends DataObject
         if ($new) {
           // Ajout de l'état initial
             if ($this->en_attente) {
-                $result_set_status = $this->setNewStatus(ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_POSTEE, "Dépôt dans un état d'attente");
+                $result_set_status = $this->setNewStatus(ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_POSTE, "Dépôt dans un état d'attente");
             } elseif ($this->is_en_attente_de_signature) {
                 $result_set_status = $this->setNewStatus(ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_SIGNEE, "En attente d'être signé");
             } else {
