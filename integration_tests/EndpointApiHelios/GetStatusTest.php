@@ -7,7 +7,7 @@ use HeliosUtilitiesTestTrait;
 use IntegrationTests\S2lowIntegrationTestCase;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-class PosterUnDocumentComptableTest extends S2lowIntegrationTestCase
+class GetStatusTest extends S2lowIntegrationTestCase
 {
     use HeliosUtilitiesTestTrait;
 
@@ -75,7 +75,7 @@ class PosterUnDocumentComptableTest extends S2lowIntegrationTestCase
     /**
      * @dataProvider dataProvider
      */
-    public function testShouldReturnFile($data): void
+    public function testShouldReturnGoodStatus($data): void
     {
         $this->createUserWithDefaultCertificatAs(UserRole::Utilisateur);
 
