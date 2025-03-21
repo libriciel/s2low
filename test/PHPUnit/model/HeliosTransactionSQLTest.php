@@ -314,7 +314,7 @@ class HeliosTransactionSQLTest extends S2lowTestCase
         $transaction_id1 = $this->createTransaction();
         $this->heliosTransactionSQL->updateStatus(
             $transaction_id1,
-            HeliosTransactionsSQL::ENVOYER_AU_SAE,
+            HeliosTransactionsSQL::ENVOYE_AU_SAE,
             "test"
         );
         $transaction_id2 = $this->createTransaction();
@@ -353,7 +353,7 @@ class HeliosTransactionSQLTest extends S2lowTestCase
         $transaction_id2_1 = $this->createTransaction(2);
         $this->heliosTransactionSQL->updateStatus(
             $transaction_id2_1,
-            HeliosTransactionsSQL::ENVOYER_AU_SAE,
+            HeliosTransactionsSQL::ENVOYE_AU_SAE,
             "test"
         );
         $transaction_id2_2 = $this->createTransaction(2);
