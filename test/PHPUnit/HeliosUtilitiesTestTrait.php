@@ -58,16 +58,22 @@ trait HeliosUtilitiesTestTrait
         $this->heliosTransactionsSQL->setAcquitFilename($transactionId, $acquitFilename);
     }
 
+    /**
+     * @param $collectiviteId
+     * @param $filename
+     * @return false|mixed
+     */
     protected function addPESRetourToCollectivite(
         $collectiviteId,
         $filename
-    ): void {
+    ): mixed
+    {
         $siret = '123456789';
         $size = 0;
         $sha1 = 'sha1';
 
         $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
-        $heliosRetourSQL->add(
+        return $heliosRetourSQL->add(
             $collectiviteId,
             $siret,
             $filename,
