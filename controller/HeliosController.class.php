@@ -328,7 +328,7 @@ class HeliosController extends Controller
         }
         $messageElement->appendChild($doc->createTextNode($msg));
 
-        header("Content-type: text/xml");
+        header_wrapper("Content-type: text/xml");
         echo $doc->saveXML();
 
         $this->controller_exit();
