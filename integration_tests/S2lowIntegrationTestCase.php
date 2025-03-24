@@ -11,7 +11,6 @@ use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\SQLQuery;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 class S2lowIntegrationTestCase extends WebTestCase
 {
