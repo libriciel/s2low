@@ -7,7 +7,7 @@ use IntegrationTests\S2lowIntegrationTestCase;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-class GetListePesRetourCollectivite extends S2lowIntegrationTestCase
+class GetListePesRetourCollectiviteTest extends S2lowIntegrationTestCase
 {
     use HeliosUtilitiesTestTrait;
 
@@ -24,7 +24,7 @@ class GetListePesRetourCollectivite extends S2lowIntegrationTestCase
         return $this->heliosTransactionsSQL;
     }
 
-    public function testGetAcquitFile(): void
+    public function testGetList(): void
     {
         $this->createUserWithDefaultCertificatAs(UserRole::Utilisateur);
 
