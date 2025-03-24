@@ -14,7 +14,7 @@ class JSONoutput
         if (TESTING_ENVIRONNEMENT) {
             throw new Exception("Exit !");
         }
-        exit;  // @codeCoverageIgnore
+        exit_wrapper();  // @codeCoverageIgnore
     }
 
     public function displayAndExit($message)
