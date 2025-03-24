@@ -3,6 +3,8 @@
 use S2low\Services\ProcessCommand\CommandLauncher;
 use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2lowLegacy\Class\actes\ActesClassificationCodesSQL;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\TypeMessageMetier;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\DataObject;
 use S2lowLegacy\Class\Helpers;
@@ -786,7 +788,7 @@ SQL;
         return $this->document_papier;
     }
 
-    public function generateReponseCourrierXMLFile($xml_name)
+    public function generateReponseCourrierXMLFile()
     {
         $xml_name .= "_0.xml";
         $this->xmlFileName = $xml_name;
@@ -946,9 +948,18 @@ SQL;
         $rep = true;
 
       // Détermination du type de transaction
+<<<<<<< Updated upstream
         switch (@ dom_import_simplexml($this->xmlObj)->nodeName) {
             case "actes:Acte":
                 $this->type = 1;
+=======
+        $rootNodeName = str_replace('actes:', '', @ dom_import_simplexml($this->xmlObj)->nodeName);
+        $typeMessageMetier = TypeMessageMetier::tryFrom($rootNodeName);
+
+        switch ($typeMessageMetier) {
+            case TypeMessageMetier::Acte:
+                $this->setType(TypeTransaction::TransmissionActe);
+>>>>>>> Stashed changes
                 $acte_attr = $this->xmlObj->attributes($namespaces["actes"]);
             // Date de la décision
                 $this->decision_date = Helpers :: getFromXMLElt($acte_attr["Date"]);
@@ -1039,6 +1050,7 @@ SQL;
 
                 break;
 
+<<<<<<< Updated upstream
             case "actes:ReponseCourrierSimple":
                 $rep = $this->setDataFromCourrier(2, $xmlFile);
                 break;
@@ -1061,6 +1073,30 @@ SQL;
 
             case "actes:Annulation":
                 $this->type = 6;
+=======
+            case TypeMessageMetier::ReponseCourrierSimple:
+                $rep = $this->setDataFromCourrier(TypeTransaction::CourrierSimple, $xmlFile);
+                break;
+
+            case TypeMessageMetier::RefusPieceComplementaire:
+                $rep = $this->setDataFromCourrier(TypeTransaction::DemandePieceComplementaire, $xmlFile, true);
+                break;
+
+            case TypeMessageMetier::PieceComplementaire:
+                $rep = $this->setDataFromCourrier(TypeTransaction::DemandePieceComplementaire, $xmlFile, false);
+                break;
+
+            case TypeMessageMetier::RejetLettreObservations:
+                $rep = $this->setDataFromCourrier(TypeTransaction::LettreDObservation, $xmlFile, true);
+                break;
+
+            case TypeMessageMetier::ReponseLettreObservations:
+                $rep = $this->setDataFromCourrier(TypeTransaction::LettreDObservation, $xmlFile, false);
+                break;
+
+            case TypeMessageMetier::Annulation:
+                $this->setType(TypeTransaction::Annulation);
+>>>>>>> Stashed changes
                 $acte_attr = $this->xmlObj->attributes($namespaces["actes"]);
 
                 $this->unique_id = Helpers :: getFromXMLElt($acte_attr["IDActe"]);
@@ -1080,16 +1116,21 @@ SQL;
 
                 break;
 
+<<<<<<< Updated upstream
             case "actes:DemandeClassification":
                 $this->type = 7;
+=======
+            case TypeMessageMetier::DemandeClassification:
+                $this->setType(TypeTransaction::DemandeDeClassification);
+>>>>>>> Stashed changes
                 break;
 
             default:
-                $this->errorMsg = "Mauvais type de transaction.";
+                $this->errorMsg = 'Mauvais type de transaction.';
                 return false;
             break;
         }
-        if ($rep == false) {
+        if (!$rep) {
             return false;
         }
 
@@ -1833,4 +1874,38 @@ SQL;
     {
         $this->is_en_attente_de_signature = $is_en_attente_de_signature;
     }
+<<<<<<< Updated upstream
+=======
+
+    public function isType(TypeTransaction $type): bool
+    {
+        return $this->getType() === $type;
+    }
+
+    public function setType(TypeTransaction $type)
+    {
+        $this->type = $type->value;
+    }
+
+    public function getType(): ?TypeTransaction
+    {
+        return TypeTransaction::tryFrom($this->type);
+    }
+
+    public function getTypeMessageMetier(bool $isSentFromS2low): TypeMessageMetier
+    {
+        foreach (TypeMessageMetier::cases() as $typeMessageMetier) {
+            if (
+                $typeMessageMetier->isSameAsStoredInS2low(
+                    $this->getType(),
+                    $this->get('type_reponse'),
+                    $isSentFromS2low
+                )
+            ) {
+                return $typeMessageMetier;
+            }
+        }
+        throw new Exception('Type Message Métier inconnu : ' . $this->getType()->value . ' ' . $this->get('type_reponse'));
+    }
+>>>>>>> Stashed changes
 }
