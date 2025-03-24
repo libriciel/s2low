@@ -69,5 +69,4 @@ class DownloadAquitFileTest extends S2lowIntegrationTestCase
         static::assertStringContainsString('<element>Contenu</element>', $response->getContent());
         unlink($newSampleXML);
     }
-
 }
