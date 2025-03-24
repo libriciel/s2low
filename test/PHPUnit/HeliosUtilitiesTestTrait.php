@@ -1,6 +1,7 @@
 <?php
 
 use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\HeliosRetourSQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 trait HeliosUtilitiesTestTrait
@@ -10,11 +11,28 @@ trait HeliosUtilitiesTestTrait
         if (is_null($date)) {
             $sql = "INSERT INTO helios_transactions(user_id,authority_id,last_status_id,filename,sha1,file_size) VALUES (?,?,?,?,?,?) returning ID;";
 
-            return $this->getSQLQuery()->queryOne($sql, 1, $authority_id, 4, "toto.txt", "ab3321d34d3fb32b52332befa534c9854fff677b", 12345678);
+            return $this->getSQLQuery()->queryOne(
+                $sql,
+                1,
+                $authority_id,
+                4,
+                "toto.txt",
+                "ab3321d34d3fb32b52332befa534c9854fff677b",
+                12345678
+            );
         }
 
         $sql = "INSERT INTO helios_transactions(user_id,authority_id,last_status_id,filename,sha1,submission_date,file_size) VALUES (?,?,?,?,?,?,?) returning ID;";
-        return $this->getSQLQuery()->queryOne($sql, 1, $authority_id, 4, "toto.txt", "ab3321d34d3fb32b52332befa534c9854fff677b", $date, 12345678);
+        return $this->getSQLQuery()->queryOne(
+            $sql,
+            1,
+            $authority_id,
+            4,
+            "toto.txt",
+            "ab3321d34d3fb32b52332befa534c9854fff677b",
+            $date,
+            12345678
+        );
     }
 
     protected function createTransaction($authority_id = 1, int $status = null, $date = null)
@@ -38,6 +56,24 @@ trait HeliosUtilitiesTestTrait
         );
 
         $this->heliosTransactionsSQL->setAcquitFilename($transactionId, $acquitFilename);
+    }
+
+    protected function addPESRetourToCollectivite(
+        $collectiviteId,
+        $filename
+    ): void {
+        $siret = '123456789';
+        $size = 0;
+        $sha1 = 'sha1';
+
+        $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
+        $heliosRetourSQL->add(
+            $collectiviteId,
+            $siret,
+            $filename,
+            $size,
+            $sha1
+        );
     }
 
     /**
