@@ -29,6 +29,17 @@ trait HeliosUtilitiesTestTrait
         return $transactionId;
     }
 
+    protected function addPESAcquitTo($transactionId, $acquitFilename): void
+    {
+        $this->heliosTransactionsSQL->updateStatus(
+            $transactionId,
+            HeliosTransactionsSQL::ACQUITTE,
+            "sample message",
+        );
+
+        $this->heliosTransactionsSQL->setAcquitFilename($transactionId, $acquitFilename);
+    }
+
     /**
      * @return SQLQuery
      */
