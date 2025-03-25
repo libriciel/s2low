@@ -153,8 +153,7 @@ class S2lowIntegrationTestCase extends WebTestCase
         string $certificatPem,
         string $certificatHash,
         ModulePermission $permissions = ModulePermission::Modification
-    ): int
-    {
+    ): int {
         $userId = $this->getNextCreatedUserId();
 
         $constMaximumUsersCreated = 100000;
