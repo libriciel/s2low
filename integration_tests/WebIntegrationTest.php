@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace IntegrationTests;
 
 use Exception;
+use S2low\Enum\ModulePermission;
+use S2low\Enum\UserRole;
 
 /**
  *
@@ -50,7 +52,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
         );
         $_POST = [];
         static::assertResponseIsSuccessful();
-        self::assertSame($_SERVER['SSL_CLIENT_VERIFY'], 'ssl_client_verify');
+        self::assertSame($_SERVER['SSL_CLIENT_VERIFY'], 'SUCCESS');
     }
 
     /**
@@ -118,7 +120,21 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testRGS(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $certificatRgsDeuxEtoiles = $this->pemCertificateFactory->getFromString(
+            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
+        );
+
+        $this->createUser(
+            UserRole::SuperAdministrateur,
+            $certificatRgsDeuxEtoiles->getContent(),
+            $certificatRgsDeuxEtoiles->getHash(),
+            ModulePermission::Modification
+        );
+
+        $client = $this->createClientWithCertificat(
+            $certificatRgsDeuxEtoiles->getContent(),
+            $certificatRgsDeuxEtoiles->getContentStrippedFromBegin()
+        );
 
         $crawler = $client->request('GET', 'api/test-rgs.php');
         static::assertMatchesRegularExpression(     //Le certificat n'est pas RGS => KO

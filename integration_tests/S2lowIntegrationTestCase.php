@@ -45,7 +45,9 @@ class S2lowIntegrationTestCase extends WebTestCase
         $this->pemCertificateFactory = new PemCertificateFactory();
 
         $this->fixtureCertificate = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
+            file_get_contents(
+                __DIR__ . '/../integration_tests/fixtures/charles S2low - charles.dutheil@libriciel.coop.pem'
+            )
         );
         $this->sqlQuery->exec(file_get_contents(__DIR__ . '/fixtures/s2low-test-init.sql'));
     }
@@ -87,7 +89,7 @@ class S2lowIntegrationTestCase extends WebTestCase
     protected function createClientWithCertificat(string $certificatPem, string $certificatSansBegin): KernelBrowser
     {
         $serverCertificatEnvVar = [
-            'SSL_CLIENT_VERIFY' => 'ssl_client_verify',
+            'SSL_CLIENT_VERIFY' => 'SUCCESS',
             'SSL_CLIENT_S_DN' => 'subject_dn',
             'SSL_CLIENT_I_DN' => 'issuer_dn',
             'SSL_CLIENT_CERT' => $certificatPem,
@@ -146,7 +148,7 @@ class S2lowIntegrationTestCase extends WebTestCase
         );
     }
 
-    private function createUser(
+    public function createUser(
         UserRole $role,
         string $certificatPem,
         string $certificatHash,

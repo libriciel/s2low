@@ -2,7 +2,6 @@
 
 define("TESTING_ENVIRONNEMENT", "true");
 define("TRACE_FILE_PATH", "/tmp/s2low-phpunit.log");
-define('HELIOS_FILES_UPLOAD_ROOT', "vfs://test/helios/");
 define("ANTIVIRUS_COMMAND", "ls");
 
 define("TIMESTAMPING_CERT", __DIR__ . "/fixtures/timestamp_certificates/s2low_timestamp_cert.pem");
