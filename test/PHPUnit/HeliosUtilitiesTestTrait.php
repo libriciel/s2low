@@ -66,8 +66,7 @@ trait HeliosUtilitiesTestTrait
     protected function addPESRetourToCollectivite(
         $collectiviteId,
         $filename
-    ): mixed
-    {
+    ): mixed {
         $siret = '123456789';
         $size = 0;
         $sha1 = 'sha1';

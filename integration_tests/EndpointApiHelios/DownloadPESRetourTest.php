@@ -88,5 +88,4 @@ class DownloadPESRetourTest extends S2lowIntegrationTestCase
         $response = $client->getResponse();
         static::assertStringContainsString($data['string_in_response'], $response->getContent());
     }
-
 }

@@ -5,12 +5,15 @@ class HeliosAPIResponse
     public function displayAndExit(array $array, $tag)
     {
         header_wrapper("Content-type: text/xml");
-            echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
+        echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
         ?>
-<<?php echo $tag?> >
-        <?php $this->afficheArray($array, $tag);?>
-</<?php echo $tag ?>>
-            <?php
+        <<?php
+        echo $tag ?> >
+        <?php
+        $this->afficheArray($array, $tag); ?>
+        </<?php
+        echo $tag ?>>
+        <?php
         exit_wrapper();
     }
 
