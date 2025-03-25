@@ -6,18 +6,18 @@ use S2low\Enum\HeliosStatus;
 
 class ApiHeliosStatusResolver
 {
-    public function getStatus(bool|string $PESAcquitPath, HeliosStatus $status): HeliosStatus
+    public static function getStatus(bool|string $PESAcquitPath, HeliosStatus $status): HeliosStatus
     {
         $statusToReturn = $status;
 
-        if ($this->PESAcquitEstIntrouvable($PESAcquitPath) && $this->PESAquitAEteRecu($status)) {
+        if (self::PESAcquitEstIntrouvable($PESAcquitPath) && self::PESAcquitAEteRecu($status)) {
             $statusToReturn = HeliosStatus::TRANSMIS;
         }
 
         return $statusToReturn;
     }
 
-    private function PESAquitAEteRecu(HeliosStatus $statusAverifier): bool
+    private static function PESAcquitAEteRecu(HeliosStatus $statusATester): bool
     {
         $statusSiPESAcquitRecu = [
             HeliosStatus::ACQUITTE,
@@ -25,10 +25,10 @@ class ApiHeliosStatusResolver
             HeliosStatus::INFORMATION_DISPONIBLE
         ];
 
-        return in_array($statusAverifier, $statusSiPESAcquitRecu);
+        return in_array($statusATester, $statusSiPESAcquitRecu);
     }
 
-    private function PESAcquitEstIntrouvable(bool|string $PESAcquitPath): bool
+    private static function PESAcquitEstIntrouvable(bool|string $PESAcquitPath): bool
     {
         return false === $PESAcquitPath;
     }
