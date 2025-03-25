@@ -17,7 +17,7 @@ function legacy_encode_array($array)
 function move_uploaded_file_wrapper($filename, $destination)
 {
     if (TESTING_ENVIRONNEMENT) {
-        return rename($filename, $destination);
+        return copy($filename, $destination);
     }
     return move_uploaded_file($filename, $destination);
 }
