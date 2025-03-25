@@ -73,7 +73,7 @@ $cloudStorage = LegacyObjectsManager::getLegacyObjectInstancier()
 $PESAcquitPath = $cloudStorage->getPath($transaction['id']);
 $transactionStatus = HeliosStatus::from($transaction['status']);
 
-$transactionStatus = (new ApiHeliosStatusResolver())->getStatus(
+$transactionStatus = ApiHeliosStatusResolver::getStatus(
     $PESAcquitPath,
     $transactionStatus
 );
