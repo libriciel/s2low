@@ -1682,6 +1682,9 @@ class ActesTransaction extends DataObject
 
     public function getType(): ?TypeTransaction
     {
+        if (is_null($this->type)) {
+            return null;
+        }
         return TypeTransaction::tryFrom($this->type);
     }
 }

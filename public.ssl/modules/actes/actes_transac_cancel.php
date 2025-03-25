@@ -53,7 +53,6 @@ if (isset($related_id) && ! empty($related_id)) {
     Helpers::returnAndExit(1, "Pas d'identifiant de transaction à annuler spécifié.", Helpers::getLink("/modules/actes/index.php"));
 }
 
-// Vérification du type de transaction
 if (!$rel_trans->isType(TypeTransaction::TransmissionActe)) {
     Helpers::returnAndExit(1, "Ce type de transaction ne peut pas être annulé.", Helpers::getLink("/modules/actes/actes_transac_show.php?id=") . $rel_trans->getId());
 }

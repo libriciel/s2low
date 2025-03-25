@@ -565,7 +565,7 @@ class ActesAnalyseFichierRecuController
      */
     private function getBySirenAndNumeroInterne($siren, $numeroInterne, TypeTransaction $type = TypeTransaction::TransmissionActe, $type_reponse_not_null = false)
     {
-        $transaction_id = $this->actesTransactionsSQL->getBySirenAndNumeroInterne($siren, $numeroInterne, $type->value, $type_reponse_not_null);
+        $transaction_id = $this->actesTransactionsSQL->getBySirenAndNumeroInterne($siren, $numeroInterne, $type, $type_reponse_not_null);
         if (! $transaction_id) {
             throw new Exception(
                 "Aucune transation trouver pour le couple SIREN $siren - numéro interne $numeroInterne"
