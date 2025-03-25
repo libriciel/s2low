@@ -242,7 +242,11 @@ class HeliosAnalyseFichierRecu
 
         if (count($xml->ACQUIT) == 0) {
             $message = "Transaction $helios_transaction_id acceptee";
-            $this->heliosTransactionsSQL->updateStatus($helios_transaction_id, HeliosTransactionsSQL::ACQUITTER, $message);
+            $this->heliosTransactionsSQL->updateStatus(
+                $helios_transaction_id,
+                HeliosTransactionsSQL::ACQUITTE,
+                $message
+            );
         } else {
             $message = "Transaction $helios_transaction_id : information disponible";
             $this->heliosTransactionsSQL->updateStatus($helios_transaction_id, HeliosTransactionsSQL::INFORMATION_DISPONIBLE, $message);
@@ -329,7 +333,12 @@ class HeliosAnalyseFichierRecu
         $this->s2lowLogger->info("Transaction trouvé : helios_transaction_id=$helios_transaction_id");
 
         $message = "Transaction $helios_transaction_id refusée";
-        $this->heliosTransactionsSQL->updateStatus($helios_transaction_id, HeliosTransactionsSQL::REFUSER, $message, true);
+        $this->heliosTransactionsSQL->updateStatus(
+            $helios_transaction_id,
+            HeliosTransactionsSQL::REFUSE,
+            $message,
+            true
+        );
         $this->heliosTransactionsSQL->setAcquitFilename($helios_transaction_id, $basename);
 
         $this->s2lowLogger->info($message);
