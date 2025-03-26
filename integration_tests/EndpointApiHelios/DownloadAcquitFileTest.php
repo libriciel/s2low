@@ -7,7 +7,7 @@ use HeliosUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-class DownloadAquitFileTest extends S2lowIntegrationTestCase
+class DownloadAcquitFileTest extends S2lowIntegrationTestCase
 {
     use HeliosUtilitiesTestTrait;
 
@@ -38,7 +38,7 @@ class DownloadAquitFileTest extends S2lowIntegrationTestCase
     /**
      * @dataProvider dataProvider
      */
-    public function testGetAcquitFile($data): void
+    public function testDownloadAcquitFile($data): void
     {
         $this->createUserWithDefaultCertificatAs(UserRole::Utilisateur);
 
