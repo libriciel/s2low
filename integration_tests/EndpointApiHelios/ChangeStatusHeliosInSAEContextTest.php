@@ -7,7 +7,7 @@ use IntegrationTests\S2lowIntegrationTestCase;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-class ChangeStatusSAEToAccept extends S2lowIntegrationTestCase
+class ChangeStatusHeliosInSAEContextTest extends S2lowIntegrationTestCase
 {
     use HeliosUtilitiesTestTrait;
 

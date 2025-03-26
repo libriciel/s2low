@@ -50,7 +50,7 @@ class CreatePESAllerTest extends S2lowIntegrationTestCase
     /**
      * @dataProvider dataProvider
      */
-    public function testGetAcquitFile($data): void
+    public function testCreatePESAller($data): void
     {
         $this->createUserWithDefaultCertificatAs(UserRole::Utilisateur);
 

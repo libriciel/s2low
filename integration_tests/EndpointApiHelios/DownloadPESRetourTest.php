@@ -54,7 +54,7 @@ class DownloadPESRetourTest extends S2lowIntegrationTestCase
     /**
      * @dataProvider dataProvider
      */
-    public function testGetRetourFile($data): void
+    public function testDownloadPESRetour($data): void
     {
         $this->createUserWithDefaultCertificatAs(UserRole::Archiviste);
 
