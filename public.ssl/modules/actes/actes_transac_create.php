@@ -19,7 +19,8 @@ use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 
-$tooManyAnnexes = error_get_last()["message"] == "Maximum number of allowable file uploads has been exceeded";
+$tooManyAnnexes = isset(error_get_last()["message"]) && error_get_last(
+    )["message"] == "Maximum number of allowable file uploads has been exceeded";
 
 list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([ObjectInstancier::class, SQLQuery::class]);
