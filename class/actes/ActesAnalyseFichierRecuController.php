@@ -2,15 +2,11 @@
 
 namespace S2lowLegacy\Class\actes;
 
-use Libriciel\LibActes\Utils\XSDValidationException;
-use S2lowLegacy\Class\S2lowLogger;
-use S2lowLegacy\Class\TmpFolder;
 use Exception;
 use finfo;
-use S2lowLegacy\Lib\SigTermHandler;
 use Libriciel\LibActes\ArchiveData;
-use Libriciel\LibActes\FichierXML\MessageMetierARActes;
 use Libriciel\LibActes\FichierXML\MessageMetieAnomalieActe;
+use Libriciel\LibActes\FichierXML\MessageMetierARActes;
 use Libriciel\LibActes\FichierXML\MessageMetierARAnnulation;
 use Libriciel\LibActes\FichierXML\MessageMetierARPieceComplementaire;
 use Libriciel\LibActes\FichierXML\MessageMetierARReponseRejetLettreObservations;
@@ -20,6 +16,10 @@ use Libriciel\LibActes\FichierXML\MessageMetierDemandePieceComplementaire;
 use Libriciel\LibActes\FichierXML\MessageMetierLettreObservations;
 use Libriciel\LibActes\FichierXML\MessageMetierReponseClassificationSansChangement;
 use Libriciel\LibActes\FichierXML\MessageMetierRetourClassification;
+use Libriciel\LibActes\Utils\XSDValidationException;
+use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Lib\SigTermHandler;
 use UnexpectedValueException;
 
 class ActesAnalyseFichierRecuController
@@ -402,7 +402,7 @@ class ActesAnalyseFichierRecuController
     {
         $this->s2lowLogger->info("AR Actes trouvé pour l'envoi de piece complementaire : " . $fichierXML->id_actes);
 
-        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne, 3, true);
+        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne, TypeTransaction::DemandePieceComplementaire, true);
 
         $this->s2lowLogger->info("$fichierXML->id_actes -> transaction_id = $transaction_id");
         $message = "Reçu par le {$this->actes_ministere_acronyme} le " . $fichierXML->date_reception;
@@ -425,7 +425,7 @@ class ActesAnalyseFichierRecuController
     {
         $this->s2lowLogger->info("AR Actes trouvé pour l'envoi d'une réponse ou d'un refus à une lettre d'observation : " . $fichierXML->id_actes);
 
-        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne, 4, true);
+        $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne, TypeTransaction::LettreDObservation, true);
 
         $this->s2lowLogger->info("$fichierXML->id_actes -> transaction_id = $transaction_id");
         $message = "Reçu par le {$this->actes_ministere_acronyme} le " . $fichierXML->date_reception;
@@ -531,7 +531,7 @@ class ActesAnalyseFichierRecuController
             $message,
             $xml
         );
-        $transaction_annulation_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne, 6);
+        $transaction_annulation_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne, TypeTransaction::Annulation);
 
         $this->updateStatus(
             $transaction_annulation_id,
@@ -563,7 +563,7 @@ class ActesAnalyseFichierRecuController
      * @return array|bool|mixed
      * @throws Exception
      */
-    private function getBySirenAndNumeroInterne($siren, $numeroInterne, $type = 1, $type_reponse_not_null = false)
+    private function getBySirenAndNumeroInterne($siren, $numeroInterne, TypeTransaction $type = TypeTransaction::TransmissionActe, $type_reponse_not_null = false)
     {
         $transaction_id = $this->actesTransactionsSQL->getBySirenAndNumeroInterne($siren, $numeroInterne, $type, $type_reponse_not_null);
         if (! $transaction_id) {
@@ -571,7 +571,7 @@ class ActesAnalyseFichierRecuController
                 "Aucune transation trouver pour le couple SIREN $siren - numéro interne $numeroInterne"
             );
         }
-        $this->s2lowLogger->info("Transaction de type $type trouvé avec le SIREN $siren et le numéro interne $numeroInterne : $transaction_id ");
+        $this->s2lowLogger->info("Transaction de type $type->value trouvé avec le SIREN $siren et le numéro interne $numeroInterne : $transaction_id ");
         return $transaction_id;
     }
 }

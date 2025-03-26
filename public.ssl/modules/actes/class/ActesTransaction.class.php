@@ -3,10 +3,11 @@
 use S2low\Services\ProcessCommand\CommandLauncher;
 use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2lowLegacy\Class\actes\ActesClassificationCodesSQL;
+use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\DataObject;
 use S2lowLegacy\Class\Helpers;
-use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
 use S2lowLegacy\Class\XMLHelper;
@@ -14,7 +15,8 @@ use S2lowLegacy\Lib\PemCertificateFactory;
 
 class ActesTransaction extends DataObject
 {
-    //Constante pour les messages 3 et 4
+    //Constante pour les messages
+    // DemandePieceComplementaire et LettreDObservation
     public const TYPE_REFUS = 3;
     public const TYPE_ENVOIE = 4;
     public const NUMBER_REGEXP = '/^([A-Z0-9][A-Z0-9_]{0,13})?[A-Z0-9]$/';
@@ -193,7 +195,7 @@ class ActesTransaction extends DataObject
     "5" => "Déféré au Tribunal Administratif",
     "6" => "Annulation",
     "7" => "Demande de classification"
-    );
+    );  // Utilisé !
     protected $en_attente;
     protected $is_en_attente_de_signature;
     private $fileNameSerial;
@@ -227,27 +229,6 @@ class ActesTransaction extends DataObject
     }
 
   /**
-   * \brief Méthode de récupération des différentes natures de transaction
-   * \return Un tableau de natures de transaction
-   */
-    public static function getTransactionNatures()
-    {
-        $sql = "SELECT id, short_descr, descr FROM actes_natures ORDER BY descr ASC";
-
-        $db = DatabasePool :: getInstance();
-
-        $result = $db->select($sql);
-
-        $types = array ();
-
-        if (!$result->isError()) {
-            return $result->get_all_row();
-        }
-
-        return false;
-    }
-
-  /**
    * \brief Méthode de récupération des natures de transaction
    * \return Un tableau de natures de transaction
    *
@@ -272,44 +253,6 @@ class ActesTransaction extends DataObject
         }
 
         return $types;
-    }
-
-  /**
-   * \brief Méthode d'obtention de la liste des transactions et tous leurs attributs
-   * \param $cond (optionnel) chaîne : Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
-   * \return tableau des transactions
-   * @deprecated 5.0.42, dead code
-  */
-    public static function getTransactionsList($cond = "")
-    {
-      // TODO: utiliser le pager pour multipages
-        $sql = <<<SQL
-SELECT actes_transactions.id,
-       actes_transactions.envelope_id,
-       actes_transactions.type,
-       actes_transactions.related_transaction_id,
-       actes_transactions.nature_code,
-       actes_transactions.nature_descr,
-       actes_transactions.subject,
-       actes_transactions.number,
-       actes_transactions.classification,
-       actes_transactions.classification_date,
-       actes_transactions.decision_date,
-       actes_transactions.unique_id,
-       actes_transactions.archive_url
-FROM actes_transactions 
-SQL;
-        $sql .= ' ' . $cond;
-
-        $db = DatabasePool :: getInstance();
-
-        $result = $db->select($sql);
-
-        if (!$result->isError()) {
-            return $result->get_all_rows();
-        }
-
-        return array ();
     }
 
   /**
@@ -407,20 +350,6 @@ SQL;
     }
 
   /**
-   * \brief Méthode qui détermine si une transaction est considérée comme étant fermée
-   * \return L'identifiant de l'état courant de la transaction
-   */
-    public function isClose()
-    {
-        $currentStatus = $this->getCurrentStatus();
-        if ($currentStatus <= 0 || ($this->type == 7 && $currentStatus > 2) || ($this->type != 7 && $currentStatus > 4)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-  /**
    * \brief Méthode d'obtention de l'état courant d'un transaction
    * \return L'identifiant de l'état courant de la transaction
    */
@@ -457,25 +386,6 @@ SQL;
     }
 
   /**
-   * \brief Méthode pour déterminer si la transaction est déjà passée par un état donné
-   * \return True si la transaction est passé par cet état, false sinon
-   */
-    public function hasStatus($status_id)
-    {
-        if (isset($this->id) && !empty($this->id)) {
-            $sql = "SELECT id FROM actes_transactions_workflow atw WHERE atw.status_id=" . $status_id . " AND atw.transaction_id=" . $this->id;
-
-            $result = $this->db->select($sql);
-
-            if (!$result->isError() && $result->num_row() == 1) {
-                return true;
-            }
-
-            return false;
-        }
-    }
-
-  /**
   * \brief Méthode qui positionne les éléments relatifs à une notification manuelle
   * \param $emails chaîne : emails des destinataires
   * \param $send_sources entier : Envoi des fichiers sources (0/1)
@@ -499,9 +409,9 @@ SQL;
    * \param $use_serial boolean (optionnel) : Ajouter le numéro de série à la fin du nom de fichier puis l'incrémenter (true par défaut)
    * \return Le nom du fichier sans extension
    */
-    public function getStdFileName($env, $use_serial = true, $code_pj = '')
+    public function getStdFileName(ActesEnvelope $env, $use_serial = true, $code_pj = '')
     {
-        if ($this->type == 6) {
+        if ($this->isType(TypeTransaction::Annulation)) {
             $trans = $this->related_transaction;
         } else {
             $trans = $this;
@@ -525,41 +435,40 @@ SQL;
 
       // Date de l'acte YYYYMMDD
         $name .= "-";
-        if ($this->type != 7) {
+        if (!$this->isType(TypeTransaction::DemandeDeClassification)) {
             $name .= date("Ymd", Helpers :: ansiDateToTimestamp($trans->decision_date));
         }
 
       // Numéro de l'acte interne à la collectivité
         $name .= "-";
-        if ($this->type != 7) {
+        if (!$this->isType(TypeTransaction::DemandeDeClassification)) {
             $name .= $trans->number;
         }
 
       // Code de la nature de l'acte
         $name .= "-";
-        if ($this->type != 7) {
+        if (!$this->isType(TypeTransaction::DemandeDeClassification)) {
             $name .= $nature_descr["short_descr"];
         }
 
       // Type de message
-        switch ($this->type) {
-            case "1":
+        switch ($this->getType()) {
+            case TypeTransaction::TransmissionActe:
                 $name .= "-1-1";
                 break;
-            case "2":
+            case TypeTransaction::CourrierSimple:
                 $name .= "-2-2";
                 break;
-            case "3":
+            case TypeTransaction::DemandePieceComplementaire:
                 $name .= "-3-" . $this->type_reponse;
                 break;
-            case "4":
+            case TypeTransaction::LettreDObservation:
                 $name .= "-4-" . $this->type_reponse;
                 break;
-            case "6":
+            case TypeTransaction::Annulation:
                 $name .= "-6-1";
                 break;
-            break;
-            case "7":
+            case TypeTransaction::DemandeDeClassification:
                 $name .= "-7-1";
                 break;
         }
@@ -679,31 +588,34 @@ SQL;
    */
     public function generateMessageXMLFile($xml_name)
     {
-        switch ($this->type) {
-            case "1":
+        switch ($this->getType()) {
+            case TypeTransaction::TransmissionActe:
                 $xml = $this->generateActeXMLFile($xml_name);
                 break;
 
-            case "2":
-            case "3":
-            case "4":
+            case TypeTransaction::CourrierSimple:
+            case TypeTransaction::DemandePieceComplementaire:
+            case TypeTransaction::LettreDObservation:
                 $xml = $this->generateReponseCourrierXMLFile($xml_name);
                 break;
 
-            case "6":
+            case TypeTransaction::Annulation:
                 $xml = $this->generateCancelXMLFile($xml_name);
                 break;
-            case "7":
+            case TypeTransaction::DemandeDeClassification:
                 $xml = $this->generateClassifRequestXMLFile($xml_name);
                 break;
             default:
-                $this->errorMsg = "Mauvais type de transaction.";
+                $this->errorMsg = 'Mauvais type de transaction.';
                 return false;
         }
 
         if ($xml === false) {
             return false;
         }
+
+        $xml_name .= "_0.xml";
+        $this->xmlFileName = $xml_name;
 
         if (!Helpers :: createDirTree(dirname($this->rootDir . "/" . $this->xmlFileName))) {
             $this->errorMsg = "Erreur système de fichiers (createDirTree).";
@@ -728,12 +640,8 @@ SQL;
    * \param $xml_name chaîne : Nom du fichier à créer
    * \return Le XML généré ou false en cas d'échec
    */
-    public function generateActeXMLFile($xml_name)
+    public function generateActeXMLFile(string $xml_name): false|string
     {
-        $xml_name .= "_0.xml";
-
-        $this->xmlFileName = $xml_name;
-
         $xml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
         $xml .= "<actes:Acte\n";
         $xml .= "xmlns:actes=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216\"\n";
@@ -788,14 +696,11 @@ SQL;
 
     public function generateReponseCourrierXMLFile($xml_name)
     {
-        $xml_name .= "_0.xml";
-        $this->xmlFileName = $xml_name;
-
-        switch ($this->type) {
-            case 2:
+        switch ($this->getType()) {
+            case TypeTransaction::CourrierSimple:
                 $root =  "ReponseCourrierSimple";
                 break;
-            case 3:
+            case TypeTransaction::DemandePieceComplementaire:
                 if ($this->type_reponse == ActesTransaction::TYPE_REFUS) {
                     $root = "RefusPieceComplementaire";
                 } elseif ($this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
@@ -805,7 +710,7 @@ SQL;
                     return false;
                 }
                 break;
-            case 4:
+            case TypeTransaction::LettreDObservation:
                 if ($this->type_reponse == ActesTransaction::TYPE_REFUS) {
                     $root = "RejetLettreObservations";
                 } elseif ($this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
@@ -827,7 +732,7 @@ SQL;
         $xml .= "actes:DateCourrierPref=\"" . $this->decision_date . "\" \n";
         $xml .= "actes:IDActe=\"" . Helpers :: escapeForXML($this->related_transaction->unique_id) . "\" > \n";
 
-        if ($this->type == 3 && $this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
+        if ($this->isType(TypeTransaction::DemandePieceComplementaire) && $this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
             $xml .= "<actes:Documents>";
         }
 
@@ -837,7 +742,7 @@ SQL;
         $xml .= "</actes:NomFichier>\n";
         $xml .= "</actes:Document>\n";
 
-        if ($this->type == 3 && $this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
+        if ($this->isType(TypeTransaction::DemandePieceComplementaire) && $this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
             if (isset($this->files["attachment"])) {
                 foreach ($this->files["attachment"] as $key => $file) {
                     $xml .= "  <actes:Document>\n";
@@ -860,10 +765,6 @@ SQL;
    */
     public function generateCancelXMLFile($xml_name)
     {
-        $xml_name .= "_0.xml";
-
-        $this->xmlFileName = $xml_name;
-
         $xml = null;
 
         if (!empty($this->related_transaction->unique_id)) {
@@ -888,11 +789,6 @@ SQL;
    */
     public function generateClassifRequestXMLFile($xml_name)
     {
-        $xml_name .= "_0.xml";
-
-        $this->xmlFileName = $xml_name;
-
-
         $xml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
         $xml .= "<actes:DemandeClassification \n";
         $xml .= "xmlns:actes=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216\"\n";
@@ -948,7 +844,7 @@ SQL;
       // Détermination du type de transaction
         switch (@ dom_import_simplexml($this->xmlObj)->nodeName) {
             case "actes:Acte":
-                $this->type = 1;
+                $this->setType(TypeTransaction::TransmissionActe);
                 $acte_attr = $this->xmlObj->attributes($namespaces["actes"]);
             // Date de la décision
                 $this->decision_date = Helpers :: getFromXMLElt($acte_attr["Date"]);
@@ -1040,27 +936,27 @@ SQL;
                 break;
 
             case "actes:ReponseCourrierSimple":
-                $rep = $this->setDataFromCourrier(2, $xmlFile);
+                $rep = $this->setDataFromCourrier(TypeTransaction::CourrierSimple, $xmlFile);
                 break;
 
             case "actes:RefusPieceComplementaire":
-                $rep = $this->setDataFromCourrier(3, $xmlFile, true);
+                $rep = $this->setDataFromCourrier(TypeTransaction::DemandePieceComplementaire, $xmlFile, true);
                 break;
 
             case "actes:PieceComplementaire":
-                $rep = $this->setDataFromCourrier(3, $xmlFile, false);
+                $rep = $this->setDataFromCourrier(TypeTransaction::DemandePieceComplementaire, $xmlFile, false);
                 break;
 
             case "actes:RejetLettreObservations":
-                $rep = $this->setDataFromCourrier(4, $xmlFile, true);
+                $rep = $this->setDataFromCourrier(TypeTransaction::LettreDObservation, $xmlFile, true);
                 break;
 
             case "actes:ReponseLettreObservations":
-                $rep = $this->setDataFromCourrier(4, $xmlFile, false);
+                $rep = $this->setDataFromCourrier(TypeTransaction::LettreDObservation, $xmlFile, false);
                 break;
 
             case "actes:Annulation":
-                $this->type = 6;
+                $this->setType(TypeTransaction::Annulation);
                 $acte_attr = $this->xmlObj->attributes($namespaces["actes"]);
 
                 $this->unique_id = Helpers :: getFromXMLElt($acte_attr["IDActe"]);
@@ -1081,13 +977,12 @@ SQL;
                 break;
 
             case "actes:DemandeClassification":
-                $this->type = 7;
+                $this->setType(TypeTransaction::DemandeDeClassification);
                 break;
 
             default:
                 $this->errorMsg = "Mauvais type de transaction.";
                 return false;
-            break;
         }
         if ($rep == false) {
             return false;
@@ -1159,7 +1054,7 @@ SQL;
             }
 
 
-            if ($type == 'acte' && $this->type == 1) {
+            if ($type == 'acte' && $this->isType(TypeTransaction::TransmissionActe)) {
                 if (! in_array($ext, array('pdf','xml'))) {
                     $this->errorMsg = "Le fichier de l'acte \" " . basename($name) . " \" est de type \" " . $mimeType . " \". Fichier PDF ou XML requis.";
                     return false;
@@ -1274,10 +1169,10 @@ SQL;
         return true;
     }
 
-    private function setDataFromCourrier($type, $xmlFile, $isRefus = false)
+    private function setDataFromCourrier(TypeTransaction $type, $xmlFile, $isRefus = false)
     {
 
-        $this->type = $type;
+        $this->setType($type);
 
         $namespaces = $this->xmlObj->getDocNamespaces();
 
@@ -1302,7 +1197,7 @@ SQL;
 
         $this->number = $related_trans->get("number");
 
-        if ($type == 3 && $isRefus == false) {
+        if ($type == TypeTransaction::DemandePieceComplementaire && !$isRefus) {
             foreach ($actesItems->Documents->Document as $fichiers) {
                 $actePath = dirname($xmlFile) . "/" . Helpers :: getFromXMLElt($fichiers->NomFichier);
                 if (!$this->addActeFile($actePath, $actePath)) {
@@ -1514,7 +1409,7 @@ SQL;
             $new = true;
         }
 
-        if ($this->type == 1) {
+        if ($this->isType(TypeTransaction::TransmissionActe)) {
             $done = false;
             $this->classification = "";
             $i = 1;
@@ -1538,7 +1433,7 @@ SQL;
 
       // Si la transaction n'est pas une transmission d'acte on désactive
       // le contrôle des champs car tous les champs ne sont plus obligatoire
-        if ($this->type != 1) {
+        if (!$this->isType(TypeTransaction::TransmissionActe)) {
             $validate = false;
         }
 
@@ -1557,7 +1452,11 @@ SQL;
             $sql_verif = "SELECT actes_transactions.id FROM actes_transactions " .
                 " WHERE actes_transactions.number=? AND authority_id=?";
 
-            if ($this->type == 1 && $this->db->getOneValue($sql_verif, [$this->get('number'),$this->get('authority_id')])) {
+            if (
+                $this->isType(TypeTransaction::TransmissionActe)
+                &&
+                $this->db->getOneValue($sql_verif, [$this->get('number'),$this->get('authority_id')])
+            ) {
                 $this->errorMsg = "Une transaction avec le même numéro existe déjà dans la base.";
                 $this->db->rollback();
                 return false;
@@ -1573,11 +1472,11 @@ SQL;
         if ($new) {
           // Ajout de l'état initial
             if ($this->en_attente) {
-                $result_set_status = $this->setNewStatus(17, "Dépôt dans un état d'attente");
+                $result_set_status = $this->setNewStatus(ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_POSTE, "Dépôt dans un état d'attente");
             } elseif ($this->is_en_attente_de_signature) {
-                $result_set_status = $this->setNewStatus(18, "En attente d'être signé");
+                $result_set_status = $this->setNewStatus(ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_SIGNEE, "En attente d'être signé");
             } else {
-                $result_set_status = $this->setNewStatus(1, "Dépôt initial");
+                $result_set_status = $this->setNewStatus(ActesStatusSQL::STATUS_POSTE, "Dépôt initial");
             }
             if (!$result_set_status) {
                 $this->errorMsg = "Erreur lors de la définition de l'état initial de la transaction.";
@@ -1713,53 +1612,6 @@ SQL;
         return true;
     }
 
-  /**
-   * \brief Méthode avertissant le moteur transactionnel qu'une nouvelle transaction est a traiter
-   * \return True en cas de succès, false sinon
-   *
-   * Non utilisée
-   */
-    public function warnTransactionalEngine()
-    {
-        if (isset($this->id) && !empty($this->id)) {
-            $cHandle = curl_init(ACTES_NEW_TRANS_URL . "?id=" . $this->id);
-
-            curl_setopt($cHandle, CURLOPT_RETURNTRANSFER, true);
-
-            $ret = curl_exec($cHandle);
-
-            curl_close($cHandle);
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-  /**
-   * \brief Méthode déterminant si un utilisateur peut modifier la transaction courante
-   * \param $user objet User : utilisateur considéré
-   * \return True en cas d'authorisation, false sinon
-   */
-    public function userCanEdit($user)
-    {
-        if ($user->isSuper()) {
-            return true;
-        }
-
-        $owner = new User($this->user_id);
-        $owner->init();
-
-        $envelope = new ActesEnvelope($this->envelope_id);
-        $envelope->init();
-
-        if (!($user->isAuthorityAdmin() && $user->get("authority_id") == $owner->get("authority_id")) && !($user->getId() == $envelope->get("user_id") && $user->canEdit('actes'))) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     public function getCourrierInfo()
     {
         $renvoie = array();
@@ -1784,22 +1636,6 @@ SQL;
             }
         }
         return $renvoie;
-    }
-
-  /**
-   * @param:
-   * @return:
-   *
-   */
-    public function removeTransmisStatus()
-    {
-        $sql = "DELETE FROM actes_transactions_workflow where transaction_id=" . $this->id . "and status_id=3";
-
-        $db = DatabasePool :: getInstance();
-
-        $result = $db->exec($sql);
-
-        return $result;
     }
 
     /**
@@ -1832,5 +1668,23 @@ SQL;
     public function setEnAttenteDeSignature($is_en_attente_de_signature)
     {
         $this->is_en_attente_de_signature = $is_en_attente_de_signature;
+    }
+
+    public function isType(TypeTransaction $type): bool
+    {
+        return $this->getType() === $type;
+    }
+
+    public function setType(TypeTransaction $type)
+    {
+        $this->type = $type->value;
+    }
+
+    public function getType(): ?TypeTransaction
+    {
+        if (is_null($this->type)) {
+            return null;
+        }
+        return TypeTransaction::tryFrom($this->type);
     }
 }

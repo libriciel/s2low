@@ -2,13 +2,14 @@
 
 namespace S2low\Controller;
 
-use S2lowLegacy\Class\actes\ActesNotification;
 use ActesTransaction;
+use Exception;
+use S2lowLegacy\Class\actes\ActesNotification;
+use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Module;
-use Exception;
-use Symfony\Component\Routing\Annotation\Route;
 use S2lowLegacy\Class\User;
+use Symfony\Component\Routing\Annotation\Route;
 
 class ActesNotificationController extends \Symfony\Bundle\FrameworkBundle\Controller\AbstractController
 {
@@ -71,7 +72,7 @@ class ActesNotificationController extends \Symfony\Bundle\FrameworkBundle\Contro
             $owner->init();
 
             //Vérification du type de transaction
-            if ($trans->get('type') != 1) {
+            if (!$trans->isType(TypeTransaction::TransmissionActe)) {
                 Helpers::returnAndExit(
                     1,
                     'Ce type de transaction ne peut pas être notifié.',

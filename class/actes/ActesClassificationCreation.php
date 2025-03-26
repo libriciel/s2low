@@ -251,7 +251,7 @@ class ActesClassificationCreation
     {
         $last_classification_date = ActesClassification::getLastRevisionDate($this->authority->getId());
         $trans = new ActesTransaction();
-        $trans->set("type", "7");
+        $trans->setType(TypeTransaction::DemandeDeClassification);
         if (! $force) {
             $trans->set("last_classification_date", $last_classification_date);
         }

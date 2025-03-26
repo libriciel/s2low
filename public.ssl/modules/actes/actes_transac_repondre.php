@@ -1,6 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesTypePJSQL;
+use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\Module;
@@ -220,7 +221,7 @@ $html .= ")) { toggle_upload('form_progress', progress_bar); return true; } els
 
 $html .= "<input type='hidden' name='id' value='" . $related_id . "'/>";
 
-if ($trans->get("type") == 3 || $trans->get("type") == 4) {
+if ($trans->isType(TypeTransaction::DemandePieceComplementaire) || $trans->isType(TypeTransaction::LettreDObservation)) {
     $html .= "  <div class=\"form-group\">\n";
     $html .= "  <label for=\"type_envoie\" class=\"control-label\"> Nature de l'envoi: </label>\n";
     $html .=  $doc->getHTMLSelect(
@@ -255,7 +256,7 @@ $html .= "       </div>\n";
 $html .= "   </fieldset>\n";
 $html .= " </div>\n";
 
-if ($trans->get("type") == 3) {
+if ($trans->isType(TypeTransaction::DemandePieceComplementaire)) {
     $html .= "<div class=\"form-group\">\n";
     $html .= "  <fieldset>\n";
     $html .= "   <div class=\"row-legend\">\n";

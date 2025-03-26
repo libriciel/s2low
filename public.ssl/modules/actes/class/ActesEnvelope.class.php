@@ -766,6 +766,7 @@ class ActesEnvelope extends DataObject
 
       // Suppression des fichiers de chaque transaction
         foreach ($this->transactions as $trans) {
+            /** @var ActesTransaction $trans */
             if (! $trans->purgeFiles()) {
                 $this->errorMsg .= $trans->getErrorMsg();
                 return false;

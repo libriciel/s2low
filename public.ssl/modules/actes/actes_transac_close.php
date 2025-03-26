@@ -1,6 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesPrepareEnvoiSAE;
+use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Initialisation;
@@ -70,7 +71,7 @@ foreach ($liste_id as $id) {
         Helpers::returnAndExit(1, "Erreur d'initialisation de la transaction.", Helpers::getLink('/modules/actes/index.php'));
     }
 
-    if ($trans->get('type') != 1) {
+    if (!$trans->isType(TypeTransaction::TransmissionActe)) {
         Helpers::returnAndExit(1, 'Ce type de transaction ne peut pas être cloturé.', Helpers::getLink('/modules/actes/actes_transac_show.php?id=') . $rel_trans->getId());
     }
 
