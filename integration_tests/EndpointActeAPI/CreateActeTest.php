@@ -9,7 +9,7 @@ use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class CreateActe extends S2lowIntegrationTestCase
+class CreateActeTest extends S2lowIntegrationTestCase
 {
     use ActesUtilitiesTestTrait;
 

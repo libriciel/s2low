@@ -8,7 +8,7 @@ use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class CreateActeFromArchive extends S2lowIntegrationTestCase
+class CreateActeFromArchiveTest extends S2lowIntegrationTestCase
 {
     use ActesUtilitiesTestTrait;
 
@@ -88,7 +88,6 @@ class CreateActeFromArchive extends S2lowIntegrationTestCase
         );
 
         $response = $client->getResponse();
-        var_dump($response->getContent());
         static::assertStringContainsString($data['stringInResponse'], $response->getContent());
     }
 }
