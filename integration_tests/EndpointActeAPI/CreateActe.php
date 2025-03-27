@@ -68,7 +68,6 @@ class CreateActe extends S2lowIntegrationTestCase
         $typePj = 'PJ002';
 
         $file = [];
-
         if ($data['with_file']) {
             $_FILES['acte_pdf_file'] = [
                 'name' => $fileName,
@@ -77,6 +76,7 @@ class CreateActe extends S2lowIntegrationTestCase
                 'error' => $fileError,
                 'size' => $fileSize,
             ];
+
             $file = [
                 'acte_pdf_file' => [
                     new UploadedFile(
@@ -89,7 +89,6 @@ class CreateActe extends S2lowIntegrationTestCase
                 ]
             ];
         }
-
 
         $_POST['api'] = $api;
         $_POST['nature_code'] = $natureCode;
@@ -119,7 +118,6 @@ class CreateActe extends S2lowIntegrationTestCase
         );
 
         $response = $client->getResponse();
-        $content = explode("\n", trim($response->getContent()));
         static::assertStringContainsString($data['stringInResponse'], $response->getContent());
     }
 }
