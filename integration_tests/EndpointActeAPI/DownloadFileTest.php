@@ -60,7 +60,7 @@ class DownloadFileTest extends S2lowIntegrationTestCase
 
     private function getFiles()
     {
-        $archivePath = __DIR__ . '/../fixtures/abc-TACT--443061841--20250313-1.tar.gz';
+        $archivePath = __DIR__ . '/../fixtures/abc-TACT--123456789--20250313-1.tar.gz';
 
         $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, $archivePath);
 
