@@ -38,6 +38,7 @@ class S2lowIntegrationTestCase extends WebTestCase
         $_SESSION = [];
         $_GET = [];
         $_POST = [];
+        $_FILES = [];
         $_SERVER['QUERY_STRING'] = '';
         $this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);
         $this->sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST);
