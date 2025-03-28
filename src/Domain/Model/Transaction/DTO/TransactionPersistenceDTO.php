@@ -18,7 +18,7 @@ class TransactionPersistenceDTO
     ) {
     }
 
-    function toModel(): Transaction
+    public function toModel(): Transaction
     {
         return new Transaction(
             $this->id,
