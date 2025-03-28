@@ -1,16 +1,19 @@
 <?php
 
+use S2lowLegacy\Class\LegacyObjectsManager;
 use Symfony\Component\Finder\Finder;
 
 require_once __DIR__ . "/../../init/init.php";
-\S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
+LegacyObjectsManager::setLegacyObjectInstancier();
+$actes_files_upload_root = LegacyObjectsManager::getLegacyObjectInstancier()->get('actes_files_upload_root');
+
 
 $i = 0;
 
 while (true) {
     $finder = new Finder();
     $finder
-        ->in(ACTES_FILES_UPLOAD_ROOT)
+        ->in($actes_files_upload_root)
         ->directories()
         ->filter(
             function (\SplFileInfo $dirname) {

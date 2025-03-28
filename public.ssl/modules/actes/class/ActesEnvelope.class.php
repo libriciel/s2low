@@ -4,6 +4,7 @@ use S2lowLegacy\Class\actes\ActesRetriever;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\DataObject;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\XMLHelper;
 
@@ -200,8 +201,12 @@ class ActesEnvelope extends DataObject
     public function set($name, $val)
     {
         switch ($name) {
-            case "destDir":
-                parent::set("rootDir", ACTES_FILES_UPLOAD_ROOT);
+            case 'destDir':
+                parent::set(
+                    'rootDir',
+                    LegacyObjectsManager::getLegacyObjectInstancier()
+                    ->get('actes_files_upload_root')
+                );
                 break;
         }
 
@@ -438,13 +443,14 @@ class ActesEnvelope extends DataObject
    */
     public function buildFileList()
     {
+        $actes_files_upload_root = LegacyObjectsManager::getLegacyObjectInstancier()->get('actes_files_upload_root');
       // Fichier XML de l'enveloppe
-        $this->fileList[] = array( "name" => basename($this->envXmlFile), "type" => "text/xml", "size" => filesize(ACTES_FILES_UPLOAD_ROOT . "/" . $this->envXmlFile));
+        $this->fileList[] = array( "name" => basename($this->envXmlFile), "type" => "text/xml", "size" => filesize($actes_files_upload_root . "/" . $this->envXmlFile));
 
         if (count($this->transactions) > 0) {
             foreach ($this->transactions as $transac) {
                 // Fichier XML de l'acte
-                $this->fileList[] = array( "name" => basename($transac->get("xmlFileName")), "type" => "text/xml", "size" => filesize(ACTES_FILES_UPLOAD_ROOT . "/" . $transac->get("xmlFileName")));
+                $this->fileList[] = array( "name" => basename($transac->get("xmlFileName")), "type" => "text/xml", "size" => filesize($actes_files_upload_root . "/" . $transac->get("xmlFileName")));
 
                 // Fichier de l'acte (optionnel)
                 if (isset($transac->files["acte"])) {
@@ -793,13 +799,14 @@ class ActesEnvelope extends DataObject
   */
     public function deleteArchiveFile()
     {
+        $actes_files_upload_root = LegacyObjectsManager::getLegacyObjectInstancier()->get('actes_files_upload_root');
         if (isset($this->file_path)) {
-            if (! @unlink(ACTES_FILES_UPLOAD_ROOT . "/" . $this->file_path)) {
-                $this->errorMsg .= "Erreur lors de la tentative de suppression du fichier archive.";
+            if (! @unlink($actes_files_upload_root . '/' . $this->file_path)) {
+                $this->errorMsg .= 'Erreur lors de la tentative de suppression du fichier archive.';
                 return false;
             } else {
               // Tentative de suppression du répertoire contenant
-                @rmdir(ACTES_FILES_UPLOAD_ROOT . "/" . dirname($this->file_path));
+                @rmdir($actes_files_upload_root . '/' . dirname($this->file_path));
                 return true;
             }
         }

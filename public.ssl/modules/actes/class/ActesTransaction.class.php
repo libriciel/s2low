@@ -8,6 +8,7 @@ use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\DataObject;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
 use S2lowLegacy\Class\XMLHelper;
@@ -293,7 +294,10 @@ class ActesTransaction extends DataObject
                 }
                 break;
             case "destDir":
-                parent :: set("rootDir", ACTES_FILES_UPLOAD_ROOT);
+                parent :: set(
+                    "rootDir",
+                    LegacyObjectsManager::getLegacyObjectInstancier()->get('actes_files_upload_root')
+                );
                 break;
         }
 
@@ -807,15 +811,15 @@ class ActesTransaction extends DataObject
 
   /**
    * \brief Méthode d'importation d'un fichier XML de description d'une transaction
-   * \param $xmlFile chaîne : Chemin vers le fichier XML de description (relatif à ACTES_FILES_UPLOAD_ROOT)
+   * \param $xmlFile chaîne : Chemin vers le fichier XML de description (relatif à actes_files_upload_root)
    * \return True en cas de succès, false sinon
    * TODO : refactorer pour éviter l'import de $actesClassificationCodesSQL ...
   */
     public function createFromXML($xmlFile, ActesClassificationCodesSQL $actesClassificationCodesSQL)
     {
 
-
-        $absXmlFile = ACTES_FILES_UPLOAD_ROOT . "/" . $xmlFile;
+        $actes_files_upload_root = LegacyObjectsManager::getLegacyObjectInstancier()->get('actes_files_upload_root');
+        $absXmlFile = $actes_files_upload_root . '/' . $xmlFile;
         $this->xmlFileName = $xmlFile;
 
         if (!file_exists($absXmlFile)) {

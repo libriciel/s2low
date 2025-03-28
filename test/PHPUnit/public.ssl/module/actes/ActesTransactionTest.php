@@ -6,6 +6,7 @@ use S2lowLegacy\Class\actes\ActesClassificationCodesSQL;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
 use S2lowLegacy\Class\actes\TypeTransaction;
+use S2lowLegacy\Class\LegacyObjectsManager;
 
 class ActesTransactionTest extends S2lowTestCase
 {
@@ -25,6 +26,7 @@ class ActesTransactionTest extends S2lowTestCase
         parent::setUp();
         $this->actesTransaction = new ActesTransaction();
         $this->actesTransaction->set('destDir', 'toto');
+        $this->actes_files_upload_root = LegacyObjectsManager::getLegacyObjectInstancier()->get('actes_files_upload_root');
 
         $this->pdf_filepath = __DIR__ . '/../../../fixtures/vide.pdf';
         $this->xml_filepath = __DIR__ . '/../../../fixtures/toto.xml';
@@ -62,7 +64,8 @@ class ActesTransactionTest extends S2lowTestCase
 
     private function validateAndRemoveFile($filename)
     {
-        $actes_destination = ACTES_FILES_UPLOAD_ROOT . "/$filename";
+        $actes_files_upload_root = LegacyObjectsManager::getLegacyObjectInstancier()->get('actes_files_upload_root');
+        $actes_destination = $actes_files_upload_root . "/$filename";
         static::assertTrue(file_exists($actes_destination));
         static::assertTrue(unlink($actes_destination));
     }
@@ -416,7 +419,7 @@ class ActesTransactionTest extends S2lowTestCase
         $env->set('siren', '000000000');
 
         static::assertTrue($this->actesTransaction->generateMessageXMLFile('test'));
-        $file_path = ACTES_FILES_UPLOAD_ROOT . '/' . $this->actesTransaction->get('xmlFileName');
+        $file_path = $this->actes_files_upload_root . '/' . $this->actesTransaction->get('xmlFileName');
         static::assertSame(
             'test_0.xml',
             $this->actesTransaction->get('xmlFileName')
@@ -452,7 +455,7 @@ class ActesTransactionTest extends S2lowTestCase
 
 
         static::assertTrue($this->actesTransaction->generateMessageXMLFile('test'));
-        $file_path = ACTES_FILES_UPLOAD_ROOT . '/' . $this->actesTransaction->get('xmlFileName');
+        $file_path = $this->actes_files_upload_root . '/' . $this->actesTransaction->get('xmlFileName');
         static::assertSame(
             'test_0.xml',
             $this->actesTransaction->get('xmlFileName')
@@ -492,7 +495,7 @@ class ActesTransactionTest extends S2lowTestCase
         $this->actesTransaction->set('related_transaction', $relatedTransaction);
 
         static::assertTrue($this->actesTransaction->generateMessageXMLFile('test'));
-        $file_path = ACTES_FILES_UPLOAD_ROOT . '/' . $this->actesTransaction->get('xmlFileName');
+        $file_path = $this->actes_files_upload_root . '/' . $this->actesTransaction->get('xmlFileName');
         static::assertSame(
             'test_0.xml',
             $this->actesTransaction->get('xmlFileName')
@@ -518,7 +521,7 @@ class ActesTransactionTest extends S2lowTestCase
         $env->set('siren', '000000000');
 
         static::assertTrue($this->actesTransaction->generateMessageXMLFile('test'));
-        $file_path = ACTES_FILES_UPLOAD_ROOT . '/' . $this->actesTransaction->get('xmlFileName');
+        $file_path = $this->actes_files_upload_root . '/' . $this->actesTransaction->get('xmlFileName');
         static::assertSame(
             'test_0.xml',
             $this->actesTransaction->get('xmlFileName')
@@ -555,7 +558,7 @@ class ActesTransactionTest extends S2lowTestCase
         $this->actesTransaction->set('related_transaction', $relatedTransaction);
 
         static::assertTrue($this->actesTransaction->generateMessageXMLFile('test'));
-        $file_path = ACTES_FILES_UPLOAD_ROOT . '/' . $this->actesTransaction->get('xmlFileName');
+        $file_path = $this->actes_files_upload_root . '/' . $this->actesTransaction->get('xmlFileName');
         static::assertSame(
             'test_0.xml',
             $this->actesTransaction->get('xmlFileName')
@@ -575,7 +578,7 @@ class ActesTransactionTest extends S2lowTestCase
             basename($this->actesTransaction->files['attachment'][0]['name']),
             $file_content
         );
-        unlink('/data/tdt-workspace/actes/uploads/test_0.xml');
+        unlink($file_path);
     }
 
     /**
@@ -584,7 +587,7 @@ class ActesTransactionTest extends S2lowTestCase
     public function testCreateFromXML(string $filename, int $type): void
     {
         $test_file_path = __DIR__ . "/../../../../../vendor/libriciel/tdt-lib-actes/tests/FichierXML/fixtures/$filename";
-        copy($test_file_path, ACTES_FILES_UPLOAD_ROOT . '/' . $filename);
+        copy($test_file_path, $this->actes_files_upload_root . '/' . $filename);
 
         $transaction = new ActesTransaction();
         $transaction->createFromXML(
@@ -592,7 +595,7 @@ class ActesTransactionTest extends S2lowTestCase
             $this->getObjectInstancier()->get(ActesClassificationCodesSQL::class)
         );
 
-        unlink(ACTES_FILES_UPLOAD_ROOT . '/' . $filename);
+        unlink($this->actes_files_upload_root . '/' . $filename);
 
         self::assertSame(
             $type,
@@ -658,9 +661,9 @@ class ActesTransactionTest extends S2lowTestCase
         $this->actesTransaction->set('unique_id', '032-213201601-20170616-ARP201706407-AI');
         $this->actesTransaction->save();
 
-        mkdir(ACTES_FILES_UPLOAD_ROOT . '/testFiles/');
-        copy($filename, ACTES_FILES_UPLOAD_ROOT . '/testFiles/' . basename($filename));
-        copy(__DIR__ . '/fixtures/test_pdf.pdf', ACTES_FILES_UPLOAD_ROOT . '/testFiles/' . '001-000000000-20170130-TEST42-DE-3-3_1.pdf');
+        mkdir($this->actes_files_upload_root . '/testFiles/');
+        copy($filename, $this->actes_files_upload_root . '/testFiles/' . basename($filename));
+        copy(__DIR__ . '/fixtures/test_pdf.pdf', $this->actes_files_upload_root . '/testFiles/' . '001-000000000-20170130-TEST42-DE-3-3_1.pdf');
 
 
         $transaction = new ActesTransaction();
@@ -671,9 +674,9 @@ class ActesTransactionTest extends S2lowTestCase
         );
 
 
-        unlink(ACTES_FILES_UPLOAD_ROOT . '/testFiles/' . basename($filename));
-        unlink(ACTES_FILES_UPLOAD_ROOT . '/testFiles/' . '001-000000000-20170130-TEST42-DE-3-3_1.pdf');
-        rmdir(ACTES_FILES_UPLOAD_ROOT . '/testFiles/');
+        unlink($this->actes_files_upload_root . '/testFiles/' . basename($filename));
+        unlink($this->actes_files_upload_root . '/testFiles/' . '001-000000000-20170130-TEST42-DE-3-3_1.pdf');
+        rmdir($this->actes_files_upload_root . '/testFiles/');
 
         static::assertSame(
             $xml_name . '_0.xml',
@@ -731,11 +734,11 @@ class ActesTransactionTest extends S2lowTestCase
         $this->actesTransaction->set('unique_id', '032-213201601-20170616-ARP201706407-AI');
         $this->actesTransaction->save();
 
-        mkdir(ACTES_FILES_UPLOAD_ROOT . '/siren');
-        mkdir(ACTES_FILES_UPLOAD_ROOT . '/siren/import/');
-        copy($filename, ACTES_FILES_UPLOAD_ROOT . '/siren/import/' . basename($filename));
-        copy(__DIR__ . '/fixtures/test_pdf.pdf', ACTES_FILES_UPLOAD_ROOT . '/siren/import/001-000000000-20170130-TEST42-DE-3-4_1.pdf');
-        copy(__DIR__ . '/fixtures/test_pdf.pdf', ACTES_FILES_UPLOAD_ROOT .  '/siren/import/001-000000000-20170130-TEST42-DE-3-4_2.pdf');
+        mkdir($this->actes_files_upload_root . '/siren');
+        mkdir($this->actes_files_upload_root . '/siren/import/');
+        copy($filename, $this->actes_files_upload_root . '/siren/import/' . basename($filename));
+        copy(__DIR__ . '/fixtures/test_pdf.pdf', $this->actes_files_upload_root . '/siren/import/001-000000000-20170130-TEST42-DE-3-4_1.pdf');
+        copy(__DIR__ . '/fixtures/test_pdf.pdf', $this->actes_files_upload_root .  '/siren/import/001-000000000-20170130-TEST42-DE-3-4_2.pdf');
 
 
         $transaction = new ActesTransaction();
@@ -746,11 +749,11 @@ class ActesTransactionTest extends S2lowTestCase
         );
 
 
-        unlink(ACTES_FILES_UPLOAD_ROOT . '/siren/import/' . basename($filename));
-        unlink(ACTES_FILES_UPLOAD_ROOT . '/siren/import/001-000000000-20170130-TEST42-DE-3-4_1.pdf');
-        unlink(ACTES_FILES_UPLOAD_ROOT . '/siren/import/001-000000000-20170130-TEST42-DE-3-4_2.pdf');
-        rmdir(ACTES_FILES_UPLOAD_ROOT . '/siren/import');
-        rmdir(ACTES_FILES_UPLOAD_ROOT . '/siren');
+        unlink($this->actes_files_upload_root . '/siren/import/' . basename($filename));
+        unlink($this->actes_files_upload_root . '/siren/import/001-000000000-20170130-TEST42-DE-3-4_1.pdf');
+        unlink($this->actes_files_upload_root . '/siren/import/001-000000000-20170130-TEST42-DE-3-4_2.pdf');
+        rmdir($this->actes_files_upload_root . '/siren/import');
+        rmdir($this->actes_files_upload_root . '/siren');
 
         self::assertSame(
             TypeTransaction::DemandePieceComplementaire->value,

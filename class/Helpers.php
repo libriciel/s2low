@@ -452,13 +452,16 @@ class Helpers
     private const GENERATED_FILES_PERMS = 0660;
 
   /**
-   * \brief Méthode de création d'une arborescence de répertoire (sous ACTES_FILES_UPLOAD_ROOT par défaut)
+   * \brief Méthode de création d'une arborescence de répertoire (sous actes_files_upload_root par défaut)
    * \param $path chaîne : chemin absolu vers l'arborescence à créer
-   * \param $base chaîne (optionnel) : répertoire de base de la création (ACTES_FILES_UPLOAD_ROOT par défaut)
+   * \param $base chaîne (optionnel) : répertoire de base de la création (actes_files_upload_root par défaut)
    * \return True en cas de succès, false sinon
    */
-    public static function createDirTree($path, $base = ACTES_FILES_UPLOAD_ROOT)
+    public static function createDirTree($path, $base = null): bool
     {
+        if (is_null($base)) {
+            $base = LegacyObjectsManager::getLegacyObjectInstancier()->get('actes_files_upload_root');
+        }
 
         $escBase = str_replace("/", '\/', $base);
         if (preg_match('/^' . $escBase . '\/*/', $path)) {
