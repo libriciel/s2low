@@ -16,15 +16,16 @@ use S2lowTestCase;
 
 class ActesEnvoiFichierWorkerTest extends S2lowTestCase
 {
-    /** @var  TmpFolder */
-    private $tmpFolder;
-    private $tmp_dir;
+    private string $enveloppe_directory;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->tmpFolder = new TmpFolder();
-        $this->tmp_dir = $this->tmpFolder->create();
+        $this->siren = '1234567';
+        $this->enveloppe_directory = $this->getObjectInstancier()->get('actes_files_upload_root') . '/' . $this->siren;
+        mkdir($this->enveloppe_directory);
+
         $this->getObjectInstancier()->set('actes_appli_trigramme', 'SLO');
 
         $actesFileSender = $this->getMockBuilder(ActesFileSender::class)->disableOriginalConstructor()->getMock();
@@ -33,8 +34,8 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
 
     protected function tearDown(): void
     {
+        (new TmpFolder())->delete($this->enveloppe_directory);
         parent::tearDown();
-        $this->tmpFolder->delete($this->tmp_dir);
     }
 
 
@@ -133,10 +134,10 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
     {
         $archive_name = basename($archive_path);
 
-        copy($archive_path, $this->tmp_dir . "/$archive_name");
+        copy($archive_path, $this->enveloppe_directory . "/$archive_name");
 
         $sql = 'INSERT INTO actes_envelopes(user_id,file_path) VALUES(1,?) returning ID';
-        $envelope_id = $this->getSQLQuery()->queryOne($sql, basename($this->tmp_dir) . "/$archive_name");
+        $envelope_id = $this->getSQLQuery()->queryOne($sql, $this->siren . "/$archive_name");
 
 
         $sql = 'INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,antivirus_check) VALUES (?,?,?,?,?) returning ID;';
