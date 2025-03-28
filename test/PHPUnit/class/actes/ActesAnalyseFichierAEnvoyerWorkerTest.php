@@ -1,5 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\actes;
+
+use Error;
+use Exception;
 use S2low\Services\PdfValidator;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\actes\ActesScriptHelper;
@@ -14,6 +20,7 @@ use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Model\LogsSQL;
+use S2lowTestCase;
 
 require_once __DIR__ . "/ActesCreator.php";
 
@@ -37,7 +44,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
         $this->getObjectInstancier()->set(PadesValid::class, $padesValid);
     }
 
-    private function getActesAnalysFichierAEnvoyerWorker()
+    private function getActesAnalysFichierAEnvoyerWorker(): ActesAnalyseFichierAEnvoyerWorker
     {
         return $this->getObjectInstancier()->get(ActesAnalyseFichierAEnvoyerWorker::class);
     }
@@ -69,7 +76,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
      */
     public function testGetList()
     {
-        $data = $this->createOneTransaction(__DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
+        $data = $this->createOneTransaction(__DIR__ . '/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz');
         $result = $this->getActesAnalysFichierAEnvoyerWorker()->getAllId();
         $this->assertEquals([$data['envelope_id']], $result);
     }
@@ -213,6 +220,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
     private function createOneTransaction($archivepath, $is_marche_public = false)
     {
         $actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
+        /** @var ActesCreator $transaction_id */
         $transaction_id = $actesCreator->createTransaction(
             ActesStatusSQL::STATUS_POSTE,
             $archivepath,

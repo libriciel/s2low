@@ -1,5 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\actes;
+
+use Exception;
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
@@ -8,6 +13,7 @@ use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\TGZExtractor;
 use S2lowLegacy\Class\TmpFolder;
+use S2lowTestCase;
 
 class ActesSignaturesTest extends S2lowTestCase
 {
@@ -23,7 +29,7 @@ class ActesSignaturesTest extends S2lowTestCase
         $tmp_dir = $tmpFolder->create();
         $actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
 
-        $transaction_id = $actesCreator->createTransaction(ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_SIGNEE, __DIR__ . "/fixtures/abc-TACT--000000000--20170803-16.tar.gz", $tmp_dir);
+        $transaction_id = $actesCreator->createTransaction(ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_SIGNEE, __DIR__ . '/fixtures/abc-TACT--000000000--20170803-16.tar.gz', $tmp_dir);
 
         $actesTransactionSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
         $transction_info = $actesTransactionSQL->getInfo($transaction_id);
@@ -33,7 +39,7 @@ class ActesSignaturesTest extends S2lowTestCase
 
 
         $actesSignature = $this->getObjectInstancier()->get(ActesSignature::class);
-        $actesSignature->setSignature($included_file_id, "ma signature");
+        $actesSignature->setSignature($included_file_id, 'ma signature');
 
         $actes_envelope_info = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class)->getInfo($transction_info['envelope_id']);
 
@@ -45,8 +51,8 @@ class ActesSignaturesTest extends S2lowTestCase
         $tgzExtractor->extract($archivePath, false);
 
         $this->assertFileEquals(
-            __DIR__ . "/fixtures/fichier-metier-signe.xml",
-            $result_dir . "/034-000000000-20170801-20170803E-AI-1-1_0.xml"
+            __DIR__ . '/fixtures/fichier-metier-signe.xml',
+            $result_dir . '/034-000000000-20170801-20170803E-AI-1-1_0.xml'
         );
 
         $tmpFolder->delete($tmp_dir);

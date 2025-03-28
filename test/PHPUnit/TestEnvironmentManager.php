@@ -23,6 +23,7 @@ class TestEnvironmentManager
      */
     public function setUp()
     {
+        $tmpFolder = new TmpFolder();
         $this->getConnection();
 
         $this->getSQLQuery()->exec($this->getSQLContent());
@@ -44,7 +45,7 @@ class TestEnvironmentManager
         \S2lowLegacy\Lib\ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());
         $this->getObjectInstancier()->__set(SQLQuery::class, $this->getSQLQuery());
         $this->getObjectInstancier()->set('helios_files_upload_root', "/tmp");
-        $this->getObjectInstancier()->set('actes_files_upload_root', sys_get_temp_dir());
+        $this->getObjectInstancier()->set('actes_files_upload_root', $tmpFolder->create());
 
         $this->getObjectInstancier()->set('use_prod_notifications', false);
 
@@ -96,9 +97,9 @@ class TestEnvironmentManager
         $this->getObjectInstancier()->set('repertoirePesAllerSansTransaction', '');
         $this->getObjectInstancier()->set('mail_files_upload_root', '');
         $this->getObjectInstancier()->set('mail_files_without_transac_dir', '');
-        $tmpFolder = new TmpFolder();
         $this->getObjectInstancier()->set('repertoireActesEnveloppeSansTransaction', $tmpFolder->create());
     }
+
 
     public function getConnection()
     {
