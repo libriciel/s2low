@@ -6,6 +6,7 @@ use S2lowLegacy\Class\actes\ActesEnvelopeSerialSQL;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesStoreEnveloppeWorker;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\DatabasePool;
@@ -20,7 +21,7 @@ use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 
 $tooManyAnnexes = isset(error_get_last()["message"]) && error_get_last(
-    )["message"] == "Maximum number of allowable file uploads has been exceeded";
+)["message"] == "Maximum number of allowable file uploads has been exceeded";
 
 list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([ObjectInstancier::class, SQLQuery::class]);
@@ -339,7 +340,7 @@ if (isset($actePDFFile) || $batchMode) {
         if ($signFile) {
             if (!$trans->addActeSign($signFile, $readFile)) {
                 $errorMsg .= "Erreur lors du traitement de la signature du fichier " . $acteFileName . " :\n" . $trans->getErrorMsg(
-                    ) . "\n";
+                ) . "\n";
                 $fileImportError = true;
             }
         }
@@ -395,7 +396,7 @@ if (isset($acteAttachments)) {
             ) {
                 if (!$trans->addAttachmentSign($acteAttachmentsSign["tmp_name"][$i])) {
                     $errorMsg .= "Erreur lors du traitement de la signature du fichier " . $acteAttachments["name"][$i] . " :\n" . $trans->getErrorMsg(
-                        ) . "\n";
+                    ) . "\n";
                     $fileImportError = true;
                 }
             }
