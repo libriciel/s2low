@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class;
 
+use org\bovigo\vfs\vfsStream;
 use RuntimeException;
 use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
 use S2lowLegacy\Class\actes\ActesImapProperties;
@@ -189,8 +190,16 @@ class LegacyObjectsManager
         $objectInstancier->set("helios_responses_root", HELIOS_RESPONSES_ROOT);
 
 
-        $objectInstancier->set("actes_files_upload_root", ACTES_FILES_UPLOAD_ROOT);
-        $objectInstancier->set("repertoireActesEnveloppeSansTransaction", ACTES_ENVELOPPE_SANSTRANSACTION);
+        if (TESTING_ENVIRONNEMENT) {
+            $tmpFolder = new TmpFolder();
+
+            $objectInstancier->set("actes_files_upload_root", $tmpFolder->create());
+            $objectInstancier->set("repertoireActesEnveloppeSansTransaction", $tmpFolder->create());
+        } else {
+            $objectInstancier->set("actes_files_upload_root", ACTES_FILES_UPLOAD_ROOT);
+            $objectInstancier->set("repertoireActesEnveloppeSansTransaction", ACTES_ENVELOPPE_SANSTRANSACTION);
+        }
+
         $objectInstancier->set("actes_appli_trigramme", ACTES_APPLI_TRIGRAMME);
         $objectInstancier->set("actes_appli_quadrigramme", ACTES_APPLI_QUADRIGRAMME);
 
@@ -289,6 +298,14 @@ class LegacyObjectsManager
 
     public static function resetObjectInstancier()
     {
+        if(TESTING_ENVIRONNEMENT)
+        {
+            $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
+            $tmpFolder = new TmpFolder();
+
+            $tmpFolder->delete($objectInstancier->get('actes_files_upload_root'));
+            //$tmpFolder->delete($objectInstancier->get('repertoireActesEnveloppeSansTransaction'));
+        }
         ObjectInstancierFactory::resetObjectInstancier();
     }
 
