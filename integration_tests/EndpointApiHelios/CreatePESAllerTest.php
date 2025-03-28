@@ -60,30 +60,30 @@ class CreatePESAllerTest extends S2lowIntegrationTestCase
             $data['status'],
         );
 
-        $filePath = __DIR__ . "/../../integration_tests/fixtures/XMLTest.xml";
+        $filePathFromFixtures = __DIR__ . "/../../integration_tests/fixtures/XMLTest.xml";
         $fileName = 'XMLTest.xml';
-        $fileContent = file_get_contents($filePath);
+
+        $filePathFromVfs = vfsStream::url('test/helios/' . $fileName);
+        copy($filePathFromFixtures, $filePathFromVfs);
+
+        $fileContent = file_get_contents($filePathFromFixtures);
         $fileType = 'application/xml';
         $fileError = UPLOAD_ERR_OK;
 
         $toUploadFile = new UploadedFile(
-            $filePath,
+            $filePathFromVfs,
             "",
             $fileContent,
             UPLOAD_ERR_OK,
             true
         );
 
-        $vfsUrl = vfsStream::url('test/helios/' . $fileName);
-        copy($filePath, $vfsUrl);
-        $filePathFromUseCaseCode = $vfsUrl;
-
         $_FILES['enveloppe'] = '';
         if ($data['with_enveloppe']) {
             $_FILES['enveloppe'] = [
                 'name' => $fileName,
                 'type' => $fileType,
-                'tmp_name' => $filePathFromUseCaseCode,
+                'tmp_name' => $filePathFromVfs,
                 'error' => $fileError,
                 'size' => 107
             ];
