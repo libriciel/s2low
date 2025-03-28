@@ -4,6 +4,7 @@ namespace EndpointApiHelios;
 
 use HeliosUtilitiesTestTrait;
 use IntegrationTests\S2lowIntegrationTestCase;
+use org\bovigo\vfs\vfsStream;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -73,7 +74,9 @@ class CreatePESAllerTest extends S2lowIntegrationTestCase
             true
         );
 
-        $filePathFromUseCaseCode = __DIR__ . "/../fixtures/XMLTest.xml";
+        $vfsUrl = vfsStream::url('test/helios/' . $fileName);
+        copy($filePath, $vfsUrl);
+        $filePathFromUseCaseCode = $vfsUrl;
 
         $_FILES['enveloppe'] = '';
         if ($data['with_enveloppe']) {

@@ -3,6 +3,7 @@
 namespace IntegrationTests;
 
 use Exception;
+use org\bovigo\vfs\vfsStream;
 use S2low\Enum\ModulePermission;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\LegacyObjectsManager;
@@ -40,6 +41,7 @@ class S2lowIntegrationTestCase extends WebTestCase
         $_POST = [];
         $_FILES = [];
         $_SERVER['QUERY_STRING'] = '';
+        vfsStream::setup('test/helios');
         $this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);
         $this->sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST);
         $this->sqlQuery->setDatabaseHost(DB_HOST_TEST);
