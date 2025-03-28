@@ -472,6 +472,4 @@ class HeliosTransactions
 
         return $this;
     }
-
-
 }

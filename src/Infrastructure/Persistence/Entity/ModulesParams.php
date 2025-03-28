@@ -106,6 +106,4 @@ class ModulesParams
 
         return $this;
     }
-
-
 }

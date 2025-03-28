@@ -12,7 +12,7 @@ class DocumentMetierPersistenceDTO
         public readonly bool $isReadByUser,
         public readonly bool $antivirusChecked,
         public readonly string $prefix,
-    ){
+    ) {
     }
 
     public function toModel(): DocumentMetier

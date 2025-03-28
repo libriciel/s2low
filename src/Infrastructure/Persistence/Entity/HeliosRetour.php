@@ -221,6 +221,4 @@ class HeliosRetour
 
         return $this;
     }
-
-
 }

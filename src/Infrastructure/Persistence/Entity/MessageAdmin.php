@@ -227,6 +227,4 @@ class MessageAdmin
 
         return $this;
     }
-
-
 }

@@ -719,6 +719,4 @@ class Authorities
 
         return $this;
     }
-
-
 }

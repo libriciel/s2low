@@ -9,12 +9,10 @@ use S2low\Domain\Port\CloudStorageDownloaderInterface;
 
 class OpenStackFileDownloader implements CloudStorageDownloaderInterface
 {
-
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly OpenStackAdapter $openStackAdapter,
-    )
-    {
+    ) {
     }
 
     /**
@@ -30,7 +28,6 @@ class OpenStackFileDownloader implements CloudStorageDownloaderInterface
             $this->openStackAdapter->download($remoteFilePath, $localPathDestination);
 
             $this->logger->info("Fichier '$localPathDestination' téléchargé avec succès.");
-
         } catch (CreateNewFileException | CloudStorageDownloadException $e) {
             $this->logger->error($e->getMessage());
         }

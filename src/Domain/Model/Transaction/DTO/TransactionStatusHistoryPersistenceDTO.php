@@ -13,8 +13,8 @@ class TransactionStatusHistoryPersistenceDTO
         public int $transactionId,
         public string $status,
         public \DateTimeImmutable $date,
-        public string $message)
-    {
+        public string $message
+    ) {
     }
 
     public function toModel(): TransactionStatusHistory

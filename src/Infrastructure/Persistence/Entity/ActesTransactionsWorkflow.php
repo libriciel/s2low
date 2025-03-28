@@ -149,6 +149,4 @@ class ActesTransactionsWorkflow
 
         return $this;
     }
-
-
 }

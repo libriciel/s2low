@@ -149,6 +149,4 @@ class ActesBatchFiles
 
         return $this;
     }
-
-
 }

@@ -45,6 +45,4 @@ class HeliosTransmissionWindows
 
         return $this;
     }
-
-
 }

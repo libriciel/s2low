@@ -72,6 +72,4 @@ class MailUserGroupe
 
         return $this;
     }
-
-
 }

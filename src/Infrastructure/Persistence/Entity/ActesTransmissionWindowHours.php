@@ -107,6 +107,4 @@ class ActesTransmissionWindowHours
 
         return $this;
     }
-
-
 }

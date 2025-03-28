@@ -15,13 +15,12 @@ class TransactionStatusHistory
     private string $message;
 
     public function __construct(
-         int|null $id,
-         int $transactionId,
-         StatusTransaction $status,
-         DateUpdateStatusTransaction $date,
-         string $message,
-    )
-    {
+        int|null $id,
+        int $transactionId,
+        StatusTransaction $status,
+        DateUpdateStatusTransaction $date,
+        string $message,
+    ) {
         $this->id = $id;
         $this->transactionId = $transactionId;
         $this->status = $status;

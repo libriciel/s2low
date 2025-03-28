@@ -64,6 +64,4 @@ class AuthorityDepartments
 
         return $this;
     }
-
-
 }

@@ -312,6 +312,4 @@ class ActesEnvelopes
 
         return $this;
     }
-
-
 }

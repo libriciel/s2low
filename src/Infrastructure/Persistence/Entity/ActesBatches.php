@@ -141,6 +141,4 @@ class ActesBatches
 
         return $this;
     }
-
-
 }

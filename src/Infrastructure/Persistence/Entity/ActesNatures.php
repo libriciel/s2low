@@ -64,6 +64,4 @@ class ActesNatures
 
         return $this;
     }
-
-
 }

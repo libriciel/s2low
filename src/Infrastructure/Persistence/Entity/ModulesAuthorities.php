@@ -72,6 +72,4 @@ class ModulesAuthorities
 
         return $this;
     }
-
-
 }

@@ -91,6 +91,4 @@ class UsersPerms
 
         return $this;
     }
-
-
 }

@@ -244,6 +244,4 @@ class LogsHistorique
 
         return $this;
     }
-
-
 }

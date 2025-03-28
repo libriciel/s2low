@@ -72,6 +72,4 @@ class ServiceUserContent
 
         return $this;
     }
-
-
 }

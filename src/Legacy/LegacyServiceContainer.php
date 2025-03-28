@@ -1,4 +1,5 @@
 <?php
+
 namespace S2low\Legacy;
 
 use S2low\Kernel;

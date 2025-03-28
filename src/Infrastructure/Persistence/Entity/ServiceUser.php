@@ -86,6 +86,4 @@ class ServiceUser
 
         return $this;
     }
-
-
 }

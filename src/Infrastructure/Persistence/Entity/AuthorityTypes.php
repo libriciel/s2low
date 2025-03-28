@@ -67,6 +67,4 @@ class AuthorityTypes
 
         return $this;
     }
-
-
 }

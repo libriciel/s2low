@@ -126,6 +126,4 @@ class Nounce
 
         return $this;
     }
-
-
 }

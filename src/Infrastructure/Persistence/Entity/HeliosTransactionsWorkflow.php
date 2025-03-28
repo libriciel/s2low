@@ -103,6 +103,4 @@ class HeliosTransactionsWorkflow
 
         return $this;
     }
-
-
 }

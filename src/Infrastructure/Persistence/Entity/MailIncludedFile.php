@@ -102,6 +102,4 @@ class MailIncludedFile
 
         return $this;
     }
-
-
 }

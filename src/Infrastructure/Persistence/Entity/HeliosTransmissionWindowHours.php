@@ -107,6 +107,4 @@ class HeliosTransmissionWindowHours
 
         return $this;
     }
-
-
 }

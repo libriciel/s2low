@@ -45,6 +45,4 @@ class ActesTransmissionWindows
 
         return $this;
     }
-
-
 }
