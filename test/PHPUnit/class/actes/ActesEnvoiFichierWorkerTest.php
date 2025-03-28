@@ -10,6 +10,7 @@ use S2lowLegacy\Class\actes\ActesEnvoiFichierWorker;
 use S2lowLegacy\Class\actes\ActesFileSender;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Model\LogsSQL;
 use S2lowTestCase;
@@ -17,16 +18,14 @@ use S2lowTestCase;
 class ActesEnvoiFichierWorkerTest extends S2lowTestCase
 {
     private string $enveloppe_directory;
+    private string $siren;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->tmpFolder = new TmpFolder();
-        $this->siren = '1234567';
+        $this->siren = '491011698';
         $this->enveloppe_directory = $this->getObjectInstancier()->get('actes_files_upload_root') . '/' . $this->siren;
         mkdir($this->enveloppe_directory);
-
-        $this->getObjectInstancier()->set('actes_appli_trigramme', 'SLO');
 
         $actesFileSender = $this->getMockBuilder(ActesFileSender::class)->disableOriginalConstructor()->getMock();
         $this->getObjectInstancier()->set(ActesFileSender::class, $actesFileSender);
@@ -40,7 +39,7 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
 
 
     /**
-     * @throws \S2lowLegacy\Class\RecoverableException
+     * @throws RecoverableException
      */
     public function testEnvoiUneEnveloppe()
     {
@@ -57,11 +56,11 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
 
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
         static::assertSame(ActesStatusSQL::STATUS_TRANSMIS, $transaction_info['last_status_id']);
-        $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
-        static::assertSame(ActesStatusSQL::STATUS_TRANSMIS, $transaction_info['status_id']);
+        $lastTransactionWorkflowInfo = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
+        static::assertSame(ActesStatusSQL::STATUS_TRANSMIS, $lastTransactionWorkflowInfo['status_id']);
         static::assertSame(
             'Transmis au MI',
-            $transaction_info['message']
+            $lastTransactionWorkflowInfo['message']
         );
         $logsSQL = $this->getObjectInstancier()->get(LogsSQL::class);
         $liste = $logsSQL->getLastLog();
@@ -90,11 +89,11 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
 
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
         static::assertSame(ActesStatusSQL::STATUS_TRANSMIS, $transaction_info['last_status_id']);
-        $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
-        static::assertSame(ActesStatusSQL::STATUS_TRANSMIS, $transaction_info['status_id']);
+        $lastTransactionWorkflowInfo = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
+        static::assertSame(ActesStatusSQL::STATUS_TRANSMIS, $lastTransactionWorkflowInfo['status_id']);
         static::assertSame(
             'Creation',
-            $transaction_info['message']
+            $lastTransactionWorkflowInfo['message']
         );
 
         static::assertSame(
