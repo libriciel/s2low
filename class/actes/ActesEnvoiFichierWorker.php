@@ -56,27 +56,6 @@ class ActesEnvoiFichierWorker implements IWorker
         );
     }
 
-
-    public function sendAllEnvelopes()
-    {
-        $sigtermHandler = SigTermHandler::getInstance();
-        $this->logger->debug("Lancement du script");
-        $enveloppe_ids = $this->actesTransactionsSQL->getEnveloppeIdByTransactionsStatus(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION);
-        $this->logger->debug("Envoie de " . count($enveloppe_ids) . " enveloppes de transaction à l'état EN ATTENTE DE TRANSMISSION");
-        foreach ($enveloppe_ids as $enveloppe_id) {
-            try {
-                $this->work($enveloppe_id);
-            } catch (RecoverableException $e) {
-                /** Nothing to do */
-            }
-            if ($sigtermHandler->isSigtermCalled()) {
-                break;
-            }
-        }
-        $this->logger->debug("Fin du script");
-        return true;
-    }
-
     /**
      * @param $enveloppe_id
      * @return bool
