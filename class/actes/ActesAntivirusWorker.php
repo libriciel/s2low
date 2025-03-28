@@ -105,9 +105,4 @@ class ActesAntivirusWorker implements IWorker
     {
         // TODO: Implement end() method.
     }
-
-    public function setAnalyserActesAntivirus(AnalyserActesAntivirus $analyserActesAntivirus)
-    {
-        $this->analyserActesAntivirus = $analyserActesAntivirus;
-    }
 }
