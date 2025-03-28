@@ -99,7 +99,7 @@ class TestEnvironmentManager
         $this->getObjectInstancier()->set('mail_files_without_transac_dir', '');
         $this->getObjectInstancier()->set('repertoireActesEnveloppeSansTransaction', $tmpFolder->create());
     }
-    
+
 
     public function getConnection()
     {

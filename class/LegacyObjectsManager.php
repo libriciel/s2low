@@ -298,8 +298,7 @@ class LegacyObjectsManager
 
     public static function resetObjectInstancier()
     {
-        if(TESTING_ENVIRONNEMENT)
-        {
+        if (TESTING_ENVIRONNEMENT) {
             $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
             $tmpFolder = new TmpFolder();
 
