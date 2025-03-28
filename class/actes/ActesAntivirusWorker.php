@@ -21,9 +21,9 @@ class ActesAntivirusWorker implements IWorker
 
 
     public function __construct(
-        ActesTransactionsSQL   $actesTransactionSQL,
-        S2lowLogger            $s2lowLogger,
-        WorkerScript           $workerScript,
+        ActesTransactionsSQL $actesTransactionSQL,
+        S2lowLogger $s2lowLogger,
+        WorkerScript $workerScript,
     ) {
         $this->actesTransactionSQL = $actesTransactionSQL;
         $this->logger = $s2lowLogger;

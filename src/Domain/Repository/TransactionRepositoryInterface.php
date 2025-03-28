@@ -14,5 +14,4 @@ interface TransactionRepositoryInterface
      */
     public function findById(string $acteId): TransactionPersistenceDTO;
     public function save(TransactionPersistenceDTO $transactionPersistenceDTO);
-
 }

@@ -68,6 +68,4 @@ class AuthorityGroupSiren
 
         return $this;
     }
-
-
 }

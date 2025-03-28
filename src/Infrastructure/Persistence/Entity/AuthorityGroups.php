@@ -64,6 +64,4 @@ class AuthorityGroups
 
         return $this;
     }
-
-
 }

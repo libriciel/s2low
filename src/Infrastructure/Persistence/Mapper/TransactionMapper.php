@@ -16,7 +16,7 @@ class TransactionMapper
     /**
      * @param TransactionStatusListUpdateMapper $transactionStatusListUpdateMapper
      */
-    public function __construct(TransactionStatusListUpdateMapper$transactionStatusListUpdateMapper)
+    public function __construct(TransactionStatusListUpdateMapper $transactionStatusListUpdateMapper)
     {
         $this->transactionStatusListUpdateMapper = $transactionStatusListUpdateMapper;
     }
@@ -26,9 +26,8 @@ class TransactionMapper
         ActesTransactions $acte,
         ActesEnvelopes $enveloppe,
         string $prefixArchivePath,
-        Array $actesHistoriqueStatut
-    ): TransactionPersistenceDTO
-    {
+        array $actesHistoriqueStatut
+    ): TransactionPersistenceDTO {
         $archive =  new DocumentMetierPersistenceDTO(
             $enveloppe->getFilePath(),
             false,

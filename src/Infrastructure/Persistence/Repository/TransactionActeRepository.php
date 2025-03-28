@@ -13,7 +13,6 @@ use S2low\Infrastructure\Persistence\Entity\ActesTransactions;
 use S2low\Infrastructure\Persistence\Entity\ActesTransactionsWorkflow;
 use S2low\Infrastructure\Persistence\Mapper\TransactionMapper;
 
-
 class TransactionActeRepository implements TransactionRepositoryInterface
 {
     private EntityManagerInterface $entityManager;
@@ -25,8 +24,8 @@ class TransactionActeRepository implements TransactionRepositoryInterface
         EntityManagerInterface $entityManager,
         TransactionMapper $transactionMapper,
         CloudStorageDownloaderInterface $cloudStorageDownloader,
-        $acteUploadRootDir)
-    {
+        $acteUploadRootDir
+    ) {
         $this->entityManager = $entityManager;
         $this->transactionMapper = $transactionMapper;
         $this->cloudStorageDownloader = $cloudStorageDownloader;
@@ -38,7 +37,8 @@ class TransactionActeRepository implements TransactionRepositoryInterface
      * @return TransactionPersistenceDTO
      * @throws EntityNotFoundException
      */
-    public function findById($acteId): TransactionPersistenceDTO {
+    public function findById($acteId): TransactionPersistenceDTO
+    {
         $acte = $this->entityManager->find(ActesTransactions::class, $acteId);
 
         if ($acte === null) {
@@ -51,8 +51,7 @@ class TransactionActeRepository implements TransactionRepositoryInterface
         $enveloppe = $acte->getEnvelope();
         $localPath = $this->acteUploadRootDir . "/" . $enveloppe->getFilePath();
 
-        if(!file_exists($localPath))
-        {
+        if (!file_exists($localPath)) {
             $this->cloudStorageDownloader->downloadFile(
                 BucketName::ACTE_ENVELOPPE,
                 $enveloppe->getFilePath(),
@@ -60,7 +59,7 @@ class TransactionActeRepository implements TransactionRepositoryInterface
             );
         }
 
-        return $this->transactionMapper->mapToTransaction($acte, $enveloppe, $this->acteUploadRootDir, $acteWorkflows );
+        return $this->transactionMapper->mapToTransaction($acte, $enveloppe, $this->acteUploadRootDir, $acteWorkflows);
     }
 
     /**
@@ -104,5 +103,4 @@ class TransactionActeRepository implements TransactionRepositoryInterface
 
         return $acteTransactions;
     }
-
 }

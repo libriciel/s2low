@@ -124,6 +124,4 @@ class ActesClassificationCodes
 
         return $this;
     }
-
-
 }

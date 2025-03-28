@@ -186,6 +186,4 @@ class AuthorityPastellConfig
 
         return $this;
     }
-
-
 }

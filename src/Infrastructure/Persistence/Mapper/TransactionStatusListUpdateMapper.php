@@ -7,7 +7,7 @@ use S2low\Domain\Model\Transaction\DTO\TransactionStatusListUpdatePersistenceDTO
 
 class TransactionStatusListUpdateMapper
 {
-    public function mapToTransactionStatusListUpdatePersistenceDTO(array $actesHistoriqueStatut) : TransactionStatusListUpdatePersistenceDTO
+    public function mapToTransactionStatusListUpdatePersistenceDTO(array $actesHistoriqueStatut): TransactionStatusListUpdatePersistenceDTO
     {
         $historiqueStatutDTO = [];
         foreach ($actesHistoriqueStatut as $element) {

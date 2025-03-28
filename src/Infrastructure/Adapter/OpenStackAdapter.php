@@ -12,12 +12,11 @@ class OpenStackAdapter
     private \OpenStack\ObjectStore\v1\Models\Container $container;
 
     public function __construct(
-        string                           $authUrl,
-        string                           $region,
-        string                           $username,
-        string                           $password,
-    )
-    {
+        string $authUrl,
+        string $region,
+        string $username,
+        string $password,
+    ) {
         $this->openstack = new OpenStack([
             'authUrl' => $authUrl,
             'region' => $region,

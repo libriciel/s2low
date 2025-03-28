@@ -102,6 +102,4 @@ class Modules
 
         return $this;
     }
-
-
 }

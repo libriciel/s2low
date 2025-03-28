@@ -26,7 +26,7 @@ class TransactionStatusListUpdate
     public function toPersistenceDto(): TransactionStatusListUpdatePersistenceDTO
     {
         $transactionStatusList = [];
-        foreach($this->transactionStatusList as $transactionStatusHistory) {
+        foreach ($this->transactionStatusList as $transactionStatusHistory) {
             $transactionStatusList[] = $transactionStatusHistory->toPersistenceDto();
         }
 

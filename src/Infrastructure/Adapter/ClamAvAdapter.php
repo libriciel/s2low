@@ -25,7 +25,8 @@ class ClamAvAdapter implements AntivirusFilesScannerInterface
      * @return bool
      * @throws \RuntimeException|VirusDetectedException
      */
-    public function scan(string $filePath): bool {
+    public function scan(string $filePath): bool
+    {
         if (!file_exists($filePath)) {
             throw new RuntimeException("Le fichier '{$filePath}' est introuvable.");
         }

@@ -122,6 +122,4 @@ class ActesClassificationRequests
 
         return $this;
     }
-
-
 }

@@ -213,6 +213,4 @@ class LogsRequest
 
         return $this;
     }
-
-
 }

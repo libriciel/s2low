@@ -198,6 +198,4 @@ class MailTransaction
 
         return $this;
     }
-
-
 }

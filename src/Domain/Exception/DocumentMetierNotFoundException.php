@@ -4,7 +4,6 @@ namespace S2low\Domain\Exception;
 
 class DocumentMetierNotFoundException extends \RuntimeException
 {
-
     /**
      * @param $path
      */

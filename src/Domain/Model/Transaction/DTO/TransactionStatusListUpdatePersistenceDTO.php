@@ -6,7 +6,6 @@ use S2low\Domain\Model\Transaction\TransactionStatusListUpdate;
 
 class TransactionStatusListUpdatePersistenceDTO
 {
-
     public array $transactionStatusList;
 
     /**
@@ -29,7 +28,8 @@ class TransactionStatusListUpdatePersistenceDTO
         );
     }
 
-    public function getMostRecent() {
+    public function getMostRecent()
+    {
         $copyList = $this->transactionStatusList;
         usort($copyList, function ($a, $b) {
             return $b->date <=> $a->date;
@@ -37,5 +37,4 @@ class TransactionStatusListUpdatePersistenceDTO
 
         return $copyList[0];
     }
-
 }

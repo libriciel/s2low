@@ -23,8 +23,7 @@ class Transaction
         ProtocolTransaction $protocolTransaction,
         StatusTransaction $status,
         TransactionStatusListUpdate $transactionStatusListUpdate
-    )
-    {
+    ) {
         $this->id = $id;
         $this->archive = $documentMetier;
         $this->protocolTransaction = $protocolTransaction;
@@ -36,9 +35,9 @@ class Transaction
      * @param $goodStatus
      * @return void
      */
-    public function assertStatusIs($goodStatus) : void
+    public function assertStatusIs($goodStatus): void
     {
-        if ( $this->status !== $goodStatus ) {
+        if ($this->status !== $goodStatus) {
             throw new BadStatusTransactionException($this->id, $goodStatus, $this->status);
         }
     }

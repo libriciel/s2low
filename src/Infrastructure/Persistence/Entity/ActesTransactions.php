@@ -528,6 +528,4 @@ class ActesTransactions
 
         return $this;
     }
-
-
 }

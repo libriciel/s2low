@@ -10,13 +10,13 @@ use S2low\Domain\Model\ValueObject\StatusTransaction;
 class TransactionPersistenceDTO
 {
     public function __construct(
-        public int                          $id,
+        public int $id,
         public DocumentMetierPersistenceDTO $documentMetierDTO,
-        public ProtocolTransaction          $protocolTransaction,
-        public StatusTransaction            $status,
-        public TransactionStatusListUpdatePersistenceDTO                        $historyPersistenceDTO
-        )
-    {}
+        public ProtocolTransaction $protocolTransaction,
+        public StatusTransaction $status,
+        public TransactionStatusListUpdatePersistenceDTO $historyPersistenceDTO
+    ) {
+    }
 
     function toModel(): Transaction
     {

@@ -45,6 +45,4 @@ class HeliosStatus
 
         return $this;
     }
-
-
 }

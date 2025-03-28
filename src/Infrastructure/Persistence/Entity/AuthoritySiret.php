@@ -107,6 +107,4 @@ class AuthoritySiret
 
         return $this;
     }
-
-
 }
