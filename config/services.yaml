@@ -32,6 +32,7 @@ parameters:
   app.beanstalkd_port: '%env(BEANSTAKLD_PORT)%'
   app.redis_server: '%env(REDIS_SERVER)%'
   app.redis_port: '%env(REDIS_PORT)%'
+  clam_scan_binary: '%env(ANTIVIRUS_COMMAND)%'
 services:
   _defaults:
     autowire: true
@@ -50,7 +51,7 @@ services:
 
   S2low\Infrastructure\Adapter\ClamAvAdapter:
     arguments:
-      $clamScanBinary: '%env(ANTIVIRUS_COMMAND)%'
+      $clamScanBinary: '%clam_scan_binary%'
 
   S2low\Infrastructure\Adapter\OpenStackAdapter:
     arguments:

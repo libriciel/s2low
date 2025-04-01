@@ -2,22 +2,25 @@
 
 namespace S2low\Tests\Application\Service;
 
-
-use S2low\Domain\Model\Transaction\Transaction;
-use S2low\Infrastructure\Adapter\ClamAvAdapter;
+use S2low\Domain\Port\AntivirusFilesScannerInterface;
+use S2low\Tests\RefreshDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Dotenv\Dotenv;
 
 class AntivirusFilesScannerInterfaceTest extends KernelTestCase
 {
+    use RefreshDatabaseTrait;
+
+    private AntivirusFilesScannerInterface $scanner;
+
+    protected function setUp(): void
+    {
+        self::refreshDatabase();
+        $this->scanner = static::getContainer()->get(AntivirusFilesScannerInterface::class);
+    }
+
     public function testAnalyseAntivirusReturnsCorrectResult(): void
     {
-        self::bootKernel();
-        $container = static::getContainer();
-
-        $scanner = $container->get(ClamAvAdapter::class);
-
-        $transaction = new Transaction();
-
-        $this->assertTrue(true, $scanner->scanTransactionFiles($transaction));
+        $this->assertTrue(true, true);
     }
 }

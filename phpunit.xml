@@ -1,13 +1,14 @@
 <?xml version="1.0"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false"
-         bootstrap="test/PHPUnit/bootstrap.php"
+         bootstrap="tests/bootstrap.php"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
 
     <php>
         <server name="KERNEL_CLASS" value="S2low\Kernel"/>
 
         <!-- ###+ symfony/framework-bundle ### -->
-        <env name="APP_ENV" value="dev"/>
+        <env name="APP_ENV" value="test" force="true"/>
+        <env name="APP_DEBUG" value="1"/>
         <env name="APP_SECRET" value="b0fc277a3213f78858601e7dee6892d0"/>
         <!-- ###- symfony/framework-bundle ### -->
     </php>
@@ -37,6 +38,9 @@
         </testsuite>
         <testsuite name="S2low_integration">
             <directory>integration_tests</directory>
+        </testsuite>
+        <testsuite name="S2low_test">
+            <directory>test</directory>
         </testsuite>
     </testsuites>
 
