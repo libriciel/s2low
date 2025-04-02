@@ -1,7 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class;
+
+use Exception;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\ShellCommand;
+use S2lowSimpleTestCase;
 
 class AntivirusTest extends S2lowSimpleTestCase
 {
@@ -11,7 +17,7 @@ class AntivirusTest extends S2lowSimpleTestCase
         $this->getObjectInstancier()->set('antivirus_command', 'ls');
     }
 
-    private function getAntivirus()
+    private function getAntivirus(): Antivirus
     {
         return $this->getObjectInstancier()->get(Antivirus::class);
     }
@@ -21,8 +27,8 @@ class AntivirusTest extends S2lowSimpleTestCase
      */
     public function testOK()
     {
-        $this->assertTrue(
-            $this->getAntivirus()->checkArchiveSanity(__DIR__ . "/fixtures/classification.xml")
+        static::assertTrue(
+            $this->getAntivirus()->checkFile(__DIR__ . '/fixtures/classification.xml')
         );
     }
 
@@ -32,26 +38,28 @@ class AntivirusTest extends S2lowSimpleTestCase
     public function testFailed()
     {
         $this->setShellCommandReturn(12);
-        $this->setExpectedException(
-            Exception::class,
-            "Erreur 12 lors du scan antivirus de l'archive"
-        );
-        $this->getAntivirus()->checkArchiveSanity(__DIR__ . "/fixtures/classification.xml");
+        self::expectException(Exception::class);
+        self::expectExceptionMessage("Erreur 12 lors du scan antivirus de l'archive");
+        $this->getAntivirus()->checkFile(__DIR__ . '/fixtures/classification.xml');
     }
 
+    /**
+     * @return void
+     * @throws Exception
+     */
     public function testVirusFound()
     {
         $this->setShellCommandReturn(1);
-        $this->assertFalse(
-            $this->getAntivirus()->checkArchiveSanity(__DIR__ . "/fixtures/classification.xml")
+        static::assertFalse(
+            $this->getAntivirus()->checkFile(__DIR__ . '/fixtures/classification.xml')
         );
-        $this->assertStringContainsString(
-            "aaa :  toto FOUND",
+        static::assertStringContainsString(
+            'aaa :  toto FOUND',
             $this->getAntivirus()->getLastError()
         );
     }
 
-    private function setShellCommandReturn($return)
+    private function setShellCommandReturn($return): void
     {
         $shellCommand = $this->getMockBuilder(ShellCommand::class)
             ->disableOriginalConstructor()
@@ -61,21 +69,7 @@ class AntivirusTest extends S2lowSimpleTestCase
             ->willReturn($return);
         $shellCommand
             ->method('getLastOutput')
-            ->willReturn("/aaa: toto FOUND");
+            ->willReturn('/aaa: toto FOUND');
         $this->getObjectInstancier()->set(ShellCommand::class, $shellCommand);
-    }
-
-    public function testIsAlive()
-    {
-        $this->assertTrue(
-            $this->getAntivirus()->isAlive()
-        );
-    }
-
-    public function testIsDead()
-    {
-        $this->setShellCommandReturn(-1);
-        $this->setExpectedException(Exception::class, "Problème avec l'antivirus");
-        $this->getAntivirus()->isAlive();
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace S2low\Services\Helios;
 
 use Exception;
@@ -87,7 +89,7 @@ class HeliosEnvoiControler
             return;
         }
 
-        if (!$this->antivirus->checkArchiveSanity($file_path)) {
+        if (!$this->antivirus->checkFile($file_path)) {
             $message = "Transaction $transaction_id : un virus a été detecté dans le fichier PES";
             $this->updateStatus($transaction_id, HeliosTransactionsSQL::ERREUR, $message, $transactionInfo['user_id']);
             return;

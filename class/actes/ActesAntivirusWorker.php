@@ -16,7 +16,7 @@ class ActesAntivirusWorker implements IWorker
     private $actesRetriever;
     private $actesEnvelopeSQL;
 
-    private $antivirus;
+    private Antivirus $antivirus;
 
     private $logger;
 
@@ -88,7 +88,7 @@ class ActesAntivirusWorker implements IWorker
         $envelope_info = $this->actesEnvelopeSQL->getInfo($transaction_info["envelope_id"]);
 
         $archive_path = $this->actesRetriever->getPath($envelope_info['file_path']);
-        if (! $this->antivirus->checkArchiveSanity($archive_path)) {
+        if (! $this->antivirus->checkFile($archive_path)) {
             $message = $this->antivirus->getLastError();
             $this->logger->notice(
                 "Un virus a été trouvé pour la transaction $transaction_id",

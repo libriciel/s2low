@@ -1,18 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class\actes;
+
+use ActesCreator;
+use Exception;
 use S2lowLegacy\Class\actes\ActesAntivirusWorker;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\TmpFolder;
-
-require_once __DIR__ . "/ActesCreator.php";
+use S2lowTestCase;
 
 class ActesAntivirusTest extends S2lowTestCase
 {
-    /** @var  TmpFolder */
-    private $tmpFolder;
-    private $tmp_dir;
+    private TmpFolder $tmpFolder;
+    private string $tmp_dir;
 
     private $transaction_id;
     /**
@@ -26,7 +30,7 @@ class ActesAntivirusTest extends S2lowTestCase
         $actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
         $this->transaction_id = $actesCreator->createTransaction(
             ActesStatusSQL::STATUS_POSTE,
-            __DIR__ . "/fixtures/abc-TACT--000000000--20170803-16.tar.gz",
+            __DIR__ . '/fixtures/abc-TACT--000000000--20170803-16.tar.gz',
             $this->tmp_dir
         );
     }
@@ -46,11 +50,11 @@ class ActesAntivirusTest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
         $antivirus
-            ->method("checkArchiveSanity")
+            ->method('checkFile')
             ->willReturn(true);
         $this->getObjectInstancier()->set(Antivirus::class, $antivirus);
         $actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
-        $this->assertTrue($actesAntivirus->work($this->transaction_id));
+        static::assertTrue($actesAntivirus->work($this->transaction_id));
     }
 
     /**
@@ -62,13 +66,13 @@ class ActesAntivirusTest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
         $antivirus
-            ->method("checkArchiveSanity")
+            ->method('checkFile')
             ->willReturn(false);
 
         $this->getObjectInstancier()->set(Antivirus::class, $antivirus);
 
         $actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
-        $this->assertFalse($actesAntivirus->work($this->transaction_id));
+        static::assertFalse($actesAntivirus->work($this->transaction_id));
     }
 
     /**
@@ -80,13 +84,14 @@ class ActesAntivirusTest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
         $antivirus
-            ->method("checkArchiveSanity")
-            ->willThrowException(new Exception("testing"));
+            ->method('checkFile')
+            ->willThrowException(new Exception('testing'));
 
         $this->getObjectInstancier()->set(Antivirus::class, $antivirus);
 
         $actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
-        $this->setExpectedException(Exception::class, "testing");
+        self::expectException(Exception::class);
+        self::expectExceptionMessage('testing');
         $actesAntivirus->work($this->transaction_id);
     }
 
@@ -100,25 +105,25 @@ class ActesAntivirusTest extends S2lowTestCase
         $actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
         $actesAntivirus->work($this->transaction_id);
         $logs = $this->getLogRecords();
-        $this->assertEquals("La transaction {$this->transaction_id} a déjà été analysé par l'antivirus", $logs[1]['message']);
+        static::assertEquals("La transaction $this->transaction_id a déjà été analysé par l'antivirus", $logs[1]['message']);
     }
 
     public function testGetAll()
     {
         $actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
         $all_id = $actesAntivirus->getAllId();
-        $this->assertEquals([$this->transaction_id], $all_id);
+        static::assertEquals([$this->transaction_id], $all_id);
     }
 
     public function testGetId()
     {
         $actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
-        $this->assertEquals($this->transaction_id, $actesAntivirus->getData($this->transaction_id));
+        static::assertEquals($this->transaction_id, $actesAntivirus->getData($this->transaction_id));
     }
 
     public function testGetQueueId()
     {
         $actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
-        $this->assertEquals(ActesAntivirusWorker::QUEUE_NAME, $actesAntivirus->getQueueName());
+        static::assertEquals(ActesAntivirusWorker::QUEUE_NAME, $actesAntivirus->getQueueName());
     }
 }
