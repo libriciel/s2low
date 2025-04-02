@@ -5,21 +5,26 @@ declare(strict_types=1);
 namespace PHPUnit\class;
 
 use Exception;
+use PHPUnit\Framework\TestCase;
+use S2low\Exceptions\AntivirusCommandException;
+use S2low\Exceptions\InfectedFileException;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\ShellCommand;
-use S2lowSimpleTestCase;
+use Symfony\Component\Filesystem\Filesystem;
 
-class AntivirusTest extends S2lowSimpleTestCase
+class AntivirusTest extends TestCase
 {
     protected function setUp(): void
     {
         parent::setUp();
-        $this->getObjectInstancier()->set('antivirus_command', 'ls');
-    }
-
-    private function getAntivirus(): Antivirus
-    {
-        return $this->getObjectInstancier()->get(Antivirus::class);
+        $this->shellCommand = $this->getMockBuilder(ShellCommand::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->antivirus = new Antivirus(
+            $this->shellCommand,
+            'ls',
+            new Filesystem()
+        );
     }
 
     /**
@@ -27,9 +32,9 @@ class AntivirusTest extends S2lowSimpleTestCase
      */
     public function testOK()
     {
-        static::assertTrue(
-            $this->getAntivirus()->checkFile(__DIR__ . '/fixtures/classification.xml')
-        );
+        self::expectNotToPerformAssertions();
+        $this->setShellCommandReturn(0);
+        $this->antivirus->checkFile(__DIR__ . '/fixtures/classification.xml');
     }
 
     /**
@@ -38,9 +43,9 @@ class AntivirusTest extends S2lowSimpleTestCase
     public function testFailed()
     {
         $this->setShellCommandReturn(12);
-        self::expectException(Exception::class);
+        self::expectException(AntivirusCommandException::class);
         self::expectExceptionMessage("Erreur 12 lors du scan antivirus de l'archive");
-        $this->getAntivirus()->checkFile(__DIR__ . '/fixtures/classification.xml');
+        $this->antivirus->checkFile(__DIR__ . '/fixtures/classification.xml');
     }
 
     /**
@@ -50,26 +55,18 @@ class AntivirusTest extends S2lowSimpleTestCase
     public function testVirusFound()
     {
         $this->setShellCommandReturn(1);
-        static::assertFalse(
-            $this->getAntivirus()->checkFile(__DIR__ . '/fixtures/classification.xml')
-        );
-        static::assertStringContainsString(
-            'aaa :  toto FOUND',
-            $this->getAntivirus()->getLastError()
-        );
+        self::expectException(InfectedFileException::class);
+        self::expectExceptionMessageMatches("/aaa :  toto FOUND/");
+        $this->antivirus->checkFile(__DIR__ . '/fixtures/classification.xml');
     }
 
     private function setShellCommandReturn($return): void
     {
-        $shellCommand = $this->getMockBuilder(ShellCommand::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $shellCommand
+        $this->shellCommand
             ->method('exec')
             ->willReturn($return);
-        $shellCommand
+        $this->shellCommand
             ->method('getLastOutput')
             ->willReturn('/aaa: toto FOUND');
-        $this->getObjectInstancier()->set(ShellCommand::class, $shellCommand);
     }
 }

@@ -6,6 +6,8 @@ namespace S2low\Tests\Services\Helios;
 
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
+use S2low\Exceptions\AntivirusCommandException;
+use S2low\Exceptions\InfectedFileException;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnection;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionBuilder;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionConfiguration;
@@ -69,6 +71,8 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
         $counterFile = fopen($this->counterDir . '/counter.txt', 'w');
         fwrite($counterFile, '000');
 
+        $this->antivirus = $this->getMockBuilder(Antivirus::class)->disableOriginalConstructor()->getMock();
+
         mkdir($this->testStreamUrl . '/helios');
         $this->getObjectInstancier()->set('helios_files_upload_root', $this->testStreamUrl . '/helios/');
         $this->heliosController = new HeliosController($this->getObjectInstancier());
@@ -78,7 +82,7 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
             static::getContainer()->get(AuthoritySQL::class),
             static::getContainer()->get(HeliosTransmissionWindowsSQL::class),
             static::getContainer()->get(PesAllerRetriever::class),
-            static::getContainer()->get(Antivirus::class),
+            $this->antivirus,
             $this->workerScript,
             static::getContainer()->get(MailerSymfonyFactory::class),
             new DGFiPConnectionsManager(
@@ -282,6 +286,34 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
         $info_transaction = $this->transactionsSQL->getLastStatusInfo($id_transaction);
         static::assertEquals(HeliosStatusSQL::ERREUR, $info_transaction['status_id']);
         static::assertMatchesRegularExpression('#La signature du fichier est invalide#', $info_transaction['message']);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testVirusDetected()
+    {
+        $this->workerScript->expects(static::never())->method('putJobByQueueName');
+        $this->antivirus->method('checkFile')->willThrowException(new InfectedFileException('test'));
+        $id_transaction = $this->validatePesAller('pes_aller_ok.xml');
+        $info_transaction = $this->transactionsSQL->getLastStatusInfo($id_transaction);
+        static::assertEquals(HeliosStatusSQL::ERREUR, $info_transaction['status_id']);
+        static::assertMatchesRegularExpression("#Transaction $id_transaction : un virus a été detecté dans le fichier PES#", $info_transaction['message']);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testAntivirusCommandException()
+    {
+        $this->workerScript->expects(static::never())->method('putJobByQueueName');
+        self::expectException(AntivirusCommandException::class);
+        self::expectExceptionMessage('test');
+        $this->antivirus->method('checkFile')->willThrowException(new AntivirusCommandException('test'));
+        $id_transaction = $this->getImportFile('pes_aller_ok.xml');
+        $this->envoiControler->validateOneTransaction($id_transaction);
+        $info_transaction = $this->transactionsSQL->getLastStatusInfo($id_transaction);
+        static::assertEquals(HeliosStatusSQL::ATTENTE, $info_transaction['status_id']);
     }
 
     /**

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace S2low\Services\Helios;
 
 use Exception;
+use S2low\Exceptions\InfectedFileException;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\Antivirus;
@@ -89,7 +90,9 @@ class HeliosEnvoiControler
             return;
         }
 
-        if (!$this->antivirus->checkFile($file_path)) {
+        try {
+            $this->antivirus->checkFile($file_path);
+        } catch (InfectedFileException $exception) {
             $message = "Transaction $transaction_id : un virus a été detecté dans le fichier PES";
             $this->updateStatus($transaction_id, HeliosTransactionsSQL::ERREUR, $message, $transactionInfo['user_id']);
             return;

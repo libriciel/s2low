@@ -6,6 +6,8 @@ namespace PHPUnit\class\actes;
 
 use ActesCreator;
 use Exception;
+use S2low\Exceptions\AntivirusCommandException;
+use S2low\Exceptions\InfectedFileException;
 use S2lowLegacy\Class\actes\ActesAntivirusWorker;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
@@ -49,9 +51,6 @@ class ActesAntivirusTest extends S2lowTestCase
         $antivirus = $this->getMockBuilder(Antivirus::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $antivirus
-            ->method('checkFile')
-            ->willReturn(true);
         $this->getObjectInstancier()->set(Antivirus::class, $antivirus);
         $actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
         static::assertTrue($actesAntivirus->work($this->transaction_id));
@@ -67,7 +66,7 @@ class ActesAntivirusTest extends S2lowTestCase
             ->getMock();
         $antivirus
             ->method('checkFile')
-            ->willReturn(false);
+            ->willThrowException(new InfectedFileException('test'));
 
         $this->getObjectInstancier()->set(Antivirus::class, $antivirus);
 
@@ -85,12 +84,12 @@ class ActesAntivirusTest extends S2lowTestCase
             ->getMock();
         $antivirus
             ->method('checkFile')
-            ->willThrowException(new Exception('testing'));
+            ->willThrowException(new AntivirusCommandException('testing'));
 
         $this->getObjectInstancier()->set(Antivirus::class, $antivirus);
 
         $actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
-        self::expectException(Exception::class);
+        self::expectException(AntivirusCommandException::class);
         self::expectExceptionMessage('testing');
         $actesAntivirus->work($this->transaction_id);
     }

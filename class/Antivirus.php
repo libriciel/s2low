@@ -3,12 +3,12 @@
 namespace S2lowLegacy\Class;
 
 use Exception;
+use S2low\Exceptions\AntivirusCommandException;
+use S2low\Exceptions\InfectedFileException;
 use Symfony\Component\Filesystem\Filesystem;
 
 class Antivirus
 {
-    private $last_error;
-
     public function __construct(
         private readonly ShellCommand $shellCommand,
         private readonly string $antivirus_command,
@@ -19,7 +19,7 @@ class Antivirus
     /**
      * @throws Exception
      */
-    public function checkFile($path): bool
+    public function checkFile($path): void
     {
         $tmpFolder = new TmpFolder();
 
@@ -35,27 +35,19 @@ class Antivirus
         $tmpFolder->delete($tmp_dir);
 
         if ($ret === 1) {
-            $this->last_error = "L'archive est infectée par un virus. Retour de l'antivirus&nbsp;:<br />\n";
+            $message = "L'archive est infectée par un virus. Retour de l'antivirus&nbsp;:<br />\n";
             // Format de ligne : /Nom/de/fichier: Nom virus
             foreach (explode("\n", $output) as $line) {
                 if (preg_match('/^\/.*: .* FOUND$/', $line)) {
                     $line = explode(':', $line);
-                    $this->last_error .= basename($line[0]) . ' : ' . $line[1] . "<br />\n";
+                    $message .= basename($line[0]) . ' : ' . $line[1] . "<br />\n";
                 }
             }
-            return false;
+            throw new InfectedFileException($message);
         }
 
         if ($ret !== 0) {
-            $message = 'Erreur ' . $ret . " lors du scan antivirus de l'archive.";
-            $this->last_error = $message;
-            throw new Exception($message);
+            throw new AntivirusCommandException('Erreur ' . $ret . " lors du scan antivirus de l'archive.");
         }
-        return true;
-    }
-
-    public function getLastError()
-    {
-        return $this->last_error;
     }
 }
