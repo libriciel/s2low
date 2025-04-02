@@ -18,9 +18,8 @@ class AnalyserActesAntivirus
     public function __construct(
         TransactionRepositoryInterface $transactionRepository,
         AntivirusFilesScannerInterface $scanner,
-        LoggerInterface                $logger,
-    )
-    {
+        LoggerInterface $logger,
+    ) {
         $this->antivirus = $scanner;
         $this->transactionRepository = $transactionRepository;
         $this->logger = $logger;
@@ -31,7 +30,7 @@ class AnalyserActesAntivirus
      * @param $transactionId
      * @return void
      */
-    public function execute($transactionId) : void
+    public function execute($transactionId): void
     {
         $transactionDTO = $this->transactionRepository->findById($transactionId);
         $transaction = $transactionDTO->toModel();
@@ -48,13 +47,12 @@ class AnalyserActesAntivirus
             $this->logger->info("Le scan antivirus de la transaction {transactionId} s'est terminé avec succès.", [
                 'transactionId' => $transactionId
             ]);
-
         } catch (VirusDetectedException $exception) {
             $transaction->reportVirusPresence();
             $this->logger->warning($exception->getMessage());
         } catch (
-            BadStatusTransactionException |
-            DocumentMetierNotFoundException $exception
+        BadStatusTransactionException|
+        DocumentMetierNotFoundException $exception
         ) {
             $this->logger->warning($exception->getMessage());
         }

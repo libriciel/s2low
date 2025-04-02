@@ -22,10 +22,10 @@ class ClamAvAdapter implements AntivirusFilesScannerInterface
 
     /**
      * @param string $filePath
-     * @return bool
-     * @throws \RuntimeException|VirusDetectedException
+     * @return void
      */
-    public function scan(string $filePath): bool {
+    public function scan(string $filePath): void
+    {
         if (!file_exists($filePath)) {
             throw new RuntimeException("Le fichier '{$filePath}' est introuvable.");
         }
@@ -43,10 +43,10 @@ class ClamAvAdapter implements AntivirusFilesScannerInterface
         }
 
         if ($this->isScanError($process->getExitCode())) {
-            throw new RuntimeException("Erreur '{$process->getExitCodeText()}' pendant le scan Antivirus du fichier {$filePath}.");
+            throw new RuntimeException(
+                "Erreur '{$process->getExitCodeText()}' pendant le scan Antivirus du fichier {$filePath}."
+            );
         }
-
-        return true;
     }
 
     /**

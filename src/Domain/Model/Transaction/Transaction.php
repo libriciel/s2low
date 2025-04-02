@@ -46,7 +46,7 @@ class Transaction
     public function reportVirusPresence(): void
     {
         $this->archive->markInfected();
-        $this->archive->antivirusCheck();
+        $this->archive->markAntivirusChecked();
         $this->updateStatusTo(
             StatusTransaction::ERREUR,
             "L'archive est infectée par un virus. Retour de l'antivirus."
@@ -55,7 +55,7 @@ class Transaction
 
     public function confirmVirusAbsence(): void
     {
-        $this->archive->antivirusCheck();
+        $this->archive->markAntivirusChecked();
     }
 
     public function toPersistenceDto(): TransactionPersistenceDTO

@@ -8,8 +8,7 @@ interface AntivirusFilesScannerInterface
 {
     /**
      * @param string $filePath
-     * @return bool
      * @throws VirusDetectedException
- */
-    public function scan(string $filePath): bool;
+     */
+    public function scan(string $filePath): void;
 }

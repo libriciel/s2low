@@ -10,7 +10,7 @@ class DocumentMetier
     private string $path;
     private bool $hasVirus;
     private bool $isReadByUser;
-    private bool $antivirusChecked;
+    private bool $isAntivirusChecked;
     private string $prefix;
 
     /**
@@ -25,7 +25,7 @@ class DocumentMetier
         $this->path = $path;
         $this->hasVirus = $hasVirus;
         $this->isReadByUser = $isReadByUser;
-        $this->antivirusChecked = $antivirusChecked;
+        $this->isAntivirusChecked = $antivirusChecked;
         $this->prefix = $prefix;
     }
 
@@ -40,7 +40,7 @@ class DocumentMetier
             $this->path,
             $this->hasVirus,
             $this->isReadByUser,
-            $this->antivirusChecked,
+            $this->isAntivirusChecked,
             $this->prefix
         );
     }
@@ -57,8 +57,8 @@ class DocumentMetier
         return $this->prefix .  "/" . $this->path;
     }
 
-    public function antivirusCheck(): void
+    public function markAntivirusChecked(): void
     {
-        $this->antivirusChecked = true;
+        $this->isAntivirusChecked = true;
     }
 }
