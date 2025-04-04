@@ -42,4 +42,9 @@ class Kernel extends BaseKernel
             (require $path)($routes->withPath($path), $this);
         }
     }
+
+    public function isBooted() : bool
+    {
+        return $this->booted;
+    }
 }

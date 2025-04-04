@@ -27,6 +27,11 @@ class ObjectInstancier
 
     public function get($name): mixed
     {
+
+        global $kernel;
+        if ($kernel !== null && $kernel->isBooted()) {
+            return $kernel->getContainer()->get($name);
+        }
         if (! isset($this->objects[$name])) {
             $this->objects[$name] =  $this->newInstance($name);
         }
