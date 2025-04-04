@@ -214,6 +214,7 @@ services:
     public: true
 
   S2lowLegacy\Model\MessageAdminSQL:
+    public: true
     arguments:
       $cachePath: "/var/run/htmlpurifier"
 

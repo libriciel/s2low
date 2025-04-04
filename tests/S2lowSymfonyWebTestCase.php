@@ -24,6 +24,9 @@ abstract class S2lowSymfonyWebTestCase extends WebTestCase
         self::bootKernel();
         $this->container = static::getContainer();
 
+        global $kernel;
+        $kernel = static::$kernel;
+
         $this->testEnvironnementManager = new TestEnvironmentManager();
         $this->testEnvironnementManager->setUp();
     }
