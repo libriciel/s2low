@@ -36,10 +36,11 @@ parameters:
   app.beanstalkd_port: '%env(BEANSTAKLD_PORT)%'
   app.redis_server: '%env(REDIS_SERVER)%'
   app.redis_port: '%env(REDIS_PORT)%'
-  app.database_name : '%env(DB_USER)%'
+  app.database_name : '%env(DB_DATABASE)%'
   app.database_host : '%env(DB_HOST)%'
   app.database_login : '%env(DB_USER)%'
   app.database_password : '%env(DB_PASSWORD)%'
+
 services:
   _defaults:
     autowire: true
