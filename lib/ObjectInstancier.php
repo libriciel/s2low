@@ -5,9 +5,12 @@ namespace S2lowLegacy\Lib;
 use Exception;
 use ReflectionClass;
 use ReflectionParameter;
+use S2lowLegacy\Class\HttpsConnexion;
+use S2lowLegacy\Class\S2lowLogger;
 
 class ObjectInstancier
 {
+    private const BASIC_CLASSES = [Environnement::class,HttpsConnexion::class,'html',SessionWrapper::class, OpenStackContainerStore::class];
     private $objects;
 
     public function __construct()
@@ -29,9 +32,10 @@ class ObjectInstancier
     {
 
         global $kernel;
-        if ($kernel !== null && $kernel->isBooted()) {
+        if (!in_array($name, self::BASIC_CLASSES) && $kernel !== null && $kernel->isBooted()) {
             return $kernel->getContainer()->get($name);
         }
+        //var_dump($name);
         if (! isset($this->objects[$name])) {
             $this->objects[$name] =  $this->newInstance($name);
         }

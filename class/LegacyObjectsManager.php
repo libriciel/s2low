@@ -308,4 +308,15 @@ class LegacyObjectsManager
         }
         return ObjectInstancierFactory::getObjetInstancier()->get($className);
     }
+
+    /**
+     * Utilisé pour l'injection de dépendances Symfony
+     */
+    public static function getObjectInstancier(): ObjectInstancier
+    {
+        if (!ObjectInstancierFactory::issetObjectInstancier()) {
+            throw new RuntimeException('ObjectInstancier not set');
+        }
+        return ObjectInstancierFactory::getObjetInstancier();
+    }
 }

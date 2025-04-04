@@ -137,14 +137,21 @@ services:
     public: false
 
   S2lowLegacy\Controller\Controller:
-    factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Controller\Controller' ]
+    public: true
 
   S2lowLegacy\Lib\:
     resource: '../lib/*'
     autowire: true
     autoconfigure: true
     public: true
+
+  S2lowLegacy\Lib\ObjectInstancier:
+    factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObjectInstancier' ]
+
+  S2lowLegacy\Lib\OpenStackContainerStore:
+    public: true
+    factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Lib\OpenStackContainerStore' ]
 
   S2lowLegacy\SigTermHandler:
     autowire: false #Utilisation de la constante SIGTERM
@@ -154,8 +161,7 @@ services:
     arguments: [ 'S2lowLegacy\Lib\Environnement' ]
 
   S2lowLegacy\Lib\FrontController:
-    factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Lib\FrontController' ]
+    public: true
 
   S2lowLegacy\Lib\OpenStackContainerFetcher:
     autowire: false #Pas un service, est renvoyé par une factory
@@ -174,8 +180,10 @@ services:
       $logger: '@monolog.logger.request'
 
   S2lowLegacy\Lib\OpenStackSwiftWrapper:
-    factory: ['\S2lowLegacy\Class\LegacyObjectsManager','getObject']
-    arguments: ['S2lowLegacy\Lib\OpenStackSwiftWrapper']
+    public: true
+    arguments:
+      $logger: '@monolog.logger.request'
+      $openstack_enable: false #TODO
 
   S2lowLegacy\Lib\ParsedownExtended:
     autowire: false #doit être configuré explicitement
@@ -201,7 +209,9 @@ services:
       $databasePassword: '%app.database_password%'
 
   S2lowLegacy\Lib\SessionWrapper:
-    autowire: false #Doit être configuré explicitement ?
+    public: true
+    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Lib\SessionWrapper' ]
 
   S2lowLegacy\Lib\XadesSignature:
     arguments:
@@ -237,8 +247,9 @@ services:
     public: true
 
   S2lowLegacy\Class\Antivirus:
-    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
-    arguments: ['S2lowLegacy\Class\Antivirus']
+    public: true
+    arguments:
+      $antivirus_command: 'todo'
 
   S2lowLegacy\Class\BatchUploadHandler:
     autowire: false
@@ -259,8 +270,7 @@ services:
     public: false
 
   S2lowLegacy\Class\Initialisation:
-    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
-    arguments: ['S2lowLegacy\Class\Initialisation']
+    public: true
 
   S2lowLegacy\Class\InitData:
      autowire: false
@@ -305,7 +315,8 @@ services:
     autowire: false
 
   S2lowLegacy\Class\HttpsConnexion:
-    autowire: false
+    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Class\HttpsConnexion' ]
 
   S2lowLegacy\Class\Mail: #TODO Impossible pour l'instant ( chargé par PEAR )
     autowire: false
@@ -317,7 +328,9 @@ services:
     autowire: false
 
   S2lowLegacy\Class\PdfStampMessages:
-    autowire: false
+    autowire: true
+    arguments:
+      $use_prod_notifications: 'todo'
 
   S2lowLegacy\Class\ModulePermission: #Impossible : doit nécésairement être paramétré par module
     autowire: false
@@ -327,8 +340,10 @@ services:
       $opensslPath: "todo"
 
   S2lowLegacy\Class\PDFStampWrapper:
-    factory: ['\S2lowLegacy\Class\LegacyObjectsManager','getObject']
-    arguments: ['S2lowLegacy\Class\PDFStampWrapper']
+    public: true
+    arguments:
+      $pdf_stamp_url: 'todo'
+      $image_for_stamp: 'todo'
 
   S2lowLegacy\Class\QueryResult:
     autowire: false
@@ -343,10 +358,12 @@ services:
       $redis_port: "%app.redis_port%"
 
   S2lowLegacy\Class\S2lowLogger:
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\S2lowLogger' ]
+    public: true
+    arguments:
+      $logger: '@monolog.logger.request'
 
   S2lowLegacy\Class\S2lowRedirect:
+    public: true
     arguments:
       $website_ssl: "todo"
       $website: "todo"
@@ -389,33 +406,28 @@ services:
       $xsdPath: "todo"
 
   S2lowLegacy\Class\WorkerScript:
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\WorkerScript' ]
+    public: true
 
   S2lowLegacy\Class\actes\ActesAntivirusWorker:
     tags: ['s2low.queue_rebuilding_worker']
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\actes\ActesAntivirusWorker' ]
 
   S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker:
     tags: ['s2low.queue_rebuilding_worker']
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker' ]
+    arguments:
+      $actes_appli_trigramme: 'todo'
+      $actes_appli_quadrigramme: 'todo'
+      $actes_dont_valid_signing_certificate: 'todo'
 
   S2lowLegacy\Class\actes\ActesEnvoiFichierWorker:
     tags: ['s2low.queue_rebuilding_worker']
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\actes\ActesEnvoiFichierWorker' ]
+    arguments:
+      $actes_ministere_acronyme: 'todo'
 
   S2lowLegacy\Class\actes\ActesAnalyseFichierRecuWorker:
     tags: ['s2low.queue_rebuilding_worker']
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\actes\ActesAnalyseFichierRecuWorker' ]
 
   S2lowLegacy\Class\actes\ActesEnvoiSaeWorker:
     tags: ['s2low.queue_rebuilding_worker']
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\actes\ActesEnvoiSaeWorker' ]
 
   S2lowLegacy\Class\actes\ClassificationString:
     autowire: false
@@ -425,8 +437,6 @@ services:
 
   S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker:
     tags: ['s2low.queue_rebuilding_worker']
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker' ]
 
   S2lowLegacy\Class\actes\ActesAnalyseFichierRecuController:
     arguments:
@@ -456,8 +466,9 @@ services:
       $root_workspace_path: "todo"
 
   S2lowLegacy\Class\actes\ActesFileSender:
-    factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\actes\ActesFileSender' ]
+    public: true
+    arguments:
+      $trustore_path: 'todo'
 
   S2lowLegacy\Class\actes\ActesImapRetrieve:
     arguments:
@@ -499,24 +510,24 @@ services:
       $actes_response_error_path: "todo"
 
   S2lowLegacy\Class\actes\ActesRetriever:
-    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
-    arguments: ['S2lowLegacy\Class\actes\ActesRetriever']
-    #arguments:
-    #  $actes_files_upload_root: "todo"
+    public: true
+    arguments:
+      $actes_files_upload_root: "todo"
 
   S2lowLegacy\Class\actes\ActesScriptHelper:
     arguments:
       $actes_appli_trigramme: "todo"
 
   S2lowLegacy\Class\actes\ActesStatistiques:
-    autowire: false #Pas un service
+    public: true
 
   S2lowLegacy\Class\helios\FTPService:
     autowire: false
 
   S2lowLegacy\Class\helios\FichierCompteur:
-    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
-    arguments: ['S2lowLegacy\Class\helios\FichierCompteur']
+    public: true
+    arguments:
+      $helios_counter_file: 'todo'
 
   S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu:
     arguments:
@@ -554,8 +565,9 @@ services:
       $helios_responses_root: "todo"
 
   S2lowLegacy\Class\helios\PesAllerRetriever:
-    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
-    arguments: ['S2lowLegacy\Class\helios\PesAllerRetriever']
+    public: true
+    arguments:
+      $helios_files_upload_root: "todo"
 
   S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage:
     arguments:
