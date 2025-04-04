@@ -102,7 +102,7 @@ class TestEnvironmentManager
 
     public function getConnection()
     {
-        if (!self::$sqlQueryStatic) {
+        if (! self::$sqlQueryStatic) {
             self::$sqlQueryStatic = new SQLQuery(
                 DB_DATABASE_TEST,
                 DB_HOST_TEST,

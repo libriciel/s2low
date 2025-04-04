@@ -54,17 +54,6 @@ class SQLQuery
         sleep($time_in_second);
     }
 
-    public function setDatabaseHost($host): void
-    {
-        $this->databaseHost = $host;
-    }
-
-    public function setCredential($login, $password): void
-    {
-        $this->databaseLogin = $login;
-        $this->databasePassword = $password;
-    }
-
     public function setSlowQuery($millisecond): void
     {
         $this->slow_query_in_ms  = $millisecond;

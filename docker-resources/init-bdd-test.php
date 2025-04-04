@@ -8,12 +8,9 @@ require_once __DIR__ . "/../init/init.php";
 \S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
 
 $objectInstancierTest = new ObjectInstancier();
-$sqlQueryTest = new SQLQuery(
-    DB_DATABASE_TEST,
-    DB_HOST_TEST,
-    DB_USER_TEST,
-    DB_PASSWORD_TEST
-);
+
+$sqlQueryTest = new SQLQuery(DB_DATABASE_TEST, DB_HOST_TEST, DB_USER_TEST, DB_PASSWORD_TEST);
+
 $objectInstancierTest->set(SQLQuery::class, $sqlQueryTest);
 $objectInstancierTest->set('database_json_definition_filepath', __DIR__ . "/../db/s2low.sql.json");
 $objectInstancierTest->set('database_sql_definition_filepath', __DIR__ . "/../db/s2low.sql");
