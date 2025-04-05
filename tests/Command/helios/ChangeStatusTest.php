@@ -12,6 +12,7 @@ use S2lowTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Dotenv\Dotenv;
 
 class ChangeStatusTest extends S2lowTestCase
 {
@@ -24,6 +25,9 @@ class ChangeStatusTest extends S2lowTestCase
 
     public function testCommandBadTransactionId(): void
     {
+        (new Dotenv())->bootEnv('/data/config/.env', 'test');
+        (new Dotenv())->bootEnv('/data/config/.env.test', 'test');
+
         $kernel = new Kernel('test', true);
         $application = new Application($kernel);
 

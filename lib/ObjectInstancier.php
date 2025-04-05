@@ -3,14 +3,18 @@
 namespace S2lowLegacy\Lib;
 
 use Exception;
+use Monolog\Handler\TestHandler;
+use Monolog\Logger;
 use ReflectionClass;
 use ReflectionParameter;
+use S2lowLegacy\Class\actes\IActesPdf;
+use S2lowLegacy\Class\helios\PESAllerCloudStorage;
 use S2lowLegacy\Class\HttpsConnexion;
 use S2lowLegacy\Class\S2lowLogger;
 
 class ObjectInstancier
 {
-    private const BASIC_CLASSES = [Environnement::class,HttpsConnexion::class,'html',SessionWrapper::class, OpenStackContainerStore::class];
+    private const BASIC_CLASSES = [Environnement::class,HttpsConnexion::class,'html',SessionWrapper::class, OpenStackContainerStore::class,Logger::class,IActesPdf::class,TestHandler::class];
     private $objects;
 
     public function __construct()
@@ -35,7 +39,6 @@ class ObjectInstancier
         if (!in_array($name, self::BASIC_CLASSES) && $kernel !== null && $kernel->isBooted()) {
             return $kernel->getContainer()->get($name);
         }
-        //var_dump($name);
         if (! isset($this->objects[$name])) {
             $this->objects[$name] =  $this->newInstance($name);
         }

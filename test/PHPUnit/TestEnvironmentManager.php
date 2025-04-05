@@ -21,7 +21,7 @@ class TestEnvironmentManager
     /**
      * @throws \Exception
      */
-    public function setUp()
+    public function setUp(?ObjectInstancier $objectInstancier = null)
     {
         $this->getConnection();
 
@@ -41,7 +41,10 @@ class TestEnvironmentManager
         $_SERVER['SSL_CLIENT_CERT'] = "";
         $_SERVER["QUERY_STRING"] = "";
 
-        \S2lowLegacy\Lib\ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());
+        if ($objectInstancier === null) {
+            $objectInstancier = new ObjectInstancier();
+        }
+        \S2lowLegacy\Lib\ObjectInstancierFactory::setObjectInstancier($objectInstancier);
         $this->getObjectInstancier()->__set(SQLQuery::class, $this->getSQLQuery());
         $this->getObjectInstancier()->set('helios_files_upload_root', "/tmp");
         $this->getObjectInstancier()->set('actes_files_upload_root', sys_get_temp_dir());

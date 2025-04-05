@@ -25,10 +25,12 @@ use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Controller\HeliosController;
 use S2lowLegacy\Lib\HeliosNamesGenerator;
+use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Lib\PesAllerReader;
 use S2lowLegacy\Model\AuthoritySiretSQL;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
+use Symfony\Component\Dotenv\Dotenv;
 
 class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
 {
@@ -47,14 +49,6 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->tmpFolder = new TmpFolder();
-        $this->workerScript = $this->getMockBuilder(WorkerScript::class)
-            ->disableOriginalConstructor()->getMock();
-        $this->connectBuilder = $this->getMockBuilder(DGFiPConnectionBuilder::class)
-            ->disableOriginalConstructor()->getMock();
-        $this->authoritySQL = static::getContainer()->get(AuthoritySQL::class);
-        $this->authoritySiretSQL = static::getContainer()->get(AuthoritySiretSQL::class);
-        $this->transactionsSQL = static::getContainer()->get(HeliosTransactionsSQL::class);
     }
 
     /**
@@ -64,20 +58,32 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
     {
         parent::setUp();
 
+        $this->tmpFolder = new TmpFolder();
+        $this->workerScript = $this->getMockBuilder(WorkerScript::class)
+            ->disableOriginalConstructor()->getMock();
+        $this->connectBuilder = $this->getMockBuilder(DGFiPConnectionBuilder::class)
+            ->disableOriginalConstructor()->getMock();
+        $this->authoritySQL = static::getContainer()->get(AuthoritySQL::class);
+        $this->authoritySiretSQL = static::getContainer()->get(AuthoritySiretSQL::class);
+        $this->transactionsSQL = static::getContainer()->get(HeliosTransactionsSQL::class);
+
         $this->testStreamUrl = $this->tmpFolder->create();
         $this->counterDir = $this->tmpFolder->create();
         $counterFile = fopen($this->counterDir . '/counter.txt', 'w');
         fwrite($counterFile, '000');
 
         mkdir($this->testStreamUrl . '/helios');
-        $this->getObjectInstancier()->set('helios_files_upload_root', $this->testStreamUrl . '/helios/');
         $this->heliosController = new HeliosController($this->getObjectInstancier());
         $this->envoiControler = new HeliosEnvoiControler(
             static::getContainer()->get(AuthoritySiretSQL::class),
             static::getContainer()->get(HeliosTransactionsSQL::class),
             static::getContainer()->get(AuthoritySQL::class),
             static::getContainer()->get(HeliosTransmissionWindowsSQL::class),
-            static::getContainer()->get(PesAllerRetriever::class),
+            new PesAllerRetriever(
+                $this->testStreamUrl . '/helios/',
+                static::getContainer()->get(OpenStackSwiftWrapper::class),
+                static::getContainer()->get(S2lowLogger::class)
+            ),
             static::getContainer()->get(Antivirus::class),
             $this->workerScript,
             static::getContainer()->get(MailerSymfonyFactory::class),

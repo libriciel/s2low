@@ -9,6 +9,7 @@ use S2low\Tests\LogsHistoriqueSQLTrait;
 use S2lowTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Dotenv\Dotenv;
 
 class ExtractAndDeleteTimestampTokenCommandTest extends S2lowTestCase
 {
@@ -21,8 +22,10 @@ class ExtractAndDeleteTimestampTokenCommandTest extends S2lowTestCase
 
     public function testCommand()
     {
+        (new Dotenv())->bootEnv('/data/config/.env');
         $kernel = new Kernel('test', true);
         $application = new Application($kernel);
+
 
         $extractAndDeleteTimestampTokenCommand = $application->find('log:timestamp-token-extract-and-delete');
 

@@ -40,6 +40,7 @@ parameters:
   app.database_host : '%env(DB_HOST)%'
   app.database_login : '%env(DB_USER)%'
   app.database_password : '%env(DB_PASSWORD)%'
+  app.antivirus_command : '%env(ANTIVIRUS_COMMAND)%'
 
 services:
   _defaults:
@@ -249,7 +250,7 @@ services:
   S2lowLegacy\Class\Antivirus:
     public: true
     arguments:
-      $antivirus_command: 'todo'
+      $antivirus_command: '%app.antivirus_command%'
 
   S2lowLegacy\Class\BatchUploadHandler:
     autowire: false
@@ -298,15 +299,21 @@ services:
     public: false
 
   S2lowLegacy\Class\helios\PESAllerCloudStorage:
-    autowire: false
+    autowire: true
     autoconfigure: false
-    public: false
+    public: true
+    arguments:
+      $helios_files_upload_root: '%app.helios_files_upload_root%'
+      $repertoirePesAllerSansTransaction: 'todo'
 
   S2lowLegacy\Class\CloudStorage: #TODO : verify
     autowire: false
 
   S2lowLegacy\Class\CloudStorageFactory: #TODO : verify
-    autowire: false
+    autowire: true
+    arguments:
+      $openstack_enable: false #TODO
+      $logger: '@monolog.logger.request'
 
   S2lowLegacy\Class\DataObjectSaveSQLRequest: # TODO :verify
     autowire: false
@@ -482,6 +489,7 @@ services:
       $trigramme: "todo"
 
   S2lowLegacy\Class\actes\ActesNotification:
+    public: true
     arguments:
       $actes_appli_trigramme: "%app.actes_appli_trigramme%"
       $use_prod_notifications: "%app.use_prod_notifications%"
@@ -567,7 +575,7 @@ services:
   S2lowLegacy\Class\helios\PesAllerRetriever:
     public: true
     arguments:
-      $helios_files_upload_root: "todo"
+      $helios_files_upload_root: "%app.helios_files_upload_root%"
 
   S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage:
     arguments:

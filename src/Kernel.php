@@ -13,7 +13,7 @@ class Kernel extends BaseKernel
 
     public function __construct(string $environment, bool $debug)
     {
-        require_once(__DIR__ . "/../init/init.php");
+        require_once(__DIR__ . '/../init/init.php');
         \S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
         parent::__construct($environment, $debug);
     }

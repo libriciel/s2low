@@ -3,9 +3,11 @@
 namespace S2low\Tests;
 
 use Exception;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Dotenv\Dotenv;
 use TestEnvironmentManager;
 
 abstract class S2lowSymfonyWebTestCase extends WebTestCase
@@ -19,6 +21,8 @@ abstract class S2lowSymfonyWebTestCase extends WebTestCase
      */
     protected function setUp(): void
     {
+        (new Dotenv())->bootEnv('/data/config/.env', 'test');
+        (new Dotenv())->bootEnv('/data/config/.env.test', 'test');
         parent::setUp();
 
         self::bootKernel();
@@ -28,7 +32,7 @@ abstract class S2lowSymfonyWebTestCase extends WebTestCase
         $kernel = static::$kernel;
 
         $this->testEnvironnementManager = new TestEnvironmentManager();
-        $this->testEnvironnementManager->setUp();
+        $this->testEnvironnementManager->setUp(LegacyObjectsManager::getLegacyObjectInstancier());
     }
 
     /**

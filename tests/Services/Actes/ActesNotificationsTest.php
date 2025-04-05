@@ -1,12 +1,17 @@
 <?php
 
+use Monolog\Handler\TestHandler;
+use Monolog\Logger;
 use S2low\Services\MailActesNotifications\MailerSymfony;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesNotification;
 use S2lowLegacy\Class\actes\ActesPdf;
+use S2lowLegacy\Class\actes\ActesRetriever;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\IActesPdf;
 use S2lowLegacy\Class\Mailer;
+use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\ObjectInstancier;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -29,6 +34,8 @@ class ActesNotificationsTest extends \S2low\Tests\S2lowSymfonyWebTestCase
      * @var ActesNotification|object|ObjectInstancier
      */
     private $actesNotification;
+
+    private TestHandler $testHandler;
 
     /**
      * @throws Exception
@@ -58,7 +65,24 @@ class ActesNotificationsTest extends \S2low\Tests\S2lowSymfonyWebTestCase
         $this->getObjectInstancier()->set(Environment::class, $twig);
 
 
-        $this->actesNotification = $this->getObjectInstancier()->get(ActesNotification::class);
+        $this->testHandler = new TestHandler();
+        $logger = new  Logger('PHPUNIT');
+        $logger->pushHandler($this->testHandler);
+        $s2lowLogger = new S2lowLogger($logger);
+
+        $this->actesNotification = new ActesNotification(
+            static::getContainer()->get(ActesTransactionsSQL::class),
+            static::getContainer()->get(\S2lowLegacy\Class\actes\ActeTamponne::class),
+            static::getContainer()->get(\S2lowLegacy\Model\AuthoritySQL::class),
+            static::getContainer()->get(ActesEnvelopeSQL::class),
+            $mailerFactory,
+            $s2lowLogger,
+            'test',
+            static::getContainer()->get(ActesRetriever::class),
+            static::getContainer()->get(\S2lowLegacy\Class\actes\BordereauPdfGenerator::class),
+            $twig,
+            false
+        );
     }
 
     /**
@@ -75,9 +99,11 @@ class ActesNotificationsTest extends \S2low\Tests\S2lowSymfonyWebTestCase
      */
     public function testNotify()
     {
+        $this->assertTrue(true);
         copy(__DIR__ . "/../../../test/PHPUnit/class/actes/fixtures/abc-TACT--000000000--20170803-16.tar.gz", $this->tmpFolderPath . "/abc-TACT--000000000--20170803-16.tar.gz");
 
         $this->mailer
+            ->expects($this->exactly(3))
             ->method('addRecipient')
             ->withConsecutive(['eric@sigmalis.com'], ['toto@toto.fr'], ['foo@foo.fr'])
             ->willReturn(true);
@@ -94,7 +120,7 @@ class ActesNotificationsTest extends \S2low\Tests\S2lowSymfonyWebTestCase
             ->willReturn(true);
 
         $this->actesNotification->sendAutomaticNotification();
-        $this->assertMatchesRegularExpression("#Notification de la transaction $this->transaction_id#", $this->getLogRecords()[0]['message']);
+        $this->assertMatchesRegularExpression("#Notification de la transaction $this->transaction_id#", $this->testHandler->getRecords()[0]['message']);
     }
 
     private function createTransaction($status): int
@@ -143,10 +169,10 @@ class ActesNotificationsTest extends \S2low\Tests\S2lowSymfonyWebTestCase
 
         $this->actesNotification->sendAutomaticNotification();
 
-        $logRecords = $this->getLogRecords();
+        $this->assertTrue(true);
         $this->assertMatchesRegularExpression(
             "#Erreur lors de la décompression#",
-            $logRecords[2]["message"]
+            $this->testHandler->getRecords()[2]["message"]
         );
     }
 }
