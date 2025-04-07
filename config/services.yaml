@@ -42,6 +42,61 @@ parameters:
   app.database_password : '%env(DB_PASSWORD)%'
   app.antivirus_command : '%env(ANTIVIRUS_COMMAND)%'
 
+  app.convert_api_logins_from_iso : '%env(CONVERT_API_LOGINS_FROM_ISO)%'
+  app.website_ssl : '%env(WEBSITE_SSL)%'
+  app.website : '%env(WEBSITE)%'
+  app.website_mail : '%env(WEBSITE_MAIL)%'
+
+  app.database_json_definition_filepath : 'TODO' #', __DIR__ . "/../db/s2low.sql.json");
+  app.database_sql_definition_filepath : 'TODO' #, __DIR__ . "/../db/s2low.sql");
+
+  app.helios_counter_file : '%env(HELIOS_COUNTER_FILE)%'
+  app.helios_use_passtrans_as_default : '%env(HELIOS_USE_PASSTRANS_AS_DEFAULT)%'
+
+  app.openstack_enable : '%env(OPENSTACK_ENABLE)%'
+
+  #app.helios_files_upload_root : '%env(HELIOS_FILES_UPLOAD_ROOT)%'
+  app.repertoirePesAllerSansTransaction : '%env(HELIOS_PESALLER_SANSTRANSACTION)%'
+  app.helios_responses_root : '%env(HELIOS_RESPONSES_ROOT)%'
+  #app.helios_responses_error_path : '%env(HELIOS_RESPONSES_ERROR_PATH)%'
+  app.schema_pes_path : '%env(HELIOS_XSD_PATH)%'
+
+  #app.helios_responses_root : '%env(HELIOS_RESPONSES_ROOT)%'
+
+
+  app.actes_files_upload_root : '%env(ACTES_FILES_UPLOAD_ROOT)%'
+  app.repertoirepesallersanstransaction : '%env(ACTES_ENVELOPPE_SANSTRANSACTION)%'
+  #app.actes_appli_trigramme : '%env(ACTES_APPLI_TRIGRAMME)%'
+  app.actes_appli_quadrigramme : '%env(ACTES_APPLI_QUADRIGRAMME)%'
+
+  app.actes_ministere_acronyme : '%env(ACTES_MINISTERE_ACRONYME)%'
+
+  app.actes_dont_valid_signing_certificate : '%env(ACTES_DONT_VALID_SIGNING_CERTIFICATE)%'
+
+  app.actes_response_tmp_local_path : '%env(ACTES_RESPONSE_TMP_LOCAL_PATH)%'
+  app.actes_response_error_path : '%env(ACTES_RESPONSE_ERROR_PATH)%'
+
+  app.mail_files_upload_root : '%env(MAIL_FILES_UPLOAD_ROOT)%'
+  app.mail_files_without_transac_dir : '%env(MAIL_FILES_WITHOUT_TRANSAC_DIR)%'
+
+  app.pades_valid_url : '%env(PADES_VALID_URL)%'
+  app.pdf_stamp_url : '%env(PDF_STAMP_URL)%'
+  app.image_for_stamp : '%env(IMAGE_FOR_STAMP)%'
+
+  app.rgs_validca_path : '%env(RGS_VALIDCA_PATH)%'
+
+  app.openssl_path : '%env(OPENSSL_PATH)%'
+  app.extended_validca_path : '%env(EXTENDED_VALIDCA_PATH)%'
+  app.trustore_path : '%env(TRUSTSTORE_PATH)%'
+
+  app.email_admin_technique : '%env(EMAIL_ADMIN_TECHNIQUE)%'
+  app.tdt_from_email : '%env(TDT_FROM_EMAIL)%'
+  app.log_level : '%env(LOG_LEVEL)%'
+
+  app.helios_retention_fichiers_nb_jours : '%env(HELIOS_RETENTION_FICHIERS_NB_JOURS)%'
+
+  #app.cachePath', "/var/run/htmlpurifier");
+
 services:
   _defaults:
     autowire: true
@@ -133,9 +188,13 @@ services:
   # ---------------------------------------------------------------------------------------------------------------------
   S2lowLegacy\Controller\:
     resource: '../controller/*'
-    autowire: false
-    autoconfigure: false
-    public: false
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  S2lowLegacy\Controller\PostgreSQLController:
+    arguments:
+      $database_json_definition_filepath: '%app.database_json_definition_filepath%'
 
   S2lowLegacy\Controller\Controller:
     public: true
@@ -147,6 +206,7 @@ services:
     public: true
 
   S2lowLegacy\Lib\ObjectInstancier:
+    public: true
     factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObjectInstancier' ]
 
   S2lowLegacy\Lib\OpenStackContainerStore:
@@ -184,7 +244,7 @@ services:
     public: true
     arguments:
       $logger: '@monolog.logger.request'
-      $openstack_enable: false #TODO
+      $openstack_enable: '%app.openstack_enable%'
 
   S2lowLegacy\Lib\ParsedownExtended:
     autowire: false #doit être configuré explicitement
@@ -197,7 +257,7 @@ services:
 
   S2lowLegacy\Lib\RgsCertificate:
     arguments:
-      $openssl_path: "todo"
+      $openssl_path: '%app.openssl_path%'
 
   S2lowLegacy\Lib\SQLQuery:
     autoconfigure: true
@@ -216,7 +276,7 @@ services:
 
   S2lowLegacy\Lib\XadesSignature:
     arguments:
-      $xmlsec1_path: "todo"
+      $xmlsec1_path: "todo"#Pour l'instant, passé par constante PHP ...
 
   # ---------------------------------------------------------------------------------------------------------------------
   # Sous Namespace  S2lowLegacy/Model : aucune dépendance, peut être instancié directement par le service container
@@ -304,7 +364,7 @@ services:
     public: true
     arguments:
       $helios_files_upload_root: '%app.helios_files_upload_root%'
-      $repertoirePesAllerSansTransaction: 'todo'
+      $repertoirePesAllerSansTransaction: '%app.repertoirepesallersanstransaction%'
 
   S2lowLegacy\Class\CloudStorage: #TODO : verify
     autowire: false
@@ -312,7 +372,7 @@ services:
   S2lowLegacy\Class\CloudStorageFactory: #TODO : verify
     autowire: true
     arguments:
-      $openstack_enable: false #TODO
+      $openstack_enable: '%app.openstack_enable%'
       $logger: '@monolog.logger.request'
 
   S2lowLegacy\Class\DataObjectSaveSQLRequest: # TODO :verify
@@ -337,27 +397,27 @@ services:
   S2lowLegacy\Class\PdfStampMessages:
     autowire: true
     arguments:
-      $use_prod_notifications: 'todo'
+      $use_prod_notifications: '%app.use_prod_notifications%'
 
   S2lowLegacy\Class\ModulePermission: #Impossible : doit nécésairement être paramétré par module
     autowire: false
 
   S2lowLegacy\Class\OpensslTSWrapper:
     arguments:
-      $opensslPath: "todo"
+      $opensslPath: "%app.openssl_path%"
 
   S2lowLegacy\Class\PDFStampWrapper:
     public: true
     arguments:
-      $pdf_stamp_url: 'todo'
-      $image_for_stamp: 'todo'
+      $pdf_stamp_url: '%app.pdf_stamp_url%'
+      $image_for_stamp: '%app.image_for_stamp%'
 
   S2lowLegacy\Class\QueryResult:
     autowire: false
 
   S2lowLegacy\Class\PadesValid:
     arguments:
-      $pades_valid_url: "todo"
+      $pades_valid_url: "%app.pades_valid_url%"
 
   S2lowLegacy\Class\RedisMutexWrapper:
     arguments:
@@ -372,19 +432,22 @@ services:
   S2lowLegacy\Class\S2lowRedirect:
     public: true
     arguments:
-      $website_ssl: "todo"
-      $website: "todo"
+      $website_ssl: '%app.website_ssl%'
+      $website: '%app.website%'
 
   S2lowLegacy\Class\TGZExtractor:
     autowire: false #(pas un service)
 
   S2lowLegacy\Class\VerifyPKCS7Signature:
+    public: false
+    autowire: false
+    autoconfigure: false
     arguments:
-      $authorized_ca_path: "todo"
+      $authorized_ca_path: "todo" # RGS_VALIDCA_PATH dépend potentiellement de ONLY_USE_VALIDCARGS
 
   S2lowLegacy\Class\VerifyPadesSignature:
     arguments:
-      $rgs_validca_path: "todo"
+      $rgs_validca_path: "%app.rgs_validca_path%"
 
   S2lowLegacy\Class\VerifyPemCertificate:
     arguments:
@@ -410,25 +473,26 @@ services:
 
   S2lowLegacy\Class\XSDValidation:
     arguments:
-      $xsdPath: "todo"
+      $xsdPath: "todo"  #Pour l'instant, passé par constante PHP ...
 
   S2lowLegacy\Class\WorkerScript:
     public: true
 
   S2lowLegacy\Class\actes\ActesAntivirusWorker:
+    public: true
     tags: ['s2low.queue_rebuilding_worker']
 
   S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker:
     tags: ['s2low.queue_rebuilding_worker']
     arguments:
-      $actes_appli_trigramme: 'todo'
-      $actes_appli_quadrigramme: 'todo'
-      $actes_dont_valid_signing_certificate: 'todo'
+      $actes_appli_trigramme: '%app.actes_appli_trigramme%'
+      $actes_appli_quadrigramme: '%app.actes_appli_quadrigramme%'
+      $actes_dont_valid_signing_certificate: '%app.actes_dont_valid_signing_certificate%'
 
   S2lowLegacy\Class\actes\ActesEnvoiFichierWorker:
     tags: ['s2low.queue_rebuilding_worker']
     arguments:
-      $actes_ministere_acronyme: 'todo'
+      $actes_ministere_acronyme: '%app.actes_ministere_acronyme%'
 
   S2lowLegacy\Class\actes\ActesAnalyseFichierRecuWorker:
     tags: ['s2low.queue_rebuilding_worker']
@@ -447,21 +511,23 @@ services:
 
   S2lowLegacy\Class\actes\ActesAnalyseFichierRecuController:
     arguments:
-      $actes_response_tmp_local_path: "todo"
-      $actes_response_error_path: "todo"
-      $actes_files_upload_root: "todo"
-      $actes_ministere_acronyme: "todo"
+      $actes_response_tmp_local_path: "%app.actes_response_tmp_local_path%"
+      $actes_response_error_path: "%app.actes_response_error_path%"
+      $actes_files_upload_root: "%app.actes_files_upload_root%"
+      $actes_ministere_acronyme: "%app.actes_ministere_acronyme%"
 
   S2lowLegacy\Class\actes\ActesArchive:
     autowire: false #Pas un service ??
 
   S2lowLegacy\Class\actes\ActesCloudStorage:
+    public: true
     arguments:
-      $actes_files_upload_root: "todo"
+      $actes_files_upload_root: "%app.actes_files_upload_root%"
+      $repertoireActesEnveloppeSansTransaction: '%app.repertoirepesallersanstransaction%'
 
   S2lowLegacy\Class\actes\ActesConventions:
      arguments:
-       $actes_files_upload_root: "todo"
+       $actes_files_upload_root: "%app.actes_files_upload_root%"
 
   S2lowLegacy\Class\actes\ActesEnvelopeStorage:
     autowire: false
@@ -475,11 +541,11 @@ services:
   S2lowLegacy\Class\actes\ActesFileSender:
     public: true
     arguments:
-      $trustore_path: 'todo'
+      $trustore_path: '%app.trustore_path%'
 
   S2lowLegacy\Class\actes\ActesImapRetrieve:
     arguments:
-      $actes_response_tmp_local_path: "todo"
+      $actes_response_tmp_local_path: "%app.actes_response_tmp_local_path%"
 
   S2lowLegacy\Class\Parapheur:
     autowire: false #Initialisé avec les données à traiter ...
@@ -515,16 +581,16 @@ services:
 
   S2lowLegacy\Class\actes\ActesResponsesError:
     arguments:
-      $actes_response_error_path: "todo"
+      $actes_response_error_path: "%app.actes_response_error_path%"
 
   S2lowLegacy\Class\actes\ActesRetriever:
     public: true
     arguments:
-      $actes_files_upload_root: "todo"
+      $actes_files_upload_root: "%app.actes_files_upload_root%"
 
   S2lowLegacy\Class\actes\ActesScriptHelper:
     arguments:
-      $actes_appli_trigramme: "todo"
+      $actes_appli_trigramme: "%app.actes_appli_trigramme%"
 
   S2lowLegacy\Class\actes\ActesStatistiques:
     public: true
@@ -535,24 +601,24 @@ services:
   S2lowLegacy\Class\helios\FichierCompteur:
     public: true
     arguments:
-      $helios_counter_file: 'todo'
+      $helios_counter_file: '%app.helios_counter_file%'
 
   S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu:
     arguments:
-      $schema_pes_path: "todo"
-      $email_admin_technique: "todo"
-      $tdt_from_email: "todo"
+      $schema_pes_path: "%app.schema_pes_path%"
+      $email_admin_technique: "%app.email_admin_technique%"
+      $tdt_from_email: "%app.tdt_from_email%"
 
   S2lowLegacy\Class\helios\HeliosEnvoiSAE:
     autowire: false #TODO : logger
 
   S2lowLegacy\Class\helios\HeliosExport:
     arguments:
-      $helios_responses_root: "todo"
+      $helios_responses_root: "%app.helios_responses_root%"
 
   S2lowLegacy\Class\helios\HeliosFiles:
     arguments:
-      $helios_file_upload: "todo"
+      $helios_file_upload: ""
 
   S2lowLegacy\Class\helios\HeliosPESValidation:
     arguments:
@@ -566,11 +632,11 @@ services:
 
   S2lowLegacy\Class\helios\PESAcquitCloudStorage:
     arguments:
-      $helios_responses_root: "todo"
+      $helios_responses_root: "%app.helios_responses_root%"
 
   S2lowLegacy\Class\helios\PESRetourCloudStorage:
     arguments:
-      $helios_responses_root: "todo"
+      $helios_responses_root: "%app.helios_responses_root%"
 
   S2lowLegacy\Class\helios\PesAllerRetriever:
     public: true
@@ -579,7 +645,7 @@ services:
 
   S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage:
     arguments:
-      $mail_files_upload_root: "todo"
+      $mail_files_upload_root: "%app.mail_files_upload_root%"
 
   App\Http\Controllers\Admin\Admin_authorities:
     public: true

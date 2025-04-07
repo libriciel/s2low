@@ -34,7 +34,7 @@ class OpenStackSwiftWrapper
     public function __construct(
         OpenStackContainerStore $openStackContainersStore,
         Logger $logger,
-        $openstack_enable
+        bool $openstack_enable
     ) {
         $this->openStackContainersStore = $openStackContainersStore;
         $this->fileSystem = new Filesystem();
