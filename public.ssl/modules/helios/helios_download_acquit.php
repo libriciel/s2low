@@ -17,37 +17,37 @@ $cloudStorageFactory = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectI
 $module = new Module();
 if (!$module->initByName("helios")) {
     $_SESSION["error"] = "Erreur d'initialisation du module";
-    header("Location: " . WEBSITE_SSL);
-    exit();
+    header_wrapper("Location: " . WEBSITE_SSL);
+    exit_wrapper();
 }
 
 $me = new User();
 
 if (!$me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
-    exit();
+    header_wrapper("Location: " . Helpers::getLink("connexion-status"));
+    exit_wrapper();
 }
 
 if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
     $_SESSION["error"] = "Accès refusé";
-    header("Location: " . WEBSITE_SSL);
-    exit();
+    header_wrapper("Location: " . WEBSITE_SSL);
+    exit_wrapper();
 }
 
 try {
     $transaction_id = Helpers :: getIntFromGet("id", true);
 } catch (Exception $e) {
     $_SESSION["error"] = $e->getMessage();
-    header("Location: " . WEBSITE_SSL);
-    exit();
+    header_wrapper("Location: " . WEBSITE_SSL);
+    exit_wrapper();
 }
 
 
 if (! $transaction_id) {
     $_SESSION["error"] = "Id non trouvé";
-    header("Location: " . WEBSITE_SSL);
-    exit();
+    header_wrapper("Location: " . WEBSITE_SSL);
+    exit_wrapper();
 }
 
 
@@ -60,13 +60,13 @@ if (isset($transaction_id) && ! empty($transaction_id)) {
         $owner->init();
     } else {
         $_SESSION["error"] = "Erreur d'initialisation de la transaction.";
-        header("Location: " . Helpers::getLink("/modules/helios/index.php"));
-        exit();
+        header_wrapper("Location: " . Helpers::getLink("/modules/helios/index.php"));
+        exit_wrapper();
     }
 } else {
     $_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
-    header("Location: " . Helpers::getLink("/modules/helios/index.php"));
-    exit();
+    header_wrapper("Location: " . Helpers::getLink("/modules/helios/index.php"));
+    exit_wrapper();
 }
 
 $serviceUser = new ServiceUser(DatabasePool::getInstance());
@@ -74,8 +74,8 @@ $permission = new ModulePermission($serviceUser, "helios");
 
 if (! $permission->canView($me, $owner)) {
     $_SESSION["error"] = "Accès refusé";
-    header("Location: " . Helpers::getLink("/modules/helios/index.php"));
-    exit();
+    header_wrapper("Location: " . Helpers::getLink("/modules/helios/index.php"));
+    exit_wrapper();
 }
 
 
@@ -95,13 +95,11 @@ try {
     $path = $pesAcquitCloudStorage->getPath($transaction_id);
 } catch (Exception $e) {
     $_SESSION["error"] = "Erreur d'envoi du fichier " . $filename . " : " . $e->getMessage();
-    header("Location: " . Helpers::getLink("/modules/helios/index.php"));
-    exit();
+    header_wrapper("Location: " . Helpers::getLink("/modules/helios/index.php"));
+    exit_wrapper();
 }
-
 
 if (!$entity->sendAcquit(trim($filename))) {
     $_SESSION["error"] = "Erreur d'envoi du fichier " . $filename . " : " . $entity->getErrorMsg();
-  //header("Location: " . WEBSITE_SSL);
-    exit();
+    exit_wrapper();
 }

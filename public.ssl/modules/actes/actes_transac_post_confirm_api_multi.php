@@ -114,5 +114,5 @@ foreach ($id_list as $id) {
 }
 
 $return_ok = Helpers :: getVarFromGet('url_return');
-header("Location:  $return_ok");
+header_wrapper("Location:  $return_ok");
 exit_wrapper();

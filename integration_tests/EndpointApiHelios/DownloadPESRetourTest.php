@@ -1,0 +1,91 @@
+<?php
+
+namespace IntegrationTests\EndpointApiHelios;
+
+use HeliosUtilitiesTestTrait;
+use IntegrationTests\S2lowIntegrationTestCase;
+use S2low\Enum\UserRole;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+
+class DownloadPESRetourTest extends S2lowIntegrationTestCase
+{
+    use HeliosUtilitiesTestTrait;
+
+    private HeliosTransactionsSQL $heliosTransactionsSQL;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+    }
+
+    public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
+    {
+        return $this->heliosTransactionsSQL;
+    }
+
+    protected function dataProvider(): array
+    {
+        return [
+            [
+                [
+                    'use_pes_retour_id' => true,
+                    'use_good_pes_retour_id' => true,
+                    'string_in_response' => '<element>Contenu</element>',
+                ]
+            ],
+            [
+                [
+                    'use_pes_retour_id' => true,
+                    'use_good_pes_retour_id' => false,
+                    'string_in_response' => '<message>retour id n\'est pas correcte</message>',
+                ]
+            ],
+            [
+                [
+                    'use_pes_retour_id' => false,
+                    'use_good_pes_retour_id' => false,
+                    'string_in_response' => '<message>retour id n\'est pas correcte</message>',
+                ]
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProvider
+     */
+    public function testDownloadPESRetour($data): void
+    {
+        $this->createUserWithDefaultCertificatAs(UserRole::Archiviste);
+
+        $collectiviteId = 1;
+        $sampleXMLPath = __DIR__ . "/../../integration_tests/fixtures/XMLTest.xml";
+        $PESRetourFilename = "XMLTest.xml";
+        $newSampleXML = HELIOS_RESPONSES_ROOT . "/" . $PESRetourFilename;
+        copy($sampleXMLPath, $newSampleXML);
+
+        $PESRetourId = $this->addPESRetourToCollectivite($collectiviteId, $PESRetourFilename);
+
+        $client = $this->getAuthenticatedClientAttachedToDefaultCertificat();
+
+        if ($data['use_pes_retour_id']) {
+            $PESRetourId = $data['use_good_pes_retour_id'] ? $PESRetourId : 1234567;
+            $_GET['id'] = $PESRetourId;
+            $requestGetParam = [
+                'id' => $PESRetourId,
+            ];
+        } else {
+            $requestGetParam = [];
+        }
+
+        $client->request(
+            'GET',
+            '/modules/helios/api/helios_get_retour.php',
+            $requestGetParam,
+        );
+
+        unlink($newSampleXML);
+        $response = $client->getResponse();
+        static::assertStringContainsString($data['string_in_response'], $response->getContent());
+    }
+}
