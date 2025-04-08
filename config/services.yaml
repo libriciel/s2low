@@ -1,7 +1,7 @@
 # config/services.yaml
 
 parameters:
-  app.workspace_directory: '%env(WORKSPACE_DIRECTORY)'
+  app.workspace_directory: '%env(WORKSPACE_DIRECTORY)%'
   app.actes_response_tmp_local_path: "%app.workspace_directory%actes/response_tmp"
 
   app.relative_legacy_ssl_path: 'public.ssl/'
