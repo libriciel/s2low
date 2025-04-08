@@ -485,10 +485,6 @@ services:
       $extractDataForBordereauPDF: "@S2lowLegacy\\Class\\actes\\ExtractDataForBordereauPDF"
       $actesPdf: "@S2lowLegacy\\Class\\actes\\ActesPdf"
 
-
-  S2lowLegacy\Class\actes\ActesPrepareEnvoiSAE:
-    autowire: false #LOGGER !!!
-
   S2lowLegacy\Class\actes\ActesResponsesError:
     arguments:
       $actes_response_error_path: "todo"
