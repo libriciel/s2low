@@ -23,7 +23,7 @@ class ActeAntivirusCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('actes:actes-antivirus')
+            ->setName('actes:antivirus')
             ->setDescription(
                 "Analyse les fichiers des transactions au status 'CREE'."
             );
