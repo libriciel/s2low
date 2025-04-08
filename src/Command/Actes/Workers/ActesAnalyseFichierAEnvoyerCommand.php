@@ -23,7 +23,7 @@ class ActesAnalyseFichierAEnvoyerCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('actes:actes-analyse-fichier-a-envoyer')
+            ->setName('actes:analyse-fichier-a-envoyer')
             ->setDescription(
                 "Analyse les fichiers de l'archive à envoyer."
             );

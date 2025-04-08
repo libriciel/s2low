@@ -23,7 +23,7 @@ class ActesEnvoiFichierCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('actes:actes-envoi-fichier')
+            ->setName('actes:envoi-fichier')
             ->setDescription(
                 "Envoi les fichiers à la DGCL."
             );
