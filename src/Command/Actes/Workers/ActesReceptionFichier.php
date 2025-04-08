@@ -35,7 +35,7 @@ class ActesReceptionFichier extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $workerRunner = $this->workerRunnerBuilder->scriptWithLogs($this->worker, true, JobFetcherFromDB::class);
-        $workerRunner->setMinExecutionTimeInSeconds(2);
+        $workerRunner->setMinExecutionTimeInSeconds(10);
         $workerRunner->work();
 
         return Command::SUCCESS;
