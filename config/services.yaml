@@ -1,6 +1,9 @@
 # config/services.yaml
 
 parameters:
+  app.workspace_directory: '%env(WORKSPACE_DIRECTORY)'
+  app.actes_response_tmp_local_path: "%app.workspace_directory%actes/response_tmp"
+
   app.relative_legacy_ssl_path: 'public.ssl/'
   app.old_timestamp_token_directory: '/data/timestamp-token/'            #TODO : utiliser OLD_TIMESTAMP_TOKEN_DIRECTORY
   app.timestamp_token_retention_nb_days: 781                             #TODO : utiliser HELIOS_RETENTION_RETOURS_NB_JOURS
@@ -443,9 +446,17 @@ services:
     factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
     arguments: [ 'S2lowLegacy\Class\actes\ActesFileSender' ]
 
+  S2lowLegacy\Class\actes\ActesImapProperties:
+    arguments:
+      $host: '%env(ACTES_IMAP_HOST)%'
+      $port: '%env(ACTES_IMAP_PORT)%'
+      $login: '%env(ACTES_IMAP_LOGIN)%'
+      $password: '%env(ACTES_IMAP_PASSWORD)%'
+      $imap_options: '%env(ACTES_IMAP_OPTIONS)%'
+
   S2lowLegacy\Class\actes\ActesImapRetrieve:
     arguments:
-      $actes_response_tmp_local_path: "todo"
+      $actes_response_tmp_local_path: "%app.actes_response_tmp_local_path%"
 
   S2lowLegacy\Class\Parapheur:
     autowire: false #Initialisé avec les données à traiter ...
