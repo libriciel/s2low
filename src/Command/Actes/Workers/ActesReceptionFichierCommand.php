@@ -9,7 +9,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ActesReceptionFichier extends Command
+class ActesReceptionFichierCommand extends Command
 {
     private ActesReceptionFichierWorker $worker;
     private WorkerRunnerBuilder $workerRunnerBuilder;
