@@ -1,6 +1,6 @@
 <?php
 
-namespace S2low\Command;
+namespace S2low\Command\Actes\Workers;
 
 use S2lowLegacy\Class\actes\ActesNotification;
 use S2lowLegacy\Class\S2lowLogger;
@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use UnexpectedValueException;
 
-class NotifyActesCommand extends Command
+class ActesEnvoiNotificationCommand extends Command
 {
     private ActesNotification $actesNotification;
     private S2lowLogger $logger;
@@ -28,7 +28,7 @@ class NotifyActesCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('cron:notify-actes')
+            ->setName('actes:notification')
             ->setDescription(
                 "Notifies actes"
             )
@@ -72,6 +72,7 @@ class NotifyActesCommand extends Command
             $this->logger->info("Arret du script : $sleep");
             sleep($sleep);
         }
-        return 0;
+
+        return Command::SUCCESS;
     }
 }
