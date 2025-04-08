@@ -3,6 +3,7 @@
 namespace IntegrationTests\EndpointActeAPI;
 
 use IntegrationTests\S2lowIntegrationTestCase;
+use org\bovigo\vfs\vfsStream;
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
@@ -60,9 +61,14 @@ class DownloadFileTest extends S2lowIntegrationTestCase
 
     private function getFiles()
     {
-        $archivePath = __DIR__ . '/../fixtures/abc-TACT--123456789--20250313-1.tar.gz';
+        $archiveName = 'abc-TACT--123456789--20250313-0.tar.gz';
+        $archivePath = __DIR__ . '/../fixtures/' . $archiveName;
 
-        $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, $archivePath);
+        $vfsUrl = vfsStream::url('test/helios/' . $archiveName);
+        copy($archivePath, $vfsUrl);
+        $archivePathFromVfs = $vfsUrl;
+
+        $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, $archivePathFromVfs);
 
         $this->createActeIncludedFiles($transactionId);
 

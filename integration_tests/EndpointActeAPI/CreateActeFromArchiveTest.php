@@ -1,6 +1,6 @@
 <?php
 
-namespace EndpointActeAPI;
+namespace IntegrationTests\EndpointActeAPI;
 
 use IntegrationTests\S2lowIntegrationTestCase;
 use PHPUnit\ActesUtilitiesTestTrait;
@@ -44,11 +44,15 @@ class CreateActeFromArchiveTest extends S2lowIntegrationTestCase
     {
         $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
 
-        $filePath = __DIR__ . '/../fixtures/abc-TACT--123456789--20250313-1.tar.gz';
+        $realFilePath = __DIR__ . '/../fixtures/abc-TACT--123456789--20250313-0.tar.gz';
+        $filePathToTest = __DIR__ . '/../fixtures/abc-TACT--123456789--20250313-1.tar.gz';
+        copy($realFilePath, $filePathToTest);
+
         $fileName = 'abc-TACT--123456789--20250313-1.tar.gz';
+
         $fileType = 'application/gzip';
         $fileError = UPLOAD_ERR_OK;
-        $fileSize = fileSize($filePath);
+        $fileSize = fileSize($filePathToTest);
 
         $api = 1;
 
@@ -57,7 +61,7 @@ class CreateActeFromArchiveTest extends S2lowIntegrationTestCase
             $_FILES['enveloppe'] = [
                 'name' => $fileName,
                 'type' => $fileType,
-                'tmp_name' => $filePath,
+                'tmp_name' => $filePathToTest,
                 'error' => $fileError,
                 'size' => $fileSize,
             ];
@@ -65,7 +69,7 @@ class CreateActeFromArchiveTest extends S2lowIntegrationTestCase
             $file = [
                 'enveloppe' => [
                     new UploadedFile(
-                        $filePath,
+                        $filePathToTest,
                         $fileName,
                         $fileType,
                         $fileError,
@@ -89,5 +93,6 @@ class CreateActeFromArchiveTest extends S2lowIntegrationTestCase
 
         $response = $client->getResponse();
         static::assertStringContainsString($data['stringInResponse'], $response->getContent());
+//        delete($filePathToTest);
     }
 }
