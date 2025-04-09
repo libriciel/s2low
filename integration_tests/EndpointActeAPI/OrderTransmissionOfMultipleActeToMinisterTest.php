@@ -31,7 +31,7 @@ class OrderTransmissionOfMultipleActeToMinisterTest extends S2lowIntegrationTest
         $firstTransactionId = $this->createTransaction(ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_POSTE);
         $secondTransactionId = $this->createTransaction(ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_POSTE);
 
-        $ids[] = [$firstTransactionId, $secondTransactionId];
+        $ids = [$firstTransactionId, $secondTransactionId];
         $urlReturn = 'index.php';
 
         $_GET['id'] = $ids;

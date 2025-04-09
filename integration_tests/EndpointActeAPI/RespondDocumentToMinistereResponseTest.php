@@ -10,7 +10,7 @@ use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class RepondToMinistereDocumentTest extends S2lowIntegrationTestCase
+class RespondDocumentToMinistereResponseTest extends S2lowIntegrationTestCase
 {
     use ActesUtilitiesTestTrait;
 
@@ -63,7 +63,7 @@ class RepondToMinistereDocumentTest extends S2lowIntegrationTestCase
     /**
      * @dataProvider dataProvider
      */
-    public function test($data): void
+    public function testShouldAcceptDocument($data): void
     {
         $transactionId = $this->createTransactionOfType(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, 2);
 

@@ -22,8 +22,8 @@ class MailIntegrationTest extends S2lowIntegrationTestCase
             file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
 
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->setUpUserCertInServer(
+        $this->createSuperAdminUser($certificatePem->getContent(), $certificatePem->getHash());
+        $client = $this->createClientWithCertificat(
             $certificatePem->getContent(),
             $certificatePem->getContentStrippedFromBegin()
         );                                                           // 2/ Le client ne modifie pas la variable _SERVER
@@ -50,11 +50,11 @@ class MailIntegrationTest extends S2lowIntegrationTestCase
             file_get_contents(__DIR__ . '/../test/PHPUnit/controller/fixtures/user1.pem')
         );
 
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
+        $this->createSuperAdminUser($certificatePem->getContent(), $certificatePem->getHash());
 
         ObjectInstancierFactory::resetObjectInstancier();
 
-        $client = $this->setUpUserCertInServer(
+        $client = $this->createClientWithCertificat(
             $wrongCertificatePem->getContent(),
             $wrongCertificatePem->getContentStrippedFromBegin()
         );
@@ -74,9 +74,9 @@ class MailIntegrationTest extends S2lowIntegrationTestCase
             file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
 
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
+        $this->createSuperAdminUser($certificatePem->getContent(), $certificatePem->getHash());
 
-        $client = $this->setUpUserCertInServer(
+        $client = $this->createClientWithCertificat(
             $certificatePem->getContent(),
             $certificatePem->getContentStrippedFromBegin()
         );                                                           // 2/ Le client ne modifie pas la variable _SERVER
@@ -100,9 +100,12 @@ class MailIntegrationTest extends S2lowIntegrationTestCase
             file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
 
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
+        $this->createSuperAdminUser($certificatePem->getContent(), $certificatePem->getHash());
 
-        $client = $this->setUpUserCertInServer($certificatePem->getContent(), $certificatePem->getContentStrippedFromBegin());
+        $client = $this->createClientWithCertificat(
+            $certificatePem->getContent(),
+            $certificatePem->getContentStrippedFromBegin()
+        );
         $postData = [ 'module' => '1', 'authority_group_id' => '1', 'subject' => 'le subject', 'body' => 'le body'];
 
         $client->request(

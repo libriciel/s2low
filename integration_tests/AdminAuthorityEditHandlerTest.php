@@ -21,9 +21,9 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
             file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
 
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
+        $this->createSuperAdminUser($certificatePem->getContent(), $certificatePem->getHash());
 
-        $client = $this->setUpUserCertInServer(
+        $client = $this->createClientWithCertificat(
             $certificatePem->getContent(),
             $certificatePem->getContentStrippedFromBegin()
         );                                                           // 2/ Le client ne modifie pas la variable _SERVER
@@ -98,9 +98,9 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
             file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
 
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
+        $this->createSuperAdminUser($certificatePem->getContent(), $certificatePem->getHash());
 
-        $client = $this->setUpUserCertInServer(
+        $client = $this->createClientWithCertificat(
             $certificatePem->getContent(),
             $certificatePem->getContentStrippedFromBegin()
         );                                                           // 2/ Le client ne modifie pas la variable _SERVER
@@ -178,9 +178,9 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
             file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
         );
 
-        $this->setUpUserInDB($certificatePem->getContent(), $certificatePem->getHash());
+        $this->createSuperAdminUser($certificatePem->getContent(), $certificatePem->getHash());
 
-        $client = $this->setUpUserCertInServer(
+        $client = $this->createClientWithCertificat(
             $certificatePem->getContent(),
             $certificatePem->getContentStrippedFromBegin()
         );                                                           // 2/ Le client ne modifie pas la variable _SERVER

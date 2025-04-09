@@ -2,20 +2,23 @@
 
 namespace IntegrationTests;
 
+use Exception;
+use org\bovigo\vfs\vfsStream;
 use S2low\Enum\ModulePermission;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\LegacyObjectsManager;
+use S2lowLegacy\Lib\PemCertificate;
 use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\SQLQuery;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 class S2lowIntegrationTestCase extends WebTestCase
 {
     protected SQLQuery $sqlQuery;
     private int $nextCreatedUserId = 1;
     protected PemCertificateFactory $pemCertificateFactory;
+    protected PemCertificate $fixtureCertificate;
 
     /**
      * @param int|string $dataName
@@ -32,16 +35,24 @@ class S2lowIntegrationTestCase extends WebTestCase
      */
     protected function setUp(): void
     {
+        parent::setUp();
         $_SESSION = [];
         $_GET = [];
         $_POST = [];
+        $_FILES = [];
         $_SERVER['QUERY_STRING'] = '';
+        vfsStream::setup('test/helios');
         $this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);
         $this->sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST);
         $this->sqlQuery->setDatabaseHost(DB_HOST_TEST);
         $this->pemCertificateFactory = new PemCertificateFactory();
+
+        $this->fixtureCertificate = $this->pemCertificateFactory->getFromString(
+            file_get_contents(
+                __DIR__ . '/../integration_tests/fixtures/charles S2low - charles.dutheil@libriciel.coop.pem'
+            )
+        );
         $this->sqlQuery->exec(file_get_contents(__DIR__ . '/fixtures/s2low-test-init.sql'));
-        parent::setUp();
     }
 
     protected function tearDown(): void
@@ -66,35 +77,34 @@ class S2lowIntegrationTestCase extends WebTestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    public function setUpUserInDB(string $certificatPem, string $certificatHash): void
+    public function createSuperAdminUser(string $certificatPem, string $certificatHash): void
     {
-        $this->createUserAs(UserRole::SuperAdministrateur, $certificatPem, $certificatHash);
+        $this->createUser(UserRole::SuperAdministrateur, $certificatPem, $certificatHash);
     }
 
     /**
      * @param string $certificatPem
      * @param string $certificatSansBegin
-     * @return \Symfony\Bundle\FrameworkBundle\KernelBrowser
+     * @return KernelBrowser
      */
-    protected function setUpUserCertInServer(string $certificatPem, string $certificatSansBegin): KernelBrowser
+    protected function createClientWithCertificat(string $certificatPem, string $certificatSansBegin): KernelBrowser
     {
-        $serverVariables = [
-            'SSL_CLIENT_VERIFY' => 'ssl_client_verify',
+        $serverCertificatEnvVar = [
+            'SSL_CLIENT_VERIFY' => 'SUCCESS',
             'SSL_CLIENT_S_DN' => 'subject_dn',
             'SSL_CLIENT_I_DN' => 'issuer_dn',
             'SSL_CLIENT_CERT' => $certificatPem,
             'HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION' => $certificatSansBegin
-
         ];
-        foreach ($serverVariables as $key => $value) {
-            $_SERVER[$key] = $value;         // Le client Symfony ne set pas la session, utilisée par l'appli...
-        }
+
+        $this->addCertificatToServeurEnvironnement($serverCertificatEnvVar);
+
         self::ensureKernelShutdown();
         return static::createClient(
             [],
-            $serverVariables
+            $serverCertificatEnvVar
         );
     }
 
@@ -107,41 +117,46 @@ class S2lowIntegrationTestCase extends WebTestCase
     }
 
     /**
-     * @return \Symfony\Bundle\FrameworkBundle\KernelBrowser
-     * @throws \Exception
+     * @param UserRole $role
+     * @param ModulePermission $permissions
+     * @return KernelBrowser
+     * @throws Exception
      */
-    protected function setUpUser(): \Symfony\Bundle\FrameworkBundle\KernelBrowser
-    {
-        return $this->setUpUserAs(UserRole::SuperAdministrateur, ModulePermission::Modification);
+    protected function getAuthenticatedClientWithUserLoggedAs(
+        UserRole $role,
+        ModulePermission $permissions = ModulePermission::Modification
+    ): KernelBrowser {
+        $this->createUser(
+            $role,
+            $this->fixtureCertificate->getContent(),
+            $this->fixtureCertificate->getHash(),
+            $permissions
+        );
+
+        return $this->createClientWithCertificat(
+            $this->fixtureCertificate->getContent(),
+            $this->fixtureCertificate->getContentStrippedFromBegin()
+        );
     }
 
     /**
-     * @return \Symfony\Bundle\FrameworkBundle\KernelBrowser
-     * @throws \Exception
+     * @return KernelBrowser
+     * @throws Exception
      */
-    protected function setUpUserAs(
-        UserRole $role,
-        ModulePermission $permissions
-    ): \Symfony\Bundle\FrameworkBundle\KernelBrowser {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
+    protected function getAuthenticatedClientWithSAdminUser(): KernelBrowser
+    {
+        return $this->getAuthenticatedClientWithUserLoggedAs(
+            UserRole::SuperAdministrateur,
+            ModulePermission::Modification
         );
-
-        $this->createUserAs($role, $certificatePem->getContent(), $certificatePem->getHash(), $permissions);
-        $client = $this->setUpUserCertInServer(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
-
-        return $client;
     }
 
-    private function createUserAs(
+    public function createUser(
         UserRole $role,
         string $certificatPem,
         string $certificatHash,
         ModulePermission $permissions = ModulePermission::Modification
-    ): void {
+    ): int {
         $userId = $this->getNextCreatedUserId();
 
         $constMaximumUsersCreated = 100000;
@@ -150,29 +165,43 @@ class S2lowIntegrationTestCase extends WebTestCase
         $userPermHeliosId = $userId + $constMaximumUsersCreated;
         $userPermMailId = $userId + $constMaximumUsersCreated * 2;
 
-        $sql = "INSERT INTO users VALUES ($userId, 'eric@sigmalis.com', 'test_subject', 'test_issuer', 'Pommateau', 'Eric', NULL, '$role->value', 1, 1, ?, NULL, NULL, NULL, 1, NULL, NULL, ?, ?)";
-        $this->sqlQuery->query($sql, [$certificatPem, $certificatPem, $certificatHash]);
+        $queryCreateUser = "INSERT INTO users VALUES ($userId, 'eric@sigmalis.com', 'test_subject', 'test_issuer', 'Pommateau', 'Eric', NULL, '$role->value', 1, 1, ?, NULL, NULL, NULL, 1, NULL, NULL, ?, ?)";
+        $this->sqlQuery->query($queryCreateUser, [$certificatPem, $certificatPem, $certificatHash]);
 
-        $sql1 = "INSERT INTO users_perms VALUES ($userPermActeId, 1, $userId, '$permissions->value'); -- Permission RW sur le module Actes";
-        $this->sqlQuery->query($sql1);
-        $sql2 = "INSERT INTO users_perms VALUES ($userPermHeliosId, 2, $userId, '$permissions->value'); -- Permission RW sur le module Helios";
-        $this->sqlQuery->query($sql2);
-        $sql3 = "INSERT INTO users_perms VALUES ($userPermMailId, 3, $userId, '$permissions->value'); -- Permission RW sur le module Mail";
-        $this->sqlQuery->query($sql3);
+        $queryAddModuleActePermission = "INSERT INTO users_perms VALUES ($userPermActeId, 1, $userId, '$permissions->value'); -- Permission RW sur le module Actes";
+        $this->sqlQuery->query($queryAddModuleActePermission);
+
+        $queryAddModuleHeliosPermission = "INSERT INTO users_perms VALUES ($userPermHeliosId, 2, $userId, '$permissions->value'); -- Permission RW sur le module Helios";
+        $this->sqlQuery->query($queryAddModuleHeliosPermission);
+
+        $queryAddModuleMailPermission = "INSERT INTO users_perms VALUES ($userPermMailId, 3, $userId, '$permissions->value'); -- Permission RW sur le module Mail";
+        $this->sqlQuery->query($queryAddModuleMailPermission);
+
+        return $userId;
     }
 
-    /**
-     * @throws \Exception
-     */
-    protected function getAuthenticatedClientWithUserLoggedAs(
-        UserRole $role = UserRole::Utilisateur,
-        ModulePermission $permissions = ModulePermission::Modification
-    ): KernelBrowser {
-        return $this->setUpUserAs($role, $permissions);
-    }
-
-    protected function headerReturnXMLFile(Response $response): bool
+    protected function createUserWithDefaultCertificatAs(UserRole $role = UserRole::Utilisateur): int
     {
-        return str_contains($response->getContent(), 'Content-type: text/xml');
+        return $this->createUser(
+            $role,
+            $this->fixtureCertificate->getContent(),
+            $this->fixtureCertificate->getHash(),
+            ModulePermission::Modification
+        );
+    }
+
+    protected function getAuthenticatedClientAttachedToDefaultCertificat(): KernelBrowser
+    {
+        return $this->createClientWithCertificat(
+            $this->fixtureCertificate->getContent(),
+            $this->fixtureCertificate->getContentStrippedFromBegin()
+        );
+    }
+
+    private function addCertificatToServeurEnvironnement(array $serverVariables): void
+    {
+        foreach ($serverVariables as $key => $value) {
+            $_SERVER[$key] = $value;
+        }
     }
 }

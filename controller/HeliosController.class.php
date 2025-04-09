@@ -128,7 +128,6 @@ class HeliosController extends Controller
             if (!move_uploaded_file_wrapper($_FILES['enveloppe']['tmp_name'], $pes_aller_destination)) {
                 throw new Exception("Échec lors du téléchargement du fichier");
             }
-            chmod($pes_aller_destination, 0644);
         } catch (Exception $e) {
             throw new Exception("Échec lors du téléchargement du fichier");
         }
@@ -328,7 +327,7 @@ class HeliosController extends Controller
         }
         $messageElement->appendChild($doc->createTextNode($msg));
 
-        header("Content-type: text/xml");
+        header_wrapper("Content-type: text/xml");
         echo $doc->saveXML();
 
         $this->controller_exit();
