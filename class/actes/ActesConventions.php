@@ -3,13 +3,14 @@
 namespace S2lowLegacy\Class\actes;
 
 use Exception;
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Model\AuthoritySQL;
 
 class ActesConventions
 {
     public function __construct(
         private readonly AuthoritySQL $authoritySQL,
-        private readonly string $actes_files_upload_root,
+        private readonly ActesWorkspace $actes_workspace
     ) {
     }
 
@@ -41,7 +42,7 @@ class ActesConventions
             return false;
         }
         $siren = $authority_info['siren'];
-        return $this->actes_files_upload_root . "/$siren/$siren-convention-actes.pdf";
+        return $this->actes_workspace->getActesFilesUploadRoot() . "/$siren/$siren-convention-actes.pdf";
     }
 
     public function setConvention($authority_id, $filepath)

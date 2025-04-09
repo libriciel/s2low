@@ -1,6 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesResponsesError;
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Class\TmpFolder;
 
 class ActesResponsesErrorTest extends S2lowTestCase
@@ -18,7 +19,15 @@ class ActesResponsesErrorTest extends S2lowTestCase
 
         touch($tmp_folder . "/test42/foo.txt");
 
-        $actesResponsesError = new ActesResponsesError($tmp_folder, $tmpFolder);
+        $actesResponsesError = new ActesResponsesError(
+            $tmpFolder,
+            new ActesWorkspace(
+                '',
+                '',
+                $tmp_folder,
+                '',
+            )
+        );
         $this->expectOutputRegex("##");
         $actesResponsesError->download("test42");
         $tmpFolder->delete($tmp_folder);

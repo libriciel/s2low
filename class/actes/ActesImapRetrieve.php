@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Class\ImapMailBoxFactory;
 use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\S2lowLogger;
@@ -15,7 +16,6 @@ use PhpImap\Mailbox;
 class ActesImapRetrieve
 {
     private $actesImapProperties;
-    private $actes_response_tmp_local_path;
     private $logger;
     private $imapMailBoxFactory;
     private $sigTermHandler;
@@ -23,14 +23,13 @@ class ActesImapRetrieve
 
     public function __construct(
         ActesImapProperties $actesImapProperties,
-        $actes_response_tmp_local_path,
         ImapMailBoxFactory $imapMailBoxFactory,
         S2lowLogger $s2lowLogger,
         SigTermHandler $sigTermHandler,
-        WorkerScript $workerScript
+        WorkerScript $workerScript,
+        private readonly ActesWorkspace $workspace
     ) {
         $this->actesImapProperties = $actesImapProperties;
-        $this->actes_response_tmp_local_path = $actes_response_tmp_local_path;
         $this->imapMailBoxFactory = $imapMailBoxFactory;
         $this->logger = $s2lowLogger;
         $this->sigTermHandler = $sigTermHandler;
@@ -129,14 +128,14 @@ class ActesImapRetrieve
         }
 
 
-        $this->logger->info("Déplacement du répertoire $tmp_dir vers {$this->actes_response_tmp_local_path}");
+        $this->logger->info("Déplacement du répertoire $tmp_dir vers {$this->workspace->getActesResponseTmpLocalPath()}");
 
-        if (! file_exists($this->actes_response_tmp_local_path)) {
-            throw new UnrecoverableException("{$this->actes_response_tmp_local_path} n'existe pas");
+        if (! file_exists($this->workspace->getActesResponseTmpLocalPath())) {
+            throw new UnrecoverableException("{$this->workspace->getActesResponseTmpLocalPath()} n'existe pas");
         }
 
         // rename() fonctionne pas si on est sur deux systèmes de fichiers différents... ce qui est le cas sur docker
-        $command = "mv $tmp_dir {$this->actes_response_tmp_local_path}";
+        $command = "mv $tmp_dir {$this->workspace->getActesResponseTmpLocalPath()}";
 
         exec($command, $output, $return_var);
         if ($return_var != 0) {

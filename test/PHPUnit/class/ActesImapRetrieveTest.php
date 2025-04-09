@@ -2,6 +2,7 @@
 
 use S2lowLegacy\Class\actes\ActesImapProperties;
 use S2lowLegacy\Class\actes\ActesImapRetrieve;
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Class\ImapMailBoxFactory;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\WorkerScript;
@@ -18,11 +19,16 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase
 
         $actesImapRetrieve = new ActesImapRetrieve(
             $this->getImapProperties(),
-            $this->getVFS(),
             $this->getImapMailBoxFactory(),
             $s2lowLogger,
             SigTermHandler::getInstance(),
-            $this->getWorkerScript()
+            $this->getWorkerScript(),
+            new ActesWorkspace(
+                '',
+                $this->getVFS(),
+                '',
+                '',
+            )
         );
         $actesImapRetrieve->retrieve();
 
@@ -62,11 +68,16 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase
 
         $actesImapRetrieve = new ActesImapRetrieve(
             $this->getImapProperties(),
-            $this->getVFS() . "/foo/bar",
             $this->getImapMailBoxFactory(),
             $s2lowLogger,
             SigTermHandler::getInstance(),
-            $this->getWorkerScript()
+            $this->getWorkerScript(),
+            new ActesWorkspace(
+                '',
+                $this->getVFS() . '/foo/bar',
+                '',
+                ''
+            )
         );
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("n'existe pas");
@@ -82,11 +93,16 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase
 
         $actesImapRetrieve = new ActesImapRetrieve(
             $this->getImapProperties(),
-            $this->getVFS(),
             $this->getImapMailBoxFactory(""),
             $s2lowLogger,
             SigTermHandler::getInstance(),
-            $this->getWorkerScript()
+            $this->getWorkerScript(),
+            new ActesWorkspace(
+                '',
+                $this->getVFS(),
+                '',
+                ''
+            )
         );
         $actesImapRetrieve->retrieve();
 

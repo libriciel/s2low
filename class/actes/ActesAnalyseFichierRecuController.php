@@ -17,6 +17,7 @@ use Libriciel\LibActes\FichierXML\MessageMetierLettreObservations;
 use Libriciel\LibActes\FichierXML\MessageMetierReponseClassificationSansChangement;
 use Libriciel\LibActes\FichierXML\MessageMetierRetourClassification;
 use Libriciel\LibActes\Utils\XSDValidationException;
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\SigTermHandler;
@@ -24,39 +25,16 @@ use UnexpectedValueException;
 
 class ActesAnalyseFichierRecuController
 {
-    private $s2lowLogger;
-    private $actes_response_tmp_local_path;
-    private $actes_response_error_path;
-    private $actesTransactionsSQL;
-    private $actesScriptHelper;
-    private $actesUpdateClassificationSQL;
-    private $actesEnvelopeSQL;
-    private $actes_files_upload_root;
-    private $actesIncludedFileSQL;
-    private $actes_ministere_acronyme;
-
     public function __construct(
-        S2lowLogger $s2lowLogger,
-        $actes_response_tmp_local_path,
-        $actes_response_error_path,
-        ActesTransactionsSQL $actesTransactionsSQL,
-        ActesScriptHelper $actesScriptHelper,
-        ActesUpdateClassificationSQL $actesUpdateClassificationSQL,
-        ActesEnvelopeSQL $actesEnvelopeSQL,
-        ActesIncludedFileSQL $actesIncludedFileSQL,
-        $actes_files_upload_root,
-        $actes_ministere_acronyme
+        private S2lowLogger $s2lowLogger,
+        private ActesTransactionsSQL $actesTransactionsSQL,
+        private ActesScriptHelper $actesScriptHelper,
+        private ActesUpdateClassificationSQL $actesUpdateClassificationSQL,
+        private ActesEnvelopeSQL $actesEnvelopeSQL,
+        private ActesIncludedFileSQL $actesIncludedFileSQL,
+        private string $actes_ministere_acronyme,
+        private ActesWorkspace $actesWorkspace
     ) {
-        $this->s2lowLogger = $s2lowLogger;
-        $this->actes_response_tmp_local_path = $actes_response_tmp_local_path;
-        $this->actes_response_error_path = $actes_response_error_path;
-        $this->actesTransactionsSQL = $actesTransactionsSQL;
-        $this->actesScriptHelper = $actesScriptHelper;
-        $this->actesUpdateClassificationSQL = $actesUpdateClassificationSQL;
-        $this->actesEnvelopeSQL = $actesEnvelopeSQL;
-        $this->actes_files_upload_root = $actes_files_upload_root;
-        $this->actesIncludedFileSQL = $actesIncludedFileSQL;
-        $this->actes_ministere_acronyme = $actes_ministere_acronyme;
     }
 
     /**
@@ -66,7 +44,7 @@ class ActesAnalyseFichierRecuController
     public function analyseAll()
     {
         $this->s2lowLogger->info("Début du script");
-        $this->s2lowLogger->info("Analyse du répertoire : {$this->actes_response_tmp_local_path}");
+        $this->s2lowLogger->info("Analyse du répertoire : {$this->actesWorkspace->getActesResponseTmpLocalPath()}");
 
         $file_list = $this->getAllDirectory();
 
@@ -88,10 +66,10 @@ class ActesAnalyseFichierRecuController
 
     public function getAllDirectory()
     {
-        $file_list = @ scandir($this->actes_response_tmp_local_path);
+        $file_list = @ scandir($this->actesWorkspace->getActesResponseTmpLocalPath());
 
         if ($file_list === false) {
-            $message = "Erreur lors de la lecture du répertoire  $this->actes_response_tmp_local_path";
+            $message = "Erreur lors de la lecture du répertoire  {$this->actesWorkspace->getActesResponseTmpLocalPath()}";
             $this->s2lowLogger->error($message);
             throw new Exception($message);
         }
@@ -103,7 +81,7 @@ class ActesAnalyseFichierRecuController
 
     public function analyseOneFileMoveIfError($file)
     {
-        $rep_path = $this->actes_response_tmp_local_path . "/" . $file;
+        $rep_path = $this->actesWorkspace->getActesResponseTmpLocalPath() . "/" . $file;
         try {
             $this->analyseOneFile($rep_path);
             $tmpDir = new TmpFolder();
@@ -111,8 +89,8 @@ class ActesAnalyseFichierRecuController
             $tmpDir->delete($rep_path);
         } catch (Exception $e) {
             $this->s2lowLogger->error("Echec du traitement de $rep_path : " . $e->getMessage());
-            $this->s2lowLogger->error("Déplacement du répertoire $file vers {$this->actes_response_error_path}");
-            rename($rep_path, $this->actes_response_error_path . "/" . $file);
+            $this->s2lowLogger->error("Déplacement du répertoire $file vers {$this->actesWorkspace->getActesResponseErrorPath()}");
+            rename($rep_path, $this->actesWorkspace->getActesResponseErrorPath() . "/" . $file);
         }
     }
 
@@ -270,7 +248,7 @@ class ActesAnalyseFichierRecuController
 
         $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne);
 
-        $archive_folder = $this->actes_files_upload_root . "/{$fichierXML->siren}/{$fichierXML->numero_interne}";
+        $archive_folder = $this->actesWorkspace->getActesFilesUploadRoot() . "/{$fichierXML->siren}/{$fichierXML->numero_interne}";
 
         if (is_file($archive_folder)) {
                 throw new UnexpectedValueException(
@@ -286,7 +264,7 @@ class ActesAnalyseFichierRecuController
         $archive_path = $this->generateZip($rep_path, $archiveData, $archive_folder);
 
 
-        $envelope_path = mb_substr($archive_path, mb_strlen($this->actes_files_upload_root));
+        $envelope_path = mb_substr($archive_path, mb_strlen($this->actesWorkspace->getActesFilesUploadRoot()));
         $envelope_size = filesize($archive_path);
 
         $this->s2lowLogger->info("Archive enregistré dans $archive_path");

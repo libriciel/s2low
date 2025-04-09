@@ -2,22 +2,21 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Class\S2lowLogger;
 use Exception;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 
 class ActesRetriever
 {
-    private $actes_files_upload_root;
     private $openStackSwiftWrapper;
     private $logger;
 
     public function __construct(
-        $actes_files_upload_root,
         OpenStackSwiftWrapper $openStackSwiftWrapper,
-        S2lowLogger $logger
+        S2lowLogger $logger,
+        private readonly ActesWorkspace $workspace
     ) {
-        $this->actes_files_upload_root = $actes_files_upload_root;
         $this->openStackSwiftWrapper = $openStackSwiftWrapper;
         $this->logger = $logger;
     }
@@ -27,7 +26,7 @@ class ActesRetriever
         try {
             $result = $this->openStackSwiftWrapper->retrieveFile(
                 ActesEnvelopeStorage::CONTAINER_NAME,
-                $this->actes_files_upload_root . "/" . $acte_path,
+                $this->workspace->getActesFilesUploadRoot() . '/' . $acte_path,
                 $acte_path
             );
         } catch (Exception $e) {
