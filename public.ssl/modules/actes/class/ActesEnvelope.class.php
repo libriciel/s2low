@@ -482,7 +482,7 @@ class ActesEnvelope extends DataObject
             return false;
         }
         //Mise en place de l'archive à son emplacement définitif
-        if (! move_uploaded_file($path, $this->rootDir . '/' . $this->file_path)) {
+        if (!move_uploaded_file_wrapper($path, $this->rootDir . '/' . $this->file_path)) {
             $this->errorMsg = "Erreur système. Abandon.";
             return false;
         }

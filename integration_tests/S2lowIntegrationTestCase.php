@@ -39,6 +39,7 @@ class S2lowIntegrationTestCase extends WebTestCase
         $_SESSION = [];
         $_GET = [];
         $_POST = [];
+        $_FILES = [];
         $_SERVER['QUERY_STRING'] = '';
         vfsStream::setup('test/helios');
         $this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);
