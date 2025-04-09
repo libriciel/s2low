@@ -24,11 +24,6 @@ class CreateActeFromArchiveTest extends S2lowIntegrationTestCase
         $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
     }
 
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-    }
-
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
     {
         return $this->actesTransactionsSQL;
