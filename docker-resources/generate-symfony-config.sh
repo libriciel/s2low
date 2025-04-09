@@ -154,27 +154,4 @@ accés au courrier recommandé.}"
 
 HELIOS_USE_PASSTRANS_AS_DEFAULT=${HELIOS_USE_PASSTRANS_AS_DEFAULT:-false}
 
-WORKSPACE_DIRECTORY="/data/tdt-workspace/"
-# Répertoire de stockage des fichiers envoyés par les utilisateurs (archives .tar.gz)
-ACTES_FILES_UPLOAD_ROOT='/data/tdt-workspace/actes/uploads'
-# Répertoire de stockage des vieux fichiers envoyés par les utilisateurs (archives .tar.gz) sans transaction associée
-ACTES_ENVELOPPE_SANSTRANSACTION='/data/tdt-workspace/actes/sans_transaction'
-# Répertoire de stockage des fichiers constituant les lots
-ACTES_BATCHES_UPLOAD_ROOT='/data/tdt-workspace/actes/batchs'
-# Répertoire temporaire de stockage des réponses du ministère par mail
-ACTES_RESPONSE_TMP_LOCAL_PATH='/data/tdt-workspace/actes/response_tmp'
-# Répertoire temporaire de stockage des réponses en erreur du ministère
-ACTES_RESPONSE_ERROR_PATH='/data/tdt-workspace/actes/response_error'
-
-HELIOS_FILES_ROOT='/data/tdt-workspace/helios/'
-# Répertoire de stockage des fichiers envoyés par les utilisateurs
-HELIOS_FILES_UPLOAD_ROOT='/data/tdt-workspace/helios/sending/'
-# Repertoire de stockage des reponses
-HELIOS_RESPONSES_ROOT='/data/tdt-workspace/helios/response/'
-# Repertoire de stockage des reponses en erreur
-HELIOS_RESPONSES_ERROR_PATH='/data/tdt-workspace/helios/response_error/'
-# Repertoire de stockage des fichiers temporaires à envoyer au FTP
-HELIOS_FILES_UPLOAD_TMP='/data/tdt-workspace/helios/sending-tmp/'
-HELIOS_COUNTER_FILE='/data/tdt-workspace/helios/counter.txt'
-
 EOF

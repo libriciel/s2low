@@ -14,7 +14,22 @@ use S2lowLegacy\Class\S2lowLogger;
 
 class ObjectInstancier
 {
-    private const BASIC_CLASSES = [Environnement::class,HttpsConnexion::class,'html',SessionWrapper::class, OpenStackContainerStore::class,Logger::class,IActesPdf::class,TestHandler::class];
+    private const BASIC_CLASSES = [
+        Environnement::class,
+        HttpsConnexion::class,
+        'html',
+        SessionWrapper::class,
+        OpenStackContainerStore::class,
+        Logger::class,
+        IActesPdf::class,
+        TestHandler::class,
+        'helios_use_passtrans_as_default',
+        'openssl_path',
+        'rgs_validca_path',
+        'extended_validca_path',
+        'actes_appli_trigramme',
+        'actes_appli_quadrigramme'
+    ];
     private $objects;
 
     public function __construct()
@@ -36,6 +51,9 @@ class ObjectInstancier
     {
 
         global $kernel;
+        if (!in_array($name, self::BASIC_CLASSES) && $kernel !== null && $kernel->isBooted() && $kernel->getContainer()->hasParameter($name)) {
+            return $kernel->getContainer()->getParameter($name);
+        }
         if (!in_array($name, self::BASIC_CLASSES) && $kernel !== null && $kernel->isBooted()) {
             return $kernel->getContainer()->get($name);
         }

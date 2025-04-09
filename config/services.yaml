@@ -47,15 +47,15 @@ parameters:
   app.website : '%env(WEBSITE)%'
   app.website_mail : '%env(WEBSITE_MAIL)%'
 
-  app.database_json_definition_filepath : 'TODO' #', __DIR__ . "/../db/s2low.sql.json");
-  app.database_sql_definition_filepath : 'TODO' #, __DIR__ . "/../db/s2low.sql");
+  app.database_json_definition_filepath : "%kernel.project_dir%/db/s2low.sql.json"
+  app.database_sql_definition_filepath : "%kernel.project_dir%/../db/s2low.sql"
 
   app.helios_counter_file : '%env(HELIOS_COUNTER_FILE)%'
   app.helios_use_passtrans_as_default : '%env(HELIOS_USE_PASSTRANS_AS_DEFAULT)%'
 
   app.openstack_enable : '%env(OPENSTACK_ENABLE)%'
 
-  #app.helios_files_upload_root : '%env(HELIOS_FILES_UPLOAD_ROOT)%'
+  #app.helios_files_upload_root :  '%env(HELIOS_FILES_UPLOAD_ROOT)%'
   app.repertoirePesAllerSansTransaction : '%env(HELIOS_PESALLER_SANSTRANSACTION)%'
   app.helios_responses_root : '%env(HELIOS_RESPONSES_ROOT)%'
   #app.helios_responses_error_path : '%env(HELIOS_RESPONSES_ERROR_PATH)%'
@@ -69,7 +69,7 @@ parameters:
   #app.actes_appli_trigramme : '%env(ACTES_APPLI_TRIGRAMME)%'
   app.actes_appli_quadrigramme : '%env(ACTES_APPLI_QUADRIGRAMME)%'
 
-  app.actes_ministere_acronyme : '%env(ACTES_MINISTERE_ACRONYME)%'
+  app.actes_ministere_acronyme : 'MI'
 
   app.actes_dont_valid_signing_certificate : '%env(ACTES_DONT_VALID_SIGNING_CERTIFICATE)%'
 
@@ -83,11 +83,11 @@ parameters:
   app.pdf_stamp_url : '%env(PDF_STAMP_URL)%'
   app.image_for_stamp : '%env(IMAGE_FOR_STAMP)%'
 
-  app.rgs_validca_path : '%env(RGS_VALIDCA_PATH)%'
+  #app.rgs_validca_path : '%env(RGS_VALIDCA_PATH)%'
 
   app.openssl_path : '%env(OPENSSL_PATH)%'
   app.extended_validca_path : '%env(EXTENDED_VALIDCA_PATH)%'
-  app.trustore_path : '%env(TRUSTSTORE_PATH)%'
+  app.trustore_path : '/data/certificate/truststore/'
 
   app.email_admin_technique : '%env(EMAIL_ADMIN_TECHNIQUE)%'
   app.tdt_from_email : '%env(TDT_FROM_EMAIL)%'
@@ -95,12 +95,15 @@ parameters:
 
   app.helios_retention_fichiers_nb_jours : '%env(HELIOS_RETENTION_FICHIERS_NB_JOURS)%'
 
-  #app.cachePath', "/var/run/htmlpurifier");
+  app.cachepath: "/var/run/htmlpurifier"
+
 
 services:
   _defaults:
     autowire: true
     autoconfigure: true
+    bind:
+      $rgs_validca_path : "%env(ONLY_USE_VALIDCARGS)%? '/etc/s2low/ssl/validcargs/' : '/etc/s2low/ssl/validca/'"
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Namespace s2low : contient le code développé après le passage en Symfony.
@@ -256,8 +259,7 @@ services:
     autowire: false #pas un service
 
   S2lowLegacy\Lib\RgsCertificate:
-    arguments:
-      $openssl_path: '%app.openssl_path%'
+    autowire: false
 
   S2lowLegacy\Lib\SQLQuery:
     autoconfigure: true
@@ -292,7 +294,7 @@ services:
   S2lowLegacy\Model\MessageAdminSQL:
     public: true
     arguments:
-      $cachePath: "/var/run/htmlpurifier"
+      $cachePath: "%app.cachepath%"
 
   # ---------------------------------------------------------------------------------------------------------------------
   # Sous Namespace  S2lowLegacy/Class
@@ -416,6 +418,7 @@ services:
     autowire: false
 
   S2lowLegacy\Class\PadesValid:
+    public: true
     arguments:
       $pades_valid_url: "%app.pades_valid_url%"
 
@@ -442,12 +445,11 @@ services:
     public: false
     autowire: false
     autoconfigure: false
-    arguments:
-      $authorized_ca_path: "todo" # RGS_VALIDCA_PATH dépend potentiellement de ONLY_USE_VALIDCARGS
+    #arguments:
+    #  $authorized_ca_path: '%app.rgs_validca_path%'# RGS_VALIDCA_PATH dépend potentiellement de ONLY_USE_VALIDCARGS
 
   S2lowLegacy\Class\VerifyPadesSignature:
-    arguments:
-      $rgs_validca_path: "%app.rgs_validca_path%"
+    public: true
 
   S2lowLegacy\Class\VerifyPemCertificate:
     arguments:
@@ -490,6 +492,7 @@ services:
       $actes_dont_valid_signing_certificate: '%app.actes_dont_valid_signing_certificate%'
 
   S2lowLegacy\Class\actes\ActesEnvoiFichierWorker:
+    public: true
     tags: ['s2low.queue_rebuilding_worker']
     arguments:
       $actes_ministere_acronyme: '%app.actes_ministere_acronyme%'
@@ -526,7 +529,8 @@ services:
       $repertoireActesEnveloppeSansTransaction: '%app.repertoirepesallersanstransaction%'
 
   S2lowLegacy\Class\actes\ActesConventions:
-     arguments:
+    public: true
+    arguments:
        $actes_files_upload_root: "%app.actes_files_upload_root%"
 
   S2lowLegacy\Class\actes\ActesEnvelopeStorage:
@@ -621,11 +625,10 @@ services:
       $helios_file_upload: ""
 
   S2lowLegacy\Class\helios\HeliosPESValidation:
-    arguments:
-      $helios_xsd_path: "todo"
+    autowire: false
 
   S2lowLegacy\Class\helios\HeliosPrepareEnvoiSAE:
-    autowire: false #TODO : logger
+    autowire: false
 
   S2lowLegacy\Class\helios\HeliosVerificationSAE:
     autowire: false #TODO: logger
