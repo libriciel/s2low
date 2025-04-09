@@ -41,7 +41,6 @@ class CreateActeFromArchiveTest extends S2lowIntegrationTestCase
         ];
     }
 
-
     /**
      * @dataProvider changeStatusProvider
      */
