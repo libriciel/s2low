@@ -63,7 +63,6 @@ class TestEnvironmentManager
         $this->getObjectInstancier()->set("actes_dont_valid_signing_certificate", false);
         $this->getObjectInstancier()->set("beanstalkd_server", false);
         $this->getObjectInstancier()->set("beanstalkd_port", false);
-        $this->getObjectInstancier()->set('antivirus_command', 'ls');
         $this->getObjectInstancier()->set('pades_valid_url', 'https://s2low');
         $this->getObjectInstancier()->set('openssl_path', OPENSSL_PATH);
         $this->getObjectInstancier()->set('rgs_validca_path', RGS_VALIDCA_PATH);

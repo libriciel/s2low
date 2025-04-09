@@ -1,15 +1,9 @@
 <?php
 
 use S2lowLegacy\Class\Antivirus;
-use S2lowLegacy\Class\ShellCommand;
 
 class AntivirusTest extends S2lowSimpleTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
     private function getAntivirus()
     {
         return static::getContainer()->get(Antivirus::class);
