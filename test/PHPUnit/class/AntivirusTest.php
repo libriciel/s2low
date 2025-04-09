@@ -46,24 +46,4 @@ class AntivirusTest extends S2lowSimpleTestCase
             $this->getAntivirus()->getLastError()
         );
     }
-
-    private function setShellCommandReturn($return)
-    {
-        $shellCommand = $this->getMockBuilder(ShellCommand::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $shellCommand
-            ->method('exec')
-            ->willReturn($return);
-        $shellCommand
-            ->method('getLastOutput')
-            ->willReturn("/aaa: toto FOUND");
-    }
-
-    public function testIsAlive()
-    {
-        $this->assertTrue(
-            $this->getAntivirus()->isAlive()
-        );
-    }
 }

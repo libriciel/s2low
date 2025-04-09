@@ -66,18 +66,4 @@ class Antivirus
     {
         return $this->last_error;
     }
-
-    /**
-     * @return bool
-     * @throws Exception
-     */
-    public function isAlive()
-    {
-        $ret = $this->shellCommand->exec([$this->antivirus_command, __FILE__]);
-        if ($ret !== 0) {
-            $output = $this->shellCommand->getLastOutput();
-            throw new Exception("Problème avec l'antivirus : $output");
-        }
-        return true;
-    }
 }
