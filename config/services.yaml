@@ -50,22 +50,22 @@ parameters:
   app.database_json_definition_filepath : "%kernel.project_dir%/db/s2low.sql.json"
   app.database_sql_definition_filepath : "%kernel.project_dir%/../db/s2low.sql"
 
-  app.helios_counter_file : '%env(HELIOS_COUNTER_FILE)%'
+  app.helios_counter_file : '/data/tdt-workspace/helios/counter.txt'
   app.helios_use_passtrans_as_default : '%env(HELIOS_USE_PASSTRANS_AS_DEFAULT)%'
 
   app.openstack_enable : '%env(OPENSTACK_ENABLE)%'
 
   #app.helios_files_upload_root :  '%env(HELIOS_FILES_UPLOAD_ROOT)%'
   app.repertoirePesAllerSansTransaction : '%env(HELIOS_PESALLER_SANSTRANSACTION)%'
-  app.helios_responses_root : '%env(HELIOS_RESPONSES_ROOT)%'
+  app.helios_responses_root : '/data/tdt-workspace/helios/response/'
   #app.helios_responses_error_path : '%env(HELIOS_RESPONSES_ERROR_PATH)%'
   app.schema_pes_path : '%env(HELIOS_XSD_PATH)%'
 
   #app.helios_responses_root : '%env(HELIOS_RESPONSES_ROOT)%'
 
 
-  app.actes_files_upload_root : '%env(ACTES_FILES_UPLOAD_ROOT)%'
-  app.repertoirepesallersanstransaction : '%env(ACTES_ENVELOPPE_SANSTRANSACTION)%'
+  app.actes_files_upload_root : '/data/tdt-workspace/actes/uploads'
+  app.repertoirepesallersanstransaction : '/data/tdt-workspace/actes/sans_transaction'
   #app.actes_appli_trigramme : '%env(ACTES_APPLI_TRIGRAMME)%'
   app.actes_appli_quadrigramme : '%env(ACTES_APPLI_QUADRIGRAMME)%'
 
@@ -73,8 +73,8 @@ parameters:
 
   app.actes_dont_valid_signing_certificate : '%env(ACTES_DONT_VALID_SIGNING_CERTIFICATE)%'
 
-  app.actes_response_tmp_local_path : '%env(ACTES_RESPONSE_TMP_LOCAL_PATH)%'
-  app.actes_response_error_path : '%env(ACTES_RESPONSE_ERROR_PATH)%'
+  app.actes_response_tmp_local_path : '/data/tdt-workspace/actes/response_tmp'
+  app.actes_response_error_path : '/data/tdt-workspace/actes/response_error'
 
   app.mail_files_upload_root : '%env(MAIL_FILES_UPLOAD_ROOT)%'
   app.mail_files_without_transac_dir : '%env(MAIL_FILES_WITHOUT_TRANSAC_DIR)%'
