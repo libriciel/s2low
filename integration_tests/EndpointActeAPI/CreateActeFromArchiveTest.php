@@ -6,6 +6,8 @@ use IntegrationTests\S2lowIntegrationTestCase;
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\TmpFolder;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class CreateActeFromArchiveTest extends S2lowIntegrationTestCase
@@ -13,11 +15,18 @@ class CreateActeFromArchiveTest extends S2lowIntegrationTestCase
     use ActesUtilitiesTestTrait;
 
     private ?ActesTransactionsSQL $actesTransactionsSQL;
+    private Filesystem $filesystem;
+
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -37,6 +46,7 @@ class CreateActeFromArchiveTest extends S2lowIntegrationTestCase
         ];
     }
 
+
     /**
      * @dataProvider changeStatusProvider
      */
@@ -44,24 +54,29 @@ class CreateActeFromArchiveTest extends S2lowIntegrationTestCase
     {
         $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
 
-        $realFilePath = __DIR__ . '/../fixtures/abc-TACT--123456789--20250313-0.tar.gz';
-        $filePathToTest = __DIR__ . '/../fixtures/abc-TACT--123456789--20250313-1.tar.gz';
-        copy($realFilePath, $filePathToTest);
+        $originalFileName = 'abc-TACT--123456789--20250313-0.tar.gz';
+        $toTestFileName = 'abc-TACT--123456789--20250313-1.tar.gz';
+        $originalFilePath = __DIR__ . '/../fixtures/' . $originalFileName;
+        $toTestFilePath = sys_get_temp_dir() . '/' . $toTestFileName;
 
-        $fileName = 'abc-TACT--123456789--20250313-1.tar.gz';
+        try {
+            copy($originalFilePath, $toTestFilePath);
+        } catch (\Exception $e) {
+            $this->fail("Impossible de copier le fichier de test : $originalFilePath");
+        }
 
         $fileType = 'application/gzip';
         $fileError = UPLOAD_ERR_OK;
-        $fileSize = fileSize($filePathToTest);
+        $fileSize = fileSize($toTestFilePath);
 
         $api = 1;
 
         $file = [];
         if ($data['with_file']) {
             $_FILES['enveloppe'] = [
-                'name' => $fileName,
+                'name' => $toTestFileName,
                 'type' => $fileType,
-                'tmp_name' => $filePathToTest,
+                'tmp_name' => $toTestFilePath,
                 'error' => $fileError,
                 'size' => $fileSize,
             ];
@@ -69,8 +84,8 @@ class CreateActeFromArchiveTest extends S2lowIntegrationTestCase
             $file = [
                 'enveloppe' => [
                     new UploadedFile(
-                        $filePathToTest,
-                        $fileName,
+                        $toTestFilePath,
+                        $toTestFileName,
                         $fileType,
                         $fileError,
                         true
@@ -80,7 +95,6 @@ class CreateActeFromArchiveTest extends S2lowIntegrationTestCase
         }
 
         $_POST['api'] = $api;
-
 
         $client->request(
             'POST',
@@ -92,7 +106,11 @@ class CreateActeFromArchiveTest extends S2lowIntegrationTestCase
         );
 
         $response = $client->getResponse();
-        static::assertStringContainsString($data['stringInResponse'], $response->getContent());
-//        delete($filePathToTest);
+
+        try {
+            static::assertStringContainsString($data['stringInResponse'], $response->getContent());
+        } finally {
+            @unlink($toTestFilePath);
+        }
     }
 }
