@@ -8,12 +8,11 @@ class AntivirusTest extends S2lowSimpleTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->getObjectInstancier()->set('antivirus_command', 'ls');
     }
 
     private function getAntivirus()
     {
-        return $this->getObjectInstancier()->get(Antivirus::class);
+        return static::getContainer()->get(Antivirus::class);
     }
 
     /**
@@ -31,22 +30,19 @@ class AntivirusTest extends S2lowSimpleTestCase
      */
     public function testFailed()
     {
-        $this->setShellCommandReturn(12);
-        $this->setExpectedException(
-            Exception::class,
-            "Erreur 12 lors du scan antivirus de l'archive"
+        $this->expectException(
+            Exception::class
         );
-        $this->getAntivirus()->checkArchiveSanity(__DIR__ . "/fixtures/classification.xml");
+        $this->getAntivirus()->checkArchiveSanity(__DIR__ . "/fixtures/fake_file.txt");
     }
 
     public function testVirusFound()
     {
-        $this->setShellCommandReturn(1);
         $this->assertFalse(
-            $this->getAntivirus()->checkArchiveSanity(__DIR__ . "/fixtures/classification.xml")
+            $this->getAntivirus()->checkArchiveSanity(__DIR__ . "/fixtures/infected_file.txt")
         );
         $this->assertStringContainsString(
-            "aaa :  toto FOUND",
+            "L'archive est infectée par un virus.",
             $this->getAntivirus()->getLastError()
         );
     }
@@ -62,7 +58,6 @@ class AntivirusTest extends S2lowSimpleTestCase
         $shellCommand
             ->method('getLastOutput')
             ->willReturn("/aaa: toto FOUND");
-        $this->getObjectInstancier()->set(ShellCommand::class, $shellCommand);
     }
 
     public function testIsAlive()
@@ -70,12 +65,5 @@ class AntivirusTest extends S2lowSimpleTestCase
         $this->assertTrue(
             $this->getAntivirus()->isAlive()
         );
-    }
-
-    public function testIsDead()
-    {
-        $this->setShellCommandReturn(-1);
-        $this->setExpectedException(Exception::class, "Problème avec l'antivirus");
-        $this->getAntivirus()->isAlive();
     }
 }

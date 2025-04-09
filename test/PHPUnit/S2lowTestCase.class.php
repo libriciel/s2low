@@ -3,9 +3,9 @@
 use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
-use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-abstract class S2lowTestCase extends TestCase
+abstract class S2lowTestCase extends KernelTestCase
 {
     protected $backupGlobalsBlacklist = array('sqlQuery');
 

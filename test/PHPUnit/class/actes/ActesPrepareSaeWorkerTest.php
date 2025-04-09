@@ -18,7 +18,7 @@ class ActesPrepareSaeWorkerTest extends S2lowTestCase
 
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
 
-        $actesPrepareSaeWorker = $this->getObjectInstancier()->get(ActesPrepareSaeWorker::class);
+        $actesPrepareSaeWorker = static::getContainer()->get(ActesPrepareSaeWorker::class);
 
         $this->assertEquals([$transaction_id], $actesPrepareSaeWorker->getAllId());
 

@@ -16,7 +16,7 @@ class ActesPrepareEnvoiSAETest extends S2lowTestCase
      */
     private function getActesPrepareEnvoiSAE()
     {
-        return $this->getObjectInstancier()->get(ActesPrepareEnvoiSAE::class);
+        return static::getContainer()->get(ActesPrepareEnvoiSAE::class);
     }
 
     /**

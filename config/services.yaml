@@ -35,6 +35,7 @@ parameters:
   app.beanstalkd_port: '%env(BEANSTAKLD_PORT)%'
   app.redis_server: '%env(REDIS_SERVER)%'
   app.redis_port: '%env(REDIS_PORT)%'
+  app.antivirus_command: '/usr/bin/clamdscan'
 services:
   _defaults:
     autowire: true
@@ -224,8 +225,8 @@ services:
     public: true
 
   S2lowLegacy\Class\Antivirus:
-    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
-    arguments: ['S2lowLegacy\Class\Antivirus']
+    arguments:
+      $antivirus_command: "%app.antivirus_command%"
 
   S2lowLegacy\Class\BatchUploadHandler:
     autowire: false
@@ -432,6 +433,11 @@ services:
   S2lowLegacy\Class\actes\ActesConventions:
      arguments:
        $actes_files_upload_root: "todo"
+
+  Monolog\Logger:
+    public: true
+    arguments:
+      $name: "s2low"
 
   S2lowLegacy\Class\actes\ActesEnvelopeStorage:
     autowire: false
