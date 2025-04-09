@@ -37,5 +37,4 @@ class HeliosAnalyseFichierRecuCommand extends Command
             ->work();
         return Command::SUCCESS;
     }
-
 }
