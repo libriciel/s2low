@@ -57,7 +57,7 @@ class Antivirus
         if ($ret !== 0) {
             $message = "Erreur " . $ret . " lors du scan antivirus de l'archive.";
             $this->last_error = $message;
-            throw new Exception($this->antivirus_command . ' ' . $message);
+            throw new Exception($message);
         }
         return true;
     }
