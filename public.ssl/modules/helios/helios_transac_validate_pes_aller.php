@@ -16,6 +16,7 @@ use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Lib\XadesSignature;
 use S2lowLegacy\Lib\XadesSignatureParser;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 /** @var Initialisation $initialisation */
 /** @var Droit $droit */
@@ -50,6 +51,10 @@ $transaction_id = $recuperateur->getInt('id');
 $info = $heliosTransactionsSQL->getInfo($transaction_id);
 
 $filename = $pesAllerRetriever->getPath($info['sha1']);
+
+if (!file_exists($filename)) {
+    throw new FileNotFoundException('Fichier introuvable : ' . $filename);
+}
 
 $pes_content = file_get_contents($filename);
 

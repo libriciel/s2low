@@ -282,7 +282,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function testHeliosTransacValidatePesAller(): void
     {
@@ -290,9 +290,9 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
         $transaction_id = $this->createTransaction();
 
         $_GET['id'] = $transaction_id;
-        $this->expectError();           //Le Pes Aller n'est pas set
         $client->request('GET', 'modules/helios/helios_transac_validate_pes_aller.php');
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
+
+        static::assertStringContainsString('Fichier introuvable', $client->getResponse()->getContent());
     }
 
     /**
