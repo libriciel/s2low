@@ -17,7 +17,7 @@ use Libriciel\LibActes\FichierXML\MessageMetierLettreObservations;
 use Libriciel\LibActes\FichierXML\MessageMetierReponseClassificationSansChangement;
 use Libriciel\LibActes\FichierXML\MessageMetierRetourClassification;
 use Libriciel\LibActes\Utils\XSDValidationException;
-use S2lowLegacy\Class\ActesWorkspace;
+use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\SigTermHandler;
@@ -33,7 +33,7 @@ class ActesAnalyseFichierRecuController
         private ActesEnvelopeSQL $actesEnvelopeSQL,
         private ActesIncludedFileSQL $actesIncludedFileSQL,
         private string $actes_ministere_acronyme,
-        private ActesWorkspace $actesWorkspace
+        private IActesWorkspace $actesWorkspace
     ) {
     }
 
@@ -44,7 +44,7 @@ class ActesAnalyseFichierRecuController
     public function analyseAll()
     {
         $this->s2lowLogger->info("Début du script");
-        $this->s2lowLogger->info("Analyse du répertoire : {$this->actesWorkspace->getActesResponseTmpLocalPath()}");
+        $this->s2lowLogger->info("Analyse du répertoire : {$this->actesWorkspace->getResponseTmpLocalPath()}");
 
         $file_list = $this->getAllDirectory();
 
@@ -66,10 +66,10 @@ class ActesAnalyseFichierRecuController
 
     public function getAllDirectory()
     {
-        $file_list = @ scandir($this->actesWorkspace->getActesResponseTmpLocalPath());
+        $file_list = @ scandir($this->actesWorkspace->getResponseTmpLocalPath());
 
         if ($file_list === false) {
-            $message = "Erreur lors de la lecture du répertoire  {$this->actesWorkspace->getActesResponseTmpLocalPath()}";
+            $message = "Erreur lors de la lecture du répertoire  {$this->actesWorkspace->getResponseTmpLocalPath()}";
             $this->s2lowLogger->error($message);
             throw new Exception($message);
         }
@@ -81,7 +81,7 @@ class ActesAnalyseFichierRecuController
 
     public function analyseOneFileMoveIfError($file)
     {
-        $rep_path = $this->actesWorkspace->getActesResponseTmpLocalPath() . "/" . $file;
+        $rep_path = $this->actesWorkspace->getResponseTmpLocalPath() . "/" . $file;
         try {
             $this->analyseOneFile($rep_path);
             $tmpDir = new TmpFolder();
@@ -89,8 +89,8 @@ class ActesAnalyseFichierRecuController
             $tmpDir->delete($rep_path);
         } catch (Exception $e) {
             $this->s2lowLogger->error("Echec du traitement de $rep_path : " . $e->getMessage());
-            $this->s2lowLogger->error("Déplacement du répertoire $file vers {$this->actesWorkspace->getActesResponseErrorPath()}");
-            rename($rep_path, $this->actesWorkspace->getActesResponseErrorPath() . "/" . $file);
+            $this->s2lowLogger->error("Déplacement du répertoire $file vers {$this->actesWorkspace->getResponseErrorPath()}");
+            rename($rep_path, $this->actesWorkspace->getResponseErrorPath() . "/" . $file);
         }
     }
 
@@ -248,7 +248,7 @@ class ActesAnalyseFichierRecuController
 
         $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne);
 
-        $archive_folder = $this->actesWorkspace->getActesFilesUploadRoot() . "/{$fichierXML->siren}/{$fichierXML->numero_interne}";
+        $archive_folder = $this->actesWorkspace->getFilesUploadRoot() . "/{$fichierXML->siren}/{$fichierXML->numero_interne}";
 
         if (is_file($archive_folder)) {
                 throw new UnexpectedValueException(
@@ -264,7 +264,7 @@ class ActesAnalyseFichierRecuController
         $archive_path = $this->generateZip($rep_path, $archiveData, $archive_folder);
 
 
-        $envelope_path = mb_substr($archive_path, mb_strlen($this->actesWorkspace->getActesFilesUploadRoot()));
+        $envelope_path = mb_substr($archive_path, mb_strlen($this->actesWorkspace->getFilesUploadRoot()));
         $envelope_size = filesize($archive_path);
 
         $this->s2lowLogger->info("Archive enregistré dans $archive_path");

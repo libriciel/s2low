@@ -9,6 +9,7 @@ use IntegrationTests\S2lowIntegrationTestCase;
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 
 class ActesIntegrationTest extends S2lowIntegrationTestCase
@@ -296,7 +297,8 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     private function copyEnveloppeToErrorDirectory(string $enveloppeName): void
     {
-        $this->enveloppeInErrorPath = "/data/tdt-workspace/actes/response_error/$enveloppeName/";
+        $error_path = $this->getActesWorkspace()->getResponseErrorPath();
+        $this->enveloppeInErrorPath = "$error_path/$enveloppeName/";
         mkdir($this->enveloppeInErrorPath);
         copy(
             __DIR__ . '/../../test/PHPUnit/class/fixtures/test-courrier-simple/034-000000000-20170701-20170725A-AI-2-1_0.xml',

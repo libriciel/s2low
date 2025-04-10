@@ -6,6 +6,7 @@ use S2lowLegacy\Class\actes\ActesNotification;
 use S2lowLegacy\Class\actes\ActesPdf;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\IActesPdf;
+use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Class\Mailer;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\ObjectInstancier;
@@ -21,10 +22,6 @@ class ActesNotificationsTest extends \S2low\Tests\S2lowSymfonyWebTestCase
     private $mailer;
     /** @var int  */
     private $transaction_id;
-    /** @var TmpFolder */
-    private $tmpFolder;
-    /** @var string */
-    private $tmpFolderPath;
     /**
      * @var ActesNotification|object|ObjectInstancier
      */
@@ -46,15 +43,10 @@ class ActesNotificationsTest extends \S2low\Tests\S2lowSymfonyWebTestCase
 
         $this->transaction_id = $this->createTransaction(4);
 
-        $this->tmpFolder = new TmpFolder();
-        $this->tmpFolderPath = $this->tmpFolder->create();
-
-
         $loader = new FilesystemLoader(__DIR__ . "/../../../templates");
         $twig = new Environment($loader);
 
         $this->getObjectInstancier()->set("pdf_stamp_url", "");
-        $this->getObjectInstancier()->set('actes_files_upload_root', $this->tmpFolderPath);
         $this->getObjectInstancier()->set(Environment::class, $twig);
 
 
@@ -62,20 +54,14 @@ class ActesNotificationsTest extends \S2low\Tests\S2lowSymfonyWebTestCase
     }
 
     /**
-     * This method is called after each test.
-     */
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $this->tmpFolder->delete($this->tmpFolderPath);
-    }
-
-    /**
      * @throws Exception
      */
     public function testNotify()
     {
-        copy(__DIR__ . "/../../../test/PHPUnit/class/actes/fixtures/abc-TACT--000000000--20170803-16.tar.gz", $this->tmpFolderPath . "/abc-TACT--000000000--20170803-16.tar.gz");
+        copy(
+            __DIR__ . '/../../../test/PHPUnit/class/actes/fixtures/abc-TACT--000000000--20170803-16.tar.gz',
+            $this->getActesWorkspace()->getFilesUploadRoot() . "/abc-TACT--000000000--20170803-16.tar.gz"
+        );
 
         $this->mailer
             ->method('addRecipient')
@@ -116,7 +102,10 @@ class ActesNotificationsTest extends \S2low\Tests\S2lowSymfonyWebTestCase
      */
     public function testNotifyWithWrongZipWillSendMailAnyway()
     {
-        copy(__DIR__ . "/../../../test/PHPUnit/class/actes/fixtures/convention-exemple.pdf", $this->tmpFolderPath . "/abc-TACT--000000000--20170803-16.tar.gz");
+        copy(
+            __DIR__ . "/../../../test/PHPUnit/class/actes/fixtures/convention-exemple.pdf",
+            $this->getActesWorkspace()->getFilesUploadRoot() . "/abc-TACT--000000000--20170803-16.tar.gz"
+        );
         $this->mailer->expects($this->exactly(3))->method('sendMailWithHtml');
 
         $this->actesNotification->sendAutomaticNotification();
@@ -127,7 +116,10 @@ class ActesNotificationsTest extends \S2low\Tests\S2lowSymfonyWebTestCase
      */
     public function testNotifyWithWrongZipWillnotAddFiles()
     {
-        copy(__DIR__ . "/../../../test/PHPUnit/class/actes/fixtures/convention-exemple.pdf", $this->tmpFolderPath . "/abc-TACT--000000000--20170803-16.tar.gz");
+        copy(
+            __DIR__ . "/../../../test/PHPUnit/class/actes/fixtures/convention-exemple.pdf",
+            $this->getActesWorkspace()->getFilesUploadRoot() . "/abc-TACT--000000000--20170803-16.tar.gz"
+        );
         $this->mailer->expects($this->never())->method('addFile');
 
         $this->actesNotification->sendAutomaticNotification();
@@ -138,7 +130,10 @@ class ActesNotificationsTest extends \S2low\Tests\S2lowSymfonyWebTestCase
      */
     public function testNotifyWithWrongZipWillLogErrors()
     {
-        copy(__DIR__ . "/../../../test/PHPUnit/class/actes/fixtures/convention-exemple.pdf", $this->tmpFolderPath . "/abc-TACT--000000000--20170803-16.tar.gz");
+        copy(
+            __DIR__ . "/../../../test/PHPUnit/class/actes/fixtures/convention-exemple.pdf",
+            $this->getActesWorkspace()->getFilesUploadRoot() . "/abc-TACT--000000000--20170803-16.tar.gz"
+        );
         $this->mailer->expects($this->never())->method('addFile');
 
         $this->actesNotification->sendAutomaticNotification();

@@ -20,7 +20,7 @@ class ActesSignaturesTest extends S2lowTestCase
     {
         $tmpFolder = new TmpFolder();
 
-        $tmp_dir = $tmpFolder->create();
+        $tmp_dir = $this->getActesWorkspace()->getFilesUploadRoot();
         $actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
 
         $transaction_id = $actesCreator->createTransaction(ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_SIGNEE, __DIR__ . "/fixtures/abc-TACT--000000000--20170803-16.tar.gz", $tmp_dir);
@@ -38,7 +38,7 @@ class ActesSignaturesTest extends S2lowTestCase
         $actes_envelope_info = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class)->getInfo($transction_info['envelope_id']);
 
 
-        $archivePath = $this->getObjectInstancier()->get('actes_files_upload_root') . '/' . $actes_envelope_info['file_path'];
+        $archivePath = $this->getActesWorkspace()->getFilesUploadRoot() . '/' . $actes_envelope_info['file_path'];
 
         $result_dir = $tmpFolder->create();
         $tgzExtractor = new TGZExtractor($result_dir);
@@ -49,7 +49,6 @@ class ActesSignaturesTest extends S2lowTestCase
             $result_dir . "/034-000000000-20170801-20170803E-AI-1-1_0.xml"
         );
 
-        $tmpFolder->delete($tmp_dir);
         $tmpFolder->delete($result_dir);
     }
 

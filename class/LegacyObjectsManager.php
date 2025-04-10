@@ -188,9 +188,6 @@ class LegacyObjectsManager
 
         $objectInstancier->set("helios_responses_root", HELIOS_RESPONSES_ROOT);
 
-
-        $objectInstancier->set("actes_files_upload_root", ACTES_FILES_UPLOAD_ROOT);
-        $objectInstancier->set("repertoireActesEnveloppeSansTransaction", ACTES_ENVELOPPE_SANSTRANSACTION);
         $objectInstancier->set("actes_appli_trigramme", ACTES_APPLI_TRIGRAMME);
         $objectInstancier->set("actes_appli_quadrigramme", ACTES_APPLI_QUADRIGRAMME);
 
@@ -220,8 +217,19 @@ class LegacyObjectsManager
         $actesImapProperties->imap_options = ACTES_IMAP_OPTIONS;
         $objectInstancier->set(ActesImapProperties::class, $actesImapProperties);
 
-        $objectInstancier->set('actes_response_tmp_local_path', ACTES_RESPONSE_TMP_LOCAL_PATH);
-        $objectInstancier->set('actes_response_error_path', ACTES_RESPONSE_ERROR_PATH);
+        if (!TESTING_ENVIRONNEMENT) {
+            $objectInstancier->set(
+                IActesWorkspace::class,
+                new ActesWorkspace(
+                    ACTES_FILES_UPLOAD_ROOT,
+                    ACTES_RESPONSE_TMP_LOCAL_PATH,
+                    ACTES_RESPONSE_ERROR_PATH,
+                    ACTES_ENVELOPPE_SANSTRANSACTION
+                )
+            );
+        } else {
+            $objectInstancier->set(IActesWorkspace::class, new ActesWorkspaceForTests());
+        }
 
         $objectInstancier->set('mail_files_upload_root', MAIL_FILES_UPLOAD_ROOT);
         $objectInstancier->set('mail_files_without_transac_dir', MAIL_FILES_WITHOUT_TRANSAC_DIR);

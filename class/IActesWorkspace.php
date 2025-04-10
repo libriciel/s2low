@@ -4,11 +4,11 @@ namespace S2lowLegacy\Class;
 
 interface IActesWorkspace
 {
-    public function getRepertoireActesEnveloppeSansTransaction(): string;
+    public function getRepertoireEnveloppeSansTransaction(): string;
 
-    public function getActesFilesUploadRoot(): string;
+    public function getFilesUploadRoot(): string;
 
-    public function getActesResponseTmpLocalPath(): string;
+    public function getResponseTmpLocalPath(): string;
 
-    public function getActesResponseErrorPath(): string;
+    public function getResponseErrorPath(): string;
 }

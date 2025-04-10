@@ -22,10 +22,13 @@ class ActesCreator
             $archive_name = uniqid(rand(), true);
         } else {
             $archive_name = basename($archive_path);
-            copy($archive_path, $tmp_dir . "/$archive_name");
+            if (!is_dir("$tmp_dir/000000/")) {
+                mkdir("$tmp_dir/000000/");
+            }
+            copy($archive_path, "$tmp_dir/000000/$archive_name");
         }
 
-        $this->last_envelope_id = $this->actesEnvelopeSQL->create(1, basename($tmp_dir) . "/$archive_name");
+        $this->last_envelope_id = $this->actesEnvelopeSQL->create(1, "/000000/$archive_name");
 
         $transaction_id = $this->actesTransactionsSQL->create($this->last_envelope_id, $status, 1, 1);
 

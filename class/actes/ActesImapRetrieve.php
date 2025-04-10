@@ -2,7 +2,7 @@
 
 namespace S2lowLegacy\Class\actes;
 
-use S2lowLegacy\Class\ActesWorkspace;
+use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Class\ImapMailBoxFactory;
 use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\S2lowLogger;
@@ -27,7 +27,7 @@ class ActesImapRetrieve
         S2lowLogger $s2lowLogger,
         SigTermHandler $sigTermHandler,
         WorkerScript $workerScript,
-        private readonly ActesWorkspace $workspace
+        private readonly IActesWorkspace $workspace
     ) {
         $this->actesImapProperties = $actesImapProperties;
         $this->imapMailBoxFactory = $imapMailBoxFactory;
@@ -128,14 +128,14 @@ class ActesImapRetrieve
         }
 
 
-        $this->logger->info("Déplacement du répertoire $tmp_dir vers {$this->workspace->getActesResponseTmpLocalPath()}");
+        $this->logger->info("Déplacement du répertoire $tmp_dir vers {$this->workspace->getResponseTmpLocalPath()}");
 
-        if (! file_exists($this->workspace->getActesResponseTmpLocalPath())) {
-            throw new UnrecoverableException("{$this->workspace->getActesResponseTmpLocalPath()} n'existe pas");
+        if (! file_exists($this->workspace->getResponseTmpLocalPath())) {
+            throw new UnrecoverableException("{$this->workspace->getResponseTmpLocalPath()} n'existe pas");
         }
 
         // rename() fonctionne pas si on est sur deux systèmes de fichiers différents... ce qui est le cas sur docker
-        $command = "mv $tmp_dir {$this->workspace->getActesResponseTmpLocalPath()}";
+        $command = "mv $tmp_dir {$this->workspace->getResponseTmpLocalPath()}";
 
         exec($command, $output, $return_var);
         if ($return_var != 0) {

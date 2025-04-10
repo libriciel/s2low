@@ -8,6 +8,8 @@ use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\ActesTypePJSQL;
 use S2lowLegacy\Class\actes\ActesUpdateClassificationSQL;
 use S2lowLegacy\Class\actes\ArchiveValidatorFactory;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
+use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Class\PadesValid;
 use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\S2lowLogger;
@@ -15,37 +17,20 @@ use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Model\LogsSQL;
 
-require_once __DIR__ . "/ActesCreator.php";
-
 class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
 {
-    /** @var  TmpFolder */
-    private $tmpFolder;
-    private $tmp_dir;
-
-    /**
-     * @throws Exception
-     */
     protected function setUp(): void
     {
         parent::setUp();
-        $this->tmpFolder = new TmpFolder();
-        $this->tmp_dir = $this->tmpFolder->create();
 
         $padesValid = $this->getMockBuilder(PadesValid::class)->disableOriginalConstructor()->getMock();
         $padesValid->method("validate")->willReturn(true);
         $this->getObjectInstancier()->set(PadesValid::class, $padesValid);
     }
 
-    private function getActesAnalysFichierAEnvoyerWorker()
+    private function getActesAnalysFichierAEnvoyerWorker(): ActesAnalyseFichierAEnvoyerWorker
     {
         return $this->getObjectInstancier()->get(ActesAnalyseFichierAEnvoyerWorker::class);
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $this->tmpFolder->delete($this->tmp_dir);
     }
 
     public function testQueueName()
@@ -212,11 +197,12 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
      */
     private function createOneTransaction($archivepath, $is_marche_public = false)
     {
+        /** @var ActesCreator $actesCreator */
         $actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
         $transaction_id = $actesCreator->createTransaction(
             ActesStatusSQL::STATUS_POSTE,
             $archivepath,
-            $this->tmp_dir
+            $this->getActesWorkspace()->getFilesUploadRoot()
         );
 
         $envelope_id = $actesCreator->getLastEnvelopeId();

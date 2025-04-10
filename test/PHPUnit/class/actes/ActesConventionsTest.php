@@ -1,33 +1,18 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesConventions;
+use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Class\TmpFolder;
 
 class ActesConventionsTest extends S2lowTestCase
 {
-    private $actes_files_upload_root;
-
     /** @var  ActesConventions */
     private $actesConventions;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $tmpFolder = new TmpFolder();
-        $this->actes_files_upload_root = $tmpFolder->create();
-        $this->getObjectInstancier()->set(
-            'actes_files_upload_root',
-            $this->actes_files_upload_root
-        );
-
         $this->actesConventions = $this->getObjectInstancier()->get(ActesConventions::class);
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $tmpFolder = new TmpFolder();
-        $tmpFolder->delete($this->actes_files_upload_root);
     }
 
     public function testHasNoConvention()
@@ -54,7 +39,7 @@ class ActesConventionsTest extends S2lowTestCase
     {
         $this->actesConventions->setConvention(1, __DIR__ . "/fixtures/convention-exemple.pdf");
         $this->assertEquals(
-            $this->actes_files_upload_root . "/123456789/123456789-convention-actes.pdf",
+            $this->getActesWorkspace()->getFilesUploadRoot() . "/123456789/123456789-convention-actes.pdf",
             $this->actesConventions->getConventionFilepath(1)
         );
     }

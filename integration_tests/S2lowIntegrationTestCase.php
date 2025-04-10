@@ -6,6 +6,8 @@ use Exception;
 use org\bovigo\vfs\vfsStream;
 use S2low\Enum\ModulePermission;
 use S2low\Enum\UserRole;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
+use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Lib\PemCertificate;
 use S2lowLegacy\Lib\PemCertificateFactory;
@@ -68,6 +70,7 @@ class S2lowIntegrationTestCase extends WebTestCase
         $_SERVER['QUERY_STRING'] = '';
         // Evite le message postgres phpunit désolé, trop de clients sont déjà connectés
         $this->sqlQuery->disconnect();
+        $this->getActesWorkspace()->clear();
         parent::tearDown();
     }
 
@@ -203,5 +206,13 @@ class S2lowIntegrationTestCase extends WebTestCase
         foreach ($serverVariables as $key => $value) {
             $_SERVER[$key] = $value;
         }
+    }
+
+    /**
+     * @return mixed|object|\Symfony\Component\DependencyInjection\Container|\Symfony\Component\DependencyInjection\ContainerInterface|null
+     */
+    protected function getActesWorkspace(): ActesWorkspaceForTests
+    {
+        return static::getContainer()->get(IActesWorkspace::class);
     }
 }

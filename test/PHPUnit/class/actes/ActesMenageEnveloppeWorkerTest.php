@@ -1,6 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesMenageEnveloppeWorker;
+use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackContainerStore;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
@@ -13,8 +14,7 @@ class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
      */
     private function createActesOnDisk(): string
     {
-        $tmpFolder = new TmpFolder();
-        $tmp_folder = $tmpFolder->create();
+        $tmp_folder = $this->getActesWorkspace()->getFilesUploadRoot();
         mkdir($tmp_folder . "/000000000/");
         $actes_path = $tmp_folder . "/000000000/test.tar.gz";
         file_put_contents("$actes_path", "foo");
@@ -84,7 +84,8 @@ class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
         $actesMenageEnveloppeWorker->work(false);
         static::assertFileDoesNotExist($actes_path);
         static::assertFileExists(
-            $this->getObjectInstancier()->get('repertoireActesEnveloppeSansTransaction') . '/' . basename($actes_path)
+            $this->getActesWorkspace()
+                ->getRepertoireEnveloppeSansTransaction() . '/' . basename($actes_path)
         );
         static::assertDirectoryExists(dirname($actes_path));
     }

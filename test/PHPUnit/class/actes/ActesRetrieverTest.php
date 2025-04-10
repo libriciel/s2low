@@ -1,6 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesRetriever;
+use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Class\TmpFolder;
 
 class ActesRetrieverTest extends S2lowTestCase
@@ -11,8 +12,7 @@ class ActesRetrieverTest extends S2lowTestCase
     public function testGetPath()
     {
         $tmpFolder = new TmpFolder();
-        $my_tmp_folder = $tmpFolder->create();
-        $this->getObjectInstancier()->set('actes_files_upload_root', $my_tmp_folder);
+        $my_tmp_folder = $this->getActesWorkspace()->getFilesUploadRoot();
 
         mkdir($my_tmp_folder . "/foo");
         file_put_contents("$my_tmp_folder/foo/bar", "foo");

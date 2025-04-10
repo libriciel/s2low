@@ -4,7 +4,7 @@ namespace S2lowLegacy\Class\actes;
 
 use Exception;
 use FilesystemIterator;
-use S2lowLegacy\Class\ActesWorkspace;
+use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Class\TmpFolder;
 
 class ActesResponsesError
@@ -13,7 +13,7 @@ class ActesResponsesError
 
     public function __construct(
         TmpFolder $tmpFolder,
-        private readonly ActesWorkspace $workspace
+        private readonly IActesWorkspace $workspace
     ) {
         $this->tmpFolder = $tmpFolder;
     }
@@ -26,7 +26,7 @@ class ActesResponsesError
 
     public function getFilesystemIterator()
     {
-        return new FilesystemIterator($this->workspace->getActesResponseErrorPath(), FilesystemIterator::SKIP_DOTS);
+        return new FilesystemIterator($this->workspace->getResponseErrorPath(), FilesystemIterator::SKIP_DOTS);
     }
 
     /**
@@ -36,9 +36,9 @@ class ActesResponsesError
      */
     public function getFilepath($filename)
     {
-        $filepath = realpath($this->workspace->getActesResponseErrorPath() . "/" . $filename);
+        $filepath = realpath($this->workspace->getResponseErrorPath() . "/" . $filename);
 
-        if (dirname($filepath) != $this->workspace->getActesResponseErrorPath()) {
+        if (dirname($filepath) != $this->workspace->getResponseErrorPath()) {
             throw new Exception('Impossible de lire le fichier.');
         }
 

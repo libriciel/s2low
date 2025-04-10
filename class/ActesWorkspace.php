@@ -12,21 +12,21 @@ class ActesWorkspace implements IActesWorkspace
     ) {
     }
 
-    public function getRepertoireActesEnveloppeSansTransaction(): string
+    public function getRepertoireEnveloppeSansTransaction(): string
     {
         return $this->repertoireActesEnveloppeSansTransaction;
     }
-    public function getActesFilesUploadRoot(): string
+    public function getFilesUploadRoot(): string
     {
         return $this->actes_files_upload_root;
     }
 
-    public function getActesResponseTmpLocalPath(): string
+    public function getResponseTmpLocalPath(): string
     {
         return $this->actes_response_tmp_local_path;
     }
 
-    public function getActesResponseErrorPath(): string
+    public function getResponseErrorPath(): string
     {
         return $this->actes_response_error_path;
     }

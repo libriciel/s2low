@@ -446,16 +446,16 @@ services:
   S2lowLegacy\Class\actes\ActesImapRetrieve:
 
 
-  S2lowLegacy\Class\ActesWorkspace:
+  S2lowLegacy\Class\IActesWorkspace:
     factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\actes\ActesWorkspace' ]
+    arguments: [ 'S2lowLegacy\Class\IActesWorkspace' ]
     #arguments:
     #  $actes_files_upload_root: 'todo'
     #  $actes_response_tmp_local_path: 'todo'
     #  $actes_response_error_path: 'todo',
     #  $repertoireActesEnveloppeSansTransaction: 'todo'
 
-  S2lowLegacy\Class\IActesWorkspace:
+  S2lowLegacy\Class\ActesWorkspace:
     public: false
     autowire: false
 

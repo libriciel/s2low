@@ -3,6 +3,7 @@
 namespace S2low\Tests;
 
 use Exception;
+use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -26,6 +27,12 @@ abstract class S2lowSymfonyWebTestCase extends WebTestCase
 
         $this->testEnvironnementManager = new TestEnvironmentManager();
         $this->testEnvironnementManager->setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        $this->getActesWorkspace()->clear();
+        parent::tearDown();
     }
 
     /**
@@ -106,5 +113,9 @@ abstract class S2lowSymfonyWebTestCase extends WebTestCase
     public function noAssertion()
     {
         $this->assertTrue(true);
+    }
+    protected function getActesWorkspace(): IActesWorkspace
+    {
+        return $this->getObjectInstancier()->get(IActesWorkspace::class);
     }
 }

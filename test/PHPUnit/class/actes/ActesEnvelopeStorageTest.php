@@ -18,7 +18,6 @@ use S2lowTestCase;
 class ActesEnvelopeStorageTest extends S2lowTestCase
 {
     private const S2LOW_PHPUNIT_ACTE_ENVELOPE_STORAGE_TEST = 's2low-phpunit-acte-envelope-storage-test';
-    private const ACTES_FILES_UPLOAD_ROOT = 'actes_files_upload_root';
     private const MIN_DATE = '1970-01-01';
     private const MESSAGE = 'message';
     private string $dateTomorrow;
@@ -66,7 +65,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
 
         $filename = self::S2LOW_PHPUNIT_ACTE_ENVELOPE_STORAGE_TEST . mt_rand(0, mt_getrandmax());
 
-        $actes_files_upload_root =  $this->getObjectInstancier()->get(self::ACTES_FILES_UPLOAD_ROOT);
+        $actes_files_upload_root =  $this->getActesWorkspace()->getFilesUploadRoot();
         file_put_contents("$actes_files_upload_root/$filename", 'foo');
 
         $transaction_id = $actesEnvelopeSQL->create(1, $filename);
@@ -97,7 +96,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
 
         $filename = self::S2LOW_PHPUNIT_ACTE_ENVELOPE_STORAGE_TEST . mt_rand(0, mt_getrandmax());
 
-        $actes_files_upload_root =  $this->getObjectInstancier()->get(self::ACTES_FILES_UPLOAD_ROOT);
+        $actes_files_upload_root =  $this->getActesWorkspace()->getFilesUploadRoot();
         file_put_contents($actes_files_upload_root . "/$filename", 'foo');
 
         $transaction_id = $actesEnvelopeSQL->create(1, $filename);
@@ -116,7 +115,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
     {
         $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
         $filename = self::S2LOW_PHPUNIT_ACTE_ENVELOPE_STORAGE_TEST . mt_rand(0, mt_getrandmax());
-        $actes_files_upload_root =  $this->getObjectInstancier()->get(self::ACTES_FILES_UPLOAD_ROOT);
+        $actes_files_upload_root =  $this->getActesWorkspace()->getFilesUploadRoot();
         file_put_contents("$actes_files_upload_root/$filename", 'foo');
         $transaction_id = $actesEnvelopeSQL->create(1, $filename);
         static::assertFileExists("$actes_files_upload_root/$filename");
@@ -157,7 +156,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
         $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
 
         $filename = self::S2LOW_PHPUNIT_ACTE_ENVELOPE_STORAGE_TEST . mt_rand(0, mt_getrandmax());
-        $actes_files_upload_root =  $this->getObjectInstancier()->get(self::ACTES_FILES_UPLOAD_ROOT);
+        $actes_files_upload_root =  $this->getActesWorkspace()->getFilesUploadRoot();
         file_put_contents("$actes_files_upload_root/$filename", 'foo');
 
         $envelope_id = $actesEnvelopeSQL->create(1, $filename);
@@ -187,7 +186,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
         $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
 
         $filename = self::S2LOW_PHPUNIT_ACTE_ENVELOPE_STORAGE_TEST . mt_rand(0, mt_getrandmax());
-        $actes_files_upload_root =  $this->getObjectInstancier()->get(self::ACTES_FILES_UPLOAD_ROOT);
+        $actes_files_upload_root =  $this->getActesWorkspace()->getFilesUploadRoot();
         file_put_contents($actes_files_upload_root . "/$filename", 'foo');
 
         $envelope_id = $actesEnvelopeSQL->create(1, $filename);

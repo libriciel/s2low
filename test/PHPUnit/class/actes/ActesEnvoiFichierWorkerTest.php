@@ -24,17 +24,12 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
     {
         parent::setUp();
         $this->siren = '491011698';
-        $this->enveloppe_directory = $this->getObjectInstancier()->get('actes_files_upload_root') . '/' . $this->siren;
+        $this->enveloppe_directory = $this->getActesWorkspace()
+                ->getFilesUploadRoot() . '/' . $this->siren;
         mkdir($this->enveloppe_directory);
 
         $actesFileSender = $this->getMockBuilder(ActesFileSender::class)->disableOriginalConstructor()->getMock();
         $this->getObjectInstancier()->set(ActesFileSender::class, $actesFileSender);
-    }
-
-    protected function tearDown(): void
-    {
-        (new TmpFolder())->delete($this->enveloppe_directory);
-        parent::tearDown();
     }
 
 

@@ -5,6 +5,8 @@ use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesRetriever;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\ActesWorkspace;
+use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Model\LogsSQL;
@@ -13,36 +15,14 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
 {
     private const TEST_ARCHIVE_MISILCL_PATH = __DIR__ . "/../fixtures/test-archive-MISILCL";
 
-    /** @var  TmpFolder */
-    private $tmpFolder;
-    private $tmp_dir;
-    private $tmp_dir2;
-    private $actes_files_upload_root;
-
     private $actes_ministere_acronyme;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->tmpFolder = new TmpFolder();
-        $this->tmp_dir = $this->tmpFolder->create();
-        $this->getObjectInstancier()->set('actes_response_tmp_local_path', $this->tmp_dir);
-
-        $this->tmp_dir2 = $this->tmpFolder->create();
-        $this->getObjectInstancier()->set('actes_response_error_path', $this->tmp_dir2);
-
-        $this->actes_files_upload_root = $this->tmpFolder->create();
-        $this->getObjectInstancier()->set('actes_files_upload_root', $this->actes_files_upload_root);
 
         $this->actes_ministere_acronyme = ACTES_MINISTERE_ACRONYME;
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $this->tmpFolder->delete($this->tmp_dir);
-        $this->tmpFolder->delete($this->tmp_dir2);
-        $this->tmpFolder->delete($this->actes_files_upload_root);
     }
 
     /**
@@ -61,17 +41,17 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
      */
     public function testAnalyseAllBadDirectory()
     {
-        $bad_dir = $this->tmp_dir . "/test_bad";
+        $bad_dir = $this->getActesWorkspace()->getResponseTmpLocalPath() . '/test_bad';
         mkdir($bad_dir);
 
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get(ActesAnalyseFichierRecuController::class);
         $actesAnalyseFichierRecuController->analyseAll();
 
-        $this->assertFileExists($this->tmp_dir2 . "/test_bad");
+        $this->assertFileExists($this->getActesWorkspace()->getResponseErrorPath() . '/test_bad');
 
         $logs = $this->getLogRecords();
         $this->assertEquals("Echec du traitement de $bad_dir : Aucun fichier de type enveloppe métier n'a été trouvé dans le répertoire $bad_dir", $logs[4][S2lowLogger::MESSAGE]);
-        $this->assertEquals("Déplacement du répertoire test_bad vers {$this->tmp_dir2}", $logs[5][S2lowLogger::MESSAGE]);
+        $this->assertEquals("Déplacement du répertoire test_bad vers {$this->getActesWorkspace()->getResponseErrorPath()}", $logs[5][S2lowLogger::MESSAGE]);
     }
 
 
@@ -114,7 +94,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
         $liste = $logsSQL->getLastLog();
         $this->assertMatchesRegularExpression("#Transaction.*[0-9]* : passage à l'état acquittement reçu#", $liste['message']);
 
-        $this->assertEquals(array('.','..'), scandir("{$this->tmp_dir}"));
+        $this->assertEquals(array('.','..'), scandir("{$this->getActesWorkspace()->getResponseTmpLocalPath()}"));
     }
 
     /**
@@ -146,16 +126,23 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
      */
     public function testAnalyseAllActeErrorRep()
     {
-        $this->getObjectInstancier()->set('actes_response_tmp_local_path', $this->tmp_dir . "/not-exists/");
-
+        $this->getObjectInstancier()->set(
+            IActesWorkspace::class,
+            new ActesWorkspace(
+                '/not/a/dir/',
+                '/not/a/dir/either/',
+                '/not/a/dir/of/course/',
+                '/not/a/dir/at/last/',
+            )
+        );
         try {
             $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get(ActesAnalyseFichierRecuController::class);
             $actesAnalyseFichierRecuController->analyseAll();
         } catch (Exception $e) {
-            $this->assertEquals("Erreur lors de la lecture du répertoire  {$this->tmp_dir}/not-exists/", $e->getMessage());
+            $this->assertEquals("Erreur lors de la lecture du répertoire  /not/a/dir/either/", $e->getMessage());
         }
         $logs = $this->getLogRecords();
-        $this->assertEquals("Erreur lors de la lecture du répertoire  {$this->tmp_dir}/not-exists/", $logs[2]['message']);
+        $this->assertEquals("Erreur lors de la lecture du répertoire  /not/a/dir/either/", $logs[2]['message']);
     }
 
     /**
@@ -177,7 +164,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
             "#Enveloppe rejetée par le {$this->actes_ministere_acronyme}#",
             $transaction_info['message']
         );
-        $this->assertEquals(array('.','..'), scandir("{$this->tmp_dir}"));
+        $this->assertEquals(array('.','..'), scandir("{$this->getActesWorkspace()->getResponseTmpLocalPath()}"));
     }
 
     /**
@@ -213,8 +200,8 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
             "#Déplacement du répertoire test#",
             $logs[3][S2lowLogger::MESSAGE]
         );
-        $this->assertEquals(array('.','..'), scandir("{$this->tmp_dir}"));
-        $this->assertTrue(in_array("test", scandir("{$this->tmp_dir2}")));
+        $this->assertEquals(array('.','..'), scandir("{$this->getActesWorkspace()->getResponseTmpLocalPath()}"));
+        $this->assertTrue(in_array('test', scandir("{$this->getActesWorkspace()->getResponseErrorPath()}")));
     }
     /**
      * @throws Exception
@@ -236,7 +223,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
             "#Anomalie signalee par le MI : 042 - Ca ne fonctionne pas#",
             $transaction_info['message']
         );
-        $this->assertEquals(array('.','..'), scandir("{$this->tmp_dir}"));
+        $this->assertEquals(array('.','..'), scandir("{$this->getActesWorkspace()->getResponseTmpLocalPath()}"));
     }
 
 
@@ -270,7 +257,11 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
     {
         $transaction_id_orig = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
         $this->mockGetBySirenAndNumeroInterne($transaction_id_orig);
-        mkdir($this->actes_files_upload_root . "/000000000/20170725A/", 0777, true);
+        mkdir(
+            $this->getActesWorkspace()->getFilesUploadRoot() . "/000000000/20170725A/",
+            0777,
+            true
+        );
         $this->copyDirectoryToAnalysePath(__DIR__ . "/../fixtures/test-courrier-simple");
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get(ActesAnalyseFichierRecuController::class);
         $actesAnalyseFichierRecuController->analyseAll();
@@ -289,8 +280,6 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
 
 
         $this->assertEquals("2017-07-25", mb_substr($info['decision_date'], 0, 10));
-
-        $this->cleanAnalysePath();
     }
 
     /**
@@ -319,7 +308,6 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
 
 
         $this->assertEquals("2017-07-25", mb_substr($info['decision_date'], 0, 10));
-        $this->cleanAnalysePath();
     }
 
     /**
@@ -329,8 +317,16 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
      */
     public function testCourrierSimpleApres15JFichierPenible()
     {
-        mkdir($this->actes_files_upload_root . "/000000000/", 0777, true);
-        file_put_contents($this->actes_files_upload_root . "/000000000/20170725A", "pouet", true);
+        mkdir(
+            $this->getActesWorkspace()->getFilesUploadRoot() . "/000000000/",
+            0777,
+            true
+        );
+        file_put_contents(
+            $this->getActesWorkspace()->getFilesUploadRoot() . "/000000000/20170725A",
+            "pouet",
+            true
+        );
         $transaction_id_orig = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
         $this->mockGetBySirenAndNumeroInterne($transaction_id_orig);
         $this->copyDirectoryToAnalysePath(__DIR__ . "/../fixtures/test-courrier-simple");
@@ -340,8 +336,6 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
 
         $logs = $this->getLogRecords();
         $this->assertMatchesRegularExpression("#un fichier de ce nom existe déjà#", $logs[6][S2lowLogger::MESSAGE]);
-        unlink($this->actes_files_upload_root . "/000000000/20170725A");
-        rmdir($this->actes_files_upload_root . "/000000000/");
     }
 
     /**
@@ -351,7 +345,11 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
     {
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
         $this->mockGetBySirenAndNumeroInterne($transaction_id);
-        mkdir($this->actes_files_upload_root . "/000000000/20170725A/", 0777, true);
+        mkdir(
+            $this->getActesWorkspace()->getFilesUploadRoot() . "/000000000/20170725A/",
+            0777,
+            true
+        );
         $this->copyDirectoryToAnalysePath(__DIR__ . "/../fixtures/test-defere-ta");
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get(ActesAnalyseFichierRecuController::class);
         $actesAnalyseFichierRecuController->analyseAll();
@@ -367,7 +365,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
 
     private function copyDirectoryToAnalysePath($directory)
     {
-        exec("cp -r $directory {$this->tmp_dir}/test");
+        exec("cp -r $directory {$this->getActesWorkspace()->getResponseTmpLocalPath()}/test");
     }
 
     /**
@@ -377,7 +375,11 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
     {
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
         $this->mockGetBySirenAndNumeroInterne($transaction_id);
-        mkdir($this->actes_files_upload_root . "/000000000/20170725A/", 0777, true);
+        mkdir(
+            $this->getActesWorkspace()->getFilesUploadRoot() . "/000000000/20170725A/",
+            0777,
+            true
+        );
         $this->copyDirectoryToAnalysePath(__DIR__ . "/../fixtures/test-courrier-simple-renumerote");
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get(ActesAnalyseFichierRecuController::class);
         $actesAnalyseFichierRecuController->analyseAll();
@@ -427,11 +429,15 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
     {
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
         $this->mockGetBySirenAndNumeroInterne($transaction_id);
-        mkdir($this->actes_files_upload_root . "/000000000/20170725A/", 0777, true);
+        mkdir(
+            $this->getActesWorkspace()->getFilesUploadRoot() . "/000000000/20170725A/",
+            0777,
+            true
+        );
         $this->copyDirectoryToAnalysePath(__DIR__ . "/fixtures/mail-suite-multicanal/");
         $actesAnalyseFichierRecuController = $this->getObjectInstancier()->get(ActesAnalyseFichierRecuController::class);
         $actesAnalyseFichierRecuController->analyseAll();
-        $this->assertEquals(array('.','..'), scandir("{$this->tmp_dir}"));
+        $this->assertEquals(array('.','..'), scandir("{$this->getActesWorkspace()->getResponseTmpLocalPath()}"));
         $logs = $this->getLogRecords();
         $this->assertMatchesRegularExpression("#Message de réponse à un multicanal#", $logs[4][S2lowLogger::MESSAGE]);
         $this->assertMatchesRegularExpression("#Suppression du répertoire#", $logs[5]['message']);
@@ -439,12 +445,5 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
         $actesTransactionsSQL =  $this->mockGetBySirenAndNumeroInterne($transaction_id);
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_TRANSMIS, $transaction_info['last_status_id']);
-    }
-
-    private function cleanAnalysePath(): void
-    {
-        array_map('unlink', glob($this->actes_files_upload_root . "/000000000/20170725A/*"));
-        rmdir($this->actes_files_upload_root . "/000000000/20170725A/");
-        rmdir($this->actes_files_upload_root . "/000000000/");
     }
 }

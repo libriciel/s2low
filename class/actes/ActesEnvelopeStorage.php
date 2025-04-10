@@ -2,8 +2,7 @@
 
 namespace S2lowLegacy\Class\actes;
 
-use Exception;
-use S2lowLegacy\Class\ActesWorkspace;
+use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Lib\SigTermHandler;
 use Monolog\Logger;
@@ -26,7 +25,7 @@ class ActesEnvelopeStorage
         ActesEnvelopeSQL $actesEnvelopeSQL,
         OpenStackSwiftWrapper $openStackSwiftWrapper,
         Logger $logger,
-        private readonly ActesWorkspace $workspace
+        private readonly IActesWorkspace $workspace
     ) {
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
         $this->openStackSwiftWrapper = $openStackSwiftWrapper;
@@ -50,7 +49,7 @@ class ActesEnvelopeStorage
             $actes_envelope = $sqlQuery->fetch();
 
             $this->logger->debug("Analysing file : {$actes_envelope['file_path']} {$actes_envelope['id']} - {$actes_envelope['submission_date']}");
-            $filename = $this->workspace->getActesFilesUploadRoot() . "/{$actes_envelope['file_path']}";
+            $filename = $this->workspace->getFilesUploadRoot() . "/{$actes_envelope['file_path']}";
             if (! file_exists($filename)) {
                 $this->logger->debug("File not exists {$actes_envelope['file_path']} [PASS]");
                 continue;

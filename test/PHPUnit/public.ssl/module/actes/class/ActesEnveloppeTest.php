@@ -1,7 +1,6 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesRetriever;
-use S2lowLegacy\Class\TmpFolder;
 
 class ActesEnveloppeTest extends S2lowTestCase
 {
@@ -27,9 +26,7 @@ class ActesEnveloppeTest extends S2lowTestCase
      */
     public function testSendFile()
     {
-        $tmpFolder = new TmpFolder();
-        $my_tmp_folder = $tmpFolder->create();
-        $this->getObjectInstancier()->set('actes_files_upload_root', $my_tmp_folder);
+        $my_tmp_folder = $this->getActesWorkspace()->getFilesUploadRoot();
         file_put_contents("$my_tmp_folder/test.txt", "foo");
         /** @var ActesRetriever $actesRetriever */
         $actesRetriever = $this->getObjectInstancier()->get(ActesRetriever::class);
@@ -39,6 +36,5 @@ class ActesEnveloppeTest extends S2lowTestCase
         $actesEnvelope->set('file_path', "test.txt");
         $this->expectOutputRegex("#toto#");
         $actesEnvelope->sendFile();
-        $tmpFolder->delete($my_tmp_folder);
     }
 }
