@@ -8,6 +8,8 @@ use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
+use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 
@@ -16,12 +18,20 @@ class DownloadFileTest extends S2lowIntegrationTestCase
     use ActesUtilitiesTestTrait;
 
     private ?ActesTransactionsSQL $actesTransactionsSQL;
+    private ActesWorkspaceForTests $workspace;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
         $this->client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
+
+        $this->workspace = $this->getObjectInstancier()->get(IActesWorkspace::class);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->workspace->clear();
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -90,5 +100,10 @@ class DownloadFileTest extends S2lowIntegrationTestCase
         static::assertJson($content[0]);
 
         return json_decode($response->getContent(), true);
+    }
+
+    public function getWorkspace(): ActesWorkspaceForTests
+    {
+        return $this->workspace;
     }
 }

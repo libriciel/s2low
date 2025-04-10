@@ -3,11 +3,17 @@
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\ActesExport;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
+use S2lowLegacy\Class\actes\ActesRetriever;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\ActeTamponne;
+use S2lowLegacy\Class\ActesWorkspace;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
+use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Lib\UnrecoverableException;
+use S2lowLegacy\Model\AuthoritySQL;
 
 class ActesExportTest extends S2lowTestCase
 {
@@ -16,11 +22,35 @@ class ActesExportTest extends S2lowTestCase
     private const ENVELOPPE_TEST_PATH = __DIR__ . "/fixtures/abc-TACT--000000000--20170803-16.tar.gz";
     private const XML_TEST = "<test></test>";
 
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->workspace = new ActesWorkspaceForTests();
+
+        $this->actesRetriever = new ActesRetriever(
+            $this->getObjectInstancier()->get(OpenStackSwiftWrapper::class),
+            $this->getObjectInstancier()->get(S2lowLogger::class),
+            $this->workspace
+        );
+    }
+
+    public function tearDown(): void
+    {
+        $this->workspace->clear();
+    }
+
     private function getActesExport()
     {
         $acteTamponne = $this->getMockBuilder(ActeTamponne::class)->disableOriginalConstructor()->getMock();
         $this->getObjectInstancier()->set(ActeTamponne::class, $acteTamponne);
-        return $this->getObjectInstancier()->get(ActesExport::class);
+        return new ActesExport(
+            $this->getObjectInstancier()->get(S2lowLogger::class),
+            $this->getObjectInstancier()->get(AuthoritySQL::class),
+            $this->getObjectInstancier()->get(ActesTransactionsSQL::class),
+            $this->actesRetriever,
+            $this->getObjectInstancier()->get(ActesIncludedFileSQL::class),
+            $acteTamponne
+        );
     }
 
     /**
@@ -127,5 +157,10 @@ class ActesExportTest extends S2lowTestCase
     public function getActesTransactionsSQL(): ActesTransactionsSQL
     {
         return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+    }
+
+    public function getWorkspace(): \S2lowLegacy\Class\ActesWorkspaceForTests
+    {
+        return $this->workspace;
     }
 }

@@ -7,6 +7,7 @@ use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 
 class GetUnreadPrefectureDocumentsTest extends S2lowIntegrationTestCase
@@ -46,5 +47,10 @@ class GetUnreadPrefectureDocumentsTest extends S2lowIntegrationTestCase
             static::assertArrayHasKey('last_status_id', $document);
             static::assertArrayHasKey('related_transaction_id', $document);
         }
+    }
+
+    public function getWorkspace(): ActesWorkspaceForTests
+    {
+        return $this->getActesWorkspace();
     }
 }

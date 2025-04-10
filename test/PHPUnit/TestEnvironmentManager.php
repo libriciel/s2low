@@ -73,6 +73,7 @@ class TestEnvironmentManager
         $this->getObjectInstancier()->set('schema_pes_path', HELIOS_XSD_PATH);
         $this->getObjectInstancier()->set('redis_server', 'localhost');
         $this->getObjectInstancier()->set('redis_port', 6379);
+        $this->getObjectInstancier()->set('pdf_stamp_url', 'stamp_url');
 
         $get = array();
         $post = array();
@@ -98,7 +99,7 @@ class TestEnvironmentManager
         $this->getObjectInstancier()->set('mail_files_upload_root', '');
         $this->getObjectInstancier()->set('mail_files_without_transac_dir', '');
 
-        $this->getObjectInstancier()->set(IActesWorkspace::class, new ActesWorkspaceForTests());
+        //$this->getObjectInstancier()->set(IActesWorkspace::class, new ActesWorkspaceForTests());
     }
 
     public function getConnection()

@@ -7,6 +7,7 @@ use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -120,5 +121,10 @@ class RespondDocumentToMinistereResponseTest extends S2lowIntegrationTestCase
 
         $response = $client->getResponse();
         static::assertStringContainsString($data['stringInResponse'], $response->getContent());
+    }
+
+    public function getWorkspace(): ActesWorkspaceForTests
+    {
+        return $this->getActesWorkspace();
     }
 }

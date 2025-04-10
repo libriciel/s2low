@@ -35,7 +35,6 @@ class ActesArchiveControler
     private CloudStorage $actesEnvelopeCloudStorage;
 
     /**
-     * @throws \S2lowLegacy\Lib\UnrecoverableException
      */
     public function __construct(
         ActesRetriever $actesRetriever,
@@ -46,7 +45,9 @@ class ActesArchiveControler
         ActesTransactionsSQL $actesTransactionsSQL,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         ActesTypePJSQL $actesTypePJSQL,
-        CloudStorageFactory $cloudStorageFactory
+        CloudStorageFactory $cloudStorageFactory,
+        private readonly ActeTamponne $actesTamponne,
+        private readonly BordereauPdfGenerator $bordereauPdfGenerator
     ) {
         $this->pastellWrapperFactory = $pastellWrapperFactory;
         $this->actesTransactionsSQL = $actesTransactionsSQL;
@@ -202,12 +203,9 @@ class ActesArchiveControler
         $date_postage = $this->actesTransactionsSQL->getStatusInfo($transactionsInfo['id'], 1);
         $actesFilesForSAE->date_postage = date("d/m/Y", strtotime($date_postage['date']));
 
-        $objectInstancier = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
-        $bordereauPdfGenerator = $objectInstancier->get(BordereauPdfGenerator::class);
-
         $actesFilesForSAE->bordereau_filepath = $tmp_folder . "/bordereau_acquit.pdf";
 
-        $bordereauPdfGenerator->generate($transaction_id, $actesFilesForSAE->bordereau_filepath, false, "F");
+        $this->bordereauPdfGenerator->generate($transaction_id, $actesFilesForSAE->bordereau_filepath, false, "F");
 
         array_shift($actesFile);
         array_shift($actesFile);
@@ -409,10 +407,7 @@ class ActesArchiveControler
     {
         $pdftkise = $tmpfolder . "/tampon_" . $fileorig;
 
-        $objectInstancier = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
-
-        $acteTamponne = $objectInstancier->get(ActeTamponne::class);
-        $tampon_content = $acteTamponne->tamponnerPDF($tmpfolder . "/" . $fileorig, $transactionId);
+        $tampon_content = $this->actesTamponne->tamponnerPDF($tmpfolder . "/" . $fileorig, $transactionId);
 
         file_put_contents($pdftkise, $tampon_content);
         return $pdftkise;

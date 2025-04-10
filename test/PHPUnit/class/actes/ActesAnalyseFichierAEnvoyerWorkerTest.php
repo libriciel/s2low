@@ -1,7 +1,10 @@
 <?php
 
+use Libriciel\LibActes\ArchiveValidator;
 use S2low\Services\PdfValidator;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
+use S2lowLegacy\Class\actes\ActesRetriever;
 use S2lowLegacy\Class\actes\ActesScriptHelper;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
@@ -19,6 +22,12 @@ use S2lowLegacy\Model\LogsSQL;
 
 class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
 {
+    /**
+     * @var \S2lowLegacy\Class\ActesWorkspaceForTests
+     */
+    private ActesWorkspaceForTests $workspace;
+    private ActesScriptHelper $actesScriptHelper;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -26,11 +35,41 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
         $padesValid = $this->getMockBuilder(PadesValid::class)->disableOriginalConstructor()->getMock();
         $padesValid->method("validate")->willReturn(true);
         $this->getObjectInstancier()->set(PadesValid::class, $padesValid);
+
+        $this->workspace = new ActesWorkspaceForTests();
+
+        $this->actesScriptHelper = new ActesScriptHelper(
+            $this->getObjectInstancier()->get(ActesTransactionsSQL::class),
+            $this->getObjectInstancier()->get(ActesEnvelopeSQL::class),
+            $this->getObjectInstancier()->get('actes_appli_trigramme'),
+            new ActesRetriever(
+                $this->getObjectInstancier()->get(\S2lowLegacy\Lib\OpenStackSwiftWrapper::class),
+                $this->getObjectInstancier()->get(S2lowLogger::class),
+                $this->workspace
+            )
+        );
+    }
+
+    protected function tearDown(): void
+    {
+        $this->workspace->clear();
     }
 
     private function getActesAnalysFichierAEnvoyerWorker(): ActesAnalyseFichierAEnvoyerWorker
     {
-        return $this->getObjectInstancier()->get(ActesAnalyseFichierAEnvoyerWorker::class);
+        return new ActesAnalyseFichierAEnvoyerWorker(
+            $this->getObjectInstancier()->get(S2lowLogger::class),
+            $this->getObjectInstancier()->get(ActesTransactionsSQL::class),
+            $this->getObjectInstancier()->get('actes_appli_trigramme'),
+            $this->getObjectInstancier()->get('actes_appli_quadrigramme'),
+            $this->actesScriptHelper,
+            $this->getObjectInstancier()->get(PadesValid::class),
+            $this->getObjectInstancier()->get(WorkerScript::class),
+            $this->getObjectInstancier()->get('actes_dont_valid_signing_certificate'),
+            $this->getObjectInstancier()->get(ActesTypePJSQL::class),
+            $this->getObjectInstancier()->get(PdfValidator::class),
+            $this->getObjectInstancier()->get(ArchiveValidatorFactory::class)
+        );
     }
 
     public function testQueueName()
@@ -202,7 +241,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
         $transaction_id = $actesCreator->createTransaction(
             ActesStatusSQL::STATUS_POSTE,
             $archivepath,
-            $this->getActesWorkspace()->getFilesUploadRoot()
+            $this->workspace->getFilesUploadRoot()
         );
 
         $envelope_id = $actesCreator->getLastEnvelopeId();
@@ -367,7 +406,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
             $this->getObjectInstancier()->get(ActesTransactionsSQL::class),
             $this->getObjectInstancier()->get('actes_appli_trigramme'),
             $this->getObjectInstancier()->get('actes_appli_quadrigramme'),
-            $this->getObjectInstancier()->get(ActesScriptHelper::class),
+            $this->actesScriptHelper,
             $this->getObjectInstancier()->get(PadesValid::class),
             $this->getObjectInstancier()->get(WorkerScript::class),
             $this->getObjectInstancier()->get('actes_dont_valid_signing_certificate'),

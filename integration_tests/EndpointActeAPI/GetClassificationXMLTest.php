@@ -6,6 +6,7 @@ use IntegrationTests\S2lowIntegrationTestCase;
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
 use Symfony\Component\HttpFoundation\Response;
 
 class GetClassificationXMLTest extends S2lowIntegrationTestCase
@@ -43,5 +44,10 @@ class GetClassificationXMLTest extends S2lowIntegrationTestCase
     private function headerReturnXMLFile(Response $response): bool
     {
         return str_contains($response->getContent(), 'Content-type: text/xml');
+    }
+
+    public function getWorkspace(): ActesWorkspaceForTests
+    {
+        return $this->getActesWorkspace();
     }
 }

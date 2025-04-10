@@ -1,6 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesMenageEnveloppeWorker;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
 use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackContainerStore;
@@ -8,13 +9,26 @@ use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 
 class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
 {
+    private ActesWorkspaceForTests $workspace;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->workspace = new ActesWorkspaceForTests();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->workspace->clear();
+    }
     /**
      * @return string
      * @throws Exception
      */
     private function createActesOnDisk(): string
     {
-        $tmp_folder = $this->getActesWorkspace()->getFilesUploadRoot();
+        $tmp_folder = $this->workspace->getFilesUploadRoot();
         mkdir($tmp_folder . "/000000000/");
         $actes_path = $tmp_folder . "/000000000/test.tar.gz";
         file_put_contents("$actes_path", "foo");
@@ -63,6 +77,7 @@ class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
         $this->mockOpenStack();
 
         $this->assertFileExists($actes_path);
+        $this->getObjectInstancier()->set(IActesWorkspace::class, $this->workspace);
         $actesMenageEnveloppeWorker = $this->getObjectInstancier()->get(ActesMenageEnveloppeWorker::class);
         $actesMenageEnveloppeWorker->setNbDayInDisk(0);
         $actesMenageEnveloppeWorker->work(false);
@@ -79,6 +94,7 @@ class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
         $this->mockOpenStack(false);
 
         $this->assertFileExists($actes_path);
+        $this->getObjectInstancier()->set(IActesWorkspace::class, $this->workspace);
         $actesMenageEnveloppeWorker = $this->getObjectInstancier()->get(ActesMenageEnveloppeWorker::class);
         $actesMenageEnveloppeWorker->setNbDayInDisk(0);
         $actesMenageEnveloppeWorker->work(false);
@@ -100,6 +116,7 @@ class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
         $this->mockOpenStack(true);
 
         $this->assertFileExists($actes_path);
+        $this->getObjectInstancier()->set(IActesWorkspace::class, $this->workspace);
         $actesMenageEnveloppeWorker = $this->getObjectInstancier()->get(ActesMenageEnveloppeWorker::class);
         $actesMenageEnveloppeWorker->setNbDayInDisk(0);
         $actesMenageEnveloppeWorker->work(false);

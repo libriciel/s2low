@@ -335,4 +335,9 @@ class ActesTransactionsSQLTest extends S2lowTestCase
         self::assertSame('test', $result['flux_retour']);
         self::assertSame($transactionId, $result['transaction_id']);
     }
+
+    public function getWorkspace(): \S2lowLegacy\Class\ActesWorkspaceForTests
+    {
+        // TODO: Implement getWorkspace() method.
+    }
 }

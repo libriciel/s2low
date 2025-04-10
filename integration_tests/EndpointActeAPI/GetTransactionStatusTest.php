@@ -7,6 +7,7 @@ use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 
 class GetTransactionStatusTest extends S2lowIntegrationTestCase
@@ -73,5 +74,10 @@ class GetTransactionStatusTest extends S2lowIntegrationTestCase
         $response = $client->getResponse();
 
         static::assertStringContainsString($shouldBeInHeader, $response->getContent());
+    }
+
+    public function getWorkspace(): ActesWorkspaceForTests
+    {
+        return $this->getActesWorkspace();
     }
 }

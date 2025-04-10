@@ -9,8 +9,6 @@ use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 
 class UpdateClassificationTransactionTest extends S2lowIntegrationTestCase
 {
-    use ActesUtilitiesTestTrait;
-
     private ?ActesTransactionsSQL $actesTransactionsSQL;
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL

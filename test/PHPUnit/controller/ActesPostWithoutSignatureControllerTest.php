@@ -3,6 +3,8 @@
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\ActesWorkspace;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
 use S2lowLegacy\Controller\ActesPostWithoutSignatureController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\RedirectException;
@@ -11,6 +13,18 @@ class ActesPostWithoutSignatureControllerTest extends S2lowTestCase
 {
     use ActesUtilitiesTestTrait;
     use RgsConnexionTestTrait;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->workspace = new ActesWorkspaceForTests();
+    }
+
+    protected function tearDown(): void
+    {
+        $this->workspace->clear();
+        parent::tearDown();
+    }
 
     /**
      * @throws Exception
@@ -22,6 +36,7 @@ class ActesPostWithoutSignatureControllerTest extends S2lowTestCase
 
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_SIGNEE);
         $this->setSuperAdminAuthentication();
+        /** @var ActesPostWithoutSignatureController $actesPostWithoutSignature */
         $actesPostWithoutSignature = $this->getObjectInstancier()->get(ActesPostWithoutSignatureController::class);
         $this->getObjectInstancier()->get(Environnement::class)->post()->set('id', $transaction_id);
         try {
@@ -86,5 +101,10 @@ class ActesPostWithoutSignatureControllerTest extends S2lowTestCase
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
     {
         return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+    }
+
+    public function getWorkspace(): \S2lowLegacy\Class\ActesWorkspaceForTests
+    {
+        return $this->workspace;
     }
 }

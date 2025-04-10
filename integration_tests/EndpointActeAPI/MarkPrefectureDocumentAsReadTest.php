@@ -7,6 +7,7 @@ use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 
 class MarkPrefectureDocumentAsReadTest extends S2lowIntegrationTestCase
@@ -45,5 +46,10 @@ class MarkPrefectureDocumentAsReadTest extends S2lowIntegrationTestCase
         $content = explode("\n", trim($response->getContent()));
 
         static::assertSame('{"result":"ok"}', $content[0]);
+    }
+
+    public function getWorkspace(): ActesWorkspaceForTests
+    {
+        return $this->getActesWorkspace();
     }
 }

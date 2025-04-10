@@ -1,6 +1,9 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesConventions;
+use S2lowLegacy\Class\ActesWorkspace;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
+use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Controller\AdminAuthorityController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\RedirectException;
@@ -38,6 +41,7 @@ class AdminAuthorityControllerTest extends S2lowTestCase
     {
         $this->setSuperAdminAuthentication();
         $this->getObjectInstancier()->get(Environnement::class)->get()->set('authority_id', 1);
+        $this->getObjectInstancier()->set(IActesWorkspace::class, new ActesWorkspaceForTests());
         $adminAuthorityController = $this->getObjectInstancier()->get(AdminAuthorityController::class);
         $this->setExpectedException(
             "Exception",

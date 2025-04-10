@@ -53,8 +53,9 @@ class ActesPostWithoutSignatureController extends Controller
 
         $actesTransactionSQL->updateStatus($transaction_id, ActesStatusSQL::STATUS_POSTE, $message);
 
+        /** @var WorkerScript $workerScript */
         $workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
-        $workerScript->putJobByClassName($workerClassName, $transaction_id);
+        $workerScript->putJobByQueueName($workerClassName, $transaction_id);
 
         $this->redirect("/modules/actes/actes_transac_show.php?id=$transaction_id", $message);
     }

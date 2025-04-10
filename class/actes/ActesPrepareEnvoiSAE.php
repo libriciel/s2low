@@ -66,8 +66,8 @@ class ActesPrepareEnvoiSAE
         );
 
         if ($put_in_job_queue) {
-            $this->workerScript->putJobByClassName(
-                ActesEnvoiSaeWorker::class,
+            $this->workerScript->putJobByQueueName(
+                ActesEnvoiSaeWorker::QUEUE_NAME,
                 $transaction_id
             );
         }

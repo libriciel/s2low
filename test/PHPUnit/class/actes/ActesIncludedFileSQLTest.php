@@ -5,6 +5,7 @@ use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
 
 class ActesIncludedFileSQLTest extends S2lowTestCase
 {
@@ -65,5 +66,9 @@ class ActesIncludedFileSQLTest extends S2lowTestCase
     public function getActesTransactionsSQL(): ActesTransactionsSQL
     {
         return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+    }
+
+    public function getWorkspace(): ActesWorkspaceForTests
+    {
     }
 }

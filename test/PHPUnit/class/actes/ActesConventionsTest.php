@@ -1,18 +1,31 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesConventions;
+use S2lowLegacy\Class\ActesWorkspace;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
 use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Model\AuthoritySQL;
 
 class ActesConventionsTest extends S2lowTestCase
 {
     /** @var  ActesConventions */
     private $actesConventions;
+    private ActesWorkspaceForTests $workspace;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->actesConventions = $this->getObjectInstancier()->get(ActesConventions::class);
+        $this->workspace = new ActesWorkspaceForTests();
+        $this->actesConventions = new ActesConventions(
+            $this->getObjectInstancier()->get(AuthoritySQL::class),
+            $this->workspace
+        );
+    }
+
+    protected function tearDown(): void
+    {
+        $this->workspace->clear();
     }
 
     public function testHasNoConvention()
@@ -39,7 +52,7 @@ class ActesConventionsTest extends S2lowTestCase
     {
         $this->actesConventions->setConvention(1, __DIR__ . "/fixtures/convention-exemple.pdf");
         $this->assertEquals(
-            $this->getActesWorkspace()->getFilesUploadRoot() . "/123456789/123456789-convention-actes.pdf",
+            $this->workspace->getFilesUploadRoot() . "/123456789/123456789-convention-actes.pdf",
             $this->actesConventions->getConventionFilepath(1)
         );
     }

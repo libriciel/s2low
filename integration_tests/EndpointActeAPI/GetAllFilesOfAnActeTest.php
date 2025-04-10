@@ -7,6 +7,7 @@ use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 
 class GetAllFilesOfAnActeTest extends S2lowIntegrationTestCase
@@ -73,5 +74,10 @@ class GetAllFilesOfAnActeTest extends S2lowIntegrationTestCase
             static::assertArrayHasKey('sign', $file);
             static::assertArrayHasKey('code_pj', $file);
         }
+    }
+
+    public function getWorkspace(): ActesWorkspaceForTests
+    {
+        return $this->getActesWorkspace();
     }
 }

@@ -10,6 +10,8 @@ use S2lowLegacy\Class\actes\ActesEnvoiFichierWorker;
 use S2lowLegacy\Class\actes\ActesFileSender;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
+use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Model\LogsSQL;
@@ -19,17 +21,26 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
 {
     private string $enveloppe_directory;
     private string $siren;
+    private ActesWorkspaceForTests $workspace;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->siren = '491011698';
+        $this->workspace = new ActesWorkspaceForTests();
+        $this->getObjectInstancier()->set(IActesWorkspace::class, $this->workspace);
         $this->enveloppe_directory = $this->getActesWorkspace()
                 ->getFilesUploadRoot() . '/' . $this->siren;
         mkdir($this->enveloppe_directory);
 
         $actesFileSender = $this->getMockBuilder(ActesFileSender::class)->disableOriginalConstructor()->getMock();
         $this->getObjectInstancier()->set(ActesFileSender::class, $actesFileSender);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->workspace->clear();
     }
 
 

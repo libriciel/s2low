@@ -208,9 +208,6 @@ class S2lowIntegrationTestCase extends WebTestCase
         }
     }
 
-    /**
-     * @return mixed|object|\Symfony\Component\DependencyInjection\Container|\Symfony\Component\DependencyInjection\ContainerInterface|null
-     */
     protected function getActesWorkspace(): ActesWorkspaceForTests
     {
         return static::getContainer()->get(IActesWorkspace::class);

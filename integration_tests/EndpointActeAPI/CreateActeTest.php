@@ -11,8 +11,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class CreateActeTest extends S2lowIntegrationTestCase
 {
-    use ActesUtilitiesTestTrait;
-
     private ?ActesTransactionsSQL $actesTransactionsSQL;
 
     protected function setUp(): void

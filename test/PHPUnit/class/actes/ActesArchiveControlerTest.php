@@ -10,13 +10,16 @@ use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\ActesArchiveControler;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
 use S2lowLegacy\Class\actes\ActesPdf;
+use S2lowLegacy\Class\actes\ActesPdfLegacy;
 use S2lowLegacy\Class\actes\ActesRetriever;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\ActeTamponne;
 use S2lowLegacy\Class\actes\IActesPdf;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
 use S2lowLegacy\Class\CloudStorage;
 use S2lowLegacy\Class\CloudStorageFactory;
+use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowTestCase;
 
@@ -25,9 +28,31 @@ class ActesArchiveControlerTest extends S2lowTestCase
     use ActesUtilitiesTestTrait;
     use PastellConfigurationTestTrait;
 
+    /**
+     * @var \S2lowLegacy\Class\ActesWorkspaceForTests
+     */
+    private ActesWorkspaceForTests $workspace;
+
     private function getActesArchivesControler(): ActesArchiveControler
     {
         return $this->getObjectInstancier()->get(ActesArchiveControler::class);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->workspace = new ActesWorkspaceForTests();
+        $this->getObjectInstancier()->set(IActesWorkspace::class, $this->workspace);
+        $this->getObjectInstancier()->set(
+            IActesPdf::class,
+            new ActesPdfLegacy(SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg")
+        );
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->workspace->clear();
     }
 
     /**
@@ -212,5 +237,10 @@ class ActesArchiveControlerTest extends S2lowTestCase
     public function getActesTransactionsSQL(): ActesTransactionsSQL
     {
         return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+    }
+
+    public function getWorkspace(): ActesWorkspaceForTests
+    {
+        return $this->workspace;
     }
 }

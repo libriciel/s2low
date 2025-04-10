@@ -107,8 +107,8 @@ class ActesAntivirusWorker implements IWorker
             "La transaction $transaction_id ne contient pas de virus"
         );
 
-        $this->workerScript->putJobByClassName(
-            ActesAnalyseFichierAEnvoyerWorker::class,
+        $this->workerScript->putJobByQueueName(
+            ActesAnalyseFichierAEnvoyerWorker::QUEUE_NAME,
             $transaction_info["envelope_id"]
         );
         return true;

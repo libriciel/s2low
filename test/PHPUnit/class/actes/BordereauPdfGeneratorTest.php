@@ -6,11 +6,25 @@ use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\BordereauPdfGenerator;
 use S2lowLegacy\Class\actes\IActesPdf;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
 use S2lowLegacy\Class\TmpFolder;
 
 class BordereauPdfGeneratorTest extends S2lowTestCase
 {
     use ActesUtilitiesTestTrait;
+
+    private ActesWorkspaceForTests $workspace;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->workspace = new ActesWorkspaceForTests();
+    }
+
+    public function tearDown(): void
+    {
+        $this->workspace->clear();
+    }
 
     public function testGenerate()
     {
@@ -39,5 +53,10 @@ class BordereauPdfGeneratorTest extends S2lowTestCase
     protected function getActesTransactionsSQL(): \S2lowLegacy\Class\actes\ActesTransactionsSQL
     {
         return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+    }
+
+    public function getWorkspace(): ActesWorkspaceForTests
+    {
+        return $this->workspace;
     }
 }

@@ -63,4 +63,9 @@ class TransactionSQLTest extends S2lowTestCase
     {
         return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
     }
+
+    public function getWorkspace(): \S2lowLegacy\Class\ActesWorkspaceForTests
+    {
+        // TODO: Implement getWorkspace() method.
+    }
 }

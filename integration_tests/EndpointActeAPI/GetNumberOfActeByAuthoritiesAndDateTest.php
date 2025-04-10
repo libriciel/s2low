@@ -7,6 +7,7 @@ use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 
 class GetNumberOfActeByAuthoritiesAndDateTest extends S2lowIntegrationTestCase
@@ -116,5 +117,10 @@ class GetNumberOfActeByAuthoritiesAndDateTest extends S2lowIntegrationTestCase
 
         $response = $client->getResponse();
         static::assertSame('', $response->getContent());
+    }
+
+    public function getWorkspace(): ActesWorkspaceForTests
+    {
+        return $this->getActesWorkspace();
     }
 }

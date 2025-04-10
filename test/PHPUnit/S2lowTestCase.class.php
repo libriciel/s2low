@@ -25,12 +25,12 @@ abstract class S2lowTestCase extends TestCase
         $this->testEnvironmentManager->setUp();
     }
 
-    protected function tearDown(): void
+    /*protected function tearDown(): void
     {
         if (is_a($this->getActesWorkspace(), ActesWorkspaceForTests::class)) {
             $this->getActesWorkspace()->clear();
         }
-    }
+    }*/
 
     public function getObjectInstancier(): ObjectInstancier
     {

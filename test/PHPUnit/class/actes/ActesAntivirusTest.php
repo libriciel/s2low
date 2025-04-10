@@ -1,10 +1,16 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesAntivirusWorker;
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
+use S2lowLegacy\Class\actes\ActesRetriever;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
 use S2lowLegacy\Class\Antivirus;
+use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Class\WorkerScript;
+use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 
 require_once __DIR__ . "/ActesCreator.php";
 
@@ -29,10 +35,18 @@ class ActesAntivirusTest extends S2lowTestCase
             __DIR__ . "/fixtures/abc-TACT--000000000--20170803-16.tar.gz",
             $this->tmp_dir
         );
+        $this->workspace = new ActesWorkspaceForTests();
+
+        $this->actesRetriever = new ActesRetriever(
+            $this->getObjectInstancier()->get(OpenStackSwiftWrapper::class),
+            $this->getObjectInstancier()->get(S2lowLogger::class),
+            $this->workspace
+        );
     }
 
     protected function tearDown(): void
     {
+        $this->workspace->clear();
         $this->tmpFolder->delete($this->tmp_dir);
         parent::tearDown();
     }
@@ -48,8 +62,8 @@ class ActesAntivirusTest extends S2lowTestCase
         $antivirus
             ->method("checkArchiveSanity")
             ->willReturn(true);
-        $this->getObjectInstancier()->set(Antivirus::class, $antivirus);
-        $actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
+
+        $actesAntivirus = $this->getAntivirusWorker($antivirus);
         $this->assertTrue($actesAntivirus->work($this->transaction_id));
     }
 
@@ -65,9 +79,7 @@ class ActesAntivirusTest extends S2lowTestCase
             ->method("checkArchiveSanity")
             ->willReturn(false);
 
-        $this->getObjectInstancier()->set(Antivirus::class, $antivirus);
-
-        $actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
+        $actesAntivirus = $this->getAntivirusWorker($antivirus);
         $this->assertFalse($actesAntivirus->work($this->transaction_id));
     }
 
@@ -83,9 +95,7 @@ class ActesAntivirusTest extends S2lowTestCase
             ->method("checkArchiveSanity")
             ->willThrowException(new Exception("testing"));
 
-        $this->getObjectInstancier()->set(Antivirus::class, $antivirus);
-
-        $actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
+        $actesAntivirus = $this->getAntivirusWorker($antivirus);
         $this->setExpectedException(Exception::class, "testing");
         $actesAntivirus->work($this->transaction_id);
     }
@@ -97,7 +107,7 @@ class ActesAntivirusTest extends S2lowTestCase
     {
         $actesTransactionSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
         $actesTransactionSQL->setAntivirusCheck($this->transaction_id);
-        $actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
+        $actesAntivirus = $this->getAntivirusWorker();
         $actesAntivirus->work($this->transaction_id);
         $logs = $this->getLogRecords();
         $this->assertEquals("La transaction {$this->transaction_id} a déjà été analysé par l'antivirus", $logs[1]['message']);
@@ -105,20 +115,38 @@ class ActesAntivirusTest extends S2lowTestCase
 
     public function testGetAll()
     {
-        $actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
+        $actesAntivirus = $this->getAntivirusWorker();
         $all_id = $actesAntivirus->getAllId();
         $this->assertEquals([$this->transaction_id], $all_id);
     }
 
     public function testGetId()
     {
-        $actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
+        $actesAntivirus = $this->getAntivirusWorker();
         $this->assertEquals($this->transaction_id, $actesAntivirus->getData($this->transaction_id));
     }
 
     public function testGetQueueId()
     {
-        $actesAntivirus = $this->getObjectInstancier()->get(ActesAntivirusWorker::class);
+        $actesAntivirus = $this->getAntivirusWorker();
         $this->assertEquals(ActesAntivirusWorker::QUEUE_NAME, $actesAntivirus->getQueueName());
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getAntivirusWorker(?Antivirus $antivirus = null): ActesAntivirusWorker
+    {
+        if (is_null($antivirus)) {
+            $antivirus = $this->getObjectInstancier()->get(Antivirus::class);
+        }
+        return new ActesAntivirusWorker(
+            $this->getObjectInstancier()->get(ActesTransactionsSQL::class),
+            $this->actesRetriever,
+            $this->getObjectInstancier()->get(ActesEnvelopeSQL::class),
+            $antivirus,
+            $this->getObjectInstancier()->get(S2lowLogger::class),
+            $this->getObjectInstancier()->get(WorkerScript::class)
+        );
     }
 }

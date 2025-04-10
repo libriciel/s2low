@@ -6,6 +6,8 @@ use S2lowLegacy\Class\actes\ActesNotification;
 use S2lowLegacy\Class\actes\ActesPdf;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\IActesPdf;
+use S2lowLegacy\Class\ActesWorkspace;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
 use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Class\Mailer;
 use S2lowLegacy\Class\TmpFolder;
@@ -49,7 +51,8 @@ class ActesNotificationsTest extends \S2low\Tests\S2lowSymfonyWebTestCase
         $this->getObjectInstancier()->set("pdf_stamp_url", "");
         $this->getObjectInstancier()->set(Environment::class, $twig);
 
-
+        $this->workspace = new ActesWorkspaceForTests();
+        $this->getObjectInstancier()->set(IActesWorkspace::class, $this->workspace);
         $this->actesNotification = $this->getObjectInstancier()->get(ActesNotification::class);
     }
 

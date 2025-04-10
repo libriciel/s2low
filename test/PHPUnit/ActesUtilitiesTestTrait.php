@@ -8,6 +8,7 @@ use Exception;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
 use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Lib\SQLQuery;
 
@@ -62,7 +63,7 @@ trait ActesUtilitiesTestTrait
 
         if ($archive_path) {
             $relative_path = basename($archive_path);
-            $actes_files_upload_root = $this->getObjectInstancier()->get(IActesWorkspace::class)->getFilesUploadRoot();
+            $actes_files_upload_root = $this->getWorkspace()->getFilesUploadRoot();
             $destination = $actes_files_upload_root . '/' . basename($archive_path);
             copy($archive_path, $destination);
             $sql = 'UPDATE actes_envelopes SET file_path=?,file_size=? WHERE id=?';
@@ -149,4 +150,6 @@ trait ActesUtilitiesTestTrait
     abstract protected function getActesTransactionsSQL(): ActesTransactionsSQL;
 
     abstract public function getSQLQuery(): SQLQuery;
+
+    abstract public function getWorkspace(): ActesWorkspaceForTests;
 }

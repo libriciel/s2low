@@ -6,15 +6,38 @@ namespace PHPUnit\class\actes;
 
 use Exception;
 use PHPUnit\ActesUtilitiesTestTrait;
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
+use S2lowLegacy\Class\actes\ActesRetriever;
+use S2lowLegacy\Class\actes\ActesScriptHelper;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsCloser;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
+use S2lowLegacy\Class\S2lowLogger;
+use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowTestCase;
 
 class ActesTransactionsCloserTest extends S2lowTestCase
 {
     use ActesUtilitiesTestTrait;
 
+    private ActesWorkspaceForTests $workspace;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->workspace = new ActesWorkspaceForTests();
+        $this->actesRetriever = new ActesRetriever(
+            $this->getObjectInstancier()->get(OpenStackSwiftWrapper::class),
+            $this->getObjectInstancier()->get(S2lowLogger::class),
+            $this->workspace
+        );
+    }
+
+    public function tearDown(): void
+    {
+        $this->workspace->clear();
+    }
     /**
      * @throws Exception
      */
@@ -33,7 +56,16 @@ class ActesTransactionsCloserTest extends S2lowTestCase
         );
 
         /** @var ActesTransactionsCloser $actesTransactionsCloser */
-        $actesTransactionsCloser = $this->getObjectInstancier()->get(ActesTransactionsCloser::class);
+        $actesTransactionsCloser = new ActesTransactionsCloser(
+            $this->getObjectInstancier()->get(ActesTransactionsSQL::class),
+            $this->getObjectInstancier()->get(S2lowLogger::class),
+            new ActesScriptHelper(
+                $this->getObjectInstancier()->get(ActesTransactionsSQL::class),
+                $this->getObjectInstancier()->get(ActesEnvelopeSQL::class),
+                $this->getObjectInstancier()->get('actes_appli_trigramme'),
+                $this->actesRetriever
+            )
+        );
         $actesTransactionsCloser->closeAll();
 
         /** @var ActesTransactionsSQL $actesTransactionsSQL */
@@ -49,5 +81,10 @@ class ActesTransactionsCloserTest extends S2lowTestCase
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
     {
         return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+    }
+
+    public function getWorkspace(): ActesWorkspaceForTests
+    {
+        return $this->workspace;
     }
 }

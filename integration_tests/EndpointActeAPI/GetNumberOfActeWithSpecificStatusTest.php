@@ -7,6 +7,7 @@ use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\ActesWorkspaceForTests;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 
 class GetNumberOfActeWithSpecificStatusTest extends S2lowIntegrationTestCase
@@ -66,5 +67,10 @@ class GetNumberOfActeWithSpecificStatusTest extends S2lowIntegrationTestCase
 
         static::assertSame($nbTransaction, $contentAsArray['nb_transactions']);
         static::assertSame($status, $contentAsArray['status_id']);
+    }
+
+    public function getWorkspace(): ActesWorkspaceForTests
+    {
+        return $this->getActesWorkspace();
     }
 }

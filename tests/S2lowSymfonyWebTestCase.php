@@ -31,7 +31,7 @@ abstract class S2lowSymfonyWebTestCase extends WebTestCase
 
     protected function tearDown(): void
     {
-        $this->getActesWorkspace()->clear();
+        //$this->getActesWorkspace()->clear();
         parent::tearDown();
     }
 
