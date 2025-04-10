@@ -15,7 +15,7 @@ class PESRetourCloudStorage implements ICloudStorable
 
     public function __construct(
         private readonly HeliosRetourSQL $heliosRetourSQL,
-        private readonly Workspace $workspace,
+        private readonly IWorkspace $workspace,
     ) {
     }
 

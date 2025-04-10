@@ -8,7 +8,7 @@ class HeliosFilesFactory
 {
     public function __construct(
         private readonly HeliosTransactionsSQL $heliosTransactionsSQL,
-        private readonly Workspace $workspace
+        private readonly IWorkspace $workspace
     ) {
     }
 

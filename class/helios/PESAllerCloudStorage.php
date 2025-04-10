@@ -15,7 +15,7 @@ class PESAllerCloudStorage implements ICloudStorable
 
     public function __construct(
         HeliosTransactionsSQL $transactionsSQL,
-        private readonly Workspace $workspace
+        private readonly IWorkspace $workspace
     ) {
         $this->transactionsSQL = $transactionsSQL;
     }

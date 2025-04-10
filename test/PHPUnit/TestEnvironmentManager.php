@@ -2,6 +2,8 @@
 
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
+use S2lowLegacy\Class\helios\IWorkspace;
+use S2lowLegacy\Class\helios\WorkspaceForTests;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\Environnement;
@@ -43,7 +45,6 @@ class TestEnvironmentManager
 
         \S2lowLegacy\Lib\ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());
         $this->getObjectInstancier()->__set(SQLQuery::class, $this->getSQLQuery());
-        $this->getObjectInstancier()->set('helios_files_upload_root', "/tmp");
         $this->getObjectInstancier()->set('actes_files_upload_root', sys_get_temp_dir());
 
         $this->getObjectInstancier()->set('use_prod_notifications', false);
@@ -98,6 +99,8 @@ class TestEnvironmentManager
         $this->getObjectInstancier()->set('mail_files_without_transac_dir', '');
         $tmpFolder = new TmpFolder();
         $this->getObjectInstancier()->set('repertoireActesEnveloppeSansTransaction', $tmpFolder->create());
+
+        $this->getObjectInstancier()->set(IWorkspace::class, new WorkspaceForTests());
     }
 
     public function getConnection()

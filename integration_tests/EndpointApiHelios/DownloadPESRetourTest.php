@@ -5,6 +5,8 @@ namespace IntegrationTests\EndpointApiHelios;
 use HeliosUtilitiesTestTrait;
 use IntegrationTests\S2lowIntegrationTestCase;
 use S2low\Enum\UserRole;
+use S2lowLegacy\Class\helios\IWorkspace;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 class DownloadPESRetourTest extends S2lowIntegrationTestCase
@@ -58,15 +60,16 @@ class DownloadPESRetourTest extends S2lowIntegrationTestCase
     {
         $this->createUserWithDefaultCertificatAs(UserRole::Archiviste);
 
+        $client = $this->getAuthenticatedClientAttachedToDefaultCertificat();
+
         $collectiviteId = 1;
         $sampleXMLPath = __DIR__ . "/../../integration_tests/fixtures/XMLTest.xml";
         $PESRetourFilename = "XMLTest.xml";
-        $newSampleXML = HELIOS_RESPONSES_ROOT . "/" . $PESRetourFilename;
+        $newSampleXML = LegacyObjectsManager::getLegacyObjectInstancier()->get(IWorkspace::class)->getHeliosResponsesRoot() . "/" . $PESRetourFilename;
         copy($sampleXMLPath, $newSampleXML);
 
         $PESRetourId = $this->addPESRetourToCollectivite($collectiviteId, $PESRetourFilename);
 
-        $client = $this->getAuthenticatedClientAttachedToDefaultCertificat();
 
         if ($data['use_pes_retour_id']) {
             $PESRetourId = $data['use_good_pes_retour_id'] ? $PESRetourId : 1234567;

@@ -7,7 +7,9 @@ namespace PHPUnit\class\helios;
 use Exception;
 use HeliosUtilitiesTestTrait;
 use S2lowLegacy\Class\CloudStorageFactory;
+use S2lowLegacy\Class\helios\IWorkspace;
 use S2lowLegacy\Class\helios\PESAllerCloudStorage;
+use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
@@ -31,9 +33,9 @@ class PesAllerStorageTest extends S2lowTestCase
     private function mockOpenStackSwiftWrapper(bool $fileExistsOnCloud): string
     {
 
-        $tmpFolder = new TmpFolder();
-        $tmp_folder = $tmpFolder->create();
-        $pes_aller_path = $tmp_folder . '/' . self::SHA1_EXEMPLE;
+        $pes_aller_path = $this->getObjectInstancier()
+                ->get(IWorkspace::class)
+                ->getHeliosFilesUploadRoot() . '/' . self::SHA1_EXEMPLE;
         file_put_contents($pes_aller_path, '<test></test>');
 
         $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
@@ -43,7 +45,6 @@ class PesAllerStorageTest extends S2lowTestCase
             ->method('fileExistsOnCloud')
             ->willReturn($fileExistsOnCloud);
         $this->getObjectInstancier()->set(OpenStackSwiftWrapper::class, $openStackSwiftWrapper);
-        $this->getObjectInstancier()->set('helios_files_upload_root', $tmp_folder);
         return $pes_aller_path;
     }
 
@@ -119,8 +120,11 @@ class PesAllerStorageTest extends S2lowTestCase
 
         $this->getObjectInstancier()->set(OpenStackSwiftWrapper::class, $openStackSwiftWrapper);
 
-        $helios_files_upload_root = $this->getObjectInstancier()->get('helios_files_upload_root');
-        file_put_contents($helios_files_upload_root . '/' . $transaction_info['sha1'], 'test');
+        file_put_contents(
+            $this->getObjectInstancier()->get(IWorkspace::class)
+                ->getHeliosFilesUploadRoot() . '/' . $transaction_info['sha1'],
+            'test'
+        );
 
         /** @var \S2lowLegacy\Class\CloudStorage $cloudStorage */
         $cloudStorage = $this->getObjectInstancier()
@@ -129,8 +133,6 @@ class PesAllerStorageTest extends S2lowTestCase
         $cloudStorage->storeObject($transaction_id);
 
         static::assertTrue($cloudStorage->storeObject($transaction_id));
-
-        unlink($helios_files_upload_root . '/' . $transaction_info['sha1']);
     }
 
     /**
@@ -153,7 +155,7 @@ class PesAllerStorageTest extends S2lowTestCase
 
         $this->getObjectInstancier()->set(OpenStackSwiftWrapper::class, $openStackSwiftWrapper);
 
-        $helios_files_upload_root = $this->getObjectInstancier()->get('helios_files_upload_root');
+        $helios_files_upload_root = $this->getObjectInstancier()->get(IWorkspace::class)->getHeliosFilesUploadRoot();
         file_put_contents($helios_files_upload_root . '/' . $transaction_info['sha1'], 'test');
 
         /** @var \S2lowLegacy\Class\CloudStorage $cloudStorage */

@@ -68,15 +68,14 @@ class CreatePESAllerTest extends S2lowIntegrationTestCase
 
         $toUploadFile = new UploadedFile(
             $filePath,
-            "",
+            '',
             $fileContent,
             UPLOAD_ERR_OK,
             true
         );
 
-        $vfsUrl = vfsStream::url('test/helios/' . $fileName);
-        copy($filePath, $vfsUrl);
-        $filePathFromUseCaseCode = $vfsUrl;
+        $filePathFromUseCaseCode = sys_get_temp_dir() . "/$fileName";
+        copy($filePath, $filePathFromUseCaseCode);
 
         $_FILES['enveloppe'] = '';
         if ($data['with_enveloppe']) {

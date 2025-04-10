@@ -18,6 +18,7 @@ use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
+/** @var CloudStorageFactory $cloudStorageFactory */
 list($cloudStorageFactory) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [CloudStorageFactory::class]
@@ -68,6 +69,7 @@ try {
         throw new Exception('KO');
     }
 
+    /** @var \S2lowLegacy\Class\CloudStorage $pesRetourCloudStorage */
     $pesRetourCloudStorage = $cloudStorageFactory->getInstanceByClassName(PESRetourCloudStorage::class);
     $pesRetourCloudStorage->getPath($retourId); // Permet de récupérer le fichier s'il est dans le cloud
 

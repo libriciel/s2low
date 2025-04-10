@@ -2,7 +2,9 @@
 
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\DataObject;
+use S2lowLegacy\Class\helios\IWorkspace;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\LegacyObjectsManager;
 
 /**
  * \class HeliosTransaction HeliosTransaction.class.php
@@ -284,8 +286,12 @@ class HeliosTransaction extends DataObject
 
     public function sendAcquit($filename)
     {
+        $helios_responses_root = LegacyObjectsManager::getLegacyObjectInstancier()
+            ->get(IWorkspace::class)
+            ->getHeliosResponsesRoot();
 
-        if (!file_exists(HELIOS_RESPONSES_ROOT . $filename) || $filename == null) {
+        var_dump($helios_responses_root . $filename);
+        if (!file_exists($helios_responses_root . $filename) || $filename == null) {
             $this->errorMsg = "Le fichier '" . $filename . "' n'est pas/plus disponible.";
             echo "<br>helios Tansaction_class: sendAcquit " . $this->errorMsg;
             return false;
@@ -293,7 +299,7 @@ class HeliosTransaction extends DataObject
 
         $ret_value = true;
       //AICI pot incerca sa modific parametrii...
-        if (!Helpers :: sendFileToBrowser(HELIOS_RESPONSES_ROOT . $filename, $filename, "text/xml")) {
+        if (!Helpers :: sendFileToBrowser($helios_responses_root . $filename, $filename, "text/xml")) {
             $this->errorMsg = "Erreur envoi fichier";
             echo "<br> heliosTansaction_class: sendAcquit " . $this->errorMsg;
             $ret_value = false;

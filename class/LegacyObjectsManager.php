@@ -9,9 +9,12 @@ use S2lowLegacy\Class\actes\ActesMinistereProperties;
 use S2lowLegacy\Class\actes\ActesPdf;
 use S2lowLegacy\Class\actes\ActesPdfLegacy;
 use S2lowLegacy\Class\actes\IActesPdf;
+use S2lowLegacy\Class\helios\IWorkspace;
 use S2lowLegacy\Class\helios\PESAcquitCloudStorage;
 use S2lowLegacy\Class\helios\PESAllerCloudStorage;
 use S2lowLegacy\Class\helios\PESRetourCloudStorage;
+use S2lowLegacy\Class\helios\Workspace;
+use S2lowLegacy\Class\helios\WorkspaceForTests;
 use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\ObjectInstancier;
@@ -180,10 +183,16 @@ class LegacyObjectsManager
         $objectInstancier->set(OpenStackContainerStore::class, $openStackContainerStore);
 
 
-        $objectInstancier->set("helios_files_upload_root", HELIOS_FILES_UPLOAD_ROOT);
-        $objectInstancier->set("repertoirePesAllerSansTransaction", HELIOS_PESALLER_SANSTRANSACTION);
-        $objectInstancier->set("helios_responses_root", HELIOS_RESPONSES_ROOT);
-        $objectInstancier->set("helios_responses_error_path", HELIOS_RESPONSES_ERROR_PATH);
+        if (!TESTING_ENVIRONNEMENT) {
+            $objectInstancier->set(IWorkspace::class, new Workspace(
+                HELIOS_FILES_UPLOAD_ROOT,
+                HELIOS_PESALLER_SANSTRANSACTION,
+                HELIOS_RESPONSES_ROOT,
+                HELIOS_RESPONSES_ERROR_PATH
+            ));
+        } else {
+            $objectInstancier->set(IWorkspace::class, new WorkspaceForTests());
+        }
 
         $objectInstancier->set("schema_pes_path", HELIOS_XSD_PATH);
 

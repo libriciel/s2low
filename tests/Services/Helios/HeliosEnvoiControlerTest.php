@@ -18,6 +18,7 @@ use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\helios\FichierCompteur;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Class\helios\HeliosTransmissionWindowsSQL;
+use S2lowLegacy\Class\helios\IWorkspace;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
@@ -69,8 +70,6 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
         $counterFile = fopen($this->counterDir . '/counter.txt', 'w');
         fwrite($counterFile, '000');
 
-        mkdir($this->testStreamUrl . '/helios');
-        $this->getObjectInstancier()->set('helios_files_upload_root', $this->testStreamUrl . '/helios/');
         $this->heliosController = new HeliosController($this->getObjectInstancier());
         $this->envoiControler = new HeliosEnvoiControler(
             static::getContainer()->get(AuthoritySiretSQL::class),
@@ -227,10 +226,16 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
     {
         $this->workerScript->expects(static::never())->method('putJobByQueueName');
         $pes_aller = __DIR__ . '/../../../test/PHPUnit/helios/fixtures/pes_aller_ok.xml';
-        copy($pes_aller, $this->testStreamUrl . '/helios/' . sha1_file($pes_aller));
+        copy(
+            $pes_aller,
+            $this->getObjectInstancier()->get(IWorkspace::class)->getHeliosFilesUploadRoot() . '/' . sha1_file($pes_aller)
+        );
         $transaction_id = $this->heliosController->importFile(8, $pes_aller, 'pes_aller.xml');
         $pes_aller_change = __DIR__ . '/../../../test/PHPUnit/helios/fixtures/pes_aller.xml';
-        copy($pes_aller_change, $this->testStreamUrl . '/helios/' . sha1_file($pes_aller));
+        copy(
+            $pes_aller_change,
+            $this->getObjectInstancier()->get(IWorkspace::class)->getHeliosFilesUploadRoot() . '/' . sha1_file($pes_aller)
+        );
         ob_start();
         $this->envoiControler->validateOneTransaction($transaction_id);
         ob_end_clean();
@@ -523,7 +528,7 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
     private function getImportFile($filename): mixed
     {
         $pes_aller = __DIR__ . "/../../../test/PHPUnit/helios/fixtures/$filename";
-        copy($pes_aller, $this->testStreamUrl . '/helios/' . sha1_file($pes_aller));
+        copy($pes_aller, $this->getObjectInstancier()->get(IWorkspace::class)->getHeliosFilesUploadRoot() . '/' . sha1_file($pes_aller));
         return $this->heliosController->importFile(8, $pes_aller, 'pes_aller.xml');
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\helios\HeliosExport;
+use S2lowLegacy\Class\helios\IWorkspace;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Controller\HeliosController;
@@ -14,16 +15,8 @@ class HeliosExportTest extends S2lowTestCase
     public function testExport()
     {
 
-        $tmpFolder = new TmpFolder();
-        $helios_responses_root = $tmpFolder->create();
-
         $pes_aller = __DIR__ . "/../../helios/fixtures/pes_aller_ok.xml";
         $pes_acquit = __DIR__ . "/../../helios/fixtures/pes_acquit.xml";
-
-        $this->getObjectInstancier()->set(
-            'helios_responses_root',
-            $helios_responses_root
-        );
 
         /** @var PesAllerRetriever $pesAllerRetriever */
         $pesAllerRetriever = $this->getObjectInstancier()->get(PesAllerRetriever::class);
@@ -33,15 +26,20 @@ class HeliosExportTest extends S2lowTestCase
         $heliosControler = $this->getObjectInstancier()->get(HeliosController::class);
         $transaction_id =  $heliosControler->importFile(8, $pes_aller, "pes_aller.xml");
 
-        copy($pes_acquit, $this->getObjectInstancier()->get('helios_responses_root') . "/pes_acquit.xml");
+        copy(
+            $pes_acquit,
+            $this->getObjectInstancier()->get(IWorkspace::class)->getHeliosResponsesRoot() . "/pes_acquit.xml"
+        );
 
         $heliosTransactionSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
 
         $heliosTransactionSQL->setAcquitFilename($transaction_id, "pes_acquit.xml");
 
+        /** @var HeliosExport $heliosExport */
         $heliosExport = $this->getObjectInstancier()->get(HeliosExport::class);
 
 
+        $tmpFolder = new TmpFolder();
         $tmp_folder = $tmpFolder->create();
         $heliosExport->export(1, $tmp_folder);
 
@@ -49,6 +47,5 @@ class HeliosExportTest extends S2lowTestCase
         $this->assertFileEquals($pes_acquit, $tmp_folder . "/$transaction_id/pes_acquit.xml");
 
         $tmpFolder->delete($tmp_folder);
-        $tmpFolder->delete($helios_responses_root);
     }
 }

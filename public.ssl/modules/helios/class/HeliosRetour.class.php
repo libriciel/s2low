@@ -2,7 +2,9 @@
 
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\DataObject;
+use S2lowLegacy\Class\helios\IWorkspace;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\LegacyObjectsManager;
 
 class HeliosRetour extends DataObject
 {
@@ -56,8 +58,12 @@ class HeliosRetour extends DataObject
     }
     public function sendfile($fileName)
     {
+        $heliosResponseRoot = LegacyObjectsManager::getLegacyObjectInstancier()
+            ->get(IWorkspace::class)
+            ->getHeliosResponsesRoot();
+
         $fileName = trim($fileName);
-        if (!file_exists(HELIOS_RESPONSES_ROOT . "/" . $fileName)) {
+        if (!file_exists($heliosResponseRoot . "/" . $fileName)) {
             $this->errorMsg = "Le fichier '" . $fileName . "' n'est pas/plus disponible.";
             echo "<br>helios Tansaction_class: sendFile " . $this->errorMsg;
             return false;
@@ -65,7 +71,7 @@ class HeliosRetour extends DataObject
 
         $ret_value = true;
       //AICI pot incerca sa modific parametrii...
-        if (!Helpers :: sendFileToBrowser(HELIOS_RESPONSES_ROOT . "/" . $fileName, $fileName, "text/xml")) {
+        if (!Helpers :: sendFileToBrowser($heliosResponseRoot . "/" . $fileName, $fileName, "text/xml")) {
             $this->errorMsg = "Erreur envoi fichier";
             echo "<br> heliosTansaction_class: sendFile " . $fileName . " :" . $this->errorMsg;
             $ret_value = false;

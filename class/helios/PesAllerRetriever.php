@@ -15,7 +15,7 @@ class PesAllerRetriever
     public function __construct(
         OpenStackSwiftWrapper $openStackSwiftWrapper,
         S2lowLogger $logger,
-        private readonly Workspace $workspace
+        private readonly IWorkspace $workspace
     ) {
         $this->openStackSwiftWrapper = $openStackSwiftWrapper;
         $this->logger = $logger;

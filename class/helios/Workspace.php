@@ -2,9 +2,7 @@
 
 namespace S2lowLegacy\Class\helios;
 
-use Symfony\Contracts\Service\Attribute\Required;
-
-class Workspace
+class Workspace implements IWorkspace
 {
     public function __construct(
         private readonly string $helios_files_upload_root,

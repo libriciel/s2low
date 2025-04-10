@@ -5,6 +5,8 @@ namespace IntegrationTests\EndpointApiHelios;
 use IntegrationTests\S2lowIntegrationTestCase;
 use HeliosUtilitiesTestTrait;
 use S2low\Enum\UserRole;
+use S2lowLegacy\Class\helios\IWorkspace;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 class DownloadAcquitFileTest extends S2lowIntegrationTestCase
@@ -49,13 +51,16 @@ class DownloadAcquitFileTest extends S2lowIntegrationTestCase
 
         $_GET['id'] = $transactionId;
 
+        $client = $this->getAuthenticatedClientAttachedToDefaultCertificat();
+
         $sampleXMLPath = __DIR__ . "/../../integration_tests/fixtures/XMLTest.xml";
         $acquitFilename = "XMLTest.xml";
-        $newSampleXML = HELIOS_RESPONSES_ROOT . "/" . $acquitFilename;
+        $newSampleXML = LegacyObjectsManager::getLegacyObjectInstancier()
+                ->get(IWorkspace::class)->getHeliosResponsesRoot() . '/' . $acquitFilename;
         copy($sampleXMLPath, $newSampleXML);
 
         $this->addPESAcquitTo($transactionId, $acquitFilename);
-        $client = $this->getAuthenticatedClientAttachedToDefaultCertificat();
+
         $client->request(
             'GET',
             '/modules/helios/helios_download_acquit.php',

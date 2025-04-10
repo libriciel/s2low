@@ -3,6 +3,7 @@
 use S2lowLegacy\Class\helios\HeliosEnvoiSAE;
 use S2lowLegacy\Class\helios\HeliosPrepareEnvoiSAE;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
+use S2lowLegacy\Class\helios\IWorkspace;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
@@ -23,9 +24,9 @@ class HeliosEnvoiSAETest extends S2lowTestCase
      */
     private function mockOpenStack()
     {
-        $tmpFolder = new TmpFolder();
-        $tmp_folder = $tmpFolder->create();
-        $pes_aller_path = $tmp_folder . "/ab3321d34d3fb32b52332befa534c9854fff677b";
+
+        $pes_aller_path = $this->getObjectInstancier()
+                ->get(IWorkspace::class)->getHeliosFilesUploadRoot() . "/ab3321d34d3fb32b52332befa534c9854fff677b";
         file_put_contents($pes_aller_path, "<test></test>");
         $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
             ->disableOriginalConstructor()
@@ -33,7 +34,7 @@ class HeliosEnvoiSAETest extends S2lowTestCase
         $openStackSwiftWrapper->method("fileExistsOnCloud")->willReturn(true);
         $openStackSwiftWrapper->method("retrieveFile")->willReturn($pes_aller_path);
         $this->getObjectInstancier()->set(OpenStackSwiftWrapper::class, $openStackSwiftWrapper);
-        $this->getObjectInstancier()->set('helios_files_upload_root', $tmp_folder);
+
         return $pes_aller_path;
     }
 

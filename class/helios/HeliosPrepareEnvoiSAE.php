@@ -14,13 +14,11 @@ class HeliosPrepareEnvoiSAE
     private $lastError;
 
     private $heliosTransactionsSQL;
-    private $pesAllerRetriever;
     private $userSQL;
     private $authoritySQL;
     private $logger;
 
     public function __construct(
-        PesAllerRetriever $pesAllerRetriever,
         Logger $logger,
         UserSQL $userSQL,
         AuthoritySQL $authoritySQL,
@@ -29,7 +27,6 @@ class HeliosPrepareEnvoiSAE
 
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
         $this->authoritySQL = $authoritySQL;
-        $this->pesAllerRetriever = $pesAllerRetriever;
         $this->logger = $logger;
         $this->userSQL = $userSQL;
     }
