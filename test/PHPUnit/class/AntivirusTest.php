@@ -1,16 +1,21 @@
 <?php
 
-use Psr\Container\ContainerInterface;
+use S2low\Tests\Services\ValueObject\MockCommandParams;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\ShellCommand;
 
 class AntivirusTest extends S2lowSimpleTestCase
 {
-    public ContainerInterface $container;
-    protected function setUp(): void
+    public function testOK()
     {
-        parent::setUp();
-        $this->container = static::getContainer();
+        $commandToCall = new MockCommandParams('exec', 0);
+        
+        $shellCommandObject = $this->shellCommandMockBuilder->getMock([$commandToCall]);
+        $this->container->set(ShellCommand::class, $shellCommandObject);
+
+        $this->assertTrue(
+            $this->getAntivirus()->checkArchiveSanity(__DIR__ . "/fixtures/classification.xml")
+        );
     }
 
     private function getAntivirus()
@@ -18,23 +23,13 @@ class AntivirusTest extends S2lowSimpleTestCase
         return $this->container->get(Antivirus::class);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testOK()
-    {
-        $this->setShellCommandReturn(0);
-        $this->assertTrue(
-            $this->getAntivirus()->checkArchiveSanity(__DIR__ . "/fixtures/classification.xml")
-        );
-    }
-
-    /**
-     * @throws Exception
-     */
     public function testFailed()
     {
-        $this->setShellCommandReturn(12);
+        $commandToCall = new MockCommandParams('exec', 12);
+
+        $shellCommandObject = $this->shellCommandMockBuilder->getMock([$commandToCall]);
+        $this->container->set(ShellCommand::class, $shellCommandObject);
+
         static::expectException(
             Exception::class,
         );
@@ -43,34 +38,19 @@ class AntivirusTest extends S2lowSimpleTestCase
 
     public function testVirusFound()
     {
-        $this->setShellCommandReturn(1);
+        $commandToCall = new MockCommandParams('exec', 1);
+
+        $shellCommandObject = $this->shellCommandMockBuilder->getMock([$commandToCall]);
+        $this->container->set(ShellCommand::class, $shellCommandObject);
+
+        $antivirus = $this->getAntivirus();
+
         $this->assertFalse(
-            $this->getAntivirus()->checkArchiveSanity(__DIR__ . "/fixtures/classification.xml")
+            $antivirus->checkArchiveSanity(__DIR__ . "/fixtures/classification.xml")
         );
         $this->assertStringContainsString(
-            "aaa :  toto FOUND",
-            $this->getAntivirus()->getLastError()
+            "L'archive est infectée par un virus. Retour de l'antivirus",
+            $antivirus->getLastError()
         );
-    }
-
-    private function setShellCommandReturn($return): void
-    {
-        if (!$this->container->has(ShellCommand::class)) {
-            throw new \LogicException('ShellCommand service not found in container.');
-        }
-
-        $shellCommand = $this->getMockBuilder(ShellCommand::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $shellCommand
-            ->method('exec')
-            ->willReturn($return);
-
-        $shellCommand
-            ->method('getLastOutput')
-            ->willReturn('/aaa: toto FOUND');
-
-        $this->container->set(ShellCommand::class, $shellCommand);
     }
 }

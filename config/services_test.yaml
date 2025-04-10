@@ -1,0 +1,5 @@
+services:
+  S2low\Tests\Services\ShellCommandMockBuilder:
+    public: true
+    autowire: true
+    autoconfigure: true
