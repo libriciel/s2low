@@ -2,32 +2,30 @@
 
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\ShellCommand;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AntivirusTest extends S2lowSimpleTestCase
 {
+    public ContainerInterface $container;
     protected function setUp(): void
     {
         parent::setUp();
+        $this->container = static::getContainer();
     }
 
     private function getAntivirus()
     {
-        return static::getContainer()->get(Antivirus::class);
+        return $this->container->get(Antivirus::class);
     }
 
-    /**
-     * @throws Exception
-     */
     public function testOK()
     {
+        $this->setShellCommandReturn(0);
         $this->assertTrue(
             $this->getAntivirus()->checkArchiveSanity(__DIR__ . "/fixtures/classification.xml")
         );
     }
 
-    /**
-     * @throws Exception
-     */
     public function testFailed()
     {
         $this->setShellCommandReturn(12);
@@ -60,6 +58,7 @@ class AntivirusTest extends S2lowSimpleTestCase
         $shellCommand
             ->method('getLastOutput')
             ->willReturn("/aaa: toto FOUND");
-        static::getContainer()->set(ShellCommand::class, $shellCommand);
+
+        $this->container->set(ShellCommand::class, $shellCommand);
     }
 }
