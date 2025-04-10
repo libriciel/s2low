@@ -588,7 +588,7 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
     public function testSendOnePesAcquitRetour()
     {
         $this->setupAntivirusReturnCommand();
-        
+
         $id_transaction = $this->createPesAllerToSend('PES_ACQUIT_RETOUR.xml');
         $this->envoiControler->sendOneTransaction($id_transaction, false);
 

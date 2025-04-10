@@ -2,7 +2,6 @@
 
 namespace S2low\Tests\Services\ValueObject;
 
-
 class MockCommandParams
 {
     public function __construct(

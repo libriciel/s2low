@@ -9,7 +9,7 @@ class AntivirusTest extends S2lowSimpleTestCase
     public function testOK()
     {
         $commandToCall = new MockCommandParams('exec', 0);
-        
+
         $shellCommandObject = $this->shellCommandMockBuilder->getMock([$commandToCall]);
         $this->container->set(ShellCommand::class, $shellCommandObject);
 
