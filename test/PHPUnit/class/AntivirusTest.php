@@ -1,8 +1,8 @@
 <?php
 
+use Psr\Container\ContainerInterface;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\ShellCommand;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AntivirusTest extends S2lowSimpleTestCase
 {
@@ -18,6 +18,9 @@ class AntivirusTest extends S2lowSimpleTestCase
         return $this->container->get(Antivirus::class);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testOK()
     {
         $this->setShellCommandReturn(0);
@@ -26,6 +29,9 @@ class AntivirusTest extends S2lowSimpleTestCase
         );
     }
 
+    /**
+     * @throws Exception
+     */
     public function testFailed()
     {
         $this->setShellCommandReturn(12);
@@ -47,17 +53,23 @@ class AntivirusTest extends S2lowSimpleTestCase
         );
     }
 
-    private function setShellCommandReturn($return)
+    private function setShellCommandReturn($return): void
     {
+        if (!$this->container->has(ShellCommand::class)) {
+            throw new \LogicException('ShellCommand service not found in container.');
+        }
+
         $shellCommand = $this->getMockBuilder(ShellCommand::class)
             ->disableOriginalConstructor()
             ->getMock();
+
         $shellCommand
             ->method('exec')
             ->willReturn($return);
+
         $shellCommand
             ->method('getLastOutput')
-            ->willReturn("/aaa: toto FOUND");
+            ->willReturn('/aaa: toto FOUND');
 
         $this->container->set(ShellCommand::class, $shellCommand);
     }
