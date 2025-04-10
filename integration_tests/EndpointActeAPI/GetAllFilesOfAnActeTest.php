@@ -75,9 +75,4 @@ class GetAllFilesOfAnActeTest extends S2lowIntegrationTestCase
             static::assertArrayHasKey('code_pj', $file);
         }
     }
-
-    public function getWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->getActesWorkspace();
-    }
 }

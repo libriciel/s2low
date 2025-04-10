@@ -314,9 +314,4 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
             $this->enveloppeInErrorPath . '/034-000000000-20170701-20170725A-AI-2-1_1.pdf'
         );
     }
-
-    public function getWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->getActesWorkspace();
-    }
 }

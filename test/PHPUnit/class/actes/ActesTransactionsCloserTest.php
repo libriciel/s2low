@@ -83,7 +83,7 @@ class ActesTransactionsCloserTest extends S2lowTestCase
         return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
     }
 
-    public function getWorkspace(): ActesWorkspaceForTests
+    public function getActesWorkspace(): ActesWorkspaceForTests
     {
         return $this->workspace;
     }

@@ -57,9 +57,4 @@ class GetDocumentOfTransactionTest extends S2lowIntegrationTestCase
         static::assertStringContainsString($strInHeader, $content);
         static::assertStringNotContainsString($strNotInHeader, $content);
     }
-
-    public function getWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->getActesWorkspace();
-    }
 }

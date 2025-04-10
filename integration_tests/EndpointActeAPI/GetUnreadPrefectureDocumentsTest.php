@@ -48,9 +48,4 @@ class GetUnreadPrefectureDocumentsTest extends S2lowIntegrationTestCase
             static::assertArrayHasKey('related_transaction_id', $document);
         }
     }
-
-    public function getWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->getActesWorkspace();
-    }
 }

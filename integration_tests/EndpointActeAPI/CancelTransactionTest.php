@@ -66,9 +66,4 @@ class CancelTransactionTest extends S2lowIntegrationTestCase
         $response = $client->getResponse();
         static::assertStringContainsString($stringInResponse, $response->getContent());
     }
-
-    public function getWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->getActesWorkspace();
-    }
 }

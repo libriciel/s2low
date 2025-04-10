@@ -31,9 +31,4 @@ class GetNewUniqueEnveloppeNumberTest extends S2lowIntegrationTestCase
         static::assertSame('OK', $content[0]);
         static::assertNotEmpty($content[1]);
     }
-
-    public function getWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->getActesWorkspace();
-    }
 }

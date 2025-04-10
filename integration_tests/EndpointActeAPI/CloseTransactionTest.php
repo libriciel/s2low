@@ -76,9 +76,4 @@ class CloseTransactionTest extends S2lowIntegrationTestCase
 
         static::assertSame($responseMsg, $content[0]);
     }
-
-    public function getWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->getActesWorkspace();
-    }
 }

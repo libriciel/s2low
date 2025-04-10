@@ -50,9 +50,4 @@ class GetTransactionBordereauAcquittementTest extends S2lowIntegrationTestCase
             $response->getContent()
         );
     }
-
-    public function getWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->getActesWorkspace();
-    }
 }

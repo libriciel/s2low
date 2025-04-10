@@ -18,14 +18,12 @@ class DeleteTransaction extends S2lowIntegrationTestCase
 
     protected function setUp(): void
     {
-        $this->setUpWithoutDeletingObjectInstancier();
-        $this->actesTransactionsSQL = ObjectInstancierFactory::getObjetInstancier()->get(ActesTransactionsSQL::class);
-        ObjectInstancierFactory::resetObjectInstancier();
+        parent::setUp();
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
     {
-        return $this->actesTransactionsSQL;
+        return ObjectInstancierFactory::getObjetInstancier()->get(ActesTransactionsSQL::class);
     }
 
     public function testShouldDeleteTransaction(): void
@@ -45,10 +43,5 @@ class DeleteTransaction extends S2lowIntegrationTestCase
         $transaction = $this->getActesTransactionsSQL()->getInfo($transactionId);
 
         return $transaction == false;
-    }
-
-    public function getWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->getActesWorkspace();
     }
 }

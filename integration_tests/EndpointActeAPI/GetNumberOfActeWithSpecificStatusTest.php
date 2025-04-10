@@ -68,9 +68,4 @@ class GetNumberOfActeWithSpecificStatusTest extends S2lowIntegrationTestCase
         static::assertSame($nbTransaction, $contentAsArray['nb_transactions']);
         static::assertSame($status, $contentAsArray['status_id']);
     }
-
-    public function getWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->getActesWorkspace();
-    }
 }

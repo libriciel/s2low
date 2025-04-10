@@ -25,13 +25,6 @@ class DownloadFileTest extends S2lowIntegrationTestCase
         parent::setUp();
         $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
         $this->client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
-
-        $this->workspace = $this->getObjectInstancier()->get(IActesWorkspace::class);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->workspace->clear();
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -100,10 +93,5 @@ class DownloadFileTest extends S2lowIntegrationTestCase
         static::assertJson($content[0]);
 
         return json_decode($response->getContent(), true);
-    }
-
-    public function getWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->workspace;
     }
 }

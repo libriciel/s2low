@@ -47,9 +47,4 @@ class OrderTransmissionOfMultipleActeToMinisterTest extends S2lowIntegrationTest
         $response = $client->getResponse();
         static::assertStringContainsString('Location:  index.php', $response->getContent());
     }
-
-    public function getWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->getActesWorkspace();
-    }
 }

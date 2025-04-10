@@ -263,7 +263,7 @@ class ActesApiControllerTest extends S2lowTestCase
         return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
     }
 
-    public function getWorkspace(): ActesWorkspaceForTests
+    public function getActesWorkspace(): ActesWorkspaceForTests
     {
         // Les tests se font sans ref au workspace
     }

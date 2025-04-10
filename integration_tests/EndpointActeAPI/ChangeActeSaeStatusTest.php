@@ -120,9 +120,4 @@ class ChangeActeSaeStatusTest extends S2lowIntegrationTestCase
         static::assertSame($arrayValueAnswer, $contentAsArray[$arrayKeyAnswer]);
         static::assertResponseStatusCodeSame($codeResponse);
     }
-
-    public function getWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->getActesWorkspace();
-    }
 }

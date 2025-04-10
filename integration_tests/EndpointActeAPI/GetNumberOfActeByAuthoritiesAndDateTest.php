@@ -118,9 +118,4 @@ class GetNumberOfActeByAuthoritiesAndDateTest extends S2lowIntegrationTestCase
         $response = $client->getResponse();
         static::assertSame('', $response->getContent());
     }
-
-    public function getWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->getActesWorkspace();
-    }
 }

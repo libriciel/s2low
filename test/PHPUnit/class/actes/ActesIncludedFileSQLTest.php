@@ -68,7 +68,7 @@ class ActesIncludedFileSQLTest extends S2lowTestCase
         return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
     }
 
-    public function getWorkspace(): ActesWorkspaceForTests
+    public function getActesWorkspace(): ActesWorkspaceForTests
     {
     }
 }

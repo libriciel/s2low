@@ -47,9 +47,4 @@ class MarkPrefectureDocumentAsReadTest extends S2lowIntegrationTestCase
 
         static::assertSame('{"result":"ok"}', $content[0]);
     }
-
-    public function getWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->getActesWorkspace();
-    }
 }

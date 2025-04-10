@@ -159,7 +159,7 @@ class ActesExportTest extends S2lowTestCase
         return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
     }
 
-    public function getWorkspace(): \S2lowLegacy\Class\ActesWorkspaceForTests
+    public function getActesWorkspace(): \S2lowLegacy\Class\ActesWorkspaceForTests
     {
         return $this->workspace;
     }

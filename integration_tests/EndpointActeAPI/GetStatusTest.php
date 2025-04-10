@@ -88,9 +88,4 @@ class GetStatusTest extends S2lowIntegrationTestCase
 
         self::assertTrue($nbOfDifferentValuesInArrays === 0, "Les statuts différents.");
     }
-
-    public function getWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->getActesWorkspace();
-    }
 }

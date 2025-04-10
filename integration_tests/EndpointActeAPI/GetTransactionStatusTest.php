@@ -75,9 +75,4 @@ class GetTransactionStatusTest extends S2lowIntegrationTestCase
 
         static::assertStringContainsString($shouldBeInHeader, $response->getContent());
     }
-
-    public function getWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->getActesWorkspace();
-    }
 }

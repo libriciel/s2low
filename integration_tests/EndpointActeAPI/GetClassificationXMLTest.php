@@ -45,9 +45,4 @@ class GetClassificationXMLTest extends S2lowIntegrationTestCase
     {
         return str_contains($response->getContent(), 'Content-type: text/xml');
     }
-
-    public function getWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->getActesWorkspace();
-    }
 }

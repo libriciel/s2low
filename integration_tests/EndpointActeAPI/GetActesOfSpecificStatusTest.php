@@ -118,9 +118,4 @@ class GetActesOfSpecificStatusTest extends S2lowIntegrationTestCase
         static::assertSame($data['offset'], intVal($contentAsArray['offset']));
         static::assertSame($data['limit'], intVal($contentAsArray['limit']));
     }
-
-    public function getWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->getActesWorkspace();
-    }
 }
