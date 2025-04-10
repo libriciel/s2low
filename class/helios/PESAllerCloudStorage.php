@@ -12,17 +12,12 @@ class PESAllerCloudStorage implements ICloudStorable
 {
     public const CONTAINER_NAME = 'pes_aller';
     private HeliosTransactionsSQL $transactionsSQL;
-    private string $helios_files_upload_root;
-    private string $repertoirePesAllerSansTransaction;
 
     public function __construct(
-        string $helios_files_upload_root,
         HeliosTransactionsSQL $transactionsSQL,
-        string $repertoirePesAllerSansTransaction
+        private readonly Workspace $workspace
     ) {
-        $this->helios_files_upload_root = $helios_files_upload_root;
         $this->transactionsSQL = $transactionsSQL;
-        $this->repertoirePesAllerSansTransaction = $repertoirePesAllerSansTransaction;
     }
 
     public function getContainerName(): string
@@ -38,7 +33,7 @@ class PESAllerCloudStorage implements ICloudStorable
     public function getFilePathOnDisk(int $object_id): string
     {
         $transaction_info = $this->transactionsSQL->getInfo($object_id);
-        return $this->helios_files_upload_root . '/' . $transaction_info['sha1'];
+        return $this->workspace->getHeliosFilesUploadRoot() . '/' . $transaction_info['sha1'];
     }
 
     public function getFilePathOnCloud(int $object_id): string
@@ -64,7 +59,7 @@ class PESAllerCloudStorage implements ICloudStorable
     public function getFinder(): Finder
     {
         $finder = new Finder();
-        $finder->in($this->helios_files_upload_root);
+        $finder->in($this->workspace->getHeliosFilesUploadRoot());
         return $finder;
     }
 
@@ -96,7 +91,7 @@ class PESAllerCloudStorage implements ICloudStorable
 
     public function getDirectoryForFilesWithoutTransaction(): ?string
     {
-        return $this->repertoirePesAllerSansTransaction;
+        return $this->workspace->getRepertoirePesAllerSansTransaction();
     }
 
     public function getDesiredPathInDirectoryForFilesWithoutTransaction(SplFileInfo $file): string

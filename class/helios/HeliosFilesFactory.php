@@ -8,8 +8,7 @@ class HeliosFilesFactory
 {
     public function __construct(
         private readonly HeliosTransactionsSQL $heliosTransactionsSQL,
-        private readonly string $helios_files_upload_root,
-        private readonly string $helios_responses_root,
+        private readonly Workspace $workspace
     ) {
     }
 
@@ -17,9 +16,9 @@ class HeliosFilesFactory
     {
         $info = $this->heliosTransactionsSQL->getInfo($transaction_id);
         return new HeliosFilesNames(
-            $this->helios_files_upload_root . "/{$info['sha1']}",                       // PES ALLER
-            $this->helios_files_upload_root . "/{$info['complete_name']}",          // PES ALLER utilisé lors de l'envoi, normalement supprimé
-            $this->helios_responses_root . "/" . $info['acquit_filename']   // Acquit, utilisé par setAcquitFilename
+            $this->workspace->getHeliosFilesUploadRoot() . "/{$info['sha1']}",                       // PES ALLER
+            $this->workspace->getHeliosFilesUploadRoot() . "/{$info['complete_name']}",          // PES ALLER utilisé lors de l'envoi, normalement supprimé
+            $this->workspace->getHeliosResponsesRoot() . "/" . $info['acquit_filename']   // Acquit, utilisé par setAcquitFilename
         );
     }
 }

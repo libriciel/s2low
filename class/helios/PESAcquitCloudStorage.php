@@ -13,15 +13,10 @@ class PESAcquitCloudStorage implements ICloudStorable
 {
     public const CONTAINER_NAME = "helios_pes_acquit";
 
-    private $heliosTransactionsSQL;
-    private $helios_responses_root;
-
     public function __construct(
-        HeliosTransactionsSQL $heliosTransactionsSQL,
-        $helios_responses_root
+        private readonly HeliosTransactionsSQL $heliosTransactionsSQL,
+        private readonly Workspace $workspace
     ) {
-        $this->heliosTransactionsSQL = $heliosTransactionsSQL;
-        $this->helios_responses_root = $helios_responses_root;
     }
 
     public function getContainerName(): string
@@ -40,7 +35,7 @@ class PESAcquitCloudStorage implements ICloudStorable
         if (empty($transaction_info['acquit_filename'])) {
             return "";
         }
-        return sprintf("%s/%s", $this->helios_responses_root, $transaction_info['acquit_filename']);
+        return sprintf("%s/%s", $this->workspace->getHeliosResponsesRoot(), $transaction_info['acquit_filename']);
     }
 
     public function getFilePathOnCloud(int $object_id): string
@@ -70,7 +65,7 @@ class PESAcquitCloudStorage implements ICloudStorable
     public function getFinder(): Finder
     {
         $finder = new Finder();
-        $finder->in($this->helios_responses_root)->name("*ACK*.xml");
+        $finder->in($this->workspace->getHeliosResponsesRoot())->name("*ACK*.xml");
         return $finder;
     }
 

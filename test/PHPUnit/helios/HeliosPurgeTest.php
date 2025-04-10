@@ -7,6 +7,7 @@ use PHPUnit\Exception;
 use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu;
 use S2lowLegacy\Class\helios\HeliosFilesFactory;
 use S2lowLegacy\Class\helios\HeliosPurge;
+use S2lowLegacy\Class\helios\Workspace;
 use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Controller\HeliosController;
@@ -38,8 +39,13 @@ class HeliosPurgeTest extends \S2lowTestCase
         $this->heliosController = new HeliosController($this->getObjectInstancier());
         $this->heliosFilesFactory = new HeliosFilesFactory(
             $this->heliosTransactionSQL,
-            $this->heliosUtils->helios_files_upload_root,
-            $this->heliosUtils->helios_response_root
+            new Workspace(
+                $this->heliosUtils->helios_files_upload_root,
+                '',
+                $this->heliosUtils->helios_response_root,
+                '',
+                '',
+            )
         );
 
         $this->heliosAnalyseFichierRecu = $this->getObjectInstancier()->get(HeliosAnalyseFichierRecu::class);

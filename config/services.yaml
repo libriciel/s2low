@@ -512,8 +512,6 @@ services:
     autowire: false #TODO : logger
 
   S2lowLegacy\Class\helios\HeliosExport:
-    arguments:
-      $helios_responses_root: "todo"
 
   S2lowLegacy\Class\helios\HeliosFiles:
     arguments:
@@ -530,12 +528,11 @@ services:
     autowire: false #TODO: logger
 
   S2lowLegacy\Class\helios\PESAcquitCloudStorage:
-    arguments:
-      $helios_responses_root: "todo"
 
   S2lowLegacy\Class\helios\PESRetourCloudStorage:
-    arguments:
-      $helios_responses_root: "todo"
+
+  S2lowLegacy\Class\helios\Workspace:
+    autowire: false
 
   S2lowLegacy\Class\helios\PesAllerRetriever:
     factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']

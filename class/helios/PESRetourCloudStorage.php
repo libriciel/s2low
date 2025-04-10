@@ -13,15 +13,10 @@ class PESRetourCloudStorage implements ICloudStorable
 {
     public const CONTAINER_NAME = "helios_pes_retour";
 
-    private $heliosRetourSQL;
-    private $helios_responses_root;
-
     public function __construct(
-        HeliosRetourSQL $heliosRetourSQL,
-        $helios_responses_root
+        private readonly HeliosRetourSQL $heliosRetourSQL,
+        private readonly Workspace $workspace,
     ) {
-        $this->heliosRetourSQL = $heliosRetourSQL;
-        $this->helios_responses_root = $helios_responses_root;
     }
 
     public function getContainerName(): string
@@ -40,7 +35,7 @@ class PESRetourCloudStorage implements ICloudStorable
         if (empty($transaction_info['filename'])) {
             return "";
         }
-        return sprintf("%s/%s", $this->helios_responses_root, $transaction_info['filename']);
+        return sprintf("%s/%s", $this->workspace->getHeliosResponsesRoot(), $transaction_info['filename']);
     }
 
     public function getFilePathOnCloud(int $object_id): string
@@ -70,7 +65,7 @@ class PESRetourCloudStorage implements ICloudStorable
     public function getFinder(): Finder
     {
         $finder = new Finder();
-        $finder->in($this->helios_responses_root)->name("PES2R*.xml");
+        $finder->in($this->workspace->getHeliosResponsesRoot())->name("PES2R*.xml");
         return $finder;
     }
 

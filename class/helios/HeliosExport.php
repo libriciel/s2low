@@ -17,7 +17,6 @@ class HeliosExport
     private $authoritySQL;
     private $heliosTransactionsSQL;
     private $pesAllerRetriever;
-    private $helios_responses_root;
     private $cloudStorageFactory;
 
     public function __construct(
@@ -25,14 +24,12 @@ class HeliosExport
         AuthoritySQL $authoritySQL,
         HeliosTransactionsSQL $heliosTransactionsSQL,
         PesAllerRetriever $pesAllerRetriever,
-        $helios_responses_root,
         CloudStorageFactory $cloudStorageFactory
     ) {
         $this->s2lowLogger = $s2lowLogger;
         $this->authoritySQL = $authoritySQL;
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
         $this->pesAllerRetriever = $pesAllerRetriever;
-        $this->helios_responses_root = $helios_responses_root;
         $this->cloudStorageFactory = $cloudStorageFactory;
     }
 

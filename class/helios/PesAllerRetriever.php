@@ -8,17 +8,15 @@ use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 
 class PesAllerRetriever
 {
-    private $helios_files_upload_root;
     private $openStackSwiftWrapper;
     private $logger;
 
 
     public function __construct(
-        $helios_files_upload_root,
         OpenStackSwiftWrapper $openStackSwiftWrapper,
-        S2lowLogger $logger
+        S2lowLogger $logger,
+        private readonly Workspace $workspace
     ) {
-        $this->helios_files_upload_root = $helios_files_upload_root;
         $this->openStackSwiftWrapper = $openStackSwiftWrapper;
         $this->logger = $logger;
     }
@@ -28,7 +26,7 @@ class PesAllerRetriever
         try {
             $result = $this->openStackSwiftWrapper->retrieveFile(
                 PESAllerCloudStorage::CONTAINER_NAME,
-                $this->helios_files_upload_root . "/" . $pes_sha1
+                $this->workspace->getHeliosFilesUploadRoot() . '/' . $pes_sha1
             );
         } catch (Exception $e) {
             $this->logger->error("Unable to retrieve $pes_sha1 from cloud : " . $e->getMessage(), $e->getTrace());
@@ -40,6 +38,6 @@ class PesAllerRetriever
 
     public function getPathForNonExistingFile($pes_sha1)
     {
-        return $this->helios_files_upload_root . "/" . $pes_sha1;
+        return $this->workspace->getHeliosFilesUploadRoot() . "/" . $pes_sha1;
     }
 }
