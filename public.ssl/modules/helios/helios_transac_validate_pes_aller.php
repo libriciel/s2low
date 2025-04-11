@@ -52,10 +52,6 @@ $info = $heliosTransactionsSQL->getInfo($transaction_id);
 
 $filename = $pesAllerRetriever->getPath($info['sha1']);
 
-if (!file_exists($filename)) {
-    throw new FileNotFoundException('Fichier introuvable : ' . $filename);
-}
-
 $pes_content = file_get_contents($filename);
 
 $heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);
