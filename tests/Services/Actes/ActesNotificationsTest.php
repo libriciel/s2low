@@ -5,10 +5,9 @@ use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\actes\ActesNotification;
 use S2lowLegacy\Class\actes\ActesPdf;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\actes\ActesWorspaceManager;
 use S2lowLegacy\Class\actes\IActesPdf;
 use S2lowLegacy\Class\ActesWorkspace;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
-use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Class\Mailer;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\ObjectInstancier;
@@ -35,6 +34,7 @@ class ActesNotificationsTest extends \S2low\Tests\S2lowSymfonyWebTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->actesWorkspaceManager = new ActesWorspaceManager(new TmpFolder());
         $this->getObjectInstancier()->set(IActesPdf::class, new ActesPdf(SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg"));
         $this->mailer = $this->getMockBuilder(MailerSymfony::class)
             ->disableOriginalConstructor()->getMock();
@@ -51,9 +51,15 @@ class ActesNotificationsTest extends \S2low\Tests\S2lowSymfonyWebTestCase
         $this->getObjectInstancier()->set("pdf_stamp_url", "");
         $this->getObjectInstancier()->set(Environment::class, $twig);
 
-        $this->workspace = new ActesWorkspaceForTests();
-        $this->getObjectInstancier()->set(IActesWorkspace::class, $this->workspace);
+        $this->workspace = $this->actesWorkspaceManager->get();
+        $this->getObjectInstancier()->set(ActesWorkspace::class, $this->workspace);
         $this->actesNotification = $this->getObjectInstancier()->get(ActesNotification::class);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->actesWorkspaceManager->delete($this->workspace);
     }
 
     /**

@@ -16,10 +16,9 @@ use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\ActeTamponne;
 use S2lowLegacy\Class\actes\IActesPdf;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Class\CloudStorage;
 use S2lowLegacy\Class\CloudStorageFactory;
-use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowTestCase;
 
@@ -28,10 +27,7 @@ class ActesArchiveControlerTest extends S2lowTestCase
     use ActesUtilitiesTestTrait;
     use PastellConfigurationTestTrait;
 
-    /**
-     * @var \S2lowLegacy\Class\ActesWorkspaceForTests
-     */
-    private ActesWorkspaceForTests $workspace;
+    private ActesWorkspace $workspace;
 
     private function getActesArchivesControler(): ActesArchiveControler
     {
@@ -41,8 +37,8 @@ class ActesArchiveControlerTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->workspace = new ActesWorkspaceForTests();
-        $this->getObjectInstancier()->set(IActesWorkspace::class, $this->workspace);
+        $this->workspace = $this->actesWorkspaceManager->get();
+        $this->getObjectInstancier()->set(ActesWorkspace::class, $this->workspace);
         $this->getObjectInstancier()->set(
             IActesPdf::class,
             new ActesPdfLegacy(SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg")
@@ -52,7 +48,7 @@ class ActesArchiveControlerTest extends S2lowTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-        $this->workspace->clear();
+        $this->actesWorkspaceManager->delete($this->workspace);
     }
 
     /**
@@ -237,10 +233,5 @@ class ActesArchiveControlerTest extends S2lowTestCase
     public function getActesTransactionsSQL(): ActesTransactionsSQL
     {
         return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
-    }
-
-    public function getActesWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->workspace;
     }
 }

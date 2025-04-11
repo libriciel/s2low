@@ -17,7 +17,7 @@ use Libriciel\LibActes\FichierXML\MessageMetierLettreObservations;
 use Libriciel\LibActes\FichierXML\MessageMetierReponseClassificationSansChangement;
 use Libriciel\LibActes\FichierXML\MessageMetierRetourClassification;
 use Libriciel\LibActes\Utils\XSDValidationException;
-use S2lowLegacy\Class\IActesWorkspace;
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\SigTermHandler;
@@ -33,7 +33,7 @@ class ActesAnalyseFichierRecuController
         private ActesEnvelopeSQL $actesEnvelopeSQL,
         private ActesIncludedFileSQL $actesIncludedFileSQL,
         private string $actes_ministere_acronyme,
-        private IActesWorkspace $actesWorkspace
+        private ActesWorkspace $actesWorkspace
     ) {
     }
 

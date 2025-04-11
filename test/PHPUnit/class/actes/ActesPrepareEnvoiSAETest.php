@@ -78,9 +78,4 @@ class ActesPrepareEnvoiSAETest extends S2lowTestCase
     {
         return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
     }
-
-    public function getActesWorkspace(): \S2lowLegacy\Class\ActesWorkspaceForTests
-    {
-        // TODO: Implement getWorkspace() method.
-    }
 }

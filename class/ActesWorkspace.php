@@ -2,7 +2,7 @@
 
 namespace S2lowLegacy\Class;
 
-class ActesWorkspace implements IActesWorkspace
+class ActesWorkspace
 {
     public function __construct(
         private string $actes_files_upload_root,

@@ -1,24 +1,23 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesRetriever;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
-use S2lowLegacy\Class\IActesWorkspace;
+use S2lowLegacy\Class\ActesWorkspace;
 
 class ActesEnveloppeTest extends S2lowTestCase
 {
-    private ActesWorkspaceForTests $workspace;
+    private ActesWorkspace $workspace;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->workspace = new ActesWorkspaceForTests();
-        $this->getObjectInstancier()->set(IActesWorkspace::class, $this->workspace);
+        $this->workspace = $this->actesWorkspaceManager->get();
+        $this->getObjectInstancier()->set(ActesWorkspace::class, $this->workspace);
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
-        $this->workspace->clear();
+        $this->actesWorkspaceManager->delete($this->workspace);
     }
 
     public function testSendFileNotInit()

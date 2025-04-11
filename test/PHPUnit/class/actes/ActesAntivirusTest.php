@@ -5,7 +5,6 @@ use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesRetriever;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
@@ -35,7 +34,7 @@ class ActesAntivirusTest extends S2lowTestCase
             __DIR__ . "/fixtures/abc-TACT--000000000--20170803-16.tar.gz",
             $this->tmp_dir
         );
-        $this->workspace = new ActesWorkspaceForTests();
+        $this->workspace = $this->actesWorkspaceManager->get();
 
         $this->actesRetriever = new ActesRetriever(
             $this->getObjectInstancier()->get(OpenStackSwiftWrapper::class),
@@ -46,7 +45,7 @@ class ActesAntivirusTest extends S2lowTestCase
 
     protected function tearDown(): void
     {
-        $this->workspace->clear();
+        $this->actesWorkspaceManager->delete($this->workspace);
         $this->tmpFolder->delete($this->tmp_dir);
         parent::tearDown();
     }

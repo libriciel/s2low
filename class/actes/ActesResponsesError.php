@@ -4,7 +4,7 @@ namespace S2lowLegacy\Class\actes;
 
 use Exception;
 use FilesystemIterator;
-use S2lowLegacy\Class\IActesWorkspace;
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Class\TmpFolder;
 
 class ActesResponsesError
@@ -13,7 +13,7 @@ class ActesResponsesError
 
     public function __construct(
         TmpFolder $tmpFolder,
-        private readonly IActesWorkspace $workspace
+        private readonly ActesWorkspace $workspace
     ) {
         $this->tmpFolder = $tmpFolder;
     }

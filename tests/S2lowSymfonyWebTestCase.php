@@ -3,7 +3,7 @@
 namespace S2low\Tests;
 
 use Exception;
-use S2lowLegacy\Class\IActesWorkspace;
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -114,8 +114,8 @@ abstract class S2lowSymfonyWebTestCase extends WebTestCase
     {
         $this->assertTrue(true);
     }
-    protected function getActesWorkspace(): IActesWorkspace
+    protected function getActesWorkspace(): ActesWorkspace
     {
-        return $this->getObjectInstancier()->get(IActesWorkspace::class);
+        return $this->getObjectInstancier()->get(ActesWorkspace::class);
     }
 }

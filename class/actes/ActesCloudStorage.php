@@ -2,7 +2,7 @@
 
 namespace S2lowLegacy\Class\actes;
 
-use S2lowLegacy\Class\IActesWorkspace;
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Class\ICloudStorable;
 use S2lowLegacy\Lib\UnrecoverableException;
 use SplFileInfo;
@@ -19,7 +19,7 @@ class ActesCloudStorage implements ICloudStorable
      */
     public function __construct(
         private ActesEnvelopeSQL $actesEnvelopeSQL,
-        private IActesWorkspace $actesWorkspace
+        private ActesWorkspace $actesWorkspace
     ) {
         if (!is_dir($this->actesWorkspace->getFilesUploadRoot())) {
             throw new UnrecoverableException(

@@ -8,6 +8,7 @@ use S2lowLegacy\Class\actes\ActesImapProperties;
 use S2lowLegacy\Class\actes\ActesMinistereProperties;
 use S2lowLegacy\Class\actes\ActesPdf;
 use S2lowLegacy\Class\actes\ActesPdfLegacy;
+use S2lowLegacy\Class\actes\ActesWorspaceManager;
 use S2lowLegacy\Class\actes\IActesPdf;
 use S2lowLegacy\Class\helios\PESAcquitCloudStorage;
 use S2lowLegacy\Class\helios\PESAllerCloudStorage;
@@ -219,7 +220,7 @@ class LegacyObjectsManager
 
         if (!TESTING_ENVIRONNEMENT) {
             $objectInstancier->set(
-                IActesWorkspace::class,
+                ActesWorkspace::class,
                 new ActesWorkspace(
                     ACTES_FILES_UPLOAD_ROOT,
                     ACTES_RESPONSE_TMP_LOCAL_PATH,
@@ -228,7 +229,9 @@ class LegacyObjectsManager
                 )
             );
         } else {
-            $objectInstancier->set(IActesWorkspace::class, new ActesWorkspaceForTests());
+            $tmpFolder = new TmpFolder();
+            $actesWorkspaceManager = new ActesWorspaceManager($tmpFolder);
+            $objectInstancier->set(ActesWorkspace::class, $actesWorkspaceManager->get());
         }
 
         $objectInstancier->set('mail_files_upload_root', MAIL_FILES_UPLOAD_ROOT);

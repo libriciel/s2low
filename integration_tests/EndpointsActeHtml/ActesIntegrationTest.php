@@ -9,9 +9,6 @@ use IntegrationTests\S2lowIntegrationTestCase;
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
-use S2lowLegacy\Class\IActesWorkspace;
-use S2lowLegacy\Lib\ObjectInstancierFactory;
 
 class ActesIntegrationTest extends S2lowIntegrationTestCase
 {

@@ -1,6 +1,5 @@
 <?php
 
-use Libriciel\LibActes\ArchiveValidator;
 use S2low\Services\PdfValidator;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
@@ -11,21 +10,16 @@ use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\ActesTypePJSQL;
 use S2lowLegacy\Class\actes\ActesUpdateClassificationSQL;
 use S2lowLegacy\Class\actes\ArchiveValidatorFactory;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
-use S2lowLegacy\Class\IActesWorkspace;
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Class\PadesValid;
 use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\S2lowLogger;
-use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Model\LogsSQL;
 
 class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
 {
-    /**
-     * @var \S2lowLegacy\Class\ActesWorkspaceForTests
-     */
-    private ActesWorkspaceForTests $workspace;
+    private ActesWorkspace $workspace;
     private ActesScriptHelper $actesScriptHelper;
 
     protected function setUp(): void
@@ -36,7 +30,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
         $padesValid->method("validate")->willReturn(true);
         $this->getObjectInstancier()->set(PadesValid::class, $padesValid);
 
-        $this->workspace = new ActesWorkspaceForTests();
+        $this->workspace = $this->actesWorkspaceManager->get();
 
         $this->actesScriptHelper = new ActesScriptHelper(
             $this->getObjectInstancier()->get(ActesTransactionsSQL::class),
@@ -52,7 +46,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
 
     protected function tearDown(): void
     {
-        $this->workspace->clear();
+        $this->actesWorkspaceManager->delete($this->workspace);
     }
 
     private function getActesAnalysFichierAEnvoyerWorker(): ActesAnalyseFichierAEnvoyerWorker

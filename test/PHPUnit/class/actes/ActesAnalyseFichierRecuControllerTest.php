@@ -9,8 +9,6 @@ use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\ActesUpdateClassificationSQL;
 use S2lowLegacy\Class\ActesWorkspace;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
-use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
@@ -21,7 +19,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
     private const TEST_ARCHIVE_MISILCL_PATH = __DIR__ . "/../fixtures/test-archive-MISILCL";
 
     private $actes_ministere_acronyme;
-    private IActesWorkspace $workspace;
+    private ActesWorkspace $workspace;
     private ActesRetriever $actesRetriever;
 
     protected function setUp(): void
@@ -31,7 +29,7 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
 
         $this->actes_ministere_acronyme = ACTES_MINISTERE_ACRONYME;
 
-        $this->workspace = new ActesWorkspaceForTests();
+        $this->workspace =  $this->actesWorkspaceManager->get();
 
         $this->actesRetriever = new ActesRetriever(
             $this->getObjectInstancier()->get(OpenStackSwiftWrapper::class),

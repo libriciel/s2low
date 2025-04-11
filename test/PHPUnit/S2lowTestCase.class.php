@@ -1,9 +1,10 @@
 <?php
 
-use S2lowLegacy\Class\ActesWorkspaceForTests;
-use S2lowLegacy\Class\IActesWorkspace;
+use S2lowLegacy\Class\actes\ActesWorspaceManager;
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\RgsConnexion;
+use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 use PHPUnit\Framework\TestCase;
@@ -23,14 +24,9 @@ abstract class S2lowTestCase extends TestCase
 
         $this->testEnvironmentManager = new TestEnvironmentManager();
         $this->testEnvironmentManager->setUp();
+        $this->actesWorkspaceManager = new ActesWorspaceManager(new TmpFolder());
     }
 
-    /*protected function tearDown(): void
-    {
-        if (is_a($this->getActesWorkspace(), ActesWorkspaceForTests::class)) {
-            $this->getActesWorkspace()->clear();
-        }
-    }*/
 
     public function getObjectInstancier(): ObjectInstancier
     {
@@ -126,8 +122,8 @@ abstract class S2lowTestCase extends TestCase
         $this->assertTrue(true);
     }
 
-    protected function getActesWorkspace(): IActesWorkspace
+    protected function getActesWorkspace(): ActesWorkspace
     {
-        return LegacyObjectsManager::getLegacyObjectInstancier()->get(IActesWorkspace::class);
+        return LegacyObjectsManager::getLegacyObjectInstancier()->get(ActesWorkspace::class);
     }
 }

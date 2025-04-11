@@ -8,7 +8,6 @@ use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\ActeTamponne;
 use S2lowLegacy\Class\ActesWorkspace;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
@@ -25,7 +24,7 @@ class ActesExportTest extends S2lowTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->workspace = new ActesWorkspaceForTests();
+        $this->workspace = $this->actesWorkspaceManager->get();
 
         $this->actesRetriever = new ActesRetriever(
             $this->getObjectInstancier()->get(OpenStackSwiftWrapper::class),
@@ -36,7 +35,7 @@ class ActesExportTest extends S2lowTestCase
 
     public function tearDown(): void
     {
-        $this->workspace->clear();
+        $this->actesWorkspaceManager->delete($this->workspace);
     }
 
     private function getActesExport()
@@ -159,7 +158,7 @@ class ActesExportTest extends S2lowTestCase
         return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
     }
 
-    public function getActesWorkspace(): \S2lowLegacy\Class\ActesWorkspaceForTests
+    public function getActesWorkspace(): ActesWorkspace
     {
         return $this->workspace;
     }

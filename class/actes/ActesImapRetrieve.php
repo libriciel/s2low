@@ -2,7 +2,7 @@
 
 namespace S2lowLegacy\Class\actes;
 
-use S2lowLegacy\Class\IActesWorkspace;
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Class\ImapMailBoxFactory;
 use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\S2lowLogger;
@@ -27,7 +27,7 @@ class ActesImapRetrieve
         S2lowLogger $s2lowLogger,
         SigTermHandler $sigTermHandler,
         WorkerScript $workerScript,
-        private readonly IActesWorkspace $workspace
+        private readonly ActesWorkspace $workspace
     ) {
         $this->actesImapProperties = $actesImapProperties;
         $this->imapMailBoxFactory = $imapMailBoxFactory;

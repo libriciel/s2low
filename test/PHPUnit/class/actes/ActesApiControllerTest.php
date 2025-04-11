@@ -7,7 +7,6 @@ namespace PHPUnit\class\actes;
 use Exception;
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
 use S2lowLegacy\Controller\ActesAPIController;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Lib\Environnement;
@@ -261,10 +260,5 @@ class ActesApiControllerTest extends S2lowTestCase
     public function getActesTransactionsSQL(): ActesTransactionsSQL
     {
         return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
-    }
-
-    public function getActesWorkspace(): ActesWorkspaceForTests
-    {
-        // Les tests se font sans ref au workspace
     }
 }

@@ -2,11 +2,10 @@
 
 namespace S2lowLegacy\Class\actes;
 
-use S2lowLegacy\Class\IActesWorkspace;
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Lib\SigTermHandler;
 use Monolog\Logger;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @deprecated 5.0.39
@@ -25,7 +24,7 @@ class ActesEnvelopeStorage
         ActesEnvelopeSQL $actesEnvelopeSQL,
         OpenStackSwiftWrapper $openStackSwiftWrapper,
         Logger $logger,
-        private readonly IActesWorkspace $workspace
+        private readonly ActesWorkspace $workspace
     ) {
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
         $this->openStackSwiftWrapper = $openStackSwiftWrapper;

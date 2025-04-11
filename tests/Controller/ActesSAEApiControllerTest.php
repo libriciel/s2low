@@ -13,7 +13,6 @@ use S2low\Kernel;
 use S2low\Services\Actes\ActesSAEStateTransitionner;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Controller\Controller;
 use S2lowTestCase;
@@ -148,10 +147,5 @@ class ActesSAEApiControllerTest extends S2lowTestCase
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
     {
         return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
-    }
-
-    public function getActesWorkspace(): ActesWorkspaceForTests
-    {
-        // TODO: Implement getWorkspace() method.
     }
 }

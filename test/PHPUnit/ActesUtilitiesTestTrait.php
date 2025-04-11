@@ -8,8 +8,7 @@ use Exception;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
-use S2lowLegacy\Class\IActesWorkspace;
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Lib\SQLQuery;
 
 /**
@@ -151,5 +150,5 @@ trait ActesUtilitiesTestTrait
 
     abstract public function getSQLQuery(): SQLQuery;
 
-    abstract public function getActesWorkspace(): ActesWorkspaceForTests;
+    abstract public function getActesWorkspace(): ActesWorkspace;
 }

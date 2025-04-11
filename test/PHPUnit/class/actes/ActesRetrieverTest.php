@@ -2,22 +2,21 @@
 
 use S2lowLegacy\Class\actes\ActesRetriever;
 use S2lowLegacy\Class\ActesWorkspace;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
-use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Class\TmpFolder;
 
 class ActesRetrieverTest extends S2lowTestCase
 {
+    private ActesWorkspace $workspace;
     protected function setUp(): void
     {
         parent::setUp();
-        $this->workspace = new ActesWorkspaceForTests();
+        $this->workspace = $this->actesWorkspaceManager->get();
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
-        $this->workspace->clear();
+        $this->actesWorkspaceManager->delete($this->workspace);
     }
 
     /**

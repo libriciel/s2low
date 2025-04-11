@@ -2,21 +2,18 @@
 
 use S2lowLegacy\Class\actes\ActesConventions;
 use S2lowLegacy\Class\ActesWorkspace;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
-use S2lowLegacy\Class\IActesWorkspace;
-use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Model\AuthoritySQL;
 
 class ActesConventionsTest extends S2lowTestCase
 {
     /** @var  ActesConventions */
     private $actesConventions;
-    private ActesWorkspaceForTests $workspace;
+    private ActesWorkspace $workspace;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->workspace = new ActesWorkspaceForTests();
+        $this->workspace = $this->actesWorkspaceManager->get();
         $this->actesConventions = new ActesConventions(
             $this->getObjectInstancier()->get(AuthoritySQL::class),
             $this->workspace
@@ -25,7 +22,7 @@ class ActesConventionsTest extends S2lowTestCase
 
     protected function tearDown(): void
     {
-        $this->workspace->clear();
+        $this->actesWorkspaceManager->delete($this->workspace);
     }
 
     public function testHasNoConvention()

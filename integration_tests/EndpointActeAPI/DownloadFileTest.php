@@ -8,8 +8,6 @@ use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
-use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 
@@ -18,7 +16,6 @@ class DownloadFileTest extends S2lowIntegrationTestCase
     use ActesUtilitiesTestTrait;
 
     private ?ActesTransactionsSQL $actesTransactionsSQL;
-    private ActesWorkspaceForTests $workspace;
 
     protected function setUp(): void
     {

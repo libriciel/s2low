@@ -6,9 +6,10 @@ use Exception;
 use org\bovigo\vfs\vfsStream;
 use S2low\Enum\ModulePermission;
 use S2low\Enum\UserRole;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
-use S2lowLegacy\Class\IActesWorkspace;
+use S2lowLegacy\Class\actes\ActesWorspaceManager;
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Class\LegacyObjectsManager;
+use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\PemCertificate;
 use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\SQLQuery;
@@ -21,6 +22,7 @@ class S2lowIntegrationTestCase extends WebTestCase
     private int $nextCreatedUserId = 1;
     protected PemCertificateFactory $pemCertificateFactory;
     protected PemCertificate $fixtureCertificate;
+    protected ActesWorspaceManager $actesWorkspaceManager;
 
     /**
      * @param int|string $dataName
@@ -30,6 +32,7 @@ class S2lowIntegrationTestCase extends WebTestCase
     public function __construct(?string $name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
+        $this->actesWorkspaceManager = new ActesWorspaceManager(new TmpFolder());
     }
 
     /**
@@ -70,7 +73,7 @@ class S2lowIntegrationTestCase extends WebTestCase
         $_SERVER['QUERY_STRING'] = '';
         // Evite le message postgres phpunit désolé, trop de clients sont déjà connectés
         $this->sqlQuery->disconnect();
-        $this->getActesWorkspace()->clear();
+        $this->actesWorkspaceManager->delete($this->getActesWorkspace());
         parent::tearDown();
     }
 
@@ -208,8 +211,8 @@ class S2lowIntegrationTestCase extends WebTestCase
         }
     }
 
-    protected function getActesWorkspace(): ActesWorkspaceForTests
+    protected function getActesWorkspace(): ActesWorkspace
     {
-        return static::getContainer()->get(IActesWorkspace::class);
+        return static::getContainer()->get(ActesWorkspace::class);
     }
 }

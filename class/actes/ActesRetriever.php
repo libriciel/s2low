@@ -2,7 +2,7 @@
 
 namespace S2lowLegacy\Class\actes;
 
-use S2lowLegacy\Class\IActesWorkspace;
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Class\S2lowLogger;
 use Exception;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
@@ -15,7 +15,7 @@ class ActesRetriever
     public function __construct(
         OpenStackSwiftWrapper $openStackSwiftWrapper,
         S2lowLogger $logger,
-        private readonly IActesWorkspace $workspace
+        private readonly ActesWorkspace $workspace
     ) {
         $this->openStackSwiftWrapper = $openStackSwiftWrapper;
         $this->logger = $logger;

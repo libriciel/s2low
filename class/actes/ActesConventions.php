@@ -3,14 +3,14 @@
 namespace S2lowLegacy\Class\actes;
 
 use Exception;
-use S2lowLegacy\Class\IActesWorkspace;
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Model\AuthoritySQL;
 
 class ActesConventions
 {
     public function __construct(
         private readonly AuthoritySQL $authoritySQL,
-        private readonly IActesWorkspace $actes_workspace
+        private readonly ActesWorkspace $actes_workspace
     ) {
     }
 

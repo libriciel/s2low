@@ -1,8 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesClassificationCreation;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
-use S2lowLegacy\Class\IActesWorkspace;
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Model\AuthoritySQL;
 
 class ActesClassificationCreationTest extends S2lowTestCase
@@ -16,7 +15,7 @@ class ActesClassificationCreationTest extends S2lowTestCase
 
         $actesClassificationCreation = new ActesClassificationCreation();
         ob_start();
-        $this->getObjectInstancier()->set(IActesWorkspace::class, new ActesWorkspaceForTests());
+        $this->getObjectInstancier()->set(ActesWorkspace::class, $this->actesWorkspaceManager->get());
         $actesClassificationCreation->sendToAllAuthorities();
         $content = ob_get_contents();
         ob_end_clean();

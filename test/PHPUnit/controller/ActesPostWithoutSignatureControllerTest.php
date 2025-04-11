@@ -4,7 +4,6 @@ use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\ActesWorkspace;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
 use S2lowLegacy\Controller\ActesPostWithoutSignatureController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\RedirectException;
@@ -17,12 +16,12 @@ class ActesPostWithoutSignatureControllerTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->workspace = new ActesWorkspaceForTests();
+        $this->workspace = $this->actesWorkspaceManager->get();
     }
 
     protected function tearDown(): void
     {
-        $this->workspace->clear();
+        $this->actesWorkspaceManager->delete($this->workspace);
         parent::tearDown();
     }
 
@@ -103,7 +102,7 @@ class ActesPostWithoutSignatureControllerTest extends S2lowTestCase
         return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
     }
 
-    public function getActesWorkspace(): \S2lowLegacy\Class\ActesWorkspaceForTests
+    public function getActesWorkspace(): ActesWorkspace
     {
         return $this->workspace;
     }

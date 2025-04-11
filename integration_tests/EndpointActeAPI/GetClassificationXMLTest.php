@@ -6,7 +6,6 @@ use IntegrationTests\S2lowIntegrationTestCase;
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
 use Symfony\Component\HttpFoundation\Response;
 
 class GetClassificationXMLTest extends S2lowIntegrationTestCase

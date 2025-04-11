@@ -9,9 +9,8 @@ use Monolog\Handler\TestHandler;
 use S2lowLegacy\Class\actes\ActesCloudStorage;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Class\CloudStorageFactory;
-use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Lib\OpenStackContainerStore;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -23,7 +22,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
     private const MIN_DATE = '1970-01-01';
     private const MESSAGE = 'message';
     private string $dateTomorrow;
-    private ActesWorkspaceForTests $workspace;
+    private ActesWorkspace $workspace;
 
     /**
      * @throws Exception
@@ -60,7 +59,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
 
         $this->getObjectInstancier()->set(OpenStackSwiftWrapper::class, $openStackSwiftWrapper);
 
-        $this->workspace = new ActesWorkspaceForTests();
+        $this->workspace = $this->actesWorkspaceManager->get();
     }
 
 
@@ -75,7 +74,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
 
         $transaction_id = $actesEnvelopeSQL->create(1, $filename);
         $actesEnvelopeSQL->setTransactionInCloud($transaction_id);
-        $this->getObjectInstancier()->set(IActesWorkspace::class, $this->workspace);
+        $this->getObjectInstancier()->set(ActesWorkspace::class, $this->workspace);
         $actesEnvelopeStorage = $this->getObjectInstancier()->get(ActesEnvelopeStorage::class);
         $actesEnvelopeStorage->grandMenage(self::MIN_DATE, $this->dateTomorrow, 'ok');
         $testHandler = $this->getObjectInstancier()->get(TestHandler::class);
@@ -90,7 +89,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
 
         $transaction_id = $actesEnvelopeSQL->create(1, $filename);
         $actesEnvelopeSQL->setTransactionInCloud($transaction_id);
-        $this->getObjectInstancier()->set(IActesWorkspace::class, $this->workspace);
+        $this->getObjectInstancier()->set(ActesWorkspace::class, $this->workspace);
         $actesEnvelopeStorage = $this->getObjectInstancier()->get(ActesEnvelopeStorage::class);
         $actesEnvelopeStorage->grandMenage(self::MIN_DATE, $this->dateTomorrow, true);
         $testHandler = $this->getObjectInstancier()->get(TestHandler::class);
@@ -108,7 +107,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
 
         $transaction_id = $actesEnvelopeSQL->create(1, $filename);
         $actesEnvelopeSQL->setTransactionInCloud($transaction_id);
-        $this->getObjectInstancier()->set(IActesWorkspace::class, $this->workspace);
+        $this->getObjectInstancier()->set(ActesWorkspace::class, $this->workspace);
         $actesEnvelopeStorage = $this->getObjectInstancier()->get(ActesEnvelopeStorage::class);
         $actesEnvelopeStorage->grandMenage(self::MIN_DATE, $this->dateTomorrow, false);
         $testHandler = $this->getObjectInstancier()->get(TestHandler::class);
@@ -127,7 +126,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
         file_put_contents("$actes_files_upload_root/$filename", 'foo');
         $transaction_id = $actesEnvelopeSQL->create(1, $filename);
         static::assertFileExists("$actes_files_upload_root/$filename");
-        $this->getObjectInstancier()->set(IActesWorkspace::class, $this->workspace);
+        $this->getObjectInstancier()->set(ActesWorkspace::class, $this->workspace);
         $this->getObjectInstancier()
             ->get(CloudStorageFactory::class)
             ->getInstanceByClassName(ActesCloudStorage::class)
@@ -146,7 +145,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
         $filename = self::S2LOW_PHPUNIT_ACTE_ENVELOPE_STORAGE_TEST . mt_rand(0, mt_getrandmax());
 
         $envelope_id = $actesEnvelopeSQL->create(1, $filename);
-        $this->getObjectInstancier()->set(IActesWorkspace::class, $this->workspace);
+        $this->getObjectInstancier()->set(ActesWorkspace::class, $this->workspace);
         $this->getObjectInstancier()
             ->get(CloudStorageFactory::class)
             ->getInstanceByClassName(ActesCloudStorage::class)
@@ -179,7 +178,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
         $openStackSwiftWrapper->method('fileExistsOnCloud')->willReturn(true);
 
         $this->getObjectInstancier()->set(OpenStackSwiftWrapper::class, $openStackSwiftWrapper);
-        $this->getObjectInstancier()->set(IActesWorkspace::class, $this->workspace);
+        $this->getObjectInstancier()->set(ActesWorkspace::class, $this->workspace);
         $this->getObjectInstancier()
             ->get(CloudStorageFactory::class)
             ->getInstanceByClassName(ActesCloudStorage::class)
@@ -209,7 +208,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
 
         $this->getObjectInstancier()->set(OpenStackSwiftWrapper::class, $openStackSwiftWrapper);
 
-        $this->getObjectInstancier()->set(IActesWorkspace::class, $this->workspace);
+        $this->getObjectInstancier()->set(ActesWorkspace::class, $this->workspace);
         $storeResult = $this->getObjectInstancier()
             ->get(CloudStorageFactory::class)
             ->getInstanceByClassName(ActesCloudStorage::class)

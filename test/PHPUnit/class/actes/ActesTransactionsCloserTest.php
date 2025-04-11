@@ -12,7 +12,7 @@ use S2lowLegacy\Class\actes\ActesScriptHelper;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsCloser;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
+use S2lowLegacy\Class\ActesWorkspace;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowTestCase;
@@ -21,12 +21,12 @@ class ActesTransactionsCloserTest extends S2lowTestCase
 {
     use ActesUtilitiesTestTrait;
 
-    private ActesWorkspaceForTests $workspace;
+    private ActesWorkspace $workspace;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->workspace = new ActesWorkspaceForTests();
+        $this->workspace = $this->actesWorkspaceManager->get();
         $this->actesRetriever = new ActesRetriever(
             $this->getObjectInstancier()->get(OpenStackSwiftWrapper::class),
             $this->getObjectInstancier()->get(S2lowLogger::class),
@@ -36,7 +36,7 @@ class ActesTransactionsCloserTest extends S2lowTestCase
 
     public function tearDown(): void
     {
-        $this->workspace->clear();
+        $this->actesWorkspaceManager->delete($this->workspace);
     }
     /**
      * @throws Exception
@@ -81,10 +81,5 @@ class ActesTransactionsCloserTest extends S2lowTestCase
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
     {
         return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
-    }
-
-    public function getActesWorkspace(): ActesWorkspaceForTests
-    {
-        return $this->workspace;
     }
 }

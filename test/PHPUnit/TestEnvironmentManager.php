@@ -2,10 +2,7 @@
 
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
-use S2lowLegacy\Class\ActesWorkspaceForTests;
-use S2lowLegacy\Class\IActesWorkspace;
 use S2lowLegacy\Class\S2lowLogger;
-use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SessionWrapper;
