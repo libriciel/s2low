@@ -16,7 +16,6 @@ use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Lib\XadesSignature;
 use S2lowLegacy\Lib\XadesSignatureParser;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
-use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 /** @var Initialisation $initialisation */
 /** @var Droit $droit */
