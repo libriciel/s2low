@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\ImapMailBoxFactory;
 use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\S2lowLogger;
@@ -25,14 +26,14 @@ class ActesImapRetrieve
         ActesImapProperties $actesImapProperties,
         $actes_response_tmp_local_path,
         ImapMailBoxFactory $imapMailBoxFactory,
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $logger,
         SigTermHandler $sigTermHandler,
         WorkerScript $workerScript
     ) {
         $this->actesImapProperties = $actesImapProperties;
         $this->actes_response_tmp_local_path = $actes_response_tmp_local_path;
         $this->imapMailBoxFactory = $imapMailBoxFactory;
-        $this->logger = $s2lowLogger;
+        $this->logger = $logger;
         $this->sigTermHandler = $sigTermHandler;
         $this->workerScript = $workerScript;
     }

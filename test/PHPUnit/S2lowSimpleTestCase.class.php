@@ -1,36 +1,26 @@
 <?php
 
-use S2lowLegacy\Lib\ObjectInstancier;
-use PHPUnit\Framework\TestCase;
+use Monolog\Handler\TestHandler;
+use Monolog\Logger;
+use S2low\Tests\Services\ShellCommandMockBuilder;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class S2lowSimpleTestCase extends TestCase
+class S2lowSimpleTestCase extends KernelTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-        \S2lowLegacy\Lib\ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());
-        $this->getObjectInstancier()->set(Monolog\Logger::class, new  Monolog\Logger('PHPUNIT'));
-        $testHandler = new Monolog\Handler\TestHandler();
-        $testHandler->setLevel(\Monolog\Logger::DEBUG);
-        $this->getObjectInstancier()->set(Monolog\Handler\TestHandler::class, $testHandler);
-        $this->getObjectInstancier()->get(Monolog\Logger::class)->pushHandler($testHandler);
-    }
-
-    public function getObjectInstancier()
-    {
-        return \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
-    }
-
+    public ShellCommandMockBuilder $shellCommandMockBuilder;
 
     public function getLogRecords()
     {
-        $testHandler = $this->getObjectInstancier()->get(Monolog\Handler\TestHandler::class);
-        return $testHandler->getRecords();
+        return $this->testHandler->getRecords();
     }
-    /** @deprecated  */
-    public function setExpectedException(string $e, string $message)
+
+    protected function setUp(): void
     {
-        $this->expectException($e);
-        $this->expectExceptionMessage($message);
+        parent::setUp();
+        $this->container = static::getContainer();
+        $this->shellCommandMockBuilder = new ShellCommandMockBuilder($this);
+        $this->testHandler = new TestHandler();
+        $this->logger = new Logger('test');
+        $this->logger->pushHandler($this->testHandler);
     }
 }
