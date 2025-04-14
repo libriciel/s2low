@@ -14,98 +14,52 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase
      */
     public function testRetrieve()
     {
-        $s2lowLogger = $this->getObjectInstancier()->get(S2lowLogger::class);
-
         $actesImapRetrieve = new ActesImapRetrieve(
             $this->getImapProperties(),
             $this->getVFS(),
             $this->getImapMailBoxFactory(),
-            $s2lowLogger,
+            $this->logger,
             SigTermHandler::getInstance(),
             $this->getWorkerScript()
         );
         $actesImapRetrieve->retrieve();
-
         $logs = $this->getLogRecords();
 
         $this->assertMatchesRegularExpression(
             "#Connexion au serveur IMAP mail.example.com:993/imap/ssl avec l'utilisateur login#",
             $logs[1][S2lowLogger::MESSAGE]
         );
-        $this->assertMatchesRegularExpression("#Il y a 1 messages dans la boite au lettres#", $logs[2][S2lowLogger::MESSAGE]);
+        $this->assertMatchesRegularExpression(
+            "#Il y a 1 messages dans la boite au lettres#",
+            $logs[2][S2lowLogger::MESSAGE]
+        );
         $this->assertMatchesRegularExpression("#Récupération du message : 13#", $logs[3][S2lowLogger::MESSAGE]);
-
-        $this->assertMatchesRegularExpression("#Sauvegarde du contenu du message HTML #", $logs[4][S2lowLogger::MESSAGE]);
-        $this->assertMatchesRegularExpression("#Sauvegarde de.*foo-école.pdf#", $logs[5][S2lowLogger::MESSAGE]);
-        $this->assertMatchesRegularExpression("#Déplacement du répertoire#", $logs[7][S2lowLogger::MESSAGE]);
-        $this->assertMatchesRegularExpression("#Suppression du message : 13#", $logs[8][S2lowLogger::MESSAGE]);
-    }
-
-    /**
-     * @return WorkerScript
-     */
-    private function getWorkerScript()
-    {
-        $workerScript = $this->getMockBuilder(WorkerScript::class)->disableOriginalConstructor()->getMock();
-        $workerScript->method('putJobByClassName')->willReturn(true);
-        /** @var WorkerScript $workerScript */
-        return $workerScript;
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function testRetrieveDirectoryCreationFailed()
-    {
-        $s2lowLogger = $this->getObjectInstancier()->get(S2lowLogger::class);
-
-
-        $actesImapRetrieve = new ActesImapRetrieve(
-            $this->getImapProperties(),
-            $this->getVFS() . "/foo/bar",
-            $this->getImapMailBoxFactory(),
-            $s2lowLogger,
-            SigTermHandler::getInstance(),
-            $this->getWorkerScript()
-        );
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage("n'existe pas");
-        $actesImapRetrieve->retrieve();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function testRetrieveMailWithEmptyBody()
-    {
-        $s2lowLogger = $this->getObjectInstancier()->get(S2lowLogger::class);
-
-        $actesImapRetrieve = new ActesImapRetrieve(
-            $this->getImapProperties(),
-            $this->getVFS(),
-            $this->getImapMailBoxFactory(""),
-            $s2lowLogger,
-            SigTermHandler::getInstance(),
-            $this->getWorkerScript()
-        );
-        $actesImapRetrieve->retrieve();
-
-        $logs = $this->getLogRecords();
 
         $this->assertMatchesRegularExpression(
-            "#Connexion au serveur IMAP mail.example.com:993/imap/ssl avec l'utilisateur login#",
-            $logs[1][S2lowLogger::MESSAGE]
+            "#Sauvegarde du contenu du message HTML #",
+            $logs[4][S2lowLogger::MESSAGE]
         );
-        $this->assertMatchesRegularExpression("#Il y a 1 messages dans la boite au lettres#", $logs[2][S2lowLogger::MESSAGE]);
-        $this->assertMatchesRegularExpression("#Récupération du message : 13#", $logs[3][S2lowLogger::MESSAGE]);
-
-        $this->assertMatchesRegularExpression("#Le corps du mail est vide, il ne sera pas sauvegardé#", $logs[4][S2lowLogger::MESSAGE]);
         $this->assertMatchesRegularExpression("#Sauvegarde de.*foo-école.pdf#", $logs[5][S2lowLogger::MESSAGE]);
         $this->assertMatchesRegularExpression("#Déplacement du répertoire#", $logs[7][S2lowLogger::MESSAGE]);
         $this->assertMatchesRegularExpression("#Suppression du message : 13#", $logs[8][S2lowLogger::MESSAGE]);
     }
 
-
+    private function getImapProperties()
+    {
+        $host = 'mail.example.com';
+        $port = 993;
+        $imap_options = '/imap/ssl';
+        $login = 'login';
+        $password = 'password';
+        $actesImapProperties = new ActesImapProperties(
+            $host,
+            $port,
+            $login,
+            $password,
+            $imap_options
+        );
+        return $actesImapProperties;
+    }
 
     public function getVFS()
     {
@@ -114,22 +68,8 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase
         return $tmp;
     }
 
-
-    private function getImapProperties()
-    {
-        $actesImapProperties = new ActesImapProperties();
-        $actesImapProperties->host = 'mail.example.com';
-        $actesImapProperties->port = 993;
-        $actesImapProperties->imap_options = '/imap/ssl';
-        $actesImapProperties->login = 'login';
-        $actesImapProperties->password = 'password';
-        return $actesImapProperties;
-    }
-
     private function getImapMailBoxFactory($mailHtmlText = "mon texte html")
     {
-
-
         $attachments = new StdClass();
         $attachments->name = "foo-école.pdf";
         $attachments->filePath = __FILE__;
@@ -148,5 +88,70 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase
         $imapMailBoxFactory->method('getInstance')->willReturn($mailBox);
         /** @var ImapMailBoxFactory $imapMailBoxFactory */
         return $imapMailBoxFactory;
+    }
+
+    /**
+     * @return WorkerScript
+     */
+    private function getWorkerScript()
+    {
+        $workerScript = $this->getMockBuilder(WorkerScript::class)->disableOriginalConstructor()->getMock();
+        $workerScript->method('putJobByClassName')->willReturn(true);
+        /** @var WorkerScript $workerScript */
+        return $workerScript;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testRetrieveDirectoryCreationFailed()
+    {
+        $actesImapRetrieve = new ActesImapRetrieve(
+            $this->getImapProperties(),
+            $this->getVFS() . "/foo/bar",
+            $this->getImapMailBoxFactory(),
+            $this->logger,
+            SigTermHandler::getInstance(),
+            $this->getWorkerScript()
+        );
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("n'existe pas");
+        $actesImapRetrieve->retrieve();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testRetrieveMailWithEmptyBody()
+    {
+        $actesImapRetrieve = new ActesImapRetrieve(
+            $this->getImapProperties(),
+            $this->getVFS(),
+            $this->getImapMailBoxFactory(""),
+            $this->logger,
+            SigTermHandler::getInstance(),
+            $this->getWorkerScript()
+        );
+        $actesImapRetrieve->retrieve();
+
+        $logs = $this->getLogRecords();
+
+        $this->assertMatchesRegularExpression(
+            "#Connexion au serveur IMAP mail.example.com:993/imap/ssl avec l'utilisateur login#",
+            $logs[1][S2lowLogger::MESSAGE]
+        );
+        $this->assertMatchesRegularExpression(
+            "#Il y a 1 messages dans la boite au lettres#",
+            $logs[2][S2lowLogger::MESSAGE]
+        );
+        $this->assertMatchesRegularExpression("#Récupération du message : 13#", $logs[3][S2lowLogger::MESSAGE]);
+
+        $this->assertMatchesRegularExpression(
+            "#Le corps du mail est vide, il ne sera pas sauvegardé#",
+            $logs[4][S2lowLogger::MESSAGE]
+        );
+        $this->assertMatchesRegularExpression("#Sauvegarde de.*foo-école.pdf#", $logs[5][S2lowLogger::MESSAGE]);
+        $this->assertMatchesRegularExpression("#Déplacement du répertoire#", $logs[7][S2lowLogger::MESSAGE]);
+        $this->assertMatchesRegularExpression("#Suppression du message : 13#", $logs[8][S2lowLogger::MESSAGE]);
     }
 }

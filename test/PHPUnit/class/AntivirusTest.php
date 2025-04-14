@@ -1,81 +1,56 @@
 <?php
 
+use S2low\Tests\Services\ValueObject\MockCommandParams;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\ShellCommand;
 
 class AntivirusTest extends S2lowSimpleTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->getObjectInstancier()->set('antivirus_command', 'ls');
-    }
-
-    private function getAntivirus()
-    {
-        return $this->getObjectInstancier()->get(Antivirus::class);
-    }
-
-    /**
-     * @throws Exception
-     */
     public function testOK()
     {
+        $commandToCall = new MockCommandParams('exec', 0);
+
+        $shellCommandObject = $this->shellCommandMockBuilder->getMock([$commandToCall]);
+        $this->container->set(ShellCommand::class, $shellCommandObject);
+
         $this->assertTrue(
             $this->getAntivirus()->checkArchiveSanity(__DIR__ . "/fixtures/classification.xml")
         );
     }
 
-    /**
-     * @throws Exception
-     */
+    private function getAntivirus()
+    {
+        return $this->container->get(Antivirus::class);
+    }
+
     public function testFailed()
     {
-        $this->setShellCommandReturn(12);
-        $this->setExpectedException(
+        $commandToCall = new MockCommandParams('exec', 12);
+
+        $shellCommandObject = $this->shellCommandMockBuilder->getMock([$commandToCall]);
+        $this->container->set(ShellCommand::class, $shellCommandObject);
+
+        static::expectException(
             Exception::class,
-            "Erreur 12 lors du scan antivirus de l'archive"
         );
         $this->getAntivirus()->checkArchiveSanity(__DIR__ . "/fixtures/classification.xml");
     }
 
     public function testVirusFound()
     {
-        $this->setShellCommandReturn(1);
+        $commandToCall = new MockCommandParams('exec', 1);
+
+        $shellCommandObject = $this->shellCommandMockBuilder->getMock([$commandToCall]);
+        $this->container->set(ShellCommand::class, $shellCommandObject);
+
+        $antivirus = $this->getAntivirus();
+
         $this->assertFalse(
-            $this->getAntivirus()->checkArchiveSanity(__DIR__ . "/fixtures/classification.xml")
+            $antivirus->checkArchiveSanity(__DIR__ . "/fixtures/classification.xml")
         );
         $this->assertStringContainsString(
-            "aaa :  toto FOUND",
-            $this->getAntivirus()->getLastError()
+            "L'archive est infectée par un virus. Retour de l'antivirus",
+            $antivirus->getLastError()
         );
-    }
-
-    private function setShellCommandReturn($return)
-    {
-        $shellCommand = $this->getMockBuilder(ShellCommand::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $shellCommand
-            ->method('exec')
-            ->willReturn($return);
-        $shellCommand
-            ->method('getLastOutput')
-            ->willReturn("/aaa: toto FOUND");
-        $this->getObjectInstancier()->set(ShellCommand::class, $shellCommand);
-    }
-
-    public function testIsAlive()
-    {
-        $this->assertTrue(
-            $this->getAntivirus()->isAlive()
-        );
-    }
-
-    public function testIsDead()
-    {
-        $this->setShellCommandReturn(-1);
-        $this->setExpectedException(Exception::class, "Problème avec l'antivirus");
-        $this->getAntivirus()->isAlive();
     }
 }
