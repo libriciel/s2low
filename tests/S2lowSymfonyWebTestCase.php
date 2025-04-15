@@ -3,7 +3,6 @@
 namespace S2low\Tests;
 
 use Exception;
-use S2low\Tests\Services\ShellCommandMockBuilder;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -12,8 +11,22 @@ use TestEnvironmentManager;
 abstract class S2lowSymfonyWebTestCase extends WebTestCase
 {
     protected $backupGlobalsBlacklist = array('sqlQuery');
-    protected ShellCommandMockBuilder $shellCommandMockBuilder;
+
     private $testEnvironnementManager;
+
+    /**
+     * @throws Exception
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        self::bootKernel();
+        $this->container = static::getContainer();
+
+        $this->testEnvironnementManager = new TestEnvironmentManager();
+        $this->testEnvironnementManager->setUp();
+    }
 
     /**
      * @return ObjectInstancier
@@ -46,6 +59,7 @@ abstract class S2lowSymfonyWebTestCase extends WebTestCase
         $this->setAdminGroup2Authentication();
     }
 
+
     public function setAdminColAuthentication()
     {
         $this->setAdminColAuthentication();
@@ -61,17 +75,17 @@ abstract class S2lowSymfonyWebTestCase extends WebTestCase
         $this->setUserAuthentification();
     }
 
+    public function getLogRecords()
+    {
+        return $this->testEnvironnementManager->getLogRecords();
+    }
+
     public function assertLogMessage($expected_message, $num_log = 0)
     {
         $this->assertEquals(
             $expected_message,
             $this->getLogRecords()[$num_log]['message']
         );
-    }
-
-    public function getLogRecords()
-    {
-        return $this->testEnvironnementManager->getLogRecords();
     }
 
     public function assertMatchesRegularExpressionLogMessage($expected_message, $num_log = 0)
@@ -93,20 +107,5 @@ abstract class S2lowSymfonyWebTestCase extends WebTestCase
     public function noAssertion()
     {
         $this->assertTrue(true);
-    }
-
-    /**
-     * @throws Exception
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        self::bootKernel();
-        $this->container = static::getContainer();
-
-        $this->shellCommandMockBuilder = new ShellCommandMockBuilder($this);
-        $this->testEnvironnementManager = new TestEnvironmentManager();
-        $this->testEnvironnementManager->setUp();
     }
 }
