@@ -175,10 +175,7 @@ class LegacyObjectsManager
         $openStackContainerStore->addConfiguration(PESAllerCloudStorage::CONTAINER_NAME, $openStackConfigHelios);
         $openStackContainerStore->addConfiguration(PESAcquitCloudStorage::CONTAINER_NAME, $openStackConfigHeliosAcquit);
         $openStackContainerStore->addConfiguration(PESRetourCloudStorage::CONTAINER_NAME, $openStackConfigHeliosRetour);
-        $openStackContainerStore->addConfiguration(
-            MailIncludedFilesCloudStorage::CONTAINER_NAME,
-            $openStackConfigMailsec
-        );
+        $openStackContainerStore->addConfiguration(MailIncludedFilesCloudStorage::CONTAINER_NAME, $openStackConfigMailsec);
 
         $objectInstancier->set(OpenStackContainerStore::class, $openStackContainerStore);
 

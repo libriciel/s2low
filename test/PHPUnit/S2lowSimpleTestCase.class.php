@@ -27,8 +27,7 @@ class S2lowSimpleTestCase extends TestCase
         $testHandler = $this->getObjectInstancier()->get(Monolog\Handler\TestHandler::class);
         return $testHandler->getRecords();
     }
-
-    /** @deprecated */
+    /** @deprecated  */
     public function setExpectedException(string $e, string $message)
     {
         $this->expectException($e);
