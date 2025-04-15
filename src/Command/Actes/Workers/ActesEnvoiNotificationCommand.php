@@ -21,8 +21,8 @@ class ActesEnvoiNotificationCommand extends Command
 {
     public function __construct(
         private readonly ActesNotification $actesNotification,
-        private readonly S2lowLogger $logger)
-    {
+        private readonly S2lowLogger $logger
+    ) {
         $this->logger->setName("actes-notification");
         parent::__construct();
     }

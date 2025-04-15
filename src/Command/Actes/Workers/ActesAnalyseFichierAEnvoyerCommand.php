@@ -17,8 +17,8 @@ class ActesAnalyseFichierAEnvoyerCommand extends Command
 {
     public function __construct(
         private readonly ActesAnalyseFichierAEnvoyerWorker $worker,
-        private readonly WorkerRunnerBuilder $workerRunnerBuilder)
-    {
+        private readonly WorkerRunnerBuilder $workerRunnerBuilder
+    ) {
         parent::__construct();
     }
 
