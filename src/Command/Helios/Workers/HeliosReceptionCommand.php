@@ -5,11 +5,16 @@ namespace S2low\Command\Helios\Workers;
 use S2low\Services\Helios\HeliosReceptionWorkerFactory;
 use S2lowLegacy\Class\WorkerRunnerBuilder;
 use S2lowLegacy\Class\JobFetcherFromSelfUpdatedBeanstalkd;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(
+    name: 'worker:helios-reception',
+    description: 'Reception des flux de la DGFiP',
+)]
 class HeliosReceptionCommand extends Command
 {
     private WorkerRunnerBuilder $workerRunnerBuilder;
@@ -24,13 +29,9 @@ class HeliosReceptionCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
-            ->setName('helios:reception')
-            ->setDescription(
-                "Reception des flux de la DGFiP"
-            )
             ->addOption(
                 'usePasstrans',
                 null,
