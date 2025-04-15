@@ -16,7 +16,7 @@ class ActesEnvoiNotificationCommandTest extends KernelTestCase
         $kernel = new Kernel('test', true);
         $application = new Application($kernel);
 
-        $command = $application->find('actes:notification');
+        $command = $application->find('worker:acte-notification');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             // pass arguments to the helper
