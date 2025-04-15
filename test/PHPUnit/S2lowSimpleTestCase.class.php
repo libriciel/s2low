@@ -1,26 +1,37 @@
 <?php
 
-use Monolog\Handler\TestHandler;
-use Monolog\Logger;
-use S2low\Tests\Services\ShellCommandMockBuilder;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use S2lowLegacy\Lib\ObjectInstancier;
+use PHPUnit\Framework\TestCase;
 
-class S2lowSimpleTestCase extends KernelTestCase
+class S2lowSimpleTestCase extends TestCase
 {
-    public ShellCommandMockBuilder $shellCommandMockBuilder;
-
-    public function getLogRecords()
-    {
-        return $this->testHandler->getRecords();
-    }
-
     protected function setUp(): void
     {
         parent::setUp();
-        $this->container = static::getContainer();
-        $this->shellCommandMockBuilder = new ShellCommandMockBuilder($this);
-        $this->testHandler = new TestHandler();
-        $this->logger = new Logger('test');
-        $this->logger->pushHandler($this->testHandler);
+        \S2lowLegacy\Lib\ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());
+        $this->getObjectInstancier()->set(Monolog\Logger::class, new  Monolog\Logger('PHPUNIT'));
+        $testHandler = new Monolog\Handler\TestHandler();
+        $testHandler->setLevel(\Monolog\Logger::DEBUG);
+        $this->getObjectInstancier()->set(Monolog\Handler\TestHandler::class, $testHandler);
+        $this->getObjectInstancier()->get(Monolog\Logger::class)->pushHandler($testHandler);
+    }
+
+    public function getObjectInstancier()
+    {
+        return \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
+    }
+
+
+    public function getLogRecords()
+    {
+        $testHandler = $this->getObjectInstancier()->get(Monolog\Handler\TestHandler::class);
+        return $testHandler->getRecords();
+    }
+
+    /** @deprecated */
+    public function setExpectedException(string $e, string $message)
+    {
+        $this->expectException($e);
+        $this->expectExceptionMessage($message);
     }
 }

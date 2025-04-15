@@ -1,9 +1,6 @@
 # config/services.yaml
 
 parameters:
-  app.workspace_directory: '%env(WORKSPACE_DIRECTORY)%'
-  app.actes_response_tmp_local_path: "%app.workspace_directory%actes/response_tmp"
-
   app.relative_legacy_ssl_path: 'public.ssl/'
   app.old_timestamp_token_directory: '/data/timestamp-token/'            #TODO : utiliser OLD_TIMESTAMP_TOKEN_DIRECTORY
   app.timestamp_token_retention_nb_days: 781                             #TODO : utiliser HELIOS_RETENTION_RETOURS_NB_JOURS
@@ -35,7 +32,6 @@ parameters:
   app.beanstalkd_port: '%env(BEANSTAKLD_PORT)%'
   app.redis_server: '%env(REDIS_SERVER)%'
   app.redis_port: '%env(REDIS_PORT)%'
-  app.antivirus_command: '/usr/bin/clamdscan'
 services:
   _defaults:
     autowire: true
@@ -225,8 +221,8 @@ services:
     public: true
 
   S2lowLegacy\Class\Antivirus:
-    arguments:
-      $antivirus_command: "%app.antivirus_command%"
+    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Class\Antivirus' ]
 
   S2lowLegacy\Class\BatchUploadHandler:
     autowire: false
@@ -434,11 +430,6 @@ services:
      arguments:
        $actes_files_upload_root: "todo"
 
-  Monolog\Logger:
-    public: true
-    arguments:
-      $name: "s2low"
-
   S2lowLegacy\Class\actes\ActesEnvelopeStorage:
     autowire: false
     #arguments:                                 TODO : pour plus tard, quand j'aurais compris la config du Logger
@@ -452,17 +443,9 @@ services:
     factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
     arguments: [ 'S2lowLegacy\Class\actes\ActesFileSender' ]
 
-  S2lowLegacy\Class\actes\ActesImapProperties:
-    arguments:
-      $host: '%env(ACTES_IMAP_HOST)%'
-      $port: '%env(ACTES_IMAP_PORT)%'
-      $login: '%env(ACTES_IMAP_LOGIN)%'
-      $password: '%env(ACTES_IMAP_PASSWORD)%'
-      $imap_options: '%env(ACTES_IMAP_OPTIONS)%'
-
   S2lowLegacy\Class\actes\ActesImapRetrieve:
     arguments:
-      $actes_response_tmp_local_path: "%app.actes_response_tmp_local_path%"
+      $actes_response_tmp_local_path: "todo"
 
   S2lowLegacy\Class\Parapheur:
     autowire: false #Initialisé avec les données à traiter ...
@@ -490,6 +473,10 @@ services:
     arguments:
       $extractDataForBordereauPDF: "@S2lowLegacy\\Class\\actes\\ExtractDataForBordereauPDF"
       $actesPdf: "@S2lowLegacy\\Class\\actes\\ActesPdf"
+
+
+  S2lowLegacy\Class\actes\ActesPrepareEnvoiSAE:
+    autowire: false #LOGGER !!!
 
   S2lowLegacy\Class\actes\ActesResponsesError:
     arguments:
