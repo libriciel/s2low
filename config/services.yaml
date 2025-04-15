@@ -221,8 +221,8 @@ services:
     public: true
 
   S2lowLegacy\Class\Antivirus:
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\Antivirus' ]
+    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
+    arguments: ['S2lowLegacy\Class\Antivirus']
 
   S2lowLegacy\Class\BatchUploadHandler:
     autowire: false

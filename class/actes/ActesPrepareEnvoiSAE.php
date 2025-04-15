@@ -83,7 +83,7 @@ class ActesPrepareEnvoiSAE
      */
     private function isAllowToSendArchive($user_id, $transactionsInfo)
     {
-        if (!$transactionsInfo) {
+        if (! $transactionsInfo) {
             throw new UnrecoverableException("Impossible de d'envoyer la transaction");
         }
         if ($transactionsInfo['user_id'] == $user_id) {

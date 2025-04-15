@@ -32,16 +32,10 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase
             "#Connexion au serveur IMAP mail.example.com:993/imap/ssl avec l'utilisateur login#",
             $logs[1][S2lowLogger::MESSAGE]
         );
-        $this->assertMatchesRegularExpression(
-            "#Il y a 1 messages dans la boite au lettres#",
-            $logs[2][S2lowLogger::MESSAGE]
-        );
+        $this->assertMatchesRegularExpression("#Il y a 1 messages dans la boite au lettres#", $logs[2][S2lowLogger::MESSAGE]);
         $this->assertMatchesRegularExpression("#Récupération du message : 13#", $logs[3][S2lowLogger::MESSAGE]);
 
-        $this->assertMatchesRegularExpression(
-            "#Sauvegarde du contenu du message HTML #",
-            $logs[4][S2lowLogger::MESSAGE]
-        );
+        $this->assertMatchesRegularExpression("#Sauvegarde du contenu du message HTML #", $logs[4][S2lowLogger::MESSAGE]);
         $this->assertMatchesRegularExpression("#Sauvegarde de.*foo-école.pdf#", $logs[5][S2lowLogger::MESSAGE]);
         $this->assertMatchesRegularExpression("#Déplacement du répertoire#", $logs[7][S2lowLogger::MESSAGE]);
         $this->assertMatchesRegularExpression("#Suppression du message : 13#", $logs[8][S2lowLogger::MESSAGE]);
@@ -102,20 +96,15 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase
             "#Connexion au serveur IMAP mail.example.com:993/imap/ssl avec l'utilisateur login#",
             $logs[1][S2lowLogger::MESSAGE]
         );
-        $this->assertMatchesRegularExpression(
-            "#Il y a 1 messages dans la boite au lettres#",
-            $logs[2][S2lowLogger::MESSAGE]
-        );
+        $this->assertMatchesRegularExpression("#Il y a 1 messages dans la boite au lettres#", $logs[2][S2lowLogger::MESSAGE]);
         $this->assertMatchesRegularExpression("#Récupération du message : 13#", $logs[3][S2lowLogger::MESSAGE]);
 
-        $this->assertMatchesRegularExpression(
-            "#Le corps du mail est vide, il ne sera pas sauvegardé#",
-            $logs[4][S2lowLogger::MESSAGE]
-        );
+        $this->assertMatchesRegularExpression("#Le corps du mail est vide, il ne sera pas sauvegardé#", $logs[4][S2lowLogger::MESSAGE]);
         $this->assertMatchesRegularExpression("#Sauvegarde de.*foo-école.pdf#", $logs[5][S2lowLogger::MESSAGE]);
         $this->assertMatchesRegularExpression("#Déplacement du répertoire#", $logs[7][S2lowLogger::MESSAGE]);
         $this->assertMatchesRegularExpression("#Suppression du message : 13#", $logs[8][S2lowLogger::MESSAGE]);
     }
+
 
 
     public function getVFS()
@@ -139,6 +128,8 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase
 
     private function getImapMailBoxFactory($mailHtmlText = "mon texte html")
     {
+
+
         $attachments = new StdClass();
         $attachments->name = "foo-école.pdf";
         $attachments->filePath = __FILE__;
