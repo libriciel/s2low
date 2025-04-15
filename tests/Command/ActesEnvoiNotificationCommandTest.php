@@ -2,14 +2,12 @@
 
 namespace S2low\Tests\Command;
 
-use S2low\Helpers\ClassHelper;
 use S2low\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\Console\Command\Command;
 
-class NotifyActesCommandTest extends KernelTestCase
+class ActesEnvoiNotificationCommandTest extends KernelTestCase
 {
     public function testExecute()
     {
@@ -18,7 +16,7 @@ class NotifyActesCommandTest extends KernelTestCase
         $kernel = new Kernel('test', true);
         $application = new Application($kernel);
 
-        $command = $application->find('cron:notify-actes');
+        $command = $application->find('worker:acte-notification');
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             // pass arguments to the helper
