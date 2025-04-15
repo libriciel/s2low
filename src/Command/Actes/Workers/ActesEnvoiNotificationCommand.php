@@ -5,6 +5,7 @@ namespace S2low\Command\Actes\Workers;
 use S2lowLegacy\Class\actes\ActesNotification;
 use S2lowLegacy\Class\S2lowLogger;
 use Exception;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,26 +13,23 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use UnexpectedValueException;
 
+#[AsCommand(
+    name: 'worker:acte-notification',
+    description: 'Envoi une notification.'
+)]
 class ActesEnvoiNotificationCommand extends Command
 {
-    private ActesNotification $actesNotification;
-    private S2lowLogger $logger;
-
-    public function __construct(ActesNotification $actesNotification, S2lowLogger $s2lowLogger)
+    public function __construct(
+        private readonly ActesNotification $actesNotification,
+        private readonly S2lowLogger $logger)
     {
-        $this->actesNotification = $actesNotification;
-        $this->logger = $s2lowLogger;
         $this->logger->setName("actes-notification");
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
-            ->setName('actes:notification')
-            ->setDescription(
-                "Notifies actes"
-            )
             ->addArgument(
                 'minimumExecutionTime',
                 InputArgument::OPTIONAL,

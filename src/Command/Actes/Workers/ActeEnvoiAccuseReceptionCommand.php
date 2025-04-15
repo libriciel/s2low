@@ -4,31 +4,22 @@ namespace S2low\Command\Actes\Workers;
 
 use S2lowLegacy\Class\actes\ActesEnvoiAR;
 use S2lowLegacy\Class\S2lowLogger;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(
+    name: 'worker:acte-envoi-ar',
+    description: 'Envoi l\'accuse de reception a la DGFIP.',
+)]
 class ActeEnvoiAccuseReceptionCommand extends Command
 {
-    private S2lowLogger $logger;
-    private ActesEnvoiAR $actesEnvoiAR;
-
     public function __construct(
-        S2lowLogger $logger,
-        ActesEnvoiAR $actesEnvoiAR,
+        private readonly S2lowLogger $logger,
+        private readonly ActesEnvoiAR $actesEnvoiAR,
     ) {
         parent::__construct();
-        $this->logger = $logger;
-        $this->actesEnvoiAR = $actesEnvoiAR;
-    }
-
-    protected function configure(): void
-    {
-        $this
-            ->setName('actes:envoi-ar')
-            ->setDescription(
-                ""
-            );
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int

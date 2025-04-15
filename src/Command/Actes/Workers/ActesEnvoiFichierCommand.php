@@ -2,31 +2,24 @@
 
 namespace S2low\Command\Actes\Workers;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use S2lowLegacy\Class\actes\ActesEnvoiFichierWorker;
 use S2lowLegacy\Class\WorkerRunnerBuilder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(
+    name: 'worker:acte-envoi-fichier',
+    description: 'Envoi les fichiers à la DGCL.',
+)]
 class ActesEnvoiFichierCommand extends Command
 {
-    private ActesEnvoiFichierWorker $worker;
-    private WorkerRunnerBuilder $workerRunnerBuilder;
-
-    public function __construct(ActesEnvoiFichierWorker $worker, WorkerRunnerBuilder $workerRunnerBuilder)
-    {
+    public function __construct(
+        private readonly ActesEnvoiFichierWorker $worker,
+        private readonly WorkerRunnerBuilder $workerRunnerBuilder
+    ) {
         parent::__construct();
-        $this->worker = $worker;
-        $this->workerRunnerBuilder = $workerRunnerBuilder;
-    }
-
-    protected function configure(): void
-    {
-        $this
-            ->setName('actes:envoi-fichier')
-            ->setDescription(
-                "Envoi les fichiers à la DGCL."
-            );
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
