@@ -3,7 +3,7 @@
 namespace S2lowLegacy\Controller;
 
 use Exception;
-use S2lowLegacy\Class\CloudStorageFactory;
+use S2lowLegacy\Cloud\CloudStorageFactory;
 use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
 use S2lowLegacy\Class\mailsec\MailTransactionSQL;
 use S2lowLegacy\Class\TmpFolder;

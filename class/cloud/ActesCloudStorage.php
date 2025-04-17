@@ -1,9 +1,8 @@
 <?php
 
-namespace S2lowLegacy\Class\actes;
+namespace S2lowLegacy\Cloud;
 
-use Exception;
-use S2lowLegacy\Class\ICloudStorable;
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Lib\UnrecoverableException;
 use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;

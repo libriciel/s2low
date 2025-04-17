@@ -8,7 +8,7 @@ use Exception;
 use Monolog\Handler\NullHandler;
 use Monolog\Logger;
 use PHPUnit\Framework\MockObject\MockObject;
-use S2lowLegacy\Class\CloudStorageException;
+use S2lowLegacy\Cloud\CloudStorageException;
 use S2lowLegacy\Lib\OpenStackContainerStore;
 use S2lowLegacy\Lib\OpenStackContainerWrapper;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
@@ -391,7 +391,7 @@ class OpenStackSwiftWrapperTest extends TestCase
 
     /**
      * @return void
-     * @throws \S2lowLegacy\Class\CloudStorageException
+     * @throws \S2lowLegacy\Cloud\CloudStorageException
      * @throws \S2lowLegacy\Lib\PausingQueueException
      * @throws \S2lowLegacy\Lib\UnrecoverableException
      */
@@ -445,7 +445,7 @@ class OpenStackSwiftWrapperTest extends TestCase
 
     /**
      * @return void
-     * @throws \S2lowLegacy\Class\CloudStorageException
+     * @throws \S2lowLegacy\Cloud\CloudStorageException
      * @throws \S2lowLegacy\Lib\PausingQueueException
      * @throws \S2lowLegacy\Lib\UnrecoverableException
      */
@@ -499,7 +499,7 @@ class OpenStackSwiftWrapperTest extends TestCase
 
     /**
      * @return void
-     * @throws \S2lowLegacy\Class\CloudStorageException
+     * @throws \S2lowLegacy\Cloud\CloudStorageException
      * @throws \S2lowLegacy\Lib\PausingQueueException
      * @throws \S2lowLegacy\Lib\UnrecoverableException
      */
@@ -554,7 +554,7 @@ class OpenStackSwiftWrapperTest extends TestCase
 
     /**
      * @return void
-     * @throws \S2lowLegacy\Class\CloudStorageException
+     * @throws \S2lowLegacy\Cloud\CloudStorageException
      * @throws \S2lowLegacy\Lib\PausingQueueException
      * @throws \S2lowLegacy\Lib\UnrecoverableException
      */

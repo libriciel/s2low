@@ -1,6 +1,6 @@
 <?php
 
-use S2lowLegacy\Class\helios\PESAllerCloudStorage;
+use S2lowLegacy\Cloud\PESAllerCloudStorage;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Lib\SigTermHandler;

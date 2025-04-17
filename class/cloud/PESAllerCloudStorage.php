@@ -1,8 +1,7 @@
 <?php
 
-namespace S2lowLegacy\Class\helios;
+namespace S2lowLegacy\Cloud;
 
-use S2lowLegacy\Class\ICloudStorable;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;

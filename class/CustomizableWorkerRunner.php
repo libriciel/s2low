@@ -78,7 +78,7 @@ class CustomizableWorkerRunner implements WorkerRunner
     }
 
     /**
-     * @throws \S2lowLegacy\Class\CloudStorageException
+     * @throws \S2lowLegacy\Cloud\CloudStorageException
      * @throws \S2lowLegacy\Class\WorkerScriptException
      * @throws \S2lowLegacy\Lib\PausingQueueException
      * @throws \S2lowLegacy\Lib\UnrecoverableException

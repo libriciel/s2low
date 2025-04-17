@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace S2lowLegacy\Class;
+namespace S2lowLegacy\Cloud;
 
 use Monolog\Logger;
 use Symfony\Component\Filesystem\Filesystem;
@@ -25,7 +25,7 @@ class CloudStorage
     private bool $openstack_enable;
 
     /**
-     * @param \S2lowLegacy\Class\ICloudStorable $iCloudStorable
+     * @param \S2lowLegacy\Cloud\ICloudStorable $iCloudStorable
      * @param \S2lowLegacy\Lib\OpenStackSwiftWrapper $openStackSwiftWrapper
      * @param \Monolog\Logger $logger
      * @param $openstack_enable
@@ -226,7 +226,7 @@ class CloudStorage
     /**
      * @param int $object_id
      * @return string|bool
-     * @throws \S2lowLegacy\Class\CloudStorageException
+     * @throws \S2lowLegacy\Cloud\CloudStorageException
      * @throws \S2lowLegacy\Lib\PausingQueueException
      * @throws \S2lowLegacy\Lib\UnrecoverableException
      * @throws \Exception
@@ -353,7 +353,7 @@ class CloudStorage
      * @param string $file_path_on_disk
      * @return void
      * @throws \S2lowLegacy\Lib\PausingQueueException
-     * @throws \S2lowLegacy\Lib\UnrecoverableException|\S2lowLegacy\Class\CloudStorageException
+     * @throws \S2lowLegacy\Lib\UnrecoverableException|\S2lowLegacy\Cloud\CloudStorageException
      */
     private function retrieveFromCloud(int $object_id, string $file_path_on_cloud, string $file_path_on_disk): void
     {

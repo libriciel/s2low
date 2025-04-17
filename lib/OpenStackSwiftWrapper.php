@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace S2lowLegacy\Lib;
 
-use S2lowLegacy\Class\CloudStorageException;
+use S2lowLegacy\Cloud\CloudStorageException;
 use Exception;
 use Monolog\Logger;
 use Psr\Http\Message\ResponseInterface;
@@ -85,7 +85,7 @@ class OpenStackSwiftWrapper
      * @param string $container_name
      * @param string $filepath_local
      * @param string $filepath_on_cloud
-     * @throws \S2lowLegacy\Class\CloudStorageException
+     * @throws \S2lowLegacy\Cloud\CloudStorageException
      * @throws \S2lowLegacy\Lib\PausingQueueException
      * @throws \S2lowLegacy\Lib\UnrecoverableException
      */
@@ -130,7 +130,7 @@ class OpenStackSwiftWrapper
      * @param string $filepath_on_cloud l'emplacement sur le cloud, sinon on prend le nom du fichier local et
      * on le cherche directemnet sur le container
      * @return mixed
-     * @throws UnrecoverableException|PausingQueueException|\S2lowLegacy\Class\CloudStorageException
+     * @throws UnrecoverableException|PausingQueueException|\S2lowLegacy\Cloud\CloudStorageException
      * @throws \Exception
      */
 

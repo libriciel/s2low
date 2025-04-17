@@ -6,9 +6,9 @@ namespace PHPUnit\class;
 
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
-use S2lowLegacy\Class\CloudStorage;
-use S2lowLegacy\Class\CloudStorageFactory;
-use S2lowLegacy\Class\ICloudStorable;
+use S2lowLegacy\Cloud\CloudStorage;
+use S2lowLegacy\Cloud\CloudStorageFactory;
+use S2lowLegacy\Cloud\ICloudStorable;
 use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
@@ -294,7 +294,7 @@ class CloudStorageTest extends S2lowTestCase
     /**
      * @throws \S2lowLegacy\Lib\PausingQueueException
      * @throws \S2lowLegacy\Lib\UnrecoverableException
-     * @throws \S2lowLegacy\Class\CloudStorageException
+     * @throws \S2lowLegacy\Cloud\CloudStorageException
      * @throws \Exception
      */
     public function testErrorWhileCreatingFile()
@@ -586,7 +586,7 @@ class CloudStorageTest extends S2lowTestCase
     /**
      * @throws \S2lowLegacy\Lib\PausingQueueException
      * @throws \S2lowLegacy\Lib\UnrecoverableException
-     * @throws \S2lowLegacy\Class\CloudStorageException
+     * @throws \S2lowLegacy\Cloud\CloudStorageException
      */
     public function testGetPath()
     {

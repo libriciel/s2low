@@ -2,10 +2,11 @@
 
 namespace S2lowLegacy\Class\helios;
 
-use S2lowLegacy\Class\CloudStorage;
-use S2lowLegacy\Class\CloudStorageFactory;
+use S2lowLegacy\Cloud\CloudStorage;
+use S2lowLegacy\Cloud\CloudStorageFactory;
 use S2lowLegacy\Class\IWorker;
 use Exception;
+use S2lowLegacy\Cloud\PESAcquitCloudStorage;
 use S2lowLegacy\Lib\UnrecoverableException;
 
 class HeliosMenagePesAcquitWorker implements IWorker

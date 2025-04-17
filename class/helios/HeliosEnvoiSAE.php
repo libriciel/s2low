@@ -3,9 +3,11 @@
 namespace S2lowLegacy\Class\helios;
 
 use S2lowLegacy\Class\actes\FilesNotFoundInCloudException;
-use S2lowLegacy\Class\CloudStorageFactory;
+use S2lowLegacy\Cloud\CloudStorageFactory;
 use S2lowLegacy\Class\PastellWrapperFactory;
 use Exception;
+use S2lowLegacy\Cloud\PESAcquitCloudStorage;
+use S2lowLegacy\Cloud\PESAllerCloudStorage;
 use S2lowLegacy\Lib\SigTermHandler;
 use S2lowLegacy\Lib\UnrecoverableException;
 use S2lowLegacy\Model\AuthoritySQL;

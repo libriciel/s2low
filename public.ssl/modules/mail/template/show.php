@@ -11,8 +11,8 @@
             <table id="message-detail" class="data-table table table-bordered" aria-describedby="details_desc">
             <?php
 
-            use S2lowLegacy\Class\CloudStorage;
-            use S2lowLegacy\Class\CloudStorageFactory;
+            use S2lowLegacy\Cloud\CloudStorage;
+            use S2lowLegacy\Cloud\CloudStorageFactory;
             use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
             use S2lowLegacy\Lib\ObjectInstancierFactory;
 

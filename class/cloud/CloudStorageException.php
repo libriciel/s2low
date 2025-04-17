@@ -1,6 +1,6 @@
 <?php
 
-namespace S2lowLegacy\Class;
+namespace S2lowLegacy\Cloud;
 
 use Exception;
 

@@ -6,8 +6,8 @@ namespace PHPUnit\class\helios;
 
 use Exception;
 use HeliosUtilitiesTestTrait;
-use S2lowLegacy\Class\CloudStorageFactory;
-use S2lowLegacy\Class\helios\PESAllerCloudStorage;
+use S2lowLegacy\Cloud\CloudStorageFactory;
+use S2lowLegacy\Cloud\PESAllerCloudStorage;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
@@ -88,7 +88,7 @@ class PesAllerStorageTest extends S2lowTestCase
         $transaction_id = $this->createTransaction();
         $heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
 
-        /** @var \S2lowLegacy\Class\CloudStorage $cloudStorage */
+        /** @var \S2lowLegacy\Cloud\CloudStorage $cloudStorage */
         $cloudStorage = $this->getObjectInstancier()
             ->get(CloudStorageFactory::class)
             ->getInstanceByClassName(PESAllerCloudStorage::class);
@@ -101,7 +101,7 @@ class PesAllerStorageTest extends S2lowTestCase
     /**
      * @throws \S2lowLegacy\Lib\PausingQueueException
      * @throws \S2lowLegacy\Lib\UnrecoverableException
-     * @throws \S2lowLegacy\Class\CloudStorageException
+     * @throws \S2lowLegacy\Cloud\CloudStorageException
      */
     public function testStoreSuccess()
     {
@@ -122,7 +122,7 @@ class PesAllerStorageTest extends S2lowTestCase
         $helios_files_upload_root = $this->getObjectInstancier()->get('helios_files_upload_root');
         file_put_contents($helios_files_upload_root . '/' . $transaction_info['sha1'], 'test');
 
-        /** @var \S2lowLegacy\Class\CloudStorage $cloudStorage */
+        /** @var \S2lowLegacy\Cloud\CloudStorage $cloudStorage */
         $cloudStorage = $this->getObjectInstancier()
             ->get(CloudStorageFactory::class)
             ->getInstanceByClassName(PESAllerCloudStorage::class);
@@ -136,7 +136,7 @@ class PesAllerStorageTest extends S2lowTestCase
     /**
      * @throws \S2lowLegacy\Lib\PausingQueueException
      * @throws \S2lowLegacy\Lib\UnrecoverableException
-     * @throws \S2lowLegacy\Class\CloudStorageException
+     * @throws \S2lowLegacy\Cloud\CloudStorageException
      */
     public function testStoreFailure()
     {
@@ -156,7 +156,7 @@ class PesAllerStorageTest extends S2lowTestCase
         $helios_files_upload_root = $this->getObjectInstancier()->get('helios_files_upload_root');
         file_put_contents($helios_files_upload_root . '/' . $transaction_info['sha1'], 'test');
 
-        /** @var \S2lowLegacy\Class\CloudStorage $cloudStorage */
+        /** @var \S2lowLegacy\Cloud\CloudStorage $cloudStorage */
         $cloudStorage = $this->getObjectInstancier()
             ->get(CloudStorageFactory::class)
             ->getInstanceByClassName(PESAllerCloudStorage::class);

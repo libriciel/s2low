@@ -211,11 +211,18 @@ services:
   # Sous Namespace  S2lowLegacy/Class
   # ---------------------------------------------------------------------------------------------------------------------
 
+  S2lowLegacy\Cloud\:
+    resource: '../class/cloud/*'
+    autowire: true
+    autoconfigure: true
+    public: true
+
   S2lowLegacy\Class\:
     resource: '../class/*'
     exclude:
       - '../class/include.php'
       - '../class/util.php'
+      - '../class/cloud/*'
     autowire: true
     autoconfigure: true
     public: true
@@ -275,11 +282,17 @@ services:
     autowire: false
     autoconfigure: false
     public: false
-
-  S2lowLegacy\Class\CloudStorage: #TODO : verify
+#
+  S2lowLegacy\Cloud\CloudStorage:
     autowire: false
 
-  S2lowLegacy\Class\CloudStorageFactory: #TODO : verify
+  S2lowLegacy\Cloud\ActesCloudStorage:
+    autowire: false
+
+  S2lowLegacy\Cloud\CloudStorageFactory:
+    autowire: false
+
+  S2lowLegacy\Cloud\PESAllerCloudStorage:
     autowire: false
 
   S2lowLegacy\Class\DataObjectSaveSQLRequest: # TODO :verify
@@ -422,18 +435,12 @@ services:
   S2lowLegacy\Class\actes\ActesArchive:
     autowire: false #Pas un service ??
 
-  S2lowLegacy\Class\actes\ActesCloudStorage:
-    arguments:
-      $actes_files_upload_root: "todo"
-
   S2lowLegacy\Class\actes\ActesConventions:
      arguments:
        $actes_files_upload_root: "todo"
 
   S2lowLegacy\Class\actes\ActesEnvelopeStorage:
     autowire: false
-    #arguments:                                 TODO : pour plus tard, quand j'aurais compris la config du Logger
-    #  $actes_files_upload_root: "fdsfdsfsdfs"
 
   S2lowLegacy\Class\actes\ActesFiles:
     arguments:
@@ -529,11 +536,11 @@ services:
   S2lowLegacy\Class\helios\HeliosVerificationSAE:
     autowire: false #TODO: logger
 
-  S2lowLegacy\Class\helios\PESAcquitCloudStorage:
+  S2lowLegacy\Cloud\PESAcquitCloudStorage:
     arguments:
       $helios_responses_root: "todo"
 
-  S2lowLegacy\Class\helios\PESRetourCloudStorage:
+  S2lowLegacy\Cloud\PESRetourCloudStorage:
     arguments:
       $helios_responses_root: "todo"
 

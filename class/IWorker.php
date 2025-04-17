@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class;
 
+use S2lowLegacy\Cloud\CloudStorageException;
 use S2lowLegacy\Lib\PausingQueueException;
 use S2lowLegacy\Lib\UnrecoverableException;
 

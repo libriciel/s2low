@@ -82,7 +82,8 @@
       "S2low\\": "src/",
       "Legacy\\": "public.ssl/modules/mail/lib",
       "IntegrationTests\\": "integration_tests",
-      "S2lowLegacy\\Lib\\": "lib/"
+      "S2lowLegacy\\Lib\\": "lib/",
+      "S2lowLegacy\\Cloud\\": "class/cloud"
     },
     "classmap": [
       "lib",

@@ -1,8 +1,8 @@
 <?php
 
-use S2lowLegacy\Class\CloudStorage;
-use S2lowLegacy\Class\CloudStorageFactory;
-use S2lowLegacy\Class\helios\PESRetourCloudStorage;
+use S2lowLegacy\Cloud\CloudStorage;
+use S2lowLegacy\Cloud\CloudStorageFactory;
+use S2lowLegacy\Cloud\PESRetourCloudStorage;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\HeliosRetourSQL;

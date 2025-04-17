@@ -4,6 +4,7 @@ namespace S2lowLegacy\Class\helios;
 
 use S2lowLegacy\Class\S2lowLogger;
 use Exception;
+use S2lowLegacy\Cloud\PESAllerCloudStorage;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 
 class PesAllerRetriever

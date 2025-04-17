@@ -1,8 +1,8 @@
 <?php
 
 // Configuration
-use S2lowLegacy\Class\CloudStorageFactory;
-use S2lowLegacy\Class\helios\PESRetourCloudStorage;
+use S2lowLegacy\Cloud\CloudStorageFactory;
+use S2lowLegacy\Cloud\PESRetourCloudStorage;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;

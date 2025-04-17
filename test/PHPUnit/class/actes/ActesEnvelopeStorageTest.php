@@ -6,10 +6,10 @@ namespace PHPUnit\class\actes;
 
 use Exception;
 use Monolog\Handler\TestHandler;
-use S2lowLegacy\Class\actes\ActesCloudStorage;
+use S2lowLegacy\Cloud\ActesCloudStorage;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
-use S2lowLegacy\Class\CloudStorageFactory;
+use S2lowLegacy\Cloud\CloudStorageFactory;
 use S2lowLegacy\Lib\OpenStackContainerStore;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use PHPUnit\Framework\MockObject\MockObject;

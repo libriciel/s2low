@@ -2,7 +2,7 @@
 
 namespace S2lowLegacy\Class\mailsec;
 
-use S2lowLegacy\Class\ICloudStorable;
+use S2lowLegacy\Cloud\ICloudStorable;
 use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;

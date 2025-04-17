@@ -2,9 +2,9 @@
 
 // Configuration
 use S2lowLegacy\Class\Authority;
-use S2lowLegacy\Class\CloudStorageFactory;
+use S2lowLegacy\Cloud\CloudStorageFactory;
 use S2lowLegacy\Class\DatabasePool;
-use S2lowLegacy\Class\helios\PESAcquitCloudStorage;
+use S2lowLegacy\Cloud\PESAcquitCloudStorage;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\ModulePermission;
