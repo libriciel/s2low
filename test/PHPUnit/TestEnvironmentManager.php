@@ -72,6 +72,7 @@ class TestEnvironmentManager
         $this->getObjectInstancier()->set('schema_pes_path', HELIOS_XSD_PATH);
         $this->getObjectInstancier()->set('redis_server', 'localhost');
         $this->getObjectInstancier()->set('redis_port', 6379);
+        $this->getObjectInstancier()->set('totalTryBeforeWorkerDie', 10);
 
         $get = array();
         $post = array();

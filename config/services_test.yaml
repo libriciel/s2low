@@ -1,0 +1,9 @@
+parameters:
+  app.seconds_between_each_try: '0'
+  app.total_try_before_worker_die: '1'
+
+services:
+  S2low\Command\Helios\Workers\HeliosAnalyseFichierAEnvoyerCommand:
+    public: true
+    autowire: true
+    autoconfigure: true

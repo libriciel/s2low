@@ -28,10 +28,12 @@ parameters:
   app.helios_passtrans_password: '%env(HELIOS_PASSTRANS_PASSWORD)%'
   app.helios_passtrans_sending_destination: '%env(HELIOS_PASSTRANS_SENDING_DESTINATION)%'
   app.helios_passtrans_response_server_path: '%env(HELIOS_PASSTRANS_RESPONSE_SERVER_PATH)%'
-  app.beanstalkd_server: '%env(BEANSTAKLD_SERVER)%'
-  app.beanstalkd_port: '%env(BEANSTAKLD_PORT)%'
-  app.redis_server: '%env(REDIS_SERVER)%'
-  app.redis_port: '%env(REDIS_PORT)%'
+  app.seconds_between_each_try: '30'
+  app.total_try_before_worker_die: '10'
+  app.beanstalkd_server: 'beanstalkd'
+  app.beanstalkd_port: '11300'
+  app.redis_server: 'redis'
+  app.redis_port: '6379'
 services:
   _defaults:
     autowire: true
@@ -195,7 +197,6 @@ services:
   # ---------------------------------------------------------------------------------------------------------------------
   # Sous Namespace  S2lowLegacy/Model : aucune dépendance, peut être instancié directement par le service container
   # ---------------------------------------------------------------------------------------------------------------------
-
 
   S2lowLegacy\Model\:
     resource: '../model/*'
@@ -371,6 +372,11 @@ services:
   S2lowLegacy\Class\XSDValidation:
     arguments:
       $xsdPath: "todo"
+
+  S2lowLegacy\Class\WorkerRunnerBuilder:
+    arguments:
+      $totalTryBeforeWorkerDie: '%app.total_try_before_worker_die%'
+      $secondsBetweenEachTry: '%app.seconds_between_each_try%'
 
   S2lowLegacy\Class\WorkerScript:
     factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
