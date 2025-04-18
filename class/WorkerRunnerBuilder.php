@@ -33,7 +33,7 @@ class WorkerRunnerBuilder
         $this->redisMutexWrapper = $redisMutexWrapper;
         $this->workerScript = $workerScript;
         $this->totalTryBeforeWorkerDie = $totalTryBeforeWorkerDie;
-        $this->secondsMaximumBetweenEachRetry = $secondsMaximumBetweenEachTry;
+        $this->secondsMaximumBetweenEachTry = $secondsMaximumBetweenEachTry;
     }
 
     public function scriptWithLogs(
@@ -58,7 +58,7 @@ class WorkerRunnerBuilder
                 $this->sigTermHandlerFactory->getInstance(),
                 $this->redisMutexWrapper,
                 $this->totalTryBeforeWorkerDie,
-                $this->secondsMaximumBetweenEachRetry
+                $this->secondsMaximumBetweenEachTry
             ),
             JobFetcherFromDB::class => new CustomizableWorkerRunner(
                 $IWorker,
