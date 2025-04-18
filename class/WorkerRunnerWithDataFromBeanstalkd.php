@@ -33,7 +33,7 @@ class WorkerRunnerWithDataFromBeanstalkd implements WorkerRunner
      */
     private RedisMutexWrapper $redisMutexWrapper;
     private int $totalTryBeforeWorkerDie;
-    private int $secondsBetweenEachRetry;
+    private int $secondsMaximumBetweenEachTry;
 
     public function __construct(
         IWorker $worker,
@@ -42,7 +42,7 @@ class WorkerRunnerWithDataFromBeanstalkd implements WorkerRunner
         SigTermHandler $sigTermHandler,
         RedisMutexWrapper $redisMutexWrapper,
         int $totalTryBeforeWorkerDie,
-        int $secondsBetweenEachRetry
+        int $secondsMaximumBetweenEachTry
     ) {
         $this->worker = $worker;
         $this->beanstalkdWrapper = $beanstalkdWrapper;
@@ -50,7 +50,7 @@ class WorkerRunnerWithDataFromBeanstalkd implements WorkerRunner
         $this->sigTermHandler = $sigTermHandler;
         $this->redisMutexWrapper = $redisMutexWrapper;
         $this->totalTryBeforeWorkerDie = $totalTryBeforeWorkerDie;
-        $this->secondsBetweenEachRetry = $secondsBetweenEachRetry;
+        $this->secondsMaximumBetweenEachTry = $secondsMaximumBetweenEachTry;
     }
 
     /**
@@ -82,7 +82,7 @@ class WorkerRunnerWithDataFromBeanstalkd implements WorkerRunner
         $nbJobsTraités = 0;
         $nbIterationsAVide = 0;                          // On va relancer périodiquement le worker
         while ($nbIterationsAVide < $this->totalTryBeforeWorkerDie) {                // Si aucun job, toutes les 10 iterations
-            $job = $queue->reserve($this->secondsBetweenEachRetry);           // On attend au max 30s un job dispo
+            $job = $queue->reserve($this->secondsMaximumBetweenEachTry);           // On attend au max 30s un job dispo
                                                          // Ce qui fait une boucle à vide de 5 minutes
             if (!$job) {                                 // Et on logge si aucun job disponible.
                 $nbIterationsAVide++;

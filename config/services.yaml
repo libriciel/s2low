@@ -28,7 +28,7 @@ parameters:
   app.helios_passtrans_password: '%env(HELIOS_PASSTRANS_PASSWORD)%'
   app.helios_passtrans_sending_destination: '%env(HELIOS_PASSTRANS_SENDING_DESTINATION)%'
   app.helios_passtrans_response_server_path: '%env(HELIOS_PASSTRANS_RESPONSE_SERVER_PATH)%'
-  app.seconds_between_each_try: '30'
+  app.seconds_maximum_between_each_try: '30'
   app.total_try_before_worker_die: '10'
   app.beanstalkd_server: 'beanstalkd'
   app.beanstalkd_port: '11300'
@@ -376,7 +376,7 @@ services:
   S2lowLegacy\Class\WorkerRunnerBuilder:
     arguments:
       $totalTryBeforeWorkerDie: '%app.total_try_before_worker_die%'
-      $secondsBetweenEachTry: '%app.seconds_between_each_try%'
+      $secondsMaximumBetweenEachTry: '%app.seconds_maximum_between_each_try%'
 
   S2lowLegacy\Class\WorkerScript:
     factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]

@@ -16,7 +16,7 @@ class WorkerRunnerBuilder
     private SigTermHandlerFactory $sigTermHandlerFactory;
     private WorkerScript $workerScript;
     private int $totalTryBeforeWorkerDie;
-    private int $secondsBetweenEachTry;
+    private int $secondsMaximumBetweenEachTry;
 
     public function __construct(
         BeanstalkdWrapper $beanstalkdWrapper,
@@ -25,7 +25,7 @@ class WorkerRunnerBuilder
         RedisMutexWrapper $redisMutexWrapper,
         WorkerScript $workerScript,
         int $totalTryBeforeWorkerDie,
-        int $secondsBetweenEachTry
+        int $secondsMaximumBetweenEachTry
     ) {
         $this->s2lowLogger = $s2lowLogger;
         $this->beanstalkdWrapper = $beanstalkdWrapper;
@@ -33,7 +33,7 @@ class WorkerRunnerBuilder
         $this->redisMutexWrapper = $redisMutexWrapper;
         $this->workerScript = $workerScript;
         $this->totalTryBeforeWorkerDie = $totalTryBeforeWorkerDie;
-        $this->secondsBetweenEachTry = $secondsBetweenEachTry;
+        $this->secondsMaximumBetweenEachRetry = $secondsMaximumBetweenEachTry;
     }
 
     public function scriptWithLogs(
@@ -58,7 +58,7 @@ class WorkerRunnerBuilder
                 $this->sigTermHandlerFactory->getInstance(),
                 $this->redisMutexWrapper,
                 $this->totalTryBeforeWorkerDie,
-                $this->secondsBetweenEachTry
+                $this->secondsMaximumBetweenEachRetry
             ),
             JobFetcherFromDB::class => new CustomizableWorkerRunner(
                 $IWorker,
