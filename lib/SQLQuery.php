@@ -10,29 +10,40 @@ use PDOStatement;
 class SQLQuery
 {
     private const DATABASE_TYPE = "pgsql";
-    private const DEFAULT_HOST = "localhost";
     private const SLOW_QUERY_IN_MS = 2000;
 
     private const CLIENT_ENCODING_DEFAULT = "UTF-8";
 
     private $databaseName;
-    private $host;
-    private $login;
-    private $password;
+    private $databaseHost;
+    private $databaseLogin;
+    private $databasePassword;
     private $slow_query_in_ms;
     private $pdo;
 
     private $client_encoding;
 
-    public function __construct($databaseName)
-    {
+    /** @var  PDOStatement */
+    private $lastPdoStatement;
+    private $nextResult;
+    private $hasMoreResult;
+
+    public function __construct(
+        string $databaseName,
+        string $databaseHost,
+        string $databaseLogin,
+        string $databasePassword
+    ) {
         $this->databaseName = $databaseName;
-        $this->setDatabaseHost(self::DEFAULT_HOST);
+        $this->databaseLogin = $databaseLogin;
+        $this->databasePassword = $databasePassword;
+        $this->databaseHost = $databaseHost;
+
         $this->setSlowQuery(self::SLOW_QUERY_IN_MS);
         $this->setClientEncoding(self::CLIENT_ENCODING_DEFAULT);
     }
 
-    public function disconnect()
+    public function disconnect(): void
     {
         $this->pdo = null;
     }
@@ -43,35 +54,35 @@ class SQLQuery
         sleep($time_in_second);
     }
 
-    public function setDatabaseHost($host)
+    public function setDatabaseHost($host): void
     {
-        $this->host = $host;
+        $this->databaseHost = $host;
     }
 
-    public function setCredential($login, $password)
+    public function setCredential($login, $password): void
     {
-        $this->login = $login;
-        $this->password = $password;
+        $this->databaseLogin = $login;
+        $this->databasePassword = $password;
     }
 
-    public function setSlowQuery($millisecond)
+    public function setSlowQuery($millisecond): void
     {
         $this->slow_query_in_ms  = $millisecond;
     }
 
-    public function setClientEncoding($client_encoding)
+    public function setClientEncoding($client_encoding): void
     {
         $this->client_encoding = $client_encoding;
     }
 
-    public function getPdo()
+    public function getPdo(): PDO
     {
         if (! $this->pdo) {
-            $dsn = self::DATABASE_TYPE . ":host=" . $this->host;
+            $dsn = self::DATABASE_TYPE . ":host=" . $this->databaseHost;
             if ($this->databaseName) {
                 $dsn .= ";dbname=" . $this->databaseName;
             }
-            $this->pdo = new PDO($dsn, $this->login, $this->password);
+            $this->pdo = new PDO($dsn, $this->databaseLogin, $this->databasePassword);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->query("SET CLIENT_ENCODING TO '{$this->client_encoding}';");
             $this->query("SET standard_conforming_strings = off;");
@@ -79,7 +90,7 @@ class SQLQuery
         return $this->pdo;
     }
 
-    public function query($query, $param = false)
+    public function query($query, $param = false): array
     {
         $start = microtime(true);
         if (! is_array($param)) {
@@ -132,7 +143,7 @@ class SQLQuery
         return $result;
     }
 
-    public function queryOneCol($query, $param = false)
+    public function queryOneCol($query, $param = false): array
     {
         if (! is_array($param)) {
             $param = func_get_args();
@@ -150,12 +161,7 @@ class SQLQuery
         return $r;
     }
 
-    /** @var  PDOStatement */
-    private $lastPdoStatement;
-    private $nextResult;
-    private $hasMoreResult;
-
-    public function prepareAndExecute($query, $param = false)
+    public function prepareAndExecute($query, $param = false): void
     {
         if (! is_array($param)) {
             $param = func_get_args();
@@ -167,7 +173,7 @@ class SQLQuery
         $this->fetch();
     }
 
-    public function exec($query)
+    public function exec($query): void
     {
         $this->getPdo()->exec($query);
     }
@@ -188,7 +194,7 @@ class SQLQuery
         return $result;
     }
 
-    public function waitStarting(Closure $log_function, $nb_retry_max = 60)
+    public function waitStarting(Closure $log_function, $nb_retry_max = 60): bool
     {
         $connected = false;
         $nb_retry = 0;

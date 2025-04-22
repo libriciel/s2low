@@ -42,9 +42,12 @@ class S2lowIntegrationTestCase extends WebTestCase
         $_FILES = [];
         $_SERVER['QUERY_STRING'] = '';
         vfsStream::setup('test/helios');
-        $this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);
-        $this->sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST);
-        $this->sqlQuery->setDatabaseHost(DB_HOST_TEST);
+        $this->sqlQuery = new SQLQuery(
+            DB_DATABASE_TEST,
+            DB_HOST_TEST,
+            DB_USER_TEST,
+            DB_PASSWORD_TEST
+        );
         $this->pemCertificateFactory = new PemCertificateFactory();
 
         $this->fixtureCertificate = $this->pemCertificateFactory->getFromString(
