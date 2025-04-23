@@ -58,7 +58,6 @@ class WorkerCommandKernelTestCase extends KernelTestCase
         KernelInterface $kernel,
         array $commandParams = []
     ): int {
-        (new Dotenv())->bootEnv('/data/config/.env');
         $application = new Application($kernel);
         $command = $application->find($commandName);
         $commandTester = new CommandTester($command);

@@ -3,6 +3,14 @@ parameters:
   app.database_host: '%env(POSTGRES_HOST_TEST)%'
   app.database_login: '%env(POSTGRES_USER_TEST)%'
   app.database_password: '%env(POSTGRES_PASSWORD_TEST)%'
+  app.helios_passtrans_server: 'ftp_passtrans'
+  app.helios_passtrans_port: '8022'
+  app.helios_passtrans_passive_mode: 'true'
+  app.helios_passtrans_connection_mode: 'SIMULATEUR'
+  app.helios_passtrans_login: 'helios-passtrans'
+  app.helios_passtrans_password: 'helios-passtrans'
+  app.helios_passtrans_sending_destination: '/entree/'
+  app.helios_passtrans_response_server_path: '/sortie/'
 
 services:
   S2low\Command\Helios\Workers\HeliosAnalyseFichierAEnvoyerCommand:
