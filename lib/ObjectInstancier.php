@@ -49,11 +49,7 @@ class ObjectInstancier
 
     public function get($name): mixed
     {
-
         global $kernel;
-        if (!in_array($name, self::BASIC_CLASSES) && $kernel !== null && $kernel->isBooted() && $kernel->getContainer()->hasParameter($name)) {
-            return $kernel->getContainer()->getParameter($name);
-        }
         if (!in_array($name, self::BASIC_CLASSES) && $kernel !== null && $kernel->isBooted()) {
             return $kernel->getContainer()->get($name);
         }
