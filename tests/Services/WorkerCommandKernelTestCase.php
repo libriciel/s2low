@@ -8,6 +8,7 @@ use S2lowLegacy\Class\BeanstalkdWrapper;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class WorkerCommandKernelTestCase extends KernelTestCase
@@ -57,6 +58,7 @@ class WorkerCommandKernelTestCase extends KernelTestCase
         KernelInterface $kernel,
         array $commandParams = []
     ): int {
+        (new Dotenv())->bootEnv('/data/config/.env');
         $application = new Application($kernel);
         $command = $application->find($commandName);
         $commandTester = new CommandTester($command);
