@@ -11,6 +11,8 @@ parameters:
   app.helios_passtrans_password: 'helios-passtrans'
   app.helios_passtrans_sending_destination: '/entree/'
   app.helios_passtrans_response_server_path: '/sortie/'
+  app.helios_ftp_p_appli: 'GHELPES2'
+
 
 services:
   S2low\Command\Helios\Workers\HeliosAnalyseFichierAEnvoyerCommand:
