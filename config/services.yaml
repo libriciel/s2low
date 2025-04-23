@@ -36,10 +36,6 @@ parameters:
   app.beanstalkd_port: '%env(BEANSTAKLD_PORT)%'
   app.redis_server: '%env(REDIS_SERVER)%'
   app.redis_port: '%env(REDIS_PORT)%'
-  app.database_name : '%env(DB_DATABASE)%'
-  app.database_host : '%env(DB_HOST)%'
-  app.database_login : '%env(DB_USER)%'
-  app.database_password : '%env(DB_PASSWORD)%'
   app.antivirus_command : '%env(ANTIVIRUS_COMMAND)%'
 
   app.convert_api_logins_from_iso : '%env(CONVERT_API_LOGINS_FROM_ISO)%'
@@ -80,8 +76,8 @@ parameters:
   app.mail_files_without_transac_dir : '%env(MAIL_FILES_WITHOUT_TRANSAC_DIR)%'
 
   app.pades_valid_url : '%env(PADES_VALID_URL)%'
-  app.pdf_stamp_url : '%env(PDF_STAMP_URL)%'
-  app.image_for_stamp : '%env(IMAGE_FOR_STAMP)%'
+  app.pdf_stamp_url : 'http://pdf-stamp:8080'
+  app.image_for_stamp : '/var/www/s2low/public.ssl/custom/images/s2low-stamp.png'
 
   #app.rgs_validca_path : '%env(RGS_VALIDCA_PATH)%'
 
