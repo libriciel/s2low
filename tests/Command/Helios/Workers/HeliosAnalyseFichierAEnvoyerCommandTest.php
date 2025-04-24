@@ -63,7 +63,8 @@ class HeliosAnalyseFichierAEnvoyerCommandTest extends WorkerCommandKernelTestCas
         $this->commandExecute('worker:helios-analyse-fichier-a-envoyer', self::$kernel);
 
         $transactionUpdatedByCommand = $this->heliosTransactionSQL->getInfo($heliosTransactionId);
-
-        self::assertEquals(HeliosTransactionsSQL::ATTENTE, $transactionUpdatedByCommand['last_status_id']);
+        var_dump($_ENV);
+        var_dump(self::$kernel->getEnvironment());
+        self::assertEquals(HeliosStatus::EN_ATTENTE->value, $transactionUpdatedByCommand['last_status_id']);
     }
 }
