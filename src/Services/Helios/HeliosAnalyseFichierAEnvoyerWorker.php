@@ -61,9 +61,9 @@ class HeliosAnalyseFichierAEnvoyerWorker implements IWorker
 
     public function isDataValid($data)
     {
-        var_dump('id '.$data);
+        var_dump('id ' . $data);
         $status_id = $this->heliosTransactionsSQL->getLatestStatusId($data);
-        var_dump('status_id '.$status_id.' is valid?');
+        var_dump('status_id ' . $status_id . ' is valid?');
 
         return $status_id == HeliosTransactionsSQL::POSTE;
     }
