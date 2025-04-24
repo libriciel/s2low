@@ -102,10 +102,13 @@ class TestEnvironmentManager
 
     public function getConnection()
     {
-        if (! self::$sqlQueryStatic) {
-            self::$sqlQueryStatic = new SQLQuery(DB_DATABASE_TEST);
-            self::$sqlQueryStatic->setCredential(DB_USER_TEST, DB_PASSWORD_TEST);
-            self::$sqlQueryStatic->setDatabaseHost(DB_HOST_TEST);
+        if (!self::$sqlQueryStatic) {
+            self::$sqlQueryStatic = new SQLQuery(
+                DB_DATABASE_TEST,
+                DB_HOST_TEST,
+                DB_USER_TEST,
+                DB_PASSWORD_TEST
+            );
         }
     }
 

@@ -154,7 +154,10 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
         $info_transaction = $this->transactionsSQL->getInfo($id_transaction);
         static::assertEquals(HeliosTransactionsSQL::ERREUR, $info_transaction['last_status_id']);
         $last_status_info = $this->transactionsSQL->getLastStatusInfo($id_transaction);
-        static::assertEquals("Transaction $id_transaction : ce fichier n'est pas encodé en ISO-8859-1", $last_status_info['message']);
+        static::assertEquals(
+            "Transaction $id_transaction : ce fichier n'est pas encodé en ISO-8859-1",
+            $last_status_info['message']
+        );
     }
 
     /**
@@ -254,7 +257,10 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
         $this->validate($id_transaction);
         $info_transaction = $this->transactionsSQL->getLastStatusInfo($id_transaction);
         static::assertEquals(HeliosTransactionsSQL::ATTENTE, $info_transaction['status_id']);
-        static::assertMatchesRegularExpression("#Transaction $id_transaction dans la file d'attente#", $info_transaction['message']);
+        static::assertMatchesRegularExpression(
+            "#Transaction $id_transaction dans la file d'attente#",
+            $info_transaction['message']
+        );
     }
 
     /**
@@ -269,7 +275,10 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
         $this->validate($id_transaction);
         $info_transaction = $this->transactionsSQL->getLastStatusInfo($id_transaction);
         static::assertEquals(HeliosTransactionsSQL::ATTENTE, $info_transaction['status_id']);
-        static::assertMatchesRegularExpression("#Transaction $id_transaction dans la file d'attente#", $info_transaction['message']);
+        static::assertMatchesRegularExpression(
+            "#Transaction $id_transaction dans la file d'attente#",
+            $info_transaction['message']
+        );
     }
 
     /**
@@ -302,7 +311,10 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
 
         $info_transaction = $this->transactionsSQL->getLastStatusInfo($id_transaction);
         static::assertEquals(-1, $info_transaction['status_id']);
-        static::assertMatchesRegularExpression('#ce fichier existe déjà sur la plateforme#', $info_transaction['message']);
+        static::assertMatchesRegularExpression(
+            '#ce fichier existe déjà sur la plateforme#',
+            $info_transaction['message']
+        );
     }
 
 

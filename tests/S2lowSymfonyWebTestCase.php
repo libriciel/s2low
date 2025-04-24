@@ -33,7 +33,7 @@ abstract class S2lowSymfonyWebTestCase extends WebTestCase
      */
     public function getObjectInstancier()
     {
-        return  $this->testEnvironnementManager->getObjectInstancier();
+        return $this->testEnvironnementManager->getObjectInstancier();
     }
 
     /**
@@ -96,13 +96,14 @@ abstract class S2lowSymfonyWebTestCase extends WebTestCase
         );
     }
 
-    /** @deprecated  */
+    /** @deprecated */
     public function setExpectedException($e, string $message)
     {
         $this->expectException($e);
         $this->expectExceptionMessage($message);
     }
-    /** @deprecated  */
+
+    /** @deprecated */
     public function noAssertion()
     {
         $this->assertTrue(true);

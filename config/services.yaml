@@ -1,6 +1,10 @@
 # config/services.yaml
 
 parameters:
+  app.database_name: '%env(POSTGRES_DB)%'
+  app.database_host: '%env(POSTGRES_HOST)%'
+  app.database_login: '%env(POSTGRES_USER)%'
+  app.database_password: '%env(POSTGRES_PASSWORD)%'
   app.relative_legacy_ssl_path: 'public.ssl/'
   app.old_timestamp_token_directory: '/data/timestamp-token/'            #TODO : utiliser OLD_TIMESTAMP_TOKEN_DIRECTORY
   app.timestamp_token_retention_nb_days: 781                             #TODO : utiliser HELIOS_RETENTION_RETOURS_NB_JOURS
@@ -182,8 +186,14 @@ services:
       $openssl_path: "todo"
 
   S2lowLegacy\Lib\SQLQuery:
-    factory: ['\S2lowLegacy\Class\LegacyObjectsManager','getObject']
-    arguments: ['S2lowLegacy\Lib\SQLQuery']
+    autoconfigure: true
+    autowire: true
+    public: true
+    arguments:
+      $databaseName: '%app.database_name%'
+      $databaseHost: '%app.database_host%'
+      $databaseLogin: '%app.database_login%'
+      $databasePassword: '%app.database_password%'
 
   S2lowLegacy\Lib\SessionWrapper:
     autowire: false #Doit être configuré explicitement ?

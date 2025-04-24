@@ -11,9 +11,12 @@ class SQLQueryTest extends PHPUnit_Framework_TestCase
 
     protected function setUp(): void
     {
-        $this->sqlQuery = new SQLQuery(DB_DATABASE_TEST);
-        $this->sqlQuery->setDatabaseHost(DB_HOST_TEST);
-        $this->sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST);
+        $this->sqlQuery = new SQLQuery(
+            DB_DATABASE_TEST,
+            DB_HOST_TEST,
+            DB_USER_TEST,
+            DB_PASSWORD_TEST
+        );
     }
 
     public function testGetPdo()
@@ -66,7 +69,7 @@ class SQLQueryTest extends PHPUnit_Framework_TestCase
     {
         $sql = "SELECT id FROM users ORDER BY id LIMIT 2";
         $result = $this->sqlQuery->queryOneCol($sql);
-        $this->assertEquals(array(1,2), $result);
+        $this->assertEquals(array(1, 2), $result);
     }
 
     public function testQueryOneEmptyResult()

@@ -50,13 +50,19 @@ class LegacyObjectsManager
     public static function setLegacyObjectInstancier(): void
     {
         if (TESTING_ENVIRONNEMENT) {
-            $sqlQuery = new SQLQuery(DB_DATABASE_TEST);
-            $sqlQuery->setCredential(DB_USER_TEST, DB_PASSWORD_TEST);
-            $sqlQuery->setDatabaseHost(DB_HOST_TEST);
+            $sqlQuery = new SQLQuery(
+                DB_DATABASE_TEST,
+                DB_HOST_TEST,
+                DB_USER_TEST,
+                DB_PASSWORD_TEST
+            );
         } else {
-            $sqlQuery = new SQLQuery(DB_DATABASE);
-            $sqlQuery->setDatabaseHost(DB_HOST);
-            $sqlQuery->setCredential(DB_USER, DB_PASSWORD);
+            $sqlQuery = new SQLQuery(
+                DB_DATABASE,
+                DB_HOST,
+                DB_USER,
+                DB_PASSWORD
+            );
         }
 
         $objectInstancier = new ObjectInstancier();
