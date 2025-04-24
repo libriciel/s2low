@@ -180,8 +180,6 @@ class HeliosEnvoiControler
         $usePasstransMsg = $authorityInfo['helios_use_passtrans'] ? ' [Passtrans]' : '';
         $message = "Transaction $transaction_id dans la file d'attente" . $usePasstransMsg;
         $this->updateStatus($transaction_id, HeliosTransactionsSQL::ATTENTE, $message, $transactionInfo['user_id']);
-        var_dump("Le status a ete edité.");
-        //TODO : Quickfix pour permettre d'utiliser un Worker utilisant des composants Symfony
 
         $this->workerScript->putJobByQueueName(
             HeliosEnvoiWorker::getQueueNameParametre($authorityInfo['helios_use_passtrans']),

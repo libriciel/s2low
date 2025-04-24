@@ -10,12 +10,9 @@ parameters:
   app.helios_ftp_login: 'helios'
   app.helios_ftp_password: 'helios'
   app.helios_ftp_response_server_path: '/sortie/'
-  app.helios_ftp_response_tmp_local_path: '/data/tdt-workspace/helios/response_tmp/'
-
-  app.helios_responses_error_path: '/data/tdt-workspace/helios/response_error/'
-
   app.helios_sending_destination: '/entree/'
-
+  app.helios_ftp_response_tmp_local_path: '/data/tdt-workspace/helios/response_tmp/'
+  app.helios_responses_error_path: '/data/tdt-workspace/helios/response_error/'
   app.helios_passtrans_server: 'ftp_passtrans'
   app.helios_passtrans_port: '8022'
   app.helios_passtrans_passive_mode: 'true'
