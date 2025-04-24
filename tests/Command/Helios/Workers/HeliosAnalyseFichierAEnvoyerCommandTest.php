@@ -5,12 +5,45 @@ namespace S2low\Tests\Command\Helios\Workers;
 use org\bovigo\vfs\vfsStream;
 use S2low\Enum\HeliosStatus;
 use S2low\Tests\Services\WorkerCommandKernelTestCase;
-use S2lowLegacy\Class\BeanstalkdWrapper;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 class HeliosAnalyseFichierAEnvoyerCommandTest extends WorkerCommandKernelTestCase
 {
     private HeliosTransactionsSQL $heliosTransactionSQL;
+
+    /**
+     * @dataProvider dataProvider
+     */
+    public function tests($data): void
+    {
+        $heliosTransactionId = $this->heliosTransactionSQL->create(
+            $data['filename'],
+            $data['sha1'],
+            $data['user_id'],
+            $data['authority_id'],
+            $data['file_size'],
+            $data['siren'],
+        );
+        $this->heliosTransactionSQL->updateStatus(
+            $heliosTransactionId,
+            $data['last_status_id'],
+            'Statut dans les tests.'
+        );
+
+        $this->simuleBeanstalkdAndRedis(beanstalkdPayload: $heliosTransactionId);
+
+        vfsStream::setup('test/helios/');
+        $vfsUrl = vfsStream::url('test/helios/' . $data['sha1']);
+
+        $filePath = __DIR__ . '/../../../Fixtures/' . $data['filename'];
+        copy($filePath, $vfsUrl);
+
+        $this->commandExecute('worker:helios-analyse-fichier-a-envoyer', self::$kernel);
+
+        $transactionUpdatedByCommand = $this->heliosTransactionSQL->getInfo($heliosTransactionId);
+
+        self::assertEquals(HeliosStatus::EN_ATTENTE->value, $transactionUpdatedByCommand['last_status_id']);
+    }
 
     public function setUp(): void
     {
@@ -34,37 +67,5 @@ class HeliosAnalyseFichierAEnvoyerCommandTest extends WorkerCommandKernelTestCas
                 ]
             ],
         ];
-    }
-
-    /**
-     * @dataProvider dataProvider
-     */
-    public function tests($data): void
-    {
-        $heliosTransactionId = $this->heliosTransactionSQL->create(
-            $data['filename'],
-            $data['sha1'],
-            $data['user_id'],
-            $data['authority_id'],
-            $data['file_size'],
-            $data['siren'],
-        );
-        $this->heliosTransactionSQL->updateStatus($heliosTransactionId, $data['last_status_id'], 'Statut dans les tests.');
-
-        $beanstalkWrapperMock = $this->createBeantstalkdMock('helios-analyse-fichier-a-envoyer', $heliosTransactionId);
-        self::getContainer()->set(BeanstalkdWrapper::class, $beanstalkWrapperMock);
-
-        vfsStream::setup('test/helios/');
-        $vfsUrl = vfsStream::url('test/helios/' . $data['sha1']);
-
-        $filePath = __DIR__ . '/../../../Fixtures/' . $data['filename'];
-        copy($filePath, $vfsUrl);
-
-        $this->commandExecute('worker:helios-analyse-fichier-a-envoyer', self::$kernel);
-
-        $transactionUpdatedByCommand = $this->heliosTransactionSQL->getInfo($heliosTransactionId);
-        var_dump($_ENV);
-        var_dump(self::$kernel->getEnvironment());
-        self::assertEquals(HeliosStatus::EN_ATTENTE->value, $transactionUpdatedByCommand['last_status_id']);
     }
 }
