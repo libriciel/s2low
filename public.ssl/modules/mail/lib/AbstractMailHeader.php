@@ -1,5 +1,7 @@
 <?php
 
+namespace S2lowLegacy\Mail;
+
 abstract class AbstractMailHeader
 {
     /** @var string */

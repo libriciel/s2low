@@ -1,7 +1,10 @@
 <?php
 
+namespace S2lowLegacy\Mail;
+
 use S2lowLegacy\Class\DataObject;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Mail\MailMessageEmis;
 
 class MailTransaction extends DataObject
 {
@@ -11,7 +14,12 @@ class MailTransaction extends DataObject
 
     public static function getTabStatus()
     {
-        return array(0 => '',self::STATUS_CONFIRMER,self::STATUS_NO_CONFIRMATION,self::STATUS_CONFIRMER_PARTIELLEMENT);
+        return array(
+            0 => '',
+            self::STATUS_CONFIRMER,
+            self::STATUS_NO_CONFIRMATION,
+            self::STATUS_CONFIRMER_PARTIELLEMENT
+        );
     }
 
     private $arrayEmail;
@@ -24,14 +32,14 @@ class MailTransaction extends DataObject
     protected $fn_download;
     protected $status;
     protected $date_envoi;
-    protected $dbFields =  array(
-        "user_id"      => array( "descr" => "Identifiant utilisateur", "type" => "isInt", "mandatory" => true),
-        "objet"        => array("descr" => "---", "type" => "isString", "mandatory" => true),
-        "password"     => array("descr" => "---", "type" => "isString", "mandatory" => true),
-        "message"      => array("descr" => "---", "type" => "isString", "mandatory" => true),
-        "fn_download"   => array("descr" => "---", "type" => "isString", "mandatory" => true),
-        "status"       => array("descr" => "---", "type" => "isString", "mandatory" => true),
-        "date_envoi"  => array("descr" => "---", "type" => "isString", "mandatory" => true),
+    protected $dbFields = array(
+        "user_id" => array("descr" => "Identifiant utilisateur", "type" => "isInt", "mandatory" => true),
+        "objet" => array("descr" => "---", "type" => "isString", "mandatory" => true),
+        "password" => array("descr" => "---", "type" => "isString", "mandatory" => true),
+        "message" => array("descr" => "---", "type" => "isString", "mandatory" => true),
+        "fn_download" => array("descr" => "---", "type" => "isString", "mandatory" => true),
+        "status" => array("descr" => "---", "type" => "isString", "mandatory" => true),
+        "date_envoi" => array("descr" => "---", "type" => "isString", "mandatory" => true),
     );
 
     public function newSave($id)
@@ -63,7 +71,6 @@ class MailTransaction extends DataObject
 
     public function getMessage()
     {
-
         return $this->message;
     }
 
@@ -86,14 +93,13 @@ class MailTransaction extends DataObject
     public function getFile($fileId)
     {
         $sql = "SELECT * FROM mail_included_file WHERE id=? AND mail_transaction_id= ?";
-        $result = $this->db->select($sql, [$fileId,$this->getId()]);
+        $result = $this->db->select($sql, [$fileId, $this->getId()]);
         return $result->get_next_row();
     }
 
     public function isPasswordOK($password)
     {
-
-        if (! $this->getPassword()) {
+        if (!$this->getPassword()) {
             return true;
         }
         return $password == $this->getPassword();
@@ -117,15 +123,15 @@ class MailTransaction extends DataObject
 
     private function getArrayEmail()
     {
-
         if ($this->arrayEmail) {
             return $this->arrayEmail;
         }
 
-        $this->arrayEmail = array(MailMessageEmis::TYPE_MAIL_TO => array(),
-                            MailMessageEmis::TYPE_MAIL_CC => array(),
-                            MailMessageEmis::TYPE_MAIL_BCC => array(),
-                            );
+        $this->arrayEmail = array(
+            MailMessageEmis::TYPE_MAIL_TO => array(),
+            MailMessageEmis::TYPE_MAIL_CC => array(),
+            MailMessageEmis::TYPE_MAIL_BCC => array(),
+        );
 
         $sql = "SELECT * FROM mail_message_emis WHERE mail_transaction_id =  ?";
         $result = $this->db->select($sql, [$this->getId()]);

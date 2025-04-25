@@ -3,6 +3,8 @@
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\MailInit;
+use S2lowLegacy\Mail\MailList;
+use S2lowLegacy\Mail\MailPeer;
 
 list($module, $me, $myAuthority) = MailInit::getIdentificationParameters();
 

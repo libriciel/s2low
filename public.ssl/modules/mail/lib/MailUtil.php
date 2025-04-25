@@ -14,7 +14,10 @@
  *
  */
 
+namespace S2lowLegacy\Mail;
+
 use S2lowLegacy\Class\Trace;
+use ZipArchive;
 
 require_once SITEROOT . '/class/include.php';
 

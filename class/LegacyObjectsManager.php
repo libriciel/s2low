@@ -22,11 +22,11 @@ use S2lowLegacy\Lib\OpenStackContainerWrapperFactory;
 use S2lowLegacy\Lib\SessionWrapper;
 use S2lowLegacy\Lib\SigTermHandler;
 use S2lowLegacy\Lib\SQLQuery;
-use MailHeader;
-use MailHeaderLegacy;
 use Monolog\Handler\SymfonyMailerHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use S2lowLegacy\Mail\MailHeader;
+use S2lowLegacy\Mail\MailHeaderLegacy;
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mime\Email;
 

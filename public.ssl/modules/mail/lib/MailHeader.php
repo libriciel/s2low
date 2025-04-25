@@ -1,5 +1,7 @@
 <?php
 
+namespace S2lowLegacy\Mail;
+
 class MailHeader extends AbstractMailHeader implements IMailHeader
 {
     private function getFromField(): string

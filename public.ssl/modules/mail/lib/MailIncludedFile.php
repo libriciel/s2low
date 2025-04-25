@@ -1,5 +1,7 @@
 <?php
 
+namespace S2lowLegacy\Mail;
+
 use S2lowLegacy\Class\DataObject;
 use S2lowLegacy\Class\FileUploader;
 
@@ -16,7 +18,6 @@ use S2lowLegacy\Class\FileUploader;
  * Auteur   Date       Commentaire
  *
  */
-
 class MailIncludedFile extends DataObject
 {
     private $lastError;
@@ -26,12 +27,13 @@ class MailIncludedFile extends DataObject
     protected $filename;
     protected $filetype;
     protected $filesize;
-    protected $dbFields =  array(
-    "mail_transaction_id"      => array( "descr" => "Identifiant utilisateur", "type" => "isInt", "mandatory" => true),
-    "filename"       => array("descr" => "---", "type" => "isString", "mandatory" => true),
-    "filetype"       => array("descr" => "---", "type" => "isString", "mandatory" => true),
-    "filesize"       => array("descr" => "---", "type" => "isString", "mandatory" => true),
+    protected $dbFields = array(
+        "mail_transaction_id" => array("descr" => "Identifiant utilisateur", "type" => "isInt", "mandatory" => true),
+        "filename" => array("descr" => "---", "type" => "isString", "mandatory" => true),
+        "filetype" => array("descr" => "---", "type" => "isString", "mandatory" => true),
+        "filesize" => array("descr" => "---", "type" => "isString", "mandatory" => true),
     );
+
     public function __construct($id = false)
     {
         parent::__construct($id);
@@ -44,7 +46,6 @@ class MailIncludedFile extends DataObject
 
     public function newSave($file_name, $Transaction_id, $newdir)
     {
-
         $uploader = new FileUploader();
         $uploader->setDestinationDirectory($newdir);
         $uploader->disableForbidenExtension();
@@ -68,14 +69,17 @@ class MailIncludedFile extends DataObject
     {
         return $this->mail_transaction_id;
     }
+
     public function getFileName()
     {
         return $this->filename;
     }
+
     public function getFileType()
     {
         return $this->filetype;
     }
+
     public function getFileSize()
     {
         return $this->filesize;

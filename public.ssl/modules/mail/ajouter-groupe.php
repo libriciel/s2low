@@ -1,7 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\MailInit;
-use Legacy\MailLayout;
+use S2lowLegacy\Mail\MailLayout;
 
 list($module, $me, $myAuthority) = MailInit::getIdentificationParameters();
 

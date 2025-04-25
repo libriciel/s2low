@@ -1,5 +1,7 @@
 <?php
 
+namespace S2lowLegacy\Mail;
+
 use S2lowLegacy\Class\DataObject;
 
 /**
@@ -15,7 +17,6 @@ use S2lowLegacy\Class\DataObject;
  * Auteur   Date       Commentaire
  *
  */
-
 class MailErrors extends DataObject
 {
     protected $objectName = "mail_errors";
@@ -23,10 +24,10 @@ class MailErrors extends DataObject
     protected $mail_message_emis_id;
     protected $date_registered;
     protected $message_retour;
-    protected $dbFields =  array(
-    "mail_message_emis_id"      => array( "descr" => "Identifiant mail", "type" => "isString", "mandatory" => true),
-    "message_retour"       => array("descr" => "---", "type" => "isString", "mandatory" => true),
-    "date_registered"       => array("descr" => "---", "type" => "isString", "mandatory" => true),
+    protected $dbFields = array(
+        "mail_message_emis_id" => array("descr" => "Identifiant mail", "type" => "isString", "mandatory" => true),
+        "message_retour" => array("descr" => "---", "type" => "isString", "mandatory" => true),
+        "date_registered" => array("descr" => "---", "type" => "isString", "mandatory" => true),
     );
 
     public function __construct($id = false)

@@ -1,6 +1,6 @@
 <?php
 
-use Legacy\MailLayout;
+use S2lowLegacy\Mail\MailLayout;
 
 require_once('../../../init/init.php');
 \S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();

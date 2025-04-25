@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Mail\GroupeMail;
+
 class GroupeMailTest extends S2lowTestCase
 {
     /** @var \GroupeMail  */

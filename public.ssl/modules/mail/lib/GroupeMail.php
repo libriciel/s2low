@@ -1,5 +1,7 @@
 <?php
 
+namespace S2lowLegacy\Mail;
+
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\DataObject;
 

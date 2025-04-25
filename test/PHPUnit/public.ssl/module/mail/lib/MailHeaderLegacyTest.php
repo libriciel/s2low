@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Mail\MailHeaderLegacy;
+
 class MailHeaderLegacyTest extends S2lowTestCase
 {
     public function testDefaults()
