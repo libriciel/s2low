@@ -37,10 +37,18 @@ parameters:
   app.beanstalkd_port: '%env(BEANSTAKLD_PORT)%'
   app.redis_server: '%env(REDIS_SERVER)%'
   app.redis_port: '%env(REDIS_PORT)%'
+  app.mail.message: 'Vous avez reçu un courrier recommandé par S2LOW'
+  app.mail.tedetis_from: 's2low-mailsec@s2low.docker.libriciel.fr'
+  app.mail.secure_description: 'ne-pas-repondre'
+  app.mail.use_legacy_secure_mail: '%env(USE_LEGACY_SECURE_MAIL_FIELDS)%'
 services:
   _defaults:
     autowire: true
     autoconfigure: true
+    bind:
+      $subject: '%app.mail.message%'
+      $s2lowFromMail: '%app.mail.tedetis_from%'
+      $fromDescription: '%app.mail.secure_description%'
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Namespace s2low : contient le code développé après le passage en Symfony.
@@ -133,6 +141,36 @@ services:
     autowire: false
     autoconfigure: true
     public: true
+
+
+  Legacy\Annuaire:
+    autowire: false
+
+  # ---------------------------------------------------------------------------------------------------------------------
+  # Namespace  Legacy : Les mails
+  # ---------------------------------------------------------------------------------------------------------------------
+  Legacy\MailList:
+    autowire: false
+
+  Legacy\MailHeader:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Legacy\MailHeaderLegacy:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Legacy\IMailHeader:
+    factory: ['@S2low\Factory\MailHeaderFactory', 'create']
+    arguments:
+      $useLegacySecureMailFields: '%app.mail.use_legacy_secure_mail%'
+
+  S2low\Factory\MailHeaderFactory:
+    arguments:
+      $mailHeader: '@Legacy\MailHeader'
+      $mailHeaderLegacy: '@Legacy\MailHeaderLegacy'
 
   # ---------------------------------------------------------------------------------------------------------------------
   # Namespace  S2lowLegacy : contient le code Legacy

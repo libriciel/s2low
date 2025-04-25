@@ -1,5 +1,10 @@
 <?php
 
+use Legacy\Annuaire;
+use Legacy\GroupeMail;
+use Legacy\IMailHeader;
+use Legacy\MailList;
+use Legacy\MailUtil;
 use S2low\Services\MailSecurises\MailSecuriseNotification;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\DatabasePool;
@@ -383,7 +388,7 @@ class MailController
         }
          //----------------------
 
-        $mailHeader = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(MailHeader::class);
+        $mailHeader = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(IMailHeader::class);
 
         $mailHeader->setAuthorityName($this->myAuthority->get('name'));
         $mailHeader->setFromMail($this->myAuthority->get('email_mail_securise'));

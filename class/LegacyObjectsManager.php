@@ -2,6 +2,9 @@
 
 namespace S2lowLegacy\Class;
 
+use Legacy\IMailHeader;
+use Legacy\MailHeader;
+use Legacy\MailHeaderLegacy;
 use RuntimeException;
 use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
 use S2lowLegacy\Class\actes\ActesImapProperties;
@@ -278,12 +281,12 @@ class LegacyObjectsManager
 
         if (USE_LEGACY_SECURE_MAIL_FIELDS) {
             $objectInstancier->set(
-                MailHeader::class,
+                IMailHeader::class,
                 new MailHeaderLegacy(MAIL_MESSAGE, MAIL_TEDETIS_FROM, MAIL_SECURE_DESCRIPTION)
             );
         } else {
             $objectInstancier->set(
-                MailHeader::class,
+                IMailHeader::class,
                 new MailHeader(MAIL_MESSAGE, MAIL_TEDETIS_FROM, MAIL_SECURE_DESCRIPTION)
             );
         }
