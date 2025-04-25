@@ -122,7 +122,9 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
         static::assertFileExists("$actes_files_upload_root/$filename");
         $this->getObjectInstancier()
             ->get(CloudStorageFactory::class)
-            ->getInstanceByClassName(ActesCloudStorage::class)
+            ->getInstance(
+                $this->getObjectInstancier()->get(ActesCloudStorage::class)
+            )
             ->deleteIfIsInCloud($transaction_id);
         static::assertFileDoesNotExist("$actes_files_upload_root/$filename");
         $this->assertLogMessage("Deleting object #$transaction_id : $actes_files_upload_root/$filename");
@@ -141,7 +143,9 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
 
         $this->getObjectInstancier()
             ->get(CloudStorageFactory::class)
-            ->getInstanceByClassName(ActesCloudStorage::class)
+            ->getInstance(
+                $this->getObjectInstancier()->get(ActesCloudStorage::class)
+            )
             ->storeObject($envelope_id);
 
         $envelope_info = $actesEnvelopeSQL->getInfo($envelope_id);
@@ -174,7 +178,9 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
 
         $this->getObjectInstancier()
             ->get(CloudStorageFactory::class)
-            ->getInstanceByClassName(ActesCloudStorage::class)
+            ->getInstance(
+                $this->getObjectInstancier()->get(ActesCloudStorage::class)
+            )
             ->storeObject($envelope_id);
 
         $envelope_info = $actesEnvelopeSQL->getInfo($envelope_id);
@@ -203,7 +209,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
 
         $storeResult = $this->getObjectInstancier()
             ->get(CloudStorageFactory::class)
-            ->getInstanceByClassName(ActesCloudStorage::class)
+            ->getInstance($this->getObjectInstancier()->get(ActesCloudStorage::class))
             ->storeObject($envelope_id);
 
         static::assertFalse($storeResult);

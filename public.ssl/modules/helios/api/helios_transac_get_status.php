@@ -67,8 +67,9 @@ if (!$transaction['status']) {
 
 $transaction['resultat'] = "OK";
 
-$cloudStorage = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->get(CloudStorageFactory::class)->getInstanceByClassName(PESAcquitCloudStorage::class);
+$objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier();
+$cloudStorage = $objectInstancier
+    ->get(CloudStorageFactory::class)->getInstance($objectInstancier->get(PESAcquitCloudStorage::class));
 
 $PESAcquitPath = $cloudStorage->getPath($transaction['id']);
 $transactionStatus = HeliosStatus::from($transaction['status']);

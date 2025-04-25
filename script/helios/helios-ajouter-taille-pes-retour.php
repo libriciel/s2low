@@ -8,16 +8,16 @@ use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\HeliosRetourSQL;
 
 require_once(__DIR__ . "/../../init/init.php");
-list( $sqlQuery, $cloudStorageFactory,$heliosRetourSQL ) = LegacyObjectsManager::getLegacyObjectInstancier()
+list( $sqlQuery, $cloudStorageFactory,$heliosRetourSQL,$pesRetourCloudStorageC ) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ SQLQuery::class, CloudStorageFactory::class, HeliosRetourSQL::class]
+        [ SQLQuery::class, CloudStorageFactory::class, HeliosRetourSQL::class,PESRetourCloudStorage::class]
     );
 
 /** @var  HeliosRetourSQL $pesRetours */
 $pesRetours =  $heliosRetourSQL->getAllPESRetour();
 
 /* @var CloudStorage $pesRetourCloudStorage */
-$pesRetourCloudStorage = $cloudStorageFactory->getInstanceByClassName(PESRetourCloudStorage::class);
+$pesRetourCloudStorage = $cloudStorageFactory->getInstance($pesRetourCloudStorageC);
 
 foreach ($pesRetours as $pesRetour) {
     echo "------------------------------\n";

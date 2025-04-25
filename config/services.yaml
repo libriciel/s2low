@@ -492,8 +492,8 @@ services:
     autowire: false #Pas un service ??
 
   S2lowLegacy\Class\actes\ActesCloudStorage:
-    arguments:
-      $actes_files_upload_root: "todo"
+      factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+      arguments: [ 'S2lowLegacy\Class\actes\ActesCloudStorage' ]
 
   S2lowLegacy\Class\actes\ActesConventions:
      arguments:
@@ -542,7 +542,6 @@ services:
     arguments:
       $extractDataForBordereauPDF: "@S2lowLegacy\\Class\\actes\\ExtractDataForBordereauPDF"
       $actesPdf: "@S2lowLegacy\\Class\\actes\\ActesPdf"
-
 
   S2lowLegacy\Class\actes\ActesPrepareEnvoiSAE:
     autowire: false #LOGGER !!!
@@ -611,8 +610,8 @@ services:
     arguments: ['S2lowLegacy\Class\helios\PesAllerRetriever']
 
   S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage:
-    arguments:
-      $mail_files_upload_root: "todo"
+    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
+    arguments: ['S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage']
 
   App\Http\Controllers\Admin\Admin_authorities:
     public: true

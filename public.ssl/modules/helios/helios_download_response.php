@@ -9,9 +9,9 @@ use S2lowLegacy\Class\User;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosRetourSQL;
 
-list($cloudStorageFactory,$heliosRetourSQL,$authoritySQL) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($cloudStorageFactory,$heliosRetourSQL,$authoritySQL,$pesRetourCloudStorageC) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [CloudStorageFactory::class, HeliosRetourSQL::class, AuthoritySQL::class]
+        [CloudStorageFactory::class, HeliosRetourSQL::class, AuthoritySQL::class,PESRetourCloudStorage::class]
     );
 
 // Instanciation du module courant
@@ -60,7 +60,7 @@ $entity->init();
 $filename = $entity->get("filename");
 
 try {
-    $pesRetourCloudStorage = $cloudStorageFactory->getInstanceByClassName(PESRetourCloudStorage::class);
+    $pesRetourCloudStorage = $cloudStorageFactory->getInstance($pesRetourCloudStorageC);
     $filepath = $pesRetourCloudStorage->getPath($retourId);
 } catch (Exception $e) {
     $_SESSION["error"] = "Erreur lors de la r?cup?ration du fichier : " . $e->getMessage();

@@ -21,8 +21,10 @@ class HeliosStorePESAcquitWorker implements IWorker
     private $cloudStorageFactory;
     private $cloudStorage;
 
-    public function __construct(CloudStorageFactory $cloudStorageFactory)
-    {
+    public function __construct(
+        CloudStorageFactory $cloudStorageFactory,
+        private PESAcquitCloudStorage $PESAcquitCloudStorage
+    ) {
         $this->cloudStorageFactory = $cloudStorageFactory;
     }
 
@@ -39,7 +41,7 @@ class HeliosStorePESAcquitWorker implements IWorker
     {
         if (! $this->cloudStorage) {
             $this->cloudStorage = $this->cloudStorageFactory
-                ->getInstanceByClassName(PESAcquitCloudStorage::class);
+                ->getInstance($this->PESAcquitCloudStorage);
         }
         return $this->cloudStorage;
     }

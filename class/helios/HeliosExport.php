@@ -26,7 +26,8 @@ class HeliosExport
         HeliosTransactionsSQL $heliosTransactionsSQL,
         PesAllerRetriever $pesAllerRetriever,
         $helios_responses_root,
-        CloudStorageFactory $cloudStorageFactory
+        CloudStorageFactory $cloudStorageFactory,
+        private PESAcquitCloudStorage $pesAcquitCloudStorage
     ) {
         $this->s2lowLogger = $s2lowLogger;
         $this->authoritySQL = $authoritySQL;
@@ -134,7 +135,7 @@ class HeliosExport
         $this->s2lowLogger->debug("[COPIE OK] $pes_aller_path -> $pes_aller_destination");
 
         if ($transaction_info['acquit_filename']) {
-            $pesAcquitCloudStorage = $this->cloudStorageFactory->getInstanceByClassName(PESAcquitCloudStorage::class);
+            $pesAcquitCloudStorage = $this->cloudStorageFactory->getInstance($this->pesAcquitCloudStorage);
             $pes_acquit_path = $pesAcquitCloudStorage->getPath($transaction_info['id']);
             $pes_acquit_destintation = $output_directory . "/$directory_name/{$transaction_info['acquit_filename']}";
             $filesystem->copy($pes_acquit_path, $pes_acquit_destintation);

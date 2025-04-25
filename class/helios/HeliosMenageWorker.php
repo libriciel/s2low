@@ -15,7 +15,8 @@ class HeliosMenageWorker implements IWorker
     private CloudStorageFactory $cloudStorageFactory;
     private ?CloudStorage $cloudStorage = null;
     public function __construct(
-        CloudStorageFactory $cloudStorageFactory
+        CloudStorageFactory $cloudStorageFactory,
+        private PESAllerCloudStorage $PESAllerCloudStorage
     ) {
         $this->cloudStorageFactory = $cloudStorageFactory;
     }
@@ -27,7 +28,7 @@ class HeliosMenageWorker implements IWorker
     {
         if (is_null($this->cloudStorage)) {
             $this->cloudStorage = $this->cloudStorageFactory
-                ->getInstanceByClassName(PESAllerCloudStorage::class);
+                ->getInstance($this->PESAllerCloudStorage);
         }
         return $this->cloudStorage;
     }

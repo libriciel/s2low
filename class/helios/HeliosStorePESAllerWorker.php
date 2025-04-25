@@ -20,9 +20,11 @@ class HeliosStorePESAllerWorker implements IWorker
     /**
      * @throws \S2lowLegacy\Lib\UnrecoverableException
      */
-    public function __construct(CloudStorageFactory $cloudStorageFactory)
-    {
-        $this->cloudStorage = $cloudStorageFactory->getInstanceByClassName(PESAllerCloudStorage::class);
+    public function __construct(
+        CloudStorageFactory $cloudStorageFactory,
+        private PESAllerCloudStorage $PESAllerCloudStorage
+    ) {
+        $this->cloudStorage = $cloudStorageFactory->getInstance($this->PESAllerCloudStorage);
     }
 
     public function getData($id): int

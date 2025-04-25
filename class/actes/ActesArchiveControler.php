@@ -46,7 +46,8 @@ class ActesArchiveControler
         ActesTransactionsSQL $actesTransactionsSQL,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         ActesTypePJSQL $actesTypePJSQL,
-        CloudStorageFactory $cloudStorageFactory
+        CloudStorageFactory $cloudStorageFactory,
+        ActesCloudStorage $actesCloudStorage
     ) {
         $this->pastellWrapperFactory = $pastellWrapperFactory;
         $this->actesTransactionsSQL = $actesTransactionsSQL;
@@ -57,7 +58,7 @@ class ActesArchiveControler
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
         $this->actesTypePJSQL = $actesTypePJSQL;
         $this->actesEnvelopeCloudStorage = $cloudStorageFactory
-            ->getInstanceByClassName(ActesCloudStorage::class);
+            ->getInstance($actesCloudStorage);
     }
 
     /**

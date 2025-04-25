@@ -12,6 +12,7 @@ use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
 
 $cloudStorageFactory = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(CloudStorageFactory::class);
+$pesAcquitCloudStorageC = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(PESAcquitCloudStorage::class);
 
 // Instanciation du module courant
 $module = new Module();
@@ -91,7 +92,7 @@ $owner = new User($ownerId);
 $owner->init();
 
 try {
-    $pesAcquitCloudStorage = $cloudStorageFactory->getInstanceByClassName(PESAcquitCloudStorage::class);
+    $pesAcquitCloudStorage = $cloudStorageFactory->getInstance($pesAcquitCloudStorageC);
     $path = $pesAcquitCloudStorage->getPath($transaction_id);
 } catch (Exception $e) {
     $_SESSION["error"] = "Erreur d'envoi du fichier " . $filename . " : " . $e->getMessage();

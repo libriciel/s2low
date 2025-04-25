@@ -57,9 +57,10 @@ $doc = new MailLayout('xhtml_mail.tpl.php');
 $doc->setTitle(WEBSITE_TITLE);
 
 /** @var CloudStorage $cloudStorage */
-$cloudStorage  = ObjectInstancierFactory::getObjetInstancier()
+$objectInstancier = ObjectInstancierFactory::getObjetInstancier();
+$cloudStorage  = $objectInstancier
     ->get(CloudStorageFactory::class)
-    ->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
+    ->getInstance($objectInstancier->get(MailIncludedFilesCloudStorage::class));
 
 if ($fndownload) {
     try {

@@ -39,7 +39,7 @@ class MailsecDownloadController extends Controller
 
         $cloudStorage  = $this->getObjectInstancier()
             ->get(CloudStorageFactory::class)
-            ->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
+            ->getInstance($this->getObjectInstancier()->get(MailIncludedFilesCloudStorage::class));
 
         try {
             $filepath = $cloudStorage->getPath($mail_id);

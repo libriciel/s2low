@@ -110,9 +110,10 @@
     if ($mailIncludeFileArray) {
         //C'est super dégeulasse...
         /** @var CloudStorage $cloudStorage */
-        $cloudStorage  = ObjectInstancierFactory::getObjetInstancier()
+        $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
+        $cloudStorage  = $objectInstancier
             ->get(CloudStorageFactory::class)
-            ->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
+            ->getInstance($objectInstancier->get( MailIncludedFilesCloudStorage::class));
         $mailzip_filepath = $cloudStorage->getPath($mailTransaction->getId());
 
 

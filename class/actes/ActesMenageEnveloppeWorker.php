@@ -16,10 +16,12 @@ class ActesMenageEnveloppeWorker implements IWorker
     private CloudStorageFactory $cloudStorageFactory;
     private ?CloudStorage $cloudStorage = null;
     private int $nb_days_in_disk;
+    private ActesCloudStorage $actesCloudStorage;
 
-    public function __construct(CloudStorageFactory $cloudStorageFactory)
+    public function __construct(CloudStorageFactory $cloudStorageFactory, ActesCloudStorage $actesCloudStorage)
     {
         $this->cloudStorageFactory = $cloudStorageFactory;
+        $this->actesCloudStorage = $actesCloudStorage;
         $this->setNbDayInDisk(self::NB_DAYS_IN_DISK);
     }
 
@@ -31,7 +33,7 @@ class ActesMenageEnveloppeWorker implements IWorker
     {
         if (is_null($this->cloudStorage)) {
             $this->cloudStorage = $this->cloudStorageFactory
-                ->getInstanceByClassName(ActesCloudStorage::class);
+                ->getInstance($this->actesCloudStorage);
         }
         return $this->cloudStorage;
     }

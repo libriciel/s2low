@@ -83,7 +83,7 @@ class ActesArchiveControlerTest extends S2lowTestCase
 
         $cloudStorage = $this->getMockBuilder(CloudStorage::class)->disableOriginalConstructor()->getMock();
 
-        $cloudStorageFactory->method('getInstanceByClassName')->willReturn($cloudStorage);
+        $cloudStorageFactory->method('getInstance')->willReturn($cloudStorage);
 
         $this->getObjectInstancier()->set(CloudStorageFactory::class, $cloudStorageFactory);
 

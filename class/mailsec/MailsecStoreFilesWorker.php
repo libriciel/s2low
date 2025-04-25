@@ -21,8 +21,10 @@ class MailsecStoreFilesWorker implements IWorker
     private $cloudStorageFactory;
     private $cloudStorage;
 
-    public function __construct(CloudStorageFactory $cloudStorageFactory)
-    {
+    public function __construct(
+        CloudStorageFactory $cloudStorageFactory,
+        private MailIncludedFilesCloudStorage $mailIncludedFilesCloudStorage
+    ) {
         $this->cloudStorageFactory = $cloudStorageFactory;
     }
 
@@ -39,7 +41,7 @@ class MailsecStoreFilesWorker implements IWorker
     {
         if (! $this->cloudStorage) {
             $this->cloudStorage = $this->cloudStorageFactory
-                ->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
+                ->getInstance($this->mailIncludedFilesCloudStorage);
         }
         return $this->cloudStorage;
     }

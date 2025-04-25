@@ -30,7 +30,9 @@ class HeliosEnvoiSAE
         AuthoritySQL $authoritySQL,
         HeliosTransactionsSQL $heliosTransactionsSQL,
         PastellPropertiesSQL $pastellPropertiesSQL,
-        CloudStorageFactory $cloudStorageFactory
+        CloudStorageFactory $cloudStorageFactory,
+        private PESAllerCloudStorage $pesAllerCloudStorage,
+        private PESAcquitCloudStorage $pesAcquitCloudStorage
     ) {
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
         $this->authoritySQL = $authoritySQL;
@@ -106,7 +108,7 @@ class HeliosEnvoiSAE
             throw new FilesNotFoundInCloudException("Impossible de récupérer le PES ALLER {$transactionsInfo['sha1']}");
         }
 
-            $pesAcquitCloudStorage = $this->cloudStorageFactory->getInstanceByClassName(PESAcquitCloudStorage::class);
+            $pesAcquitCloudStorage = $this->cloudStorageFactory->getInstance($this->pesAcquitCloudStorage);
             $pes_acquit_filepath = $pesAcquitCloudStorage->getPath($transaction_id);
 
             $pastellProperties = $this->pastellPropertiesSQL->getPastellProperties($transactionsInfo[HeliosTransactionsSQL::AUTHORITY_ID]);
@@ -147,7 +149,7 @@ class HeliosEnvoiSAE
             throw new Exception($message);
         }
 
-        $pesAllerCloudStorage = $this->cloudStorageFactory->getInstanceByClassName(PESAllerCloudStorage::class);
+        $pesAllerCloudStorage = $this->cloudStorageFactory->getInstance($this->pesAllerCloudStorage);
         $pesAllerCloudStorage->deleteIfIsInCloud($transaction_id);
 
 
