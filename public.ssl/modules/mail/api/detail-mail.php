@@ -1,5 +1,6 @@
 <?php
 
+use Legacy\MailList;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\MailInit;
