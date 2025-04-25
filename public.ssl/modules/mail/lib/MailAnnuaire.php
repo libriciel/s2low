@@ -1,5 +1,7 @@
 <?php
 
+namespace S2lowLegacy\Mail;
+
 use S2lowLegacy\Class\DataObject;
 
 /**
@@ -15,7 +17,6 @@ use S2lowLegacy\Class\DataObject;
  * Auteur   Date       Commentaire
  *
  */
-
 class MailAnnuaire extends DataObject
 {
     protected $objectName = "mail_annuaire";

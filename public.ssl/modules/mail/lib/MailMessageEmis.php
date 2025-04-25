@@ -1,7 +1,10 @@
 <?php
 
+namespace S2lowLegacy\Mail;
+
 use S2lowLegacy\Class\DataObject;
 use S2lowLegacy\Class\Log;
+use S2lowLegacy\Mail\MailTransaction;
 
 class MailMessageEmis extends DataObject
 {
@@ -33,7 +36,7 @@ class MailMessageEmis extends DataObject
      * il va envois 2 mail sur un même adresse. et le destinataire faut confirmer 2 fois.
      *
      *
-     * @param string $email= mail address emis
+     * @param string $email = mail address emis
      * @param int $mail_transaction_id
      * @param string $type_envois with 3 type : mailto, mailcc, mailbcc
      * @return bool // return true if save success; or false if failed.
@@ -47,11 +50,12 @@ class MailMessageEmis extends DataObject
         $this->id = md5($email . $type_envois . $now);
         $this->ack = 0;
         $sql = "INSERT INTO mail_message_emis (id, mail_transaction_id, email, type_envoi, ack) VALUES";
-        $sql .= "('" . $this->id . "', '" . $mail_transaction_id . "', " . $this->db->quote($email) . ", '" . $type_envois . "', '0')";
+        $sql .= "('" . $this->id . "', '" . $mail_transaction_id . "', " . $this->db->quote(
+            $email
+        ) . ", '" . $type_envois . "', '0')";
 
-        return  $this->db->exec($sql);
+        return $this->db->exec($sql);
     }
-
 
 
     public function getMailTransactionId()
@@ -81,7 +85,6 @@ class MailMessageEmis extends DataObject
 
     public function acquitter()
     {
-
         $mailTransaction = new MailTransaction($this->getMailTransactionId());
         $mailTransaction->init();
 
