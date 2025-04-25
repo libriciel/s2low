@@ -2,9 +2,9 @@
 
 namespace S2low\Factory;
 
-use Legacy\IMailHeader;
-use Legacy\MailHeader;
-use Legacy\MailHeaderLegacy;
+use S2lowLegacy\Mail\IMailHeader;
+use S2lowLegacy\Mail\MailHeader;
+use S2lowLegacy\Mail\MailHeaderLegacy;
 
 class MailHeaderFactory
 {

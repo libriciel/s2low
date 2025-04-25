@@ -1,6 +1,5 @@
 <?php
 
-use Legacy\Annuaire;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\FileUploader;
 use S2lowLegacy\Class\MailInit;

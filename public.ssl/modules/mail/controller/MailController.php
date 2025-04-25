@@ -1,10 +1,5 @@
 <?php
 
-use Legacy\Annuaire;
-use Legacy\GroupeMail;
-use Legacy\IMailHeader;
-use Legacy\MailList;
-use Legacy\MailUtil;
 use S2low\Services\MailSecurises\MailSecuriseNotification;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\DatabasePool;
@@ -14,6 +9,7 @@ use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Mail\Annuaire;
 use S2lowLegacy\Mail\GroupeMail;
+use S2lowLegacy\Mail\IMailHeader;
 use S2lowLegacy\Mail\MailAnnuaire;
 use S2lowLegacy\Mail\MailErrors;
 use S2lowLegacy\Mail\MailHeader;

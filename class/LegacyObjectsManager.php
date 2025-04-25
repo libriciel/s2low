@@ -2,9 +2,6 @@
 
 namespace S2lowLegacy\Class;
 
-use Legacy\IMailHeader;
-use Legacy\MailHeader;
-use Legacy\MailHeaderLegacy;
 use RuntimeException;
 use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
 use S2lowLegacy\Class\actes\ActesImapProperties;
@@ -28,6 +25,7 @@ use S2lowLegacy\Lib\SQLQuery;
 use Monolog\Handler\SymfonyMailerHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use S2lowLegacy\Mail\IMailHeader;
 use S2lowLegacy\Mail\MailHeader;
 use S2lowLegacy\Mail\MailHeaderLegacy;
 use Symfony\Component\Mailer\Transport;

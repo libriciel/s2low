@@ -2,10 +2,10 @@
 
 namespace S2low\Tests\Factory;
 
-use Legacy\MailHeader;
-use Legacy\MailHeaderLegacy;
 use S2low\Factory\MailHeaderFactory;
 use PHPUnit\Framework\TestCase;
+use S2lowLegacy\Mail\MailHeader;
+use S2lowLegacy\Mail\MailHeaderLegacy;
 
 class MailHeaderFactoryTest extends TestCase
 {
