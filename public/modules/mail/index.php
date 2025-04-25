@@ -5,7 +5,7 @@ use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
-use Legacy\MailLayout;
+use S2lowLegacy\Mail\MailLayout;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 use S2lowLegacy\Mail\MailMessageEmis;
 use S2lowLegacy\Mail\MailPeer;
