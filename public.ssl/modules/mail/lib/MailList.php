@@ -1,5 +1,7 @@
 <?php
 
+namespace S2lowLegacy\Mail;
+
 //Les classes MailPeer et MailTransaction ne sont pas utilisable pour gérer l'API... (EP)
 
 use S2lowLegacy\Class\Database;

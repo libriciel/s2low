@@ -1,9 +1,11 @@
 <?php
 
+namespace S2lowLegacy\Mail;
+
+use MailAnnuaire;
 use S2low\Services\MailActesNotifications\MailerSymfony;
 use S2lowLegacy\Class\Database;
 use S2lowLegacy\Class\FileUploader;
-use S2lowLegacy\Class\Mailer;
 
 /**
  * Modifications :

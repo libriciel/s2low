@@ -1,8 +1,8 @@
 <?php
 
 use S2lowLegacy\Class\MailInit;
-use Legacy\MailLayout;
 use S2low\Services\MailSecurises\MailSecuriseNotification;
+use S2lowLegacy\Mail\MailLayout;
 
 list($doc, $mailerSecurise) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([MailLayout::class, MailSecuriseNotification::class]);

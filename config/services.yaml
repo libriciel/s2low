@@ -115,10 +115,10 @@ services:
   # Namespace Legacy : contient du code legacy correspondant au mail sécurisé
   # Voué à être intégré dans le namespace S2lowLegacy
   # ---------------------------------------------------------------------------------------------------------------------
-  Legacy\:
+  S2lowLegacy\Mail\:
     resource: '../public.ssl/modules/mail/lib/'
     exclude: '../public.ssl/modules/mail/lib/mailfunction.php'
-    autowire: true
+    autowire: false
     autoconfigure: true
     public: true
 

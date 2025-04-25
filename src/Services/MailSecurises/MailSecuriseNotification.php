@@ -2,7 +2,7 @@
 
 namespace S2low\Services\MailSecurises;
 
-use IMailHeader;
+use S2lowLegacy\Mail\IMailHeader;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Twig\Environment;

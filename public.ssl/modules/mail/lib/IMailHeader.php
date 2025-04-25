@@ -1,5 +1,7 @@
 <?php
 
+namespace S2lowLegacy\Mail;
+
 interface IMailHeader
 {
     public function setAuthorityName(string $name): void;

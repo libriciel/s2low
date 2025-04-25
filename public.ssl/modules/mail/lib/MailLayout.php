@@ -16,7 +16,7 @@
  *
  */
 
-namespace Legacy;
+namespace S2lowLegacy\Mail;
 
 use S2lowLegacy\Class\HTMLLayout;
 

@@ -80,9 +80,9 @@
   "autoload": {
     "psr-4": {
       "S2low\\": "src/",
-      "Legacy\\": "public.ssl/modules/mail/lib",
       "IntegrationTests\\": "integration_tests",
-      "S2lowLegacy\\Lib\\": "lib/"
+      "S2lowLegacy\\Lib\\": "lib/",
+      "S2lowLegacy\\Mail\\": "public.ssl/modules/mail/lib/"
     },
     "classmap": [
       "lib",

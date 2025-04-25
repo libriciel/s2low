@@ -7,6 +7,11 @@ use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
+use S2lowLegacy\Mail\Annuaire;
+use S2lowLegacy\Mail\GroupeMail;
+use S2lowLegacy\Mail\MailHeader;
+use S2lowLegacy\Mail\MailList;
+use S2lowLegacy\Mail\MailUtil;
 
 class MailController
 {

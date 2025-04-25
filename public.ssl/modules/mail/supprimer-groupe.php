@@ -2,6 +2,7 @@
 
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\MailInit;
+use S2lowLegacy\Mail\GroupeMail;
 
 list($module, $me, $myAuthority) = MailInit::getIdentificationParameters();
 
