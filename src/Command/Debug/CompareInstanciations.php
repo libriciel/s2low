@@ -3,7 +3,13 @@
 namespace S2low\Command\Debug;
 
 use ReflectionClass;
+use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
+use S2lowLegacy\Class\actes\ActesNameArchive;
+use S2lowLegacy\Class\actes\ActesPdf;
 use S2lowLegacy\Class\actes\ActesPdfLegacy;
+use S2lowLegacy\Class\actes\ClassificationString;
+use S2lowLegacy\Class\actes\FilesNotFoundInCloudException;
+use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use Exception;
 use S2lowLegacy\Lib\SQL;
@@ -18,7 +24,13 @@ class CompareInstanciations extends Command
 {
     private const NOT_INSTANCIABLE_CLASSES = [
         SQL::class,
-        ActesPdfLegacy::class
+        ActesPdfLegacy::class,
+        ActesPdf::class,
+        ActesEnvelopeStorage::class,
+        TypeTransaction::class,          //enum
+        ClassificationString::class,     // le construct utilise transaction_info
+        ActesNameArchive::class,          // pas utilisé comme service
+        FilesNotFoundInCloudException::class
     ];
 
     public function __construct()
@@ -69,7 +81,7 @@ class CompareInstanciations extends Command
                         } catch (Exception $e) {
                             $classes_instanciated_but_different[] = [
                                 $class,
-                                'var_export non défini',
+                                $e->getMessage(),
                                 'var_export non défini',
                             ];
                         }
@@ -83,16 +95,17 @@ class CompareInstanciations extends Command
         foreach ($classes_ok as $class) {
             $output->writeln($class);
         }
-            $io->title('Classes instanciées différement');
-                $io->table(
-                    ['nom','objet instancié par object instancier', 'objet instancié par container'],
-                    $classes_instanciated_but_different
-                );
         $io->title('Classes dont l\'instanciation génère une exception');
         $io->table(
             ['nom','type d\'exception', 'message'],
             $classes_with_exception
         );
+        $io->title('Classes instanciées différement');
+        foreach ($classes_instanciated_but_different as $class) {
+            $output->writeln($class[0]);
+            $output->writeln($class[1]);
+            $output->writeln($class[2]);
+        }
                 return 0;
     }
 }

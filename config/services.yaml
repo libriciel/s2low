@@ -15,6 +15,12 @@ parameters:
   app.use_prod_notifications: '%env(bool:default:app.default_use_prod_notifications:USE_PROD_NOTIFICATIONS)%'
   app.default_actes_appli_trigramme: 'abc'
   app.actes_appli_trigramme: '%env(default:app.default_actes_appli_trigramme:ACTES_APPLI_TRIGRAMME)%'
+  app.actes_files_upload_root: '/data/tdt-workspace/actes/uploads'
+  app.actes_enveloppes_sans_transaction: '/data/tdt-workspace/actes/sans_transaction'
+  app.actes_response_tmp_local_path: '/data/tdt-workspace/actes/response_tmp'
+  app.actes_response_error_path: '/data/tdt-workspace/actes/response_error'
+  app.actes_ministere_acronyme_default: 'MI'
+  app.actes_ministere_acronyme: '%env(default:app.actes_ministere_acronyme_default:ACTES_MINISTERE_ACRONYME)%'
   app.helios_ftp_p_appli: '%env(HELIOS_FTP_P_APPLI)%'
   app.helios_ftp_server: '%env(HELIOS_FTP_SERVER)%'
   app.helios_ftp_port: '%env(HELIOS_FTP_PORT)%'
@@ -57,6 +63,12 @@ services:
       $subject: '%app.mail.message%'
       $s2lowFromMail: '%app.mail.tedetis_from%'
       $fromDescription: '%app.mail.secure_description%'
+      $repertoireActesEnveloppeSansTransaction: '%app.actes_enveloppes_sans_transaction%'
+      $actes_files_upload_root: '%app.actes_files_upload_root%'
+      $actes_response_tmp_local_path: '%app.actes_response_tmp_local_path%'
+      $actes_response_error_path: '%app.actes_response_error_path%'
+      $actes_ministere_acronyme: '%app.actes_ministere_acronyme%'
+      $actes_appli_trigramme: '%app.actes_appli_trigramme%'
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Namespace s2low : contient le code développé après le passage en Symfony.
@@ -187,6 +199,7 @@ services:
     factory: ['S2lowLegacy\Lib\SigTermHandler', 'getInstance']
 
   S2lowLegacy\Lib\Environnement:
+    public: true
     factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
     arguments: [ 'S2lowLegacy\Lib\Environnement' ]
 
@@ -210,6 +223,11 @@ services:
     arguments:
       $logger: '@monolog.logger.request'
 
+  S2lowLegacy\Lib\OpenStackContainerStore:
+    public: true
+    factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Lib\OpenStackContainerStore' ]
+
   S2lowLegacy\Lib\OpenStackSwiftWrapper:
     factory: ['\S2lowLegacy\Class\LegacyObjectsManager','getObject']
     arguments: ['S2lowLegacy\Lib\OpenStackSwiftWrapper']
@@ -231,14 +249,18 @@ services:
     autoconfigure: true
     autowire: true
     public: true
-    arguments:
-      $databaseName: '%app.database_name%'
-      $databaseHost: '%app.database_host%'
-      $databaseLogin: '%app.database_login%'
-      $databasePassword: '%app.database_password%'
+    factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Lib\SQLQuery' ]
+    #arguments:
+    #  $databaseName: '%app.database_name%'
+    #  $databaseHost: '%app.database_host%'
+    #  $databaseLogin: '%app.database_login%'
+    #  $databasePassword: '%app.database_password%'
 
   S2lowLegacy\Lib\SessionWrapper:
-    autowire: false #Doit être configuré explicitement ?
+    public: true
+    factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Lib\SessionWrapper' ]
 
   S2lowLegacy\Lib\XadesSignature:
     arguments:
@@ -443,26 +465,31 @@ services:
       $server_certificate_path: '%actes.ministere.server_certificate_path%'
 
   S2lowLegacy\Class\actes\ActesAntivirusWorker:
+    public: true
     tags: ['s2low.queue_rebuilding_worker']
     factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
     arguments: [ 'S2lowLegacy\Class\actes\ActesAntivirusWorker' ]
 
   S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker:
+    public: true
     tags: ['s2low.queue_rebuilding_worker']
     factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
     arguments: [ 'S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker' ]
 
   S2lowLegacy\Class\actes\ActesEnvoiFichierWorker:
+    public: true
     tags: ['s2low.queue_rebuilding_worker']
     factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
     arguments: [ 'S2lowLegacy\Class\actes\ActesEnvoiFichierWorker' ]
 
   S2lowLegacy\Class\actes\ActesAnalyseFichierRecuWorker:
+    public: true
     tags: ['s2low.queue_rebuilding_worker']
     factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
     arguments: [ 'S2lowLegacy\Class\actes\ActesAnalyseFichierRecuWorker' ]
 
   S2lowLegacy\Class\actes\ActesEnvoiSaeWorker:
+    public: true
     tags: ['s2low.queue_rebuilding_worker']
     factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
     arguments: [ 'S2lowLegacy\Class\actes\ActesEnvoiSaeWorker' ]
@@ -489,14 +516,7 @@ services:
     arguments: [ 'S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker' ]
 
   S2lowLegacy\Class\actes\ActesAnalyseFichierRecuController:
-    arguments:
-      $actes_response_tmp_local_path: "todo"
-      $actes_response_error_path: "todo"
-      $actes_files_upload_root: "todo"
-      $actes_ministere_acronyme: "todo"
-
-  S2lowLegacy\Class\actes\ActesArchive:
-    autowire: false #Pas un service ??
+    public: true
 
   S2lowLegacy\Class\actes\ActesCloudStorable:
       factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
@@ -508,8 +528,7 @@ services:
       $openstack_enable: '%app.openstack_enable%'
 
   S2lowLegacy\Class\actes\ActesConventions:
-     arguments:
-       $actes_files_upload_root: "todo"
+    public: true
 
   S2lowLegacy\Class\actes\ActesMenage:
     autowire: false
@@ -517,63 +536,60 @@ services:
     #  $actes_files_upload_root: "fdsfdsfsdfs"
 
   S2lowLegacy\Class\actes\ActesFiles:
-    arguments:
-      $root_workspace_path: "todo"
+    public: false #Non utilisé comme un service
 
   S2lowLegacy\Class\actes\ActesFileSender:
+    public: true
     factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
     arguments: [ 'S2lowLegacy\Class\actes\ActesFileSender' ]
 
   S2lowLegacy\Class\actes\ActesImapRetrieve:
-    arguments:
-      $actes_response_tmp_local_path: "todo"
+    public: true
 
   S2lowLegacy\Class\Parapheur:
     autowire: false #Initialisé avec les données à traiter ...
 
   S2lowLegacy\Class\actes\ActesNameArchive:
+    public: false
     arguments:
       $trigramme: "todo"
 
   S2lowLegacy\Class\actes\ActesNotification:
-    arguments:
-      $actes_appli_trigramme: "%app.actes_appli_trigramme%"
-      $use_prod_notifications: "%app.use_prod_notifications%"
-
-  S2lowLegacy\Class\actes\ActesPdf:
-    autowire: true
     public: true
     arguments:
-      $img: "/var/www/s2low/public.ssl/custom/images/bandeau-s2low-190.jpg" #TODO : utiliser la variable d'env ?
+      $use_prod_notifications: "%app.use_prod_notifications%"
+
+  S2lowLegacy\Class\actes\ActesPdf:   # Set explicitement dans LegacyObjectManager
+    autowire: true
+    public: true
+    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
+    arguments: ['S2lowLegacy\Class\actes\ActesRetriever']
 
   S2lowLegacy\Class\actes\ActesPdfLegacy:
     autowire: false # Pas utilisé en v5 ...
 
   S2lowLegacy\Class\actes\BordereauPdfGenerator:
+    public: true
     autowire: true
     arguments:
       $extractDataForBordereauPDF: "@S2lowLegacy\\Class\\actes\\ExtractDataForBordereauPDF"
       $actesPdf: "@S2lowLegacy\\Class\\actes\\ActesPdf"
 
   S2lowLegacy\Class\actes\ActesPrepareEnvoiSAE:
-    autowire: false #LOGGER !!!
+    public: true
+    arguments:
+      $logger: '@monolog.logger.request'
 
   S2lowLegacy\Class\actes\ActesResponsesError:
-    arguments:
-      $actes_response_error_path: "todo"
+    public: true
 
   S2lowLegacy\Class\actes\ActesRetriever:
+    public: true
     factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
     arguments: ['S2lowLegacy\Class\actes\ActesRetriever']
-    #arguments:
-    #  $actes_files_upload_root: "todo"
 
   S2lowLegacy\Class\actes\ActesScriptHelper:
-    arguments:
-      $actes_appli_trigramme: "todo"
-
-  S2lowLegacy\Class\actes\ActesStatistiques:
-    autowire: false #Pas un service
+    public: true
 
   S2lowLegacy\Class\helios\FTPService:
     autowire: false
