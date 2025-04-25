@@ -3,6 +3,7 @@
 namespace S2low\Command\Debug;
 
 use ReflectionClass;
+use S2lowLegacy\Class\actes\ActesPdfLegacy;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use Exception;
 use S2lowLegacy\Lib\SQL;
@@ -16,7 +17,8 @@ use Throwable;
 class CompareInstanciations extends Command
 {
     private const NOT_INSTANCIABLE_CLASSES = [
-        SQL::class
+        SQL::class,
+        ActesPdfLegacy::class
     ];
 
     public function __construct()
