@@ -7,7 +7,7 @@ use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
-class MailIncludedFilesCloudStorage implements ICloudStorable
+class MailIncludedFilesCloudStorable implements ICloudStorable
 {
     public const CONTAINER_NAME = 'mailsec_included_files';
 

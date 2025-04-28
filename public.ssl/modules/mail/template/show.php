@@ -13,7 +13,7 @@
 
             use S2lowLegacy\Class\CloudStorage;
             use S2lowLegacy\Class\CloudStorageFactory;
-            use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
+            use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable;
             use S2lowLegacy\Lib\ObjectInstancierFactory;
 
             $mailToSize = 0;
@@ -113,7 +113,7 @@
         $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
         $cloudStorage  = $objectInstancier
             ->get(CloudStorageFactory::class)
-            ->getInstance($objectInstancier->get( MailIncludedFilesCloudStorage::class));
+            ->getInstance($objectInstancier->get( MailIncludedFilesCloudStorable::class));
         $mailzip_filepath = $cloudStorage->getPath($mailTransaction->getId());
 
 

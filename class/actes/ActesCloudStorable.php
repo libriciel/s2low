@@ -9,7 +9,7 @@ use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
-class ActesCloudStorage implements ICloudStorable
+class ActesCloudStorable implements ICloudStorable
 {
     public const CONTAINER_NAME = 'acte_envelope';
 

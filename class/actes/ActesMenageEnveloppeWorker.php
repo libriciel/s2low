@@ -16,9 +16,9 @@ class ActesMenageEnveloppeWorker implements IWorker
     private CloudStorageFactory $cloudStorageFactory;
     private ?CloudStorage $cloudStorage = null;
     private int $nb_days_in_disk;
-    private ActesCloudStorage $actesCloudStorage;
+    private ActesCloudStorable $actesCloudStorage;
 
-    public function __construct(CloudStorageFactory $cloudStorageFactory, ActesCloudStorage $actesCloudStorage)
+    public function __construct(CloudStorageFactory $cloudStorageFactory, ActesCloudStorable $actesCloudStorage)
     {
         $this->cloudStorageFactory = $cloudStorageFactory;
         $this->actesCloudStorage = $actesCloudStorage;

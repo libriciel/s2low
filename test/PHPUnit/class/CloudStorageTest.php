@@ -9,7 +9,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use S2lowLegacy\Class\CloudStorage;
 use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\ICloudStorable;
-use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
+use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use Monolog\Logger;
@@ -23,9 +23,9 @@ class CloudStorageTest extends S2lowTestCase
         string $file_path_on_disk,
         string $getDirectoryForFilesWithoutTransaction = null,
         string $getPathRelativeToUploadDir = null
-    ): MailIncludedFilesCloudStorage | MockObject {
+    ): MailIncludedFilesCloudStorable | MockObject {
         $this->setOpenStackSwiftWrapper(false, false);
-        $iCloudStorable = $this->getMockBuilder(MailIncludedFilesCloudStorage::class)
+        $iCloudStorable = $this->getMockBuilder(MailIncludedFilesCloudStorable::class)
             ->disableOriginalConstructor()
             ->getMock();
 

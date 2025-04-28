@@ -8,7 +8,7 @@ use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
-class PESAllerCloudStorage implements ICloudStorable
+class PESAllerCloudStorable implements ICloudStorable
 {
     public const CONTAINER_NAME = 'pes_aller';
     private HeliosTransactionsSQL $transactionsSQL;

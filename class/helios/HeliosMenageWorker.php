@@ -16,7 +16,7 @@ class HeliosMenageWorker implements IWorker
     private ?CloudStorage $cloudStorage = null;
     public function __construct(
         CloudStorageFactory $cloudStorageFactory,
-        private PESAllerCloudStorage $PESAllerCloudStorage
+        private PESAllerCloudStorable $PESAllerCloudStorage
     ) {
         $this->cloudStorageFactory = $cloudStorageFactory;
     }

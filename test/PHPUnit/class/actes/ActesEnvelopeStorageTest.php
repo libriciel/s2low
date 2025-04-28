@@ -6,7 +6,7 @@ namespace PHPUnit\class\actes;
 
 use Exception;
 use Monolog\Handler\TestHandler;
-use S2lowLegacy\Class\actes\ActesCloudStorage;
+use S2lowLegacy\Class\actes\ActesCloudStorable;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
 use S2lowLegacy\Class\CloudStorageFactory;
@@ -123,7 +123,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
         $this->getObjectInstancier()
             ->get(CloudStorageFactory::class)
             ->getInstance(
-                $this->getObjectInstancier()->get(ActesCloudStorage::class)
+                $this->getObjectInstancier()->get(ActesCloudStorable::class)
             )
             ->deleteIfIsInCloud($transaction_id);
         static::assertFileDoesNotExist("$actes_files_upload_root/$filename");
@@ -144,7 +144,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
         $this->getObjectInstancier()
             ->get(CloudStorageFactory::class)
             ->getInstance(
-                $this->getObjectInstancier()->get(ActesCloudStorage::class)
+                $this->getObjectInstancier()->get(ActesCloudStorable::class)
             )
             ->storeObject($envelope_id);
 
@@ -179,7 +179,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
         $this->getObjectInstancier()
             ->get(CloudStorageFactory::class)
             ->getInstance(
-                $this->getObjectInstancier()->get(ActesCloudStorage::class)
+                $this->getObjectInstancier()->get(ActesCloudStorable::class)
             )
             ->storeObject($envelope_id);
 
@@ -209,7 +209,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
 
         $storeResult = $this->getObjectInstancier()
             ->get(CloudStorageFactory::class)
-            ->getInstance($this->getObjectInstancier()->get(ActesCloudStorage::class))
+            ->getInstance($this->getObjectInstancier()->get(ActesCloudStorable::class))
             ->storeObject($envelope_id);
 
         static::assertFalse($storeResult);

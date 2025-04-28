@@ -31,8 +31,8 @@ class HeliosEnvoiSAE
         HeliosTransactionsSQL $heliosTransactionsSQL,
         PastellPropertiesSQL $pastellPropertiesSQL,
         CloudStorageFactory $cloudStorageFactory,
-        private PESAllerCloudStorage $pesAllerCloudStorage,
-        private PESAcquitCloudStorage $pesAcquitCloudStorage
+        private PESAllerCloudStorable $pesAllerCloudStorage,
+        private PESAcquitCloudStorable $pesAcquitCloudStorage
     ) {
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
         $this->authoritySQL = $authoritySQL;

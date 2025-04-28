@@ -4,7 +4,7 @@ namespace S2lowLegacy\Controller;
 
 use Exception;
 use S2lowLegacy\Class\CloudStorageFactory;
-use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
+use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable;
 use S2lowLegacy\Class\mailsec\MailTransactionSQL;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\RedirectException;
@@ -39,7 +39,7 @@ class MailsecDownloadController extends Controller
 
         $cloudStorage  = $this->getObjectInstancier()
             ->get(CloudStorageFactory::class)
-            ->getInstance($this->getObjectInstancier()->get(MailIncludedFilesCloudStorage::class));
+            ->getInstance($this->getObjectInstancier()->get(MailIncludedFilesCloudStorable::class));
 
         try {
             $filepath = $cloudStorage->getPath($mail_id);

@@ -27,7 +27,7 @@ class HeliosExport
         PesAllerRetriever $pesAllerRetriever,
         $helios_responses_root,
         CloudStorageFactory $cloudStorageFactory,
-        private PESAcquitCloudStorage $pesAcquitCloudStorage
+        private PESAcquitCloudStorable $pesAcquitCloudStorage
     ) {
         $this->s2lowLogger = $s2lowLogger;
         $this->authoritySQL = $authoritySQL;

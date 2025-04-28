@@ -18,7 +18,7 @@ class HeliosMenagePesAcquitWorker implements IWorker
 
     public function __construct(
         CloudStorageFactory $cloudStorageFactory,
-        private PESAcquitCloudStorage $pesAcquitCloudStorage
+        private PESAcquitCloudStorable $pesAcquitCloudStorage
     ) {
         $this->cloudStorageFactory = $cloudStorageFactory;
     }

@@ -23,7 +23,7 @@ class HeliosStorePESRetourWorker implements IWorker
 
     public function __construct(
         CloudStorageFactory $cloudStorageFactory,
-        private PESRetourCloudStorage $PESRetourCloudStorage
+        private PESRetourCloudStorable $PESRetourCloudStorage
     ) {
         $this->cloudStorageFactory = $cloudStorageFactory;
     }

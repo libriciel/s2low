@@ -13,14 +13,14 @@
  */
 
 use S2lowLegacy\Class\CloudStorageFactory;
-use S2lowLegacy\Class\helios\PESRetourCloudStorage;
+use S2lowLegacy\Class\helios\PESRetourCloudStorable;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
 list($cloudStorageFactory,$PESRetourCloudStorage) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [CloudStorageFactory::class,PESRetourCloudStorage::class]
+        [CloudStorageFactory::class,PESRetourCloudStorable::class]
     );
 
 $retourId = Helpers :: getVarFromGet("id");

@@ -9,7 +9,7 @@ use HeliosUtilitiesTestTrait;
 use S2lowLegacy\Class\CloudStorage;
 use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\helios\HeliosStorePESAllerWorker;
-use S2lowLegacy\Class\helios\PESAllerCloudStorage;
+use S2lowLegacy\Class\helios\PESAllerCloudStorable;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use S2lowTestCase;
 
@@ -47,7 +47,7 @@ class HeliosStorePESAllerWorkerTest extends S2lowTestCase
 
         $heliosStorePESAllerWorker = new HeliosStorePESAllerWorker(
             $cloudStorageFactoryMock,
-            $this->getMockBuilder(PESAllerCloudStorage::class)->disableOriginalConstructor()->getMock()
+            $this->getMockBuilder(PESAllerCloudStorable::class)->disableOriginalConstructor()->getMock()
         );
 
         $heliosStorePESAllerWorker->work(6587);

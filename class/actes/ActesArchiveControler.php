@@ -47,7 +47,7 @@ class ActesArchiveControler
         ActesEnvelopeSQL $actesEnvelopeSQL,
         ActesTypePJSQL $actesTypePJSQL,
         CloudStorageFactory $cloudStorageFactory,
-        ActesCloudStorage $actesCloudStorage
+        ActesCloudStorable $actesCloudStorage
     ) {
         $this->pastellWrapperFactory = $pastellWrapperFactory;
         $this->actesTransactionsSQL = $actesTransactionsSQL;

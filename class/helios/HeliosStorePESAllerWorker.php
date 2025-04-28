@@ -22,7 +22,7 @@ class HeliosStorePESAllerWorker implements IWorker
      */
     public function __construct(
         CloudStorageFactory $cloudStorageFactory,
-        private PESAllerCloudStorage $PESAllerCloudStorage
+        private PESAllerCloudStorable $PESAllerCloudStorage
     ) {
         $this->cloudStorage = $cloudStorageFactory->getInstance($this->PESAllerCloudStorage);
     }

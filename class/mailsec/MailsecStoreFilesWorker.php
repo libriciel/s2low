@@ -23,7 +23,7 @@ class MailsecStoreFilesWorker implements IWorker
 
     public function __construct(
         CloudStorageFactory $cloudStorageFactory,
-        private MailIncludedFilesCloudStorage $mailIncludedFilesCloudStorage
+        private MailIncludedFilesCloudStorable $mailIncludedFilesCloudStorage
     ) {
         $this->cloudStorageFactory = $cloudStorageFactory;
     }

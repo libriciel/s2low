@@ -10,10 +10,10 @@ use S2lowLegacy\Class\actes\ActesMinistereProperties;
 use S2lowLegacy\Class\actes\ActesPdf;
 use S2lowLegacy\Class\actes\ActesPdfLegacy;
 use S2lowLegacy\Class\actes\IActesPdf;
-use S2lowLegacy\Class\helios\PESAcquitCloudStorage;
-use S2lowLegacy\Class\helios\PESAllerCloudStorage;
-use S2lowLegacy\Class\helios\PESRetourCloudStorage;
-use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
+use S2lowLegacy\Class\helios\PESAcquitCloudStorable;
+use S2lowLegacy\Class\helios\PESAllerCloudStorable;
+use S2lowLegacy\Class\helios\PESRetourCloudStorable;
+use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
@@ -180,10 +180,10 @@ class LegacyObjectsManager
         $openStackContainerStore = new OpenStackContainerStore($openStackContainerWrapperFactory);
 
         $openStackContainerStore->addConfiguration(ActesEnvelopeStorage::CONTAINER_NAME, $openStackConfigActes);
-        $openStackContainerStore->addConfiguration(PESAllerCloudStorage::CONTAINER_NAME, $openStackConfigHelios);
-        $openStackContainerStore->addConfiguration(PESAcquitCloudStorage::CONTAINER_NAME, $openStackConfigHeliosAcquit);
-        $openStackContainerStore->addConfiguration(PESRetourCloudStorage::CONTAINER_NAME, $openStackConfigHeliosRetour);
-        $openStackContainerStore->addConfiguration(MailIncludedFilesCloudStorage::CONTAINER_NAME, $openStackConfigMailsec);
+        $openStackContainerStore->addConfiguration(PESAllerCloudStorable::CONTAINER_NAME, $openStackConfigHelios);
+        $openStackContainerStore->addConfiguration(PESAcquitCloudStorable::CONTAINER_NAME, $openStackConfigHeliosAcquit);
+        $openStackContainerStore->addConfiguration(PESRetourCloudStorable::CONTAINER_NAME, $openStackConfigHeliosRetour);
+        $openStackContainerStore->addConfiguration(MailIncludedFilesCloudStorable::CONTAINER_NAME, $openStackConfigMailsec);
 
         $objectInstancier->set(OpenStackContainerStore::class, $openStackContainerStore);
 

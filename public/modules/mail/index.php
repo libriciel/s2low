@@ -4,7 +4,7 @@ use S2lowLegacy\Class\CloudStorage;
 use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\LegacyObjectsManager;
-use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
+use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable;
 use S2lowLegacy\Mail\MailLayout;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 use S2lowLegacy\Mail\MailMessageEmis;
@@ -60,7 +60,7 @@ $doc->setTitle(WEBSITE_TITLE);
 $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
 $cloudStorage  = $objectInstancier
     ->get(CloudStorageFactory::class)
-    ->getInstance($objectInstancier->get(MailIncludedFilesCloudStorage::class));
+    ->getInstance($objectInstancier->get(MailIncludedFilesCloudStorable::class));
 
 if ($fndownload) {
     try {
