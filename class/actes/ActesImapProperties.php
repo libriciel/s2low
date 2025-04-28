@@ -4,9 +4,12 @@ namespace S2lowLegacy\Class\actes;
 
 class ActesImapProperties
 {
-    public $host;
-    public $port;
-    public $login;
-    public $password;
-    public $imap_options;
+    public function __construct(
+        public string $host,
+        public mixed $port,
+        public string $login,
+        public string $password,
+        public string $imap_options,
+    ) {
+    }
 }

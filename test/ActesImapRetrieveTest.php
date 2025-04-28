@@ -115,15 +115,15 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase
     }
 
 
-    private function getImapProperties()
+    private function getImapProperties(): ActesImapProperties
     {
-        $actesImapProperties = new ActesImapProperties();
-        $actesImapProperties->host = 'mail.example.com';
-        $actesImapProperties->port = 993;
-        $actesImapProperties->imap_options = '/imap/ssl';
-        $actesImapProperties->login = 'login';
-        $actesImapProperties->password = 'password';
-        return $actesImapProperties;
+        return new ActesImapProperties(
+            'mail.example.com',
+            993,
+            'login',
+            'password',
+            '/imap/ssl'
+        );
     }
 
     private function getImapMailBoxFactory($mailHtmlText = "mon texte html")

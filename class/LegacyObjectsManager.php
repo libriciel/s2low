@@ -219,12 +219,13 @@ class LegacyObjectsManager
         );
         $objectInstancier->set(ActesMinistereProperties::class, $actesMinistereProperties);
 
-        $actesImapProperties = new ActesImapProperties();
-        $actesImapProperties->host = ACTES_IMAP_HOST;
-        $actesImapProperties->port = ACTES_IMAP_PORT;
-        $actesImapProperties->login = ACTES_IMAP_LOGIN;
-        $actesImapProperties->password = ACTES_IMAP_PASSWORD;
-        $actesImapProperties->imap_options = ACTES_IMAP_OPTIONS;
+        $actesImapProperties = new ActesImapProperties(
+            ACTES_IMAP_HOST,
+            ACTES_IMAP_PORT,
+            ACTES_IMAP_LOGIN,
+            ACTES_IMAP_PASSWORD,
+            ACTES_IMAP_OPTIONS
+        );
         $objectInstancier->set(ActesImapProperties::class, $actesImapProperties);
 
         $objectInstancier->set('actes_response_tmp_local_path', ACTES_RESPONSE_TMP_LOCAL_PATH);
