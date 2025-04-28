@@ -3,7 +3,7 @@
 use S2low\Enum\HeliosStatus;
 use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\helios\ApiHeliosStatusResolver;
-use S2lowLegacy\Class\helios\PESAcquitCloudStorable;
+use S2lowLegacy\Class\helios\PESAcquitCloudStorage;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
@@ -68,8 +68,7 @@ if (!$transaction['status']) {
 $transaction['resultat'] = "OK";
 
 $objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier();
-$cloudStorage = $objectInstancier
-    ->get(CloudStorageFactory::class)->getInstance($objectInstancier->get(PESAcquitCloudStorable::class));
+$cloudStorage = $objectInstancier->get(PESAcquitCloudStorage::class);
 
 $PESAcquitPath = $cloudStorage->getPath($transaction['id']);
 $transactionStatus = HeliosStatus::from($transaction['status']);

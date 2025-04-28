@@ -612,6 +612,9 @@ services:
     arguments:
       $helios_responses_root: "todo"
 
+  S2lowLegacy\Class\helios\PESAcquitCloudStorage:
+    autowire: false
+
   S2lowLegacy\Class\helios\PESRetourCloudStorable:
     arguments:
       $helios_responses_root: "todo"
