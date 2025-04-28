@@ -31,6 +31,4 @@ class ActesPdfFactoryTest extends TestCase
 
         $this->assertInstanceOf(ActesPdf::class, $createdActesPdf);
     }
-
-
 }
