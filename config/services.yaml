@@ -325,9 +325,9 @@ services:
     public: false
 
   S2lowLegacy\Class\helios\PESAllerCloudStorage:
-    autowire: false
-    autoconfigure: false
-    public: false
+    arguments:
+      $logger: '@monolog.logger.request'
+      $openstack_enable: '%app.openstack_enable%'
 
   S2lowLegacy\Class\CloudStorage: #TODO : verify
     autowire: false
@@ -610,14 +610,18 @@ services:
       $helios_responses_root: "todo"
 
   S2lowLegacy\Class\helios\PESAcquitCloudStorage:
-    autowire: false
+    arguments:
+      $logger: '@monolog.logger.request'
+      $openstack_enable: '%app.openstack_enable%'
 
   S2lowLegacy\Class\helios\PESRetourCloudStorable:
     arguments:
       $helios_responses_root: "todo"
 
   S2lowLegacy\Class\helios\PESRetourCloudStorage:
-    autowire: false
+    arguments:
+      $logger: '@monolog.logger.request'
+      $openstack_enable: '%app.openstack_enable%'
 
   S2lowLegacy\Class\helios\PesAllerRetriever:
     factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
@@ -628,7 +632,9 @@ services:
     arguments: ['S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable']
 
   S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage:
-    autowire: false
+    arguments:
+      $logger: '@monolog.logger.request'
+      $openstack_enable: '%app.openstack_enable%'
 
   App\Http\Controllers\Admin\Admin_authorities:
     public: true
