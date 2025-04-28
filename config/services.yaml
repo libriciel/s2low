@@ -32,6 +32,7 @@ parameters:
   app.helios_passtrans_password: '%env(HELIOS_PASSTRANS_PASSWORD)%'
   app.helios_passtrans_sending_destination: '%env(HELIOS_PASSTRANS_SENDING_DESTINATION)%'
   app.helios_passtrans_response_server_path: '%env(HELIOS_PASSTRANS_RESPONSE_SERVER_PATH)%'
+  app.use_legacy_bordereau_model: '%env(USE_LEGACY_BORDEREAU_MODEL)%'
   app.beanstalkd_server: '%env(BEANSTAKLD_SERVER)%'
   app.beanstalkd_port: '%env(BEANSTAKLD_PORT)%'
   app.redis_server: '%env(REDIS_SERVER)%'
@@ -51,8 +52,6 @@ services:
   S2low\Command\RebuildQueueCommand:
     arguments:
       - !tagged_iterator s2low.queue_rebuilding_worker
-
-
 
   S2low\Services\LogTimestampTokenGarbage:
     arguments:
@@ -110,6 +109,19 @@ services:
   S2low\Controller\HeliosAdminController:
     arguments:
       $helios_ftp_p_appli: '%app.helios_ftp_p_appli%'
+
+  S2lowLegacy\Class\actes\IActesPdf:
+    factory: ['@S2low\Factory\ActesPdfFactory','create']
+
+  # ---------------------------------------------------------------------------------------------------------------------
+  # Factories
+  # ---------------------------------------------------------------------------------------------------------------------
+
+  S2low\Factory\ActesPdfFactory:
+    autowire: true
+    autoconfigure: true
+    arguments:
+      $useLegacyBordereauModel: '%app.use_legacy_bordereau_model%'
 
   # ---------------------------------------------------------------------------------------------------------------------
   # Namespace Legacy : contient du code legacy correspondant au mail sécurisé
@@ -205,7 +217,6 @@ services:
   # ---------------------------------------------------------------------------------------------------------------------
   # Sous Namespace  S2lowLegacy/Model : aucune dépendance, peut être instancié directement par le service container
   # ---------------------------------------------------------------------------------------------------------------------
-
 
   S2lowLegacy\Model\:
     resource: '../model/*'
