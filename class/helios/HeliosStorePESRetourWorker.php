@@ -18,14 +18,9 @@ class HeliosStorePESRetourWorker implements IWorker
         return self::QUEUE_NAME;
     }
 
-    private $cloudStorageFactory;
-    private $cloudStorage;
-
     public function __construct(
-        CloudStorageFactory $cloudStorageFactory,
-        private PESRetourCloudStorable $PESRetourCloudStorage
+        private PESRetourCloudStorage $PESRetourCloudStorage
     ) {
-        $this->cloudStorageFactory = $cloudStorageFactory;
     }
 
     public function getData($id)
@@ -34,25 +29,12 @@ class HeliosStorePESRetourWorker implements IWorker
     }
 
     /**
-     * @return CloudStorage
-     * @throws UnrecoverableException
-     */
-    private function getCloudStorage()
-    {
-        if (! $this->cloudStorage) {
-            $this->cloudStorage = $this->cloudStorageFactory
-                ->getInstance($this->PESRetourCloudStorage);
-        }
-        return $this->cloudStorage;
-    }
-
-    /**
      * @return int[]
      * @throws UnrecoverableException
      */
     public function getAllId()
     {
-        return $this->getCloudStorage()->getAllObjectIdToStore();
+        return $this->PESRetourCloudStorage->getAllObjectIdToStore();
     }
 
     /**
@@ -63,7 +45,7 @@ class HeliosStorePESRetourWorker implements IWorker
 
     public function work($data)
     {
-        $this->getCloudStorage()->storeObject($data);
+        $this->PESRetourCloudStorage->storeObject($data);
     }
 
     public function getMutexName($data)

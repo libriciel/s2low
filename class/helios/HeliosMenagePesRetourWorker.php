@@ -13,29 +13,10 @@ class HeliosMenagePesRetourWorker implements IWorker
     public const QUEUE_NAME = 'helios-pes-retour-menage';
     private const NB_DAYS_IN_DISK = 15;
 
-    private $cloudStorageFactory;
-    private $cloudStorage;
-
     public function __construct(
-        CloudStorageFactory $cloudStorageFactory,
-        private PESRetourCloudStorable $pesRetourCloudStorage
+        private PESRetourCloudStorage $pesRetourCloudStorage
     ) {
-        $this->cloudStorageFactory = $cloudStorageFactory;
     }
-
-    /**
-     * @return CloudStorage
-     * @throws UnrecoverableException
-     */
-    private function getCloudStorage()
-    {
-        if (! $this->cloudStorage) {
-            $this->cloudStorage = $this->cloudStorageFactory
-                ->getInstance($this->pesRetourCloudStorage);
-        }
-        return $this->cloudStorage;
-    }
-
 
     public function getQueueName()
     {
@@ -59,7 +40,7 @@ class HeliosMenagePesRetourWorker implements IWorker
      */
     public function work($data)
     {
-        $this->getCloudStorage()->deleteFilesOnDisk(self::NB_DAYS_IN_DISK, true);
+        $this->pesRetourCloudStorage->deleteFilesOnDisk(self::NB_DAYS_IN_DISK, true);
     }
 
     public function getMutexName($data)
