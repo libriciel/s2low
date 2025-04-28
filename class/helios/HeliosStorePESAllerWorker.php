@@ -3,14 +3,12 @@
 namespace S2lowLegacy\Class\helios;
 
 use S2lowLegacy\Class\CloudStorage;
-use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\IWorker;
 use Exception;
 
 class HeliosStorePESAllerWorker implements IWorker
 {
     public const QUEUE_NAME = 'helios-store-pes-aller';
-    private CloudStorage $cloudStorage;
 
     public function getQueueName(): string
     {
@@ -18,13 +16,10 @@ class HeliosStorePESAllerWorker implements IWorker
     }
 
     /**
-     * @throws \S2lowLegacy\Lib\UnrecoverableException
      */
     public function __construct(
-        CloudStorageFactory $cloudStorageFactory,
-        private PESAllerCloudStorable $PESAllerCloudStorage
+        private readonly PESAllerCloudStorage $PESAllerCloudStorage
     ) {
-        $this->cloudStorage = $cloudStorageFactory->getInstance($this->PESAllerCloudStorage);
     }
 
     public function getData($id): int
@@ -34,7 +29,7 @@ class HeliosStorePESAllerWorker implements IWorker
 
     public function getAllId(): array
     {
-        return $this->cloudStorage->getAllObjectIdToStore();
+        return $this->PESAllerCloudStorage->getAllObjectIdToStore();
     }
 
     /**
@@ -44,7 +39,7 @@ class HeliosStorePESAllerWorker implements IWorker
      */
     public function work($data): void
     {
-        $this->cloudStorage->storeObject($data);
+        $this->PESAllerCloudStorage->storeObject($data);
     }
 
     public function getMutexName($data): string
