@@ -2,11 +2,8 @@
 
 namespace S2lowLegacy\Class\actes;
 
-use S2lowLegacy\Class\CloudStorage;
-use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\IWorker;
 use Exception;
-use S2lowLegacy\Lib\UnrecoverableException;
 
 class ActesMenageEnveloppeWorker implements IWorker
 {

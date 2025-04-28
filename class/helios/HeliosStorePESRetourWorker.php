@@ -2,9 +2,7 @@
 
 namespace S2lowLegacy\Class\helios;
 
-use S2lowLegacy\Class\CloudStorage;
 use S2lowLegacy\Class\CloudStorageException;
-use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Lib\PausingQueueException;
 use S2lowLegacy\Lib\UnrecoverableException;

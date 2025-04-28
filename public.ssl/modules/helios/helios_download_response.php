@@ -1,7 +1,6 @@
 <?php
 
 // Configuration
-use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\helios\PESRetourCloudStorage;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Module;
@@ -9,9 +8,9 @@ use S2lowLegacy\Class\User;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosRetourSQL;
 
-list($cloudStorageFactory,$heliosRetourSQL,$authoritySQL,$pesRetourCloudStorage) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($heliosRetourSQL,$authoritySQL,$pesRetourCloudStorage) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [CloudStorageFactory::class, HeliosRetourSQL::class, AuthoritySQL::class, PESRetourCloudStorage::class]
+        [HeliosRetourSQL::class, AuthoritySQL::class, PESRetourCloudStorage::class]
     );
 
 // Instanciation du module courant

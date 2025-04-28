@@ -7,7 +7,6 @@ namespace PHPUnit\class;
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use S2lowLegacy\Class\CloudStorage;
-use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\ICloudStorable;
 use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable;
 use S2lowLegacy\Class\TmpFolder;
@@ -66,9 +65,12 @@ class CloudStorageTest extends S2lowTestCase
 
     private function getCloudStorage(ICloudStorable $iCloudStorable): CloudStorage
     {
-        /** @var CloudStorageFactory $cloudStorageFactory */
-        $cloudStorageFactory = $this->getObjectInstancier()->get(CloudStorageFactory::class);
-        return $cloudStorageFactory->getInstance($iCloudStorable);
+        return new CloudStorage(
+            $iCloudStorable,
+            $this->getObjectInstancier()->get(OpenStackSwiftWrapper::class),
+            $this->getObjectInstancier()->get(Logger::class),
+            $this->getObjectInstancier()->get('openstack_enable')
+        );
     }
 
     private function setOpenStackSwiftWrapper(

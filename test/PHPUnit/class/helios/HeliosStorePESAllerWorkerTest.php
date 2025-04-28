@@ -6,10 +6,7 @@ namespace PHPUnit\class\helios;
 
 use Exception;
 use HeliosUtilitiesTestTrait;
-use S2lowLegacy\Class\CloudStorage;
-use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\helios\HeliosStorePESAllerWorker;
-use S2lowLegacy\Class\helios\PESAllerCloudStorable;
 use S2lowLegacy\Class\helios\PESAllerCloudStorage;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use S2lowTestCase;

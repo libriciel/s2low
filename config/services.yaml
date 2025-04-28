@@ -332,9 +332,6 @@ services:
   S2lowLegacy\Class\CloudStorage: #TODO : verify
     autowire: false
 
-  S2lowLegacy\Class\CloudStorageFactory: #TODO : verify
-    autowire: false
-
   S2lowLegacy\Class\DataObjectSaveSQLRequest: # TODO :verify
     autowire: false
 

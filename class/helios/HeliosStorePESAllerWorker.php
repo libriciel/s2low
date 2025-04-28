@@ -2,7 +2,6 @@
 
 namespace S2lowLegacy\Class\helios;
 
-use S2lowLegacy\Class\CloudStorage;
 use S2lowLegacy\Class\IWorker;
 use Exception;
 

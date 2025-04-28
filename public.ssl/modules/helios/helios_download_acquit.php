@@ -2,7 +2,6 @@
 
 // Configuration
 use S2lowLegacy\Class\Authority;
-use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\helios\PESAcquitCloudStorage;
 use S2lowLegacy\Class\Helpers;
@@ -11,7 +10,6 @@ use S2lowLegacy\Class\ModulePermission;
 use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
 
-$cloudStorageFactory = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(CloudStorageFactory::class);
 $pesAcquitCloudStorage = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(PESAcquitCloudStorage::class);
 
 // Instanciation du module courant
