@@ -47,6 +47,7 @@ parameters:
   app.mail.tedetis_from: '%env(MAIL_TEDETIS_FROM)%'
   app.mail.secure_description: '%env(MAIL_SECURE_DESCRIPTION)%'
   app.mail.use_legacy_secure_mail: '%env(USE_LEGACY_SECURE_MAIL_FIELDS)%'
+  app.openstack_enable: '%env(OPENSTACK_ENABLE)'
 services:
   _defaults:
     autowire: true
@@ -494,6 +495,11 @@ services:
   S2lowLegacy\Class\actes\ActesCloudStorable:
       factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
       arguments: [ 'S2lowLegacy\Class\actes\ActesCloudStorable' ]
+
+  S2lowLegacy\Class\actes\ActesCloudStorage:
+    arguments:
+      $logger: '@monolog.logger.request'
+      $openstack_enable: '%app.openstack_enable%'
 
   S2lowLegacy\Class\actes\ActesConventions:
      arguments:

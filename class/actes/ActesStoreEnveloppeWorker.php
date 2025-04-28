@@ -20,9 +20,9 @@ class ActesStoreEnveloppeWorker implements IWorker
     /**
      * @throws \S2lowLegacy\Lib\UnrecoverableException
      */
-    public function __construct(CloudStorageFactory $cloudStorageFactory, ActesCloudStorable $actesCloudStorage)
+    public function __construct(ActesCloudStorage $actesCloudStorage)
     {
-        $this->cloudStorage = $cloudStorageFactory->getInstance($actesCloudStorage);
+        $this->cloudStorage = $actesCloudStorage;
     }
 
     public function getData($id): int

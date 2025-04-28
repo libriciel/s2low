@@ -8,6 +8,7 @@ use Exception;
 use PastellConfigurationTestTrait;
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\ActesArchiveControler;
+use S2lowLegacy\Class\actes\ActesCloudStorage;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
 use S2lowLegacy\Class\actes\ActesPdf;
 use S2lowLegacy\Class\actes\ActesRetriever;
@@ -78,14 +79,10 @@ class ActesArchiveControlerTest extends S2lowTestCase
             new ActesPdf(SITEROOT . 'public.ssl/custom/images/bandeau-s2low-190.jpg')
         );
 
-        $cloudStorageFactory = $this->getMockBuilder(CloudStorageFactory::class)
-            ->disableOriginalConstructor()->getMock();
+        $cloudStorage = $this->getMockBuilder(ActesCloudStorage::class)->disableOriginalConstructor()->getMock();
 
-        $cloudStorage = $this->getMockBuilder(CloudStorage::class)->disableOriginalConstructor()->getMock();
-
-        $cloudStorageFactory->method('getInstance')->willReturn($cloudStorage);
-
-        $this->getObjectInstancier()->set(CloudStorageFactory::class, $cloudStorageFactory);
+        $this->getObjectInstancier()->set(ActesCloudStorage::class, $cloudStorage);
+        ;
 
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
 

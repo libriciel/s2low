@@ -12,30 +12,13 @@ class ActesMenageEnveloppeWorker implements IWorker
 {
     public const QUEUE_NAME = 'actes-enveloppe-menage';
     private const NB_DAYS_IN_DISK = 15;
-
-    private CloudStorageFactory $cloudStorageFactory;
-    private ?CloudStorage $cloudStorage = null;
     private int $nb_days_in_disk;
-    private ActesCloudStorable $actesCloudStorage;
+    private ActesCloudStorage $actesCloudStorage;
 
-    public function __construct(CloudStorageFactory $cloudStorageFactory, ActesCloudStorable $actesCloudStorage)
+    public function __construct(ActesCloudStorage $actesCloudStorage)
     {
-        $this->cloudStorageFactory = $cloudStorageFactory;
         $this->actesCloudStorage = $actesCloudStorage;
         $this->setNbDayInDisk(self::NB_DAYS_IN_DISK);
-    }
-
-    /**
-     * @return CloudStorage
-     * @throws UnrecoverableException
-     */
-    private function getCloudStorage(): CloudStorage
-    {
-        if (is_null($this->cloudStorage)) {
-            $this->cloudStorage = $this->cloudStorageFactory
-                ->getInstance($this->actesCloudStorage);
-        }
-        return $this->cloudStorage;
     }
 
 
@@ -66,7 +49,7 @@ class ActesMenageEnveloppeWorker implements IWorker
      */
     public function work($data): void
     {
-        $this->getCloudStorage()->deleteFilesOnDisk($this->nb_days_in_disk, true);
+        $this->actesCloudStorage->deleteFilesOnDisk($this->nb_days_in_disk, true);
     }
 
     public function getMutexName($data): string
