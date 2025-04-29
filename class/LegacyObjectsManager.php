@@ -206,16 +206,6 @@ class LegacyObjectsManager
 
         $objectInstancier->set("actes_dont_valid_signing_certificate", ACTES_DONT_VALID_SIGNING_CERTIFICATE);
 
-        $objectInstancier->set("url", ACTES_MINISTERE_URL);
-        $objectInstancier->set("authentification_type", ACTES_MINISTERE_AUTHENTICATION);
-        $objectInstancier->set("login", ACTES_MINISTERE_LOGIN);
-        $objectInstancier->set("password", ACTES_MINISTERE_PASSWORD);
-        $objectInstancier->set("client_certificate", ACTES_MINISTERE_CERTIFICATE);
-        $objectInstancier->set("client_certificate_key", ACTES_MINISTERE_CERTIFICATE_KEY);
-        $objectInstancier->set("client_certificate_key_password", ACTES_MINISTERE_CERTIFICATE_KEY_PASS);
-        $objectInstancier->set("adapt_protocol", ACTES_MINISTERE_ADAPT_PROTOCOL);
-        $objectInstancier->set("server_certificate_path", ACTES_MINISTERE_SERVER_CERTIFICATE_PATH);
-
         $actesMinistereProperties = new ActesMinistereProperties(
             ACTES_MINISTERE_URL,
             ACTES_MINISTERE_AUTHENTICATION,
