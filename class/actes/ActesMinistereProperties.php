@@ -8,18 +8,16 @@ class ActesMinistereProperties
     public const AUTHENTICATION_BASIC = "BASIC";
     public const AUTHENTICATION_POST = "POST";
 
-    public $url;
-
-    public $authentification_type;
-
-    public $login;
-    public $password;
-
-    public $client_certificate;
-    public $client_certificate_key;
-    public $client_certificate_key_password;
-
-    public $server_certificate_path;
-
-    public $adapt_protocol;
+    public function __construct(
+        public string $url,
+        public string $authentification_type,
+        public string $login,
+        public string $password,
+        public string $client_certificate,
+        public string $client_certificate_key,
+        public string $client_certificate_key_password,
+        public string $adapt_protocol,
+        public string $server_certificate_path
+    ) {
+    }
 }

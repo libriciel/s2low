@@ -4,6 +4,7 @@ namespace S2lowLegacy\Class;
 
 use RuntimeException;
 use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
+use S2lowLegacy\Class\actes\ActesFileSender;
 use S2lowLegacy\Class\actes\ActesImapProperties;
 use S2lowLegacy\Class\actes\ActesMinistereProperties;
 use S2lowLegacy\Class\actes\ActesPdf;
@@ -205,18 +206,27 @@ class LegacyObjectsManager
 
         $objectInstancier->set("actes_dont_valid_signing_certificate", ACTES_DONT_VALID_SIGNING_CERTIFICATE);
 
-        $actesMinistereProperties = new ActesMinistereProperties();
+        $objectInstancier->set("url", ACTES_MINISTERE_URL);
+        $objectInstancier->set("authentification_type", ACTES_MINISTERE_AUTHENTICATION);
+        $objectInstancier->set("login", ACTES_MINISTERE_LOGIN);
+        $objectInstancier->set("password", ACTES_MINISTERE_PASSWORD);
+        $objectInstancier->set("client_certificate", ACTES_MINISTERE_CERTIFICATE);
+        $objectInstancier->set("client_certificate_key", ACTES_MINISTERE_CERTIFICATE_KEY);
+        $objectInstancier->set("client_certificate_key_password", ACTES_MINISTERE_CERTIFICATE_KEY_PASS);
+        $objectInstancier->set("adapt_protocol", ACTES_MINISTERE_ADAPT_PROTOCOL);
+        $objectInstancier->set("server_certificate_path", ACTES_MINISTERE_SERVER_CERTIFICATE_PATH);
 
-        $actesMinistereProperties->url = ACTES_MINISTERE_URL;
-        $actesMinistereProperties->authentification_type = ACTES_MINISTERE_AUTHENTICATION;
-
-        $actesMinistereProperties->login = ACTES_MINISTERE_LOGIN;
-        $actesMinistereProperties->password = ACTES_MINISTERE_PASSWORD;
-        $actesMinistereProperties->client_certificate = ACTES_MINISTERE_CERTIFICATE;
-        $actesMinistereProperties->client_certificate_key = ACTES_MINISTERE_CERTIFICATE_KEY;
-        $actesMinistereProperties->client_certificate_key_password = ACTES_MINISTERE_CERTIFICATE_KEY_PASS;
-        $actesMinistereProperties->server_certificate_path = ACTES_MINISTERE_SERVER_CERTIFICATE_PATH;
-        $actesMinistereProperties->adapt_protocol = ACTES_MINISTERE_ADAPT_PROTOCOL;
+        $actesMinistereProperties = new ActesMinistereProperties(
+            ACTES_MINISTERE_URL,
+            ACTES_MINISTERE_AUTHENTICATION,
+            ACTES_MINISTERE_LOGIN,
+            ACTES_MINISTERE_PASSWORD,
+            ACTES_MINISTERE_CERTIFICATE,
+            ACTES_MINISTERE_CERTIFICATE_KEY,
+            ACTES_MINISTERE_CERTIFICATE_KEY_PASS,
+            ACTES_MINISTERE_ADAPT_PROTOCOL,
+            ACTES_MINISTERE_SERVER_CERTIFICATE_PATH
+        );
         $objectInstancier->set(ActesMinistereProperties::class, $actesMinistereProperties);
 
         $actesImapProperties = new ActesImapProperties();

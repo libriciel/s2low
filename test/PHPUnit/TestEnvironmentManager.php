@@ -2,6 +2,7 @@
 
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
+use S2lowLegacy\Class\actes\ActesMinistereProperties;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\Environnement;
@@ -78,6 +79,19 @@ class TestEnvironmentManager
         $request = array();
         $session = array();
         $server = array();
+
+        $actesMinistereProperties = new ActesMinistereProperties(
+            ACTES_MINISTERE_URL,
+            ACTES_MINISTERE_AUTHENTICATION,
+            ACTES_MINISTERE_LOGIN,
+            ACTES_MINISTERE_PASSWORD,
+            ACTES_MINISTERE_CERTIFICATE,
+            ACTES_MINISTERE_CERTIFICATE_KEY,
+            ACTES_MINISTERE_CERTIFICATE_KEY_PASS,
+            ACTES_MINISTERE_ADAPT_PROTOCOL,
+            ACTES_MINISTERE_SERVER_CERTIFICATE_PATH
+        );
+        $this->getObjectInstancier()->set(ActesMinistereProperties::class, $actesMinistereProperties);
 
         $this->getObjectInstancier()->set(Environnement::class, new Environnement($get, $post, $request, $session, $server, false));
         $this->getObjectInstancier()->set(SessionWrapper::class, $this->getObjectInstancier()->get(Environnement::class)->session());

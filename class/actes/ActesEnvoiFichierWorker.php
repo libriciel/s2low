@@ -6,7 +6,6 @@ use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\S2lowLogger;
 use Exception;
-use S2lowLegacy\Lib\SigTermHandler;
 
 class ActesEnvoiFichierWorker implements IWorker
 {
