@@ -17,7 +17,7 @@ use UnexpectedValueException;
 /**
  *
  */
-class CloudStorage
+abstract class CloudStorage
 {
     private ICloudStorable $cloudStorable;
     private OpenStackSwiftWrapper $openStackSwiftWrapper;
