@@ -10,6 +10,7 @@
 ### Corrections
 
 - Correction de la correspondance simulateur/ftp pour les instances de développement #1240
+- Ajout d'un filtre dans l'interface web pour sélectionner seulement des fichiers '.xml' lors d'import de PES aller dans S2low. #1269
 
 ### Sécurité
 
