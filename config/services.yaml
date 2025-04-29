@@ -153,8 +153,10 @@ services:
     autoconfigure: true
     public: true
 
-  S2lowLegacy\SigTermHandler:
-    autowire: false #Utilisation de la constante SIGTERM
+  S2lowLegacy\Lib\SigTermHandler:
+    shared: true
+    autowire: true
+    factory: ['S2lowLegacy\Lib\SigTermHandler', 'getInstance']
 
   S2lowLegacy\Lib\Environnement:
     factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
