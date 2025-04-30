@@ -325,9 +325,8 @@ services:
     public: false
 
   S2lowLegacy\Class\helios\PESAllerCloudStorable:
-    autowire: false
-    autoconfigure: false
-    public: false
+    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Class\helios\PESAllerCloudStorable' ]
 
   S2lowLegacy\Class\helios\PESAllerCloudStorage:
     arguments:
@@ -608,8 +607,8 @@ services:
     autowire: false #TODO: logger
 
   S2lowLegacy\Class\helios\PESAcquitCloudStorable:
-    arguments:
-      $helios_responses_root: "todo"
+    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Class\helios\PESAcquitCloudStorable' ]
 
   S2lowLegacy\Class\helios\PESAcquitCloudStorage:
     arguments:
@@ -617,8 +616,8 @@ services:
       $openstack_enable: '%app.openstack_enable%'
 
   S2lowLegacy\Class\helios\PESRetourCloudStorable:
-    arguments:
-      $helios_responses_root: "todo"
+    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Class\helios\PESRetourCloudStorable' ]
 
   S2lowLegacy\Class\helios\PESRetourCloudStorage:
     arguments:
