@@ -1,5 +1,6 @@
 # config/services.yaml
 imports:
+  - { resource: services_cloud_provider.yaml }
   - { resource: services_actes.yaml }
 parameters:
   app.database_name: '%env(POSTGRES_DB)%'
@@ -177,6 +178,8 @@ services:
     autowire: true
     autoconfigure: true
     public: true
+    exclude:
+      - '../lib/OpenStackConfig.php'
 
   S2lowLegacy\Lib\SigTermHandler:
     shared: true
@@ -640,3 +643,11 @@ services:
   App\Http\Controllers\Admin\Admin_authorities:
     public: true
     tags: [ 'controller.service_arguments' ]
+
+  S2low\Factory\OpenStackConfigFactory:
+    autowire: true
+    arguments:
+      $cloudProvidersConfig: '%cloud_provider%'
+
+  S2lowLegacy\Lib\OpenStackContainerStore:
+    factory: ['@S2low\Factory\OpenStackContainerStoreFactory', "create"]

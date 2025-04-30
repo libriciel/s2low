@@ -4,10 +4,13 @@ namespace S2lowLegacy\Lib;
 
 class OpenStackConfig
 {
-    public $openstack_authentication_url_v3;
-    public $openstack_username;
-    public $openstack_password;
-    public $openstack_tenant;
-    public $openstack_region;
-    public $openstack_swift_container_prefix;
+    public function __construct(
+        public readonly string $openstack_authentication_url_v3,
+        public readonly string $openstack_username,
+        public readonly string $openstack_password,
+        public readonly string $openstack_tenant,
+        public readonly string $openstack_region,
+        public readonly string $openstack_swift_container_prefix
+    ) {
+    }
 }

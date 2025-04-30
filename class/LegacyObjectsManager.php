@@ -134,47 +134,50 @@ class LegacyObjectsManager
 
         $objectInstancier->set('openstack_enable', OPENSTACK_ENABLE);
 
-        $openStackConfigActes = new OpenStackConfig();
-        $openStackConfigActes->openstack_authentication_url_v3 = ACTES_OPENSTACK_AUTHENTICATION_URL_V3;
-        $openStackConfigActes->openstack_username = ACTES_OPENSTACK_USERNAME;
-        $openStackConfigActes->openstack_password = ACTES_OPENSTACK_PASSWORD;
-        $openStackConfigActes->openstack_tenant = ACTES_OPENSTACK_TENANT;
-        $openStackConfigActes->openstack_region = ACTES_OPENSTACK_REGION;
-        $openStackConfigActes->openstack_swift_container_prefix = ACTES_OPENSTACK_SWIFT_CONTAINER_PREFIX;
+        $openStackConfigActes = new OpenStackConfig(
+            ACTES_OPENSTACK_AUTHENTICATION_URL_V3,
+            ACTES_OPENSTACK_USERNAME,
+            ACTES_OPENSTACK_PASSWORD,
+            ACTES_OPENSTACK_TENANT,
+            ACTES_OPENSTACK_REGION,
+            ACTES_OPENSTACK_SWIFT_CONTAINER_PREFIX
+        );
 
+        $openStackConfigHelios = new OpenStackConfig(
+            HELIOS_OPENSTACK_AUTHENTICATION_URL_V3,
+            HELIOS_OPENSTACK_USERNAME,
+            HELIOS_OPENSTACK_PASSWORD,
+            HELIOS_OPENSTACK_TENANT,
+            HELIOS_OPENSTACK_REGION,
+            HELIOS_OPENSTACK_SWIFT_CONTAINER_PREFIX
+        );
 
-        $openStackConfigHelios = new OpenStackConfig();
-        $openStackConfigHelios->openstack_authentication_url_v3 = HELIOS_OPENSTACK_AUTHENTICATION_URL_V3;
-        $openStackConfigHelios->openstack_username = HELIOS_OPENSTACK_USERNAME;
-        $openStackConfigHelios->openstack_password = HELIOS_OPENSTACK_PASSWORD;
-        $openStackConfigHelios->openstack_tenant = HELIOS_OPENSTACK_TENANT;
-        $openStackConfigHelios->openstack_region = HELIOS_OPENSTACK_REGION;
-        $openStackConfigHelios->openstack_swift_container_prefix = HELIOS_OPENSTACK_SWIFT_CONTAINER_PREFIX;
+        $openStackConfigHeliosAcquit = new OpenStackConfig(
+            HELIOS_ACQUIT_OPENSTACK_AUTHENTICATION_URL_V3,
+            HELIOS_ACQUIT_OPENSTACK_USERNAME,
+            HELIOS_ACQUIT_OPENSTACK_PASSWORD,
+            HELIOS_ACQUIT_OPENSTACK_TENANT,
+            HELIOS_ACQUIT_OPENSTACK_REGION,
+            HELIOS_ACQUIT_OPENSTACK_SWIFT_CONTAINER_PREFIX
+        );
 
+        $openStackConfigHeliosRetour = new OpenStackConfig(
+            HELIOS_RETOUR_OPENSTACK_AUTHENTICATION_URL_V3,
+            HELIOS_RETOUR_OPENSTACK_USERNAME,
+            HELIOS_RETOUR_OPENSTACK_PASSWORD,
+            HELIOS_RETOUR_OPENSTACK_TENANT,
+            HELIOS_RETOUR_OPENSTACK_REGION,
+            HELIOS_RETOUR_OPENSTACK_SWIFT_CONTAINER_PREFIX
+        );
 
-        $openStackConfigHeliosAcquit = new OpenStackConfig();
-        $openStackConfigHeliosAcquit->openstack_authentication_url_v3 = HELIOS_ACQUIT_OPENSTACK_AUTHENTICATION_URL_V3;
-        $openStackConfigHeliosAcquit->openstack_username = HELIOS_ACQUIT_OPENSTACK_USERNAME;
-        $openStackConfigHeliosAcquit->openstack_password = HELIOS_ACQUIT_OPENSTACK_PASSWORD;
-        $openStackConfigHeliosAcquit->openstack_tenant = HELIOS_ACQUIT_OPENSTACK_TENANT;
-        $openStackConfigHeliosAcquit->openstack_region = HELIOS_ACQUIT_OPENSTACK_REGION;
-        $openStackConfigHeliosAcquit->openstack_swift_container_prefix = HELIOS_ACQUIT_OPENSTACK_SWIFT_CONTAINER_PREFIX;
-
-        $openStackConfigHeliosRetour = new OpenStackConfig();
-        $openStackConfigHeliosRetour->openstack_authentication_url_v3 = HELIOS_RETOUR_OPENSTACK_AUTHENTICATION_URL_V3;
-        $openStackConfigHeliosRetour->openstack_username = HELIOS_RETOUR_OPENSTACK_USERNAME;
-        $openStackConfigHeliosRetour->openstack_password = HELIOS_RETOUR_OPENSTACK_PASSWORD;
-        $openStackConfigHeliosRetour->openstack_tenant = HELIOS_RETOUR_OPENSTACK_TENANT;
-        $openStackConfigHeliosRetour->openstack_region = HELIOS_RETOUR_OPENSTACK_REGION;
-        $openStackConfigHeliosRetour->openstack_swift_container_prefix = HELIOS_RETOUR_OPENSTACK_SWIFT_CONTAINER_PREFIX;
-
-        $openStackConfigMailsec = new OpenStackConfig();
-        $openStackConfigMailsec->openstack_authentication_url_v3 = MAILSEC_OPENSTACK_AUTHENTICATION_URL_V3;
-        $openStackConfigMailsec->openstack_username = MAILSEC_OPENSTACK_USERNAME;
-        $openStackConfigMailsec->openstack_password = MAILSEC_OPENSTACK_PASSWORD;
-        $openStackConfigMailsec->openstack_tenant = MAILSEC_OPENSTACK_TENANT;
-        $openStackConfigMailsec->openstack_region = MAILSEC_OPENSTACK_REGION;
-        $openStackConfigMailsec->openstack_swift_container_prefix = MAILSEC_OPENSTACK_SWIFT_CONTAINER_PREFIX;
+        $openStackConfigMailsec = new OpenStackConfig(
+            MAILSEC_OPENSTACK_AUTHENTICATION_URL_V3,
+            MAILSEC_OPENSTACK_USERNAME,
+            MAILSEC_OPENSTACK_PASSWORD,
+            MAILSEC_OPENSTACK_TENANT,
+            MAILSEC_OPENSTACK_REGION,
+            MAILSEC_OPENSTACK_SWIFT_CONTAINER_PREFIX
+        );
 
         $openStackContainerWrapperFactory = new OpenStackContainerWrapperFactory($logger);
         $openStackContainerStore = new OpenStackContainerStore($openStackContainerWrapperFactory);

@@ -29,11 +29,14 @@ class OpenStackContainerStoreTest extends S2lowTestCase
                 ->disableOriginalConstructor()
                 ->getMock();
 
-        $this->openStackConfig = new OpenStackConfig();
-        $this->openStackConfig->openstack_authentication_url_v3 = "a";
-        $this->openStackConfig->openstack_username = "b";
-        $this->openStackConfig->openstack_password = "c";
-        $this->openStackConfig->openstack_tenant = "d";
+        $this->openStackConfig = new OpenStackConfig(
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f"
+        );
     }
 
     /**
