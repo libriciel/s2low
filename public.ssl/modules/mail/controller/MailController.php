@@ -9,6 +9,7 @@ use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Mail\Annuaire;
 use S2lowLegacy\Mail\GroupeMail;
+use S2lowLegacy\Mail\IMailHeader;
 use S2lowLegacy\Mail\MailAnnuaire;
 use S2lowLegacy\Mail\MailErrors;
 use S2lowLegacy\Mail\MailHeader;
@@ -383,7 +384,7 @@ class MailController
         }
          //----------------------
 
-        $mailHeader = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(MailHeader::class);
+        $mailHeader = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(IMailHeader::class);
 
         $mailHeader->setAuthorityName($this->myAuthority->get('name'));
         $mailHeader->setFromMail($this->myAuthority->get('email_mail_securise'));

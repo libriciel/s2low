@@ -37,10 +37,18 @@ parameters:
   app.beanstalkd_port: '%env(BEANSTAKLD_PORT)%'
   app.redis_server: '%env(REDIS_SERVER)%'
   app.redis_port: '%env(REDIS_PORT)%'
+  app.mail.message: '%env(MAIL_MESSAGE)'
+  app.mail.tedetis_from: '%env(MAIL_TEDETIS_FROM)%'
+  app.mail.secure_description: '%env(MAIL_SECURE_DESCRIPTION)%'
+  app.mail.use_legacy_secure_mail: '%env(USE_LEGACY_SECURE_MAIL_FIELDS)%'
 services:
   _defaults:
     autowire: true
     autoconfigure: true
+    bind:
+      $subject: '%app.mail.message%'
+      $s2lowFromMail: '%app.mail.tedetis_from%'
+      $fromDescription: '%app.mail.secure_description%'
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Namespace s2low : contient le code développé après le passage en Symfony.
@@ -124,15 +132,25 @@ services:
       $useLegacyBordereauModel: '%app.use_legacy_bordereau_model%'
 
   # ---------------------------------------------------------------------------------------------------------------------
-  # Namespace Legacy : contient du code legacy correspondant au mail sécurisé
-  # Voué à être intégré dans le namespace S2lowLegacy
+  # S2lowLegacy\Mail
   # ---------------------------------------------------------------------------------------------------------------------
+
   S2lowLegacy\Mail\:
     resource: '../public.ssl/modules/mail/lib/'
     exclude: '../public.ssl/modules/mail/lib/mailfunction.php'
     autowire: false
     autoconfigure: true
     public: true
+
+  S2lowLegacy\Mail\IMailHeader:
+    factory: ['@S2low\Factory\MailHeaderFactory', 'create']
+    arguments:
+      $useLegacySecureMailFields: '%app.mail.use_legacy_secure_mail%'
+
+  S2low\Factory\MailHeaderFactory:
+    arguments:
+      $mailHeader: '@S2lowLegacy\Mail\MailHeader'
+      $mailHeaderLegacy: '@S2lowLegacy\Mail\MailHeaderLegacy'
 
   # ---------------------------------------------------------------------------------------------------------------------
   # Namespace  S2lowLegacy : contient le code Legacy

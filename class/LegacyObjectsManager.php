@@ -25,6 +25,7 @@ use S2lowLegacy\Lib\SQLQuery;
 use Monolog\Handler\SymfonyMailerHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use S2lowLegacy\Mail\IMailHeader;
 use S2lowLegacy\Mail\MailHeader;
 use S2lowLegacy\Mail\MailHeaderLegacy;
 use Symfony\Component\Mailer\Transport;
@@ -278,12 +279,12 @@ class LegacyObjectsManager
 
         if (USE_LEGACY_SECURE_MAIL_FIELDS) {
             $objectInstancier->set(
-                MailHeader::class,
+                IMailHeader::class,
                 new MailHeaderLegacy(MAIL_MESSAGE, MAIL_TEDETIS_FROM, MAIL_SECURE_DESCRIPTION)
             );
         } else {
             $objectInstancier->set(
-                MailHeader::class,
+                IMailHeader::class,
                 new MailHeader(MAIL_MESSAGE, MAIL_TEDETIS_FROM, MAIL_SECURE_DESCRIPTION)
             );
         }
