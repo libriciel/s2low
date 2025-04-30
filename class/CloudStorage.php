@@ -17,7 +17,7 @@ use UnexpectedValueException;
 /**
  *
  */
-abstract class CloudStorage
+class CloudStorage
 {
     private ICloudStorable $cloudStorable;
     private OpenStackSwiftWrapper $openStackSwiftWrapper;
@@ -34,7 +34,7 @@ abstract class CloudStorage
         ICloudStorable $iCloudStorable,
         OpenStackSwiftWrapper $openStackSwiftWrapper,
         Logger $logger,
-        $openstack_enable
+        bool $openstack_enable
     ) {
         $this->cloudStorable = $iCloudStorable;
         $this->openStackSwiftWrapper = $openStackSwiftWrapper;

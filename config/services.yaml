@@ -280,6 +280,11 @@ services:
       $beanstalkd_server: "%app.beanstalkd_server%"
       $beanstalkd_port: "%app.beanstalkd_port%"
 
+  S2lowLegacy\Class\CloudStorage:
+    autowire: false
+    autoconfigure: false
+    public: false
+
   S2lowLegacy\Class\EncodingManager:
     autowire: false
     autoconfigure: false

@@ -6,8 +6,9 @@ namespace PHPUnit\class;
 
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
-use S2lowLegacy\Class\actes\ActesCloudStorable;
-use S2lowLegacy\Class\actes\ActesCloudStorage;
+use S2lowLegacy\Class\CloudStorage;
+use S2lowLegacy\Class\ICloudStorable;
+use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use Monolog\Logger;
@@ -17,13 +18,13 @@ use UnexpectedValueException;
 
 class CloudStorageTest extends S2lowTestCase
 {
-    private function getActesCloudStorage(
+    private function getMailIncludedFilesCloudStorable(
         string $file_path_on_disk,
         string $getDirectoryForFilesWithoutTransaction = null,
         string $getPathRelativeToUploadDir = null
-    ): ActesCloudStorable | MockObject {
+    ): MailIncludedFilesCloudStorable | MockObject {
         $this->setOpenStackSwiftWrapper(false, false);
-        $iCloudStorable = $this->getMockBuilder(ActesCloudStorable::class)
+        $iCloudStorable = $this->getMockBuilder(MailIncludedFilesCloudStorable::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -44,12 +45,12 @@ class CloudStorageTest extends S2lowTestCase
 
         return $iCloudStorable;
     }
-    private function getActesCloudStorable(
+    private function getICloudStorable(
         string $file_path_on_disk,
         string $file_path_on_cloud = 'test42',
         Finder $finder = null
-    ): ActesCloudStorable |MockObject {
-        $iCloudStorable = $this->getMockBuilder(ActesCloudStorable::class)
+    ): ICloudStorable |MockObject {
+        $iCloudStorable = $this->getMockBuilder(ICloudStorable::class)
             ->disableOriginalConstructor()
             ->getMock();
         $iCloudStorable->method('getAllObjectIdToStore')->willReturn([42]);
@@ -62,13 +63,13 @@ class CloudStorageTest extends S2lowTestCase
         return $iCloudStorable;
     }
 
-    private function getCloudStorage(ActesCloudStorable $iCloudStorable): ActesCloudStorage
+    private function getCloudStorage(ICloudStorable $iCloudStorable): CloudStorage
     {
-        return new ActesCloudStorage(
+        return new CloudStorage(
             $iCloudStorable,
             $this->getObjectInstancier()->get(OpenStackSwiftWrapper::class),
             $this->getObjectInstancier()->get(Logger::class),
-            $this->getObjectInstancier()->get('openstack_enable')
+            true
         );
     }
 
@@ -103,7 +104,7 @@ class CloudStorageTest extends S2lowTestCase
     {
         static::assertSame(
             [42],
-            $this->getCloudStorage($this->getActesCloudStorable(''))->getAllObjectIdToStore()
+            $this->getCloudStorage($this->getICloudStorable(''))->getAllObjectIdToStore()
         );
     }
 
@@ -115,7 +116,7 @@ class CloudStorageTest extends S2lowTestCase
         $this->setOpenStackSwiftWrapper();
         $file_to_send = $this->createFile();
         static::assertTrue(
-            $this->getCloudStorage($this->getActesCloudStorable($file_to_send))
+            $this->getCloudStorage($this->getICloudStorable($file_to_send))
                 ->storeObject(42)
         );
         $this->assertLogMessage('Stored object [OK] : 42', 3);
@@ -126,7 +127,7 @@ class CloudStorageTest extends S2lowTestCase
      */
     public function testStoreObjetWhenFileOnDiskNotAvailable()
     {
-        $iCloudStorable = $this->getActesCloudStorable('');
+        $iCloudStorable = $this->getICloudStorable('');
         static::assertFalse(
             $this->getCloudStorage($iCloudStorable)->storeObject(42)
         );
@@ -140,7 +141,7 @@ class CloudStorageTest extends S2lowTestCase
      */
     public function testStoreObjetWhenFileOnDiskNotFound()
     {
-        $iCloudStorable = $this->getActesCloudStorable('this_file_did_not_exists');
+        $iCloudStorable = $this->getICloudStorable('this_file_did_not_exists');
         static::assertFalse(
             $this->getCloudStorage($iCloudStorable)->storeObject(42)
         );
@@ -155,7 +156,7 @@ class CloudStorageTest extends S2lowTestCase
     public function testStoreObjetWhenFileOnCloudNotFound()
     {
         $file_to_send = $this->createFile();
-        $iCloudStorable = $this->getActesCloudStorable($file_to_send, '');
+        $iCloudStorable = $this->getICloudStorable($file_to_send, '');
         static::assertFalse(
             $this->getCloudStorage($iCloudStorable)->storeObject(42)
         );
@@ -171,7 +172,7 @@ class CloudStorageTest extends S2lowTestCase
     {
         $this->setOpenStackSwiftWrapper();
         $file_to_send = $this->createFile();
-        $iCloudStorable = $this->getActesCloudStorable($file_to_send, $file_to_send);
+        $iCloudStorable = $this->getICloudStorable($file_to_send, $file_to_send);
         $this->getCloudStorage($iCloudStorable)->deleteIfIsInCloud(42);
         static::assertFileDoesNotExist($file_to_send);
         $this->assertLogMessage("Deleting object #42 : $file_to_send");
@@ -184,7 +185,7 @@ class CloudStorageTest extends S2lowTestCase
     {
         $this->setOpenStackSwiftWrapper(false);
         $file_to_send = $this->createFile();
-        $iCloudStorable = $this->getActesCloudStorable($file_to_send, 'foo');
+        $iCloudStorable = $this->getICloudStorable($file_to_send, 'foo');
         $this->getCloudStorage($iCloudStorable)->deleteIfIsInCloud(42);
         static::assertFileExists($file_to_send);
         $this->assertLogMessage('Object #42 not existing on cloud : not deleted (foo not found)');
@@ -204,7 +205,7 @@ class CloudStorageTest extends S2lowTestCase
         );
         $this->getObjectInstancier()->set(OpenStackSwiftWrapper::class, $openStackSwiftWrapper);
         $file_to_send = $this->createFile();
-        $iCloudStorable = $this->getActesCloudStorable($file_to_send, 'foo');
+        $iCloudStorable = $this->getICloudStorable($file_to_send, 'foo');
 
         $this->getCloudStorage($iCloudStorable)->deleteIfIsInCloud(42);
         static::assertFileExists($file_to_send);
@@ -231,7 +232,7 @@ class CloudStorageTest extends S2lowTestCase
         $finder = new Finder();
         $finder->in(dirname($file_to_send));
 
-        $iCloudStorable = $this->getActesCloudStorable($file_to_send, $file_to_send, $finder);
+        $iCloudStorable = $this->getICloudStorable($file_to_send, $file_to_send, $finder);
 
         $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk();
         static::assertFileExists($file_to_send);
@@ -253,7 +254,7 @@ class CloudStorageTest extends S2lowTestCase
         $finder = new Finder();
         $finder->in(dirname($file_to_send));
 
-        $iCloudStorable = $this->getActesCloudStorable($file_to_send, $file_to_send, $finder);
+        $iCloudStorable = $this->getICloudStorable($file_to_send, $file_to_send, $finder);
 
         $iCloudStorable->method('getFilePathOnCloudWithFileOnDiskPath')
             ->willReturn(basename($file_to_send));
@@ -278,7 +279,7 @@ class CloudStorageTest extends S2lowTestCase
         $finder = new Finder();
         $finder->in(dirname($file_to_send));
 
-        $iCloudStorable = $this->getActesCloudStorable($file_to_send, '', $finder);
+        $iCloudStorable = $this->getICloudStorable($file_to_send, '', $finder);
 
         $iCloudStorable->method('getFilePathOnCloudWithFileOnDiskPath')
             ->willReturn(basename($file_to_send));
@@ -303,7 +304,7 @@ class CloudStorageTest extends S2lowTestCase
         $this->setOpenStackSwiftWrapper(false, false);
         $file_to_send = $this->createFile();
         static::assertFalse(
-            $this->getCloudStorage($this->getActesCloudStorable($file_to_send))
+            $this->getCloudStorage($this->getICloudStorable($file_to_send))
                 ->storeObject(42)
         );
     }
@@ -317,7 +318,7 @@ class CloudStorageTest extends S2lowTestCase
         $file_to_send = $this->createFile();
         $finder = new Finder();
         $finder->in(dirname($file_to_send));
-        $iCloudStorable = $this->getActesCloudStorable($file_to_send, '', $finder);
+        $iCloudStorable = $this->getICloudStorable($file_to_send, '', $finder);
         $iCloudStorable->method('isAvailable')->willReturn(false);
         $iCloudStorable->method('getObjectIdByFilePath')->willReturn(42);
         $iCloudStorable->expects(static::once())->method('setAvailable')->with(static::equalTo(true));
@@ -339,7 +340,7 @@ class CloudStorageTest extends S2lowTestCase
 
         $tmpDir = new TmpFolder();
         $files_without_transaction_dir = $tmpDir->create();
-        $iCloudStorable = $this->getActesCloudStorage(
+        $iCloudStorable = $this->getMailIncludedFilesCloudStorable(
             $file_to_send,
             $files_without_transaction_dir,
             $path_relative_to_upload_dir
@@ -377,7 +378,7 @@ class CloudStorageTest extends S2lowTestCase
 
         $tmpDir = new TmpFolder();
         $files_without_transaction_dir = $tmpDir->create();
-        $iCloudStorable = $this->getActesCloudStorage(
+        $iCloudStorable = $this->getMailIncludedFilesCloudStorable(
             $file_to_send,
             $files_without_transaction_dir,
             'foo/bar/baz.txt'
@@ -397,7 +398,7 @@ class CloudStorageTest extends S2lowTestCase
         $file_to_send = $this->createFile();
         $tmpDir = new TmpFolder();
         $files_without_transaction_dir = $tmpDir->create();
-        $iCloudStorable = $this->getActesCloudStorage(
+        $iCloudStorable = $this->getMailIncludedFilesCloudStorable(
             $file_to_send,
             $files_without_transaction_dir,
             'bar.txt'
@@ -419,7 +420,7 @@ class CloudStorageTest extends S2lowTestCase
         $file_to_send = $this->createFile();
         $tmpDir = new TmpFolder();
         $files_without_transaction_dir = $tmpDir->create();
-        $iCloudStorable = $this->getActesCloudStorage(
+        $iCloudStorable = $this->getMailIncludedFilesCloudStorable(
             $file_to_send,
             $files_without_transaction_dir,
             'bar.txt'
@@ -450,7 +451,7 @@ class CloudStorageTest extends S2lowTestCase
         $file_to_send = $this->createFile();
         $finder = new Finder();
         $finder->in(dirname($file_to_send));
-        $iCloudStorable = $this->getActesCloudStorable($file_to_send, '', $finder);
+        $iCloudStorable = $this->getICloudStorable($file_to_send, '', $finder);
         $iCloudStorable->method('getObjectIdByFilePath')->willReturn(42);
         $iCloudStorable->method('isAvailable')->willReturn($isAvailable);
         $iCloudStorable->method('isTransactionInCloud')->willReturn($isTransactionInCloud);
@@ -485,7 +486,7 @@ class CloudStorageTest extends S2lowTestCase
     {
         $filePathOnDisk = '/test/test/test.tar.gz';
 
-        $iCloudStorable = $this->getMockBuilder(ActesCloudStorable::class)
+        $iCloudStorable = $this->getMockBuilder(ICloudStorable::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -505,7 +506,7 @@ class CloudStorageTest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $cloudStorage = new ActesCloudStorage($iCloudStorable, $openStackSwiftWrapper, $logger, true);
+        $cloudStorage = new CloudStorage($iCloudStorable, $openStackSwiftWrapper, $logger, true);
 
         $return = $cloudStorage->getFilePathOnCloudWithFileOnDiskPath($filePathOnDisk);
 
@@ -519,7 +520,7 @@ class CloudStorageTest extends S2lowTestCase
     {
         $filePathOnDisk = '/test/test/test.tar.gz';
 
-        $iCloudStorable = $this->getMockBuilder(ActesCloudStorable::class)
+        $iCloudStorable = $this->getMockBuilder(ICloudStorable::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -538,7 +539,7 @@ class CloudStorageTest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $cloudStorage = new ActesCloudStorage($iCloudStorable, $openStackSwiftWrapper, $logger, true);
+        $cloudStorage = new CloudStorage($iCloudStorable, $openStackSwiftWrapper, $logger, true);
 
         $return = $cloudStorage->getFilePathOnCloudWithFileOnDiskPath($filePathOnDisk);
 
@@ -552,7 +553,7 @@ class CloudStorageTest extends S2lowTestCase
     {
         $filePathOnDisk = '/test/import/test.tar.gz';
 
-        $iCloudStorable = $this->getMockBuilder(ActesCloudStorable::class)
+        $iCloudStorable = $this->getMockBuilder(ICloudStorable::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -574,7 +575,7 @@ class CloudStorageTest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $cloudStorage = new ActesCloudStorage($iCloudStorable, $openStackSwiftWrapper, $logger, true);
+        $cloudStorage = new CloudStorage($iCloudStorable, $openStackSwiftWrapper, $logger, true);
 
         $return = $cloudStorage->getFilePathOnCloudWithFileOnDiskPath($filePathOnDisk);
 
@@ -591,7 +592,7 @@ class CloudStorageTest extends S2lowTestCase
      */
     public function testGetPath()
     {
-        $iCloudStorable = $this->getMockBuilder(ActesCloudStorable::class)
+        $iCloudStorable = $this->getMockBuilder(ICloudStorable::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -606,7 +607,7 @@ class CloudStorageTest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $cloudStorage = new ActesCloudStorage($iCloudStorable, $openStackSwiftWrapper, $logger, false);
+        $cloudStorage = new CloudStorage($iCloudStorable, $openStackSwiftWrapper, $logger, false);
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage(
