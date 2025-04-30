@@ -1,7 +1,5 @@
 <?php
 
-namespace Legacy;
-
 /**
  * \class MailUtil.class.php
  * \brief fonction commun pour envoiyer les email.
