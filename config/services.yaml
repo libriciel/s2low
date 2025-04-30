@@ -1,5 +1,6 @@
 # config/services.yaml
-
+imports:
+  - { resource: services_actes.yaml }
 parameters:
   app.database_name: '%env(POSTGRES_DB)%'
   app.database_host: '%env(POSTGRES_HOST)%'
@@ -416,6 +417,18 @@ services:
   S2lowLegacy\Class\WorkerScript:
     factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
     arguments: [ 'S2lowLegacy\Class\WorkerScript' ]
+
+  S2lowLegacy\Class\actes\ActesMinistereProperties:
+    arguments:
+      $url: '%actes.ministere.url%'
+      $authentification_type: '%actes.ministere.authentification_type%'
+      $login: '%actes.ministere.login%'
+      $password: '%actes.ministere.password%'
+      $client_certificate: '%actes.ministere.client_certificat%'
+      $client_certificate_key: '%actes.ministere.client_certificate_key%'
+      $client_certificate_key_password: '%actes.ministere.client_certificate_key_password%'
+      $adapt_protocol: '%actes.ministere.adapt_protocol%'
+      $server_certificate_path: '%actes.ministere.server_certificate_path%'
 
   S2lowLegacy\Class\actes\ActesAntivirusWorker:
     tags: ['s2low.queue_rebuilding_worker']
