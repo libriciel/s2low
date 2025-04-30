@@ -83,7 +83,7 @@ ob_start();
                 <label for="enveloppe" class="control-label">Fichier XML</label>
             </th>
             <td>
-                <input class="" type="file" id="enveloppe" name="enveloppe"/>
+                <input class="" type="file" id="enveloppe" name="enveloppe" accept=".xml"/>
             </td>
         </tr>
         <tr>
