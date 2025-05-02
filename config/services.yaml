@@ -51,6 +51,7 @@ parameters:
   app.openstack_enable: '%env(OPENSTACK_ENABLE)'
   app.mail.tdt_from_email: '%env(TDT_FROM_EMAIL)%'
   app.mail.email_admin_technique: '%env(EMAIL_ADMIN_TECHNIQUE)%'
+  app.log.file: '%env(LOG_FILE)%'
 services:
   _defaults:
     autowire: true

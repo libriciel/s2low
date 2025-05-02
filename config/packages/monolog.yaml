@@ -4,7 +4,7 @@ monolog:
     handlers:
         main:
             type: stream
-            path: '%kernel.logs_dir%/%kernel.environment%.log'
+            path: '%app.log.file%'
             level: debug
         critical_mailer:
             type: fingers_crossed
