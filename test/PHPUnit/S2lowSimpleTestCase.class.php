@@ -1,6 +1,5 @@
 <?php
 
-use S2lowLegacy\Lib\ObjectInstancier;
 use PHPUnit\Framework\TestCase;
 
 class S2lowSimpleTestCase extends TestCase
@@ -8,17 +7,15 @@ class S2lowSimpleTestCase extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        \S2lowLegacy\Lib\ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());
-        $this->getObjectInstancier()->set(Monolog\Logger::class, new  Monolog\Logger('PHPUNIT'));
-        $testHandler = new Monolog\Handler\TestHandler();
-        $testHandler->setLevel(\Monolog\Logger::DEBUG);
-        $this->getObjectInstancier()->set(Monolog\Handler\TestHandler::class, $testHandler);
-        $this->getObjectInstancier()->get(Monolog\Logger::class)->pushHandler($testHandler);
+
+        $testEnvironment = new TestEnvironmentManager();
+        $testEnvironment->setUp();
+        $this->objectInstancieur = $testEnvironment->getObjectInstancier();
     }
 
     public function getObjectInstancier()
     {
-        return \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
+        return $this->objectInstancieur;
     }
 
 

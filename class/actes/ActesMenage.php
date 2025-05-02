@@ -3,9 +3,9 @@
 namespace S2lowLegacy\Class\actes;
 
 use Exception;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Lib\SigTermHandler;
-use Monolog\Logger;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ActesMenage
@@ -13,14 +13,14 @@ class ActesMenage
     private $actes_files_upload_root;
     private $actesEnvelopeSQL;
     private $openStackSwiftWrapper;
-    private $logger;
+    private LoggerInterface $logger;
 
 
     public function __construct(
         $actes_files_upload_root,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         OpenStackSwiftWrapper $openStackSwiftWrapper,
-        Logger $logger
+        LoggerInterface $logger
     ) {
         $this->actes_files_upload_root = $actes_files_upload_root;
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;

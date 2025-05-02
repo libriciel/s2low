@@ -3,7 +3,6 @@
 namespace S2lowLegacy\Lib;
 
 use Exception;
-use Monolog\Logger;
 use OpenStack\Identity\v3\Models\Token;
 use OpenStack\ObjectStore\v1\Models\Container;
 use OpenStack\ObjectStore\v1\Models\StorageObject;
@@ -18,10 +17,7 @@ class OpenStackContainerWrapper
     private $container;
     /** @var OpenStackContainerFetcher */
     private $openStackContainerFetcher;
-    /**
-     * @var Logger
-     */
-    private $logger;
+    private LoggerInterface $logger;
     /**
      * @var OpenStackStateManager
      */

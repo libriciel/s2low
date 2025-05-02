@@ -2,13 +2,13 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\WorkerScript;
 use Exception;
 use S2lowLegacy\Lib\UnrecoverableException;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\UserSQL;
-use Monolog\Logger;
 
 class ActesPrepareEnvoiSAE
 {
@@ -20,8 +20,13 @@ class ActesPrepareEnvoiSAE
 
     private $lastError;
 
-    public function __construct(ActesTransactionsSQL $actesTransactionsSQL, Logger $logger, AuthoritySQL $authoritySQL, WorkerScript $workerScript, UserSQL $userSQL)
-    {
+    public function __construct(
+        ActesTransactionsSQL $actesTransactionsSQL,
+        LoggerInterface $logger,
+        AuthoritySQL $authoritySQL,
+        WorkerScript $workerScript,
+        UserSQL $userSQL
+    ) {
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->logger = $logger;
         $this->authoritySQL = $authoritySQL;

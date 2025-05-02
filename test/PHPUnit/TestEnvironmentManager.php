@@ -2,6 +2,7 @@
 
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\actes\ActesMinistereProperties;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
@@ -95,11 +96,13 @@ class TestEnvironmentManager
 
         $this->getObjectInstancier()->set(Environnement::class, new Environnement($get, $post, $request, $session, $server, false));
         $this->getObjectInstancier()->set(SessionWrapper::class, $this->getObjectInstancier()->get(Environnement::class)->session());
+
         $monologLogger = new  Logger('PHPUNIT');
-        $this->getObjectInstancier()->set(Logger::class, $monologLogger);
         $testHandler = new TestHandler();
+        $monologLogger->pushHandler($testHandler);
+
         $this->getObjectInstancier()->set(TestHandler::class, $testHandler);
-        $this->getObjectInstancier()->get(Logger::class)->pushHandler($testHandler);
+        $this->getObjectInstancier()->set(LoggerInterface::class, $monologLogger);
 
         $this->getObjectInstancier()->set('convert_api_logins_from_iso', false);
 

@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class\helios;
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\PastellWrapperFactory;
 use S2lowLegacy\Class\RecoverableException;
 use Exception;
@@ -9,19 +10,18 @@ use S2lowLegacy\Lib\UnrecoverableException;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use S2lowLegacy\Model\PastellPropertiesSQL;
-use Monolog\Logger;
 
 class HeliosVerificationSAE
 {
     private $heliosTransactionsSQL;
     private $pastellWrapperFactory;
-    private $logger;
+    private LoggerInterface $logger;
     private $authoritySQL;
     private $pastellPropertiesSQL;
 
     public function __construct(
         PastellWrapperFactory $pastellWrapperFactory,
-        Logger $logger,
+        LoggerInterface $logger,
         AuthoritySQL $authoritySQL,
         HeliosTransactionsSQL $heliosTransactionsSQL,
         PastellPropertiesSQL $pastellPropertiesSQL

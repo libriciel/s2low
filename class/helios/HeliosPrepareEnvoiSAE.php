@@ -3,11 +3,11 @@
 namespace S2lowLegacy\Class\helios;
 
 use Exception;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Lib\UnrecoverableException;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use S2lowLegacy\Model\UserSQL;
-use Monolog\Logger;
 
 class HeliosPrepareEnvoiSAE
 {
@@ -17,11 +17,11 @@ class HeliosPrepareEnvoiSAE
     private $pesAllerRetriever;
     private $userSQL;
     private $authoritySQL;
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(
         PesAllerRetriever $pesAllerRetriever,
-        Logger $logger,
+        LoggerInterface $logger,
         UserSQL $userSQL,
         AuthoritySQL $authoritySQL,
         HeliosTransactionsSQL $heliosTransactionsSQL

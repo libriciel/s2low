@@ -3,15 +3,13 @@
 namespace S2lowLegacy\Lib;
 
 use OpenStack\OpenStack;
+use Psr\Log\LoggerInterface;
 
 class OpenStackContainerWrapperFactory
 {
-    /**
-     * @var \Monolog\Logger
-     */
-    private $logger;
+    private LoggerInterface $logger;
 
-    public function __construct(\Monolog\Logger $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }

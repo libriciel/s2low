@@ -6,6 +6,7 @@ use Exception;
 use Monolog\Handler\HandlerInterface;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 class S2lowLogger
 {
@@ -15,7 +16,7 @@ class S2lowLogger
     private $log_level;
     private $name;
 
-    public function __construct(Logger $logger, $log_level = Logger::INFO)
+    public function __construct(LoggerInterface $logger, $log_level = Logger::INFO)
     {
         $this->logger = $logger;
         $this->log_level = $log_level;
