@@ -92,8 +92,6 @@ unit_test:
         POSTGRES_HOST: postgres
         S2LOW_WEBSITE: "localhost"
         COMPOSER_PROCESS_TIMEOUT: 9000
-        TDT_FROM_EMAIL: "Tiers de télétransmission <s2low@s2low.docker.libriciel.fr>"
-        EMAIL_ADMIN_TECHNIQUE: "noreply@libriciel.net"
         DONT_RETRIEVE_VALIDCA: "true"
         XDEBUG_MODE: coverage
         APP_ENV: test

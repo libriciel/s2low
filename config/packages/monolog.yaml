@@ -12,8 +12,8 @@ monolog:
             handler: symfony_mailer
         symfony_mailer:
             type: symfony_mailer
-            from_email: '%env(TDT_FROM_EMAIL)%'
-            to_email: '%env(EMAIL_ADMIN_TECHNIQUE)%'
+            from_email: '%app.mail.tdt_from_email%'
+            to_email: '%app.mail.email_admin_technique%'
             subject: '[%%datetime%%] %%channel%%.%%level_name%%: %%message%% %%context%% { "pid" : %%extra.pid%% }'
             level: critical
             formatter: monolog.formatter.html

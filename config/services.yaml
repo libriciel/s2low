@@ -49,6 +49,8 @@ parameters:
   app.mail.secure_description: '%env(MAIL_SECURE_DESCRIPTION)%'
   app.mail.use_legacy_secure_mail: '%env(USE_LEGACY_SECURE_MAIL_FIELDS)%'
   app.openstack_enable: '%env(OPENSTACK_ENABLE)'
+  app.mail.tdt_from_email: '%env(TDT_FROM_EMAIL)%'
+  app.mail.email_admin_technique: '%env(EMAIL_ADMIN_TECHNIQUE)%'
 services:
   _defaults:
     autowire: true
