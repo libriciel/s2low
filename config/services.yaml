@@ -38,6 +38,11 @@ parameters:
   app.beanstalkd_port: '%env(BEANSTAKLD_PORT)%'
   app.redis_server: '%env(REDIS_SERVER)%'
   app.redis_port: '%env(REDIS_PORT)%'
+  app.actes_imap_host: '%env(ACTES_IMAP_HOST)%'
+  app.actes_imap_port: '%env(ACTES_IMAP_PORT)%'
+  app.actes_imap_login: '%env(ACTES_IMAP_LOGIN)%'
+  app.actes_imap_password: '%env(ACTES_IMAP_PASSWORD)%'
+  app.actes_imap_options: '%env(ACTES_IMAP_OPTIONS)%'
   app.mail.message: '%env(MAIL_MESSAGE)'
   app.mail.tedetis_from: '%env(MAIL_TEDETIS_FROM)%'
   app.mail.secure_description: '%env(MAIL_SECURE_DESCRIPTION)%'
@@ -457,6 +462,16 @@ services:
 
   S2lowLegacy\Class\actes\ClassificationString:
     autowire: false
+
+  S2lowLegacy\Class\actes\ActesImapProperties:
+    autowire: true
+    arguments:
+      $host: '%app.actes_imap_host%'
+      $port: '%app.actes_imap_port%'
+      $login: '%app.actes_imap_login%'
+      $password: '%app.actes_imap_password%'
+      $imap_options: '%app.actes_imap_options%'
+
 
   S2low\Services\Helios\HeliosAnalyseFichierAEnvoyerWorker:
     tags: ['s2low.queue_rebuilding_worker']
