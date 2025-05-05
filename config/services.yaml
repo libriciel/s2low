@@ -51,7 +51,10 @@ parameters:
   app.openstack_enable: '%env(OPENSTACK_ENABLE)'
   app.mail.tdt_from_email: '%env(TDT_FROM_EMAIL)%'
   app.mail.email_admin_technique: '%env(EMAIL_ADMIN_TECHNIQUE)%'
-  app.log.file: '%env(LOG_FILE)%'
+  app.log.file: '%env(string:default:app.log.file.default:LOG_FILE)%'
+  app.log.file.default: '/data/log/s2low.log'
+  app.mail.dsn: '%env(string:default:app.mail.dsn.default:MAILER_DSN)%'
+  app.mail.dsn.default: 'smtp://maildev:1025?verify_peer=0'
 services:
   _defaults:
     autowire: true
