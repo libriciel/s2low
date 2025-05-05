@@ -1,6 +1,6 @@
 <?php
 
-use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
+use S2lowLegacy\Class\actes\ActesMenage;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\ScriptSleeping;
@@ -41,10 +41,10 @@ $logger  = $objectInstancier->get("Monolog\Logger");
 $logger->pushHandler(new  Monolog\Handler\StreamHandler('php://stdout'));
 
 $logger->info("Starting actes-grand-menage");
-/** @var ActesEnvelopeStorage $actesEnvelopeStorage */
-$actesEnvelopeStorage = $objectInstancier->get(ActesEnvelopeStorage::class);
+/** @var ActesMenage $actesMenage */
+$actesMenage = $objectInstancier->get(ActesMenage::class);
 try {
-    $actesEnvelopeStorage->grandMenage($min_date, $max_date, $confirm);
+    $actesMenage->grandMenage($min_date, $max_date, $confirm);
 } catch (Exception $e) {
     $logger->critical("Exception thrown during actes-grand-menage", $e);
     exit(-1);

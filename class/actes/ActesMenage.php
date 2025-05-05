@@ -12,7 +12,7 @@ use Symfony\Component\Filesystem\Filesystem;
  * @deprecated 5.0.39
  * Le script de ménage doit être réimplémenté en utilisant CloudStorage
  */
-class ActesEnvelopeStorage
+class ActesMenage
 {
     private $actes_files_upload_root;
     private $actesEnvelopeSQL;

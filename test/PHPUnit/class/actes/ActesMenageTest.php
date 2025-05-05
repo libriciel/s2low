@@ -6,16 +6,15 @@ namespace PHPUnit\class\actes;
 
 use Exception;
 use Monolog\Handler\TestHandler;
-use S2lowLegacy\Class\actes\ActesCloudStorable;
 use S2lowLegacy\Class\actes\ActesCloudStorage;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
-use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
+use S2lowLegacy\Class\actes\ActesMenage;
 use S2lowLegacy\Lib\OpenStackContainerStore;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use PHPUnit\Framework\MockObject\MockObject;
 use S2lowTestCase;
 
-class ActesEnvelopeStorageTest extends S2lowTestCase
+class ActesMenageTest extends S2lowTestCase
 {
     private const S2LOW_PHPUNIT_ACTE_ENVELOPE_STORAGE_TEST = 's2low-phpunit-acte-envelope-storage-test';
     private const ACTES_FILES_UPLOAD_ROOT = 'actes_files_upload_root';
@@ -71,7 +70,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
 
         $transaction_id = $actesEnvelopeSQL->create(1, $filename);
         $actesEnvelopeSQL->setTransactionInCloud($transaction_id);
-        $actesEnvelopeStorage = $this->getObjectInstancier()->get(ActesEnvelopeStorage::class);
+        $actesEnvelopeStorage = $this->getObjectInstancier()->get(ActesMenage::class);
         $actesEnvelopeStorage->grandMenage(self::MIN_DATE, $this->dateTomorrow, 'ok');
         $testHandler = $this->getObjectInstancier()->get(TestHandler::class);
         static::assertFalse(file_exists($actes_files_upload_root . "/$filename"));
@@ -85,7 +84,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
 
         $transaction_id = $actesEnvelopeSQL->create(1, $filename);
         $actesEnvelopeSQL->setTransactionInCloud($transaction_id);
-        $actesEnvelopeStorage = $this->getObjectInstancier()->get(ActesEnvelopeStorage::class);
+        $actesEnvelopeStorage = $this->getObjectInstancier()->get(ActesMenage::class);
         $actesEnvelopeStorage->grandMenage(self::MIN_DATE, $this->dateTomorrow, true);
         $testHandler = $this->getObjectInstancier()->get(TestHandler::class);
         static::assertSame("File not exists $filename [PASS]", $testHandler->getRecords()[2][self::MESSAGE]);
@@ -102,7 +101,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
 
         $transaction_id = $actesEnvelopeSQL->create(1, $filename);
         $actesEnvelopeSQL->setTransactionInCloud($transaction_id);
-        $actesEnvelopeStorage = $this->getObjectInstancier()->get(ActesEnvelopeStorage::class);
+        $actesEnvelopeStorage = $this->getObjectInstancier()->get(ActesMenage::class);
         $actesEnvelopeStorage->grandMenage(self::MIN_DATE, $this->dateTomorrow, false);
         $testHandler = $this->getObjectInstancier()->get(TestHandler::class);
         static::assertTrue(file_exists("$actes_files_upload_root/$filename"));

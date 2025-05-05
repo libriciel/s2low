@@ -511,7 +511,7 @@ services:
      arguments:
        $actes_files_upload_root: "todo"
 
-  S2lowLegacy\Class\actes\ActesEnvelopeStorage:
+  S2lowLegacy\Class\actes\ActesMenage:
     autowire: false
     #arguments:                                 TODO : pour plus tard, quand j'aurais compris la config du Logger
     #  $actes_files_upload_root: "fdsfdsfsdfs"

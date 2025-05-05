@@ -4,8 +4,6 @@ namespace S2lowLegacy\Class;
 
 use RuntimeException;
 use S2lowLegacy\Class\actes\ActesCloudStorable;
-use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
-use S2lowLegacy\Class\actes\ActesFileSender;
 use S2lowLegacy\Class\actes\ActesImapProperties;
 use S2lowLegacy\Class\actes\ActesMinistereProperties;
 use S2lowLegacy\Class\actes\ActesPdf;
