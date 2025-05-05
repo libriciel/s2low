@@ -2,11 +2,11 @@
 
 namespace S2low\Factory;
 
-use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
-use S2lowLegacy\Class\helios\PESAcquitCloudStorage;
-use S2lowLegacy\Class\helios\PESAllerCloudStorage;
-use S2lowLegacy\Class\helios\PESRetourCloudStorage;
-use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
+use S2lowLegacy\Class\actes\ActesCloudStorable;
+use S2lowLegacy\Class\helios\PESAcquitCloudStorable;
+use S2lowLegacy\Class\helios\PESAllerCloudStorable;
+use S2lowLegacy\Class\helios\PESRetourCloudStorable;
+use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable;
 use S2lowLegacy\Lib\OpenStackContainerStore;
 use S2lowLegacy\Lib\OpenStackContainerWrapperFactory;
 
@@ -30,23 +30,23 @@ class OpenStackContainerStoreFactory
             $this->openStackContainerWrapperFactory
         );
         $openStackContainerStore->addConfiguration(
-            ActesEnvelopeStorage::CONTAINER_NAME,
+            ActesCloudStorable::CONTAINER_NAME,
             $this->openStackConfigFactory->create(self::ACTES)
         );
         $openStackContainerStore->addConfiguration(
-            PESAllerCloudStorage::CONTAINER_NAME,
+            PESAllerCloudStorable::CONTAINER_NAME,
             $this->openStackConfigFactory->create(self::PES_ALLER)
         );
         $openStackContainerStore->addConfiguration(
-            PESAcquitCloudStorage::CONTAINER_NAME,
+            PESAcquitCloudStorable::CONTAINER_NAME,
             $this->openStackConfigFactory->create(self::PES_ACQUIT)
         );
         $openStackContainerStore->addConfiguration(
-            PESRetourCloudStorage::CONTAINER_NAME,
+            PESRetourCloudStorable::CONTAINER_NAME,
             $this->openStackConfigFactory->create(self::PES_RETOUR)
         );
         $openStackContainerStore->addConfiguration(
-            MailIncludedFilesCloudStorage::CONTAINER_NAME,
+            MailIncludedFilesCloudStorable::CONTAINER_NAME,
             $this->openStackConfigFactory->create(self::MAILSEC)
         );
         return $openStackContainerStore;
