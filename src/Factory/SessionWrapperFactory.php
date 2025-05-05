@@ -8,7 +8,12 @@ class SessionWrapperFactory
 {
     public static function create(): SessionWrapper
     {
-        $session = $_SESSION ?? [];
+        if (!isset($_SESSION)) {
+            $_SESSION = [];
+        }
+
+        $session =& $_SESSION;
+
         return new SessionWrapper($session);
     }
 }
