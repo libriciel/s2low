@@ -7,9 +7,8 @@ namespace PHPUnit\class;
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use S2lowLegacy\Class\CloudStorage;
-use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\ICloudStorable;
-use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
+use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use Monolog\Logger;
@@ -19,13 +18,13 @@ use UnexpectedValueException;
 
 class CloudStorageTest extends S2lowTestCase
 {
-    private function getMailIncludedFilesCloudStorage(
+    private function getMailIncludedFilesCloudStorable(
         string $file_path_on_disk,
         string $getDirectoryForFilesWithoutTransaction = null,
         string $getPathRelativeToUploadDir = null
-    ): MailIncludedFilesCloudStorage | MockObject {
+    ): MailIncludedFilesCloudStorable | MockObject {
         $this->setOpenStackSwiftWrapper(false, false);
-        $iCloudStorable = $this->getMockBuilder(MailIncludedFilesCloudStorage::class)
+        $iCloudStorable = $this->getMockBuilder(MailIncludedFilesCloudStorable::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -66,9 +65,12 @@ class CloudStorageTest extends S2lowTestCase
 
     private function getCloudStorage(ICloudStorable $iCloudStorable): CloudStorage
     {
-        /** @var CloudStorageFactory $cloudStorageFactory */
-        $cloudStorageFactory = $this->getObjectInstancier()->get(CloudStorageFactory::class);
-        return $cloudStorageFactory->getInstance($iCloudStorable);
+        return new CloudStorage(
+            $iCloudStorable,
+            $this->getObjectInstancier()->get(OpenStackSwiftWrapper::class),
+            $this->getObjectInstancier()->get(Logger::class),
+            true
+        );
     }
 
     private function setOpenStackSwiftWrapper(
@@ -338,7 +340,7 @@ class CloudStorageTest extends S2lowTestCase
 
         $tmpDir = new TmpFolder();
         $files_without_transaction_dir = $tmpDir->create();
-        $iCloudStorable = $this->getMailIncludedFilesCloudStorage(
+        $iCloudStorable = $this->getMailIncludedFilesCloudStorable(
             $file_to_send,
             $files_without_transaction_dir,
             $path_relative_to_upload_dir
@@ -376,7 +378,7 @@ class CloudStorageTest extends S2lowTestCase
 
         $tmpDir = new TmpFolder();
         $files_without_transaction_dir = $tmpDir->create();
-        $iCloudStorable = $this->getMailIncludedFilesCloudStorage(
+        $iCloudStorable = $this->getMailIncludedFilesCloudStorable(
             $file_to_send,
             $files_without_transaction_dir,
             'foo/bar/baz.txt'
@@ -396,7 +398,7 @@ class CloudStorageTest extends S2lowTestCase
         $file_to_send = $this->createFile();
         $tmpDir = new TmpFolder();
         $files_without_transaction_dir = $tmpDir->create();
-        $iCloudStorable = $this->getMailIncludedFilesCloudStorage(
+        $iCloudStorable = $this->getMailIncludedFilesCloudStorable(
             $file_to_send,
             $files_without_transaction_dir,
             'bar.txt'
@@ -418,7 +420,7 @@ class CloudStorageTest extends S2lowTestCase
         $file_to_send = $this->createFile();
         $tmpDir = new TmpFolder();
         $files_without_transaction_dir = $tmpDir->create();
-        $iCloudStorable = $this->getMailIncludedFilesCloudStorage(
+        $iCloudStorable = $this->getMailIncludedFilesCloudStorable(
             $file_to_send,
             $files_without_transaction_dir,
             'bar.txt'

@@ -2,38 +2,20 @@
 
 namespace S2lowLegacy\Class\actes;
 
-use S2lowLegacy\Class\CloudStorage;
-use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\IWorker;
 use Exception;
-use S2lowLegacy\Lib\UnrecoverableException;
 
 class ActesMenageEnveloppeWorker implements IWorker
 {
     public const QUEUE_NAME = 'actes-enveloppe-menage';
     private const NB_DAYS_IN_DISK = 15;
-
-    private CloudStorageFactory $cloudStorageFactory;
-    private ?CloudStorage $cloudStorage = null;
     private int $nb_days_in_disk;
+    private ActesCloudStorage $actesCloudStorage;
 
-    public function __construct(CloudStorageFactory $cloudStorageFactory)
+    public function __construct(ActesCloudStorage $actesCloudStorage)
     {
-        $this->cloudStorageFactory = $cloudStorageFactory;
+        $this->actesCloudStorage = $actesCloudStorage;
         $this->setNbDayInDisk(self::NB_DAYS_IN_DISK);
-    }
-
-    /**
-     * @return CloudStorage
-     * @throws UnrecoverableException
-     */
-    private function getCloudStorage(): CloudStorage
-    {
-        if (is_null($this->cloudStorage)) {
-            $this->cloudStorage = $this->cloudStorageFactory
-                ->getInstanceByClassName(ActesCloudStorage::class);
-        }
-        return $this->cloudStorage;
     }
 
 
@@ -64,7 +46,7 @@ class ActesMenageEnveloppeWorker implements IWorker
      */
     public function work($data): void
     {
-        $this->getCloudStorage()->deleteFilesOnDisk($this->nb_days_in_disk, true);
+        $this->actesCloudStorage->deleteFilesOnDisk($this->nb_days_in_disk, true);
     }
 
     public function getMutexName($data): string

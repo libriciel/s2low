@@ -11,8 +11,6 @@
             <table id="message-detail" class="data-table table table-bordered" aria-describedby="details_desc">
             <?php
 
-            use S2lowLegacy\Class\CloudStorage;
-            use S2lowLegacy\Class\CloudStorageFactory;
             use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
             use S2lowLegacy\Lib\ObjectInstancierFactory;
 
@@ -109,10 +107,9 @@
     <?php
     if ($mailIncludeFileArray) {
         //C'est super dégeulasse...
-        /** @var CloudStorage $cloudStorage */
-        $cloudStorage  = ObjectInstancierFactory::getObjetInstancier()
-            ->get(CloudStorageFactory::class)
-            ->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
+        /** @var MailIncludedFilesCloudStorage $cloudStorage */
+        $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
+        $cloudStorage  = $objectInstancier->get(MailIncludedFilesCloudStorage::class);
         $mailzip_filepath = $cloudStorage->getPath($mailTransaction->getId());
 
 

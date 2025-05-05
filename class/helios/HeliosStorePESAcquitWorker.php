@@ -2,9 +2,7 @@
 
 namespace S2lowLegacy\Class\helios;
 
-use S2lowLegacy\Class\CloudStorage;
 use S2lowLegacy\Class\CloudStorageException;
-use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Lib\PausingQueueException;
 use S2lowLegacy\Lib\UnrecoverableException;
@@ -18,12 +16,9 @@ class HeliosStorePESAcquitWorker implements IWorker
         return self::QUEUE_NAME;
     }
 
-    private $cloudStorageFactory;
-    private $cloudStorage;
-
-    public function __construct(CloudStorageFactory $cloudStorageFactory)
-    {
-        $this->cloudStorageFactory = $cloudStorageFactory;
+    public function __construct(
+        private PESAcquitCloudStorage $PESAcquitCloudStorage
+    ) {
     }
 
     public function getData($id)
@@ -32,25 +27,11 @@ class HeliosStorePESAcquitWorker implements IWorker
     }
 
     /**
-     * @return CloudStorage
-     * @throws UnrecoverableException
-     */
-    private function getCloudStorage()
-    {
-        if (! $this->cloudStorage) {
-            $this->cloudStorage = $this->cloudStorageFactory
-                ->getInstanceByClassName(PESAcquitCloudStorage::class);
-        }
-        return $this->cloudStorage;
-    }
-
-    /**
      * @return int[]
-     * @throws UnrecoverableException
      */
     public function getAllId()
     {
-        return $this->getCloudStorage()->getAllObjectIdToStore();
+        return $this->PESAcquitCloudStorage->getAllObjectIdToStore();
     }
 
     /**
@@ -63,7 +44,7 @@ class HeliosStorePESAcquitWorker implements IWorker
 
     public function work($data)
     {
-        $this->getCloudStorage()->storeObject($data);
+        $this->PESAcquitCloudStorage->storeObject($data);
     }
 
     public function getMutexName($data)

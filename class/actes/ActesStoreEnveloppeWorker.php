@@ -2,15 +2,13 @@
 
 namespace S2lowLegacy\Class\actes;
 
-use S2lowLegacy\Class\CloudStorage;
-use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\IWorker;
 use Exception;
 
 class ActesStoreEnveloppeWorker implements IWorker
 {
     public const QUEUE_NAME = 'actes-store-enveloppe';
-    private CloudStorage $cloudStorage;
+    private ActesCloudStorage $cloudStorage;
 
     public function getQueueName(): string
     {
@@ -20,9 +18,9 @@ class ActesStoreEnveloppeWorker implements IWorker
     /**
      * @throws \S2lowLegacy\Lib\UnrecoverableException
      */
-    public function __construct(CloudStorageFactory $cloudStorageFactory)
+    public function __construct(ActesCloudStorage $actesCloudStorage)
     {
-        $this->cloudStorage = $cloudStorageFactory->getInstanceByClassName(ActesCloudStorage::class);
+        $this->cloudStorage = $actesCloudStorage;
     }
 
     public function getData($id): int

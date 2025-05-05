@@ -3,7 +3,6 @@
 namespace S2lowLegacy\Class\helios;
 
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\S2lowLogger;
 use Exception;
 use S2lowLegacy\Lib\UnrecoverableException;
@@ -18,7 +17,6 @@ class HeliosExport
     private $heliosTransactionsSQL;
     private $pesAllerRetriever;
     private $helios_responses_root;
-    private $cloudStorageFactory;
 
     public function __construct(
         S2lowLogger $s2lowLogger,
@@ -26,14 +24,13 @@ class HeliosExport
         HeliosTransactionsSQL $heliosTransactionsSQL,
         PesAllerRetriever $pesAllerRetriever,
         $helios_responses_root,
-        CloudStorageFactory $cloudStorageFactory
+        private PESAcquitCloudStorage $pesAcquitCloudStorage
     ) {
         $this->s2lowLogger = $s2lowLogger;
         $this->authoritySQL = $authoritySQL;
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
         $this->pesAllerRetriever = $pesAllerRetriever;
         $this->helios_responses_root = $helios_responses_root;
-        $this->cloudStorageFactory = $cloudStorageFactory;
     }
 
     /**
@@ -134,8 +131,7 @@ class HeliosExport
         $this->s2lowLogger->debug("[COPIE OK] $pes_aller_path -> $pes_aller_destination");
 
         if ($transaction_info['acquit_filename']) {
-            $pesAcquitCloudStorage = $this->cloudStorageFactory->getInstanceByClassName(PESAcquitCloudStorage::class);
-            $pes_acquit_path = $pesAcquitCloudStorage->getPath($transaction_info['id']);
+            $pes_acquit_path = $this->pesAcquitCloudStorage->getPath($transaction_info['id']);
             $pes_acquit_destintation = $output_directory . "/$directory_name/{$transaction_info['acquit_filename']}";
             $filesystem->copy($pes_acquit_path, $pes_acquit_destintation);
             $this->s2lowLogger->debug("[COPIE OK] $pes_acquit_path -> $pes_acquit_destintation");

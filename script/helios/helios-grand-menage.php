@@ -1,6 +1,6 @@
 <?php
 
-use S2lowLegacy\Class\helios\PESAllerCloudStorage;
+use S2lowLegacy\Class\helios\PESAllerCloudStorable;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Lib\SigTermHandler;
@@ -51,7 +51,7 @@ while ($sqlQuery->hasMoreResult()) {
         echo "Le fichier n'existe pas... [PASS]\n";
         continue;
     }
-    if ($openStackSwiftWrapper->fileExistsOnCloud(PESAllerCloudStorage::CONTAINER_NAME, $pes['sha1'])) {
+    if ($openStackSwiftWrapper->fileExistsOnCloud(PESAllerCloudStorable::CONTAINER_NAME, $pes['sha1'])) {
         echo "Le fichier existe sur le cloud, supression...\n";
         if ($confirm) {
             unlink($filename);

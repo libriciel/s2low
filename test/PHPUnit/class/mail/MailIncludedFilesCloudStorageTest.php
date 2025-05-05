@@ -6,7 +6,7 @@ namespace PHPUnit\class\mail;
 
 use Exception;
 use MailsecUtilitiesTestTrait;
-use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
+use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowTestCase;
 
@@ -14,15 +14,15 @@ class MailIncludedFilesCloudStorageTest extends S2lowTestCase
 {
     use MailsecUtilitiesTestTrait;
 
-    private function getMailIncludedFilesCloudStorage(): MailIncludedFilesCloudStorage
+    private function getMailIncludedFilesCloudStorage(): MailIncludedFilesCloudStorable
     {
-        return $this->getObjectInstancier()->get(MailIncludedFilesCloudStorage::class);
+        return $this->getObjectInstancier()->get(MailIncludedFilesCloudStorable::class);
     }
 
     public function testGetContainerName(): void
     {
         static::assertSame(
-            MailIncludedFilesCloudStorage::CONTAINER_NAME,
+            MailIncludedFilesCloudStorable::CONTAINER_NAME,
             $this->getMailIncludedFilesCloudStorage()->getContainerName()
         );
     }

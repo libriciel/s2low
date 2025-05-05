@@ -4,8 +4,6 @@ namespace S2lowLegacy\Class\actes;
 
 /* Archive au sens SEDA et pas au sens Actes ... */
 
-use S2lowLegacy\Class\CloudStorage;
-use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\PastellWrapperFactory;
 use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\S2lowLogger;
@@ -32,7 +30,7 @@ class ActesArchiveControler
 
     private ActesEnvelopeSQL $actesEnvelopeSQL;
     private ActesTypePJSQL $actesTypePJSQL;
-    private CloudStorage $actesEnvelopeCloudStorage;
+    private ActesCloudStorage $actesEnvelopeCloudStorage;
 
     /**
      * @throws \S2lowLegacy\Lib\UnrecoverableException
@@ -46,7 +44,7 @@ class ActesArchiveControler
         ActesTransactionsSQL $actesTransactionsSQL,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         ActesTypePJSQL $actesTypePJSQL,
-        CloudStorageFactory $cloudStorageFactory
+        ActesCloudStorage $cloudStorage,
     ) {
         $this->pastellWrapperFactory = $pastellWrapperFactory;
         $this->actesTransactionsSQL = $actesTransactionsSQL;
@@ -56,8 +54,7 @@ class ActesArchiveControler
         $this->logger = $logger;
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
         $this->actesTypePJSQL = $actesTypePJSQL;
-        $this->actesEnvelopeCloudStorage = $cloudStorageFactory
-            ->getInstanceByClassName(ActesCloudStorage::class);
+        $this->actesEnvelopeCloudStorage = $cloudStorage;
     }
 
     /**

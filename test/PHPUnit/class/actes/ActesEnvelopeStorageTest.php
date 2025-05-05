@@ -6,10 +6,10 @@ namespace PHPUnit\class\actes;
 
 use Exception;
 use Monolog\Handler\TestHandler;
+use S2lowLegacy\Class\actes\ActesCloudStorable;
 use S2lowLegacy\Class\actes\ActesCloudStorage;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
-use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Lib\OpenStackContainerStore;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -121,8 +121,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
         $transaction_id = $actesEnvelopeSQL->create(1, $filename);
         static::assertFileExists("$actes_files_upload_root/$filename");
         $this->getObjectInstancier()
-            ->get(CloudStorageFactory::class)
-            ->getInstanceByClassName(ActesCloudStorage::class)
+            ->get(ActesCloudStorage::class)
             ->deleteIfIsInCloud($transaction_id);
         static::assertFileDoesNotExist("$actes_files_upload_root/$filename");
         $this->assertLogMessage("Deleting object #$transaction_id : $actes_files_upload_root/$filename");
@@ -140,8 +139,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
         $envelope_id = $actesEnvelopeSQL->create(1, $filename);
 
         $this->getObjectInstancier()
-            ->get(CloudStorageFactory::class)
-            ->getInstanceByClassName(ActesCloudStorage::class)
+            ->get(ActesCloudStorage::class)
             ->storeObject($envelope_id);
 
         $envelope_info = $actesEnvelopeSQL->getInfo($envelope_id);
@@ -173,8 +171,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
         $this->getObjectInstancier()->set(OpenStackSwiftWrapper::class, $openStackSwiftWrapper);
 
         $this->getObjectInstancier()
-            ->get(CloudStorageFactory::class)
-            ->getInstanceByClassName(ActesCloudStorage::class)
+            ->get(ActesCloudStorage::class)
             ->storeObject($envelope_id);
 
         $envelope_info = $actesEnvelopeSQL->getInfo($envelope_id);
@@ -202,8 +199,7 @@ class ActesEnvelopeStorageTest extends S2lowTestCase
         $this->getObjectInstancier()->set(OpenStackSwiftWrapper::class, $openStackSwiftWrapper);
 
         $storeResult = $this->getObjectInstancier()
-            ->get(CloudStorageFactory::class)
-            ->getInstanceByClassName(ActesCloudStorage::class)
+            ->get(ActesCloudStorage::class)
             ->storeObject($envelope_id);
 
         static::assertFalse($storeResult);

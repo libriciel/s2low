@@ -1,7 +1,5 @@
 <?php
 
-use S2lowLegacy\Class\CloudStorage;
-use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
@@ -56,10 +54,9 @@ $mailIncludeFileArray = MailPeer::GetIncludeFiles($mail_id);
 $doc = new MailLayout('xhtml_mail.tpl.php');
 $doc->setTitle(WEBSITE_TITLE);
 
-/** @var CloudStorage $cloudStorage */
-$cloudStorage  = ObjectInstancierFactory::getObjetInstancier()
-    ->get(CloudStorageFactory::class)
-    ->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
+$objectInstancier = ObjectInstancierFactory::getObjetInstancier();
+/** @var MailIncludedFilesCloudStorage $cloudStorage */
+$cloudStorage  = $objectInstancier->get(MailIncludedFilesCloudStorage::class);
 
 if ($fndownload) {
     try {

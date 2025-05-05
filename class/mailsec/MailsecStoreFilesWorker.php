@@ -2,9 +2,7 @@
 
 namespace S2lowLegacy\Class\mailsec;
 
-use S2lowLegacy\Class\CloudStorage;
 use S2lowLegacy\Class\CloudStorageException;
-use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Lib\PausingQueueException;
 use S2lowLegacy\Lib\UnrecoverableException;
@@ -18,12 +16,9 @@ class MailsecStoreFilesWorker implements IWorker
         return self::QUEUE_NAME;
     }
 
-    private $cloudStorageFactory;
-    private $cloudStorage;
-
-    public function __construct(CloudStorageFactory $cloudStorageFactory)
-    {
-        $this->cloudStorageFactory = $cloudStorageFactory;
+    public function __construct(
+        private MailIncludedFilesCloudStorage $mailIncludedFilesCloudStorage
+    ) {
     }
 
     public function getData($id)
@@ -32,25 +27,12 @@ class MailsecStoreFilesWorker implements IWorker
     }
 
     /**
-     * @return CloudStorage
-     * @throws UnrecoverableException
-     */
-    private function getCloudStorage()
-    {
-        if (! $this->cloudStorage) {
-            $this->cloudStorage = $this->cloudStorageFactory
-                ->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
-        }
-        return $this->cloudStorage;
-    }
-
-    /**
      * @return int[]
      * @throws UnrecoverableException
      */
     public function getAllId()
     {
-        return $this->getCloudStorage()->getAllObjectIdToStore();
+        return $this->mailIncludedFilesCloudStorage->getAllObjectIdToStore();
     }
 
     /**
@@ -61,7 +43,7 @@ class MailsecStoreFilesWorker implements IWorker
 
     public function work($data)
     {
-        $this->getCloudStorage()->storeObject($data);
+        $this->mailIncludedFilesCloudStorage->storeObject($data);
     }
 
     public function getMutexName($data)

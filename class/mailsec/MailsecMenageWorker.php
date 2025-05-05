@@ -2,36 +2,17 @@
 
 namespace S2lowLegacy\Class\mailsec;
 
-use S2lowLegacy\Class\CloudStorage;
-use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\IWorker;
 use Exception;
-use S2lowLegacy\Lib\UnrecoverableException;
 
 class MailsecMenageWorker implements IWorker
 {
     public const QUEUE_NAME = 'mailsec-menage';
     private const NB_DAYS_IN_DISK = 15;
 
-    private $cloudStorageFactory;
-    private $cloudStorage;
-
-    public function __construct(CloudStorageFactory $cloudStorageFactory)
-    {
-        $this->cloudStorageFactory = $cloudStorageFactory;
-    }
-
-    /**
-     * @return CloudStorage
-     * @throws UnrecoverableException
-     */
-    private function getCloudStorage()
-    {
-        if (! $this->cloudStorage) {
-            $this->cloudStorage = $this->cloudStorageFactory
-                ->getInstanceByClassName(MailIncludedFilesCloudStorage::class);
-        }
-        return $this->cloudStorage;
+    public function __construct(
+        private MailIncludedFilesCloudStorable $mailIncludedFilesCloudStorage
+    ) {
     }
 
 
@@ -57,7 +38,7 @@ class MailsecMenageWorker implements IWorker
      */
     public function work($data)
     {
-        $this->getCloudStorage()->deleteFilesOnDisk(self::NB_DAYS_IN_DISK, true);
+        $this->mailIncludedFilesCloudStorage->deleteFilesOnDisk(self::NB_DAYS_IN_DISK, true);
     }
 
     public function getMutexName($data)

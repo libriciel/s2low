@@ -3,7 +3,6 @@
 namespace S2lowLegacy\Class\helios;
 
 use S2lowLegacy\Class\actes\FilesNotFoundInCloudException;
-use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\PastellWrapperFactory;
 use Exception;
 use S2lowLegacy\Lib\SigTermHandler;
@@ -21,7 +20,6 @@ class HeliosEnvoiSAE
     private $logger;
     private $authoritySQL;
     private $pastellPropertiesSQL;
-    private $cloudStorageFactory;
 
     public function __construct(
         PesAllerRetriever $pesAllerRetriever,
@@ -30,7 +28,7 @@ class HeliosEnvoiSAE
         AuthoritySQL $authoritySQL,
         HeliosTransactionsSQL $heliosTransactionsSQL,
         PastellPropertiesSQL $pastellPropertiesSQL,
-        CloudStorageFactory $cloudStorageFactory
+        private readonly PESAllerCloudStorage $pesAllerCloudStorage
     ) {
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
         $this->authoritySQL = $authoritySQL;
@@ -38,7 +36,6 @@ class HeliosEnvoiSAE
         $this->pesAllerRetriever = $pesAllerRetriever;
         $this->logger = $logger;
         $this->pastellPropertiesSQL = $pastellPropertiesSQL;
-        $this->cloudStorageFactory = $cloudStorageFactory;
     }
 
     public function sendAllArchive($authority_id = 0)
@@ -106,8 +103,7 @@ class HeliosEnvoiSAE
             throw new FilesNotFoundInCloudException("Impossible de récupérer le PES ALLER {$transactionsInfo['sha1']}");
         }
 
-            $pesAcquitCloudStorage = $this->cloudStorageFactory->getInstanceByClassName(PESAcquitCloudStorage::class);
-            $pes_acquit_filepath = $pesAcquitCloudStorage->getPath($transaction_id);
+            $pes_acquit_filepath = $this->pesAllerCloudStorage->getPath($transaction_id);
 
             $pastellProperties = $this->pastellPropertiesSQL->getPastellProperties($transactionsInfo[HeliosTransactionsSQL::AUTHORITY_ID]);
             $this->logger->info("Début du transfert vers $pastellProperties->url de la transaction $transaction_id");
@@ -147,8 +143,7 @@ class HeliosEnvoiSAE
             throw new Exception($message);
         }
 
-        $pesAllerCloudStorage = $this->cloudStorageFactory->getInstanceByClassName(PESAllerCloudStorage::class);
-        $pesAllerCloudStorage->deleteIfIsInCloud($transaction_id);
+        $this->pesAllerCloudStorage->deleteIfIsInCloud($transaction_id);
 
 
         return true;

@@ -47,6 +47,7 @@ parameters:
   app.mail.tedetis_from: '%env(MAIL_TEDETIS_FROM)%'
   app.mail.secure_description: '%env(MAIL_SECURE_DESCRIPTION)%'
   app.mail.use_legacy_secure_mail: '%env(USE_LEGACY_SECURE_MAIL_FIELDS)%'
+  app.openstack_enable: '%env(OPENSTACK_ENABLE)'
 services:
   _defaults:
     autowire: true
@@ -279,6 +280,11 @@ services:
       $beanstalkd_server: "%app.beanstalkd_server%"
       $beanstalkd_port: "%app.beanstalkd_port%"
 
+  S2lowLegacy\Class\CloudStorage:
+    autowire: false
+    autoconfigure: false
+    public: false
+
   S2lowLegacy\Class\EncodingManager:
     autowire: false
     autoconfigure: false
@@ -318,16 +324,14 @@ services:
     autoconfigure: false
     public: false
 
+  S2lowLegacy\Class\helios\PESAllerCloudStorable:
+    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Class\helios\PESAllerCloudStorable' ]
+
   S2lowLegacy\Class\helios\PESAllerCloudStorage:
-    autowire: false
-    autoconfigure: false
-    public: false
-
-  S2lowLegacy\Class\CloudStorage: #TODO : verify
-    autowire: false
-
-  S2lowLegacy\Class\CloudStorageFactory: #TODO : verify
-    autowire: false
+    arguments:
+      $logger: '@monolog.logger.request'
+      $openstack_enable: '%app.openstack_enable%'
 
   S2lowLegacy\Class\DataObjectSaveSQLRequest: # TODO :verify
     autowire: false
@@ -491,9 +495,14 @@ services:
   S2lowLegacy\Class\actes\ActesArchive:
     autowire: false #Pas un service ??
 
+  S2lowLegacy\Class\actes\ActesCloudStorable:
+      factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+      arguments: [ 'S2lowLegacy\Class\actes\ActesCloudStorable' ]
+
   S2lowLegacy\Class\actes\ActesCloudStorage:
     arguments:
-      $actes_files_upload_root: "todo"
+      $logger: '@monolog.logger.request'
+      $openstack_enable: '%app.openstack_enable%'
 
   S2lowLegacy\Class\actes\ActesConventions:
      arguments:
@@ -542,7 +551,6 @@ services:
     arguments:
       $extractDataForBordereauPDF: "@S2lowLegacy\\Class\\actes\\ExtractDataForBordereauPDF"
       $actesPdf: "@S2lowLegacy\\Class\\actes\\ActesPdf"
-
 
   S2lowLegacy\Class\actes\ActesPrepareEnvoiSAE:
     autowire: false #LOGGER !!!
@@ -598,21 +606,36 @@ services:
   S2lowLegacy\Class\helios\HeliosVerificationSAE:
     autowire: false #TODO: logger
 
+  S2lowLegacy\Class\helios\PESAcquitCloudStorable:
+    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Class\helios\PESAcquitCloudStorable' ]
+
   S2lowLegacy\Class\helios\PESAcquitCloudStorage:
     arguments:
-      $helios_responses_root: "todo"
+      $logger: '@monolog.logger.request'
+      $openstack_enable: '%app.openstack_enable%'
+
+  S2lowLegacy\Class\helios\PESRetourCloudStorable:
+    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Class\helios\PESRetourCloudStorable' ]
 
   S2lowLegacy\Class\helios\PESRetourCloudStorage:
     arguments:
-      $helios_responses_root: "todo"
+      $logger: '@monolog.logger.request'
+      $openstack_enable: '%app.openstack_enable%'
 
   S2lowLegacy\Class\helios\PesAllerRetriever:
     factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
     arguments: ['S2lowLegacy\Class\helios\PesAllerRetriever']
 
+  S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable:
+    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
+    arguments: ['S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable']
+
   S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage:
     arguments:
-      $mail_files_upload_root: "todo"
+      $logger: '@monolog.logger.request'
+      $openstack_enable: '%app.openstack_enable%'
 
   App\Http\Controllers\Admin\Admin_authorities:
     public: true

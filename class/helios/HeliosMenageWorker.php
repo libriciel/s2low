@@ -2,34 +2,16 @@
 
 namespace S2lowLegacy\Class\helios;
 
-use S2lowLegacy\Class\CloudStorage;
-use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\IWorker;
 use Exception;
-use S2lowLegacy\Lib\UnrecoverableException;
 
 class HeliosMenageWorker implements IWorker
 {
     public const QUEUE_NAME = 'helios-menage';
     private const NB_DAYS_IN_DISK = 15;
-    private CloudStorageFactory $cloudStorageFactory;
-    private ?CloudStorage $cloudStorage = null;
     public function __construct(
-        CloudStorageFactory $cloudStorageFactory
+        private readonly PESAllerCloudStorage $PESAllerCloudStorage
     ) {
-        $this->cloudStorageFactory = $cloudStorageFactory;
-    }
-
-    /**
-     * @throws UnrecoverableException
-     */
-    private function getCloudStorage(): CloudStorage
-    {
-        if (is_null($this->cloudStorage)) {
-            $this->cloudStorage = $this->cloudStorageFactory
-                ->getInstanceByClassName(PESAllerCloudStorage::class);
-        }
-        return $this->cloudStorage;
     }
 
     public function getQueueName(): string
@@ -54,7 +36,7 @@ class HeliosMenageWorker implements IWorker
      */
     public function work($data): void
     {
-        $this->getCloudStorage()->deleteFilesOnDisk(self::NB_DAYS_IN_DISK);
+        $this->PESAllerCloudStorage->deleteFilesOnDisk(self::NB_DAYS_IN_DISK);
     }
 
     public function getMutexName($data): string

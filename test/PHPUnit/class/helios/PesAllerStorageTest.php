@@ -6,7 +6,6 @@ namespace PHPUnit\class\helios;
 
 use Exception;
 use HeliosUtilitiesTestTrait;
-use S2lowLegacy\Class\CloudStorageFactory;
 use S2lowLegacy\Class\helios\PESAllerCloudStorage;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
@@ -56,8 +55,7 @@ class PesAllerStorageTest extends S2lowTestCase
         $transaction_id = $this->createTransaction();
         static::assertFileExists($pes_aller_path);
         $this->getObjectInstancier()
-            ->get(CloudStorageFactory::class)
-            ->getInstanceByClassName(PESAllerCloudStorage::class)
+            ->get(PESAllerCloudStorage::class)
             ->deleteIfIsInCloud($transaction_id);
         static::assertFileDoesNotExist($pes_aller_path);
     }
@@ -71,8 +69,7 @@ class PesAllerStorageTest extends S2lowTestCase
         $transaction_id = $this->createTransaction();
         static::assertFileExists($pes_aller_path);
         $this->getObjectInstancier()
-            ->get(CloudStorageFactory::class)
-            ->getInstanceByClassName(PESAllerCloudStorage::class)
+            ->get(PESAllerCloudStorage::class)
             ->deleteIfIsInCloud($transaction_id);
         static::assertFileExists($pes_aller_path);
     }
@@ -90,8 +87,7 @@ class PesAllerStorageTest extends S2lowTestCase
 
         /** @var \S2lowLegacy\Class\CloudStorage $cloudStorage */
         $cloudStorage = $this->getObjectInstancier()
-            ->get(CloudStorageFactory::class)
-            ->getInstanceByClassName(PESAllerCloudStorage::class);
+            ->get(PESAllerCloudStorage::class);
         $cloudStorage->storeObject($transaction_id);
 
         $transaction_info = $heliosTransactionsSQL->getInfo($transaction_id);
@@ -124,8 +120,7 @@ class PesAllerStorageTest extends S2lowTestCase
 
         /** @var \S2lowLegacy\Class\CloudStorage $cloudStorage */
         $cloudStorage = $this->getObjectInstancier()
-            ->get(CloudStorageFactory::class)
-            ->getInstanceByClassName(PESAllerCloudStorage::class);
+            ->get(PESAllerCloudStorage::class);
         $cloudStorage->storeObject($transaction_id);
 
         static::assertTrue($cloudStorage->storeObject($transaction_id));
@@ -158,8 +153,7 @@ class PesAllerStorageTest extends S2lowTestCase
 
         /** @var \S2lowLegacy\Class\CloudStorage $cloudStorage */
         $cloudStorage = $this->getObjectInstancier()
-            ->get(CloudStorageFactory::class)
-            ->getInstanceByClassName(PESAllerCloudStorage::class);
+            ->get(PESAllerCloudStorage::class);
         $cloudStorage->storeObject($transaction_id);
 
         static::assertFalse($cloudStorage->storeObject($transaction_id));
