@@ -6,12 +6,12 @@ namespace PHPUnit\class;
 
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\CloudStorage;
 use S2lowLegacy\Class\ICloudStorable;
 use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
-use Monolog\Logger;
 use S2lowTestCase;
 use Symfony\Component\Finder\Finder;
 use UnexpectedValueException;
@@ -68,7 +68,7 @@ class CloudStorageTest extends S2lowTestCase
         return new CloudStorage(
             $iCloudStorable,
             $this->getObjectInstancier()->get(OpenStackSwiftWrapper::class),
-            $this->getObjectInstancier()->get(Logger::class),
+            $this->getObjectInstancier()->get(LoggerInterface::class),
             true
         );
     }
@@ -502,7 +502,7 @@ class CloudStorageTest extends S2lowTestCase
             ->with(null, $filePathOnDisk)
             ->willReturn(false);
 
-        $logger = $this->getMockBuilder(Logger::class)
+        $logger = $this->getMockBuilder(LoggerInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -535,7 +535,7 @@ class CloudStorageTest extends S2lowTestCase
             ->with(null, $filePathOnDisk)
             ->willReturn(true);
 
-        $logger = $this->getMockBuilder(Logger::class)
+        $logger = $this->getMockBuilder(LoggerInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -571,7 +571,7 @@ class CloudStorageTest extends S2lowTestCase
                 [static::equalTo(null), static::equalTo('/test/import//test.tar.gz')]
             )->willReturnOnConsecutiveCalls(false, true);
 
-        $logger = $this->getMockBuilder(Logger::class)
+        $logger = $this->getMockBuilder(LoggerInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -603,7 +603,7 @@ class CloudStorageTest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $logger = $this->getMockBuilder(Logger::class)
+        $logger = $this->getMockBuilder(LoggerInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
