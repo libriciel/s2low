@@ -13,7 +13,16 @@ class EnvironnementTest extends PHPUnit_Framework_TestCase
         $request = array();
         $session = array();
         $server = array();
-        $environnement = new Environnement($get, $post, $request, $session, $server, false);
+        $sessionWrapper = new SessionWrapper($session);
+        $environnement = new Environnement(
+            $get,
+            $post,
+            $request,
+            $sessionWrapper,
+            $server,
+            false
+        );
+
         $this->assertInstanceOf(SessionWrapper::class, $environnement->session());
         $this->assertInstanceOf(Recuperateur::class, $environnement->get());
         $this->assertInstanceOf(Recuperateur::class, $environnement->post());
@@ -49,8 +58,15 @@ class EnvironnementTest extends PHPUnit_Framework_TestCase
         string $expectedServerContent,
         bool $forceConversionFromIso
     ) {
-
-        $environnement = new Environnement($get, $post, $request, $session, $server, $forceConversionFromIso);
+        $sessionWrapper = new SessionWrapper($session);
+        $environnement = new Environnement(
+            $get,
+            $post,
+            $request,
+            $sessionWrapper,
+            $server,
+            $forceConversionFromIso
+        );
         static::assertEquals($environnement->get()->get('content'), $expectedGetContent);
         static::assertEquals($environnement->post()->get('content'), $expectedPostContent);
         static::assertEquals($environnement->request()->get('content'), $expectedRequestContent);
