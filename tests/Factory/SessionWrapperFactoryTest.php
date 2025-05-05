@@ -28,6 +28,5 @@ class SessionWrapperFactoryTest extends TestCase
         $sessionWrapper = $factory->create();
 
         self::assertInstanceOf(SessionWrapper::class, $sessionWrapper);
-
     }
 }

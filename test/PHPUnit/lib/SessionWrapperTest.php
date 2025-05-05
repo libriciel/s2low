@@ -28,12 +28,11 @@ class SessionWrapperTest extends TestCase
 
         $sessionWrapper = new SessionWrapper($session);
         $this->assertEquals('ceci est une valeur de test', $sessionWrapper->get('test'));
-
     }
 
     public function testGetWithSessionEmpty()
     {
-        $session= [];
+        $session = [];
 
         $sessionWrapper = new SessionWrapper($session);
         $this->assertFalse($sessionWrapper->get('test'));
