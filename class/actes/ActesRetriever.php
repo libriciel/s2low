@@ -26,7 +26,7 @@ class ActesRetriever
     {
         try {
             $result = $this->openStackSwiftWrapper->retrieveFile(
-                ActesEnvelopeStorage::CONTAINER_NAME,
+                ActesCloudStorable::CONTAINER_NAME,
                 $this->actes_files_upload_root . "/" . $acte_path,
                 $acte_path
             );

@@ -14,8 +14,6 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class ActesEnvelopeStorage
 {
-    public const CONTAINER_NAME = 'acte_envelope';
-
     private $actes_files_upload_root;
     private $actesEnvelopeSQL;
     private $openStackSwiftWrapper;
@@ -58,7 +56,7 @@ class ActesEnvelopeStorage
             }
             if (
                 $this->openStackSwiftWrapper->fileExistsOnCloud(
-                    ActesEnvelopeStorage::CONTAINER_NAME,
+                    ActesCloudStorable::CONTAINER_NAME,
                     $actes_envelope['file_path']
                 )
             ) {
