@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class;
 
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use S2lowLegacy\Class\actes\ActesCloudStorable;
 use S2lowLegacy\Class\actes\ActesImapProperties;
@@ -87,8 +88,7 @@ class LegacyObjectsManager
             $logger->pushHandler($mailHandler);
         }
 
-
-        $objectInstancier->set(Logger::class, $logger);
+        $objectInstancier->set(LoggerInterface::class, $logger);
 
         $objectInstancier->set('convert_api_logins_from_iso', CONVERT_API_LOGINS_FROM_ISO);
 

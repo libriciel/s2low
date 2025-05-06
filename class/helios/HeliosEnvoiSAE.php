@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class\helios;
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\actes\FilesNotFoundInCloudException;
 use S2lowLegacy\Class\PastellWrapperFactory;
 use Exception;
@@ -10,7 +11,6 @@ use S2lowLegacy\Lib\UnrecoverableException;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use S2lowLegacy\Model\PastellPropertiesSQL;
-use Monolog\Logger;
 
 class HeliosEnvoiSAE
 {
@@ -24,7 +24,7 @@ class HeliosEnvoiSAE
     public function __construct(
         PesAllerRetriever $pesAllerRetriever,
         PastellWrapperFactory $pastellWrapperFactory,
-        Logger $logger,
+        LoggerInterface $logger,
         AuthoritySQL $authoritySQL,
         HeliosTransactionsSQL $heliosTransactionsSQL,
         PastellPropertiesSQL $pastellPropertiesSQL,

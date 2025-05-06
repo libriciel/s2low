@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace S2lowLegacy\Class;
 
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Exception;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
@@ -21,19 +21,13 @@ class CloudStorage
 {
     private ICloudStorable $cloudStorable;
     private OpenStackSwiftWrapper $openStackSwiftWrapper;
-    private Logger $logger;
+    private LoggerInterface $logger;
     private bool $openstack_enable;
 
-    /**
-     * @param \S2lowLegacy\Class\ICloudStorable $iCloudStorable
-     * @param \S2lowLegacy\Lib\OpenStackSwiftWrapper $openStackSwiftWrapper
-     * @param \Monolog\Logger $logger
-     * @param $openstack_enable
-     */
     public function __construct(
         ICloudStorable $iCloudStorable,
         OpenStackSwiftWrapper $openStackSwiftWrapper,
-        Logger $logger,
+        LoggerInterface $logger,
         bool $openstack_enable
     ) {
         $this->cloudStorable = $iCloudStorable;

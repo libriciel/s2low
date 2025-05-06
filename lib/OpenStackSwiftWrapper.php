@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace S2lowLegacy\Lib;
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\CloudStorageException;
 use Exception;
-use Monolog\Logger;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use GuzzleHttp\Psr7\Stream;
@@ -23,17 +23,12 @@ class OpenStackSwiftWrapper
 
     private Filesystem $fileSystem;
 
-    private Logger $logger;
+    private LoggerInterface $logger;
     private bool $openstack_enable;
 
-    /**
-     * @param \S2lowLegacy\Lib\OpenStackContainerStore $openStackContainersStore
-     * @param \Monolog\Logger $logger
-     * @param $openstack_enable
-     */
     public function __construct(
         OpenStackContainerStore $openStackContainersStore,
-        Logger $logger,
+        LoggerInterface $logger,
         $openstack_enable
     ) {
         $this->openStackContainersStore = $openStackContainersStore;

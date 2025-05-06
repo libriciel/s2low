@@ -8,6 +8,7 @@ use Exception;
 use Monolog\Handler\NullHandler;
 use Monolog\Logger;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\CloudStorageException;
 use S2lowLegacy\Lib\OpenStackContainerStore;
 use S2lowLegacy\Lib\OpenStackContainerWrapper;
@@ -27,8 +28,7 @@ class OpenStackSwiftWrapperTest extends TestCase
     private const ABSENT_FILE_PATH = __DIR__ . self::PATH . self::ABSENT_FILE_NAME;
     private const CONTAINER_TEST = 'container_test';
 
-    /** @var Logger  */
-    private Logger $logger;
+    private LoggerInterface $logger;
 
     /**
      * This method is called before each test.
