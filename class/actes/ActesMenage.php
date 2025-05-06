@@ -8,10 +8,6 @@ use S2lowLegacy\Lib\SigTermHandler;
 use Monolog\Logger;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * @deprecated 5.0.39
- * Le script de ménage doit être réimplémenté en utilisant CloudStorage
- */
 class ActesMenage
 {
     private $actes_files_upload_root;
