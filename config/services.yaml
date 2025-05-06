@@ -238,7 +238,7 @@ services:
       $databasePassword: '%app.database_password%'
 
   S2lowLegacy\Lib\SessionWrapper:
-    autowire: false #Doit être configuré explicitement ?
+    factory: ['S2low\Factory\SessionWrapperFactory', 'create']
 
   S2lowLegacy\Lib\XadesSignature:
     arguments:
