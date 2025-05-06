@@ -24,7 +24,7 @@ class FrontControllerTest extends PHPUnit_Framework_TestCase
             $server,
             false
         );
-        
+
         $objectInstancier->set(Environnement::class, $environnement);
         $frontController = new FrontController($objectInstancier);
         require_once(__DIR__ . "/fixtures/MockController.class.php");
