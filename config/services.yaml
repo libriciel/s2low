@@ -49,6 +49,8 @@ parameters:
   app.mail.secure_description: '%env(MAIL_SECURE_DESCRIPTION)%'
   app.mail.use_legacy_secure_mail: '%env(USE_LEGACY_SECURE_MAIL_FIELDS)%'
   app.openstack_enable: '%env(OPENSTACK_ENABLE)'
+  app.convert_api_logins_from_iso.default: 'false'
+  app.convert_api_logins_from_iso: '%env(string:default:app.convert_api_logins_from_iso.default:CONVERT_API_LOGINS_FROM_ISO)%'
   app.mail.tdt_from_email: '%env(TDT_FROM_EMAIL)%'
   app.mail.email_admin_technique: '%env(EMAIL_ADMIN_TECHNIQUE)%'
   app.log.file: '%env(string:default:app.log.file.default:LOG_FILE)%'
@@ -145,6 +147,20 @@ services:
     arguments:
       $useLegacyBordereauModel: '%app.use_legacy_bordereau_model%'
 
+  S2low\Factory\MailHeaderFactory:
+    arguments:
+      $mailHeader: '@S2lowLegacy\Mail\MailHeader'
+      $mailHeaderLegacy: '@S2lowLegacy\Mail\MailHeaderLegacy'
+
+  S2low\Factory\OpenStackConfigFactory:
+    autowire: true
+    arguments:
+      $cloudProvidersConfig: '%cloud_provider%'
+
+  S2low\Factory\EnvironnementFactory:
+    arguments:
+      $convert_api_logins_from_iso: '%app.convert_api_logins_from_iso%'
+
   # ---------------------------------------------------------------------------------------------------------------------
   # S2lowLegacy\Mail
   # ---------------------------------------------------------------------------------------------------------------------
@@ -160,11 +176,6 @@ services:
     factory: ['@S2low\Factory\MailHeaderFactory', 'create']
     arguments:
       $useLegacySecureMailFields: '%app.mail.use_legacy_secure_mail%'
-
-  S2low\Factory\MailHeaderFactory:
-    arguments:
-      $mailHeader: '@S2lowLegacy\Mail\MailHeader'
-      $mailHeaderLegacy: '@S2lowLegacy\Mail\MailHeaderLegacy'
 
   # ---------------------------------------------------------------------------------------------------------------------
   # Namespace  S2lowLegacy : contient le code Legacy
@@ -191,10 +202,6 @@ services:
     shared: true
     autowire: true
     factory: ['S2lowLegacy\Lib\SigTermHandler', 'getInstance']
-
-  S2lowLegacy\Lib\Environnement:
-    factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Lib\Environnement' ]
 
   S2lowLegacy\Lib\FrontController:
     factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
@@ -245,6 +252,9 @@ services:
 
   S2lowLegacy\Lib\SessionWrapper:
     factory: ['S2low\Factory\SessionWrapperFactory', 'create']
+
+  S2lowLegacy\Lib\Environnement:
+    factory: ['@S2low\Factory\EnvironnementFactory', 'create']
 
   S2lowLegacy\Lib\XadesSignature:
     arguments:
@@ -645,11 +655,6 @@ services:
   App\Http\Controllers\Admin\Admin_authorities:
     public: true
     tags: [ 'controller.service_arguments' ]
-
-  S2low\Factory\OpenStackConfigFactory:
-    autowire: true
-    arguments:
-      $cloudProvidersConfig: '%cloud_provider%'
 
   S2lowLegacy\Lib\OpenStackContainerStore:
     factory: ['@S2low\Factory\OpenStackContainerStoreFactory', "create"]
