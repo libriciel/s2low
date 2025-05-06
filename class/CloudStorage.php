@@ -28,8 +28,6 @@ class CloudStorage
         ICloudStorable $iCloudStorable,
         OpenStackSwiftWrapper $openStackSwiftWrapper,
         LoggerInterface $logger,
-        $openstack_enable
-        LoggerInterface $logger,
         bool $openstack_enable
     ) {
         $this->cloudStorable = $iCloudStorable;
