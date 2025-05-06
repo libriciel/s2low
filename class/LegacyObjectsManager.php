@@ -3,8 +3,7 @@
 namespace S2lowLegacy\Class;
 
 use RuntimeException;
-use S2lowLegacy\Class\actes\ActesEnvelopeStorage;
-use S2lowLegacy\Class\actes\ActesFileSender;
+use S2lowLegacy\Class\actes\ActesCloudStorable;
 use S2lowLegacy\Class\actes\ActesImapProperties;
 use S2lowLegacy\Class\actes\ActesMinistereProperties;
 use S2lowLegacy\Class\actes\ActesPdf;
@@ -182,7 +181,7 @@ class LegacyObjectsManager
         $openStackContainerWrapperFactory = new OpenStackContainerWrapperFactory($logger);
         $openStackContainerStore = new OpenStackContainerStore($openStackContainerWrapperFactory);
 
-        $openStackContainerStore->addConfiguration(ActesEnvelopeStorage::CONTAINER_NAME, $openStackConfigActes);
+        $openStackContainerStore->addConfiguration(ActesCloudStorable::CONTAINER_NAME, $openStackConfigActes);
         $openStackContainerStore->addConfiguration(PESAllerCloudStorable::CONTAINER_NAME, $openStackConfigHelios);
         $openStackContainerStore->addConfiguration(PESAcquitCloudStorable::CONTAINER_NAME, $openStackConfigHeliosAcquit);
         $openStackContainerStore->addConfiguration(PESRetourCloudStorable::CONTAINER_NAME, $openStackConfigHeliosRetour);
