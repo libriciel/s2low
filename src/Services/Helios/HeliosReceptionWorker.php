@@ -69,7 +69,7 @@ class HeliosReceptionWorker implements IWorker
         try {
             $this->ftpFileGetter->recupOneFile($data);
             if ($this->workerScript) {
-                $this->workerScript->putJobByClassName(HeliosAnalyseFichierRecuWorker::class, $data);
+                $this->workerScript->putJobByQueueName(HeliosAnalyseFichierRecuWorker::QUEUE_NAME, $data);
             }
         } catch (FTPFileRetrieveException $e) {
             // Dans ce cas, on va continuer à traiter les autres fichiers

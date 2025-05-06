@@ -2,18 +2,13 @@
 
 namespace S2lowLegacy\Class;
 
-use S2lowLegacy\Lib\ObjectInstancier;
 use Pheanstalk\PheanstalkInterface;
 
 class WorkerScript
 {
-    private const MIN_EXECUTION_TIME_IN_SECONDS = 10; //uniquement pour le mode non beanstalked
-
-
     public function __construct(
         private readonly BeanstalkdWrapper $beanstalkdWrapper,
-        private readonly S2lowLogger $s2lowLogger,
-        private readonly ObjectInstancier $objectInstancier,
+        private readonly S2lowLogger $s2lowLogger
     ) {
     }
 
@@ -27,20 +22,6 @@ class WorkerScript
         );                                      // to process
     }
 
-    public function putJobByClassName($workerClassName, $data)
-    {
-        /** @var IWorker $worker */
-        $worker = $this->objectInstancier->get($workerClassName);
-        return $this->beanstalkdWrapper->put(
-            $worker->getQueueName(),
-            $data,
-            PheanstalkInterface::DEFAULT_DELAY,
-            $this->getTTR($workerClassName)  //Some workers, ex. ActesAnalyseFichierAEnvoyerWorker , need more time
-        );                                   // to process
-    }
-
-    //TODO : Quickfix pour permettre d'utiliser un Worker utilisant des composants Symfony
-    // Evite d'avoir à l'instancier
     public function putJobByQueueName($queueName, $data)
     {
         return $this->beanstalkdWrapper->put(

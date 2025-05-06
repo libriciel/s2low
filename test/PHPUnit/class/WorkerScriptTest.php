@@ -18,16 +18,6 @@ class WorkerScriptTest extends S2lowTestCase
         $this->getObjectInstancier()->set(BeanstalkdWrapper::class, $beanstalkdWrapper);
     }
 
-    public function testPutJob()
-    {
-        /** @var IWorker $IWorker */
-        $IWorker = $this->getMockForAbstractClass(IWorker::class);
-        $this->getObjectInstancier()->set('MockWorker', $IWorker);
-
-        $workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
-        $this->assertTrue($workerScript->putJobByClassName("MockWorker", true));
-    }
-
     public function testRebuildQueue()
     {
         $IWorker = $this->getMockForAbstractClass(IWorker::class);

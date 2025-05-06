@@ -94,13 +94,13 @@ try {
 
         $actesEnvelopeSQL->setTransactionInCloudRemove($transaction_info['envelope_id']);
 
-        $workerScript->putJobByClassName(
-            ActesStoreEnveloppeWorker::class,
+        $workerScript->putJobByQueueName(
+            ActesStoreEnveloppeWorker::QUEUE_NAME,
             $transaction_info['envelope_id']
         );
 
-        $workerScript->putJobByClassName(
-            ActesAnalyseFichierAEnvoyerWorker::class,
+        $workerScript->putJobByQueueName(
+            ActesAnalyseFichierAEnvoyerWorker::QUEUE_NAME,
             $transaction_info['envelope_id']
         );
     }

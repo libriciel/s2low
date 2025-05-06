@@ -30,6 +30,7 @@ if (!function_exists('sortir_atrc')) {
 }
 
 // Configuration
+/** @var WorkerScript $workerScript */
 $workerScript = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(WorkerScript::class);
 
 
@@ -318,7 +319,7 @@ if (!$trans->save()) {
     $apiMsg = $trans->getId() . "\n";
 }
 
-$workerScript->putJobByClassName(ActesAntivirusWorker::class, $trans->getId());
+$workerScript->putJobByQueueName(ActesAntivirusWorker::QUEUE_NAME, $trans->getId());
 
 
 if ($api) {

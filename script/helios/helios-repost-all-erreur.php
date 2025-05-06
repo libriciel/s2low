@@ -40,8 +40,9 @@ foreach ($all as $line) {
     ));
 
 
+    /** @var WorkerScript $workerScript */
     $workerScript = $objectInstancier->get(WorkerScript::class);
-    $workerScript->putJobByClassName(HeliosAnalyseFichierAEnvoyerWorker::class, $line['id']);
+    $workerScript->putJobByQueueName(HeliosAnalyseFichierAEnvoyerWorker::QUEUE_NAME, $line['id']);
     echo "$message\n";
     exit;
     $i++;

@@ -528,12 +528,12 @@ if ($batchMode) {
 $actesTrantransactionSQL = $objectInstancier->get(ActesTransactionsSQL::class);
 $info_actes = $actesTrantransactionSQL->getInfo($trans->getId());
 
-
+/** @var WorkerScript $workerScript */
 $workerScript = $objectInstancier->get(WorkerScript::class);
-$workerScript->putJobByClassName(ActesStoreEnveloppeWorker::class, $env->getId());
+$workerScript->putJobByQueueName(ActesStoreEnveloppeWorker::QUEUE_NAME, $env->getId());
 
 if ($info_actes['last_status_id'] == ActesStatusSQL::STATUS_POSTE) {
-    $workerScript->putJobByClassName(ActesAntivirusWorker::class, $trans->getId());
+    $workerScript->putJobByQueueName(ActesAntivirusWorker::QUEUE_NAME, $trans->getId());
 }
 
 if ($nextBatchFileId) {

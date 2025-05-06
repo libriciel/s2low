@@ -13,6 +13,10 @@ use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
+/** @var Initialisation $initialisation */
+/** @var PesAllerRetriever $pesAllerRetriever */
+/** @var WorkerScript $workerScript */
+/** @var HeliosTransactionsSQL $heliosTransactionSQL */
 list($initialisation, $pesAllerRetriever,$workerScript, $heliosTransactionSQL ) =
     LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
@@ -117,7 +121,7 @@ for ($i = 1; $i <= $nb_signature; $i++) {
 
     $heliosTransactionSQL->updateStatus($id, HeliosTransactionsSQL::POSTE, 'Fichier signé');
 
-    $workerScript->putJobByClassName(HeliosStorePESAllerWorker::class, $id);
+    $workerScript->putJobByQueueName(HeliosStorePESAllerWorker::QUEUE_NAME, $id);
     $workerScript->putJobByQueueName(HeliosAnalyseFichierAEnvoyerWorker::QUEUE_NAME, $id);
 }
 

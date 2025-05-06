@@ -143,8 +143,8 @@ class ActesImapRetrieve
             throw new UnrecoverableException("Impossible de déplacer $tmp_dir ");
         }
 
-        $this->workerScript->putJobByClassName(
-            ActesAnalyseFichierRecuWorker::class,
+        $this->workerScript->putJobByQueueName(
+            ActesAnalyseFichierRecuWorker::QUEUE_NAME,
             basename($tmp_dir)
         );
     }

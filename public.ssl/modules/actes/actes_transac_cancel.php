@@ -12,6 +12,7 @@ use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\WorkerScript;
 
+/** @var WorkerScript $workerScript */
 $workerScript = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(WorkerScript::class);
 
 // Instanciation du module courant
@@ -188,7 +189,7 @@ if (! $trans->save()) {
     Helpers::purgeTempSession();
 
 
-    $workerScript->putJobByClassName(ActesAntivirusWorker::class, $trans->getId());
+    $workerScript->putJobByQueueName(ActesAntivirusWorker::QUEUE_NAME, $trans->getId());
 
 
     // Message réservé à l'appel via API

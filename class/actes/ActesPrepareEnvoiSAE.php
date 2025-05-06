@@ -25,7 +25,8 @@ class ActesPrepareEnvoiSAE
         LoggerInterface $logger,
         AuthoritySQL $authoritySQL,
         WorkerScript $workerScript,
-        UserSQL $userSQL
+        UserSQL $userSQL,
+        private readonly ActesEnvoiSaeWorker $actesEnvoiSaeWorker
     ) {
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->logger = $logger;
@@ -71,8 +72,8 @@ class ActesPrepareEnvoiSAE
         );
 
         if ($put_in_job_queue) {
-            $this->workerScript->putJobByClassName(
-                ActesEnvoiSaeWorker::class,
+            $this->workerScript->putJob(
+                $this->actesEnvoiSaeWorker,
                 $transaction_id
             );
         }

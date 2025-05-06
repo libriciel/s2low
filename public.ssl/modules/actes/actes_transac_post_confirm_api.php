@@ -20,9 +20,9 @@ use S2lowLegacy\Class\WorkerScript;
 /** @var ActesTransactionsSQL $actesTransactionsSQL */
 /** @var ActesScriptHelper $actesScriptHelper */
 /** @var Connexion $connexion */
-list($workerScript, $actesTransactionsSQL, $actesScriptHelper, $connexion ) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($workerScript, $actesTransactionsSQL, $actesScriptHelper, $connexion, $actesAntivirusWorker ) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [WorkerScript::class, ActesTransactionsSQL::class, ActesScriptHelper::class,Connexion::class]
+        [WorkerScript::class, ActesTransactionsSQL::class, ActesScriptHelper::class,Connexion::class,ActesAntivirusWorker::class]
     );
 
 $actionHtml = '';
@@ -94,7 +94,7 @@ if ($info['last_status_id'] != ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_POSTE) {
 }
 
 $actesTransactionsSQL->updateStatus($id, ActesStatusSQL::STATUS_POSTE, $msg);
-$workerScript->putJobByClassName(ActesAntivirusWorker::class, $id);
+$workerScript->putJob($actesAntivirusWorker, $id);
 
 $msg4journal = $actesScriptHelper->getMessage($id, $msg);
 

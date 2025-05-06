@@ -47,8 +47,8 @@ class HeliosReceptionWorkerTest extends TestCase
         // On récupère bien le fichier fileName
         $this->FTPHeliosReceiver->expects(self::once())->method('recupOneFile')->with('fileName');
         // Et il est mis dans la queue des fichiers à analyser
-        $this->workerScript->expects(self::once())->method('putJobByClassName')
-            ->with(HeliosAnalyseFichierRecuWorker::class, 'fileName');
+        $this->workerScript->expects(self::once())->method('putJobByQueueName')
+            ->with(HeliosAnalyseFichierRecuWorker::QUEUE_NAME, 'fileName');
         // et le traitement des fichiers continue
         $this->FTPHeliosReceiver->expects(self::never())->method('finTraitement');
 
@@ -65,8 +65,8 @@ class HeliosReceptionWorkerTest extends TestCase
         $this->FTPHeliosReceiver->expects(self::once())->method('recupOneFile')
             ->willThrowException(new FTPFileRetrieveException('OupsieDaysy'));
         // On n'aura rien à envoyer dans la queue d'analyse des fichiers reçus
-        $this->workerScript->expects(self::never())->method('putJobByClassName')
-            ->with(HeliosAnalyseFichierRecuWorker::class, 'fileName');
+        $this->workerScript->expects(self::never())->method('putJobByQueueName')
+            ->with(HeliosAnalyseFichierRecuWorker::QUEUE_NAME, 'fileName');
         // Et une RecoverableException est lancée
         $this->expectException(RecoverableException::class);
         $this->expectExceptionMessage('OupsieDaysy');
@@ -84,8 +84,8 @@ class HeliosReceptionWorkerTest extends TestCase
         $this->FTPHeliosReceiver->expects(self::once())->method('recupOneFile')
             ->willThrowException(new RuntimeException('OupsieDaysy'));
         // On n'aura rien à envoyer dans la queue d'analyse des fichiers reçus
-        $this->workerScript->expects(self::never())->method('putJobByClassName')
-            ->with(HeliosAnalyseFichierRecuWorker::class, 'fileName');
+        $this->workerScript->expects(self::never())->method('putJobByQueueName')
+            ->with(HeliosAnalyseFichierRecuWorker::QUEUE_NAME, 'fileName');
         // Et l'exception est relancée
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('OupsieDaysy');

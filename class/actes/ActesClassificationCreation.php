@@ -173,8 +173,9 @@ class ActesClassificationCreation
 
         $objectInstancier = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
 
+        /** @var WorkerScript $workerScript */
         $workerScript = $objectInstancier->get(WorkerScript::class);
-        $workerScript->putJobByClassName(ActesAntivirusWorker::class, $trans->getId());
+        $workerScript->putJobByQueueName(ActesAntivirusWorker::QUEUE_NAME, $trans->getId());
 
         $this->lastTransactionId = $trans->getId() . "\n";
         return true;

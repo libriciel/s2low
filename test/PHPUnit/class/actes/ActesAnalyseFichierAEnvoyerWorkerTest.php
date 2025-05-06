@@ -2,6 +2,7 @@
 
 use S2low\Services\PdfValidator;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
+use S2lowLegacy\Class\actes\ActesEnvoiFichierWorker;
 use S2lowLegacy\Class\actes\ActesScriptHelper;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
@@ -387,7 +388,8 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
             $this->getObjectInstancier()->get('actes_dont_valid_signing_certificate'),
             $this->getObjectInstancier()->get(ActesTypePJSQL::class),
             $this->getObjectInstancier()->get(PdfValidator::class),
-            $archiveValidatorFactory
+            $archiveValidatorFactory,
+            $this->getObjectInstancier()->get(ActesEnvoiFichierWorker::class)
         );
 
         $data = $this->createOneTransaction(__DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");

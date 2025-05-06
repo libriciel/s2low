@@ -59,7 +59,7 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase
     private function getWorkerScript()
     {
         $workerScript = $this->getMockBuilder(WorkerScript::class)->disableOriginalConstructor()->getMock();
-        $workerScript->method('putJobByClassName')->willReturn(true);
+        $workerScript->method('putJob')->willReturn(true);
         /** @var WorkerScript $workerScript */
         return $workerScript;
     }

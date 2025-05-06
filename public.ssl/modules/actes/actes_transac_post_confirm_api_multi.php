@@ -21,14 +21,16 @@ use S2lowLegacy\Class\WorkerScript;
 /** @var ActesScriptHelper $actesScriptHelper */
 /** @var ActesTransactionsSQL $actesTransactionsSQL */
 /** @var \S2lowLegacy\Class\Initialisation $initialisation */
+/** @var ActesAntivirusWorker $actesAntivirusWorker */
 list(
     $workerScript,
     $actesScriptHelper,
     $actesTransactionsSQL,
-    $initialisation
+    $initialisation,
+    $actesAntivirusWorker
     ) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [WorkerScript::class,ActesScriptHelper::class,ActesTransactionsSQL::class, Initialisation::class]
+        [WorkerScript::class,ActesScriptHelper::class,ActesTransactionsSQL::class, Initialisation::class,ActesAntivirusWorker::class]
     );
 
 
@@ -106,7 +108,7 @@ foreach ($id_list as $id) {
 
     $actesTransactionsSQL->updateStatus($id, ActesStatusSQL::STATUS_POSTE, $msg);
 
-    $workerScript->putJobByClassName(ActesAntivirusWorker::class, $id);
+    $workerScript->putJob($actesAntivirusWorker, $id);
 
     $msg4journal = $actesScriptHelper->getMessage($id, $msg);
 

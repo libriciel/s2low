@@ -28,6 +28,7 @@ class ActesAntivirusWorker implements IWorker
         ActesEnvelopeSQL $actesEnvelopeSQL,
         Antivirus $antivirus,
         S2lowLogger $s2lowLogger,
+        private readonly ActesAnalyseFichierAEnvoyerWorker $actesAnalyseFichierAEnvoyerWorker,
         WorkerScript $workerScript
     ) {
         $this->actesTransactionSQL = $actesTransactionSQL;
@@ -107,8 +108,8 @@ class ActesAntivirusWorker implements IWorker
             "La transaction $transaction_id ne contient pas de virus"
         );
 
-        $this->workerScript->putJobByClassName(
-            ActesAnalyseFichierAEnvoyerWorker::class,
+        $this->workerScript->putJob(
+            $this->actesAnalyseFichierAEnvoyerWorker,
             $transaction_info["envelope_id"]
         );
         return true;

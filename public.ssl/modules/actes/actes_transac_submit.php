@@ -12,6 +12,8 @@ use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\WorkerScript;
 
+/** @var WorkerScript $workerScript */
+/** @var \S2lowLegacy\Class\actes\ActesClassificationCodesSQL $actesClassificationCodesSQL */
 [$workerScript, $actesClassificationCodesSQL] = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([WorkerScript::class, \S2lowLegacy\Class\actes\ActesClassificationCodesSQL::class]);
 
@@ -250,8 +252,8 @@ foreach ($transacs as $trans) {
     $apiMsg .= $trans->getId() . "\n";
 }
 
-$workerScript->putJobByClassName(ActesStoreEnveloppeWorker::class, $env->getId());
-$workerScript->putJobByClassName(ActesAntivirusWorker::class, $trans->getId());
+$workerScript->putJobByQueueName(ActesStoreEnveloppeWorker::QUEUE_NAME, $env->getId());
+$workerScript->putJobByQueueName(ActesAntivirusWorker::QUEUE_NAME, $trans->getId());
 
 
 Helpers::returnAndExit(0, $msg, Helpers::getLink("/modules/actes/index.php"), $apiMsg);

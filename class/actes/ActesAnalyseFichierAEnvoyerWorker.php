@@ -45,7 +45,8 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
         $actes_dont_valid_signing_certificate,
         ActesTypePJSQL $actesTypePJSQL,
         PdfValidator $pdfValidator,
-        ArchiveValidatorFactory $archiveValidatorFactory
+        ArchiveValidatorFactory $archiveValidatorFactory,
+        private readonly ActesEnvoiFichierWorker $actesEnvoiFichierWorker
     ) {
         $this->actes_appli_trigramme = $actes_appli_trigramme;
         $this->actes_appli_quadrigramme = $actes_appli_quadrigramme;
@@ -149,8 +150,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
             ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,
             "Accepté par le TdT : validation OK"
         );
-
-        $this->workerScript->putJobByClassName(ActesEnvoiFichierWorker::class, $enveloppe_id);
+        $this->workerScript->putJob($this->actesEnvoiFichierWorker, $enveloppe_id);
         return true;
     }
 

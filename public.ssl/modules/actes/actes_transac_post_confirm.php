@@ -25,10 +25,11 @@ list(
     $workerScript,
     $actesScriptHelper,
     $actesTransactionsSQL,
-    $initialisation
+    $initialisation,
+    $actesAntivirusWorker
     ) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [WorkerScript::class, ActesScriptHelper::class, ActesTransactionsSQL::class, Initialisation::class]
+        [WorkerScript::class, ActesScriptHelper::class, ActesTransactionsSQL::class, Initialisation::class,ActesAntivirusWorker::class]
     );
 
 $initData = $initialisation->doInit();
@@ -112,7 +113,7 @@ if ($info['last_status_id'] != ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_POSTE) {
 
 $actesTransactionsSQL->updateStatus($id, ActesStatusSQL::STATUS_POSTE, $msg);
 
-$workerScript->putJobByClassName(ActesAntivirusWorker::class, $id);
+$workerScript->putJob($actesAntivirusWorker, $id);
 
 $msg4journal = $actesScriptHelper->getMessage($id, $msg);
 

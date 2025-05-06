@@ -171,9 +171,8 @@ class HeliosController extends Controller
         Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', self::MODULE_NAME, false, $user_id);
 
         $workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
-        $workerScript->putJobByClassName(HeliosStorePESAllerWorker::class, $id_transaction);
+        $workerScript->putJobByQueueName(HeliosStorePESAllerWorker::QUEUE_NAME, $id_transaction);
         if ($state == HeliosTransactionsSQL::POSTE) {
-            //TODO : Quickfix pour permettre d'utiliser un Worker utilisant des composants Symfony
             $workerScript->putJobByQueueName(HeliosAnalyseFichierAEnvoyerWorker::QUEUE_NAME, $id_transaction);
         }
         return $id_transaction;

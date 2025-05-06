@@ -48,13 +48,14 @@ class ActesPostWithoutSignatureController extends Controller
         }
 
         $message = "La transaction $transaction_id a été posté sans signature";
-        $workerClassName = ActesAntivirusWorker::class;
+        $workerQueueName = ActesAntivirusWorker::QUEUE_NAME;
 
 
         $actesTransactionSQL->updateStatus($transaction_id, ActesStatusSQL::STATUS_POSTE, $message);
 
+        /** @var WorkerScript $workerScript */
         $workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
-        $workerScript->putJobByClassName($workerClassName, $transaction_id);
+        $workerScript->putJobByQueueName($workerQueueName, $transaction_id);
 
         $this->redirect("/modules/actes/actes_transac_show.php?id=$transaction_id", $message);
     }
