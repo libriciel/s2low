@@ -9,7 +9,7 @@ class EnvironnementFactory
 {
     public function __construct(
         private readonly SessionWrapper $session,
-        private readonly string $convert_api_logins_from_iso
+        private readonly bool $convert_api_logins_from_iso
     ) {
     }
 

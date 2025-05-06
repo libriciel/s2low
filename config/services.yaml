@@ -50,7 +50,7 @@ parameters:
   app.mail.use_legacy_secure_mail: '%env(USE_LEGACY_SECURE_MAIL_FIELDS)%'
   app.openstack_enable: '%env(OPENSTACK_ENABLE)'
   app.convert_api_logins_from_iso.default: 'false'
-  app.convert_api_logins_from_iso: '%env(string:default:app.convert_api_logins_from_iso.default:CONVERT_API_LOGINS_FROM_ISO)%'
+  app.convert_api_logins_from_iso: '%env(default:app.convert_api_logins_from_iso.default:CONVERT_API_LOGINS_FROM_ISO)%'
   app.mail.tdt_from_email: '%env(TDT_FROM_EMAIL)%'
   app.mail.email_admin_technique: '%env(EMAIL_ADMIN_TECHNIQUE)%'
   app.log.file: '%env(string:default:app.log.file.default:LOG_FILE)%'
