@@ -69,7 +69,15 @@ class HttpConnexionTest extends S2lowTestCase
         ];
 
         $session = [];
-        $environnement = new Environnement($get, [], [], $session, $serveur, true);
+        $sessionWrapper = new SessionWrapper($session);
+        $environnement = new Environnement(
+            $get,
+            [],
+            [],
+            $sessionWrapper,
+            $serveur,
+            true
+        );
         $httpsConnexion = new HttpsConnexion(
             $environnement,
             $this->getObjectInstancier()->get(X509Certificate::class)

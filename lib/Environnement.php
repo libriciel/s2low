@@ -8,17 +8,23 @@ class Environnement
     private $postWrapper;
     private $requestWrapper;
     private $serverWrapper;
-    private $sessionWrapper;
+    private SessionWrapper $sessionWrapper;
 
-    public function __construct($get, $post, $request, &$session, $server, bool $forceConversionFromIso = false)
-    {
+    public function __construct(
+        $get,
+        $post,
+        $request,
+        $sessionWrapper,
+        $server,
+        bool $forceConversionFromIso = false
+    ) {
         $isHTTPAuthentification = isset($server['PHP_AUTH_USER']);
         $isNounceAuthentification = isset($get['login']) && isset($get['nounce']) && isset($get['hash']);
         $needsConversionFromIso = ($isHTTPAuthentification || $isNounceAuthentification) && $forceConversionFromIso;
         $this->getWrapper = new Recuperateur($get, $needsConversionFromIso);
         $this->postWrapper = new Recuperateur($post, $needsConversionFromIso);
         $this->requestWrapper = new Recuperateur($request, $needsConversionFromIso);
-        $this->sessionWrapper = new SessionWrapper($session);
+        $this->sessionWrapper = $sessionWrapper;
         $this->serverWrapper = new Recuperateur($server, $needsConversionFromIso);
     }
 

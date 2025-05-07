@@ -4,6 +4,7 @@ use S2lowLegacy\Class\Authentification;
 use S2lowLegacy\Class\HttpsConnexion;
 use S2lowLegacy\Class\PasswordHandler;
 use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Lib\SessionWrapper;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Model\NounceSQL;
 use S2lowLegacy\Model\UserSQL;
@@ -217,7 +218,15 @@ class AuthentificationTest extends S2lowTestCase
             'SSL_CLIENT_CERT' => "certificat"
         ];
 
-        $environment = new Environnement($get, [], [], $session, $server, $convertLoginFromIso);
+        $sessionWrapper = new SessionWrapper($session);
+        $environment = new Environnement(
+            $get,
+            [],
+            [],
+            $sessionWrapper,
+            $server,
+            $convertLoginFromIso
+        );
 
         $certHandler = $this->getMockBuilder(X509Certificate::class)->disableOriginalConstructor()->getMock();
 

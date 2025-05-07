@@ -97,23 +97,25 @@ class LegacyObjectsManager
         $objectInstancier->set(Database::class, DatabasePool::getInstance());
 
         if (isset($_SESSION)) {
-            $objectInstancier->set(SessionWrapper::class, new SessionWrapper($_SESSION));
+            $sessionWrapper = new SessionWrapper($_SESSION);
+            $objectInstancier->set(SessionWrapper::class, $sessionWrapper);
             $environnement = new Environnement(
                 $_GET,
                 $_POST,
                 $_REQUEST,
-                $_SESSION,
+                $sessionWrapper,
                 $_SERVER,
                 CONVERT_API_LOGINS_FROM_ISO
             );
         } else {
             $session = array();
-            $objectInstancier->set(SessionWrapper::class, new SessionWrapper($session));
+            $sessionWrapper = new SessionWrapper($session);
+            $objectInstancier->set(SessionWrapper::class, $sessionWrapper);
             $environnement = new Environnement(
                 $_GET,
                 $_POST,
                 $_REQUEST,
-                $session,
+                $sessionWrapper,
                 $_SERVER,
                 CONVERT_API_LOGINS_FROM_ISO
             );
