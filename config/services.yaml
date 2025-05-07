@@ -44,11 +44,17 @@ parameters:
   app.actes_imap_login: '%env(ACTES_IMAP_LOGIN)%'
   app.actes_imap_password: '%env(ACTES_IMAP_PASSWORD)%'
   app.actes_imap_options: '%env(ACTES_IMAP_OPTIONS)%'
-  app.mail.message: '%env(MAIL_MESSAGE)'
+  app.mail.message: '%env(MAIL_MESSAGE)%'
   app.mail.tedetis_from: '%env(MAIL_TEDETIS_FROM)%'
   app.mail.secure_description: '%env(MAIL_SECURE_DESCRIPTION)%'
   app.mail.use_legacy_secure_mail: '%env(USE_LEGACY_SECURE_MAIL_FIELDS)%'
   app.openstack_enable: '%env(OPENSTACK_ENABLE)'
+  app.mail.tdt_from_email: '%env(TDT_FROM_EMAIL)%'
+  app.mail.email_admin_technique: '%env(EMAIL_ADMIN_TECHNIQUE)%'
+  app.log.file: '%env(string:default:app.log.file.default:LOG_FILE)%'
+  app.log.file.default: '/data/log/s2low.log'
+  app.mail.dsn: '%env(string:default:app.mail.dsn.default:MAILER_DSN)%'
+  app.mail.dsn.default: 'smtp://maildev:1025?verify_peer=0'
 services:
   _defaults:
     autowire: true
@@ -380,10 +386,6 @@ services:
       $redis_server: "%app.redis_server%"
       $redis_port: "%app.redis_port%"
 
-  S2lowLegacy\Class\S2lowLogger:
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\S2lowLogger' ]
-
   S2lowLegacy\Class\S2lowRedirect:
     arguments:
       $website_ssl: "todo"
@@ -651,3 +653,7 @@ services:
 
   S2lowLegacy\Lib\OpenStackContainerStore:
     factory: ['@S2low\Factory\OpenStackContainerStoreFactory', "create"]
+
+  S2low\Logger\MailerProcessor:
+    tags:
+      - { name: monolog.processor }
