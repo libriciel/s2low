@@ -491,11 +491,8 @@ services:
     arguments: [ 'S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker' ]
 
   S2lowLegacy\Class\actes\ActesAnalyseFichierRecuController:
-    arguments:
-      $actes_response_tmp_local_path: "todo"
-      $actes_response_error_path: "todo"
-      $actes_files_upload_root: "todo"
-      $actes_ministere_acronyme: "todo"
+    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Class\actes\ActesAnalyseFichierRecuController' ]
 
   S2lowLegacy\Class\actes\ActesArchive:
     autowire: false #Pas un service ??
@@ -527,8 +524,8 @@ services:
     arguments: [ 'S2lowLegacy\Class\actes\ActesFileSender' ]
 
   S2lowLegacy\Class\actes\ActesImapRetrieve:
-    arguments:
-      $actes_response_tmp_local_path: "todo"
+    factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
+    arguments: [ 'S2lowLegacy\Class\actes\ActesImapRetrieve' ]
 
   S2lowLegacy\Class\Parapheur:
     autowire: false #Initialisé avec les données à traiter ...
