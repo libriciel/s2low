@@ -2,8 +2,8 @@
 
 namespace S2lowLegacy\Class\actes;
 
-use S2lowLegacy\Class\CurlWrapper;
 use Exception;
+use S2lowLegacy\Class\CurlWrapperFactory;
 use S2lowLegacy\Lib\X509Certificate;
 
 class ActesFileSender
@@ -13,7 +13,9 @@ class ActesFileSender
 
     public function __construct(
         ActesMinistereProperties $actesMinistereProperties,
-        $trustore_path
+        $trustore_path,
+        private readonly CurlWrapperFactory $curlWrapperFactory,
+        private readonly X509Certificate $x509Certificate
     ) {
         $this->actesMinistereProperties = $actesMinistereProperties;
         $this->truststorePath = $trustore_path;
@@ -21,7 +23,7 @@ class ActesFileSender
 
     public function send($filepath)
     {
-        $curlWrapper = new CurlWrapper();
+        $curlWrapper = $this->curlWrapperFactory->getNewInstance();
         $curlWrapper->setTimeout(60, 60 * 3);
 
         $url = $this->actesMinistereProperties->url;
@@ -61,13 +63,11 @@ class ActesFileSender
         }
 
         if (mb_substr($url, 0, 5) == 'https') {
-            $x509Certificate = new X509Certificate();
-
             $actual_certificat = $curlWrapper->getServerCertificate();
             $expected_certificat = file_get_contents($this->actesMinistereProperties->server_certificate_path);
 
-            $actual_hash = $x509Certificate->getBase64Hash($actual_certificat);
-            $expected_hash = $x509Certificate->getBase64Hash($expected_certificat);
+            $actual_hash = $this->x509Certificate->getBase64Hash($actual_certificat);
+            $expected_hash = $this->x509Certificate->getBase64Hash($expected_certificat);
 
             if ($actual_hash != $expected_hash) {
                 throw new Exception("Le certificat recu ($actual_hash) ne correspond pas à celui attendu ($expected_hash)");
