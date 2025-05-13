@@ -267,6 +267,91 @@ class ActesFileSenderTest extends TestCase
         self::assertEqualsCanonicalizing($expectedParameters, $this->setProperties);
     }
 
+    /**
+     * @throws Exception
+     */
+    public function testSendNewServersSuccess(): void
+    {
+        $actesMinistereProperties = new ActesMinistereProperties(
+            'https://sirserver/and/stuff',
+            ActesMinistereProperties::AUTHENTICATION_NONE,
+            '',
+            '',
+            '',
+            '',
+            '',
+            false,
+            __DIR__ . '/../fixtures/toto.txt',
+            false
+        );
+
+        $actesFileSender = new ActesFileSender(
+            $actesMinistereProperties,
+            '/path/to/truststore',
+            $this->curlWrapperFactoryMock,
+            $this->x509CertificateMock
+        );
+
+        $this->curlWrapperMock->expects(self::once())->method('setClientCertificate')
+            ->with('', '', '');
+
+        $this->mockSetPropertiesFunction();
+
+        $this->curlWrapperMock->expects(self::once())->method('setTimeout')
+            ->with(60, 60 * 3);
+
+        $this->curlWrapperMock->expects(self::once())->method('addPostFile')
+            ->with('filetosend.tar.gz', '/path/to/filetosend.tar.gz');
+        $this->curlWrapperMock->expects(self::once())->method('get')
+            ->with('https://sirserver/and/stuff');
+
+        $this->curlWrapperMock->method('getHTTPCode')->willReturn(201);
+
+        static::assertTrue($actesFileSender->send('/path/to/filetosend.tar.gz'));
+
+        $expectedParameters = [
+            CURLOPT_USERAGENT => 'curl/*',
+            CURLOPT_SSL_VERIFYHOST => 2,
+        CURLOPT_CERTINFO => 1,
+        CURLOPT_CAPATH => '/path/to/truststore',
+            ];
+
+        self::assertEqualsCanonicalizing($expectedParameters, $this->setProperties);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testSendNewServersFail(): void
+    {
+        $actesMinistereProperties = new ActesMinistereProperties(
+            'https://sirserver/and/stuff',
+            ActesMinistereProperties::AUTHENTICATION_NONE,
+            '',
+            '',
+            '',
+            '',
+            '',
+            false,
+            __DIR__ . '/../fixtures/toto.txt',
+            false
+        );
+
+        $actesFileSender = new ActesFileSender(
+            $actesMinistereProperties,
+            '/path/to/truststore',
+            $this->curlWrapperFactoryMock,
+            $this->x509CertificateMock
+        );
+
+        $this->curlWrapperMock->method('getHTTPCode')->willReturn(200);
+        $this->curlWrapperMock->method('getLastError')->willReturn('Le message d\'erreur de curl');
+
+        self::expectException(Exception::class);
+        self::expectExceptionMessage('Le message d\'erreur de curl');
+        $actesFileSender->send('/path/to/filetosend.tar.gz');
+    }
+
     private function mockSetPropertiesFunction(): void
     {
         $setProperties = &$this->setProperties;

@@ -17,7 +17,8 @@ class ActesMinistereProperties
         public string $client_certificate_key,
         public string $client_certificate_key_password,
         public string $adapt_protocol,
-        public string $server_certificate_path
+        public string $server_certificate_path,
+        public bool $use_legacy_protocol = true
     ) {
     }
     public function getUrl(): string
@@ -28,8 +29,16 @@ class ActesMinistereProperties
         return $this->url;
     }
 
-    public function isHttps(): bool
+    public function isLegacyHttps(): bool
     {
-        return mb_substr($this->url, 0, 5) == 'https';
+        return $this->use_legacy_protocol && mb_substr($this->url, 0, 5) == 'https';
+    }
+
+    public function isError(int $http_code): bool
+    {
+        if ($this->use_legacy_protocol) {
+            return $http_code != 200;
+        }
+        return $http_code != 201;
     }
 }

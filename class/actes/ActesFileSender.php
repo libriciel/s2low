@@ -30,8 +30,13 @@ class ActesFileSender
         $curlWrapper = $this->curlWrapperFactory->getNewInstance();
         $curlWrapper->setTimeout(60, 60 * 3);
 
-        if ($this->actesMinistereProperties->isHttps()) {
+        if ($this->actesMinistereProperties->isLegacyHttps()) {
             $this->setUpForPostTransfertCertificateValidation($curlWrapper);
+        }
+
+        if (! $this->actesMinistereProperties->use_legacy_protocol) {
+            $this->setUpPreTransfertCertificateValidation($curlWrapper);
+            $this->setUpUserAgent($curlWrapper);
         }
 
         if ($this->actesMinistereProperties->adapt_protocol) {
@@ -55,11 +60,11 @@ class ActesFileSender
 
         $curlWrapper->get($this->actesMinistereProperties->getUrl());
 
-        if ($curlWrapper->getHTTPCode() != 200) {
+        if ($this->actesMinistereProperties->isError($curlWrapper->getHTTPCode())) {
             throw new Exception($curlWrapper->getLastError());
         }
 
-        if ($this->actesMinistereProperties->isHttps()) {
+        if ($this->actesMinistereProperties->isLegacyHttps()) {
             $this->postTransfertCertificateValidation($curlWrapper);
         }
 
@@ -105,5 +110,17 @@ class ActesFileSender
         if ($actual_hash != $expected_hash) {
             throw new Exception("Le certificat recu ($actual_hash) ne correspond pas à celui attendu ($expected_hash)");
         }
+    }
+
+    private function setUpPreTransfertCertificateValidation(CurlWrapper $curlWrapper)
+    {
+        $curlWrapper->setProperties(CURLOPT_SSL_VERIFYHOST, 2);
+        $curlWrapper->setProperties(CURLOPT_CERTINFO, 1);
+        $curlWrapper->setProperties(CURLOPT_CAPATH, $this->truststorePath);
+    }
+
+    private function setUpUserAgent(CurlWrapper $curlWrapper)
+    {
+        $curlWrapper->setProperties(CURLOPT_USERAGENT, 'curl/*');
     }
 }
