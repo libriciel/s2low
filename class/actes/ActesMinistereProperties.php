@@ -18,7 +18,7 @@ class ActesMinistereProperties
         public string $client_certificate_key_password,
         public string $adapt_protocol,
         public string $server_certificate_path,
-        public bool $use_legacy_protocol = true
+        public bool $use_legacy_protocol
     ) {
     }
     public function getUrl(): string

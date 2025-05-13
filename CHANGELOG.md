@@ -6,6 +6,7 @@
 
 - Permettre de poster les Pes Acquit Retour #1156
 - Permettre de configurer la configuration Apache SSLInsecureRenegotiation #1244
+- Permettre de se connecter aux nouveaux serveurs de la DGCL. Ajout de ACTES_MINISTERE_USE_LEGACY_PROTOCOL #1207 
 
 ### Corrections
 
