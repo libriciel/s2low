@@ -20,4 +20,16 @@ class ActesMinistereProperties
         public string $server_certificate_path
     ) {
     }
+    public function getUrl(): string
+    {
+        if ($this->authentification_type == ActesMinistereProperties::AUTHENTICATION_POST) {
+            return $this->url . "?user={$this->login}&password={$this->password}";
+        }
+        return $this->url;
+    }
+
+    public function isHttps(): bool
+    {
+        return mb_substr($this->url, 0, 5) == 'https';
+    }
 }
