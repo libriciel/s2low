@@ -320,10 +320,16 @@ ob_start();
     <?php
         $rgsCertificate = new RgsCertificate(OPENSSL_PATH, RGS_VALIDCA_PATH);
         $is_rgs = $rgsCertificate->isRgsCertificate($him->get("certificate"));
+        $is_ssl_client = $rgsCertificate->isSslClient($him->get("certificate"));
     ?>
     <?php if (! $is_rgs) : ?>
         <div class="alert alert-warning col-md-9 col-md-offset-1">
             Ce certificat n'est pas RGS et ne peut pas servir à télétransmettre.
+        </div>
+    <?php endif; ?>
+    <?php if (! $is_ssl_client) : ?>
+        <div class="alert alert-warning col-md-9 col-md-offset-1">
+            Ce certificat ne semble pas permettre l'authentification à s2low.
         </div>
     <?php endif; ?>
 
