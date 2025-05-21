@@ -42,6 +42,7 @@ class ActesFileSenderTest extends TestCase
             'client_certificate_password',
             false,
             __DIR__ . '/../fixtures/toto.txt',
+            true
         );
 
         $actesFileSender = new ActesFileSender(
@@ -95,6 +96,7 @@ class ActesFileSenderTest extends TestCase
             'client_certificate_password',
             false,
             __DIR__ . '/../fixtures/toto.txt',
+            true
         );
 
         $actesFileSender = new ActesFileSender(
@@ -127,6 +129,7 @@ class ActesFileSenderTest extends TestCase
             'client_certificate_password',
             false,
             __DIR__ . '/../fixtures/toto.txt',
+            true
         );
 
         $actesFileSender = new ActesFileSender(
@@ -160,6 +163,7 @@ class ActesFileSenderTest extends TestCase
             'client_certificate_password',
             true,
             __DIR__ . '/../fixtures/toto.txt',
+            true
         );
 
         $actesFileSender = new ActesFileSender(
@@ -198,6 +202,7 @@ class ActesFileSenderTest extends TestCase
             'client_certificate_password',
             false,
             __DIR__ . '/../fixtures/toto.txt',
+            true
         );
 
         $actesFileSender = new ActesFileSender(
@@ -236,6 +241,7 @@ class ActesFileSenderTest extends TestCase
             '',
             false,
             __DIR__ . '/../fixtures/toto.txt',
+            true
         );
 
         $actesFileSender = new ActesFileSender(

@@ -90,7 +90,8 @@ class TestEnvironmentManager
             ACTES_MINISTERE_CERTIFICATE_KEY,
             ACTES_MINISTERE_CERTIFICATE_KEY_PASS,
             ACTES_MINISTERE_ADAPT_PROTOCOL,
-            ACTES_MINISTERE_SERVER_CERTIFICATE_PATH
+            ACTES_MINISTERE_SERVER_CERTIFICATE_PATH,
+            ACTES_MINISTERE_USE_LEGACY_PROTOCOL
         );
         $this->getObjectInstancier()->set(ActesMinistereProperties::class, $actesMinistereProperties);
 

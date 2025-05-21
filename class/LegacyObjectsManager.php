@@ -210,7 +210,7 @@ class LegacyObjectsManager
 
         $objectInstancier->set("actes_dont_valid_signing_certificate", ACTES_DONT_VALID_SIGNING_CERTIFICATE);
 
-        /*$actesMinistereProperties = new ActesMinistereProperties(
+        $actesMinistereProperties = new ActesMinistereProperties(
             ACTES_MINISTERE_URL,
             ACTES_MINISTERE_AUTHENTICATION,
             ACTES_MINISTERE_LOGIN,
@@ -219,9 +219,10 @@ class LegacyObjectsManager
             ACTES_MINISTERE_CERTIFICATE_KEY,
             ACTES_MINISTERE_CERTIFICATE_KEY_PASS,
             ACTES_MINISTERE_ADAPT_PROTOCOL,
-            ACTES_MINISTERE_SERVER_CERTIFICATE_PATH
+            ACTES_MINISTERE_SERVER_CERTIFICATE_PATH,
+            ACTES_MINISTERE_USE_LEGACY_PROTOCOL
         );
-        $objectInstancier->set(ActesMinistereProperties::class, $actesMinistereProperties);*/
+        $objectInstancier->set(ActesMinistereProperties::class, $actesMinistereProperties);
 
         $actesImapProperties = new ActesImapProperties(
             ACTES_IMAP_HOST,
