@@ -503,9 +503,9 @@ services:
 
   S2lowLegacy\Class\actes\ActesAnalyseFichierRecuController:
     arguments:
-      $actes_response_tmp_local_path: "todo"
-      $actes_response_error_path: "todo"
-      $actes_files_upload_root: "todo"
+      $actes_response_tmp_local_path: '%actes.response_tmp_local_path%'
+      $actes_response_error_path: '%actes.response_error_path%'
+      $actes_files_upload_root: '%actes.files_upload_root%'
       $actes_ministere_acronyme: '%actes.ministere_acronyme%'
 
   S2lowLegacy\Class\actes\ActesArchive:
@@ -522,7 +522,7 @@ services:
 
   S2lowLegacy\Class\actes\ActesConventions:
      arguments:
-       $actes_files_upload_root: "todo"
+       $actes_files_upload_root: '%actes.files_upload_root%'
 
   S2lowLegacy\Class\actes\ActesMenage:
     autowire: false
@@ -539,7 +539,7 @@ services:
 
   S2lowLegacy\Class\actes\ActesImapRetrieve:
     arguments:
-      $actes_response_tmp_local_path: "todo"
+      $actes_response_tmp_local_path: '%actes.response_tmp_local_path%'
 
   S2lowLegacy\Class\Parapheur:
     autowire: false #Initialisé avec les données à traiter ...
@@ -573,7 +573,7 @@ services:
 
   S2lowLegacy\Class\actes\ActesResponsesError:
     arguments:
-      $actes_response_error_path: "todo"
+      $actes_response_error_path: '%actes.response_error_path%'
 
   S2lowLegacy\Class\actes\ActesRetriever:
     factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']

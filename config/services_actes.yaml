@@ -11,3 +11,11 @@ parameters:
   actes.use_legacy_protocol_default: true
   actes.use_legacy_protocol: '%env(bool:default:actes.use_legacy_protocol_default:ACTES_MINISTERE_USE_LEGACY_PROTOCOL)%'
   actes.ministere_acronyme: 'MI'
+  # Répertoire de stockage des fichiers envoyés par les utilisateurs (archives .tar.gz)
+  actes.files_upload_root: '/data/tdt-workspace/actes/uploads'
+  # Répertoire de stockage des vieux fichiers envoyés par les utilisateurs (archives .tar.gz) sans transaction associée
+  actes.repertoireEnveloppeSansTransaction: '/data/tdt-workspace/actes/sans_transaction'
+  # Répertoire temporaire de stockage des réponses du ministère par mail
+  actes.response_tmp_local_path: '/data/tdt-workspace/actes/response_tmp'
+  # Répertoire temporaire de stockage des réponses en erreur du ministère
+  actes.response_error_path: '/data/tdt-workspace/actes/response_error'
