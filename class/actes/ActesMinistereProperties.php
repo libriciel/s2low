@@ -16,7 +16,7 @@ class ActesMinistereProperties
         public string $client_certificate,
         public string $client_certificate_key,
         public string $client_certificate_key_password,
-        public string $adapt_protocol,
+        public bool $adapt_protocol,
         public string $server_certificate_path
     ) {
     }
