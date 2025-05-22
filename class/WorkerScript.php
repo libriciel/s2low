@@ -12,7 +12,7 @@ class WorkerScript
 
     public function __construct(
         private readonly BeanstalkdWrapper $beanstalkdWrapper,
-        private readonly S2lowLogger $s2lowLogger,
+        private S2lowLogger $s2lowLogger,
         private readonly ObjectInstancier $objectInstancier,
     ) {
     }
@@ -73,5 +73,10 @@ class WorkerScript
             $delay = PheanstalkInterface::DEFAULT_TTR;
         }
         return $delay;
+    }
+
+    public function setLogger(S2lowLogger $s2lowLogger)
+    {
+        $this->s2lowLogger = $s2lowLogger;
     }
 }

@@ -94,6 +94,7 @@ class RebuildQueueCommand extends Command
     private function rebuildQueue(mixed $worker): void
     {
         $this->s2lowLogger->setName($worker->getQueueName() . '-rebuild-queue');
+        $this->workerScript->setLogger($this->s2lowLogger);
         $this->workerScript->rebuildQueue($worker);
     }
 }
