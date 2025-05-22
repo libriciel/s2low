@@ -20,21 +20,25 @@ class RgsCertificateTest extends TestCase
 
     public function testIsSslClient()
     {
-        static::assertTrue($this->rgsCertificate->isSslClient(
-            file_get_contents(__DIR__ . "/fixtures/test/MyClient1.pem")
+        $certificateWithSslClientPurpose = file_get_contents(__DIR__ . '/fixtures/test/MyClient1.pem');
+        static::assertTrue($this->rgsCertificate->hasSSlClientPurpose(
+            $certificateWithSslClientPurpose
         ));
     }
 
     public function testIsNotSslClient()
     {
-        static::assertFalse($this->rgsCertificate->isSslClient(
-            file_get_contents(__DIR__ . "/../fixtures/timestamp_certificates/s2low_timestamp_cert.pem")
+        $certificateWithoutSslClientPurpose = file_get_contents(
+            __DIR__ . '/../fixtures/timestamp_certificates/s2low_timestamp_cert.pem'
+        );
+        static::assertFalse($this->rgsCertificate->hasSSlClientPurpose(
+            $certificateWithoutSslClientPurpose
         ));
     }
 
     public function testIsNotEvenCertificate()
     {
-        static::assertFalse($this->rgsCertificate->isSslClient('Nope. Not at all. Not even close'));
+        static::assertFalse($this->rgsCertificate->hasSSlClientPurpose('Not a certificate'));
     }
 
     /**
