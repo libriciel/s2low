@@ -53,6 +53,7 @@ class WorkerScript
 
     public function rebuildQueue(IWorker $IWorker)
     {
+        $this->s2lowLogger->enableStdOut(true);
         $this->s2lowLogger->setName($IWorker->getQueueName() . "-rebuild-queue");
 
         $this->beanstalkdWrapper->emptyQueue($IWorker->getQueueName());
@@ -62,6 +63,7 @@ class WorkerScript
             $this->s2lowLogger->info("Ajout en file d'attente", [$id]);
         }
         $this->s2lowLogger->info("Reconstruction de la file " . $IWorker->getQueueName() . ": OK");
+        $this->s2lowLogger->enableStdOut(false);
     }
 
 
