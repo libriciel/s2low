@@ -185,7 +185,8 @@ class HeliosEnvoiControler
 
         $this->workerScript->putJobByQueueName(
             HeliosEnvoiWorker::getQueueNameParametre($authorityInfo['helios_use_passtrans']),
-            $transaction_id
+            $transaction_id,
+            HeliosEnvoiWorker::PHEANSTALK_TTR
         );
         libxml_use_internal_errors(false);
     }
