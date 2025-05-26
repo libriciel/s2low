@@ -7,7 +7,7 @@ namespace PHPUnit\class\actes;
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use S2lowLegacy\Class\actes\ActesEnvoiFichierWorker;
-use S2lowLegacy\Class\actes\ActesFileSender;
+use S2lowLegacy\Class\actes\ActesMinistereClient;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\RecoverableException;
@@ -27,8 +27,8 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
         $this->enveloppe_directory = $this->getObjectInstancier()->get('actes_files_upload_root') . '/' . $this->siren;
         mkdir($this->enveloppe_directory);
 
-        $actesFileSender = $this->getMockBuilder(ActesFileSender::class)->disableOriginalConstructor()->getMock();
-        $this->getObjectInstancier()->set(ActesFileSender::class, $actesFileSender);
+        $actesFileSender = $this->getMockBuilder(ActesMinistereClient::class)->disableOriginalConstructor()->getMock();
+        $this->getObjectInstancier()->set(ActesMinistereClient::class, $actesFileSender);
     }
 
     protected function tearDown(): void
@@ -111,8 +111,8 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
 
-        /** @var MockObject|ActesFileSender $actesFileSender */
-        $actesFileSender = $this->getObjectInstancier()->get(ActesFileSender::class);
+        /** @var MockObject|ActesMinistereClient $actesFileSender */
+        $actesFileSender = $this->getObjectInstancier()->get(ActesMinistereClient::class);
 
         $actesFileSender->method('send')->willThrowException(new Exception('Erreur du mock'));
 

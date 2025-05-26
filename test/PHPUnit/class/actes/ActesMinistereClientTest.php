@@ -4,13 +4,13 @@ namespace PHPUnit\class\actes;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
-use S2lowLegacy\Class\actes\ActesFileSender;
+use S2lowLegacy\Class\actes\ActesMinistereClientFactory;
 use S2lowLegacy\Class\actes\ActesMinistereProperties;
 use S2lowLegacy\Class\CurlWrapper;
 use S2lowLegacy\Class\CurlWrapperFactory;
 use S2lowLegacy\Lib\X509Certificate;
 
-class ActesFileSenderTest extends TestCase
+class ActesMinistereClientTest extends TestCase
 {
     protected function setUp(): void
     {
@@ -45,7 +45,7 @@ class ActesFileSenderTest extends TestCase
             true
         );
 
-        $actesFileSender = new ActesFileSender(
+        $actesFileSenderFactory = new ActesMinistereClientFactory(
             $actesMinistereProperties,
             '/path/to/truststore',
             $this->curlWrapperFactoryMock,
@@ -71,6 +71,7 @@ class ActesFileSenderTest extends TestCase
 
         $this->curlWrapperMock->method('getHTTPCode')->willReturn(200);
 
+        $actesFileSender = $actesFileSenderFactory->get();
         static::assertTrue($actesFileSender->send('/path/to/filetosend.tar.gz'));
 
         $expectedParameters = [
@@ -99,12 +100,14 @@ class ActesFileSenderTest extends TestCase
             true
         );
 
-        $actesFileSender = new ActesFileSender(
+        $actesFileSenderFactory = new ActesMinistereClientFactory(
             $actesMinistereProperties,
             '/path/to/truststore',
             $this->curlWrapperFactoryMock,
             $this->x509CertificateMock
         );
+
+        $actesFileSender = $actesFileSenderFactory->get();
 
         $this->curlWrapperMock->method('getHTTPCode')->willReturn(500);
         $this->curlWrapperMock->method('getLastError')->willReturn('Last Error');
@@ -132,12 +135,14 @@ class ActesFileSenderTest extends TestCase
             true
         );
 
-        $actesFileSender = new ActesFileSender(
+        $actesFileSenderFactory = new ActesMinistereClientFactory(
             $actesMinistereProperties,
             '/path/to/truststore',
             $this->curlWrapperFactoryMock,
             $this->x509CertificateMock
         );
+
+        $actesFileSender = $actesFileSenderFactory->get();
 
         $this->curlWrapperMock->method('getHTTPCode')->willReturn(200);
         $this->x509CertificateMock->method('getBase64Hash')
@@ -166,16 +171,19 @@ class ActesFileSenderTest extends TestCase
             true
         );
 
-        $actesFileSender = new ActesFileSender(
+        $actesFileSenderFactory = new ActesMinistereClientFactory(
             $actesMinistereProperties,
             '/path/to/truststore',
             $this->curlWrapperFactoryMock,
             $this->x509CertificateMock
         );
 
+
         $this->mockSetPropertiesFunction();
 
         $this->curlWrapperMock->method('getHTTPCode')->willReturn(200);
+
+        $actesFileSender = $actesFileSenderFactory->get();
         static::assertTrue($actesFileSender->send('/path/to/filetosend.tar.gz'));
 
         $expectedParameters = [
@@ -205,7 +213,7 @@ class ActesFileSenderTest extends TestCase
             true
         );
 
-        $actesFileSender = new ActesFileSender(
+        $actesFileSenderFactory = new ActesMinistereClientFactory(
             $actesMinistereProperties,
             '/path/to/truststore',
             $this->curlWrapperFactoryMock,
@@ -223,6 +231,8 @@ class ActesFileSenderTest extends TestCase
             ->with('login', 'password');
 
         $this->curlWrapperMock->method('getHTTPCode')->willReturn(200);
+
+        $actesFileSender = $actesFileSenderFactory->get();
         static::assertTrue($actesFileSender->send('/path/to/filetosend.tar.gz'));
     }
 
@@ -244,7 +254,7 @@ class ActesFileSenderTest extends TestCase
             true
         );
 
-        $actesFileSender = new ActesFileSender(
+        $actesFileSenderFactory = new ActesMinistereClientFactory(
             $actesMinistereProperties,
             '/path/to/truststore',
             $this->curlWrapperFactoryMock,
@@ -266,6 +276,7 @@ class ActesFileSenderTest extends TestCase
 
         $this->curlWrapperMock->method('getHTTPCode')->willReturn(200);
 
+        $actesFileSender = $actesFileSenderFactory->get();
         static::assertTrue($actesFileSender->send('/path/to/filetosend.tar.gz'));
 
         $expectedParameters = [ ];
@@ -291,7 +302,7 @@ class ActesFileSenderTest extends TestCase
             false
         );
 
-        $actesFileSender = new ActesFileSender(
+        $actesFileSenderFactory = new ActesMinistereClientFactory(
             $actesMinistereProperties,
             '/path/to/truststore',
             $this->curlWrapperFactoryMock,
@@ -313,6 +324,7 @@ class ActesFileSenderTest extends TestCase
 
         $this->curlWrapperMock->method('getHTTPCode')->willReturn(201);
 
+        $actesFileSender = $actesFileSenderFactory->get();
         static::assertTrue($actesFileSender->send('/path/to/filetosend.tar.gz'));
 
         $expectedParameters = [
@@ -343,12 +355,14 @@ class ActesFileSenderTest extends TestCase
             false
         );
 
-        $actesFileSender = new ActesFileSender(
+        $actesFileSenderFactory = new ActesMinistereClientFactory(
             $actesMinistereProperties,
             '/path/to/truststore',
             $this->curlWrapperFactoryMock,
             $this->x509CertificateMock
         );
+
+        $actesFileSender = $actesFileSenderFactory->get();
 
         $this->curlWrapperMock->method('getHTTPCode')->willReturn(200);
         $this->curlWrapperMock->method('getLastError')->willReturn('Le message d\'erreur de curl');

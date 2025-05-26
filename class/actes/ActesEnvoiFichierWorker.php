@@ -26,7 +26,7 @@ class ActesEnvoiFichierWorker implements IWorker
         ActesEnvelopeSQL $actesEnvelopeSQL,
         ActesScriptHelper $actesScriptHelper,
         ActesTransmissionWindowsSQL $actesTransmissionWindowsSQL,
-        ActesFileSender $actesFileSender,
+        ActesMinistereClient $actesFileSender,
         $actes_ministere_acronyme
     ) {
         $this->logger = $logger;

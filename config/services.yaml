@@ -533,9 +533,21 @@ services:
     arguments:
       $root_workspace_path: "todo"
 
-  S2lowLegacy\Class\actes\ActesFileSender:
+  S2lowLegacy\Class\actes\ActesMinistereClientFactory:
     arguments:
       $trustore_path: '/data/certificate/truststore/'
+
+  S2lowLegacy\Class\actes\ActesMinistereClient:
+    autowire: false
+
+  S2lowLegacy\Class\actes\HttpAuthenticationStrategy:
+    autowire: false
+
+  S2lowLegacy\Class\actes\PostTransfertCertificateValidation:
+    autowire: false
+
+  S2lowLegacy\Class\actes\PreTransfertCertificateValidation:
+    autowire: false
 
   S2lowLegacy\Class\actes\ActesImapRetrieve:
     arguments:

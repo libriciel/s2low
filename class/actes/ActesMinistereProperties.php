@@ -4,9 +4,9 @@ namespace S2lowLegacy\Class\actes;
 
 class ActesMinistereProperties
 {
-    public const AUTHENTICATION_NONE = "NONE";
-    public const AUTHENTICATION_BASIC = "BASIC";
-    public const AUTHENTICATION_POST = "POST";
+    public const AUTHENTICATION_NONE = 'NONE';
+    public const AUTHENTICATION_BASIC = 'BASIC';
+    public const AUTHENTICATION_POST = 'POST';
 
     public function __construct(
         public string $url,
@@ -29,16 +29,16 @@ class ActesMinistereProperties
         return $this->url;
     }
 
-    public function isLegacyHttps(): bool
+    public function isHttps(): bool
     {
-        return $this->use_legacy_protocol && mb_substr($this->url, 0, 5) == 'https';
+        return mb_substr($this->url, 0, 5) == 'https';
     }
 
-    public function isError(int $http_code): bool
+    public function getSuccessHttpCode(): int
     {
         if ($this->use_legacy_protocol) {
-            return $http_code != 200;
+            return 200;
         }
-        return $http_code != 201;
+        return 201;
     }
 }

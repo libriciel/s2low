@@ -222,6 +222,8 @@ class LegacyObjectsManager
             ACTES_MINISTERE_SERVER_CERTIFICATE_PATH,
             ACTES_MINISTERE_USE_LEGACY_PROTOCOL
         );
+
+
         $objectInstancier->set(ActesMinistereProperties::class, $actesMinistereProperties);
 
         $actesImapProperties = new ActesImapProperties(

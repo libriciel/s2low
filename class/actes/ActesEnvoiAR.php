@@ -28,7 +28,7 @@ class ActesEnvoiAR
         S2lowLogger $logger,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         ActesEnvelopeSerialSQL $actesEnvelopeSerialSQL,
-        ActesFileSender $actesFileSender,
+        ActesMinistereClient $actesFileSender,
         ActesScriptHelper $actesScriptHelper,
         ActesRetriever $actesRetriever
     ) {
