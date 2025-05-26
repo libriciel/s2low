@@ -241,44 +241,6 @@ if (!defined("ACTES_MINISTERE_ACRONYME")) {
     define('ACTES_MINISTERE_ACRONYME', 'MI');
 }
 
-if (!defined('ACTES_MINISTERE_URL')) {
-    define('ACTES_MINISTERE_URL', 'http://simulateur/Simulateur/actesPost');
-}
-
-if (!defined('ACTES_MINISTERE_AUTHENTICATION')) {
-    #One off NONE, POST or BASIC
-    define('ACTES_MINISTERE_AUTHENTICATION', 'NONE');
-}
-
-if (!defined('ACTES_MINISTERE_LOGIN')) {
-    define('ACTES_MINISTERE_LOGIN', '');
-}
-
-if (!defined('ACTES_MINISTERE_PASSWORD')) {
-    define('ACTES_MINISTERE_PASSWORD', '');
-}
-
-/* Il s'agit du certificat du client ! */
-if (!defined('ACTES_MINISTERE_CERTIFICATE')) {
-    define('ACTES_MINISTERE_CERTIFICATE', '');
-}
-
-if (!defined('ACTES_MINISTERE_CERTIFICATE_KEY')) {
-    define('ACTES_MINISTERE_CERTIFICATE_KEY', '');
-}
-
-if (!defined('ACTES_MINISTERE_CERTIFICATE_KEY_PASS')) {
-    define('ACTES_MINISTERE_CERTIFICATE_KEY_PASS', '');
-}
-
-if (!defined('ACTES_MINISTERE_SERVER_CERTIFICATE_PATH')) {
-    define('ACTES_MINISTERE_SERVER_CERTIFICATE_PATH', '');
-}
-
-if (!defined('ACTES_MINISTERE_ADAPT_PROTOCOL')) {
-    define('ACTES_MINISTERE_ADAPT_PROTOCOL', false);
-}
-
 if (!defined('MAILER_DSN')) {
     define('MAILER_DSN', 'smtp://maildev:1025?verify_peer=0');
 }
