@@ -538,7 +538,7 @@ services:
       $trustore_path: '/data/certificate/truststore/'
 
   S2lowLegacy\Class\actes\ActesMinistereClient:
-    autowire: false
+    factory: [ '@S2lowLegacy\Class\actes\ActesMinistereClientFactory','get' ]
 
   S2lowLegacy\Class\actes\HttpAuthenticationStrategy:
     autowire: false
