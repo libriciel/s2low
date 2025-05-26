@@ -69,10 +69,10 @@ class ActesMinistereClientTest extends TestCase
         $this->curlWrapperMock->expects(self::once())->method('get')
             ->with('https://128.127.126.125:9456/path/to/upload.php?user=login&password=password');
 
-        $this->curlWrapperMock->method('getHTTPCode')->willReturn(200);
+        $this->curlWrapperMock->expects(self::once())->method('getHTTPCode')->willReturn(200);
 
         $actesFileSender = $actesFileSenderFactory->get();
-        static::assertTrue($actesFileSender->send('/path/to/filetosend.tar.gz'));
+        $actesFileSender->send('/path/to/filetosend.tar.gz');
 
         $expectedParameters = [
             CURLOPT_SSL_VERIFYHOST => 0,
@@ -184,7 +184,7 @@ class ActesMinistereClientTest extends TestCase
         $this->curlWrapperMock->method('getHTTPCode')->willReturn(200);
 
         $actesFileSender = $actesFileSenderFactory->get();
-        static::assertTrue($actesFileSender->send('/path/to/filetosend.tar.gz'));
+        $actesFileSender->send('/path/to/filetosend.tar.gz');
 
         $expectedParameters = [
             CURLOPT_SSL_VERIFYHOST => 0,
@@ -230,10 +230,10 @@ class ActesMinistereClientTest extends TestCase
         $this->curlWrapperMock->expects(self::once())->method('httpAuthentication')
             ->with('login', 'password');
 
-        $this->curlWrapperMock->method('getHTTPCode')->willReturn(200);
+        $this->curlWrapperMock->expects(self::once())->method('getHTTPCode')->willReturn(200);
 
         $actesFileSender = $actesFileSenderFactory->get();
-        static::assertTrue($actesFileSender->send('/path/to/filetosend.tar.gz'));
+        $actesFileSender->send('/path/to/filetosend.tar.gz');
     }
 
     /**
@@ -274,10 +274,10 @@ class ActesMinistereClientTest extends TestCase
         $this->curlWrapperMock->expects(self::once())->method('get')
             ->with('http://simulateur/Simulateur/actesPost');
 
-        $this->curlWrapperMock->method('getHTTPCode')->willReturn(200);
+        $this->curlWrapperMock->expects(self::once())->method('getHTTPCode')->willReturn(200);
 
         $actesFileSender = $actesFileSenderFactory->get();
-        static::assertTrue($actesFileSender->send('/path/to/filetosend.tar.gz'));
+        $actesFileSender->send('/path/to/filetosend.tar.gz');
 
         $expectedParameters = [ ];
 
@@ -322,10 +322,10 @@ class ActesMinistereClientTest extends TestCase
         $this->curlWrapperMock->expects(self::once())->method('get')
             ->with('https://sirserver/and/stuff');
 
-        $this->curlWrapperMock->method('getHTTPCode')->willReturn(201);
+        $this->curlWrapperMock->expects(self::once())->method('getHTTPCode')->willReturn(201);
 
         $actesFileSender = $actesFileSenderFactory->get();
-        static::assertTrue($actesFileSender->send('/path/to/filetosend.tar.gz'));
+        $actesFileSender->send('/path/to/filetosend.tar.gz');
 
         $expectedParameters = [
             CURLOPT_USERAGENT => 'curl/*',
