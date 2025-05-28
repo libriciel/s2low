@@ -41,13 +41,13 @@ class WorkerScript
 
     //TODO : Quickfix pour permettre d'utiliser un Worker utilisant des composants Symfony
     // Evite d'avoir à l'instancier
-    public function putJobByQueueName($queueName, $data)
+    public function putJobByQueueName($queueName, $data, $ttr = PheanstalkInterface::DEFAULT_TTR)
     {
         return $this->beanstalkdWrapper->put(
             $queueName,
             $data,
             PheanstalkInterface::DEFAULT_DELAY,
-            $this->getTTR($queueName)  //Some workers, ex. ActesAnalyseFichierAEnvoyerWorker , need more time
+            $ttr  //Some workers, ex. ActesAnalyseFichierAEnvoyerWorker , need more time
         );                             // to process
     }
 
