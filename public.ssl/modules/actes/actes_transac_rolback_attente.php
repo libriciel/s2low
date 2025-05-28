@@ -55,8 +55,7 @@ $actesTransactionSQL->updateStatus($id, $status_id, $message);
 
 $info = $actesTransactionSQL->getInfo($id);
 
-// TODO : ajouter le $queueTTR quand le bug sera corrigé sur master
-$workerScript->putJobByQueueName($workerQueueName, $info['envelope_id']);
+$workerScript->putJobByQueueName($workerQueueName, $info['envelope_id'], $queueTTR);
 
 $_SESSION['error'] = $message;
 header_wrapper("Location: actes_transac_show.php?id=$id");

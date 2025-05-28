@@ -150,8 +150,11 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
             "Accepté par le TdT : validation OK"
         );
 
-        // TODO : ajouter le PHEANSTALK_TTR quand le bug sera corrigé sur master
-        $this->workerScript->putJobByQueueName(ActesEnvoiFichierWorker::QUEUE_NAME, $enveloppe_id);
+        $this->workerScript->putJobByQueueName(
+            ActesEnvoiFichierWorker::QUEUE_NAME,
+            $enveloppe_id,
+            ActesEnvoiFichierWorker::PHEANSTALK_TTR
+        );
         return true;
     }
 
