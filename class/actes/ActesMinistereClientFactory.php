@@ -11,22 +11,21 @@ class ActesMinistereClientFactory
     public function __construct(
         private readonly ActesMinistereProperties $actesMinistereProperties,
         private readonly string $trustore_path,
-        private readonly CurlWrapperFactory $curlWrapperFactory,
+        private readonly CurlWrapper $curlWrapper,
         private readonly X509Certificate $x509Certificate
     ) {
     }
     public function get(): ActesMinistereClient
     {
-        $curlWrapper = $this->curlWrapperFactory->getNewInstance();
-        $curlWrapper->setTimeout(60, 60 * 3);
+        $this->curlWrapper->setTimeout(60, 60 * 3);
 
         $certificateValidation = $this->getCertificateValidationStrategy();
 
-        $certificateValidation->setUp($curlWrapper);
-        $this->setAdaptationProtocol($curlWrapper);
-        $this->configureAuthSettings($curlWrapper);
+        $certificateValidation->setUp($this->curlWrapper);
+        $this->setAdaptationProtocol($this->curlWrapper);
+        $this->configureAuthSettings($this->curlWrapper);
 
-        $curlWrapper->setClientCertificate(
+        $this->curlWrapper->setClientCertificate(
             $this->actesMinistereProperties->client_certificate,
             $this->actesMinistereProperties->client_certificate_key,
             $this->actesMinistereProperties->client_certificate_key_password
@@ -34,7 +33,7 @@ class ActesMinistereClientFactory
         return new ActesMinistereClient(
             $this->actesMinistereProperties->getUrl(),
             $this->actesMinistereProperties->getSuccessHttpCode(),
-            $curlWrapper,
+            $this->curlWrapper,
             $certificateValidation
         );
     }

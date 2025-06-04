@@ -14,12 +14,8 @@ class ActesMinistereClientTest extends TestCase
 {
     protected function setUp(): void
     {
-        $this->curlWrapperFactoryMock = $this->getMockBuilder(CurlWrapperFactory::class)
-            ->disableOriginalConstructor()->getMock();
         $this->curlWrapperMock = $this->getMockBuilder(CurlWrapper::class)
             ->disableOriginalConstructor()->getMock();
-        $this->curlWrapperFactoryMock->method('getNewInstance')
-            ->willReturn($this->curlWrapperMock);
 
         $this->x509CertificateMock = $this->getMockBuilder(X509Certificate::class)
             ->disableOriginalConstructor()->getMock();
@@ -48,7 +44,7 @@ class ActesMinistereClientTest extends TestCase
         $actesFileSenderFactory = new ActesMinistereClientFactory(
             $actesMinistereProperties,
             '/path/to/truststore',
-            $this->curlWrapperFactoryMock,
+            $this->curlWrapperMock,
             $this->x509CertificateMock
         );
 
@@ -103,7 +99,7 @@ class ActesMinistereClientTest extends TestCase
         $actesFileSenderFactory = new ActesMinistereClientFactory(
             $actesMinistereProperties,
             '/path/to/truststore',
-            $this->curlWrapperFactoryMock,
+            $this->curlWrapperMock,
             $this->x509CertificateMock
         );
 
@@ -138,7 +134,7 @@ class ActesMinistereClientTest extends TestCase
         $actesFileSenderFactory = new ActesMinistereClientFactory(
             $actesMinistereProperties,
             '/path/to/truststore',
-            $this->curlWrapperFactoryMock,
+            $this->curlWrapperMock,
             $this->x509CertificateMock
         );
 
@@ -174,7 +170,7 @@ class ActesMinistereClientTest extends TestCase
         $actesFileSenderFactory = new ActesMinistereClientFactory(
             $actesMinistereProperties,
             '/path/to/truststore',
-            $this->curlWrapperFactoryMock,
+            $this->curlWrapperMock,
             $this->x509CertificateMock
         );
 
@@ -216,7 +212,7 @@ class ActesMinistereClientTest extends TestCase
         $actesFileSenderFactory = new ActesMinistereClientFactory(
             $actesMinistereProperties,
             '/path/to/truststore',
-            $this->curlWrapperFactoryMock,
+            $this->curlWrapperMock,
             $this->x509CertificateMock
         );
 
@@ -257,7 +253,7 @@ class ActesMinistereClientTest extends TestCase
         $actesFileSenderFactory = new ActesMinistereClientFactory(
             $actesMinistereProperties,
             '/path/to/truststore',
-            $this->curlWrapperFactoryMock,
+            $this->curlWrapperMock,
             $this->x509CertificateMock
         );
 
@@ -305,7 +301,7 @@ class ActesMinistereClientTest extends TestCase
         $actesFileSenderFactory = new ActesMinistereClientFactory(
             $actesMinistereProperties,
             '/path/to/truststore',
-            $this->curlWrapperFactoryMock,
+            $this->curlWrapperMock,
             $this->x509CertificateMock
         );
 
@@ -358,7 +354,7 @@ class ActesMinistereClientTest extends TestCase
         $actesFileSenderFactory = new ActesMinistereClientFactory(
             $actesMinistereProperties,
             '/path/to/truststore',
-            $this->curlWrapperFactoryMock,
+            $this->curlWrapperMock,
             $this->x509CertificateMock
         );
 
