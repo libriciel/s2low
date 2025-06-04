@@ -3,25 +3,20 @@
 namespace S2lowLegacy\Class\actes;
 
 use S2lowLegacy\Class\CurlWrapper;
-use S2lowLegacy\Class\CurlWrapperFactory;
-use S2lowLegacy\Lib\X509Certificate;
 
 class ActesMinistereClientFactory
 {
     public function __construct(
         private readonly ActesMinistereProperties $actesMinistereProperties,
-        private readonly string $trustore_path,
         private readonly CurlWrapper $curlWrapper,
-        private readonly X509Certificate $x509Certificate
+        private readonly ICertificateValidationStrategy $certificateValidationStrategy
     ) {
     }
     public function get(): ActesMinistereClient
     {
         $this->curlWrapper->setTimeout(60, 60 * 3);
 
-        $certificateValidation = $this->getCertificateValidationStrategy();
-
-        $certificateValidation->setUp($this->curlWrapper);
+        $this->certificateValidationStrategy->setUp($this->curlWrapper);
         $this->setAdaptationProtocol($this->curlWrapper);
         $this->configureAuthSettings($this->curlWrapper);
 
@@ -34,7 +29,7 @@ class ActesMinistereClientFactory
             $this->actesMinistereProperties->getUrl(),
             $this->actesMinistereProperties->getSuccessHttpCode(),
             $this->curlWrapper,
-            $certificateValidation
+            $this->certificateValidationStrategy
         );
     }
 
@@ -46,23 +41,6 @@ class ActesMinistereClientFactory
                 $this->actesMinistereProperties->password
             );
         }
-    }
-
-    private function getCertificateValidationStrategy(): ICertificateValidationStrategy
-    {
-        if (!$this->actesMinistereProperties->isHttps()) {
-            return new NoCertificateValidationStrategy();
-        }
-        if ($this->actesMinistereProperties->use_legacy_protocol) {
-            return new PostTransfertCertificateValidation(
-                $this->actesMinistereProperties->server_certificate_path,
-                $this->trustore_path,
-                $this->x509Certificate
-            );
-        }
-        return new PreTransfertCertificateValidation(
-            $this->trustore_path
-        );
     }
 
     private function setAdaptationProtocol(CurlWrapper $curlWrapper): void

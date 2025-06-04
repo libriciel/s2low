@@ -5,7 +5,7 @@ namespace S2lowLegacy\Class\actes;
 use S2lowLegacy\Class\actes\ICertificateValidationStrategy;
 use S2lowLegacy\Class\CurlWrapper;
 
-class NoCertificateValidationStrategy implements ICertificateValidationStrategy
+class NoCertificateValidation implements ICertificateValidationStrategy
 {
     public function setUp(CurlWrapper $curlWrapper): void
     {

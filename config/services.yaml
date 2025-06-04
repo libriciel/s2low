@@ -537,15 +537,15 @@ services:
     arguments:
       $root_workspace_path: "todo"
 
-  S2lowLegacy\Class\actes\ActesMinistereClientFactory:
-    arguments:
-      $trustore_path: '/data/certificate/truststore/'
-
   S2lowLegacy\Class\actes\ActesMinistereClient:
     factory: [ '@S2lowLegacy\Class\actes\ActesMinistereClientFactory','get' ]
 
-  S2lowLegacy\Class\actes\HttpAuthenticationStrategy:
-    autowire: false
+  S2lowLegacy\Class\actes\CertificateValidationStrategyFactory:
+    arguments:
+      $trustore_path: '/data/certificate/truststore/'
+
+  S2lowLegacy\Class\actes\ICertificateValidationStrategy:
+    factory: ['S2lowLegacy\Class\actes\CertificateValidationStrategyFactory','getInstance']
 
   S2lowLegacy\Class\actes\PostTransfertCertificateValidation:
     autowire: false
