@@ -30,7 +30,8 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
             $verifyPKCS7Signature->verifySignature(
                 file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s"),
                 [],
-                __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf"
+                __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
+                new DateTime('01-01-2025')
             )
         );
     }
@@ -52,7 +53,8 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
         $verifyPKCS7Signature->verifySignature(
             file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s"),
             [],
-            __DIR__ . "/fixtures/toto.txt"
+            __DIR__ . "/fixtures/toto.txt",
+            new DateTime('01-01-2025')
         );
     }
 
@@ -73,7 +75,8 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
         $verifyPKCS7Signature->verifySignature(
             file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s"),
             [],
-            __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf"
+            __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
+            new DateTime('01-01-2025')
         );
     }
 
@@ -188,7 +191,9 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
 
         $verificator->verifySignature(
             file_get_contents("$baseSignatureDir/test_pdf.pdf.p7s"),
-            VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS
+            VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS,
+            null,
+            new DateTime('01-01-2025')
         );
         $this->addToAssertionCount(1);
     }

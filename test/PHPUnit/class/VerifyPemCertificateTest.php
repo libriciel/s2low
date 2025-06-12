@@ -23,7 +23,11 @@ class VerifyPemCertificateTest extends S2lowTestCase
     {
         $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR . "/dateOk/ac/");
 
-        $this->assertTrue($verificator->checkCertificateWithOpenSSL(self::BASE_CERTIFICATES_DIR . "/dateOk/fullchain.pem"));
+        $this->assertTrue($verificator->checkCertificateWithOpenSSL(
+            self::BASE_CERTIFICATES_DIR . "/dateOk/fullchain.pem",
+            [],
+            (new DateTime('01-01-2025'))->getTimestamp()
+        ));
     }
 
     public function testVerifyAnExpiredCertificate()
@@ -128,7 +132,8 @@ class VerifyPemCertificateTest extends S2lowTestCase
         $this->assertTrue(
             $verificator->checkCertificateWithOpenSSL(
                 self::BASE_CERTIFICATES_DIR . "/dateOk/fullchain.pem",
-                VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS
+                VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS,
+                (new DateTime('01-01-2025'))->getTimestamp()
             )
         );
     }
