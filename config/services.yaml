@@ -453,6 +453,7 @@ services:
       $client_certificate_key_password: '%actes.ministere.client_certificate_key_password%'
       $adapt_protocol: '%actes.ministere.adapt_protocol%'
       $server_certificate_path: '%actes.ministere.server_certificate_path%'
+      $use_legacy_protocol: '%actes.use_legacy_protocol%'
 
   S2lowLegacy\Class\actes\ActesAntivirusWorker:
     tags: ['s2low.queue_rebuilding_worker']
@@ -466,8 +467,9 @@ services:
 
   S2lowLegacy\Class\actes\ActesEnvoiFichierWorker:
     tags: ['s2low.queue_rebuilding_worker']
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\actes\ActesEnvoiFichierWorker' ]
+    arguments:
+      $actes_ministere_acronyme: '%actes.ministere_acronyme%'
+
 
   S2lowLegacy\Class\actes\ActesAnalyseFichierRecuWorker:
     tags: ['s2low.queue_rebuilding_worker']
@@ -502,10 +504,11 @@ services:
 
   S2lowLegacy\Class\actes\ActesAnalyseFichierRecuController:
     arguments:
-      $actes_response_tmp_local_path: "todo"
-      $actes_response_error_path: "todo"
-      $actes_files_upload_root: "todo"
-      $actes_ministere_acronyme: "todo"
+      $actes_response_tmp_local_path: '%actes.response_tmp_local_path%'
+      $actes_response_error_path: '%actes.response_error_path%'
+      $actes_files_upload_root: '%actes.files_upload_root%'
+      $actes_ministere_acronyme: '%actes.ministere_acronyme%'
+
 
   S2lowLegacy\Class\actes\ActesArchive:
     autowire: false #Pas un service ??
@@ -521,7 +524,7 @@ services:
 
   S2lowLegacy\Class\actes\ActesConventions:
      arguments:
-       $actes_files_upload_root: "todo"
+       $actes_files_upload_root: '%actes.files_upload_root%'
 
   S2lowLegacy\Class\actes\ActesMenage:
     autowire: false
@@ -533,12 +536,13 @@ services:
       $root_workspace_path: "todo"
 
   S2lowLegacy\Class\actes\ActesFileSender:
-    factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\actes\ActesFileSender' ]
+    arguments:
+      $trustore_path: '/data/certificate/truststore/'
+
 
   S2lowLegacy\Class\actes\ActesImapRetrieve:
     arguments:
-      $actes_response_tmp_local_path: "todo"
+      $actes_response_tmp_local_path: '%actes.response_tmp_local_path%'
 
   S2lowLegacy\Class\Parapheur:
     autowire: false #Initialisé avec les données à traiter ...
@@ -572,7 +576,7 @@ services:
 
   S2lowLegacy\Class\actes\ActesResponsesError:
     arguments:
-      $actes_response_error_path: "todo"
+      $actes_response_error_path: '%actes.response_error_path%'
 
   S2lowLegacy\Class\actes\ActesRetriever:
     factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
