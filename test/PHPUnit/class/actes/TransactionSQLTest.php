@@ -41,12 +41,12 @@ class TransactionSQLTest extends S2lowTestCase
 
     public static function setAuthorityAndStatusProvider(): \Generator
     {
-        yield [1, 3, 0];
-        yield [1, 4, 1];
-        yield [1, TransactionSQL::EN_COURS, 1];
-        yield [2, 3, 0];
-        yield [2, 4, 0];
-        yield [2, TransactionSQL::EN_COURS, 0];
+        yield [101, 3, 0];
+        yield [101, 4, 1];
+        yield [101, TransactionSQL::EN_COURS, 1];
+        yield [102, 3, 0];
+        yield [102, 4, 0];
+        yield [102, TransactionSQL::EN_COURS, 0];
     }
 
     /**

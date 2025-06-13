@@ -18,12 +18,12 @@ class HeliosTransactionTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+        $this->heliosTransactionsSQL = self::getContainer()->get(HeliosTransactionsSQL::class);
     }
 
     public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
     {
-        return $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+        return $this->heliosTransactionsSQL;
     }
 
     /**
@@ -51,7 +51,7 @@ class HeliosTransactionTest extends S2lowTestCase
      */
     public function testCountTransactionsWithOneTransaction()
     {
-        $this->createTransaction(1, HeliosTransactionsSQL::POSTE);
+        $this->createTransaction(101, HeliosTransactionsSQL::POSTE);
 
         $this->assertEquals(
             1,
@@ -71,8 +71,8 @@ class HeliosTransactionTest extends S2lowTestCase
      */
     public function testCountTransactionsWithTwoTransactions()
     {
-        $this->createTransaction(1, HeliosTransactionsSQL::POSTE);
-        $this->createTransaction(1, HeliosTransactionsSQL::POSTE);
+        $this->createTransaction(101, HeliosTransactionsSQL::POSTE);
+        $this->createTransaction(101, HeliosTransactionsSQL::POSTE);
 
         $this->assertEquals(
             2,
@@ -92,7 +92,7 @@ class HeliosTransactionTest extends S2lowTestCase
      */
     public function testCountTransactionsWithOnePostedTransaction()
     {
-        $this->createTransaction(1, HeliosTransactionsSQL::POSTE);
+        $this->createTransaction(101, HeliosTransactionsSQL::POSTE);
 
         $this->assertEquals(
             0,
@@ -112,7 +112,7 @@ class HeliosTransactionTest extends S2lowTestCase
      */
     public function testCountTransactionsWithOneTransmittedTransaction()
     {
-        $this->createTransaction(1, HeliosTransactionsSQL::TRANSMIS);
+        $this->createTransaction(101, HeliosTransactionsSQL::TRANSMIS);
 
         $this->assertEquals(
             1,
@@ -135,7 +135,7 @@ class HeliosTransactionTest extends S2lowTestCase
         int $expectedNumber,
         int $expectedVolume
     ): void {
-        $this->createTransaction(1, HeliosTransactionsSQL::POSTE, $date->format("Y-m-d H:i:s"));
+        $this->createTransaction(101, HeliosTransactionsSQL::POSTE, $date->format("Y-m-d H:i:s"));
 
         $this->assertEquals(
             $expectedNumber,
@@ -164,7 +164,7 @@ class HeliosTransactionTest extends S2lowTestCase
 
     public function testCountTransactionsWithOneTransactionAndGroupAdmin()
     {
-        $this->createTransaction(1, HeliosTransactionsSQL::POSTE);
+        $this->createTransaction(101, HeliosTransactionsSQL::POSTE);
 
         $author_filter = "authorities.authority_group_id=1";
 
@@ -185,7 +185,7 @@ class HeliosTransactionTest extends S2lowTestCase
 
         $beforeFirstDayOfYear = $FirstDayOfYear->add(DateInterval::createFromDateString("3 day"));
 
-        $this->createTransaction(1, HeliosTransactionsSQL::TRANSMIS, $beforeFirstDayOfYear->format("Y-m-d H:i:s"));
+        $this->createTransaction(101, HeliosTransactionsSQL::TRANSMIS, $beforeFirstDayOfYear->format("Y-m-d H:i:s"));
 
         $author_filter = "authorities.authority_group_id=1";
 
@@ -262,9 +262,8 @@ class HeliosTransactionTest extends S2lowTestCase
      */
     private function createGroupe(): mixed
     {
-        /** @var GroupSQL $groupSQL */
-        $groupSQL = $this->getObjectInstancier()->get(GroupSQL::class);
-        $groupeId = $groupSQL->edit(null, "GroupeTestHeliosTransaction", 1);
+        $groupSQL = self::getContainer()->get(GroupSQL::class);
+        $groupeId = $groupSQL->edit(1, "GroupeTestHeliosTransaction", 1);
         return $groupeId;
     }
 }

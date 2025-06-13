@@ -1,24 +1,26 @@
 <?php
 
+use IntegrationTests\S2lowIntegrationTestCase;
+use S2low\Enum\UserRole;
 use S2lowLegacy\Controller\HeliosPESRetourChangeStatusController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Model\HeliosRetourSQL;
 
-class HeliosPESRetourChangeStatusControllerTest extends S2lowTestCase
+class HeliosPESRetourChangeStatusControllerTest extends S2lowIntegrationTestCase
 {
     public function testChangeStatusAction()
     {
-        $this->setUserAuthentification();
-        $heliosRetourSQL = $this->getObjectInstancier()->get(HeliosRetourSQL::class);
+        $this->setUserWithRole(UserRole::Utilisateur);
+        $heliosRetourSQL = self::getContainer()->get(HeliosRetourSQL::class);
 
-        $transaction_id = $heliosRetourSQL->add(1, "000000000", "toto.xml", 10, "sha1");
+        $transaction_id = $heliosRetourSQL->add(101, "000000000", "toto.xml", 10, "sha1");
 
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('id', $transaction_id);
+        self::getContainer()->get(Environnement::class)->get()->set('id', $transaction_id);
 
         $info = $heliosRetourSQL->getInfo($transaction_id);
         $this->assertEquals(0, $info['status']);
 
-        $heliosPESRetourChangeStatusController = $this->getObjectInstancier()->get(HeliosPESRetourChangeStatusController::class);
+        $heliosPESRetourChangeStatusController = self::getContainer()->get(HeliosPESRetourChangeStatusController::class);
         ob_start();
         try {
             $heliosPESRetourChangeStatusController->changeStatusAction();
@@ -32,17 +34,17 @@ class HeliosPESRetourChangeStatusControllerTest extends S2lowTestCase
 
     public function testChangeStatusActionNotGoodCollectivite()
     {
-        $this->setAdminCol2Authentication();
-        $heliosRetourSQL = $this->getObjectInstancier()->get(HeliosRetourSQL::class);
+        $this->setUserWithRole(UserRole::AdministrateurCollectivite);
+        $heliosRetourSQL = self::getContainer()->get(HeliosRetourSQL::class);
 
-        $transaction_id = $heliosRetourSQL->add(1, "000000000", "toto.xml", 10, "sha1");
+        $transaction_id = $heliosRetourSQL->add(102, "000000000", "toto.xml", 10, "sha1");
 
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('id', $transaction_id);
+        self::getContainer()->get(Environnement::class)->get()->set('id', $transaction_id);
 
         $info = $heliosRetourSQL->getInfo($transaction_id);
         $this->assertEquals(0, $info['status']);
 
-        $heliosPESRetourChangeStatusController = $this->getObjectInstancier()->get(HeliosPESRetourChangeStatusController::class);
+        $heliosPESRetourChangeStatusController = self::getContainer()->get(HeliosPESRetourChangeStatusController::class);
         $this->expectException(Exception::class);
         $this->expectOutputRegex("#KO#");
         $heliosPESRetourChangeStatusController->changeStatusAction();

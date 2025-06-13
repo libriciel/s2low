@@ -23,8 +23,6 @@ class Authentification
 
     /** @var PasswordHandler */
     private $passwordHandler;
-
-    /** @var HttpsConnexion  */
     private $httpsConnexion;
 
     public function __construct(
@@ -64,8 +62,6 @@ class Authentification
      */
     private function detectConnexionID(int $authentProcess = Authentification::AUTHENTIFICATION_BY_APACHE)
     {
-        //TODO Refactorer les Helper:redirect
-
         try {
             if (
                 $this->httpsConnexion->hasNonceParameters()
@@ -74,8 +70,8 @@ class Authentification
             ) {
                 return $this->getConnexionIdFromNounce($this->httpsConnexion->getNonceParameters());
             }
-
-            $id_list = $this->getIdFromConnexionInfo($this->getAllConnexionInfo($authentProcess));
+            $connexionInfo = $this->getAllConnexionInfo($authentProcess);
+            $id_list = $this->getIdFromConnexionInfo($connexionInfo);
             if (empty($id_list)) {
                 throw new Exception("Le certificat n'est pas valide : aucun compte trouvé");
             }
@@ -87,9 +83,9 @@ class Authentification
             if ($e->getMessage() === "La connexion n'a pas pu être établie") {
                 $redirect = Helpers::getLink("/login.php");
             }
+
             Helpers::returnAndExit(1, $e->getMessage(), $redirect);
         }
-
         return $id_list[0];
     }
 
@@ -106,7 +102,6 @@ class Authentification
         } // @codeCoverageIgnore
 
         $list_id = $this->userSQL->getListIdFromConnexion($connexion_info['certificate_hash'], $connexion_info['certificate_rgs_2_etoiles']);
-
         if (! in_array($user_id, $list_id)) {
             Helpers::returnAndExit(1, "La connexion n'a pas pu être établie", Helpers::getLink("/login.php"));
         } // @codeCoverageIgnore
@@ -126,9 +121,7 @@ class Authentification
         } else {
             throw new Exception("Méthode d'authentification non reconnue");
         }
-
         $certificateInfos = $this->httpsConnexion->getCertificateInfo();
-
         if (!$certificateInfos) {
             throw new Exception("Aucune information de certificat trouvée");
         }
@@ -176,7 +169,6 @@ class Authentification
             $connexion_info['login']
         );
         $ids = [];
-
         foreach ($possibleUsersInDB as $possibleUser) {
             if (
                 $this->passwordHandler->passwordMatchesHash(
@@ -188,7 +180,6 @@ class Authentification
                 $ids[] = $possibleUser["id"];
             }
         }
-
         return $ids;
     }
 

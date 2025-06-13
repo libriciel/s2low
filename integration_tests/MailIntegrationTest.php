@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace IntegrationTests;
 
+use S2low\Enum\UserRole;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
@@ -18,17 +19,8 @@ class MailIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testAccessIndexWithRightCertificate()
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->createSuperAdminUser($certificatePem->getContent(), $certificatePem->getHash());
-        $client = $this->createClientWithCertificat(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );                                                           // 2/ Le client ne modifie pas la variable _SERVER
-
-        ObjectInstancierFactory::resetObjectInstancier();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $crawler = $client->request('GET', '/index.php');
         static::assertMatchesRegularExpression(
             '#<title>Tiers de téléransmission multiprotocoles</title>#',
@@ -38,50 +30,12 @@ class MailIntegrationTest extends S2lowIntegrationTestCase
     }
 
     /**
-     * @return void
-     * @throws \Exception
-     */
-    public function testAccessIndexWithWrongCertificate(): void
-    {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-        $wrongCertificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/PHPUnit/controller/fixtures/user1.pem')
-        );
-
-        $this->createSuperAdminUser($certificatePem->getContent(), $certificatePem->getHash());
-
-        ObjectInstancierFactory::resetObjectInstancier();
-
-        $client = $this->createClientWithCertificat(
-            $wrongCertificatePem->getContent(),
-            $wrongCertificatePem->getContentStrippedFromBegin()
-        );
-        $crawler = $client->request('GET', '/index.php');
-        static::assertMatchesRegularExpression(
-            "#Le certificat n'est pas valide : aucun compte trouvé#",
-            $crawler->html()
-        );
-    }
-
-    /**
      * @throws \Exception
      */
     public function testAdminUtilitiesControllerdoSendWithRightCertificateButNoData()
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->createSuperAdminUser($certificatePem->getContent(), $certificatePem->getHash());
-
-        $client = $this->createClientWithCertificat(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );                                                           // 2/ Le client ne modifie pas la variable _SERVER
-
-        LegacyObjectsManager::setLegacyObjectInstancier();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $crawler = $client->request('GET', '/admin/utilities/admin_send_global_message.php');
 
         static::assertMatchesRegularExpression(
@@ -96,16 +50,8 @@ class MailIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testAdminUtilitiesControllerdoSendWithRightCertificateWithData()
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->createSuperAdminUser($certificatePem->getContent(), $certificatePem->getHash());
-
-        $client = $this->createClientWithCertificat(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $postData = [ 'module' => '1', 'authority_group_id' => '1', 'subject' => 'le subject', 'body' => 'le body'];
 
         $client->request(

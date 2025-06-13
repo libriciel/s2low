@@ -16,7 +16,7 @@ class GetStatusTest extends S2lowIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+        $this->heliosTransactionsSQL = self::getContainer()->get(HeliosTransactionsSQL::class);
     }
 
     public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
@@ -77,16 +77,16 @@ class GetStatusTest extends S2lowIntegrationTestCase
      */
     public function testShouldReturnGoodStatus($data): void
     {
-        $this->createUserWithDefaultCertificatAs(UserRole::Utilisateur);
-
         $transactionId = $this->createTransaction(
-            1,
+            101,
             $data['status'],
         );
 
         $_GET['transaction'] = $transactionId;
 
-        $client = $this->getAuthenticatedClientAttachedToDefaultCertificat();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
+
         $client->request(
             'GET',
             '/modules/helios/api/helios_transac_get_status.php',

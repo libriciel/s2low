@@ -9,11 +9,11 @@ class HeliosTransactionsListeTest extends S2lowTestCase
 
     public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
     {
-        return $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+        return self::getContainer()->get(HeliosTransactionsSQL::class);
     }
     public function heliosTransactionListe(): HeliosTransactionsListe
     {
-        return $this->getObjectInstancier()->get(HeliosTransactionsListe::class);
+        return self::getContainer()->get(HeliosTransactionsListe::class);
     }
 
     /**
@@ -28,9 +28,9 @@ class HeliosTransactionsListeTest extends S2lowTestCase
 
     public static function statusAndAuthorityProvider(): \Generator
     {
-        yield [3,1,0];
-        yield [4,1,1];
-        yield [4,2,0];
+        yield [3,101,0];
+        yield [4,101,1];
+        yield [4,102,0];
     }
 
     /**

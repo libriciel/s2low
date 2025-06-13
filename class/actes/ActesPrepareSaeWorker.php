@@ -25,17 +25,17 @@ class ActesPrepareSaeWorker implements IWorker
         $this->actesPrepareEnvoiSAE = $actesPrepareEnvoiSAE;
     }
 
-    public function getQueueName()
+    public function getQueueName(): string
     {
         return self::QUEUE_NAME;
     }
 
-    public function getData($id)
+    public function getData($id): mixed
     {
         return $id;
     }
 
-    public function getAllId()
+    public function getAllId(): array
     {
         return $this->actesTransactionsSQL->getTransactionToArchive(
             self::NB_DAYS_ARCHIVE_AFTER
@@ -55,12 +55,12 @@ class ActesPrepareSaeWorker implements IWorker
         );
     }
 
-    public function getMutexName($data)
+    public function getMutexName($data): bool|string
     {
         return sprintf("actes-transaction-%s", $data);
     }
 
-    public function isDataValid($data)
+    public function isDataValid($data): bool
     {
         return true;
     }
@@ -68,7 +68,7 @@ class ActesPrepareSaeWorker implements IWorker
     /**
      * @return void
      */
-    public function start()
+    public function start(): void
     {
         // TODO: Implement start() method.
     }
@@ -76,7 +76,7 @@ class ActesPrepareSaeWorker implements IWorker
     /**
      * @return void
      */
-    public function end()
+    public function end(): void
     {
         // TODO: Implement end() method.
     }

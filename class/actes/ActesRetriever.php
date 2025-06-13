@@ -22,7 +22,7 @@ class ActesRetriever
         $this->logger = $logger;
     }
 
-    public function getPath($acte_path)
+    public function getPath(string $acte_path)
     {
         try {
             $result = $this->openStackSwiftWrapper->retrieveFile(

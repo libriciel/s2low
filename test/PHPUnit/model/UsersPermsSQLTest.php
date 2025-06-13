@@ -12,23 +12,24 @@ class UsersPermsSQLTest extends S2lowTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->usersPermsSQL = new UsersPermsSQL($this->getSQLQuery());
+        $this->usersPermsSQL = self::getContainer()->get(UsersPermsSQL::class);
     }
 
     public function testGetInfoPerms()
     {
-        $this->assertEquals('RW', $this->usersPermsSQL->getInfoPerms(1, 1));
+        $this->usersPermsSQL->setPerms(1, 103, "RW");
+        $this->assertEquals('RW', $this->usersPermsSQL->getInfoPerms(1, 103));
     }
 
     public function testSetPerms()
     {
-        $this->usersPermsSQL->setPerms(2, 1, "RW");
-        $this->assertEquals('RW', $this->usersPermsSQL->getInfoPerms(2, 1));
+        $this->usersPermsSQL->setPerms(2, 103, "RW");
+        $this->assertEquals('RW', $this->usersPermsSQL->getInfoPerms(2, 103));
     }
 
     public function testSetPermsUpdate()
     {
-        $this->usersPermsSQL->setPerms(1, 1, "RO");
-        $this->assertEquals('RO', $this->usersPermsSQL->getInfoPerms(1, 1));
+        $this->usersPermsSQL->setPerms(1, 103, "RO");
+        $this->assertEquals('RO', $this->usersPermsSQL->getInfoPerms(1, 103));
     }
 }

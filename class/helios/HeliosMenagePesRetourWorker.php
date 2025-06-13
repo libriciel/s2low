@@ -15,17 +15,17 @@ class HeliosMenagePesRetourWorker implements IWorker
     ) {
     }
 
-    public function getQueueName()
+    public function getQueueName(): string
     {
         return sprintf("%s-%s", self::QUEUE_NAME, gethostname());
     }
 
-    public function getData($id)
+    public function getData($id): mixed
     {
         return $id;
     }
 
-    public function getAllId()
+    public function getAllId(): array
     {
         return [1];
     }
@@ -40,12 +40,12 @@ class HeliosMenagePesRetourWorker implements IWorker
         $this->pesRetourCloudStorage->deleteFilesOnDisk(self::NB_DAYS_IN_DISK, true);
     }
 
-    public function getMutexName($data)
+    public function getMutexName($data): bool|string
     {
         return $this->getQueueName();
     }
 
-    public function isDataValid($data)
+    public function isDataValid($data): bool
     {
         return true;
     }
@@ -53,7 +53,7 @@ class HeliosMenagePesRetourWorker implements IWorker
     /**
      * @return void
      */
-    public function start()
+    public function start(): void
     {
         // TODO: Implement start() method.
     }
@@ -61,7 +61,7 @@ class HeliosMenagePesRetourWorker implements IWorker
     /**
      * @return void
      */
-    public function end()
+    public function end(): void
     {
         // TODO: Implement end() method.
     }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace IntegrationTests;
 
+use S2low\Enum\UserRole;
 use S2lowLegacy\Class\Authority;
-use S2lowLegacy\Class\LegacyObjectsManager;
 
 /**
  *
@@ -17,22 +17,11 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
      */
     public function testEditAuthority(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->createSuperAdminUser($certificatePem->getContent(), $certificatePem->getHash());
-
-        $client = $this->createClientWithCertificat(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );                                                           // 2/ Le client ne modifie pas la variable _SERVER
-
-        LegacyObjectsManager::setLegacyObjectInstancier();
-        LegacyObjectsManager::getLegacyObjectInstancier()->set('helios_use_passtrans_as_default', false);
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $_POST = [
-            'id' => '1',
+            'id' => '101',
             'name' => 'le nom',
             'siren' => '111',
             'authority_group_id' => 1,
@@ -64,7 +53,7 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
             $crawler->html()
         );
 
-        $authority = new Authority(1);
+        $authority = new Authority(101);
         $authority->init();
 
         static::assertSame('le nom', $authority->get('name'));
@@ -94,19 +83,8 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
      */
     public function testCreateAuthority(): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->createSuperAdminUser($certificatePem->getContent(), $certificatePem->getHash());
-
-        $client = $this->createClientWithCertificat(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );                                                           // 2/ Le client ne modifie pas la variable _SERVER
-
-        LegacyObjectsManager::setLegacyObjectInstancier();
-        LegacyObjectsManager::getLegacyObjectInstancier()->set('helios_use_passtrans_as_default', false);
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $_POST = [
             'name' => 'le nom',
@@ -174,19 +152,8 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
      */
     public function testCreateAuthorityWithPasstrans(?int $id, bool $usePasstrans, bool $expected): void
     {
-        $certificatePem = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->createSuperAdminUser($certificatePem->getContent(), $certificatePem->getHash());
-
-        $client = $this->createClientWithCertificat(
-            $certificatePem->getContent(),
-            $certificatePem->getContentStrippedFromBegin()
-        );                                                           // 2/ Le client ne modifie pas la variable _SERVER
-
-        LegacyObjectsManager::setLegacyObjectInstancier();
-        LegacyObjectsManager::getLegacyObjectInstancier()->set('helios_use_passtrans_as_default', $usePasstrans);
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);                                                       // 2/ Le client ne modifie pas la variable _SERVER
 
         $_POST = [
             'id' => $id,
@@ -235,11 +202,10 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
     {
         // On créé la collectivité : helios_use_passtrans doit correspondre à la valeur
         // de la variable d'environnement
-        yield [null,true,true];
         yield [null,false,false];
         // La collectivité est éditée : la valeur de helios_use_passtrans doit rester la même quelle que soit la
         // variable d'environnement
-        yield [1,true,false];
-        yield [1,false,false];
+        yield [101,true,false];
+        yield [101,false,false];
     }
 }

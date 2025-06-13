@@ -38,27 +38,27 @@ class ActesAntivirusWorker implements IWorker
         $this->workerScript = $workerScript;
     }
 
-    public function getQueueName()
+    public function getQueueName(): string
     {
         return self::QUEUE_NAME;
     }
 
-    public function getAllId()
+    public function getAllId(): array
     {
         return $this->actesTransactionSQL->getTransactionForAntiVirus();
     }
 
-    public function getData($id)
+    public function getData($id): mixed
     {
         return $id;
     }
 
-    public function getMutexName($data)
+    public function getMutexName($data): bool|string
     {
         return sprintf("actes-transaction-%s", $data);
     }
 
-    public function isDataValid($data)
+    public function isDataValid($data): bool
     {
         $transaction_id = $data;
         $transaction_info = $this->actesTransactionSQL->getInfo($transaction_id);
@@ -117,7 +117,7 @@ class ActesAntivirusWorker implements IWorker
     /**
      * @return void
      */
-    public function start()
+    public function start(): void
     {
         // TODO: Implement start() method.
     }
@@ -125,7 +125,7 @@ class ActesAntivirusWorker implements IWorker
     /**
      * @return void
      */
-    public function end()
+    public function end(): void
     {
         // TODO: Implement end() method.
     }

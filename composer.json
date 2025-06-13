@@ -82,7 +82,9 @@
       "S2low\\": "src/",
       "IntegrationTests\\": "integration_tests",
       "S2lowLegacy\\Lib\\": "lib/",
-      "S2lowLegacy\\Mail\\": "public.ssl/modules/mail/lib/"
+      "S2lowLegacy\\Mail\\": "public.ssl/modules/mail/lib/",
+      "S2lowLegacy\\Boot\\": "docker-resources/",
+      "S2lowLegacy\\Controller\\": "controller/"
     },
     "classmap": [
       "lib",

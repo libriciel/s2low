@@ -60,17 +60,17 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
         $this->archiveValidatorFactory = $archiveValidatorFactory;
     }
 
-    public function getQueueName()
+    public function getQueueName(): string
     {
         return self::QUEUE_NAME;
     }
 
-    public function getData($id)
+    public function getData($id): mixed
     {
         return $id;
     }
 
-    public function getAllId()
+    public function getAllId(): array
     {
         return $this->actesTransactionsSQL->getEnveloppeIdByTransactionsStatus(ActesStatusSQL::STATUS_POSTE);
     }
@@ -89,9 +89,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
         $envelope_libelle = "enveloppe $enveloppe_id (transactions " . implode(",", $transaction_ids) . ")";
 
         $this->logger->info("[$envelope_libelle] Analyse");
-
         $archive_path =  $this->actesScriptHelper->getArchivePath($enveloppe_id);
-
         if (!$archive_path) {
             $this->logger->error("[$envelope_libelle] Non trouvée en local ou sur le cloud");
             throw new RecoverableException("[$envelope_libelle] Non trouvée en local ou sur le cloud");
@@ -143,7 +141,6 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
 
         $tmpFolder->delete($tmp_dir);
         $this->logger->info("[$envelope_libelle] L'archive est valide !");
-
         $this->actesScriptHelper->updateStatusAndLog(
             $transaction_ids,
             ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,
@@ -155,12 +152,9 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
     }
 
     /**
-     * @param $archive_filepath
-     * @param $tmp_dir
      * @throws RecoverableException
-     * @throws Exception
      */
-    private function validatePades($archive_filepath, $tmp_dir, $must_validate_certificate)
+    private function validatePades($archive_filepath, $tmp_dir, $must_validate_certificate): void
     {
         $archive = new \Libriciel\LibActes\Archive();
 
@@ -180,11 +174,9 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
     }
 
     /**
-     * @param $filepath
-     * @param $must_validate_certificate
      * @throws RecoverableException
      */
-    private function validatePADESOneFile($filepath, $must_validate_certificate)
+    private function validatePADESOneFile($filepath, $must_validate_certificate): void
     {
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime_type = finfo_file($finfo, $filepath);
@@ -213,7 +205,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
      * @param $transaction_ids
      * @return bool
      */
-    private function mustValidateCertificate($transaction_ids)
+    private function mustValidateCertificate($transaction_ids): bool
     {
         if ($this->actes_dont_valid_signing_certificate) {
             return false;
@@ -230,12 +222,12 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
         return false;
     }
 
-    public function getMutexName($data)
+    public function getMutexName($data): bool|string
     {
         return sprintf("actes-transaction-%s", $data);
     }
 
-    public function isDataValid($data)
+    public function isDataValid($data): bool
     {
         $enveloppe_id = $data;
         $result = false;
@@ -251,7 +243,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
     /**
      * @return void
      */
-    public function start()
+    public function start(): void
     {
         // TODO: Implement start() method.
     }
@@ -259,7 +251,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
     /**
      * @return void
      */
-    public function end()
+    public function end(): void
     {
         // TODO: Implement end() method.
     }

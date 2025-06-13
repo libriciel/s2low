@@ -1,5 +1,6 @@
 <?php
 
+use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Services\PdfValidator;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\actes\ActesScriptHelper;
@@ -19,40 +20,35 @@ require_once __DIR__ . "/ActesCreator.php";
 
 class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
 {
-    /** @var  TmpFolder */
+    use ActesUtilitiesTestTrait;
+
     private $tmpFolder;
     private $tmp_dir;
-
-    /**
-     * @throws Exception
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->tmpFolder = new TmpFolder();
-        $this->tmp_dir = $this->tmpFolder->create();
-
-        $padesValid = $this->getMockBuilder(PadesValid::class)->disableOriginalConstructor()->getMock();
-        $padesValid->method("validate")->willReturn(true);
-        $this->getObjectInstancier()->set(PadesValid::class, $padesValid);
-    }
-
-    private function getActesAnalysFichierAEnvoyerWorker()
-    {
-        return $this->getObjectInstancier()->get(ActesAnalyseFichierAEnvoyerWorker::class);
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $this->tmpFolder->delete($this->tmp_dir);
-    }
 
     public function testQueueName()
     {
         $this->assertEquals(
             ActesAnalyseFichierAEnvoyerWorker::QUEUE_NAME,
             $this->getActesAnalysFichierAEnvoyerWorker()->getQueueName()
+        );
+    }
+
+    private function getActesAnalysFichierAEnvoyerWorker($padesMock = null): ActesAnalyseFichierAEnvoyerWorker
+    {
+        $padesValid = $padesMock ?? self::getContainer()->get(PadesValid::class);
+
+        return new ActesAnalyseFichierAEnvoyerWorker(
+            $this->s2lowLogger,
+            self::getContainer()->get(ActesTransactionsSQL::class),
+            self::getContainer()->getParameter('app.actes_appli_trigramme'),
+            self::getContainer()->getParameter('app.actes_appli_quadrigramme'),
+            self::getContainer()->get(ActesScriptHelper::class),
+            $padesValid,
+            self::getContainer()->get(WorkerScript::class),
+            self::getContainer()->getParameter('app.actes_dont_valid_signing_certificate'),
+            self::getContainer()->get(ActesTypePJSQL::class),
+            self::getContainer()->get(PdfValidator::class),
+            self::getContainer()->get(ArchiveValidatorFactory::class)
         );
     }
 
@@ -75,12 +71,39 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
     }
 
     /**
+     * @param $archivepath
+     * @param bool $is_marche_public
+     * @return array
+     * @throws Exception
+     */
+    private function createOneTransaction($archivepath, $is_marche_public = false)
+    {
+        $filePath = $this->createFilePath($archivepath, $this->tmp_dir);
+        $lastEnveloppeId = $this->createEnveloppe($filePath);
+        $transaction_id = $this->createTransactionWithTmpDir(
+            ActesStatusSQL::STATUS_POSTE,
+            $archivepath,
+            $this->tmp_dir,
+            $lastEnveloppeId,
+        );
+        $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+        $actesTransactionsSQL->setAntivirusCheck($transaction_id);
+
+        if ($is_marche_public) {
+            $sql = "UPDATE actes_transactions SET nature_code=?,classification=? WHERE id=?";
+            $this->getSQLQuery()->query($sql, "4", "1.1", $transaction_id);
+        }
+
+        return ['envelope_id' => $lastEnveloppeId, 'transaction_id' => $transaction_id];
+    }
+
+    /**
      * @throws Exception
      */
     public function testValidateAllOne()
     {
-        $transaction_id = $this->validateAll(__DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
-        $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+        $transaction_id = $this->validateAll($this->projectDir . "/test/PHPUnit/fixtures/ok/abc-TACT--000000000--20181024-4.tar.gz");
+        $actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION, $transaction_info['last_status_id']);
         $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
@@ -89,9 +112,21 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
             "Accepté par le TdT : validation OK",
             $transaction_info['message']
         );
-        $logsSQL = $this->getObjectInstancier()->get(LogsSQL::class);
+        $logsSQL = self::getContainer()->get(LogsSQL::class);
         $liste = $logsSQL->getLastLog();
         $this->assertMatchesRegularExpression("#Transaction.*[0-9]* : passage à l'état en attente#", $liste['message']);
+    }
+
+    /**
+     * @param $archivepath
+     * @return array|bool|mixed
+     * @throws Exception
+     */
+    private function validateAll($archivepath, $is_marche_public = false, $padesMock = null)
+    {
+        $data = $this->createOneTransaction($archivepath, $is_marche_public);
+        $this->getActesAnalysFichierAEnvoyerWorker($padesMock)->work($data['envelope_id']);
+        return $data['transaction_id'];
     }
 
     /**
@@ -99,10 +134,11 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
      */
     public function testValidateAllOneWithTypologieKO()
     {
-        $this->getObjectInstancier()->set('actes_appli_trigramme', 'abc');
-        $this->getObjectInstancier()->set('actes_appli_quadrigramme', 'TACT');
-
-        $this->getObjectInstancier()->get(ActesUpdateClassificationSQL::class)->insertActeNature(4, 'CC', 'Contrat et convention');
+        $this->getObjectInstancier()->get(ActesUpdateClassificationSQL::class)->insertActeNature(
+            4,
+            'CC',
+            'Contrat et convention'
+        );
         $this->getObjectInstancier()->get(ActesUpdateClassificationSQL::class)->insertActeTypePJ(4, '99_AU', 'test');
 
         $transaction_id = $this->validateAll(__DIR__ . "/../../fixtures/ok/abc-TACT--000000000--20181024-4.tar.gz");
@@ -127,11 +163,11 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
      */
     public function testValidateAllOneWithTyplogieOK()
     {
-
-        $this->getObjectInstancier()->set('actes_appli_trigramme', 'abc');
-        $this->getObjectInstancier()->set('actes_appli_quadrigramme', 'TACT');
-
-        $this->getObjectInstancier()->get(ActesUpdateClassificationSQL::class)->insertActeNature(4, 'CC', 'Contrat et convention');
+        $this->getObjectInstancier()->get(ActesUpdateClassificationSQL::class)->insertActeNature(
+            4,
+            'CC',
+            'Contrat et convention'
+        );
         $this->getObjectInstancier()->get(ActesUpdateClassificationSQL::class)->insertActeTypePJ(4, '99_CO', 'test');
         $this->getObjectInstancier()->get(ActesUpdateClassificationSQL::class)->insertActeTypePJ(4, '10_DE', 'test');
 
@@ -172,18 +208,6 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
     }
 
     /**
-     * @param $archivepath
-     * @return array|bool|mixed
-     * @throws Exception
-     */
-    private function validateAll($archivepath, $is_marche_public = false)
-    {
-        $data = $this->createOneTransaction($archivepath, $is_marche_public);
-        $this->getActesAnalysFichierAEnvoyerWorker()->work($data['envelope_id']);
-        return $data['transaction_id'];
-    }
-
-    /**
      * @throws Exception
      */
     public function testValidateEmptyFile()
@@ -205,44 +229,19 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
     }
 
     /**
-     * @param $archivepath
-     * @param bool $is_marche_public
-     * @return array
-     * @throws Exception
-     */
-    private function createOneTransaction($archivepath, $is_marche_public = false)
-    {
-        $actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
-        $transaction_id = $actesCreator->createTransaction(
-            ActesStatusSQL::STATUS_POSTE,
-            $archivepath,
-            $this->tmp_dir
-        );
-
-        $envelope_id = $actesCreator->getLastEnvelopeId();
-        $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
-        $actesTransactionsSQL->setAntivirusCheck($transaction_id);
-
-        if ($is_marche_public) {
-            $sql = "UPDATE actes_transactions SET nature_code=?,classification=? WHERE id=?";
-            $this->getSQLQuery()->query($sql, "4", "1.1", $transaction_id);
-        }
-
-        return ['envelope_id' => $envelope_id, 'transaction_id' => $transaction_id];
-    }
-
-    /**
      * @throws Exception
      */
     public function testValidateAllOnePadesFailedRecoverable()
     {
+        $padesMock = $this->getMockBuilder(PadesValid::class)->disableOriginalConstructor()->getMock();
+        $padesMock->method("validate")->willThrowException(new RecoverableException("erreur de test"));
 
-        $padesValid = $this->getMockBuilder(PadesValid::class)->disableOriginalConstructor()->getMock();
-        $padesValid->method("validate")->willThrowException(new RecoverableException("erreur de test"));
-        $this->getObjectInstancier()->set(PadesValid::class, $padesValid);
-
-        $this->setExpectedException(RecoverableException::class, "erreur de test");
-        $transaction_id = $this->validateAll(__DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
+        $this->expectException(RecoverableException::class);
+        $this->expectExceptionMessage("erreur de test");
+        $transaction_id = $this->validateAll(
+            __DIR__ . "/../../fixtures/ok/abc-TACT--000000000--20181024-4.tar.gz",
+            padesMock: $padesMock
+        );
 
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
@@ -256,12 +255,10 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
      */
     public function testValidateAllOnePadesFailedNotRecoverable()
     {
+        $padesMock = $this->getMockBuilder(PadesValid::class)->disableOriginalConstructor()->getMock();
+        $padesMock->method("validate")->willThrowException(new Exception("erreur de test"));
 
-        $padesValid = $this->getMockBuilder(PadesValid::class)->disableOriginalConstructor()->getMock();
-        $padesValid->method("validate")->willThrowException(new Exception("erreur de test"));
-        $this->getObjectInstancier()->set(PadesValid::class, $padesValid);
-
-        $transaction_id = $this->validateAll(__DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
+        $transaction_id = $this->validateAll(__DIR__ . "/../../fixtures/ok/abc-TACT--000000000--20181024-4.tar.gz", padesMock: $padesMock);
 
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
@@ -269,7 +266,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
         $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR, $transaction_info['status_id']);
         $this->assertEquals(
-            "Enveloppe invalide : Problème sur 99_DE-045-214502494-20170717-D201717-DE-1-1_1.pdf : erreur de test",
+            "Enveloppe invalide : Problème sur 10_DE-002-000000000-20181001-201810241655-CC-1-1_1.pdf : erreur de test",
             $transaction_info['message']
         );
         $logsSQL = $this->getObjectInstancier()->get(LogsSQL::class);
@@ -283,7 +280,10 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
     public function testValidateAllOneNoChekingCertificate()
     {
         $logsSQL = $this->getObjectInstancier()->get(LogsSQL::class);
-        $transaction_id = $this->validateAll(__DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-6.tar.gz", true);
+        $transaction_id = $this->validateAll(
+            __DIR__ . "/../../fixtures/ok/abc-TACT--000000000--20181024-4.tar.gz",
+            true
+        );
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
 
@@ -304,29 +304,24 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
      */
     public function testValidateAllNoChekingCertificateGlobale()
     {
-        $this->getObjectInstancier()->set("actes_dont_valid_signing_certificate", true);
-        $transaction_id = $this->validateAll(__DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
+//        $this->getObjectInstancier()->set("actes_dont_valid_signing_certificate", true);
+        $transaction_id = $this->validateAll(__DIR__ . "/../../fixtures/ok/abc-TACT--000000000--20181024-4.tar.gz");
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION, $transaction_info['last_status_id']);
     }
-
 
     /**
      * @throws Exception
      */
     public function testValidateAllOneWithTypologieKOTypologieChecked()
     {
-
         $actesUpdateClassificationSQL = $this->getObjectInstancier()->get(ActesUpdateClassificationSQL::class);
 
         $actesUpdateClassificationSQL->updateClassification(
             "123456789",
             file_get_contents(__DIR__ . "/../../class/actes/fixtures/classification-exemple.xml")
         );
-
-        $this->getObjectInstancier()->set('actes_appli_trigramme', 'abc');
-        $this->getObjectInstancier()->set('actes_appli_quadrigramme', 'TACT');
 
         $transaction_id = $this->validateAll(__DIR__ . "/../../fixtures/bad/abc-TACT--000000000--20181024-4.tar.gz");
 
@@ -356,9 +351,6 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
             file_get_contents(__DIR__ . "/../../class/actes/fixtures/classification-exemple.xml")
         );
 
-        $this->getObjectInstancier()->set('actes_appli_trigramme', 'abc');
-        $this->getObjectInstancier()->set('actes_appli_quadrigramme', 'TACT');
-
         $transaction_id = $this->validateAll(__DIR__ . "/../../fixtures/bad/abc-TACT--000000000--20181024-5.tar.gz");
 
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
@@ -368,7 +360,9 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
 
     public function testErrorIsHandled()
     {
-        $archiveValidator = $this->getMockBuilder(\Libriciel\LibActes\ArchiveValidator::class)->disableOriginalConstructor()->getMock();
+        $archiveValidator = $this->getMockBuilder(
+            \Libriciel\LibActes\ArchiveValidator::class
+        )->disableOriginalConstructor()->getMock();
         $archiveValidator->method('validate')->willThrowException(new Error('oupsie'));
 
         $archiveValidatorFactory = $this->getMockBuilder(ArchiveValidatorFactory::class)
@@ -379,12 +373,12 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
         $worker = new ActesAnalyseFichierAEnvoyerWorker(
             $this->getObjectInstancier()->get(S2lowLogger::class),
             $this->getObjectInstancier()->get(ActesTransactionsSQL::class),
-            $this->getObjectInstancier()->get('actes_appli_trigramme'),
-            $this->getObjectInstancier()->get('actes_appli_quadrigramme'),
+            $this->getObjectInstancier()->getParameter('app.actes_appli_trigramme'),
+            $this->getObjectInstancier()->getParameter('app.actes_appli_quadrigramme'),
             $this->getObjectInstancier()->get(ActesScriptHelper::class),
             $this->getObjectInstancier()->get(PadesValid::class),
             $this->getObjectInstancier()->get(WorkerScript::class),
-            $this->getObjectInstancier()->get('actes_dont_valid_signing_certificate'),
+            $this->getObjectInstancier()->getParameter('app.actes_dont_valid_signing_certificate'),
             $this->getObjectInstancier()->get(ActesTypePJSQL::class),
             $this->getObjectInstancier()->get(PdfValidator::class),
             $archiveValidatorFactory
@@ -393,11 +387,36 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
         $data = $this->createOneTransaction(__DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
 
         $worker->work($data['envelope_id']);
-
-        $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+        $actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
         $transaction_info = $actesTransactionsSQL->getInfo($data['transaction_id']);
         $this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR, $transaction_info['last_status_id']);
         $statusInfo = $actesTransactionsSQL->getLastTransactionWorkflowInfo($data['transaction_id']);
         $this->assertEquals("Enveloppe invalide : oupsie", $statusInfo['message']);
+    }
+
+    /**
+     * @throws Exception
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->tmpFolder = new TmpFolder();
+        $this->tmp_dir = $this->tmpFolder->create();
+
+        $padesValid = $this->getMockBuilder(PadesValid::class)->disableOriginalConstructor()->getMock();
+        $padesValid->method("validate")->willReturn(true);
+
+        $this->getObjectInstancier()->set(PadesValid::class, $padesValid);
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        $this->tmpFolder->delete($this->tmp_dir);
+    }
+
+    protected function getActesTransactionsSQL(): ActesTransactionsSQL
+    {
+        return self::getContainer()->get(ActesTransactionsSQL::class);
     }
 }

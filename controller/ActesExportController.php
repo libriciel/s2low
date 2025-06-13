@@ -5,6 +5,7 @@ namespace S2lowLegacy\Controller;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
 use S2lowLegacy\Class\CSVOutput;
+use S2lowLegacy\Class\Database;
 use S2lowLegacy\Model\AuthoritySQL;
 
 class ActesExportController extends Controller

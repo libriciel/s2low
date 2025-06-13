@@ -322,7 +322,7 @@ class TransactionSQL
             return $result;
         } catch (Exception $e) {
             var_dump($e->getMessage());
-            die();
+            die;
         }
     }
 

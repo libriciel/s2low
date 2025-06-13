@@ -295,7 +295,6 @@ class MailController
     {
         //FIXME fonction trop grande ...
 
-
         require_once(dirname(__FILE__) . "/../lib/mailfunction.php");
 
         //HACK
@@ -463,7 +462,6 @@ class MailController
 
             return false;
         }
-
         return $mailTransaction->getID();
     }
 

@@ -10,12 +10,12 @@ class NounceSQLTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->nounceSQL = $this->getObjectInstancier()->{NounceSQL::class};
+        $this->nounceSQL = self::getContainer()->get(NounceSQL::class);
     }
 
     public function testGetNounce()
     {
-        $nounce = $this->nounceSQL->create("toto", "MonMotDePasse", 1);
+        $nounce = $this->nounceSQL->create("toto", "MonMotDePasse", 101);
         $this->assertNotEmpty($nounce);
     }
 
@@ -24,21 +24,21 @@ class NounceSQLTest extends S2lowTestCase
         $sql = "INSERT into nounce(creation) VALUES (?)";
         $this->getSQLQuery()->query($sql, date("c", strtotime("now -1 hours")));
         $sql = "SELECT count(*) FROM nounce";
-        $this->assertEquals(1, $this->getSQLQuery()->queryOne($sql));
+        $this->assertEquals(4, $this->getSQLQuery()->queryOne($sql));
         $this->nounceSQL->menage();
-        $this->assertEquals(0, $this->getSQLQuery()->queryOne($sql));
+        $this->assertEquals(3, $this->getSQLQuery()->queryOne($sql));
     }
 
     public function testVerify()
     {
-        $nounce = $this->nounceSQL->create("toto", "MonMotDePasse", 1);
+        $nounce = $this->nounceSQL->create("toto", "MonMotDePasse", 101);
         $hash = hash("sha256", "MonMotDePasse:$nounce");
-        $this->assertEquals(1, $this->nounceSQL->verify("toto", $nounce, $hash));
+        $this->assertEquals(101, $this->nounceSQL->verify("toto", $nounce, $hash));
     }
 
     public function testVerifyFalse()
     {
-        $nounce = $this->nounceSQL->create("toto", "MonMotDePasse", 1);
+        $nounce = $this->nounceSQL->create("toto", "MonMotDePasse", 101);
         $hash = "badhash";
         $this->assertFalse($this->nounceSQL->verify("toto", $nounce, $hash));
     }

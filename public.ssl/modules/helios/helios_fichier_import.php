@@ -3,6 +3,7 @@
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Class\User;
@@ -13,7 +14,6 @@ if (!$module->initByName("helios")) {
     header("Location: " . WEBSITE_SSL);
     exit();
 }
-
 $me = new User();
 
 if (!$me->authenticate()) {
@@ -34,14 +34,12 @@ if ($module->getParam("paper") == "on") {
     exit();
 }
 
-
-$rgsConnexion = new RgsConnexion();
-if (! $rgsConnexion->isRgsConnexion()) {
-    $_SESSION["error"] = "Votre certificat n'est pas conforme au RGS, vous ne pouvez pas télétransmettre !";
-    header("Location: " . Helpers::getLink("/modules/helios/index.php"));
-    exit();
-}
-
+//$rgsConnexion = LegacyObjectsManager::getLegacyObjectInstancier()->get(RgsConnexion::class);
+//if (! $rgsConnexion->isRgsConnexion()) {
+//    $_SESSION["error"] = "Votre certificat n'est pas conforme au RGS, vous ne pouvez pas télétransmettre !";
+//    header("Location: " . Helpers::getLink("/modules/helios/index.php"));
+//    exit();
+//}
 
 $myAuthority = new Authority($me->get("authority_id"));
 

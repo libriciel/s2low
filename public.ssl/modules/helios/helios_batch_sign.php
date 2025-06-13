@@ -19,22 +19,20 @@ use S2lowLegacy\Model\ModuleSQL;
 /** @var string $html */
 
 [
-        $initialisation,
+    $initialisation,
     $moduleSQL,
     $heliosTransactionSQL,
     $pesAllerRetriever,
-    $libersignController,
-    $html
+    $libersignController
 ] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([
-            Initialisation::class,
+        Initialisation::class,
         ModuleSQL::class,
         HeliosTransactionsSQL::class,
         PesAllerRetriever::class,
         LibersignController::class,
-        'html'
         ]);
-
+$html = '';
 $initData = $initialisation->doInit();
 $moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
 

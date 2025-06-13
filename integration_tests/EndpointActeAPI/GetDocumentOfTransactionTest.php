@@ -20,7 +20,7 @@ class GetDocumentOfTransactionTest extends S2lowIntegrationTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
+        $this->actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -45,7 +45,8 @@ class GetDocumentOfTransactionTest extends S2lowIntegrationTestCase
 
         $_GET['id'] = $transactionId;
 
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
         $client->request('GET', '/modules/actes/actes_transac_get_document.php', [
             'id' => $transactionId
         ]);

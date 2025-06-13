@@ -5,6 +5,7 @@ use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Group;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
@@ -16,12 +17,12 @@ use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Model\UserSQL;
 
-list($objectInstancier, $html, $jsonOutput,$sqlQuery, $frontController) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $jsonOutput,$sqlQuery, $frontController) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, 'html', JSONoutput::class, SQLQuery::class, FrontController::class]
+        [ObjectInstancier::class, JSONoutput::class, SQLQuery::class, FrontController::class]
     );
 
-
+$html = '';
 $x509Certificate = new X509Certificate();
 
 $me = new User();
@@ -185,7 +186,7 @@ if ($him->getId()) {
     $userService_list = $serviceUser->getServiceFromUser($him->getId());
 }
 
-$userSQL = new UserSQL($sqlQuery);
+$userSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(UserSQL::class);
 
 $ident_method_id = $userSQL->getIdentificationMethod($him->getId() ?: $new_id);
 $ident_method_libelle = $userSQL->getIdentificationMethodeLibelle($ident_method_id);

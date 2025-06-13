@@ -50,7 +50,6 @@ class ActeTamponne
         $pdfStampData->recu_prefecture_date = $date_reception;
         $pdfStampData->affichage_date = $date_affichage;
         $pdfStampData->identifiant_unique = $transactionInfo['unique_id'];
-
         try {
             $result =  $this->pdfStampWrapper->stamp($file_path, $pdfStampData);
             $this->logger->info("Tamponnage de l'acte $transaction_id");

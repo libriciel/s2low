@@ -1,16 +1,26 @@
 <?php
 
+use Monolog\Handler\TestHandler;
+use org\bovigo\vfs\vfsStream;
+use Psr\Log\LoggerInterface;
+use Monolog\Level;
+use S2low\Factory\PDOFactory;
+use S2low\Services\Database\TransactionForPDO;
+use S2lowLegacy\Class\Database;
 use S2lowLegacy\Class\RgsConnexion;
+use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
-use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use S2low\Tests\DatabaseForTest;
 
-abstract class S2lowTestCase extends TestCase
+abstract class S2lowTestCase extends KernelTestCase
 {
-    protected $backupGlobalsBlacklist = array('sqlQuery');
-
-    private TestEnvironmentManager $testEnvironmentManager;
-
+    protected $backupGlobalsBlacklist = ['sqlQuery'];
+    protected $tmpPathFolder;
+    protected string $projectDir;
+    protected TransactionForPDO $transactionForPDO;
     /**
      * @throws Exception
      */
@@ -18,28 +28,74 @@ abstract class S2lowTestCase extends TestCase
     {
         parent::setUp();
 
-        $this->testEnvironmentManager = new TestEnvironmentManager();
-        $this->testEnvironmentManager->setUp();
+        // files setup
+        $this->projectDir = self::getContainer()->getParameter('kernel.project_dir');
+        $this->vfsStreamSetup = vfsStream::setup('test');
+        $this->tmpPathFolder = vfsStream::url('test');
+        $this->secondTmpPathFolder = vfsStream::url('test2');
+
+        //Database Setup
+        $this->transactionCreator = self::getContainer()->get(TransactionForPDO::class);
+        $this->transactionCreator->beginTestTransaction();
+
+        // Loggers setup
+        $this->testHandler = $this->createTestHandler();
+        $this->logger = $this->createLogger($this->testHandler);
+        $this->s2lowLogger = $this->createS2lowLogger($this->logger);
+
+        // Container setup
+        $sqlQuery = self::getContainer()->get(SQLQuery::class);
+        $database = new DatabaseForTest($sqlQuery);
+        self::getContainer()->set(Database::class, $database);
+
+        $objectInstancier = new ObjectInstancier(self::getContainer());
+        \S2lowLegacy\Class\LegacyObjectsManager::setObjectInstancier($objectInstancier);
+        \S2lowLegacy\Lib\ObjectInstancierFactory::setObjectInstancier($objectInstancier);
+        \S2lowLegacy\Class\DatabasePool::setObjectInstancier($objectInstancier);
     }
 
-    public function getObjectInstancier(): ObjectInstancier
+    public function tearDown(): void
     {
-        return  $this->testEnvironmentManager->getObjectInstancier();
+        $this->transactionCreator->rollbackTestTransaction();
+        self::getContainer()->get(Database::class)->disconnect();
+        self::getContainer()->get(PDOFactory::class)->closeAll();
+        self::ensureKernelShutdown();
+    }
+
+    /**
+     * @deprecated ObjectInstancier n'existe plus : utiliser self::getContainer à la place
+     */
+    public function getObjectInstancier(): ContainerInterface
+    {
+        return self::getContainer();
     }
 
     public function getSQLQuery(): SQLQuery
     {
-        return $this->testEnvironmentManager->getSQLQuery();
+        return self::getContainer()->get(SQLQuery::class);
+    }
+
+    public function createTestHandler(): TestHandler
+    {
+        return new Monolog\Handler\TestHandler();
+    }
+
+    public function createLogger(TestHandler $testHandler): LoggerInterface
+    {
+        $logger = new \Monolog\Logger('phpunit');
+        $logger->pushHandler($testHandler);
+
+        return $logger;
+    }
+
+    public function createS2lowLogger(LoggerInterface $logger): S2lowLogger
+    {
+        return new S2lowLogger($logger);
     }
 
     protected function setServerInfo(array $server_info)
     {
         $this->testEnvironmentManager->setServerInfo($server_info);
-    }
-
-    public function setSuperAdminAuthentication()
-    {
-        $this->testEnvironmentManager->setSuperAdminAuthentication();
     }
 
     public function setAdminGroupAuthentication()
@@ -68,6 +124,7 @@ abstract class S2lowTestCase extends TestCase
      */
     public function setRGSAuthentification(): void
     {
+        throw new Exception("seek this answer to debug 6234d5463");
         $rgsConnexion = $this->getMockBuilder(RgsConnexion::class)->disableOriginalConstructor()->getMock();
         $rgsConnexion->method('isRgsConnexion')->willReturn(true);
         $this->getObjectInstancier()->{RgsConnexion::class} = $rgsConnexion;
@@ -83,17 +140,17 @@ abstract class S2lowTestCase extends TestCase
         $this->testEnvironmentManager->setArchAuthentification();
     }
 
+    /**
+     * @deprecated methode deprecated il faut maintenant injecter un logger avec le testHandler
+     */
     public function getLogRecords()
     {
-        return $this->testEnvironmentManager->getLogRecords();
+        throw new Exception("seek this answer to debug 62345463");
     }
 
-    public function assertLogMessage($expected_message, $num_log = 0)
+    public function assertLogMessage($expected_message, Level $level): void
     {
-        $this->assertEquals(
-            $expected_message,
-            $this->getLogRecords()[$num_log]['message']
-        );
+        throw new Exception("seek this answer to debug 848756543");
     }
 
     public function assertMatchesRegularExpressionLogMessage($expected_message, $num_log = 0)
@@ -114,5 +171,13 @@ abstract class S2lowTestCase extends TestCase
     public function noAssertion()
     {
         $this->assertTrue(true);
+    }
+
+    /**
+     * @deprecated only for refacto purpose, delete this methode si vous la voyez
+     */
+    public function log()
+    {
+        dd($this->testHandler->getRecords());
     }
 }

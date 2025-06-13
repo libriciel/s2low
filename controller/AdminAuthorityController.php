@@ -5,29 +5,34 @@ namespace S2lowLegacy\Controller;
 use S2lowLegacy\Class\actes\ActesConventions;
 use S2lowLegacy\Class\CSVOutput;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Model\AuthoritySQL;
 
 class AdminAuthorityController extends Controller
 {
+    public function __construct(
+        private readonly ActesConventions $actesConventions,
+        ObjectInstancier $objectInstancier,
+    ) {
+        parent::__construct($objectInstancier);
+    }
+
     /**
      * @throws RedirectException
      */
     public function downloadConventionAction()
     {
-
         $authority_id = $this->getEnvironnement()->get()->get('authority_id');
-        if (! $authority_id) {
+        if (!$authority_id) {
             $this->redirectSSL();
         }
 
         $this->verifAdmin($authority_id);
 
-        $actesConvention = $this->getObjectInstancier()->get(ActesConventions::class);
+        $convention_filepath = $this->actesConventions->getConventionFilepath($authority_id);
 
-        $convention_filepath = $actesConvention->getConventionFilepath($authority_id);
-
-        if (! $convention_filepath || ! file_exists($convention_filepath)) {
+        if (!$convention_filepath || !file_exists($convention_filepath)) {
             $this->redirect(
                 "/admin/authorities/admin_authority_edit.php?id=" . $authority_id,
                 "Impossible de récupérer la convention"

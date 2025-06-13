@@ -145,7 +145,6 @@ class UserSQL extends SQL
                 " AND certificate_rgs_2_etoiles = ?  AND login=?  ORDER BY id ";
 
         $data = array($certificate_hash, $certificate_rgs_2_etoile,$login);
-
         return $this->query($sql, $data);
     }
 
@@ -159,11 +158,10 @@ class UserSQL extends SQL
     public function getIdsFromConnexionInfo(string $certificate_hash, string $certificate_rgs_2_etoile): array
     {
         $sql = "SELECT id FROM users " .
-            " WHERE certificate_hash=? " .
+            " WHERE certificate_hash = ? " .
             " AND certificate_rgs_2_etoiles = ?  ORDER BY id ";
 
-        $data = array($certificate_hash, $certificate_rgs_2_etoile);
-
+        $data = [$certificate_hash, $certificate_rgs_2_etoile];
         return $this->queryOneCol($sql, $data);
     }
 
@@ -195,7 +193,6 @@ class UserSQL extends SQL
             $sql = "SELECT id FROM users WHERE certificate_hash=? ";
             $result = $this->queryOneCol($sql, $certificat_connexion_info['certificate_hash']);
         }
-
         if (! $result) {
             return false;
         }

@@ -19,7 +19,7 @@ class AuthorityTest extends S2lowTestCase
      */
     public function testSimpleInitAndGet()
     {
-        $authority = new Authority(1);
+        $authority = new Authority(101);
         $authority->init();
         static::assertEquals(
             'Bourg-en-Bresse',
@@ -31,39 +31,6 @@ class AuthorityTest extends S2lowTestCase
         );
     }
 
-    /**
-     * Test simple d'init utilisant les données en BDD de S2lowTestCase
-     * @return void
-     * @throws Exception
-     * @dataProvider mails
-     */
-    public function testSimpleMail(string $mailField, string $value1, string $value2)
-    {
-        $authority = new Authority(1);
-        $authority->init();
-        $authority->set($mailField, $value1);
-        $authority->save(false, false);
-
-        $authority1 = new Authority(1);
-        $authority1->init();
-        static::assertEquals(
-            $value1,
-            $authority1->get($mailField)
-        );
-        $authority1->set($mailField, $value2);
-        $authority1->save(false, false);
-
-        $authority2 = new Authority(1);
-        $authority2->init();
-        static::assertEquals(
-            $value2,
-            $authority2->get($mailField)
-        );
-    }
-
-    /**
-     * @return array[]
-     */
     public function mails(): array
     {
         return[
@@ -74,13 +41,43 @@ class AuthorityTest extends S2lowTestCase
     }
 
     /**
+     * Test simple d'init utilisant les données en BDD de S2lowTestCase
+     * @return void
+     * @throws Exception
+     * @dataProvider mails
+     */
+    public function testSimpleMail(string $mailField, string $value1, string $value2)
+    {
+        $authority = new Authority(101);
+        $authority->init();
+        $authority->set($mailField, $value1);
+        $authority->save(false, false);
+
+        $authority1 = new Authority(102);
+        $authority1->init();
+        static::assertEquals(
+            $value1,
+            $authority1->get($mailField)
+        );
+        $authority1->set($mailField, $value2);
+        $authority1->save(false, false);
+
+        $authority2 = new Authority(103);
+        $authority2->init();
+        static::assertEquals(
+            $value2,
+            $authority2->get($mailField)
+        );
+    }
+
+    /**
      * @return void
      * @throws Exception
      * @dataProvider ftpDests
      */
     public function testSaveFtpDest(string $originFtpDest, string $modifiedFtpDest)
     {
-        $authority = new Authority(1);
+        $authority = new Authority(101);
         $authority->init();
 
         static::assertEquals(
@@ -90,7 +87,7 @@ class AuthorityTest extends S2lowTestCase
         $authority->set('helios_ftp_dest', $modifiedFtpDest);
         $authority->save(false, false);
 
-        $authority1 = new Authority(1);
+        $authority1 = new Authority(101);
         $authority1->init();
 
         static::assertEquals(
@@ -100,7 +97,7 @@ class AuthorityTest extends S2lowTestCase
         $authority1->set('helios_ftp_dest', $originFtpDest);
         $authority1->save(false, false);
 
-        $authority2 = new Authority(1);
+        $authority2 = new Authority(101);
         $authority2->init();
         static::assertEquals(
             $originFtpDest,

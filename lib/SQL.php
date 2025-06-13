@@ -2,40 +2,44 @@
 
 namespace S2lowLegacy\Lib;
 
+use S2lowLegacy\Class\Database;
+
 abstract class SQL
 {
-    private $sqlQuery;
-
-    public function __construct(SQLQuery $sqlQuery)
-    {
-        $this->sqlQuery = $sqlQuery;
+    public function __construct(
+        private readonly SQLQuery $sqlQuery,
+        protected readonly Database $database,
+    ) {
     }
 
     public function query($query, $param = false)
     {
-        if (! is_array($param)) {
+        if (!is_array($param)) {
             $param = func_get_args();
             array_shift($param);
         }
-        return $this->sqlQuery->query($query, $param);
+
+        return $this->database->query($query, $param);
     }
 
-    public function queryOne($query, $param = false)
+    public function queryOne($query, $params = false)
     {
-        if (! is_array($param)) {
-            $param = func_get_args();
-            array_shift($param);
+        if (! is_array($params)) {
+            $params = func_get_args();
+            array_shift($params);
         }
-        return $this->sqlQuery->queryOne($query, $param);
+
+        return $this->database->getOneLine($query, $params);
     }
 
-    public function queryOneCol($query, $param = false)
+    public function queryOneCol($query, $params = false)
     {
-        if (! is_array($param)) {
-            $param = func_get_args();
-            array_shift($param);
+        if (! is_array($params)) {
+            $params = func_get_args();
+            array_shift($params);
         }
-        return $this->sqlQuery->queryOneCol($query, $param);
+
+        return $this->database->getOneCol($query, $params);
     }
 
     protected function getSQLQuery()

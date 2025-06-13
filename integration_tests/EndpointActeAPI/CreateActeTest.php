@@ -5,9 +5,13 @@ namespace EndpointActeAPI;
 use IntegrationTests\S2lowIntegrationTestCase;
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
+use S2low\Services\Database\TransactionForPDO;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\Database;
+use S2lowLegacy\Class\User;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\VarDumper\Cloner\Data;
 
 class CreateActeTest extends S2lowIntegrationTestCase
 {
@@ -18,7 +22,7 @@ class CreateActeTest extends S2lowIntegrationTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
+        $this->actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -49,7 +53,8 @@ class CreateActeTest extends S2lowIntegrationTestCase
      */
     public function testShouldReturnOk($data): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
+        $this->client = $this->getAuthenticatedClient();
+        $this->setUserWithRole(UserRole::Utilisateur);
 
         $filePath = __DIR__ . '/../fixtures/PDFTest.pdf';
         $fileName = 'PDFTest.pdf';
@@ -100,7 +105,7 @@ class CreateActeTest extends S2lowIntegrationTestCase
         $_POST['type_acte'] = $typeActe;
         $_POST['type_pj'] = $typePj;
 
-        $client->request(
+        $this->client->request(
             'POST',
             '/modules/actes/actes_transac_create.php',
             [
@@ -117,7 +122,7 @@ class CreateActeTest extends S2lowIntegrationTestCase
             $file
         );
 
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
         static::assertStringContainsString($data['stringInResponse'], $response->getContent());
     }
 }

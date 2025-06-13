@@ -54,7 +54,6 @@ class CloudStorage
     {
         $file_path_on_disk = $this->cloudStorable->getFilePathOnDisk($object_id);
         $file_path_on_cloud = $this->cloudStorable->getFilePathOnCloud($object_id);
-
         if (! $file_path_on_disk) {
             $this->logger->error(
                 "Unable to store object #$object_id in cloud : file_path_on_disk not found !"
@@ -69,7 +68,6 @@ class CloudStorage
             $this->cloudStorable->setNotAvailable($object_id);
             return false;
         }
-
         if (! file_exists($file_path_on_disk)) {
             $this->logger->error(
                 "Unable to store object #$object_id in cloud : file $file_path_on_disk did not exist !"
@@ -77,7 +75,6 @@ class CloudStorage
             $this->cloudStorable->setNotAvailable($object_id);
             return false;
         }
-
         $this->logger->info(
             sprintf(
                 'Storing object #%s - filepath (on disk): %s - filepath (on cloud) : %s',
@@ -227,7 +224,6 @@ class CloudStorage
      */
     public function getPath(int $object_id): string | bool
     {
-
         $file_path_on_disk = $this->cloudStorable->getFilePathOnDisk($object_id);
         if (! $file_path_on_disk) {
             return false;

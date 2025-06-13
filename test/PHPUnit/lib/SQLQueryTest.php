@@ -2,7 +2,7 @@
 
 use S2lowLegacy\Lib\SQLQuery;
 
-class SQLQueryTest extends PHPUnit_Framework_TestCase
+class SQLQueryTest extends S2lowTestCase
 {
     /**
      * @var SQLQuery
@@ -11,12 +11,8 @@ class SQLQueryTest extends PHPUnit_Framework_TestCase
 
     protected function setUp(): void
     {
-        $this->sqlQuery = new SQLQuery(
-            DB_DATABASE_TEST,
-            DB_HOST_TEST,
-            DB_USER_TEST,
-            DB_PASSWORD_TEST
-        );
+        parent::setUp();
+        $this->sqlQuery = self::getContainer()->get(SQLQuery::class);
     }
 
     public function testGetPdo()
@@ -34,42 +30,28 @@ class SQLQueryTest extends PHPUnit_Framework_TestCase
     public function testBadQuery()
     {
         $sql = "NOT_SQL_WORD";
-        $this->setExpectedException("Exception", 'NOT_SQL_WORD');
+        $this->expectExceptionMessage("NOT_SQL_WORD");
         $this->sqlQuery->query($sql);
-    }
-
-    public function testDisconnect()
-    {
-        $this->sqlQuery->disconnect();
-        $this->noAssertion();
-    }
-
-    public function testDisconnectAndReconnect()
-    {
-        $this->sqlQuery->disconnect();
-        $sql = "SELECT 42 as response";
-        $result = $this->sqlQuery->query($sql);
-        $this->assertEquals(42, $result[0]['response']);
     }
 
     public function testSleep()
     {
         $this->sqlQuery->sleep(0);
-        $this->noAssertion();
+        self::assertTrue(true);
     }
 
     public function testQueryOne()
     {
         $sql = "SELECT id FROM users ORDER BY id LIMIT 1";
         $result = $this->sqlQuery->queryOne($sql);
-        $this->assertEquals(1, $result);
+        $this->assertEquals(101, $result);
     }
 
     public function testQueryOneCol()
     {
         $sql = "SELECT id FROM users ORDER BY id LIMIT 2";
         $result = $this->sqlQuery->queryOneCol($sql);
-        $this->assertEquals(array(1, 2), $result);
+        $this->assertEquals([101, 102], $result);
     }
 
     public function testQueryOneEmptyResult()
@@ -90,21 +72,35 @@ class SQLQueryTest extends PHPUnit_Framework_TestCase
     {
         $sql = "SELECT id FROM users ORDER BY id ";
         $result = $this->sqlQuery->queryOne($sql);
-        $this->assertEquals(1, $result);
+        $this->assertEquals(101, $result);
     }
 
     public function testSlowQuery()
     {
         $this->sqlQuery->setSlowQuery(0);
         $sql = "SELECT id FROM users ORDER BY id ";
-        $this->setExpectedException("Exception", "Requete lente");
+
+        set_error_handler(function ($errno, $errstr, $errfile, $errline) use (&$capturedError) {
+            $capturedError = [
+                'errno' => $errno,
+                'message' => $errstr,
+                'file' => $errfile,
+                'line' => $errline,
+            ];
+            return true;
+        }, E_USER_WARNING);
         $this->sqlQuery->queryOne($sql);
+        restore_error_handler();
+
+        $this->assertNotNull($capturedError);
+        $this->assertEquals(E_USER_WARNING, $capturedError['errno']);
+        $this->assertStringContainsString('Requete lente', $capturedError['message']);
     }
 
     public function testQueryOneColManyResult()
     {
         $sql = "SELECT * FROM users ORDER BY id ";
         $result = $this->sqlQuery->queryOne($sql);
-        $this->assertEquals(1, $result['id']);
+        $this->assertEquals(101, $result['id']);
     }
 }

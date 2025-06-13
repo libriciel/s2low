@@ -11,13 +11,11 @@ class RgsCertificate
     private $validca_path;
     private $last_message;
 
-    /**
-     * @param $openssl_path string chemin vers l'executable OpenSSL
-     * @param $validca_path string chemin vers un répertoire contenant des autorités de certification "hasher" : man c_rehash
-     */
-    public function __construct($openssl_path, $validca_path)
-    {
-        $this->validca_path = $validca_path;
+    public function __construct(
+        $openssl_path,
+        $rgs_validca_path
+    ) {
+        $this->validca_path = $rgs_validca_path;
         $this->openssl_path = $openssl_path;
     }
 
@@ -59,7 +57,6 @@ class RgsCertificate
         $tmpFolder->delete($tmp_folder);
 
         $output = implode("\n", $output);
-
         if (preg_match("#{$tmp_cert}: OK#", $output)) {
             $result = true;
         } else {

@@ -11,6 +11,7 @@
 
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\TGZExtractor;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\SQLQuery;
@@ -33,9 +34,9 @@ $sql = "SELECT DISTINCT actes_transactions_workflow.date, actes_transactions.env
 $result = $sqlQuery->query($sql, $date_debut_bug, $date_fin_bug);
 
 
-$actesEnveloppeSQL = new ActesEnvelopeSQL($sqlQuery);
+$actesEnveloppeSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(ActesEnvelopeSQL::class);
 
-$actesIncludedFileSQL = new ActesIncludedFileSQL($sqlQuery);
+$actesIncludedFileSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(ActesIncludedFileSQL::class);
 
 
 foreach ($result as $info) {

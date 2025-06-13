@@ -23,12 +23,12 @@ class HeliosEnvoiSaeWorker implements IWorker
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
     }
 
-    public function getQueueName()
+    public function getQueueName(): string
     {
         return self::QUEUE_NAME;
     }
 
-    public function getData($id)
+    public function getData($id): mixed
     {
         return $id;
     }
@@ -38,7 +38,7 @@ class HeliosEnvoiSaeWorker implements IWorker
      *
      * @return 0|array|int[]
      */
-    public function getAllId()
+    public function getAllId(): array
     {
         return array_slice(
             $this->heliosTransactionsSQL->getTransactionsToSendToSAE(),
@@ -57,12 +57,12 @@ class HeliosEnvoiSaeWorker implements IWorker
         $this->heliosArchiveControler->sendArchive($data);
     }
 
-    public function getMutexName($data)
+    public function getMutexName($data): bool|string
     {
         return sprintf("%s-%s", self::QUEUE_NAME, $data);
     }
 
-    public function isDataValid($data)
+    public function isDataValid($data): bool
     {
         return true;
     }
@@ -70,7 +70,7 @@ class HeliosEnvoiSaeWorker implements IWorker
     /**
      * @return void
      */
-    public function start()
+    public function start(): void
     {
         // TODO: Implement start() method.
     }
@@ -78,7 +78,7 @@ class HeliosEnvoiSaeWorker implements IWorker
     /**
      * @return void
      */
-    public function end()
+    public function end(): void
     {
         // TODO: Implement end() method.
     }

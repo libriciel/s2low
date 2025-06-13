@@ -22,8 +22,8 @@ class HeliosTransactionSQLTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
-        $this->transaction_id = $this->heliosTransactionSQL->create(self::FILENAME, "aaa", 8, 1, 42, 123456789);
+        $this->heliosTransactionSQL = self::getContainer()->get(HeliosTransactionsSQL::class);
+        $this->transaction_id = $this->heliosTransactionSQL->create(self::FILENAME, "aaa", 113, 101, 42, 123456789);
         $this->heliosTransactionSQL->updateStatus($this->transaction_id, HeliosTransactionsSQL::POSTE, "test");
     }
 
@@ -129,13 +129,13 @@ class HeliosTransactionSQLTest extends S2lowTestCase
 
     public function testGetIdByStatusByAuthorityID()
     {
-        $id_list = $this->heliosTransactionSQL->getIdsByStatus(HeliosTransactionsSQL::POSTE, 1);
+        $id_list = $this->heliosTransactionSQL->getIdsByStatus(HeliosTransactionsSQL::POSTE, 101);
         $this->assertEquals($this->transaction_id, $id_list[0]);
     }
 
     public function testGetIdByStatusByAuthorityIDNotExisting()
     {
-        $id_list = $this->heliosTransactionSQL->getIdsByStatus(HeliosTransactionsSQL::POSTE, 2);
+        $id_list = $this->heliosTransactionSQL->getIdsByStatus(HeliosTransactionsSQL::POSTE, 102);
         $this->assertEmpty($id_list);
     }
 
@@ -336,7 +336,7 @@ class HeliosTransactionSQLTest extends S2lowTestCase
     public function testGetTransactionToSendToArchiveWithTwoAuthorities()
     {
         $this->configurePastell();
-        $this->configurePastell(2);
+        $this->configurePastell(102);
 
         $transaction_id1_1 = $this->createTransaction();
         $this->heliosTransactionSQL->updateStatus(
@@ -350,13 +350,13 @@ class HeliosTransactionSQLTest extends S2lowTestCase
             HeliosTransactionsSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
             "test"
         );
-        $transaction_id2_1 = $this->createTransaction(2);
+        $transaction_id2_1 = $this->createTransaction(102);
         $this->heliosTransactionSQL->updateStatus(
             $transaction_id2_1,
             HeliosTransactionsSQL::ENVOYE_AU_SAE,
             "test"
         );
-        $transaction_id2_2 = $this->createTransaction(2);
+        $transaction_id2_2 = $this->createTransaction(102);
         $this->heliosTransactionSQL->updateStatus(
             $transaction_id2_2,
             HeliosTransactionsSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
@@ -408,7 +408,7 @@ class HeliosTransactionSQLTest extends S2lowTestCase
         static::assertSame(
             $this->heliosTransactionSQL->getListByStatusAndAuthority(
                 HeliosTransactionsSQL::POSTE,
-                1,
+                101,
                 0,
                 100
             ),

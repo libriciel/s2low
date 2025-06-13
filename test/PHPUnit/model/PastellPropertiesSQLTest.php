@@ -8,8 +8,8 @@ class PastellPropertiesSQLTest extends S2lowTestCase
 {
     public function testGetPastellProperties()
     {
-        $pastellPropertiesSQL = new PastellPropertiesSQL($this->getSQLQuery());
-        $pastellProperties = $pastellPropertiesSQL->getPastellProperties(1);
+        $pastellPropertiesSQL = self::getContainer()->get(PastellPropertiesSQL::class);
+        $pastellProperties = $pastellPropertiesSQL->getPastellProperties(101);
         $this->assertEmpty($pastellProperties->url);
     }
 
@@ -23,14 +23,14 @@ class PastellPropertiesSQLTest extends S2lowTestCase
 
         $pastellProperties->actes_flux_id = "actes-automatiques";
 
-        $pastellPropertiesSQL = new PastellPropertiesSQL($this->getSQLQuery());
+        $pastellPropertiesSQL = self::getContainer()->get(PastellPropertiesSQL::class);
 
-        $pastellPropertiesSQL->editProperties(1, $pastellProperties);
+        $pastellPropertiesSQL->editProperties(101, $pastellProperties);
 
 
-        $pastellPropertiesResult = $pastellPropertiesSQL->getPastellProperties(1);
+        $pastellPropertiesResult = $pastellPropertiesSQL->getPastellProperties(101);
 
-        $info = $this->getObjectInstancier()->get(AuthoritySQL::class)->getInfo(1);
+        $info = self::getContainer()->get(AuthoritySQL::class)->getInfo(101);
         $this->assertEquals("test", $info['pastell_url']);
         $this->assertEquals("password", $info['pastell_password']);
         $this->assertEquals("actes-automatiques", $pastellPropertiesResult->actes_flux_id);
@@ -47,14 +47,14 @@ class PastellPropertiesSQLTest extends S2lowTestCase
 
         $pastellProperties->actes_flux_id = "actes-automatiques";
 
-        $pastellPropertiesSQL = new PastellPropertiesSQL($this->getSQLQuery());
+        $pastellPropertiesSQL = self::getContainer()->get(PastellPropertiesSQL::class);
 
-        $pastellPropertiesSQL->editProperties(1, $pastellProperties);
-        $pastellPropertiesSQL->editProperties(1, $pastellProperties);
+        $pastellPropertiesSQL->editProperties(101, $pastellProperties);
+        $pastellPropertiesSQL->editProperties(101, $pastellProperties);
 
-        $pastellPropertiesResult = $pastellPropertiesSQL->getPastellProperties(1);
+        $pastellPropertiesResult = $pastellPropertiesSQL->getPastellProperties(101);
 
-        $info = $this->getObjectInstancier()->get(AuthoritySQL::class)->getInfo(1);
+        $info = self::getContainer()->get(AuthoritySQL::class)->getInfo(101);
         $this->assertEquals("test", $info['pastell_url']);
         $this->assertEquals("password", $info['pastell_password']);
         $this->assertEquals("actes-automatiques", $pastellPropertiesResult->actes_flux_id);

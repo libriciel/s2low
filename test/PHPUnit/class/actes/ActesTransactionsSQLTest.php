@@ -250,68 +250,68 @@ class ActesTransactionsSQLTest extends S2lowTestCase
             // TEST 1
             [
                 [
-                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
-                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
-                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
-                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ]
+                    [ 101, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 101, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 101, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 101, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ]
                 ],
                 4,
-                ["1" => 4]
+                ["101" => 4]
             ],
             // TEST 2
             [
                 [
-                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
-                    [ 1, self::NON_ENVOYABLE, ActesStatusSQL::STATUS_ENVOYE_AU_SAE ],
-                    [ 1, self::NON_ENVOYABLE, ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE ],
-                    [ 1, self::NON_ENVOYABLE, ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE ]
+                    [ 101, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 101, self::NON_ENVOYABLE, ActesStatusSQL::STATUS_ENVOYE_AU_SAE ],
+                    [ 101, self::NON_ENVOYABLE, ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE ],
+                    [ 101, self::NON_ENVOYABLE, ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE ]
                 ],
                 4,
-                ["1" => 1]
+                ["101" => 1]
             ],
             // testSAEDifferentsEtatsAvecLimite
             [
                 [
-                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
-                    [ 1, self::NON_ENVOYABLE,ActesStatusSQL::STATUS_ENVOYE_AU_SAE ],
-                    [ 1, self::NON_ENVOYABLE,ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE ],
-                    [ 1, self::NON_ENVOYABLE,ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE ]
+                    [ 101, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 101, self::NON_ENVOYABLE,ActesStatusSQL::STATUS_ENVOYE_AU_SAE ],
+                    [ 101, self::NON_ENVOYABLE,ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE ],
+                    [ 101, self::NON_ENVOYABLE,ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE ]
                 ],
                 3,
-                ["1" => 0]
+                ["101" => 0]
             ],
             // testSAEDeuxAutoritesAvecLimite
             [
                 [
-                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
-                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
-                    [ 2, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
-                    [ 2, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ]
+                    [ 101, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 101, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 102, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 102, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ]
                 ],
                 1,
-                ["1" => 1,"2" => 1]
+                ["101" => 1,"102" => 1]
             ],
             // testSAEDeuxAutoritesAvecLimite2
             [
                 [
-                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
-                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
-                    [ 2, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
-                    [ 2, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ]
+                    [ 101, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 101, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 102, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 102, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ]
                 ],
                 2,
-                ["1" => 2,"2" => 2]
+                ["101" => 2,"102" => 2]
             ],
             // testSAEDeuxAutorites3
             [
                 [
-                    [ 1, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
-                    [ 1, self::NON_ENVOYABLE, ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE ],
-                    [ 2, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
-                    [ 2, self::NON_ENVOYABLE, ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE ]
+                    [ 101, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 101, self::NON_ENVOYABLE, ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE ],
+                    [ 102, self::ENVOYABLE, ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE ],
+                    [ 102, self::NON_ENVOYABLE, ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE ]
                 ],
                 2,
-                ["1" => 1,"2" => 1]
+                ["101" => 1,"102" => 1]
             ]
         ];
     }

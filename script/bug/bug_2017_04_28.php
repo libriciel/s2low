@@ -28,7 +28,7 @@ $sql = "SELECT actes_envelopes.id, actes_transactions.id as transaction_id, acte
 $actes_list = $sqlQuery->query($sql, '2017-04-28', '%Pdf.Exploit.%');
 
 
-$actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);
+$actesTransactionSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(ActesTransactionsSQL::class);
 
 foreach ($actes_list as $acte) {
     echo "{$acte['id']} : {$acte['message']}\n";

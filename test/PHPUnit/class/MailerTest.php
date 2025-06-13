@@ -1,13 +1,13 @@
 <?php
 
-use S2lowLegacy\Class\Mailer;
 use PHPUnit\Framework\TestCase;
+use S2low\Services\MailActesNotifications\MailerSymfony;
 
-class MailerTest extends TestCase
+class MailerTest extends S2lowTestCase
 {
     public function testIsValidMail()
     {
-        $mailer = new \S2low\Services\MailActesNotifications\MailerSymfony(new \S2low\Tests\Services\MockMailer());
+        $mailer = self::getContainer()->get(MailerSymfony::class);
         $this->assertTrue($mailer->isValidMail("noreply@libriciel.coop"));
         $this->assertTrue($mailer->isValidMail("test <noreply@libriciel.coop>"));
         $this->assertFalse($mailer->isValidMail("test <noreply@libriciel.coop> ; test3 <noreply2@libriciel.coop> "));

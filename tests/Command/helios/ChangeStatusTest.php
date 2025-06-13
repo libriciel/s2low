@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace S2low\Tests\Command\helios;
 
 use HeliosUtilitiesTestTrait;
+use S2low\Command\Helios\ChangeStatus;
 use S2low\Kernel;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
@@ -17,6 +18,21 @@ class ChangeStatusTest extends S2lowTestCase
 {
     use HeliosUtilitiesTestTrait;
 
+    private CommandTester $commandTester;
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $heliosStatus = self::getContainer()->get(HeliosStatusSQL::class);
+        $heliosTransactionSQL = self::getContainer()->get(HeliosTransactionsSQL::class);
+
+        $command = new ChangeStatus(
+            $heliosStatus,
+            $heliosTransactionSQL
+        );
+
+        $this->commandTester = new CommandTester($command);
+    }
+
     public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
     {
         return $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
@@ -24,47 +40,34 @@ class ChangeStatusTest extends S2lowTestCase
 
     public function testCommandBadTransactionId(): void
     {
-        $kernel = new Kernel('test', true);
-        $application = new Application($kernel);
-
-        $commandTester = new CommandTester($application->find('helios:change-status'));
-        $commandTester->execute(['transaction-id' => 1,'status-id' => 2]);
+        $this->commandTester->execute(['transaction-id' => 101,'status-id' => 2]);
         static::assertStringContainsString(
             'transaction_id incorrect : aucune transaction trouvée',
-            $commandTester->getDisplay()
+            $this->commandTester->getDisplay()
         );
-        static::assertSame(Command::FAILURE, $commandTester->getStatusCode());
+        static::assertSame(Command::FAILURE, $this->commandTester->getStatusCode());
     }
+
     public function testCommand(): void
     {
-        $kernel = new Kernel('test', true);
-        $application = new Application($kernel);
-
-        $transactionId = $this->createTransaction(1, HeliosStatusSQL::POSTE);
-
-        $commandTester = new CommandTester($application->find('helios:change-status'));
-        $commandTester->execute(['transaction-id' => $transactionId,'status-id' => 1, '--force' => true]);
+        $transactionId = $this->createTransaction(101, HeliosStatusSQL::POSTE);
+        $this->commandTester->execute(['transaction-id' => $transactionId,'status-id' => 1, '--force' => true]);
         static::assertStringContainsString(
             "Modification de la transaction $transactionId : status Posté [1]",
-            $commandTester->getDisplay()
+            $this->commandTester->getDisplay()
         );
-        static::assertSame(Command::SUCCESS, $commandTester->getStatusCode());
+        static::assertSame(Command::SUCCESS, $this->commandTester->getStatusCode());
     }
 
     public function testCommandAnnulee(): void
     {
-        $kernel = new Kernel('test', true);
-        $application = new Application($kernel);
-
-        $transactionId = $this->createTransaction(1, HeliosStatusSQL::POSTE);
-
-        $commandTester = new CommandTester($application->find('helios:change-status'));
-        $commandTester->setInputs(['No']);
-        $commandTester->execute(['transaction-id' => $transactionId,'status-id' => 1]);
+        $transactionId = $this->createTransaction(101, HeliosStatusSQL::POSTE);
+        $this->commandTester->setInputs(['No']);
+        $this->commandTester->execute(['transaction-id' => $transactionId,'status-id' => 1]);
         static::assertStringContainsString(
             'Changement de statut annulé',
-            $commandTester->getDisplay()
+            $this->commandTester->getDisplay()
         );
-        static::assertSame(Command::SUCCESS, $commandTester->getStatusCode());
+        static::assertSame(Command::SUCCESS, $this->commandTester->getStatusCode());
     }
 }

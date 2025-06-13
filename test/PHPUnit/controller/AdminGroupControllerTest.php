@@ -1,11 +1,15 @@
 <?php
 
+use IntegrationTests\S2lowIntegrationTestCase;
+use S2low\Enum\UserRole;
+use S2lowLegacy\Class\Authentification;
 use S2lowLegacy\Controller\AdminGroupController;
 use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Lib\SessionWrapper;
 use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 use S2lowLegacy\Model\GroupSQL;
 
-class AdminGroupControllerTest extends S2lowTestCase
+class AdminGroupControllerTest extends S2lowIntegrationTestCase
 {
     /** @var  AdminGroupController */
     protected $adminGroupController;
@@ -13,14 +17,14 @@ class AdminGroupControllerTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->adminGroupController = new AdminGroupController($this->getObjectInstancier());
+        $this->adminGroupController = self::getContainer()->get(AdminGroupController::class);
     }
 
     public function testDoEditActionQuote()
     {
-        $this->setSuperAdminAuthentication();
-        $this->getObjectInstancier()->get(Environnement::class)->post()->set('id', 1);
-        $this->getObjectInstancier()->get(Environnement::class)->post()->set('name', "apo'strophe");
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        self::getContainer()->get(Environnement::class)->post()->set('id', 1);
+        self::getContainer()->get(Environnement::class)->post()->set('name', "apo'strophe");
 
         try {
             $this->adminGroupController->doEditAction();
@@ -28,19 +32,19 @@ class AdminGroupControllerTest extends S2lowTestCase
             /* Nothing to do */
         }
 
-        $groupeSQL = new GroupSQL($this->getSQLQuery());
+        $groupeSQL = self::getContainer()->get(GroupSQL::class);
         $info = $groupeSQL->getInfo(1);
         $this->assertEquals("apo_strophe", $info['name']);
     }
 
     public function testDoEditAction()
     {
-        $this->setSuperAdminAuthentication();
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         org\bovigo\vfs\vfsStream::setup('test');
         $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
         $tmp_file = $testStreamUrl . "/test.text";
 
-        $authorityGroupSirenSQL = new AuthorityGroupSirenSQL($this->getSQLQuery());
+        $authorityGroupSirenSQL = self::getContainer()->get(AuthorityGroupSirenSQL::class);
 
         $this->assertFalse($authorityGroupSirenSQL->exist(1, 491011698));
 
@@ -54,15 +58,15 @@ class AdminGroupControllerTest extends S2lowTestCase
             'error' => UPLOAD_ERR_OK
         );
 
-        $this->getObjectInstancier()->get(Environnement::class)->post()->set('id', 1);
+        self::getContainer()->get(Environnement::class)->post()->set('id', 1);
+        self::getContainer()->get(Environnement::class)->post()->set('name', 'Ceci est un nom de groupe');
 
         try {
             $this->adminGroupController->doEditAction();
-            $this->assertFalse(true);
+            $this->fail();
         } catch (Exception $e) {
             $this->assertMatchesRegularExpression("#^Redirect to .* with message : $#", $e->getMessage());
         }
-
         $this->assertEquals('493587273', $authorityGroupSirenSQL->exist(1, 493587273)['siren']);
         $this->assertEquals('491011698', $authorityGroupSirenSQL->exist(1, 491011698)['siren']);
     }
@@ -74,6 +78,22 @@ class AdminGroupControllerTest extends S2lowTestCase
             "#^Message : Aucune information de certificat trouvée$#"
         );
 
-        $this->adminGroupController->doEditAction();
+        $environnement = new Environnement(
+            [],
+            [],
+            [],
+            self::getContainer()->get(SessionWrapper::class),
+            [],
+            false,
+        );
+
+        $auth = $this->getAuthentication(
+            server: $this->setServerAdullactCertificate(),
+            environnement: $environnement
+        );
+
+        self::getContainer()->set(Authentification::class, $auth);
+        $adminGroup = self::getContainer()->get(AdminGroupController::class);
+        $adminGroup->doEditAction();
     }
 }

@@ -4,15 +4,18 @@ use S2lowLegacy\Class\actes\ActesTypePJSQL;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\DatePicker;
 
-list($actesTypePJSQL, $html) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($actesTypePJSQL) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ActesTypePJSQL::class, 'html']
+        [ActesTypePJSQL::class]
     );
+
+$html = '';
 
 // Instanciation du module courant
 $module = new Module();
@@ -21,7 +24,6 @@ if (!$module->initByName("actes")) {
     header("Location: " . WEBSITE_SSL);
     exit();
 }
-
 $me = new User();
 
 if (!$me->authenticate()) {
@@ -219,7 +221,7 @@ $doc->openContent();
 $html = "<h1>ACTES - Dématérialisation du contrôle de légalité</h1>\n";
 $html .= "<p id=\"back-transaction-btn\"><a href=\"" . Helpers::getLink("/modules/actes/index.php") . "\" class=\"btn btn-default\">Retour liste transactions</a></p>\n";
 
-$rgsConnexion = new RgsConnexion();
+$rgsConnexion = LegacyObjectsManager::getLegacyObjectInstancier()->get(RgsConnexion::class);
 if (! $rgsConnexion->isRgsConnexion()) {
     $html .= "<div class='alert alert-warning'>Votre certificat n'est pas conforme au RGS, vous ne pourrez pas télétransmettre !</div>";
 }

@@ -128,7 +128,6 @@ class HeliosAnalyseFichierRecu
             }
             return;
         }
-
         $file_size = filesize($file_path);
         $this->s2lowLogger->debug("Taille du fichier $file_path en octets : $file_size");
         if ($file_size > self::MAX_FILE_SIZE) {
@@ -251,6 +250,7 @@ class HeliosAnalyseFichierRecu
             $message = "Transaction $helios_transaction_id : information disponible";
             $this->heliosTransactionsSQL->updateStatus($helios_transaction_id, HeliosTransactionsSQL::INFORMATION_DISPONIBLE, $message);
         }
+
         $this->s2lowLogger->info($message);
         $this->heliosTransactionsSQL->setAcquitFilename($helios_transaction_id, $basename);
     }

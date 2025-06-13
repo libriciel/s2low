@@ -3,6 +3,7 @@
 namespace S2lowLegacy\Model;
 
 use Exception;
+use S2lowLegacy\Class\Database;
 use S2lowLegacy\Lib\SQL;
 use S2lowLegacy\Lib\SQLQuery;
 
@@ -12,9 +13,10 @@ class MessageAdminSQL extends SQL
 
     public function __construct(
         SQLQuery $sqlQuery,
+        Database $database,
         $cachePath,
     ) {
-        parent::__construct($sqlQuery);
+        parent::__construct($sqlQuery, $database);
         $this->cachePath = $cachePath;
     }
 

@@ -3,6 +3,7 @@
 namespace S2lowLegacy\Class\actes;
 
 use Exception;
+use S2lowLegacy\Class\Database;
 use S2lowLegacy\Lib\SQL;
 use S2lowLegacy\Lib\SQLQuery;
 use Libriciel\LibActes\ActesXSD;
@@ -14,20 +15,20 @@ class ActesUpdateClassificationSQL extends SQL
 {
     private $authoritySQL;
 
-    public function __construct(SQLQuery $sqlQuery, AuthoritySQL $authoritySQL)
+    public function __construct(SQLQuery $sqlQuery, AuthoritySQL $authoritySQL, Database $database)
     {
-        parent::__construct($sqlQuery);
+        parent::__construct($sqlQuery, $database);
         $this->authoritySQL = $authoritySQL;
     }
 
     public function updateClassification($siren, $xml_content)
     {
         try {
-            $this->queryOne("BEGIN");
+            $this->database->begin();
             $this->updateClassificationThrow($siren, $xml_content);
-            $this->queryOne("COMMIT");
+            $this->database->commit();
         } catch (Exception $e) {
-            $this->query("ROLLBACK");
+            $this->database->rollback();
             throw $e;
         }
     }

@@ -89,7 +89,6 @@ class ActesAnalyseFichierRecuController
     public function getAllDirectory()
     {
         $file_list = @ scandir($this->actes_response_tmp_local_path);
-
         if ($file_list === false) {
             $message = "Erreur lors de la lecture du répertoire  $this->actes_response_tmp_local_path";
             $this->s2lowLogger->error($message);

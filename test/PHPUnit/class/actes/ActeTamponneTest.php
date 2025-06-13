@@ -1,7 +1,9 @@
 <?php
 
+use Monolog\Level;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\ActeTamponne;
+use S2lowLegacy\Class\PdfStampMessages;
 use S2lowLegacy\Class\PDFStampWrapper;
 use S2lowLegacy\Class\S2lowLogger;
 
@@ -21,15 +23,17 @@ class ActeTamponneTest extends S2lowTestCase
             new PDFStampWrapper(
                 "",
                 __DIR__ . "/../../../../public.ssl/custom/images/s2low-stamp.png",
-                $this->getObjectInstancier()->get(\S2lowLegacy\Class\PdfStampMessages::class)
+                self::getContainer()->get(PdfStampMessages::class)
             ),
-            $this->getObjectInstancier()->get(S2lowLogger::class)
+            $this->s2lowLogger
         );
 
         $acteTamponne->tamponnerPDF(__DIR__ . "/../fixtures/vide.pdf", "12");
-        $this->assertEquals(
-            "Impossible de tamponné l'acte 12 :  ", // Supprime "Erreur de connexion au serveur : <url> malformed " Chgt de comportement de curl ??
-            $this->getLogRecords()[0]['message']
+        self::assertTrue(
+            $this->testHandler->hasRecord(
+                "Impossible de tamponné l'acte 12 :  ",
+                Level::Error
+            )
         );
     }
 }

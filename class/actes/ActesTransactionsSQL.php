@@ -51,6 +51,7 @@ class ActesTransactionsSQL extends SQL
     public function getLastStatusInfo($id)
     {
         $sql = "SELECT * FROM actes_transactions_workflow WHERE transaction_id=? ORDER BY date DESC,id DESC LIMIT 1";
+
         return $this->queryOne($sql, $id);
     }
 
@@ -76,7 +77,6 @@ class ActesTransactionsSQL extends SQL
         string $flux_retour = '',
         ?string $date = null
     ): int {
-
         $message = mb_substr($message ?? '', 0, 512); // quickfix transition 8.0
 
         if ($date === null) {
@@ -85,8 +85,10 @@ class ActesTransactionsSQL extends SQL
         $sql = 'INSERT INTO actes_transactions_workflow (transaction_id, status_id, date, message ) ' .
             ' VALUES( ? , ? , ? , ? ) RETURNING ID';
 
-        $id = $this->queryOne($sql, $transaction_id, $status_id, $date, $message);
-
+//        dd($this->database->query("SELECT * FROM pg_stat_activity WHERE state = 'active'"));
+//        dd($this->database->query('select * from actes_status'));
+//        dd($this->database->getOneValue($sql, $transaction_id, $status_id, $date, $message));
+        $id = $this->database->getOneValue($sql, $transaction_id, $status_id, $date, $message);
         if (!empty($flux_retour)) {
             $sql = 'UPDATE actes_transactions_workflow SET flux_retour = ? WHERE id = ?';
             $pdo = $this->getSQLQuery()->getPdo();
@@ -96,7 +98,7 @@ class ActesTransactionsSQL extends SQL
             $stmt->execute();
         }
         $sql = 'UPDATE actes_transactions SET last_status_id=? WHERE id=?';
-        $this->query($sql, $status_id, $transaction_id);
+        $this->database->query($sql, $status_id, $transaction_id);
         return $id;
     }
 

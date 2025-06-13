@@ -119,7 +119,6 @@ class ActesAPIController extends Controller
             echo json_encode(['result' => 'ko', 'message' => 'Authorities is not in a group or no group_id provided']);
             return false;
         }
-
         $this->verifGroupAdmin($authority_group_id);
 
         $month = $this->getRecuperateurGet()->getInt('month', date('m', strtotime('last month')));

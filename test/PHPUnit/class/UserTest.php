@@ -8,24 +8,24 @@ class UserTest extends S2lowTestCase
     {
         $user = new User();
         $ids = $user->getIdFromCertData('Q1pUbEb5DK53BkYf0arDl/3zl5U=');
-        $this->assertEquals(1, $ids[0]);
+        $this->assertEquals(101, $ids[0]);
     }
 
     public function testgetNbUserWithMyCertificate()
     {
         $user = new User();
-        $user->setId(2);
+        $user->setId(102);
         $user->init();
-        $this->assertEquals(2, $user->getNbUserWithMyCertificate());
+        $this->assertEquals(1, $user->getNbUserWithMyCertificate());
     }
 
     public function testGetCertificateInfo()
     {
         $user = new User();
-        $user->setId(2);
+        $user->setId(101);
         $user->init();
         $info = $user->getCertificateInfo();
-        $this->assertEquals('hash_adullact', $info['certificate_hash']);
+        $this->assertEquals('Q1pUbEb5DK53BkYf0arDl/3zl5U=', $info['certificate_hash']);
     }
 
     public function testGetDn()
@@ -60,7 +60,7 @@ class UserTest extends S2lowTestCase
         $user->set('givenname', 'givenName');
         $user->set('role', 'USER');
         $user->set('telephone', '0000000000');
-        $user->set('authority_id', 1);
+        $user->set('authority_id', 101);
         $user->set('status', 1);
         static::assertTrue($user->save());
 
@@ -74,7 +74,7 @@ class UserTest extends S2lowTestCase
         static::assertSame($retrievedUser->get('givenname'), 'givenName');
         static::assertSame($retrievedUser->get('role'), 'USER');
         static::assertSame($retrievedUser->get('telephone'), '0000000000');
-        static::assertSame($retrievedUser->get('authority_id'), 1);
+        static::assertSame($retrievedUser->get('authority_id'), 101);
         static::assertSame($retrievedUser->get('status'), 1);
     }
 

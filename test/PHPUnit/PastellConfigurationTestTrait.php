@@ -10,20 +10,20 @@ use S2lowLegacy\Model\PastellPropertiesSQL;
 
 trait PastellConfigurationTestTrait
 {
-    protected function configurePastell($authority_id = 1)
+    protected function configurePastell($authority_id = 101): void
     {
-        $authoritySQL = new AuthoritySQL($this->getSQLQuery());
+        $authoritySQL = $this->getObjectInstancier()->get(AuthoritySQL::class);
         $pastellProperties = new PastellProperties();
         $pastellProperties->url = "FakeURL";
         $pastellProperties->id_e = 12;
         $pastellProperties->actes_send_auto = true;
         $pastellProperties->helios_send_auto = true;
         $authoritySQL->updateSAE($authority_id, $pastellProperties);
-        $pastellPropertiesSQL  = new PastellPropertiesSQL($this->getSQLQuery());
+        $pastellPropertiesSQL  = $this->getObjectInstancier()->get(PastellPropertiesSQL::class);
         $pastellPropertiesSQL->editProperties($authority_id, $pastellProperties);
     }
 
-    protected function mockPastellFactory($id_d = "xyzt", $getLastErrorReturn = false, $sendSAEThrowError = false, $deleteThrowError = false)
+    protected function mockPastellFactory($id_d = "xyzt", $getLastErrorReturn = false, $sendSAEThrowError = false, $deleteThrowError = false): PastellWrapperFactory
     {
         /** @var PHPUnit\Framework\MockObject\MockObject $pastell */
         $pastell = $this->getMockBuilder(PastellWrapper::class)->disableOriginalConstructor()->getMock();
@@ -40,7 +40,8 @@ trait PastellConfigurationTestTrait
         }
         $pastellFactory = $this->getMockBuilder(PastellWrapperFactory::class)->disableOriginalConstructor()->getMock();
         $pastellFactory->method('getNewInstance')->willReturn($pastell);
-        $this->getObjectInstancier()->set(PastellWrapperFactory::class, $pastellFactory);
+
+        return $pastellFactory;
     }
 
     /**

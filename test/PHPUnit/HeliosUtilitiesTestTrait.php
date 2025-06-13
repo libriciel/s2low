@@ -6,14 +6,14 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 trait HeliosUtilitiesTestTrait
 {
-    private function getTransactionCreationSQL($authority_id = 1, $date = null): int
+    private function getTransactionCreationSQL($authority_id = 101, $date = null): int
     {
         if (is_null($date)) {
             $sql = "INSERT INTO helios_transactions(user_id,authority_id,last_status_id,filename,sha1,file_size) VALUES (?,?,?,?,?,?) returning ID;";
 
             return $this->getSQLQuery()->queryOne(
                 $sql,
-                1,
+                113,
                 $authority_id,
                 4,
                 "toto.txt",
@@ -25,7 +25,7 @@ trait HeliosUtilitiesTestTrait
         $sql = "INSERT INTO helios_transactions(user_id,authority_id,last_status_id,filename,sha1,submission_date,file_size) VALUES (?,?,?,?,?,?,?) returning ID;";
         return $this->getSQLQuery()->queryOne(
             $sql,
-            1,
+            113,
             $authority_id,
             4,
             "toto.txt",
@@ -35,14 +35,13 @@ trait HeliosUtilitiesTestTrait
         );
     }
 
-    protected function createTransaction($authority_id = 1, int $status = null, $date = null)
+    protected function createTransaction($authority_id = 101, int $status = null, $date = null): int
     {
         $transactionId = $this->getTransactionCreationSQL($authority_id, $date);
 
         if (is_null($status)) {
             return $transactionId;
         }
-        /** @var \S2lowLegacy\Model\HeliosTransactionsSQL $heliosTransactionsSQL */
         $this->getHeliosTransactionsSQL()->updateStatus($transactionId, $status, "test");
         return $transactionId;
     }
@@ -71,7 +70,7 @@ trait HeliosUtilitiesTestTrait
         $size = 0;
         $sha1 = 'sha1';
 
-        $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
+        $heliosRetourSQL = self::getContainer()->get(HeliosRetourSQL::class);
         return $heliosRetourSQL->add(
             $collectiviteId,
             $siret,

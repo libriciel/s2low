@@ -69,7 +69,6 @@ class HttpsConnexion
         if (! $result['ssl_client_verify']) {
             return false;
         }
-
         if ($result['ssl_client_cert']) {
             $info = $this->certificateHandler->getInfo($result['ssl_client_cert']);
             if (! $info) {

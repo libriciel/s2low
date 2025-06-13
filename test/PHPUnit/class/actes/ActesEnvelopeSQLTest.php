@@ -65,7 +65,7 @@ class ActesEnvelopeSQLTest extends S2lowTestCase
     public function createAndList($authority_id, $authorit_group_id)
     {
         $id_envelope  = $this->getActesEnvelopeSQL()->create(
-            1,
+            113,
             "000000000/20170721D/abc-EACT--210703385--20170612-2.tar.gz"
         );
         $info = $this->getActesEnvelopeSQL()->listEnveloppe(
@@ -84,7 +84,7 @@ class ActesEnvelopeSQLTest extends S2lowTestCase
 
     public function testlistEnveloppeAuthority()
     {
-        $this->createAndList(1, false);
+        $this->createAndList(101, false);
     }
 
     public function testlistEnveloppeAuthorityGroup()

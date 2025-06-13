@@ -18,7 +18,7 @@ class ChangeActeSaeStatusTest extends S2lowIntegrationTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
+        $this->actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -98,7 +98,8 @@ class ChangeActeSaeStatusTest extends S2lowIntegrationTestCase
         $_POST['transaction_id'] = $transactionId;
         $_POST['status_id'] = $statusId;
 
-        $client = $this->getAuthenticatedClientWithUserLoggedAs($userRole);
+        $this->setUserWithRole($userRole);
+        $client = $this->client;
         $client->request('POST', '/modules/actes/api/actes_sae_status.php', [
             'transaction_id' => $transactionId,
             'status_id' => $statusId,

@@ -23,9 +23,11 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 /** @var PesAllerRetriever $pesAllerRetriever */
 /** @var string $html */
 
-[$initialisation, $droit,$heliosTransactionsSQL ,$pesAllerRetriever,$html] =
+[$initialisation, $droit,$heliosTransactionsSQL ,$pesAllerRetriever] =
     LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class,HeliosTransactionsSQL::class,PesAllerRetriever::class,'html']);
+    ->getArray([Initialisation::class, Droit::class,HeliosTransactionsSQL::class,PesAllerRetriever::class]);
+
+$html = '';
 
 $initData = $initialisation->doInit();
 $initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);

@@ -13,11 +13,11 @@ use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 use S2lowLegacy\Model\AuthorityTypesSQL;
 use S2lowLegacy\Model\GroupSQL;
 
-list($objectInstancier, $html, $availableSirensByGroup ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $availableSirensByGroup ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, 'html', AvailableSirensByGroup::class]
+        [ObjectInstancier::class, AvailableSirensByGroup::class]
     );
-
+$html = '';
 $me = new User();
 
 if (! $me->authenticate()) {
@@ -33,7 +33,6 @@ if (! $me->isAdmin()) {
 }
 
 $id = Helpers::getVarFromGet("id");
-
 
 // Mode modification ou pas
 $mod = false;

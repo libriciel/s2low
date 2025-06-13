@@ -5,6 +5,7 @@ namespace EndpointApiHelios;
 use HeliosUtilitiesTestTrait;
 use IntegrationTests\S2lowIntegrationTestCase;
 use S2low\Enum\UserRole;
+use S2lowLegacy\Class\Database;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 class ChangeStatusHeliosInSAEContextTest extends S2lowIntegrationTestCase
@@ -16,7 +17,7 @@ class ChangeStatusHeliosInSAEContextTest extends S2lowIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+        $this->heliosTransactionsSQL = self::getContainer()->get(HeliosTransactionsSQL::class);
     }
 
     public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
@@ -107,10 +108,10 @@ class ChangeStatusHeliosInSAEContextTest extends S2lowIntegrationTestCase
      */
     public function testShouldChangeStatus($data): void
     {
-        $this->createUserWithDefaultCertificatAs($data['user_role']);
+        $this->setUserWithRole($data['user_role']);
 
         $transactionId = $this->createTransaction(
-            1,
+            101,
             $data['status_transaction_cree'],
         );
 
@@ -118,7 +119,7 @@ class ChangeStatusHeliosInSAEContextTest extends S2lowIntegrationTestCase
         $_POST['transaction_id'] = $transactionId;
         $_POST['status_id'] = $data['status_transaction_cible'];
 
-        $client = $this->getAuthenticatedClientAttachedToDefaultCertificat();
+        $client = $this->client;
         $client->request(
             'POST',
             '/modules/helios/helios_transac_change_status_sae.php',

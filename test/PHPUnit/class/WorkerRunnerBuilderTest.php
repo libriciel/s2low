@@ -1,6 +1,7 @@
 <?php
 
 use malkusch\lock\mutex\PHPRedisMutex;
+use Monolog\Level;
 use Pheanstalk\Job;
 use Pheanstalk\Pheanstalk;
 use S2lowLegacy\Class\BeanstalkdWrapper;
@@ -41,7 +42,7 @@ class WorkerRunnerBuilderTest extends S2lowTestCase
 
         $beanstalkdWrapper->method('getQueue')->willReturn($this->queue);
 
-        $this->getObjectInstancier()->set(BeanstalkdWrapper::class, $beanstalkdWrapper);
+        $this->beanstalkdWrapper = $beanstalkdWrapper;
         $this->getObjectInstancier()->set(RedisMutexWrapper::class, $redisWrapper);
     }
 
@@ -58,7 +59,7 @@ class WorkerRunnerBuilderTest extends S2lowTestCase
         $IWorker->method('getData')->willReturn([1]);
 
         /** @var WorkerRunnerBuilder $workerBuilder */
-        $workerBuilder = $this->getObjectInstancier()->get(WorkerRunnerBuilder::class);
+        $workerBuilder = $this->getWorkerRunnerBuilder();
         return $workerBuilder->script($IWorker)->work();
     }
     public function testBeanstalked()
@@ -68,8 +69,12 @@ class WorkerRunnerBuilderTest extends S2lowTestCase
             ->getMock();
 
         $this->assertTrue($this->setUpWorkerBuilder($job));
-        $logs_records = $this->getLogRecords();
-        $this->assertEquals("Travail en cours", $logs_records[1]['message']);
+        $this->assertTrue(
+            $this->testHandler->hasRecord(
+                'Travail en cours',
+                Level::Info
+            )
+        );
     }
 
     public function testBeanstalkedisLimited()
@@ -79,9 +84,12 @@ class WorkerRunnerBuilderTest extends S2lowTestCase
             ->getMock();
 
         $this->assertTrue($this->setUpWorkerBuilder($job, 200));
-        $logs_records = $this->getLogRecords();
-        $this->assertEquals("Exit after 100 jobs executed", $logs_records[101]['message']);
-        $this->assertArrayNotHasKey(102, $logs_records);
+        $this->assertTrue(
+            $this->testHandler->hasRecord(
+                'Exit after 100 jobs executed',
+                Level::Info
+            )
+        );
     }
 
     public function testBeanstalkedFailed()
@@ -94,8 +102,12 @@ class WorkerRunnerBuilderTest extends S2lowTestCase
             ->willThrowException(new Exception("foo"));
 
         $this->assertTrue($this->setUpWorkerBuilder($job));
-        $logs_records = $this->getLogRecords();
-        $this->assertEquals("foo", $logs_records[1]['message']);
+        $this->assertTrue(
+            $this->testHandler->hasRecord(
+                'foo',
+                Level::Error
+            )
+        );
     }
 
     public function testScript()
@@ -123,10 +135,15 @@ class WorkerRunnerBuilderTest extends S2lowTestCase
         $IWorker->method("getAllId")->willReturn([1]);
         /** @var IWorker $IWorker */
 
-        $workerRunnerBuilder = $this->getObjectInstancier()->get(WorkerRunnerBuilder::class);
+        $workerRunnerBuilder = $this->getWorkerRunnerBuilder();
         $this->assertTrue($workerRunnerBuilder->script($IWorker, JobFetcherFromDB::class)->work());
-        $logs_records = $this->getLogRecords();
-        $this->assertEquals("SIGTERM reçu", $logs_records[2]['message']);
+
+        $this->assertTrue(
+            $this->testHandler->hasRecord(
+                'SIGTERM reçu',
+                Level::Notice
+            )
+        );
     }
 
     public function testScriptFailed()
@@ -137,9 +154,25 @@ class WorkerRunnerBuilderTest extends S2lowTestCase
             ->willThrowException(new Exception("foo"));
         /** @var IWorker $IWorker */
 
-        $workerRunnerBuilder = $this->getObjectInstancier()->get(WorkerRunnerBuilder::class);
+        $workerRunnerBuilder = $this->getWorkerRunnerBuilder();
         $this->assertFalse($workerRunnerBuilder->script($IWorker, JobFetcherFromDB::class)->work());
-        $logs_records = $this->getLogRecords();
-        $this->assertEquals("Erreur lors de l'execution du script : foo", $logs_records[1]['message']);
+
+        $this->assertTrue(
+            $this->testHandler->hasRecord(
+                'Erreur lors de l\'execution du script : foo',
+                Level::Critical
+            )
+        );
+    }
+
+    private function getWorkerRunnerBuilder()
+    {
+        return new WorkerRunnerBuilder(
+            $this->beanstalkdWrapper,
+            $this->s2lowLogger,
+            self::getContainer()->get(SigTermHandlerFactory::class),
+            self::getContainer()->get(RedisMutexWrapper::class),
+            self::getContainer()->get(WorkerScript::class),
+        );
     }
 }

@@ -48,7 +48,7 @@ class ActesPrepareSaeWorkerTest extends S2lowTestCase
 
 
         $sql = "INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,sae_transfer_identifier,type) VALUES (?,?,?,?,?,?) returning ID;";
-        $transaction_id = $this->getSQLQuery()->queryOne($sql, $envelope_id, $status, 1, 1, 42, 1);
+        $transaction_id = $this->getSQLQuery()->queryOne($sql, $envelope_id, $status, 1, 101, 42, 1);
 
         $actesTransactionSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
         $wd_id = $actesTransactionSQL->updateStatus($transaction_id, ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, "test");
@@ -63,7 +63,7 @@ class ActesPrepareSaeWorkerTest extends S2lowTestCase
         $pastellProperties->actes_send_auto = true;
         $pastellProperties->id_e = 12;
 
-        $pastellPropertiesSQL->editProperties(1, $pastellProperties);
+        $pastellPropertiesSQL->editProperties(101, $pastellProperties);
 
         return $transaction_id;
     }

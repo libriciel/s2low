@@ -21,7 +21,7 @@ trait LogsHistoriqueSQLTrait
             LogsSQL::LEVEL_CRITICAL,
             "actes",
             "TdT",
-            "1",
+            "113",
             "SADM",
             "bar",
             "baz"
@@ -32,7 +32,7 @@ trait LogsHistoriqueSQLTrait
             LogsSQL::LEVEL_CRITICAL,
             "actes",
             "TdT",
-            "1",
+            "113",
             "SADM",
             "bar",
             "baz"
@@ -43,7 +43,7 @@ trait LogsHistoriqueSQLTrait
             LogsSQL::LEVEL_CRITICAL,
             "actes",
             "TdT",
-            "1",
+            "113",
             "SADM",
             "bar",
             "baz"

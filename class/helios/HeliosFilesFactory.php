@@ -7,9 +7,9 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 class HeliosFilesFactory
 {
     public function __construct(
-        private readonly HeliosTransactionsSQL $heliosTransactionsSQL,
         private readonly string $helios_files_upload_root,
         private readonly string $helios_responses_root,
+        private readonly HeliosTransactionsSQL $heliosTransactionsSQL,
     ) {
     }
 

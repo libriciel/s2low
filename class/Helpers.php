@@ -589,6 +589,7 @@ class Helpers
    */
     public static function sendFileToBrowser($path, $filename, $content_type = null)
     {
+
         if ($path) {
             if (! file_exists($path)) {
                 Helpers::$last_error = "Fichier spécifié introuvable";
@@ -601,7 +602,7 @@ class Helpers
         }
 
         header_wrapper('Content-disposition: attachment; filename="' . $filename . '"');
-      // Celles-ci pour IE
+        // Celles-ci pour IE
         header_wrapper("Expires: 0");
         header_wrapper("Cache-Control: must-revalidate, post-check=0,pre-check=0");
         header_wrapper("Pragma: public");

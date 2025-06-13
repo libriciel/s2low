@@ -6,7 +6,7 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 require_once(__DIR__ . "/../../init/init.php");
 $sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
-$heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
+$heliosTransactionSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(HeliosTransactionsSQL::class);
 
 
 $sql = "SELECT id,helios_transactions.submission_date,filename FROM helios_transactions " .

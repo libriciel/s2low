@@ -1,10 +1,12 @@
 <?php
 
+use Monolog\Level;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\ActesVerifSaeWorker;
 use S2lowLegacy\Class\CurlWrapper;
 use S2lowLegacy\Class\CurlWrapperFactory;
+use S2lowLegacy\Class\PastellWrapperFactory;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\PastellProperties;
 use S2lowLegacy\Model\PastellPropertiesSQL;
@@ -59,18 +61,20 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase
 
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ENVOYE_AU_SAE);
 
-        $actesVerifSaeWorker = $this->getObjectInstancier()->get(ActesVerifSaeWorker::class);
+        $actesVerifSaeWorker = $this->getActesVerifSaeWorker();
 
         $actesVerifSaeWorker->work($transaction_id);
 
         $exepected_message = "La transaction $transaction_id a été acceptée par le SAE : \n000 - Votre transfert d'archive a été accepté par la plate-forme as@lae";
 
-        $this->assertEquals(
-            $exepected_message,
-            $this->getLogRecords()[3]['message']
+        $this->assertTrue(
+            $this->testHandler->hasRecord(
+                $exepected_message,
+                Level::Info
+            )
         );
 
-        $actesTransactionSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+        $actesTransactionSQL = self::getContainer()->get(ActesTransactionsSQL::class);
 
         $transaction_info = $actesTransactionSQL->getInfo($transaction_id);
 
@@ -123,17 +127,16 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase
 
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ENVOYE_AU_SAE);
 
-        $actesVerifSaeWorker = $this->getObjectInstancier()->get(ActesVerifSaeWorker::class);
+        $actesVerifSaeWorker = $this->getActesVerifSaeWorker();
 
         $actesVerifSaeWorker->work($transaction_id);
 
         $exepected_message = "La transaction $transaction_id a été refusé par le SAE : (état verif-sae-erreur)";
 
-
-        $this->assertEquals(
+        $this->assertTrue($this->testHandler->hasRecord(
             $exepected_message,
-            $this->getLogRecords()[3]['message']
-        );
+            Level::Info
+        ));
 
         $actesTransactionSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
 
@@ -183,16 +186,16 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase
 
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ENVOYE_AU_SAE);
 
-        $actesVerifSaeWorker = $this->getObjectInstancier()->get(ActesVerifSaeWorker::class);
+        $actesVerifSaeWorker = $this->getActesVerifSaeWorker();
 
         $actesVerifSaeWorker->work($transaction_id);
 
         $exepected_message = "La transaction $transaction_id a été refusé par le SAE.\n203 - Votre transfert d'archive a été rejeté par la plate-forme as@lae";
 
-        $this->assertEquals(
+        $this->assertTrue($this->testHandler->hasRecord(
             $exepected_message,
-            $this->getLogRecords()[3]['message']
-        );
+            Level::Info
+        ));
 
         $actesTransactionSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
 
@@ -243,16 +246,18 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase
 
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ENVOYE_AU_SAE);
 
-        $actesVerifSaeWorker = $this->getObjectInstancier()->get(ActesVerifSaeWorker::class);
+        $actesVerifSaeWorker = $this->getActesVerifSaeWorker();
 
         $actesVerifSaeWorker->work($transaction_id);
 
 
         $exepected_message = "Il n'y a pas encore de réponse (404 not found)";
 
-        $this->assertEquals(
-            $exepected_message,
-            $this->getLogRecords()[3]['message']
+        $this->assertTrue(
+            $this->testHandler->hasRecord(
+                $exepected_message,
+                Level::Error
+            )
         );
 
         $actesTransactionSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
@@ -289,16 +294,16 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase
 
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ENVOYE_AU_SAE);
 
-        $actesVerifSaeWorker = $this->getObjectInstancier()->get(ActesVerifSaeWorker::class);
+        $actesVerifSaeWorker = $this->getActesVerifSaeWorker();
 
         $actesVerifSaeWorker->work($transaction_id);
 
         $exepected_message = "Problème lors de la vérification de l'archive : Impossible de décoder les données reçues [detail-document.php id_d=>42] : Pastell ne répond pas... ou mal";
 
-        $this->assertEquals(
+        $this->assertTrue($this->testHandler->hasRecord(
             $exepected_message,
-            $this->getLogRecords()[3]['message']
-        );
+            Level::Error
+        ));
 
         $actesTransactionSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
 
@@ -309,22 +314,34 @@ class ActesVerifSaeWorkerTest extends S2lowTestCase
 
     private function createTransaction($status)
     {
-        $sql = "INSERT INTO actes_envelopes(user_id) VALUES(1) returning ID";
-        $envelope_id = $this->getSQLQuery()->queryOne($sql);
+        $userId = 113;
+        $authorityId = 101;
+        $sql = "INSERT INTO actes_envelopes(user_id) VALUES(?) returning ID";
+        $envelope_id = $this->getSQLQuery()->queryOne($sql, [$userId]);
 
 
         $sql = "INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,sae_transfer_identifier) VALUES (?,?,?,?,?) returning ID;";
-        $transaction_id = $this->getSQLQuery()->queryOne($sql, $envelope_id, $status, 1, 1, 42);
+        $transaction_id = $this->getSQLQuery()->queryOne($sql, $envelope_id, $status, $userId, $authorityId, 42);
 
-        $authoritySQL = new AuthoritySQL($this->getSQLQuery());
+        $authoritySQL = self::getContainer()->get(AuthoritySQL::class);
         $pastellProperties = new PastellProperties();
         $pastellProperties->url = self::FAKE_PASTELL_URL;
         $pastellProperties->id_e = 12;
         $pastellProperties->actes_send_auto = true;
         $pastellProperties->actes_flux_id = 1;
-        $authoritySQL->updateSAE(1, $pastellProperties);
-        $pastellPropertiesSQL  = new PastellPropertiesSQL($this->getSQLQuery());
-        $pastellPropertiesSQL->editProperties(1, $pastellProperties);
+        $authoritySQL->updateSAE($authorityId, $pastellProperties);
+        $pastellPropertiesSQL  = self::getContainer()->get(PastellPropertiesSQL::class);
+        $pastellPropertiesSQL->editProperties($authorityId, $pastellProperties);
         return $transaction_id;
+    }
+
+    private function getActesVerifSaeWorker(): ActesVerifSaeWorker
+    {
+        return new ActesVerifSaeWorker(
+            self::getContainer()->get(ActesTransactionsSQL::class),
+            $this->s2lowLogger,
+            self::getContainer()->get(PastellPropertiesSQL::class),
+            self::getContainer()->get(PastellWrapperFactory::class),
+        );
     }
 }

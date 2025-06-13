@@ -23,9 +23,7 @@ class AdminGroupController extends Controller
         $status = $this->getRecuperateurPost()->getInt("status", 0);
 
         $name = str_replace('\'', '_', $name);
-
         $groupSQL = $this->getObjectInstancier()->get(GroupSQL::class);
-
         if ($groupSQL->groupNameAlreadyExists($id, $name)) {
             $this->setMessage("Le nom de ce groupe est déjà utilisé");
             $this->redirect("/admin/groups/admin_group_edit.php?id=$id");
@@ -38,7 +36,6 @@ class AdminGroupController extends Controller
         $theSirenFactory  = $this->getObjectInstancier()->get(SirenFactory::class);
 
         $fileUploaderNG = $this->getObjectInstancier()->get(FileUploaderNG::class);
-
 
         $file_content = $fileUploaderNG->getFileContent('siren_file');
         if ($fileUploaderNG->getFileType('siren_file') != 'text/plain') {

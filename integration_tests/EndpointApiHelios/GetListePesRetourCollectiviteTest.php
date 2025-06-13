@@ -16,7 +16,7 @@ class GetListePesRetourCollectiviteTest extends S2lowIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+        $this->heliosTransactionsSQL = self::getContainer()->get(HeliosTransactionsSQL::class);
     }
 
     public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
@@ -26,15 +26,15 @@ class GetListePesRetourCollectiviteTest extends S2lowIntegrationTestCase
 
     public function testGetList(): void
     {
-        $this->createUserWithDefaultCertificatAs(UserRole::Utilisateur);
-
-        $collectiviteId = 1;
+        $collectiviteId = 101;
         $filename = 'filename.xml';
 
         $_GET['collectivite'] = $collectiviteId;
 
         $this->addPESRetourToCollectivite($collectiviteId, $filename);
-        $client = $this->getAuthenticatedClientAttachedToDefaultCertificat();
+
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
 
         $client->request(
             'GET',

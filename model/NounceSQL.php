@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Model;
 
+use S2lowLegacy\Class\Database;
 use S2lowLegacy\Lib\PasswordGenerator;
 use S2lowLegacy\Lib\SQL;
 use S2lowLegacy\Lib\SQLQuery;
@@ -10,9 +11,12 @@ class NounceSQL extends SQL
 {
     private $passwordGenerator;
 
-    public function __construct(SQLQuery $sqlQuery, PasswordGenerator $passwordGenerator)
-    {
-        parent::__construct($sqlQuery);
+    public function __construct(
+        SQLQuery $sqlQuery,
+        Database $database,
+        PasswordGenerator $passwordGenerator
+    ) {
+        parent::__construct($sqlQuery, $database);
         $this->passwordGenerator = $passwordGenerator;
     }
 
@@ -40,7 +44,7 @@ class NounceSQL extends SQL
         $this->menage();
         $sql = "SELECT authority_id FROM nounce WHERE login=? AND nounce=? AND hash=?";
         $authority_id = $this->queryOne($sql, $login, $nounce, $hash);
-        if (! $authority_id) {
+        if (!$authority_id) {
             return false;
         }
         return $authority_id;

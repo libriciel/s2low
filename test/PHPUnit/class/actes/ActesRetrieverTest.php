@@ -2,6 +2,7 @@
 
 use S2lowLegacy\Class\actes\ActesRetriever;
 use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 
 class ActesRetrieverTest extends S2lowTestCase
 {
@@ -10,18 +11,22 @@ class ActesRetrieverTest extends S2lowTestCase
      */
     public function testGetPath()
     {
-        $tmpFolder = new TmpFolder();
-        $my_tmp_folder = $tmpFolder->create();
-        $this->getObjectInstancier()->set('actes_files_upload_root', $my_tmp_folder);
-
-        mkdir($my_tmp_folder . "/foo");
-        file_put_contents("$my_tmp_folder/foo/bar", "foo");
-        $actesRetriever = $this->getObjectInstancier()->get(ActesRetriever::class);
+        mkdir($this->tmpPathFolder . "/foo");
+        file_put_contents("$this->tmpPathFolder/foo/bar", "foo");
+        $actesRetriever = $this->getActesRetriever();
 
         $this->assertEquals(
-            "$my_tmp_folder/foo/bar",
+            "$this->tmpPathFolder/foo/bar",
             $actesRetriever->getPath("foo/bar")
         );
-        $tmpFolder->delete($my_tmp_folder);
+    }
+
+    private function getActesRetriever(): ActesRetriever
+    {
+        return new ActesRetriever(
+            $this->tmpPathFolder,
+            self::getContainer()->get(OpenStackSwiftWrapper::class),
+            $this->s2lowLogger
+        );
     }
 }

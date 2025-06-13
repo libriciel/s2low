@@ -5,6 +5,7 @@ namespace S2lowLegacy\Controller;
 use Exception;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
@@ -25,7 +26,7 @@ class AdminUserController extends Controller
     public function __construct(ObjectInstancier $objectInstancier)
     {
         parent::__construct($objectInstancier);
-        $this->userSQL = new UserSQL($this->getSQLQuery());
+        $this->userSQL = $objectInstancier->get(UserSQL::class);
     }
 
     private function getFromFile($name)
@@ -78,13 +79,13 @@ class AdminUserController extends Controller
 
         $user_info = false;
         if ($user_id) {
-            $userSQL = new UserSQL($this->getSQLQuery());
+            $userSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(UserSQL::class);
             $user_info = $userSQL->getInfo($user_id);
             if (!$user_info) {
                 throw new Exception("Erreur lors de la modification de l'utilisateur");
             }
         } elseif ($user_id_a_cloner) {
-            $userSQL = new UserSQL($this->getSQLQuery());
+            $userSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(UserSQL::class);
             $user_info = $userSQL->getInfo($user_id_a_cloner);
             if (!$user_info) {
                 throw new Exception("Erreur lors du clonage de l'utilisateur");
@@ -200,7 +201,6 @@ class AdminUserController extends Controller
         $certificate_rgs_2_etoiles = $_FILES['certificate_rgs_2_etoiles'] ?? [];
 
         $me = new User();
-
         if (! $me->authenticate()) {
             $this->displayErrorAndExit("Échec de l'authentification", "/");
         }
@@ -286,7 +286,6 @@ class AdminUserController extends Controller
                 $him->set("authority_id", $authority_id);
             } elseif ($me->isGroupAdmin()) {
                 $authority = new Authority($authority_id);
-
                 if ($authority->isInGroup($me->get("authority_group_id"))) {
                     $him->set("authority_id", $authority_id);
                 } else {
@@ -354,7 +353,7 @@ class AdminUserController extends Controller
         $msg = ($mod) ? "Modification" : "Création";
         $msg .= " de l'utilisateur " . $him->getPrettyName() . " (id=" . $him->getId() . "). Résultat ok.";
 
-        $userSQL = new UserSQL($this->getSQLQuery());
+        $userSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(UserSQL::class);
 
         if ($auth_method != UserSQL::IDENT_METHOD_RGS_2_ETOILES) {
             $userSQL->deleteCertificateRGS2Etoiles($him->getId());

@@ -25,41 +25,35 @@ class HeliosAnalyseFichierAEnvoyerWorker implements IWorker
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
     }
 
-    public function getQueueName()
+    public function getQueueName(): string
     {
         return self::QUEUE_NAME;
     }
 
-    public function getData($id)
+    public function getData($id): int
     {
         return $id;
     }
 
-    /**
-     * @return array|false|int[]
-     * @throws Exception
-     */
-    public function getAllId()
+    public function getAllId(): array
     {
         return $this->heliosTransactionsSQL->getIdsByStatus(HeliosTransactionsSQL::POSTE);
     }
 
     /**
-     * @param $data
-     * @return void
      * @throws Exception
      */
-    public function work($data)
+    public function work($data): void
     {
         $this->heliosEnvoiControler->validateOneTransaction($data);
     }
 
-    public function getMutexName($data)
+    public function getMutexName($data): bool|string
     {
         return sprintf("helios-transaction-%s", $data);
     }
 
-    public function isDataValid($data)
+    public function isDataValid($data): bool
     {
         $status_id = $this->heliosTransactionsSQL->getLatestStatusId($data);
         return $status_id == HeliosTransactionsSQL::POSTE;
@@ -68,7 +62,7 @@ class HeliosAnalyseFichierAEnvoyerWorker implements IWorker
     /**
      * @return void
      */
-    public function start()
+    public function start(): void
     {
         // TODO: Implement start() method.
     }
@@ -76,7 +70,7 @@ class HeliosAnalyseFichierAEnvoyerWorker implements IWorker
     /**
      * @return void
      */
-    public function end()
+    public function end(): void
     {
         // TODO: Implement end() method.
     }

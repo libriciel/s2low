@@ -6,11 +6,11 @@ use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\JSONoutput;
 
-list($html, $jsonOutput) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($jsonOutput) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        ['html', JSONoutput::class]
+        [JSONoutput::class]
     );
-
+$html = '';
 $me = new User();
 
 if (! $me->authenticate()) {

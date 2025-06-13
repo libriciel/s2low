@@ -25,124 +25,117 @@ class TestEnvironmentManager
      */
     public function setUp()
     {
-        $this->getConnection();
-
-        $this->getSQLQuery()->exec($this->getSQLContent());
-
-        $this->getSQLQuery()->query("SELECT SETVAL('users_id_seq', (SELECT MAX(id)+1 FROM users))");
-        $this->getSQLQuery()->query("SELECT SETVAL('authorities_id_seq', (SELECT MAX(id)+1 FROM authorities))");
-        $this->getSQLQuery()->query("SELECT SETVAL('authority_groups_id_seq', (SELECT MAX(id)+1 FROM authority_groups))");
-
-
-        $_GET = array();
-        $_POST = array();
-        $_SESSION = array();
-        $_SERVER['SSL_CLIENT_VERIFY'] = "";
-        $_SERVER['SSL_CLIENT_S_DN'] = "";
-        $_SERVER['SSL_CLIENT_I_DN'] = "";
-        $_SERVER['SSL_CLIENT_CERT'] = "";
-        $_SERVER["QUERY_STRING"] = "";
-
-        \S2lowLegacy\Lib\ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());
-        $this->getObjectInstancier()->__set(SQLQuery::class, $this->getSQLQuery());
-        $this->getObjectInstancier()->set('helios_files_upload_root', "/tmp");
-        $this->getObjectInstancier()->set('actes_files_upload_root', sys_get_temp_dir());
-
-        $this->getObjectInstancier()->set('use_prod_notifications', false);
-
-        $this->getObjectInstancier()->set("openstack_enable", false);
-        $this->getObjectInstancier()->set("openstack_authentication_url_v2", "");
-        $this->getObjectInstancier()->set("openstack_username", "a");
-        $this->getObjectInstancier()->set("openstack_password", "a");
-        $this->getObjectInstancier()->set("openstack_tenant", "a");
-        $this->getObjectInstancier()->set("openstack_region", "a");
-        $this->getObjectInstancier()->set("openstack_swift_container_prefix", "a");
-        $this->getObjectInstancier()->set("website", "http://s2low");
-        $this->getObjectInstancier()->set("website_ssl", "https://s2low");
-        $this->getObjectInstancier()->set("actes_appli_trigramme", "SLO");
-        $this->getObjectInstancier()->set("actes_appli_quadrigramme", "EACT");
-        $this->getObjectInstancier()->set("actes_ministere_acronyme", "MI");
-        $this->getObjectInstancier()->set("actes_dont_valid_signing_certificate", false);
-        $this->getObjectInstancier()->set("beanstalkd_server", false);
-        $this->getObjectInstancier()->set("beanstalkd_port", false);
-        $this->getObjectInstancier()->set('antivirus_command', 'ls');
-        $this->getObjectInstancier()->set('pades_valid_url', 'https://s2low');
-        $this->getObjectInstancier()->set('openssl_path', OPENSSL_PATH);
-        $this->getObjectInstancier()->set('rgs_validca_path', RGS_VALIDCA_PATH);
-        $this->getObjectInstancier()->set('extended_validca_path', EXTENDED_VALIDCA_PATH);
-        $this->getObjectInstancier()->set('trustore_path', TRUSTSTORE_PATH);
-        $this->getObjectInstancier()->set('schema_pes_path', HELIOS_XSD_PATH);
-        $this->getObjectInstancier()->set('redis_server', 'localhost');
-        $this->getObjectInstancier()->set('redis_port', 6379);
-
-        $get = array();
-        $post = array();
-        $request = array();
-        $session = array();
-        $server = array();
-
-        $actesMinistereProperties = new ActesMinistereProperties(
-            ACTES_MINISTERE_URL,
-            ACTES_MINISTERE_AUTHENTICATION,
-            ACTES_MINISTERE_LOGIN,
-            ACTES_MINISTERE_PASSWORD,
-            ACTES_MINISTERE_CERTIFICATE,
-            ACTES_MINISTERE_CERTIFICATE_KEY,
-            ACTES_MINISTERE_CERTIFICATE_KEY_PASS,
-            ACTES_MINISTERE_ADAPT_PROTOCOL,
-            ACTES_MINISTERE_SERVER_CERTIFICATE_PATH
-        );
-        $this->getObjectInstancier()->set(ActesMinistereProperties::class, $actesMinistereProperties);
-
-        $sessionWrapper = new SessionWrapper($session);
-        $environnement = new Environnement(
-            $get,
-            $post,
-            $request,
-            $sessionWrapper,
-            $server,
-            false
-        );
-
-        $this->getObjectInstancier()->set(
-            Environnement::class,
-            $environnement
-        );
-        $this->getObjectInstancier()->set(
-            SessionWrapper::class,
-            $sessionWrapper
-        );
-
-        $monologLogger = new  Logger('PHPUNIT');
-        $testHandler = new TestHandler();
-        $monologLogger->pushHandler($testHandler);
-
-        $this->getObjectInstancier()->set(TestHandler::class, $testHandler);
-        $this->getObjectInstancier()->set(LoggerInterface::class, $monologLogger);
-
-        $this->getObjectInstancier()->set('convert_api_logins_from_iso', false);
-
-        // WARNING : PAS SUR DE LA MANIP
-        $this->getObjectInstancier()->set(S2lowLogger::class, new  S2lowLogger($monologLogger));
-
-        $this->getObjectInstancier()->set('image_for_stamp', SITEROOT . 'public.ssl/custom/images/bandeau-s2low-190.jpg');
-        $this->getObjectInstancier()->set('repertoirePesAllerSansTransaction', '');
-        $this->getObjectInstancier()->set('mail_files_upload_root', '');
-        $this->getObjectInstancier()->set('mail_files_without_transac_dir', '');
-        $tmpFolder = new TmpFolder();
-        $this->getObjectInstancier()->set('repertoireActesEnveloppeSansTransaction', $tmpFolder->create());
+//        $this->getConnection();
+//
+//        $this->getSQLQuery()->exec($this->getSQLContent());
+//
+//        $this->getSQLQuery()->query("SELECT SETVAL('users_id_seq', (SELECT MAX(id)+1 FROM users))");
+//        $this->getSQLQuery()->query("SELECT SETVAL('authorities_id_seq', (SELECT MAX(id)+1 FROM authorities))");
+//        $this->getSQLQuery()->query("SELECT SETVAL('authority_groups_id_seq', (SELECT MAX(id)+1 FROM authority_groups))");
+//
+//
+//        $_GET = array();
+//        $_POST = array();
+//        $_SESSION = array();
+//        $_SERVER['SSL_CLIENT_VERIFY'] = "";
+//        $_SERVER['SSL_CLIENT_S_DN'] = "";
+//        $_SERVER['SSL_CLIENT_I_DN'] = "";
+//        $_SERVER['SSL_CLIENT_CERT'] = "";
+//        $_SERVER["QUERY_STRING"] = "";
+//
+//        \S2lowLegacy\Lib\ObjectInstancierFactory::setObjectInstancier(new ObjectInstancier());
+//        $this->getObjectInstancier()->__set(SQLQuery::class, $this->getSQLQuery());
+//        $this->getObjectInstancier()->set('helios_files_upload_root', "/tmp");
+//        $this->getObjectInstancier()->set('actes_files_upload_root', sys_get_temp_dir());
+//
+//        $this->getObjectInstancier()->set('use_prod_notifications', false);
+//
+//        $this->getObjectInstancier()->set("openstack_enable", false);
+//        $this->getObjectInstancier()->set("openstack_authentication_url_v2", "");
+//        $this->getObjectInstancier()->set("openstack_username", "a");
+//        $this->getObjectInstancier()->set("openstack_password", "a");
+//        $this->getObjectInstancier()->set("openstack_tenant", "a");
+//        $this->getObjectInstancier()->set("openstack_region", "a");
+//        $this->getObjectInstancier()->set("openstack_swift_container_prefix", "a");
+//        $this->getObjectInstancier()->set("website", "http://s2low");
+//        $this->getObjectInstancier()->set("website_ssl", "https://s2low");
+//        $this->getObjectInstancier()->set("actes_appli_trigramme", "SLO");
+//        $this->getObjectInstancier()->set("actes_appli_quadrigramme", "EACT");
+//        $this->getObjectInstancier()->set("actes_ministere_acronyme", "MI");
+//        $this->getObjectInstancier()->set("actes_dont_valid_signing_certificate", false);
+//        $this->getObjectInstancier()->set("beanstalkd_server", false);
+//        $this->getObjectInstancier()->set("beanstalkd_port", false);
+//        $this->getObjectInstancier()->set('antivirus_command', 'ls');
+//        $this->getObjectInstancier()->set('pades_valid_url', 'https://s2low');
+//        $this->getObjectInstancier()->set('openssl_path', OPENSSL_PATH);
+//        $this->getObjectInstancier()->set('rgs_validca_path', RGS_VALIDCA_PATH);
+//        $this->getObjectInstancier()->set('extended_validca_path', EXTENDED_VALIDCA_PATH);
+//        $this->getObjectInstancier()->set('trustore_path', TRUSTSTORE_PATH);
+//        $this->getObjectInstancier()->set('schema_pes_path', HELIOS_XSD_PATH);
+//        $this->getObjectInstancier()->set('redis_server', 'localhost');
+//        $this->getObjectInstancier()->set('redis_port', 6379);
+//
+//        $get = array();
+//        $post = array();
+//        $request = array();
+//        $session = array();
+//        $server = array();
+//
+//        $actesMinistereProperties = new ActesMinistereProperties(
+//            ACTES_MINISTERE_URL,
+//            ACTES_MINISTERE_AUTHENTICATION,
+//            ACTES_MINISTERE_LOGIN,
+//            ACTES_MINISTERE_PASSWORD,
+//            ACTES_MINISTERE_CERTIFICATE,
+//            ACTES_MINISTERE_CERTIFICATE_KEY,
+//            ACTES_MINISTERE_CERTIFICATE_KEY_PASS,
+//            ACTES_MINISTERE_ADAPT_PROTOCOL,
+//            ACTES_MINISTERE_SERVER_CERTIFICATE_PATH
+//        );
+//        $this->getObjectInstancier()->set(ActesMinistereProperties::class, $actesMinistereProperties);
+//
+//        $sessionWrapper = new SessionWrapper($session);
+//        $environnement = new Environnement(
+//            $get,
+//            $post,
+//            $request,
+//            $sessionWrapper,
+//            $server,
+//            false
+//        );
+//
+//        $this->getObjectInstancier()->set(
+//            Environnement::class,
+//            $environnement
+//        );
+//        $this->getObjectInstancier()->set(
+//            SessionWrapper::class,
+//            $sessionWrapper
+//        );
+//
+//        $monologLogger = new  Logger('PHPUNIT');
+//        $testHandler = new TestHandler();
+//        $monologLogger->pushHandler($testHandler);
+//
+//        $this->getObjectInstancier()->set(TestHandler::class, $testHandler);
+//        $this->getObjectInstancier()->set(LoggerInterface::class, $monologLogger);
+//
+//        $this->getObjectInstancier()->set('convert_api_logins_from_iso', false);
+//
+//        // WARNING : PAS SUR DE LA MANIP
+//        $this->getObjectInstancier()->set(S2lowLogger::class, new  S2lowLogger($monologLogger));
+//
+//        $this->getObjectInstancier()->set('image_for_stamp', SITEROOT . 'public.ssl/custom/images/bandeau-s2low-190.jpg');
+//        $this->getObjectInstancier()->set('repertoirePesAllerSansTransaction', '');
+//        $this->getObjectInstancier()->set('mail_files_upload_root', '');
+//        $this->getObjectInstancier()->set('mail_files_without_transac_dir', '');
+//        $tmpFolder = new TmpFolder();
+//        $this->getObjectInstancier()->set('repertoireActesEnveloppeSansTransaction', $tmpFolder->create());
     }
 
     public function getConnection()
     {
-        if (!self::$sqlQueryStatic) {
-            self::$sqlQueryStatic = new SQLQuery(
-                DB_DATABASE_TEST,
-                DB_HOST_TEST,
-                DB_USER_TEST,
-                DB_PASSWORD_TEST
-            );
-        }
+        throw new \Exception('Deprecated: Not implemented');
     }
 
     protected function getSQLContent()

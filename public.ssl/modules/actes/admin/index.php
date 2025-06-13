@@ -12,7 +12,7 @@ use S2lowLegacy\Class\S2lowRedirect;
 /** @var Droit $droit */
 /** @var S2lowRedirect $s2lowRedirect */
 [$initialisation,$droit,$s2lowRedirect] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class,S2lowRedirect::class]);
+    ->getArray([Initialisation::class, Droit::class, S2lowRedirect::class]);
 
 $initData = $initialisation->doInit();
 $moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);

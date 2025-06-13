@@ -103,7 +103,7 @@ class User extends DataObject
      */
     public function authenticate(int $authentProcess = Authentification::AUTHENTIFICATION_BY_APACHE)
     {
-    /** @var \S2lowLegacy\Class\Authentification $authenfication */
+
         $authenfication = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(Authentification::class);
         $this->id = $authenfication->authenticate($authentProcess);
 
@@ -513,7 +513,6 @@ class User extends DataObject
                 return false;
             }
         }
-
         $saveSQLRequest = parent::buildSaveSQLRequest($validate);
         if (! $saveSQLRequest->isValid()) {
             return false;
@@ -584,17 +583,14 @@ class User extends DataObject
                 $this->errorMsg = "Erreur de traitement du certificat.";
                 return false;
             }
-
             if (($tab = openssl_x509_parse($this->certificate)) === false) {
                 $this->errorMsg = "Erreur d'analyse du certificat.";
                 return false;
             }
-
             $this->issuer_dn = "";
             foreach ($tab['issuer'] as $key => $val) {
                 $this->issuer_dn .= "/" . $key . "=" . $val;
             }
-
             $this->subject_dn = $tab["name"];
 
           /*
@@ -611,8 +607,6 @@ class User extends DataObject
 
             $x509 = new X509Certificate();
             $this->certificate_hash = $x509->getBase64Hash($this->certificate, UserSQL::CERTIFICATE_FINGERPRINT_HASH_ALG);
-
-
           // Controle de l'existence d'un utilisateur avec les mêmes données de certificat.
           // Si un utilisateur a les mêmes données mais qu'il s'agit de l'utilisateur courant
           // on accepte => permet de modifier le certificat
@@ -627,7 +621,6 @@ class User extends DataObject
                         return false;
                     }
                 }
-
                 if ($this->login) {
                     $id = $this->getIdFromLogin($this->login);
                     if ($id) {

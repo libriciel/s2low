@@ -15,8 +15,11 @@ class BeanstalkdWrapper
 
     private $logger;
 
-    public function __construct($beanstalkd_server, $beanstalkd_port, S2lowLogger $s2lowLogger)
-    {
+    public function __construct(
+        $beanstalkd_server,
+        $beanstalkd_port,
+        S2lowLogger $s2lowLogger
+    ) {
         $this->beanstalkd_server = $beanstalkd_server;
         $this->beanstalkd_port = $beanstalkd_port;
         $this->logger = $s2lowLogger;
@@ -40,7 +43,7 @@ class BeanstalkdWrapper
         } catch (Exception $e) {
             $this->logger->critical(
                 "Unable to send data to queue : " . $e->getMessage(),
-                ['queue' => $queue,'data' => $data]
+                ['queue' => $queue, 'data' => $data]
             );
             return false;
         }

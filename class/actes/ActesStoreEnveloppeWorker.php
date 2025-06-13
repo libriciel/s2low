@@ -56,7 +56,7 @@ class ActesStoreEnveloppeWorker implements IWorker
     /**
      * @return void
      */
-    public function start()
+    public function start(): void
     {
         // TODO: Implement start() method.
     }
@@ -64,7 +64,7 @@ class ActesStoreEnveloppeWorker implements IWorker
     /**
      * @return void
      */
-    public function end()
+    public function end(): void
     {
         // TODO: Implement end() method.
     }

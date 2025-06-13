@@ -13,7 +13,7 @@ class ModuleSQLTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->moduleSQL = new ModuleSQL($this->getSQLQuery());
+        $this->moduleSQL = self::getContainer()->get(ModuleSQL::class);
     }
 
     public function testGetInfoByName()
@@ -24,17 +24,17 @@ class ModuleSQLTest extends S2lowTestCase
 
     public function testGetInfoModuleAuthority()
     {
-        $this->assertNotEmpty($this->moduleSQL->getInfoModuleAuthority(1, 1));
+        $this->assertNotEmpty($this->moduleSQL->getInfoModuleAuthority(1, 101));
     }
 
     public function testGetInfoPerms()
     {
-        $this->assertEquals('RW', $this->moduleSQL->getInfoPerms(1, 1));
+        $this->assertEquals('RW', $this->moduleSQL->getInfoPerms(1, 101));
     }
 
     public function testHasDroit()
     {
-        $this->assertTrue($this->moduleSQL->hasDroit(1, 1, 'RW'));
+        $this->assertTrue($this->moduleSQL->hasDroit(1, 101, 'RW'));
     }
 
     public function testHasDroitNone()
@@ -44,23 +44,23 @@ class ModuleSQLTest extends S2lowTestCase
 
     public function testGetModuleForSuperAdmin()
     {
-        $userSQL = new UserSQL($this->getSQLQuery());
-        $userInfo = $userSQL->getInfo(1);
+        $userSQL = self::getContainer()->get(UserSQL::class);
+        $userInfo = $userSQL->getInfo(101);
         $info = $this->moduleSQL->getModulesForUser($userInfo);
         $this->assertEquals('actes', $info[0]['name']);
     }
 
     public function testGetModuleForGroupAdmin()
     {
-        $userSQL = new UserSQL($this->getSQLQuery());
-        $userInfo = $userSQL->getInfo(7);
+        $userSQL = self::getContainer()->get(UserSQL::class);
+        $userInfo = $userSQL->getInfo(101);
         $info = $this->moduleSQL->getModulesForUser($userInfo);
-        $this->assertEquals('helios', $info[0]['name']);
+        $this->assertEquals('helios', $info[1]['name']);
     }
 
     public function testGetModuleForUser()
     {
-        $userSQL = new UserSQL($this->getSQLQuery());
+        $userSQL = self::getContainer()->get(UserSQL::class);
         $userInfo = $userSQL->getInfo(5);
         $info = $this->moduleSQL->getModulesForUser($userInfo);
         $this->assertEmpty($info);

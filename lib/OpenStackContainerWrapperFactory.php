@@ -16,7 +16,6 @@ class OpenStackContainerWrapperFactory
 
     public function getContainerWrapper(string $containerName, OpenStackConfig $configuration)
     {
-
         $containerFullName = $configuration->openstack_swift_container_prefix . $containerName;
 
         $parametres = [

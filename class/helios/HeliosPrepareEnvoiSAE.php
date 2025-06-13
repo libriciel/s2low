@@ -93,7 +93,6 @@ class HeliosPrepareEnvoiSAE
             return true;
         }
         $user_info = $this->userSQL->getInfo($user_id);
-
         if ($user_info['role'] == 'SADM') {
             return true;
         }

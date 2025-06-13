@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace S2low\Tests\Services\Helios;
 
 use Exception;
+use IntegrationTests\S2lowIntegrationTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnection;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionBuilder;
@@ -25,12 +26,13 @@ use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Controller\HeliosController;
 use S2lowLegacy\Lib\HeliosNamesGenerator;
+use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Lib\PesAllerReader;
 use S2lowLegacy\Model\AuthoritySiretSQL;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
-class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
+class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
 {
     private string $testStreamUrl;
     private string $counterDir;
@@ -44,9 +46,13 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
     private AuthoritySiretSQL $authoritySiretSQL;
     private HeliosTransactionsSQL $transactionsSQL;
 
-    public function __construct()
+    /**
+     * @throws Exception
+     */
+    protected function setUp(): void
     {
-        parent::__construct();
+        parent::setUp();
+
         $this->tmpFolder = new TmpFolder();
         $this->workerScript = $this->getMockBuilder(WorkerScript::class)
             ->disableOriginalConstructor()->getMock();
@@ -55,14 +61,6 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
         $this->authoritySQL = static::getContainer()->get(AuthoritySQL::class);
         $this->authoritySiretSQL = static::getContainer()->get(AuthoritySiretSQL::class);
         $this->transactionsSQL = static::getContainer()->get(HeliosTransactionsSQL::class);
-    }
-
-    /**
-     * @throws Exception
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
 
         $this->testStreamUrl = $this->tmpFolder->create();
         $this->counterDir = $this->tmpFolder->create();
@@ -70,48 +68,8 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
         fwrite($counterFile, '000');
 
         mkdir($this->testStreamUrl . '/helios');
-        $this->getObjectInstancier()->set('helios_files_upload_root', $this->testStreamUrl . '/helios/');
-        $this->heliosController = new HeliosController($this->getObjectInstancier());
-        $this->envoiControler = new HeliosEnvoiControler(
-            static::getContainer()->get(AuthoritySiretSQL::class),
-            static::getContainer()->get(HeliosTransactionsSQL::class),
-            static::getContainer()->get(AuthoritySQL::class),
-            static::getContainer()->get(HeliosTransmissionWindowsSQL::class),
-            static::getContainer()->get(PesAllerRetriever::class),
-            static::getContainer()->get(Antivirus::class),
-            $this->workerScript,
-            static::getContainer()->get(MailerSymfonyFactory::class),
-            new DGFiPConnectionsManager(
-                new DGFiPConnectionConfiguration(   //Passtrans Connection
-                    'passtrans_server',
-                    1982,
-                    'passtrans_login',
-                    'passtrans_password',
-                    DGFiPConnectionMode::PASSTRANS_SFTP,
-                    true,
-                    'passtrans_sending_destination',
-                    'passtrans_response_server_path',
-                    'helios_ftp_p_appli'
-                ),
-                new DGFiPConnectionConfiguration(   //Gateway Connection
-                    'std_server',
-                    1982,
-                    'std_login',
-                    'std_password',
-                    DGFiPConnectionMode::GATEWAY,
-                    true,
-                    'std_sending_destination',
-                    'std_response_server_path',
-                    'helios_ftp_p_appli'
-                ),
-                $this->connectBuilder
-            ),
-            new FichierCompteur($this->counterDir . '/counter.txt'),
-            static::getContainer()->get(S2lowLogger::class),
-            new PesAllerReader(),
-            new HeliosNamesGenerator(),
-            new VerifyPemCertificateFactory()
-        );
+        $this->heliosController = self::getContainer()->get(HeliosController::class);
+        $this->envoiControler = $this->getHeliosEnvoiController();
     }
 
     protected function tearDown(): void
@@ -119,16 +77,6 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
         $this->tmpFolder->delete($this->testStreamUrl);
         $this->tmpFolder->delete($this->counterDir);
         parent::tearDown();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function testValidateAllTransactions()
-    {
-        $this->validatePesAller('pes_aller_ok.xml');
-        $siret_list = $this->authoritySiretSQL->siretList(1);
-        static::assertEquals('12345678912345', $siret_list[0]['siret']);
     }
 
     /**
@@ -144,16 +92,51 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
     }
 
     /**
+     * @param mixed $id_transaction
+     * @return void
+     * @throws Exception
+     */
+    private function validate(mixed $id_transaction): void
+    {
+        ob_start();
+        $this->envoiControler->validateOneTransaction($id_transaction);
+        ob_end_clean();
+    }
+
+    /**
+     * @param $filename
+     * @return false|mixed
+     */
+    private function getImportFile($filename): mixed
+    {
+        $pes_aller = $this->projectDir . "/test/PHPUnit/helios/fixtures/$filename";
+        $pesAllerPourTest = $this->testStreamUrl . '/helios/' . sha1_file($pes_aller);
+        copy($pes_aller, $pesAllerPourTest);
+        return $this->heliosController->importFile(113, $pes_aller, 'pes_aller.xml');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testValidateAllTransactions()
+    {
+        $this->validatePesAller('pes_aller_ok.xml');
+        $siret_list = $this->authoritySiretSQL->siretList(101);
+        static::assertEquals("12345678912345", $siret_list[0]['siret']);
+    }
+
+    /**
      * @throws Exception
      */
     public function testNotInIso8859()
     {
         $this->workerScript->expects(static::never())->method('putJobByQueueName');
         $id_transaction = $this->validatePesAller('pes_aller_utf8.xml');
-
         $info_transaction = $this->transactionsSQL->getInfo($id_transaction);
+
         static::assertEquals(HeliosTransactionsSQL::ERREUR, $info_transaction['last_status_id']);
         $last_status_info = $this->transactionsSQL->getLastStatusInfo($id_transaction);
+
         static::assertEquals(
             "Transaction $id_transaction : ce fichier n'est pas encodé en ISO-8859-1",
             $last_status_info['message']
@@ -206,7 +189,7 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
             $info_transaction['xml_nomfic']
         );
 
-        $siret_list = $this->authoritySiretSQL->siretList(1);
+        $siret_list = $this->authoritySiretSQL->siretList(101);
         static::assertEquals('12345678912345', $siret_list[0]['siret']);
     }
 
@@ -231,7 +214,7 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
         $this->workerScript->expects(static::never())->method('putJobByQueueName');
         $pes_aller = __DIR__ . '/../../../test/PHPUnit/helios/fixtures/pes_aller_ok.xml';
         copy($pes_aller, $this->testStreamUrl . '/helios/' . sha1_file($pes_aller));
-        $transaction_id = $this->heliosController->importFile(8, $pes_aller, 'pes_aller.xml');
+        $transaction_id = $this->heliosController->importFile(113, $pes_aller, 'pes_aller.xml');
         $pes_aller_change = __DIR__ . '/../../../test/PHPUnit/helios/fixtures/pes_aller.xml';
         copy($pes_aller_change, $this->testStreamUrl . '/helios/' . sha1_file($pes_aller));
         ob_start();
@@ -268,7 +251,7 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
      */
     public function testSigneNoIDPasstrans()
     {
-        $this->authoritySQL->query('UPDATE authorities SET helios_use_passtrans = true WHERE id =1');
+        $this->authoritySQL->query('UPDATE authorities SET helios_use_passtrans = true WHERE id =101');
         $id_transaction = $this->getImportFile('/../../class/fixtures/pes_no_id.xml');
         $this->workerScript->expects(static::once())->method('putJobByQueueName')
             ->with('helios-envoi-passtrans', "$id_transaction");
@@ -325,7 +308,7 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
     {
         $this->workerScript->expects(static::exactly(2))->method('putJobByQueueName');
         $this->envoiControler->setDoNotVerifyNomFicUnicity(true);
-        $this->authoritySQL->updateDoNotVerifyNomFicUnicity(1, true);
+        $this->authoritySQL->updateDoNotVerifyNomFicUnicity(101, true);
         $this->validatePesAller('pes_aller_ok.xml');
         $id_transaction = $this->validatePesAller('pes_aller_ok.xml');
         $info_transaction = $this->transactionsSQL->getLastStatusInfo($id_transaction);
@@ -412,7 +395,7 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
     {
         $this->connectBuilder->expects(static::never())->method('get');
 
-        $this->authoritySQL->query('UPDATE authorities SET helios_use_passtrans = true WHERE id =1');
+        $this->authoritySQL->query('UPDATE authorities SET helios_use_passtrans = true WHERE id =101');
 
         $id_transaction = $this->createPesAllerToSend('pes_aller_ok.xml');
         ob_start();
@@ -489,7 +472,7 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
     {
         $id_transaction = $this->createPesAllerToSend('pes_aller_ok.xml');
 
-        $this->authoritySQL->query('UPDATE authorities SET helios_use_passtrans = true WHERE id =1');
+        $this->authoritySQL->query('UPDATE authorities SET helios_use_passtrans = true WHERE id =101');
 
         $dgfipConnection = $this->getMockBuilder(DGFiPConnection::class)
             ->disableOriginalConstructor()->getMock();
@@ -529,29 +512,6 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
     }
 
     /**
-     * @param $filename
-     * @return false|mixed
-     */
-    private function getImportFile($filename): mixed
-    {
-        $pes_aller = __DIR__ . "/../../../test/PHPUnit/helios/fixtures/$filename";
-        copy($pes_aller, $this->testStreamUrl . '/helios/' . sha1_file($pes_aller));
-        return $this->heliosController->importFile(8, $pes_aller, 'pes_aller.xml');
-    }
-
-    /**
-     * @param mixed $id_transaction
-     * @return void
-     * @throws Exception
-     */
-    private function validate(mixed $id_transaction): void
-    {
-        ob_start();
-        $this->envoiControler->validateOneTransaction($id_transaction);
-        ob_end_clean();
-    }
-
-    /**
      * Quand on envoie une transaction d'une autorité non Passtrans sur la file non passtrans, elle est
      * correctement envoyée :
      * 1/ les paramètres du serveur sont corrects (std_server, etc)
@@ -574,6 +534,56 @@ class HeliosEnvoiControlerTest extends S2lowSymfonyWebTestCase
         static::assertEquals(
             "Transaction $id_transaction transmise au serveur.",
             $last_status_info['message']
+        );
+    }
+
+    private function getHeliosEnvoiController()
+    {
+        $pesAllerRetriever = new PesAllerRetriever(
+            $this->testStreamUrl . '/helios/',
+            self::getContainer()->get(OpenStackSwiftWrapper::class),
+            self::getContainer()->get(S2lowLogger::class)
+        );
+
+        return new HeliosEnvoiControler(
+            static::getContainer()->get(AuthoritySiretSQL::class),
+            static::getContainer()->get(HeliosTransactionsSQL::class),
+            static::getContainer()->get(AuthoritySQL::class),
+            static::getContainer()->get(HeliosTransmissionWindowsSQL::class),
+            $pesAllerRetriever,
+            static::getContainer()->get(Antivirus::class),
+            $this->workerScript,
+            static::getContainer()->get(MailerSymfonyFactory::class),
+            new DGFiPConnectionsManager(
+                new DGFiPConnectionConfiguration(   //Passtrans Connection
+                    'passtrans_server',
+                    1982,
+                    'passtrans_login',
+                    'passtrans_password',
+                    DGFiPConnectionMode::PASSTRANS_SFTP,
+                    true,
+                    'passtrans_sending_destination',
+                    'passtrans_response_server_path',
+                    'helios_ftp_p_appli'
+                ),
+                new DGFiPConnectionConfiguration(   //Gateway Connection
+                    'std_server',
+                    1982,
+                    'std_login',
+                    'std_password',
+                    DGFiPConnectionMode::GATEWAY,
+                    true,
+                    'std_sending_destination',
+                    'std_response_server_path',
+                    'helios_ftp_p_appli'
+                ),
+                $this->connectBuilder
+            ),
+            new FichierCompteur($this->counterDir . '/counter.txt'),
+            static::getContainer()->get(S2lowLogger::class),
+            new PesAllerReader(),
+            new HeliosNamesGenerator(),
+            new VerifyPemCertificateFactory()
         );
     }
 }

@@ -44,8 +44,8 @@ class ExtractDataForBordereauPDF
 
     public function extract($transactionId, $addEmailNotificationField = false)
     {
-        $data = new DataForBordereauPDF();
 
+        $data = new DataForBordereauPDF();
         $transactionComplement = $this->transactionSQL->getDonneesTransaction($transactionId);
         $data->setDonneesTransaction($transactionComplement);
         $data->setAddEmailNotificationField($addEmailNotificationField);

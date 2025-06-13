@@ -18,7 +18,7 @@ class GetNumberOfActeWithSpecificStatusTest extends S2lowIntegrationTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
+        $this->actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -48,7 +48,9 @@ class GetNumberOfActeWithSpecificStatusTest extends S2lowIntegrationTestCase
 
         $_GET['status_id'] = $status;
 
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
+
         $client->request('GET', '/modules/actes/api/number_actes.php', [
             'status_id' => $status,
         ]);

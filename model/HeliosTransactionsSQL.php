@@ -43,6 +43,7 @@ class HeliosTransactionsSQL extends SQL
     {
         $sql = "INSERT INTO helios_transactions(user_id, filename, file_size, siren, sha1, submission_date, authority_id) " .
                 " VALUES (?,?,?,?,?,now(),?) RETURNING ID;";
+
         return $this->queryOne($sql, $user_id, $filename, $file_size, $siren, $sha1, $authority_id);
     }
 
@@ -70,15 +71,15 @@ class HeliosTransactionsSQL extends SQL
 
     public function begin()
     {
-        $this->queryOne("BEGIN;");
+        $this->database->begin();
     }
     public function commit()
     {
-        $this->queryOne("COMMIT;");
+        $this->database->commit();
     }
     public function rollback()
     {
-        $this->query("ROLLBACK;");
+        $this->database->rollback();
     }
 
     public function getLastStatusInfo($id)

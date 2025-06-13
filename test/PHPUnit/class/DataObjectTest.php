@@ -20,7 +20,7 @@ class DataObjectTest extends S2lowTestCase
 
     public function testConstructId()
     {
-        $user = new User(1);
+        $user = new User(101);
         $this->assertTrue($user->init());
     }
 

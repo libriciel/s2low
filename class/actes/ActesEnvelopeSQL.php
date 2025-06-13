@@ -55,7 +55,7 @@ class ActesEnvelopeSQL extends SQL
             $sql .= " AND authorities.authority_group_id = ? ";
             $data[] = $authority_group_id;
         }
-
+//dd($this->query($sql, $data));
         return $this->query($sql, $data);
     }
 

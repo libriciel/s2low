@@ -2,8 +2,6 @@
 
 namespace S2lowLegacy\Lib;
 
-use S2lowLegacy\Controller\Controller;
-
 class FrontController
 {
     private $objectInstancier;
@@ -15,11 +13,11 @@ class FrontController
 
     public function go($controller, $action)
     {
-
         $controllerName = "S2lowLegacy\Controller\\{$controller}Controller";
         $actionName = "{$action}Action";
-        /** @var Controller $controllerObject */
-        $controllerObject = new $controllerName($this->objectInstancier);
+
+        $controllerObject = $this->objectInstancier->get($controllerName);
+        $controllerObject->setFiles($_FILES);
         try {
             $controllerObject->_actionBefore($controller, $action);
             $controllerObject->$actionName();

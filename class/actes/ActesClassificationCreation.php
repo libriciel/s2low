@@ -124,9 +124,9 @@ class ActesClassificationCreation
 
         $actesEnvelopeSerial = new ActesEnvelopeSerialSQL(DatabasePool::getInstance());
         $serialNumber = $actesEnvelopeSerial->getNext($authority->getId());
-
         // Génération du fichier XML de l'enveloppe
         if (! $env->generateEnvelopeXMLFile($serialNumber)) {
+            // Génération du fichier XML de l'enveloppe
             $this->lastMessage = "Erreur lors de la génération de l'enveloppe.";
             return false;
         }

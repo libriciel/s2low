@@ -24,6 +24,8 @@ class ActesEnvoiFichierCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
+
+        var_dump('Demarrage de la commande.');
         $this->workerRunnerBuilder->scriptWithLogs($this->worker)->work();
         return Command::SUCCESS;
     }

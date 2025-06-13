@@ -13,31 +13,31 @@ class AuthoritySQLTest extends S2lowTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->authoritySQL = new AuthoritySQL($this->getSQLQuery());
+        $this->authoritySQL = self::getContainer()->get(AuthoritySQL::class);
     }
 
     public function testGetInfo()
     {
-        $info = $this->authoritySQL->getInfo(1);
+        $info = $this->authoritySQL->getInfo(101);
         $this->assertEquals("Bourg-en-Bresse", $info['name']);
     }
 
     public function testGetIdBySiren()
     {
         $id = $this->authoritySQL->getIdBySIREN("123456789");
-        $this->assertEquals(1, $id);
+        $this->assertEquals(101, $id);
     }
 
     public function testGetAll()
     {
         $info = $this->authoritySQL->getAll();
-        $this->assertEquals("Bourg-en-Bresse", $info[1]);
+        $this->assertEquals("Bourg-en-Bresse", $info[101]);
     }
 
     public function testGetSAEProperties()
     {
         $this->authoritySQL->getSAEProperties();
-        $this->noAssertion();
+        self::expectNotToPerformAssertions();
     }
 
     public function testGetSAEPropertiesType()
@@ -52,8 +52,8 @@ class AuthoritySQLTest extends S2lowTestCase
         $pastellProperties->login = "login";
         $pastellProperties->password = "password";
         $pastellProperties->id_e = 42;
-        $this->authoritySQL->updateSAE(1, $pastellProperties);
-        $info = $this->authoritySQL->getInfo(1);
+        $this->authoritySQL->updateSAE(101, $pastellProperties);
+        $info = $this->authoritySQL->getInfo(101);
         $this->assertEquals("test", $info['pastell_url']);
         $this->assertEquals("password", $info['pastell_password']);
     }
@@ -76,7 +76,7 @@ class AuthoritySQLTest extends S2lowTestCase
     public function testGetAllGroup()
     {
         $result = $this->authoritySQL->getAllGroup(1);
-        $this->assertEquals('Saint-Andre de Corcy', $result[2]);
+        $this->assertEquals('Saint-Andre de Corcy', $result[102]);
     }
 
     public function testGetListInsensitive()
@@ -91,27 +91,28 @@ class AuthoritySQLTest extends S2lowTestCase
 
     public function testUpdateVerifNomFic()
     {
-        $this->authoritySQL->updateDoNotVerifyNomFicUnicity(1, true);
-        $info = $this->authoritySQL->getInfo(1);
+        $this->authoritySQL->updateDoNotVerifyNomFicUnicity(101, true);
+        $info = $this->authoritySQL->getInfo(101);
         $this->assertTrue($info['helios_do_not_verify_nom_fic_unicity']);
     }
 
     public function testUpdateVerifNomFicFalse()
     {
-        $this->authoritySQL->updateDoNotVerifyNomFicUnicity(1, false);
-        $info = $this->authoritySQL->getInfo(1);
+        $this->authoritySQL->updateDoNotVerifyNomFicUnicity(101, false);
+        $info = $this->authoritySQL->getInfo(101);
         $this->assertFalse($info['helios_do_not_verify_nom_fic_unicity']);
     }
 
     public function testGetAllForExport()
     {
         $info = $this->authoritySQL->getAllForExport();
+
         $this->assertEquals(
-            array (
+            [
                 0 =>
-                    array (
+                    [
                         'name' => 'Bourg-en-Bresse',
-                        'email' => null,
+                        'email' => '',
                         'siren' => '123456789',
                         'address' => null,
                         'postal_code' => null,
@@ -122,12 +123,12 @@ class AuthoritySQLTest extends S2lowTestCase
                         'district' => '1',
                         'status' => 1,
                         'group_name' => 'Groupe de test',
-                        'description' => 'Conseil régional',
-                    ),
+                        'description' => 'Région',
+                    ],
                 1 =>
-                    array (
+                    [
                         'name' => 'Saint-Andre de Corcy',
-                        'email' => null,
+                        'email' => 'email',
                         'siren' => '999999999',
                         'address' => null,
                         'postal_code' => null,
@@ -139,8 +140,24 @@ class AuthoritySQLTest extends S2lowTestCase
                         'status' => 1,
                         'group_name' => 'Groupe de test',
                         'description' => null,
-                    ),
-            ),
+                    ],
+                2 =>
+                    [
+                        "name" => "une nouvelle authority",
+                        "email" => null,
+                        "siren" => "123456780",
+                        "address" => null,
+                        "postal_code" => null,
+                        "city" => null,
+                        "telephone" => null,
+                        "fax" => null,
+                        "department" => null,
+                        "district" => null,
+                        "status" => 1,
+                        "group_name" => "Groupe de test",
+                        "description" => null,
+                    ],
+            ],
             $info
         );
     }

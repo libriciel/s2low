@@ -15,7 +15,6 @@ LegacyObjectsManager::setLegacyObjectInstancier();
 $mail_emis_id = Helpers::getVarFromGet('mail_emis_id');
 $password = Helpers::getVarFromPost('mdp');
 
-
 $mailEmis = new MailMessageEmis($mail_emis_id);
 $mailEmis->init();
 if (! $mailEmis) {
@@ -106,9 +105,9 @@ $doc->DisplayHead();
                     </div>
                     <br class="clear" />
 
-                    <?php  if ($mailIncludeFileArray) : ?>      
+                    <?php  if ($mailIncludeFileArray) : ?>
                     <h2 id="pj_desc">Pièces jointes</h2>
-    
+
                     <div class="col_gauche_pj">&nbsp;</div>
                     <div class="col_droite_pj">
                         <table aria-describedby="pj_desc">
@@ -119,7 +118,7 @@ $doc->DisplayHead();
                                     <th id="type">Type </th>
                                     <th id="download">Télécharger</th>
                                 </tr>
-                            </thead>    
+                            </thead>
                             <tbody>
                         <?php foreach ($mailIncludeFileArray as $mailIncludeFile) : ?>
                                 <tr>
@@ -141,8 +140,8 @@ $doc->DisplayHead();
                 </div>
                 <br class="clear" />
                     <?php   else : ?>
-                <h2>Ce mail ne comporte pas de pièces jointes</h2>  
-                    <?php endif; ?> 
+                <h2>Ce mail ne comporte pas de pièces jointes</h2>
+                    <?php endif; ?>
             </div><!-- list-area-->
         </div><!-- col-md-12 -->
     </div><!-- row -->

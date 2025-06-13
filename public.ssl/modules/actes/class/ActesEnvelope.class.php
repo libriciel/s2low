@@ -281,7 +281,6 @@ class ActesEnvelope extends DataObject
    */
     public function generateEnvelopeXMLFile($serial)
     {
-
         if (count($this->transactions) <= 0) {
             $this->errorMsg = "Informations manquantes pour générer l'enveloppe (pas de transaction)";
             return false;
@@ -950,6 +949,7 @@ class ActesEnvelope extends DataObject
 
 
         if (! $this->db->begin()) {
+            dd('fefe');
             $this->errorMsg = "Erreur lors de l'initialisation de la transaction.";
             return false;
         }

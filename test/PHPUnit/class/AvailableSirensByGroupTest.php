@@ -23,7 +23,7 @@ class AvailableSirensByGroupTest extends S2lowTestCase
     /**
      * @throws \Exception
      */
-    protected function tearDown(): void
+    public function tearDown(): void
     {
         $this->getSQLQuery()->query('DELETE FROM authority_group_siren');
         $this->getSQLQuery()->query('DELETE FROM authority_groups WHERE id=546');

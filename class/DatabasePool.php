@@ -2,17 +2,23 @@
 
 namespace S2lowLegacy\Class;
 
+use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 
 /**
- * Class DatabasePool
+ * @deprecated Fin du DatabasePool. Il faut autowire Database::class
  */
 class DatabasePool
 {
+    private static $objectInstancier;
+
+    public static function setObjectInstancier(ObjectInstancier $objectInstancier): void
+    {
+        self::$objectInstancier = $objectInstancier;
+    }
+
     public static function getInstance()
     {
-        $objectInstancier = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
-        $sqlQuery = $objectInstancier->get(SQLQuery::class);
-        return new Database($sqlQuery);
+        return self::$objectInstancier->get(Database::class);
     }
 }

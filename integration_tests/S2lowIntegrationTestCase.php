@@ -4,21 +4,49 @@ namespace IntegrationTests;
 
 use Exception;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\LoginUtilsForTestSetup;
 use S2low\Enum\ModulePermission;
 use S2low\Enum\UserRole;
-use S2lowLegacy\Class\LegacyObjectsManager;
+use S2low\Factory\PDOFactory;
+use S2low\Kernel;
+use S2low\Services\Database\TransactionForPDO;
+use S2low\Tests\DatabaseForIntegrationTests;
+use S2lowLegacy\Class\Authentification;
+use S2lowLegacy\Class\Database;
+use S2lowLegacy\Class\HttpsConnexion;
+use S2lowLegacy\Class\PasswordHandler;
+use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\PemCertificate;
 use S2lowLegacy\Lib\PemCertificateFactory;
+use S2lowLegacy\Lib\SessionWrapper;
 use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Lib\X509Certificate;
+use S2lowLegacy\Model\NounceSQL;
+use S2lowLegacy\Model\UserSQL;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class S2lowIntegrationTestCase extends WebTestCase
 {
-    protected SQLQuery $sqlQuery;
-    private int $nextCreatedUserId = 1;
+    /**
+     * @description Pour ajouter de nouveaux utilisateurs : ajouter dans s2low-test.sql un nouvel user avec certificat puis l'ajouter ci-dessous
+     * avant de pouvoir se logger avec $this->logAs($userId).
+     */
+    private array $usersCertificates = [
+        //user_id => certificat path
+        101 => __DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem',
+        102 => __DIR__ . '/../test/api/robert_petitpoids_rgs.pem', // <= Non rgs certif
+        103 => __DIR__ . '/../test/api/Charles DUTHEIL - User S2low.pem',
+        113 => __DIR__ . '/fixtures/charles S2low - charles.dutheil@libriciel.coop.pem',
+        150 => __DIR__ . '/../test/PHPUnit/controller/fixtures/user1.pem', // <= certif utilise par plusieurs users donc : login / password
+    ];
+
+    protected array $serverCertificatEnvVar;
     protected PemCertificateFactory $pemCertificateFactory;
     protected PemCertificate $fixtureCertificate;
+    private TransactionForPDO $transactionForPdo;
+    protected KernelBrowser $client;
 
     /**
      * @param int|string $dataName
@@ -28,6 +56,17 @@ class S2lowIntegrationTestCase extends WebTestCase
     public function __construct(?string $name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
+        $this->pemCertificateFactory = new PemCertificateFactory();
+    }
+
+    protected static function createKernel(array $options = []): KernelInterface
+    {
+        return new Kernel('test', true);
+    }
+
+    public function getSQLQuery(): SQLQuery
+    {
+        return self::getContainer()->get(SQLQuery::class);
     }
 
     /**
@@ -35,111 +74,34 @@ class S2lowIntegrationTestCase extends WebTestCase
      */
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->logAs(113);
+
         $_SESSION = [];
         $_GET = [];
         $_POST = [];
         $_FILES = [];
         $_SERVER['QUERY_STRING'] = '';
-        vfsStream::setup('test/helios');
-        $this->sqlQuery = new SQLQuery(
-            DB_DATABASE_TEST,
-            DB_HOST_TEST,
-            DB_USER_TEST,
-            DB_PASSWORD_TEST
-        );
-        $this->pemCertificateFactory = new PemCertificateFactory();
 
-        $this->fixtureCertificate = $this->pemCertificateFactory->getFromString(
-            file_get_contents(
-                __DIR__ . '/../integration_tests/fixtures/charles S2low - charles.dutheil@libriciel.coop.pem'
-            )
-        );
-        $this->sqlQuery->exec(file_get_contents(__DIR__ . '/fixtures/s2low-test-init.sql'));
+        $this->projectDir = self::getContainer()->getParameter("kernel.project_dir");
+        vfsStream::setup('test');
+        $this->tmpPathFolder = vfsStream::url('test');
+
+        parent::setUp();
     }
 
     protected function tearDown(): void
     {
-        self::ensureKernelShutdown();
-        LegacyObjectsManager::resetObjectInstancier(); //Evite les interactions entre tests via
-        // L'objectInstancier.
-        // Normalement on ne devrait pas modifier l'ObjectInstancier pour les tests d'intégration
-        // Mais on ne sait jamais ...
         $_SESSION = [];
         $_GET = [];
         $_POST = [];
         $_SERVER['QUERY_STRING'] = '';
-        // Evite le message postgres phpunit désolé, trop de clients sont déjà connectés
-        $this->sqlQuery->disconnect();
+
+        $this->transactionForPdo->rollbackTestTransaction();
+        self::getContainer()->get(Database::class)->disconnect();
+        self::getContainer()->get(PDOFactory::class)->closeAll();
+
+
         parent::tearDown();
-    }
-
-    private function getNextCreatedUserId(): int
-    {
-        return $this->nextCreatedUserId++;
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function createSuperAdminUser(string $certificatPem, string $certificatHash): void
-    {
-        $this->createUser(UserRole::SuperAdministrateur, $certificatPem, $certificatHash);
-    }
-
-    /**
-     * @param string $certificatPem
-     * @param string $certificatSansBegin
-     * @return KernelBrowser
-     */
-    protected function createClientWithCertificat(string $certificatPem, string $certificatSansBegin): KernelBrowser
-    {
-        $serverCertificatEnvVar = [
-            'SSL_CLIENT_VERIFY' => 'SUCCESS',
-            'SSL_CLIENT_S_DN' => 'subject_dn',
-            'SSL_CLIENT_I_DN' => 'issuer_dn',
-            'SSL_CLIENT_CERT' => $certificatPem,
-            'HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION' => $certificatSansBegin
-        ];
-
-        $this->addCertificatToServeurEnvironnement($serverCertificatEnvVar);
-
-        self::ensureKernelShutdown();
-        return static::createClient(
-            [],
-            $serverCertificatEnvVar
-        );
-    }
-
-    /**
-     * @return SQLQuery
-     */
-    public function getSQLQuery(): SQLQuery
-    {
-        return $this->sqlQuery;
-    }
-
-    /**
-     * @param UserRole $role
-     * @param ModulePermission $permissions
-     * @return KernelBrowser
-     * @throws Exception
-     */
-    protected function getAuthenticatedClientWithUserLoggedAs(
-        UserRole $role,
-        ModulePermission $permissions = ModulePermission::Modification
-    ): KernelBrowser {
-        $this->createUser(
-            $role,
-            $this->fixtureCertificate->getContent(),
-            $this->fixtureCertificate->getHash(),
-            $permissions
-        );
-
-        return $this->createClientWithCertificat(
-            $this->fixtureCertificate->getContent(),
-            $this->fixtureCertificate->getContentStrippedFromBegin()
-        );
     }
 
     /**
@@ -154,51 +116,60 @@ class S2lowIntegrationTestCase extends WebTestCase
         );
     }
 
-    public function createUser(
+    /**
+     * @param UserRole $role
+     * @param ModulePermission $permissions
+     * @return KernelBrowser
+     * @throws Exception
+     */
+    protected function getAuthenticatedClientWithUserLoggedAs(
         UserRole $role,
-        string $certificatPem,
-        string $certificatHash,
         ModulePermission $permissions = ModulePermission::Modification
-    ): int {
-        $userId = $this->getNextCreatedUserId();
-
-        $constMaximumUsersCreated = 100000;
-
-        $userPermActeId = $userId;
-        $userPermHeliosId = $userId + $constMaximumUsersCreated;
-        $userPermMailId = $userId + $constMaximumUsersCreated * 2;
-
-        $queryCreateUser = "INSERT INTO users VALUES ($userId, 'eric@sigmalis.com', 'test_subject', 'test_issuer', 'Pommateau', 'Eric', NULL, '$role->value', 1, 1, ?, NULL, NULL, NULL, 1, NULL, NULL, ?, ?)";
-        $this->sqlQuery->query($queryCreateUser, [$certificatPem, $certificatPem, $certificatHash]);
-
-        $queryAddModuleActePermission = "INSERT INTO users_perms VALUES ($userPermActeId, 1, $userId, '$permissions->value'); -- Permission RW sur le module Actes";
-        $this->sqlQuery->query($queryAddModuleActePermission);
-
-        $queryAddModuleHeliosPermission = "INSERT INTO users_perms VALUES ($userPermHeliosId, 2, $userId, '$permissions->value'); -- Permission RW sur le module Helios";
-        $this->sqlQuery->query($queryAddModuleHeliosPermission);
-
-        $queryAddModuleMailPermission = "INSERT INTO users_perms VALUES ($userPermMailId, 3, $userId, '$permissions->value'); -- Permission RW sur le module Mail";
-        $this->sqlQuery->query($queryAddModuleMailPermission);
-
-        return $userId;
+    ): KernelBrowser {
+        return $this->getAuthenticatedClient();
     }
 
-    protected function createUserWithDefaultCertificatAs(UserRole $role = UserRole::Utilisateur): int
+    public function getAuthenticatedClient(): KernelBrowser
     {
-        return $this->createUser(
-            $role,
-            $this->fixtureCertificate->getContent(),
-            $this->fixtureCertificate->getHash(),
-            ModulePermission::Modification
-        );
-    }
+        if (empty($this->fixtureCertificate)) {
+            $this->logAs(113);
+        }
 
-    protected function getAuthenticatedClientAttachedToDefaultCertificat(): KernelBrowser
-    {
         return $this->createClientWithCertificat(
             $this->fixtureCertificate->getContent(),
             $this->fixtureCertificate->getContentStrippedFromBegin()
         );
+    }
+
+    /**
+     * @param string $certificatPem
+     * @param string $certificatSansBegin
+     * @return KernelBrowser
+     */
+    protected function createClientWithCertificat(string $certificatPem, string $certificatSansBegin, bool $clientVerifySuccess = true): KernelBrowser
+    {
+        $this->serverCertificatEnvVar = [
+            'SSL_CLIENT_VERIFY' => $clientVerifySuccess ? 'SUCCESS' : null,
+            'SSL_CLIENT_S_DN' => 'subject_dn',
+            'SSL_CLIENT_I_DN' => 'issuer_dn',
+            'SSL_CLIENT_CERT' => $certificatPem,
+            'HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION' => $certificatSansBegin
+        ];
+        $this->addCertificatToServeurEnvironnement($this->serverCertificatEnvVar);
+
+        self::ensureKernelShutdown();
+        $client = static::createClient(
+            [],
+            $this->serverCertificatEnvVar
+        );
+
+        $sqlQuery = self::getContainer()->get(SQLQuery::class);
+        $databaseForTest = new DatabaseForIntegrationTests($sqlQuery);
+        self::getContainer()->set(Database::class, $databaseForTest);
+        $this->transactionForPdo = self::getContainer()->get(TransactionForPDO::class);
+        $this->transactionForPdo->beginTestTransaction();
+
+        return $client;
     }
 
     private function addCertificatToServeurEnvironnement(array $serverVariables): void
@@ -206,5 +177,93 @@ class S2lowIntegrationTestCase extends WebTestCase
         foreach ($serverVariables as $key => $value) {
             $_SERVER[$key] = $value;
         }
+    }
+
+    protected function setUserAuthority(int $authorityId, int $userId = 113): void
+    {
+        self::getContainer()->get(Database::class)->query('UPDATE users SET authority_id = ? WHERE users.id = ?', [$authorityId, $userId]);
+    }
+
+    protected function setUserWithRole(UserRole $userRole, int $userId = 113): void
+    {
+        self::getContainer()->get(Database::class)->query('UPDATE users SET role = ? WHERE id = ?', [$userRole->value, $userId]);
+    }
+
+    protected function setUserWithPermission(ModulePermission $modulePermission): void
+    {
+        self::getContainer()->get(Database::class)->query('UPDATE users_perms SET perm = ? WHERE user_id = 113 AND module_id = 1', [$modulePermission->value]);
+        self::getContainer()->get(Database::class)->query('UPDATE users_perms SET perm = ? WHERE user_id = 113 AND module_id = 2', [$modulePermission->value]);
+        self::getContainer()->get(Database::class)->query('UPDATE users_perms SET perm = ? WHERE user_id = 113 AND module_id = 3', [$modulePermission->value]);
+    }
+
+    protected function logAs(int $userId): void
+    {
+        $file = file_get_contents(
+            $this->usersCertificates[$userId]
+        );
+
+        $this->fixtureCertificate = $this->pemCertificateFactory->getFromString(
+            $file
+        );
+
+        $this->client = $this->getAuthenticatedClient();
+    }
+
+    protected function logWithoutCertificat(): KernelBrowser
+    {
+        self::ensureKernelShutdown();
+        return static::createClient([], $this->setServerAdullactCertificate());
+    }
+
+    protected function setAuthorityGroupUserAs(int $authorityGroupId, int $userId = 113): void
+    {
+        self::getContainer()->get(Database::class)->query('UPDATE users SET authority_group_id = ? WHERE id = ?', [$authorityGroupId, $userId]);
+    }
+
+    protected function getAuthentication(
+        $server = [],
+        $idLogin = null,
+        $get = [],
+        $certHandler = null,
+        $convertLoginFromIso = false,
+        $post = [],
+        $environnement = null
+    ): Authentification {
+        $session = self::getContainer()->get(SessionWrapper::class);
+        if ($idLogin !== null) {
+            $session->set('id_login', $idLogin);
+        }
+        $environnement = $environnement ?? new Environnement(
+            $get,
+            $post,
+            [],
+            $session,
+            $server,
+            $convertLoginFromIso,
+        );
+
+        $httpsConnexion = new HttpsConnexion(
+            $environnement,
+            $certHandler ?? self::getContainer()->get(X509Certificate::class),
+        );
+
+        return new Authentification(
+            $environnement,
+            self::getContainer()->get(UserSQL::class),
+            self::getContainer()->get(PasswordHandler::class),
+            $httpsConnexion,
+            self::getContainer()->get(NounceSQL::class),
+        );
+    }
+
+    protected function setServerAdullactCertificate(): array
+    {
+        $server = $this->serverCertificatEnvVar;
+        $server['SSL_CLIENT_VERIFY'] = "SUCCESS";
+        $server['SSL_CLIENT_S_DN'] = "adullact";
+        $server['SSL_CLIENT_I_DN'] = "adullact";
+        $server['TESTING_CERTIFICATE_HASH'] = "hash_adullact";
+
+        return $server;
     }
 }

@@ -24,17 +24,15 @@ class OpenStackSwiftWrapper
     private Filesystem $fileSystem;
 
     private LoggerInterface $logger;
-    private bool $openstack_enable;
 
     public function __construct(
         OpenStackContainerStore $openStackContainersStore,
         LoggerInterface $logger,
-        $openstack_enable
+        public readonly bool $openstack_enable
     ) {
         $this->openStackContainersStore = $openStackContainersStore;
         $this->fileSystem = new Filesystem();
         $this->logger = $logger;
-        $this->openstack_enable = $openstack_enable;
     }
 
     /**
@@ -134,6 +132,7 @@ class OpenStackSwiftWrapper
         string $filepath_local,
         string $filepath_on_cloud = ''
     ): string {
+
         if ($this->fileSystem->exists($filepath_local)) {
             return $filepath_local; //
         }

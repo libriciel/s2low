@@ -67,7 +67,6 @@ try {
         $msg = "retour id n'est pas correcte";
         throw new Exception('KO');
     }
-
     $PESRetourCloudStorage->getPath($retourId); // Permet de récupérer le fichier s'il est dans le cloud
 
     if (!$entity->sendfile($filename)) {

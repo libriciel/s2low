@@ -32,7 +32,6 @@ $filename = $recuperateur->get('file');
 
 
 $_SESSION['error'] = '';
-
 ob_start();
 try {
     $filepath = $actesResponsesError->getFilepath($filename);
