@@ -73,6 +73,12 @@ services:
     resource: '../src/*'
     exclude: '../src/Kernel.php'
 
+  S2lowLegacy\Boot\S2lowBootstrap:
+    class: 'S2lowLegacy\Boot\S2lowBootstrap'
+    autowire: true
+    autoconfigure: true
+    public: true
+
   S2low\Command\RebuildQueueCommand:
     arguments:
       - !tagged_iterator s2low.queue_rebuilding_worker
