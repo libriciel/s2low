@@ -29,7 +29,6 @@ class ActesAnalyseFichierRecuWorker implements IWorker
     }
 
     /**
-     * @return array|false|int[]
      * @throws Exception
      */
     public function getAllId(): array
