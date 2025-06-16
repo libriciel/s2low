@@ -7,11 +7,11 @@ use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
-list($actesTypePJSQL, $html) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($actesTypePJSQL) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ActesTypePJSQL::class, 'html']
+        [ActesTypePJSQL::class]
     );
-
+$html = '';
 $batchMode = false;
 
 // Instanciation du module courant

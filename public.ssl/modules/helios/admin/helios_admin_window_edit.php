@@ -22,7 +22,7 @@ use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
-$html = LegacyObjectsManager::getLegacyObjectInstancier()->get('html');
+$html = '';
 
 // Instanciation du module courant
 $module = new Module();

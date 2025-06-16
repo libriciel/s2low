@@ -22,8 +22,7 @@ use S2lowLegacy\Model\ModuleSQL;
     $moduleSQL,
     $actesTransactionSQL,
     $actesIncludedFileSQL,
-    $libersignController,
-    $html
+    $libersignController
 ] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [
@@ -32,10 +31,9 @@ use S2lowLegacy\Model\ModuleSQL;
                 ActesTransactionsSQL::class,
                 ActesIncludedFileSQL::class,
                 LibersignController::class,
-                'html'
             ]
     );
-
+$html = '';
 $initData = $initialisation->doInit();
 $moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
