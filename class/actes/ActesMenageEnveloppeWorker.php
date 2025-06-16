@@ -19,7 +19,7 @@ class ActesMenageEnveloppeWorker implements IWorker
     }
 
 
-    public function getQueueName()
+    public function getQueueName(): string
     {
         return sprintf('%s-%s', self::QUEUE_NAME, gethostname());
     }
@@ -62,7 +62,7 @@ class ActesMenageEnveloppeWorker implements IWorker
     /**
      * @return void
      */
-    public function start()
+    public function start(): void
     {
         // TODO: Implement start() method.
     }
@@ -70,7 +70,7 @@ class ActesMenageEnveloppeWorker implements IWorker
     /**
      * @return void
      */
-    public function end()
+    public function end(): void
     {
         // TODO: Implement end() method.
     }

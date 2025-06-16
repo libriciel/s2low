@@ -18,12 +18,12 @@ class HeliosAnalyseFichierRecuWorker implements IWorker
         $this->heliosAnalyseFichierRecu = $heliosAnalyseFichierRecu;
     }
 
-    public function getQueueName()
+    public function getQueueName(): string
     {
         return self::QUEUE_NAME;
     }
 
-    public function getData($id)
+    public function getData($id): mixed
     {
         return $id;
     }
@@ -32,7 +32,7 @@ class HeliosAnalyseFichierRecuWorker implements IWorker
      * @return array|false|int[]
      * @throws Exception
      */
-    public function getAllId()
+    public function getAllId(): array
     {
         return $this->heliosAnalyseFichierRecu->getAllDirectory(HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH);
     }
@@ -53,12 +53,12 @@ class HeliosAnalyseFichierRecuWorker implements IWorker
         );
     }
 
-    public function getMutexName($data)
+    public function getMutexName($data): bool|string
     {
         return sprintf("%s-%s", self::QUEUE_NAME, $data);
     }
 
-    public function isDataValid($data)
+    public function isDataValid($data): bool
     {
         return true;
     }
@@ -66,7 +66,7 @@ class HeliosAnalyseFichierRecuWorker implements IWorker
     /**
      * @return void
      */
-    public function start()
+    public function start(): void
     {
         // TODO: Implement start() method.
     }
@@ -74,7 +74,7 @@ class HeliosAnalyseFichierRecuWorker implements IWorker
     /**
      * @return void
      */
-    public function end()
+    public function end(): void
     {
         // TODO: Implement end() method.
     }

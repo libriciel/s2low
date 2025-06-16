@@ -18,17 +18,17 @@ class ActesEnvoiSaeWorker implements IWorker
         $this->actesArchiveControler = $actesArchiveControler;
     }
 
-    public function getQueueName()
+    public function getQueueName(): string
     {
         return self::QUEUE_NAME;
     }
 
-    public function getData($id)
+    public function getData($id): mixed
     {
         return $id;
     }
 
-    public function getAllId()
+    public function getAllId(): array
     {
         return $this->actesArchiveControler->getAllTransactionIdToSend(self::MAX_NUMBER_OF_SIMULTANEOUS_PENDING_ARCHIVE);
     }
@@ -43,22 +43,22 @@ class ActesEnvoiSaeWorker implements IWorker
         $this->actesArchiveControler->sendArchive($data);
     }
 
-    public function getMutexName($data)
+    public function getMutexName($data): bool|string
     {
         return sprintf("actes-transaction-%s", $data);
     }
 
-    public function isDataValid($data)
+    public function isDataValid($data): bool
     {
         return true;
     }
 
-    public function start()
+    public function start(): void
     {
         // TODO: Implement start() method.
     }
 
-    public function end()
+    public function end(): void
     {
         // TODO: Implement end() method.
     }

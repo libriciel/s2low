@@ -14,7 +14,7 @@ class AcCertificatesRetrieverWorker implements IWorker
     /**
      * @inheritDoc
      */
-    public function getQueueName()
+    public function getQueueName(): string
     {
         return self::QUEUE_NAME;
     }
@@ -22,7 +22,7 @@ class AcCertificatesRetrieverWorker implements IWorker
     /**
      * @inheritDoc
      */
-    public function getData($id)
+    public function getData($id): mixed
     {
         return [true];
     }
@@ -30,7 +30,7 @@ class AcCertificatesRetrieverWorker implements IWorker
     /**
      * @inheritDoc
      */
-    public function getAllId()
+    public function getAllId(): array
     {
         return [true];
     }
@@ -62,7 +62,7 @@ class AcCertificatesRetrieverWorker implements IWorker
     /**
      * @inheritDoc
      */
-    public function getMutexName($data)
+    public function getMutexName($data): bool|string
     {
         return sprintf("%s-%s", self::QUEUE_NAME, $data);
     }
@@ -70,7 +70,7 @@ class AcCertificatesRetrieverWorker implements IWorker
     /**
      * @inheritDoc
      */
-    public function isDataValid($data)
+    public function isDataValid($data): bool
     {
         return true;
     }
@@ -78,7 +78,7 @@ class AcCertificatesRetrieverWorker implements IWorker
     /**
      * @return void
      */
-    public function start()
+    public function start(): void
     {
         // TODO: Implement start() method.
     }
@@ -86,7 +86,7 @@ class AcCertificatesRetrieverWorker implements IWorker
     /**
      * @return void
      */
-    public function end()
+    public function end(): void
     {
         // TODO: Implement end() method.
     }

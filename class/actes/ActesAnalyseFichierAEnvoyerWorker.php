@@ -60,17 +60,17 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
         $this->archiveValidatorFactory = $archiveValidatorFactory;
     }
 
-    public function getQueueName()
+    public function getQueueName(): string
     {
         return self::QUEUE_NAME;
     }
 
-    public function getData($id)
+    public function getData($id): mixed
     {
         return $id;
     }
 
-    public function getAllId()
+    public function getAllId(): array
     {
         return $this->actesTransactionsSQL->getEnveloppeIdByTransactionsStatus(ActesStatusSQL::STATUS_POSTE);
     }
