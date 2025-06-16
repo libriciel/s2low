@@ -56,7 +56,7 @@ if [ -z "$DONT_INIT_DATABASE" ] ; then
     sleep 5
   done
 
-  php /var/www/s2low/docker-resources/init-docker.php
+  php /var/www/s2low/bin/console init:bootstrap
 
   if [ "${POSTGRES_DATABASE_TEST}" ]; then
       php /var/www/s2low/docker-resources/init-bdd-test.php
