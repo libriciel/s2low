@@ -18,6 +18,29 @@ class RgsCertificateTest extends TestCase
         $this->rgsCertificate = new RgsCertificate(OPENSSL_PATH, $validca_path);
     }
 
+    public function testIsSslClient()
+    {
+        $certificateWithSslClientPurpose = file_get_contents(__DIR__ . '/fixtures/test/MyClient1.pem');
+        static::assertTrue($this->rgsCertificate->hasSSlClientPurpose(
+            $certificateWithSslClientPurpose
+        ));
+    }
+
+    public function testIsNotSslClient()
+    {
+        $certificateWithoutSslClientPurpose = file_get_contents(
+            __DIR__ . '/../fixtures/timestamp_certificates/s2low_timestamp_cert.pem'
+        );
+        static::assertFalse($this->rgsCertificate->hasSSlClientPurpose(
+            $certificateWithoutSslClientPurpose
+        ));
+    }
+
+    public function testIsNotEvenCertificate()
+    {
+        static::assertFalse($this->rgsCertificate->hasSSlClientPurpose('Not a certificate'));
+    }
+
     /**
      * @throws Exception
      */
