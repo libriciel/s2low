@@ -8,7 +8,7 @@ use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Class\User;
 
-$html = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get('html');
+$html = '';
 
 // Instanciation du module courant
 $module = new Module();

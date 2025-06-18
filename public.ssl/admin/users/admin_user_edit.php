@@ -16,12 +16,12 @@ use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Model\UserSQL;
 
-list($objectInstancier, $html, $jsonOutput,$sqlQuery, $frontController) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $jsonOutput,$sqlQuery, $frontController) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, 'html', JSONoutput::class, SQLQuery::class, FrontController::class]
+        [ObjectInstancier::class, JSONoutput::class, SQLQuery::class, FrontController::class]
     );
 
-
+$html = '';
 $x509Certificate = new X509Certificate();
 
 $me = new User();

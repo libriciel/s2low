@@ -9,10 +9,12 @@ use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\DatePicker;
 
-list($actesTypePJSQL, $html) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($actesTypePJSQL) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ActesTypePJSQL::class, 'html']
+        [ActesTypePJSQL::class]
     );
+
+$html = '';
 
 // Instanciation du module courant
 $module = new Module();
