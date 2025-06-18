@@ -48,7 +48,7 @@ class HeliosAnalyseFichierAEnvoyerWorker implements IWorker
         $this->heliosEnvoiControler->validateOneTransaction($data);
     }
 
-    public function getMutexName($data): bool|string
+    public function getMutexName($data): string
     {
         return sprintf("helios-transaction-%s", $data);
     }

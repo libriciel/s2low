@@ -47,7 +47,7 @@ class ActesReceptionFichierWorker implements IWorker
         $this->actesImapRetrieve->retrieve();
     }
 
-    public function getMutexName($data): bool|string
+    public function getMutexName($data): string
     {
         return $this->getQueueName();
     }

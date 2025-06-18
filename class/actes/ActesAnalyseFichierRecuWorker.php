@@ -46,7 +46,7 @@ class ActesAnalyseFichierRecuWorker implements IWorker
         $this->actesAnalyseFichierRecuController->analyseOneFileMoveIfError($data);
     }
 
-    public function getMutexName($data): bool|string
+    public function getMutexName($data): string
     {
         return sprintf("%s-%s", self::QUEUE_NAME, $data);
     }

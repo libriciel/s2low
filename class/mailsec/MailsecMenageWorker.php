@@ -41,7 +41,7 @@ class MailsecMenageWorker implements IWorker
         $this->mailIncludedFilesCloudStorage->deleteFilesOnDisk(self::NB_DAYS_IN_DISK, true);
     }
 
-    public function getMutexName($data): bool|string
+    public function getMutexName($data): string
     {
         return $this->getQueueName();
     }

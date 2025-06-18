@@ -43,7 +43,7 @@ class ActesEnvoiSaeWorker implements IWorker
         $this->actesArchiveControler->sendArchive($data);
     }
 
-    public function getMutexName($data): bool|string
+    public function getMutexName($data): string
     {
         return sprintf("actes-transaction-%s", $data);
     }

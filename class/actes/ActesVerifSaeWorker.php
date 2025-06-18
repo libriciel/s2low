@@ -142,7 +142,7 @@ class ActesVerifSaeWorker implements IWorker
         return strval($xml->{'ReplyCode'}) . " - " . strval($xml->{'Comment'});
     }
 
-    public function getMutexName($data): bool|string
+    public function getMutexName($data): string
     {
         return sprintf("actes-transaction-%s", $data);
     }
