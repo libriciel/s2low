@@ -32,17 +32,17 @@ class ActesVerifSaeWorker implements IWorker
         $this->pastellWrapperFactory = $pastellWrapperFactory;
     }
 
-    public function getQueueName()
+    public function getQueueName(): string
     {
         return self::QUEUE_NAME;
     }
 
-    public function getData($id)
+    public function getData($id): mixed
     {
         return $id;
     }
 
-    public function getAllId()
+    public function getAllId(): array
     {
         return $this->actesTransactionsSQL->getTransactionToSendSAE(
             ActesStatusSQL::STATUS_ENVOYE_AU_SAE,
@@ -68,7 +68,7 @@ class ActesVerifSaeWorker implements IWorker
      * @return bool
      * @throws Exception
      */
-    public function verifArchiveThrow($transaction_id)
+    public function verifArchiveThrow($transaction_id): bool
     {
 
         $transaction_info = $this->actesTransactionsSQL->getInfo($transaction_id);
@@ -131,23 +131,23 @@ class ActesVerifSaeWorker implements IWorker
         return true;
     }
 
-    private function isTransfertAccepted(SimpleXMLElement $xml)
+    private function isTransfertAccepted(SimpleXMLElement $xml): bool
     {
         $nodeName = strval($xml->getName());
         return ($nodeName == 'ArchiveTransferAcceptance' || ($nodeName == 'ArchiveTransferReply' && (strval($xml->{'ReplyCode'}) == '000')));
     }
 
-    private function getXMLMessage(SimpleXMLElement $xml)
+    private function getXMLMessage(SimpleXMLElement $xml): string
     {
         return strval($xml->{'ReplyCode'}) . " - " . strval($xml->{'Comment'});
     }
 
-    public function getMutexName($data)
+    public function getMutexName($data): string
     {
         return sprintf("actes-transaction-%s", $data);
     }
 
-    public function isDataValid($data)
+    public function isDataValid($data): bool
     {
         return true;
     }
@@ -155,7 +155,7 @@ class ActesVerifSaeWorker implements IWorker
     /**
      * @return void
      */
-    public function start()
+    public function start(): void
     {
         // TODO: Implement start() method.
     }
@@ -163,7 +163,7 @@ class ActesVerifSaeWorker implements IWorker
     /**
      * @return void
      */
-    public function end()
+    public function end(): void
     {
         // TODO: Implement end() method.
     }

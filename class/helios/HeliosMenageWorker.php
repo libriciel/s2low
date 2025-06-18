@@ -19,7 +19,7 @@ class HeliosMenageWorker implements IWorker
         return sprintf('%s-%s', self::QUEUE_NAME, gethostname());
     }
 
-    public function getData($id)
+    public function getData($id): mixed
     {
         return $id;
     }
@@ -52,7 +52,7 @@ class HeliosMenageWorker implements IWorker
     /**
      * @return void
      */
-    public function start()
+    public function start(): void
     {
         // TODO: Implement start() method.
     }
@@ -60,7 +60,7 @@ class HeliosMenageWorker implements IWorker
     /**
      * @return void
      */
-    public function end()
+    public function end(): void
     {
         // TODO: Implement end() method.
     }

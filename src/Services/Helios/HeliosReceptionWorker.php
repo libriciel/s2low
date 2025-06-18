@@ -34,12 +34,12 @@ class HeliosReceptionWorker implements IWorker
         $this->usePasstrans = $usePasstrans;
     }
 
-    public function getQueueName()
+    public function getQueueName(): string
     {
         return self::QUEUE_NAME . ($this->usePasstrans ? '-passtrans' : '');
     }
 
-    public function getData($id)
+    public function getData($id): mixed
     {
         return $id;
     }
@@ -60,11 +60,9 @@ class HeliosReceptionWorker implements IWorker
     }
 
     /**
-     * @param $data
-     * @return void
      * @throws Exception
      */
-    public function work($data)
+    public function work($data): void
     {
         try {
             $this->ftpFileGetter->recupOneFile($data);
@@ -84,28 +82,22 @@ class HeliosReceptionWorker implements IWorker
         }
     }
 
-    public function getMutexName($data)
+    public function getMutexName($data): string
     {
         return $this->getQueueName();
     }
 
-    public function isDataValid($data)
+    public function isDataValid($data): bool
     {
         return true;
     }
 
-    /**
-     * @return void
-     */
-    public function start()
+    public function start(): void
     {
         $this->ftpFileGetter->debutTraitement();
     }
 
-    /**
-     * @return void
-     */
-    public function end()
+    public function end(): void
     {
         $this->ftpFileGetter->finTraitement();
     }

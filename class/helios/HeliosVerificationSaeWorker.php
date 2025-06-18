@@ -21,17 +21,17 @@ class HeliosVerificationSaeWorker implements IWorker
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
     }
 
-    public function getQueueName()
+    public function getQueueName(): string
     {
         return self::QUEUE_NAME;
     }
 
-    public function getData($id)
+    public function getData($id): mixed
     {
         return $id;
     }
 
-    public function getAllId()
+    public function getAllId(): array
     {
         return $this->heliosTransactionsSQL->getTransactionToPrepareToSAE(
             HeliosPrepareSaeWorker::NB_DAYS_ARCHIVE_AFTER,
@@ -51,12 +51,12 @@ class HeliosVerificationSaeWorker implements IWorker
         $this->heliosVerificationSAE->verifArchive($data);
     }
 
-    public function getMutexName($data)
+    public function getMutexName($data): string
     {
         return sprintf("%s-%s", self::QUEUE_NAME, $data);
     }
 
-    public function isDataValid($data)
+    public function isDataValid($data): bool
     {
         return true;
     }
@@ -64,7 +64,7 @@ class HeliosVerificationSaeWorker implements IWorker
     /**
      * @return void
      */
-    public function start()
+    public function start(): void
     {
         // TODO: Implement start() method.
     }
@@ -72,7 +72,7 @@ class HeliosVerificationSaeWorker implements IWorker
     /**
      * @return void
      */
-    public function end()
+    public function end(): void
     {
         // TODO: Implement end() method.
     }

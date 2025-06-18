@@ -23,12 +23,12 @@ class HeliosEnvoiWorker implements IWorker
     ) {
     }
 
-    public function getQueueName()
+    public function getQueueName(): string
     {
         return $this->getQueueNameParametre($this->usePasstrans);
     }
 
-    public function getData($id)
+    public function getData($id): mixed
     {
         return $id;
     }
@@ -37,7 +37,7 @@ class HeliosEnvoiWorker implements IWorker
      * @return array|false|int[]
      * @throws Exception
      */
-    public function getAllId()  //TODO : ajouter Passtrans
+    public function getAllId(): array  //TODO : ajouter Passtrans
     {
         return $this->heliosTransactionsSQL->getIdsByStatusAndPasstrans(
             HeliosTransactionsSQL::ATTENTE,
@@ -46,46 +46,35 @@ class HeliosEnvoiWorker implements IWorker
     }
 
     /**
-     * @param $data
-     * @return void
      * @throws Exception
      */
-    public function work($data)
+    public function work($data): void
     {
         $this->heliosEnvoiControler->sendOneTransaction($data, $this->usePasstrans);
     }
 
-    public function getMutexName($data)
+    public function getMutexName($data): string
     {
         return sprintf("helios-transaction-%s", $data);
     }
 
-    public function isDataValid($data)
+    public function isDataValid($data): bool
     {
         $status_id = $this->heliosTransactionsSQL->getLatestStatusId($data);
         return $status_id == HeliosStatusSQL::ATTENTE;
     }
 
-    /**
-     * @return string
-     */
     public static function getQueueNameParametre($usePasstrans): string
     {
         return self::QUEUE_NAME . ($usePasstrans ? '-passtrans' : '');
     }
 
-    /**
-     * @return void
-     */
-    public function start()
+    public function start(): void
     {
         // TODO: Implement start() method.
     }
 
-    /**
-     * @return void
-     */
-    public function end()
+    public function end(): void
     {
         // TODO: Implement end() method.
     }

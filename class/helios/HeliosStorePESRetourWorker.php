@@ -11,7 +11,7 @@ class HeliosStorePESRetourWorker implements IWorker
 {
     public const QUEUE_NAME = 'helios-store-pes-retour';
 
-    public function getQueueName()
+    public function getQueueName(): string
     {
         return self::QUEUE_NAME;
     }
@@ -21,7 +21,7 @@ class HeliosStorePESRetourWorker implements IWorker
     ) {
     }
 
-    public function getData($id)
+    public function getData($id): mixed
     {
         return $id;
     }
@@ -30,7 +30,7 @@ class HeliosStorePESRetourWorker implements IWorker
      * @return int[]
      * @throws UnrecoverableException
      */
-    public function getAllId()
+    public function getAllId(): array
     {
         return $this->PESRetourCloudStorage->getAllObjectIdToStore();
     }
@@ -46,12 +46,12 @@ class HeliosStorePESRetourWorker implements IWorker
         $this->PESRetourCloudStorage->storeObject($data);
     }
 
-    public function getMutexName($data)
+    public function getMutexName($data): string
     {
         return sprintf("%s-%s", self::QUEUE_NAME, $data);
     }
 
-    public function isDataValid($data)
+    public function isDataValid($data): bool
     {
         return true;
     }
@@ -59,7 +59,7 @@ class HeliosStorePESRetourWorker implements IWorker
     /**
      * @return void
      */
-    public function start()
+    public function start(): void
     {
         // TODO: Implement start() method.
     }
@@ -67,7 +67,7 @@ class HeliosStorePESRetourWorker implements IWorker
     /**
      * @return void
      */
-    public function end()
+    public function end(): void
     {
         // TODO: Implement end() method.
     }

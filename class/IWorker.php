@@ -11,7 +11,7 @@ interface IWorker
      * Le nom de la queue pour Beanstalkd
      * @return string
      */
-    public function getQueueName();
+    public function getQueueName(): string;
 
     /**
      * En fonction d'un identifiant, retourne les données à envoyé sur la queue
@@ -19,13 +19,13 @@ interface IWorker
      * @param $id int identifiant
      * @return mixed donnée à envoyé sur la queue
      */
-    public function getData($id);
+    public function getData($id): mixed;
 
     /**
      * Renvoie une liste d'identifiant pour reconstruire une file
      * @return int[]
      */
-    public function getAllId();
+    public function getAllId(): array;
 
     /**
      * Le vrai travail avec les data
@@ -38,23 +38,22 @@ interface IWorker
 
     /**
      * @param $data
-     * @return string|false le nom du verrou exlusif à utiliser pour la section critique "work", false si work n'est pas une section critique
      */
-    public function getMutexName($data);
+    public function getMutexName($data): string;
 
     /**
      * @param $data
      * @return boolean indique si les données sont encore valide (i.e la transaction dans le bon état par exemple), si false, on sort le travail de la file
      */
-    public function isDataValid($data);
+    public function isDataValid($data): bool;
 
     /**
      * @return void
      */
-    public function start();
+    public function start(): void;
 
     /**
      * @return void
      */
-    public function end();
+    public function end(): void;
 }
