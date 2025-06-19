@@ -36,18 +36,6 @@ class ActesNotification
     private Environment $twig;
     private bool $useProdNotifications;
 
-    /**
-     * @param \S2lowLegacy\Class\actes\ActesTransactionsSQL $actesTransactionsSQL
-     * @param \S2lowLegacy\Class\actes\ActeTamponne $acteTamponne
-     * @param \S2lowLegacy\Model\AuthoritySQL $authoritySQL
-     * @param \S2lowLegacy\Class\actes\ActesEnvelopeSQL $actesEnveloppeSQL
-     * @param MailerSymfonyFactory $mailerFactory
-     * @param \S2lowLegacy\Class\S2lowLogger $logger
-     * @param $actes_appli_trigramme
-     * @param \S2lowLegacy\Class\actes\ActesRetriever $actesRetriever
-     * @param \S2lowLegacy\Class\actes\BordereauPdfGenerator $bordereauPdfGenerator
-     * @param \Twig\Environment $twigEnvironment
-     */
     public function __construct(
         ActesTransactionsSQL $actesTransactionsSQL,
         ActeTamponne $acteTamponne,
@@ -55,11 +43,11 @@ class ActesNotification
         ActesEnvelopeSQL $actesEnveloppeSQL,
         MailerSymfonyFactory $mailerFactory,
         S2lowLogger $logger,
-        $actes_appli_trigramme,
+        string $actes_appli_trigramme,
         ActesRetriever $actesRetriever,
         BordereauPdfGenerator $bordereauPdfGenerator,
         Environment $twigEnvironment,
-        $use_prod_notifications
+        bool $use_prod_notifications
     ) {
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->acteTamponne = $acteTamponne;
@@ -80,7 +68,8 @@ class ActesNotification
     public function sendAutomaticNotification(): void
     {
         $sigtermHandler = SigTermHandler::getInstance();
-        foreach ($this->actesTransactionsSQL->getTransactionToAutoBroadcast() as $transaction_id) {
+        $transactionsToNotify = $this->actesTransactionsSQL->getTransactionToAutoBroadcast();
+        foreach ($transactionsToNotify as $transaction_id) {
             $this->logger->info("Notification de la transaction $transaction_id");
             $this->sendNotificationManuel($transaction_id);
             if ($sigtermHandler->isSigtermCalled()) {
@@ -121,13 +110,11 @@ class ActesNotification
     {
         $authority_info = $this->authoritySQL->getInfo($transaction_info['authority_id']);
         $envelope_info = $this->actesEnveloppeSQL->getInfo($transaction_info['envelope_id']);
-
         $defaultBroadcastEmail = explode(',', $authority_info['default_broadcast_email'] ?? '');
 
         $broadcast_emails = $transaction_info['broadcast_emails'] ?? '';
         $brodcastEmail = explode(',', $broadcast_emails);
         $brodcastEmail = array_diff($brodcastEmail, $defaultBroadcastEmail);
-
         $archive_path = $this->actesRetriever->getPath($envelope_info['file_path']);
 
         try {
@@ -138,17 +125,16 @@ class ActesNotification
             $fichiers_tamponnees = [];
         }
 
-
         if (!$transaction_info['auto_broadcasted']) {
             //envoie du mail au proprietaire de l'acte
             $this->sendMail($transaction_info, $envelope_info['email'], true, $authority_info['new_notification'], $fichiers_tamponnees);
             //envoie du mail a toutes les adresses renseignees dans defaut
+
             foreach ($defaultBroadcastEmail as $email) {
                 $this->sendMail($transaction_info, $email, true, false, $fichiers_tamponnees);
             }
             $this->actesTransactionsSQL->setAutoBroadcasted($transaction_info['id']);
         }
-
         if ($broadcast_emails) {
             foreach ($brodcastEmail as $email) {
                 $this->sendMail($transaction_info, $email, $transaction_info['broadcast_send_sources'] == 1, false, $fichiers_tamponnees);
@@ -162,6 +148,7 @@ class ActesNotification
      */
     private function sendMail($transactionInfo, $email, $withFile, $add_url_recup, array $fichiers_tamponnees): void
     {
+
         if (!$email) {
             return;
         }
@@ -180,6 +167,8 @@ class ActesNotification
 
             $bordereauPdf = $this->bordereauPdfGenerator
                 ->generate($transactionInfo['id'], "bordereau_acquittement.pdf", true, "S");
+
+
 
             $mailer->addStringAsFile("bordereau_acquittement.pdf", $bordereauPdf);
             if ($withFile && !$add_url_recup) {
@@ -278,6 +267,7 @@ class ActesNotification
             }
             $result[] = $file;
         }
+
         return $result;
     }
 }
