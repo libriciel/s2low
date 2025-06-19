@@ -119,12 +119,11 @@ quality:
   stage: quality
   only:
     - master
-  image : gitlab.libriciel.fr:4567/docker/sonar-scanner:latest
+  image:
+    name: hubdocker.libriciel.fr/sonarsource/sonar-scanner-cli:11.3
+    entrypoint: [ "/bin/sh", "-c" ]
   script:
-    - mkdir -p /var/www/s2low
-    - cp -rf $CI_PROJECT_DIR/* /var/www/s2low
-    - cd /var/www/s2low
-    - /sonar-scanner -Dsonar.login=$SONAR_LOGIN -Dsonar.host.url=$SONAR_HOST_URL
+    - sonar-scanner -Dsonar.token=$SONAR_LOGIN -Dsonar.host.url=$SONAR_HOST_URL
 
 security-check:
   allow_failure: true
