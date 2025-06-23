@@ -96,6 +96,7 @@ unit_test:
         XDEBUG_MODE: coverage
         APP_ENV: test
         MAILER_DSN: smtp://mailsec:25?verify_peer=0
+        ACTES_OPENSTACK_AUTHENTICATION_URL_V3: https:://mock-url/v3
     script:
         - cd /var/www/s2low/
         - composer test-cover
