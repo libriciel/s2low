@@ -17,6 +17,7 @@ include:
 stages:
     - build
     - static-analysis
+    - debug-clamscan
     - test
     - quality
     - deploy
@@ -74,6 +75,13 @@ phpstan:
   script:
     - cd /var/www/s2low
     - vendor/bin/phpstan
+
+debug-clamscan:
+  stage: test
+  image: "$CONTAINER_IMAGE"
+  script:
+    - echo "Scanning with verbose output..."
+    - clamscan -r -v /var/www/s2low/test/PHPUnit/class/fixtures/classification.xml || echo "Clamscan exited with code $?"
 
 unit_test:
     stage: test
