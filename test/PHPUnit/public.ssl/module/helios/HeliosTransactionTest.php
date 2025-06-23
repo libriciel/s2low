@@ -18,12 +18,12 @@ class HeliosTransactionTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+        $this->heliosTransactionsSQL = self::getContainer()->get(HeliosTransactionsSQL::class);
     }
 
     public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
     {
-        return $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+        return $this->heliosTransactionsSQL;
     }
 
     /**
@@ -262,9 +262,8 @@ class HeliosTransactionTest extends S2lowTestCase
      */
     private function createGroupe(): mixed
     {
-        /** @var GroupSQL $groupSQL */
-        $groupSQL = $this->getObjectInstancier()->get(GroupSQL::class);
-        $groupeId = $groupSQL->edit(null, "GroupeTestHeliosTransaction", 1);
+        $groupSQL = self::getContainer()->get(GroupSQL::class);
+        $groupeId = $groupSQL->edit(1, "GroupeTestHeliosTransaction", 1);
         return $groupeId;
     }
 }

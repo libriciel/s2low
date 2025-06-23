@@ -1,150 +1,201 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Class\Database;
-use S2lowLegacy\Class\DatabasePool;
+use S2lowLegacy\Lib\SQLQuery;
 
-class DatabaseTest extends S2lowTestCase
+class DatabaseTest extends TestCase
 {
-    /**
-     * @var Database
-     */
+    private $sqlQueryMock;
+    private $pdoMock;
+    private $pdoStatementMock;
     private $database;
 
-    /**
-     * @throws Exception
-     */
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->database = DatabasePool::getInstance();
+        $this->pdoMock = $this->createMock(PDO::class);
+        $this->pdoStatementMock = $this->createMock(PDOStatement::class);
+        $this->sqlQueryMock = $this->createMock(SQLQuery::class);
+
+        $this->sqlQueryMock->method('getPdo')->willReturn($this->pdoMock);
+
+        $this->database = new Database($this->sqlQueryMock);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testQuery()
+    public function testSelect()
     {
-        $this->assertEquals(1, $this->database->exec("SELECT 1"));
+        $query = "SELECT * FROM users";
+        $parameters = [];
+
+        $this->pdoMock->expects($this->once())
+            ->method('prepare')
+            ->with($query)
+            ->willReturn($this->pdoStatementMock);
+
+        $this->pdoStatementMock->expects($this->once())
+            ->method('execute')
+            ->with($parameters);
+
+        $this->pdoStatementMock->expects($this->once())
+            ->method('fetchAll')
+            ->willReturn([['id' => 1, 'name' => 'John Doe']]);
+
+        $result = $this->database->select($query, $parameters);
+
+        $this->assertEquals([['id' => 1, 'name' => 'John Doe']], $result->get_all_rows());
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testQueryString()
+    public function testExec()
     {
-        $queryResult = $this->database->select("SELECT 'foo'");
-        $this->assertEquals([['?column?' => 'foo']], $queryResult->get_all_rows());
+        $query = "INSERT INTO users (name) VALUES (?)";
+        $params = ['John Doe'];
+
+        $this->sqlQueryMock->expects($this->once())
+            ->method('query')
+            ->with($query, $params)
+            ->willReturn([]);
+
+        $result = $this->database->exec($query, $params);
+
+        $this->assertTrue($result);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testFetchAll()
+    public function testBegin()
     {
-        $result = $this->database->fetchAll("SELECT * FROM users ORDER BY id");
-        $this->assertEquals("eric+10@sigmalis.com", $result[9]['email']);
+        $this->sqlQueryMock->expects($this->once())
+            ->method('query')
+            ->with("BEGIN")
+            ->willReturn([]);
+
+        $result = $this->database->begin();
+
+        $this->assertEquals(1, $result);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testGetOneLine()
+    public function testCommit()
     {
-        $result = $this->database->getOneLine("SELECT * FROM users ORDER BY id");
-        $this->assertEquals("eric@sigmalis.com", $result['email']);
+        $this->database->begin();
+
+        $this->sqlQueryMock->expects($this->once())
+            ->method('query')
+            ->with("COMMIT")
+            ->willReturn([]);
+
+        $result = $this->database->commit();
+
+        $this->assertEquals(1, $result);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testGetOneValue()
+    public function testRollback()
     {
-        $result = $this->database->getOneValue("SELECT email FROM users ORDER BY id");
-        $this->assertEquals("eric@sigmalis.com", $result);
+        $this->database->begin();
+
+        $this->sqlQueryMock->expects($this->once())
+            ->method('query')
+            ->with("ROLLBACK")
+            ->willReturn([]);
+
+        $result = $this->database->rollback();
+
+        $this->assertEquals(1, $result);
     }
 
     public function testQuote()
     {
-        $quote = $this->database->quote("'toto'\\a \\'");
-        $this->assertEquals("'\'toto\'\\\\a \\\\\''", $quote);
+        $value = "'toto'\\a \\'";
+        $expected = "'\\'toto\\'\\\\a \\\\\\''";
+
+        $result = $this->database->quote($value);
+
+        $this->assertEquals($expected, $result);
     }
 
     public function testQuoteNotNull()
     {
-        $quote = $this->database->quote("", true);
-        $this->assertEquals("''", $quote);
+        $result = $this->database->quote("", true);
+
+        $this->assertEquals("''", $result);
     }
 
     public function testQuoteNull()
     {
-        $quote = $this->database->quote("", false);
-        $this->assertEquals("NULL", $quote);
+        $result = $this->database->quote("", false);
+
+        $this->assertEquals('NULL', $result);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testTransaction()
+    public function testGetOneLine()
     {
-        $this->database->begin();
-        $this->database->exec("INSERT into actes_status(id,name) VALUES (42,'toto')");
-        $this->database->commit();
-        $this->assertEquals(
-            'toto',
-            $this->database->getOneValue("SELECT name FROM actes_status WHERE id=42")
-        );
+        $query = "SELECT * FROM users ORDER BY id";
+        $params = [];
+
+        $this->sqlQueryMock->expects($this->once())
+            ->method('queryOne')
+            ->with($query, $params)
+            ->willReturn(['email' => 'eric@sigmalis.com']);
+
+        $result = $this->database->getOneLine($query, $params);
+
+        $this->assertEquals(['email' => 'eric@sigmalis.com'], $result);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testTransactionRollback()
+    public function testGetOneValue()
     {
-        $this->database->begin();
-        $this->database->exec("INSERT into actes_status(id,name) VALUES (42,'toto')");
-        $this->database->rollback();
-        $this->assertEmpty(
-            $this->database->getOneValue("SELECT name FROM actes_status WHERE id=42")
-        );
+        $query = "SELECT email FROM users ORDER BY id";
+        $params = [];
+
+        $this->sqlQueryMock->expects($this->once())
+            ->method('queryOne')
+            ->with($query, $params)
+            ->willReturn('eric@sigmalis.com');
+
+        $result = $this->database->getOneValue($query, $params);
+
+        $this->assertEquals('eric@sigmalis.com', $result);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testBeginBegin()
+    public function testGetOneCol()
     {
-        $this->database->begin();
-        $this->assertEquals(0, $this->database->begin());
-        $this->database->rollback();
+        $query = "SELECT email FROM users ORDER BY id";
+        $params = [];
+
+        $this->sqlQueryMock->expects($this->once())
+            ->method('queryOneCol')
+            ->with($query, $params)
+            ->willReturn(['eric@sigmalis.com', 'eric+10@sigmalis.com']);
+
+        $result = $this->database->getOneCol($query, $params);
+
+        $this->assertEquals(['eric@sigmalis.com', 'eric+10@sigmalis.com'], $result);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testCommit()
+    public function testFetchAll()
     {
-        $this->assertEquals(0, $this->database->commit());
+        $query = "SELECT * FROM users ORDER BY id";
+        $params = [];
+
+        $this->sqlQueryMock->expects($this->once())
+            ->method('query')
+            ->with($query, $params)
+            ->willReturn([['id' => 1, 'email' => 'eric@sigmalis.com'], ['id' => 2, 'email' => 'eric+10@sigmalis.com']]);
+
+        $result = $this->database->fetchAll($query, $params);
+
+        $this->assertEquals([['id' => 1, 'email' => 'eric@sigmalis.com'], ['id' => 2, 'email' => 'eric+10@sigmalis.com']], $result);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testRollback()
+    public function testGetPdo()
     {
-        $this->assertEquals(0, $this->database->rollback());
+        $result = $this->database->getPdo();
+
+        $this->assertInstanceOf(PDO::class, $result);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testFailed()
+    public function testDisconnect()
     {
-        $this->setExpectedException(Exception::class, 'toto');
-        $this->database->select("SELECT toto");
-    }
+        $this->sqlQueryMock->expects($this->once())
+            ->method('disconnect');
 
-    public function testGetPDO()
-    {
-        self::assertInstanceOf(PDO::class, $this->database->getPdo());
+        $this->database->disconnect();
     }
 }

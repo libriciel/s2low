@@ -1,17 +1,15 @@
 <?php
 
-use S2lowLegacy\Class\Mailer;
-use S2lowLegacy\Class\MailerFactory;
+use IntegrationTests\S2lowIntegrationTestCase;
+use S2low\Enum\UserRole;
 use S2lowLegacy\Controller\AdminUtilitiesController;
-use S2lowLegacy\Lib\Environnement;
-use S2lowLegacy\Lib\RedirectException;
 
-class AdminUtilitiesControllerTest extends S2lowTestCase
+class AdminUtilitiesControllerTest extends S2lowIntegrationTestCase
 {
     public function testIndex()
     {
-        $this->setSuperAdminAuthentication();
-        $this->getObjectInstancier()->get(AdminUtilitiesController::class)->indexAction();
-        $this->noAssertion();
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        self::getContainer()->get(AdminUtilitiesController::class)->indexAction();
+        self::expectNotToPerformAssertions();
     }
 }

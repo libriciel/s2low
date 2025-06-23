@@ -1,14 +1,16 @@
 <?php
 
+use IntegrationTests\S2lowIntegrationTestCase;
+use S2low\Enum\UserRole;
 use S2lowLegacy\Controller\LogsController;
 
-class LogsControllerTest extends S2lowTestCase
+class LogsControllerTest extends S2lowIntegrationTestCase
 {
     public function testViewAction()
     {
         $_SERVER["QUERY_STRING"] = "";
-        $this->setSuperAdminAuthentication();
-        $logsController = new LogsController($this->getObjectInstancier());
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $logsController = self::getContainer()->get(LogsController::class);
         $logsController->_actionBefore("Logs", "view");
         $logsController->viewAction();
         $this->expectOutputRegex("#Tedetis : Journal d'évènements#");
@@ -17,8 +19,8 @@ class LogsControllerTest extends S2lowTestCase
 
     public function testTitleAdminGroup()
     {
-        $this->setAdminGroupAuthentication();
-        $logsController = new LogsController($this->getObjectInstancier());
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $logsController = self::getContainer()->get(LogsController::class);
         $logsController->viewAction();
         $h1_title_expected = "Journal d'évènements du groupe «&nbsp;Groupe de test&nbsp;»";
         $this->assertEquals($h1_title_expected, $logsController->getViewParameter('h1_title'));
@@ -26,8 +28,11 @@ class LogsControllerTest extends S2lowTestCase
 
     public function testTitleAdminCol()
     {
-        $this->setAdminCol2Authentication();
-        $logsController = new LogsController($this->getObjectInstancier());
+        $this->logAs(13);
+        $this->setUserWithRole(UserRole::AdministrateurCollectivite);
+        $this->setUserAuthority(2);
+
+        $logsController = self::getContainer()->get(LogsController::class);
         $logsController->viewAction();
         $h1_title_expected = "Journal d'évènements de la collectivité «&nbsp;Saint-Andre de Corcy&nbsp;»";
         $this->assertEquals($h1_title_expected, $logsController->getViewParameter('h1_title'));
@@ -35,8 +40,8 @@ class LogsControllerTest extends S2lowTestCase
 
     public function testUser()
     {
-        $this->setUserAuthentification();
-        $logsController = new LogsController($this->getObjectInstancier());
+        $this->setUserWithRole(UserRole::Utilisateur);
+        $logsController = self::getContainer()->get(LogsController::class);
         $logsController->viewAction();
         $h1_title_expected = "Journal d'évènements";
         $this->assertEquals($h1_title_expected, $logsController->getViewParameter('h1_title'));

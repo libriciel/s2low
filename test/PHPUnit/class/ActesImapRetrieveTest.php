@@ -3,7 +3,11 @@
 namespace PHPUnit\class;
 
 use Exception;
+use Monolog\Handler\TestHandler;
+use Monolog\Level;
+use Monolog\Logger;
 use PhpImap;
+use S2lowTestCase;
 use stdClass;
 use S2lowLegacy\Class\actes\ActesImapProperties;
 use S2lowLegacy\Class\actes\ActesImapRetrieve;
@@ -11,16 +15,21 @@ use S2lowLegacy\Class\ImapMailBoxFactory;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\SigTermHandler;
-use S2lowSimpleTestCase;
 
-class ActesImapRetrieveTest extends S2lowSimpleTestCase
+class ActesImapRetrieveTest extends S2lowTestCase
 {
     /**
      * @throws Exception
      */
     public function testRetrieve()
     {
-        $s2lowLogger = $this->getObjectInstancier()->get(S2lowLogger::class);
+        $testHandler = new TestHandler();
+        $logger = new Logger('test');
+        $logger->pushHandler($testHandler);
+
+        $s2lowLogger =  new S2lowLogger(
+            $logger
+        );
 
         $actesImapRetrieve = new ActesImapRetrieve(
             $this->getImapProperties(),
@@ -32,25 +41,97 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase
         );
         $actesImapRetrieve->retrieve();
 
-        $logs = $this->getLogRecords();
+        $this->assertTrue(
+            $testHandler->hasRecord(
+                "Connexion au serveur IMAP mail.example.com:993/imap/ssl avec l'utilisateur login",
+                Level::Info
+            )
+        );
 
-        $this->assertMatchesRegularExpression(
-            "#Connexion au serveur IMAP mail.example.com:993/imap/ssl avec l'utilisateur login#",
-            $logs[1][S2lowLogger::MESSAGE]
+        $this->assertTrue(
+            $testHandler->hasRecord(
+                "Il y a 1 messages dans la boite au lettres",
+                Level::Info
+            )
         );
-        $this->assertMatchesRegularExpression(
-            "#Il y a 1 messages dans la boite au lettres#",
-            $logs[2][S2lowLogger::MESSAGE]
-        );
-        $this->assertMatchesRegularExpression("#Récupération du message : 13#", $logs[3][S2lowLogger::MESSAGE]);
 
-        $this->assertMatchesRegularExpression(
-            "#Sauvegarde du contenu du message HTML #",
-            $logs[4][S2lowLogger::MESSAGE]
+        $this->assertTrue(
+            $testHandler->hasRecord(
+                "Récupération du message : 13",
+                Level::Info
+            )
         );
-        $this->assertMatchesRegularExpression("#Sauvegarde de.*foo-école.pdf#", $logs[5][S2lowLogger::MESSAGE]);
-        $this->assertMatchesRegularExpression("#Déplacement du répertoire#", $logs[7][S2lowLogger::MESSAGE]);
-        $this->assertMatchesRegularExpression("#Suppression du message : 13#", $logs[8][S2lowLogger::MESSAGE]);
+
+        $this->assertTrue(
+            $testHandler->hasRecord(
+                "Suppression du message : 13",
+                Level::Info
+            )
+        );
+
+        $this->assertTrue(
+            $testHandler->hasInfoThatContains(
+                "Sauvegarde du contenu du message HTML"
+            )
+        );
+
+        $this->assertTrue(
+            $testHandler->hasInfoThatContains(
+                "Sauvegarde de"
+            )
+        );
+
+        $this->assertTrue(
+            $testHandler->hasInfoThatContains(
+                "foo-école.pdf"
+            )
+        );
+
+        $this->assertTrue(
+            $testHandler->hasInfoThatContains(
+                "Déplacement du répertoire"
+            )
+        );
+    }
+
+    private function getImapProperties(): ActesImapProperties
+    {
+        return new ActesImapProperties(
+            'mail.example.com',
+            993,
+            'login',
+            'password',
+            '/imap/ssl'
+        );
+    }
+
+    public function getVFS()
+    {
+        $tmp = sys_get_temp_dir() . "/test_actes_imap" . mt_rand(0, mt_getrandmax());
+        mkdir($tmp);
+        return $tmp;
+    }
+
+    private function getImapMailBoxFactory($mailHtmlText = "mon texte html")
+    {
+        $attachments = new StdClass();
+        $attachments->name = "foo-école.pdf";
+        $attachments->filePath = __FILE__;
+
+        $incomingMail = $this->getMockBuilder(PhpImap\IncomingMail::class)->disableOriginalConstructor()->getMock();
+        $incomingMail->{'textHtml'} = $mailHtmlText;
+        $incomingMail->method('getAttachments')->willReturn([$attachments]);
+
+
+        $mailBox = $this->getMockBuilder(PhpImap\Mailbox::class)->disableOriginalConstructor()->getMock();
+        $mailBox->method('searchMailbox')->willReturn([13]);
+        $mailBox->method('getMail')->willReturn($incomingMail);
+
+
+        $imapMailBoxFactory = $this->getMockBuilder(ImapMailBoxFactory::class)->getMock();
+        $imapMailBoxFactory->method('getInstance')->willReturn($mailBox);
+        /** @var ImapMailBoxFactory $imapMailBoxFactory */
+        return $imapMailBoxFactory;
     }
 
     /**
@@ -90,7 +171,13 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase
      */
     public function testRetrieveMailWithEmptyBody()
     {
-        $s2lowLogger = $this->getObjectInstancier()->get(S2lowLogger::class);
+        $testHandler = new TestHandler();
+        $logger = new Logger('test');
+        $logger->pushHandler($testHandler);
+
+        $s2lowLogger = new S2lowLogger(
+            $logger
+        );
 
         $actesImapRetrieve = new ActesImapRetrieve(
             $this->getImapProperties(),
@@ -102,66 +189,58 @@ class ActesImapRetrieveTest extends S2lowSimpleTestCase
         );
         $actesImapRetrieve->retrieve();
 
-        $logs = $this->getLogRecords();
-
-        $this->assertMatchesRegularExpression(
-            "#Connexion au serveur IMAP mail.example.com:993/imap/ssl avec l'utilisateur login#",
-            $logs[1][S2lowLogger::MESSAGE]
+        $this->assertTrue(
+            $testHandler->hasRecord(
+                "Connexion au serveur IMAP mail.example.com:993/imap/ssl avec l'utilisateur login",
+                Level::Info
+            )
         );
-        $this->assertMatchesRegularExpression(
-            "#Il y a 1 messages dans la boite au lettres#",
-            $logs[2][S2lowLogger::MESSAGE]
+
+        $this->assertTrue(
+            $testHandler->hasRecord(
+                "Il y a 1 messages dans la boite au lettres",
+                Level::Info
+            )
         );
-        $this->assertMatchesRegularExpression("#Récupération du message : 13#", $logs[3][S2lowLogger::MESSAGE]);
 
-        $this->assertMatchesRegularExpression(
-            "#Le corps du mail est vide, il ne sera pas sauvegardé#",
-            $logs[4][S2lowLogger::MESSAGE]
+        $this->assertTrue(
+            $testHandler->hasRecord(
+                "Récupération du message : 13",
+                Level::Info
+            )
         );
-        $this->assertMatchesRegularExpression("#Sauvegarde de.*foo-école.pdf#", $logs[5][S2lowLogger::MESSAGE]);
-        $this->assertMatchesRegularExpression("#Déplacement du répertoire#", $logs[7][S2lowLogger::MESSAGE]);
-        $this->assertMatchesRegularExpression("#Suppression du message : 13#", $logs[8][S2lowLogger::MESSAGE]);
-    }
 
-
-    public function getVFS()
-    {
-        $tmp = sys_get_temp_dir() . "/test_actes_imap" . mt_rand(0, mt_getrandmax());
-        mkdir($tmp);
-        return $tmp;
-    }
-
-
-    private function getImapProperties(): ActesImapProperties
-    {
-        return new ActesImapProperties(
-            'mail.example.com',
-            993,
-            'login',
-            'password',
-            '/imap/ssl'
+        $this->assertTrue(
+            $testHandler->hasRecord(
+                "Le corps du mail est vide, il ne sera pas sauvegardé",
+                Level::Info
+            )
         );
-    }
 
-    private function getImapMailBoxFactory($mailHtmlText = "mon texte html")
-    {
-        $attachments = new StdClass();
-        $attachments->name = "foo-école.pdf";
-        $attachments->filePath = __FILE__;
-
-        $incomingMail = $this->getMockBuilder(PhpImap\IncomingMail::class)->disableOriginalConstructor()->getMock();
-        $incomingMail->{'textHtml'} = $mailHtmlText;
-        $incomingMail->method('getAttachments')->willReturn([$attachments]);
+        $this->assertTrue(
+            $testHandler->hasRecord(
+                "Suppression du message : 13",
+                Level::Info
+            )
+        );
 
 
-        $mailBox = $this->getMockBuilder(PhpImap\Mailbox::class)->disableOriginalConstructor()->getMock();
-        $mailBox->method('searchMailbox')->willReturn([13]);
-        $mailBox->method('getMail')->willReturn($incomingMail);
+        $this->assertTrue(
+            $testHandler->hasInfoThatContains(
+                "Sauvegarde de"
+            )
+        );
 
+        $this->assertTrue(
+            $testHandler->hasInfoThatContains(
+                "foo-école.pdf"
+            )
+        );
 
-        $imapMailBoxFactory = $this->getMockBuilder(ImapMailBoxFactory::class)->getMock();
-        $imapMailBoxFactory->method('getInstance')->willReturn($mailBox);
-        /** @var ImapMailBoxFactory $imapMailBoxFactory */
-        return $imapMailBoxFactory;
+        $this->assertTrue(
+            $testHandler->hasInfoThatContains(
+                "Déplacement du répertoire"
+            )
+        );
     }
 }

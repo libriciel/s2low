@@ -12,7 +12,7 @@ abstract class S2lowSymfonyWebTestCase extends WebTestCase
 {
     protected $backupGlobalsBlacklist = array('sqlQuery');
 
-    private $testEnvironnementManager;
+//    private $testEnvironnementManager;
 
     /**
      * @throws Exception
@@ -24,8 +24,8 @@ abstract class S2lowSymfonyWebTestCase extends WebTestCase
         self::bootKernel();
         $this->container = static::getContainer();
 
-        $this->testEnvironnementManager = new TestEnvironmentManager();
-        $this->testEnvironnementManager->setUp();
+//        $this->testEnvironnementManager = new TestEnvironmentManager();
+//        $this->testEnvironnementManager->setUp();
     }
 
     /**
@@ -33,7 +33,7 @@ abstract class S2lowSymfonyWebTestCase extends WebTestCase
      */
     public function getObjectInstancier()
     {
-        return $this->testEnvironnementManager->getObjectInstancier();
+        return self::getContainer()->get(ObjectInstancier::class);
     }
 
     /**
@@ -41,12 +41,12 @@ abstract class S2lowSymfonyWebTestCase extends WebTestCase
      */
     public function getSQLQuery()
     {
-        return $this->testEnvironnementManager->getSQLQuery();
+        return self::getContainer()->get(SQLQuery::class);
     }
 
     public function setSuperAdminAuthentication()
     {
-        $this->testEnvironnementManager->setSuperAdminAuthentication();
+//        $this->testEnvironnementManager->setSuperAdminAuthentication();
     }
 
     public function setAdminGroupAuthentication()
@@ -75,9 +75,12 @@ abstract class S2lowSymfonyWebTestCase extends WebTestCase
         $this->setUserAuthentification();
     }
 
+    /**
+     * @deprecated Il ne faut plus utiliser cette methode mais plutot creer un logger avec un test handler et faire le test a partir de cela.
+     */
     public function getLogRecords()
     {
-        return $this->testEnvironnementManager->getLogRecords();
+        throw new Exception('log records deprecated');
     }
 
     public function assertLogMessage($expected_message, $num_log = 0)

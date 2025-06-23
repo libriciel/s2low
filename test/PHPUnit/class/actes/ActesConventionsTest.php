@@ -1,33 +1,24 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesConventions;
+use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Model\AuthoritySQL;
 
 class ActesConventionsTest extends S2lowTestCase
 {
-    private $actes_files_upload_root;
-
     /** @var  ActesConventions */
     private $actesConventions;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $tmpFolder = new TmpFolder();
-        $this->actes_files_upload_root = $tmpFolder->create();
-        $this->getObjectInstancier()->set(
-            'actes_files_upload_root',
-            $this->actes_files_upload_root
-        );
-
-        $this->actesConventions = $this->getObjectInstancier()->get(ActesConventions::class);
+        $this->actesConventions = $this->getActeConventions();
     }
 
-    protected function tearDown(): void
+    public function tearDown(): void
     {
         parent::tearDown();
-        $tmpFolder = new TmpFolder();
-        $tmpFolder->delete($this->actes_files_upload_root);
     }
 
     public function testHasNoConvention()
@@ -54,7 +45,7 @@ class ActesConventionsTest extends S2lowTestCase
     {
         $this->actesConventions->setConvention(1, __DIR__ . "/fixtures/convention-exemple.pdf");
         $this->assertEquals(
-            $this->actes_files_upload_root . "/123456789/123456789-convention-actes.pdf",
+            $this->tmpPathFolder . "/123456789/123456789-convention-actes.pdf",
             $this->actesConventions->getConventionFilepath(1)
         );
     }
@@ -74,5 +65,13 @@ class ActesConventionsTest extends S2lowTestCase
     {
         $this->setExpectedException("Exception", "Aucune convention présente pour la collectivité 18");
         $this->actesConventions->getConventionFilename(18);
+    }
+
+    private function getActeConventions(): ActesConventions
+    {
+        return new ActesConventions(
+            self::getContainer()->get(AuthoritySQL::class),
+            $this->tmpPathFolder
+        );
     }
 }

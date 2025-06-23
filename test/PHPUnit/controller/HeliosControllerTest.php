@@ -1,33 +1,35 @@
 <?php
 
-use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu;
+use IntegrationTests\S2lowIntegrationTestCase;
+use S2low\Enum\UserRole;
+use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\RgsConnexion;
+use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Controller\HeliosController;
+use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Model\AuthoritySiretSQL;
 use S2lowLegacy\Model\HeliosRetourSQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use S2lowLegacy\Model\UsersPermsSQL;
 
-class HeliosControllerTest extends S2lowTestCase
+class HeliosControllerTest extends S2lowIntegrationTestCase
 {
     /**
      * @var HeliosController
      */
     private $heliosController;
 
-    private $testStreamUrl;
-
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        org\bovigo\vfs\vfsStream::setup("test");
-        $this->testStreamUrl = org\bovigo\vfs\vfsStream::url("test");
+//        org\bovigo\vfs\vfsStream::setup("test");
+//        $this->testStreamUrl = org\bovigo\vfs\vfsStream::url("test");
 
-        mkdir($this->testStreamUrl . "/helios");
+        mkdir($this->tmpPathFolder . "/helios");
 
-        $tmp_file = $this->testStreamUrl . "/pes_aller.xml";
+        $tmp_file = $this->tmpPathFolder . "/pes_aller.xml";
         file_put_contents($tmp_file, file_get_contents(__DIR__ . "/fixtures/pes_aller.xml"));
 
         $_FILES['enveloppe'] = array(
@@ -37,12 +39,21 @@ class HeliosControllerTest extends S2lowTestCase
             'error' => UPLOAD_ERR_OK
         );
 
-        $this->setRGSAuthentification();
+//        $this->setRGSAuthentification();
 
-        $this->getObjectInstancier()->set("helios_files_upload_root", $this->testStreamUrl);
+//        $this->getObjectInstancier()->set("helios_files_upload_root", $this->testStreamUrl);
 
-        $this->setUserAuthentification();
-        $this->heliosController = new HeliosController($this->getObjectInstancier());
+//        $this->setUserAuthentification();
+        $pesAllerRetriever = new PesAllerRetriever(
+            $this->tmpPathFolder,
+            self::getContainer()->get(OpenStackSwiftWrapper::class),
+            self::getContainer()->get(S2lowLogger::class),
+        );
+
+        self::getContainer()->set(PesAllerRetriever::class, $pesAllerRetriever);
+        $this->heliosTransactionSQL = self::getContainer()->get(HeliosTransactionsSQL::class);
+        $this->heliosController = self::getContainer()->get(HeliosController::class);
+        $this->heliosController->setFiles($_FILES);
     }
 
 
@@ -56,24 +67,19 @@ class HeliosControllerTest extends S2lowTestCase
         $this->heliosController->importAction();
     }
 
-    /**
-     * @preserveGlobalState disabled
-     * @runInSeparateProcess
-     */
     public function testImportAPIAction()
     {
+        $this->setUserWithRole(UserRole::Utilisateur);
         $this->expectOutputRegex("#<resultat>OK</resultat>#");
         $this->importAPI();
-        $heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
         $output = $this->getActualOutput();
 
         $output = preg_replace("#header.*called\n#", "", $output);
         $xml = simplexml_load_string($output);
         $transaction_id = $xml->id;
-
-        $info = $heliosTransactionsSQL->getInfo($transaction_id);
+        $info = $this->heliosTransactionSQL->getInfo($transaction_id);
         $this->assertEquals(HeliosTransactionsSQL::POSTE, $info['last_status_id']);
-        $info_wf = $heliosTransactionsSQL->getWorkflow($transaction_id);
+        $info_wf = $this->heliosTransactionSQL->getWorkflow($transaction_id);
         $this->assertEquals(1, $info_wf[0]['status_id']);
     }
 
@@ -85,23 +91,18 @@ class HeliosControllerTest extends S2lowTestCase
         }
     }
 
-    /**
-     * @preserveGlobalState disabled
-     * @runInSeparateProcess
-     */
     public function testImportMustSign()
     {
         $this->expectOutputRegex("#<resultat>OK</resultat>#");
         $_POST['must_signed'] = true;
         $this->importAPI();
-        $heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
         $output = $this->getActualOutput();
         $output = preg_replace("#header.*called\n#", "", $output);
         $xml = simplexml_load_string($output);
         $transaction_id = $xml->id;
-        $info = $heliosTransactionsSQL->getInfo($transaction_id);
+        $info = $this->heliosTransactionSQL->getInfo($transaction_id);
         $this->assertEquals(HeliosTransactionsSQL::ATTENTE_SIGNEE, $info['last_status_id']);
-        $info_wf = $heliosTransactionsSQL->getWorkflow($transaction_id);
+        $info_wf = $this->heliosTransactionSQL->getWorkflow($transaction_id);
         $this->assertEquals(HeliosTransactionsSQL::ATTENTE_SIGNEE, $info_wf[0]['status_id']);
     }
 
@@ -111,18 +112,17 @@ class HeliosControllerTest extends S2lowTestCase
      */
     public function testImportMustPoster()
     {
-        $userPermsSQL = new UsersPermsSQL($this->getSQLQuery());
-        $userPermsSQL->setPerms(2, 8, 'CS');
+        $userPermsSQL = self::getContainer()->get(UsersPermsSQL::class);
+        $userPermsSQL->setPerms(2, 13, 'CS');
         $this->expectOutputRegex("#<resultat>OK</resultat>#");
         $this->importAPI();
-        $heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
         $output = $this->getActualOutput();
         $output = preg_replace("#header.*called\n#", "", $output);
         $xml = simplexml_load_string($output);
         $transaction_id = $xml->id;
-        $info = $heliosTransactionsSQL->getInfo($transaction_id);
+        $info = $this->heliosTransactionSQL->getInfo($transaction_id);
         $this->assertEquals(HeliosTransactionsSQL::ATTENTE_POSTEE, $info['last_status_id']);
-        $info_wf = $heliosTransactionsSQL->getWorkflow($transaction_id);
+        $info_wf = $this->heliosTransactionSQL->getWorkflow($transaction_id);
         $this->assertEquals(HeliosTransactionsSQL::ATTENTE_POSTEE, $info_wf[0]['status_id']);
     }
 
@@ -150,19 +150,15 @@ class HeliosControllerTest extends S2lowTestCase
      */
     public function testBadFile()
     {
-        $tmp_file = $this->testStreamUrl . "/pes_aller_not_exist.xml";
+        $tmp_file = $this->tmpPathFolder . "/pes_aller_not_exist.xml";
         $_FILES['enveloppe']['tmp_name'] = $tmp_file;
         $this->expectedError('Échec lors du téléchargement du fichier');
         $this->importAPI();
     }
 
-    /**
-     * @preserveGlobalState disabled
-     * @runInSeparateProcess
-     */
     public function testEmptyFile()
     {
-        $tmp_file = $this->testStreamUrl . "/empty_file.xml";
+        $tmp_file = $this->tmpPathFolder . "/empty_file.xml";
         file_put_contents($tmp_file, file_get_contents(__DIR__ . "/fixtures/empty_file.xml"));
 
         $_FILES['enveloppe'] = array(
@@ -186,7 +182,7 @@ class HeliosControllerTest extends S2lowTestCase
      */
     public function testDuplicate()
     {
-        $tmp_file = $this->testStreamUrl . "/pes_aller.xml";
+        $tmp_file = $this->tmpPathFolder . "/pes_aller.xml";
         $this->expectOutputRegex("#<resultat>OK</resultat>#");
         $this->importAPI();
         file_put_contents($tmp_file, file_get_contents(__DIR__ . "/fixtures/pes_aller.xml"));
@@ -207,35 +203,28 @@ class HeliosControllerTest extends S2lowTestCase
 
     public function testUpdateSiretFromPESAllerNoFile()
     {
-        $heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
-        $heliosTransactionSQL->create("pes1.xml", "42", 8, 1, 42, 12);
+        $this->heliosTransactionSQL->create("pes1.xml", "42", 13, 1, 42, 12);
 
-        $heliosController = new HeliosController($this->getObjectInstancier());
         $this->expectOutputRegex("#le fichier PES ALLER n'est pas disponible#");
-        $heliosController->updateSiretFromPESAller();
+        $this->heliosController->updateSiretFromPESAller();
     }
 
     public function testUpdateSiretFromPESAllerNotXML()
     {
-        $heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
-
-        $heliosTransactionSQL->create("pes1.xml", "d8d1a344f31de311d32134064695df85f3801897", 8, 1, 42, 12);
-        file_put_contents($this->testStreamUrl . "/d8d1a344f31de311d32134064695df85f3801897", "<test/>");
-        $heliosController = new HeliosController($this->getObjectInstancier());
+        $this->heliosTransactionSQL->create("pes1.xml", "d8d1a344f31de311d32134064695df85f3801897", 13, 1, 42, 12);
+        file_put_contents($this->tmpPathFolder . "/d8d1a344f31de311d32134064695df85f3801897", "<test/>");
         $this->expectOutputRegex("#le fichier PES ALLER ne contient pas de SIRET#");
-        $heliosController->updateSiretFromPESAller();
+        $this->heliosController->updateSiretFromPESAller();
     }
 
     public function testUpdateSiretFromPESAllerOK()
     {
-        $heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
-
-        $heliosTransactionSQL->create("pes1.xml", "d8d1a344f31de311d32134064695df85f3801897", 8, 1, 42, 12);
-        file_put_contents($this->testStreamUrl . "/d8d1a344f31de311d32134064695df85f3801897", file_get_contents(__DIR__ . "/fixtures/pes_aller.xml"));
-        $heliosController = new HeliosController($this->getObjectInstancier());
+        $this->heliosTransactionSQL->create("pes1.xml", "d8d1a344f31de311d32134064695df85f3801897", 13, 1, 42, 12);
+        file_put_contents($this->tmpPathFolder . "/d8d1a344f31de311d32134064695df85f3801897", file_get_contents(__DIR__ . "/fixtures/pes_aller.xml"));
         $this->expectOutputRegex("#siret 12345678912345 ajouté à la collectivite 1#");
-        $heliosController->updateSiretFromPESAller();
-        $authoritySiretSQL = new AuthoritySiretSQL($this->getSQLQuery());
+        $this->heliosController->updateSiretFromPESAller();
+        $authoritySiretSQL = self::getContainer()->get(AuthoritySiretSQL::class);
+        ;
         $list = $authoritySiretSQL->siretList(1);
         $this->assertEquals("12345678912345", $list[0]['siret']);
     }
@@ -246,10 +235,9 @@ class HeliosControllerTest extends S2lowTestCase
      */
     public function testGetPESRetourEmptyListAction()
     {
-        $heliosController = new HeliosController($this->getObjectInstancier());
         $this->expectOutputRegex("#<idColl>1</idColl>#");
-        $this->setExpectedException("Exception", "exit() called");
-        $heliosController->getPESRetourListAction();
+        $this->expectExceptionMessage("exit() called");
+        $this->heliosController->getPESRetourListAction();
     }
 
     /**
@@ -258,13 +246,12 @@ class HeliosControllerTest extends S2lowTestCase
      */
     public function testGetPESRetourListAction()
     {
-        $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
+        $heliosRetourSQL = self::getContainer()->get(HeliosRetourSQL::class);
         $heliosRetourSQL->add(1, "123456789", "toto.xml", 10, "sha1");
 
-        $heliosController = new HeliosController($this->getObjectInstancier());
         $this->expectOutputRegex("#<nom>toto.xml</nom>#");
-        $this->setExpectedException("Exception", "exit() called");
-        $heliosController->getPESRetourListAction();
+        $this->expectExceptionMessage("exit() called");
+        $this->heliosController->getPESRetourListAction();
     }
 
     /**
@@ -273,14 +260,13 @@ class HeliosControllerTest extends S2lowTestCase
      */
     public function testGetPESRetourListActionForAdmin()
     {
-        $this->setAdminColAuthentication();
-        $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
+        $this->setUserWithRole(UserRole::AdministrateurCollectivite);
+        $heliosRetourSQL = self::getContainer()->get(HeliosRetourSQL::class);
         $heliosRetourSQL->add(1, "123456789", "toto.xml", 10, "sha1");
 
-        $heliosController = new HeliosController($this->getObjectInstancier());
         $this->expectOutputRegex("#<nom>toto.xml</nom>#");
-        $this->setExpectedException("Exception", "exit() called");
-        $heliosController->getPESRetourListAction();
+        $this->expectExceptionMessage("exit() called");
+        $this->heliosController->getPESRetourListAction();
     }
 
     /**
@@ -289,28 +275,25 @@ class HeliosControllerTest extends S2lowTestCase
      */
     public function testGetPESRetourListActionForAdminUnauthorized()
     {
-        $this->setAdminCol2Authentication();
-        $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
-        $heliosRetourSQL->add(1, "123456789", "toto.xml", 10, "sha1");
+        $this->setUserWithRole(UserRole::AdministrateurCollectivite);
+        $heliosRetourSQL = self::getContainer()->get(HeliosRetourSQL::class);
+        $heliosRetourSQL->add(2, "123456789", "toto.xml", 10, "sha1");
 
-        $heliosController = new HeliosController($this->getObjectInstancier());
         $this->expectOutputRegex("#^((?!toto.xml).)*$#s");
-        $this->setExpectedException("Exception", "exit() called");
-        $heliosController->getPESRetourListAction();
+        $this->expectExceptionMessage("exit() called");
+        $this->heliosController->getPESRetourListAction();
     }
 
-    /**
-     * @preserveGlobalState disabled
-     * @runInSeparateProcess
-     */
     public function testGetPostPESRetourWithoutRGS()
     {
         $rgsConnexion = $this->getMockBuilder(RgsConnexion::class)->disableOriginalConstructor()->getMock();
         $rgsConnexion->method('isRgsConnexion')->willReturn(false);
 
-        $this->getObjectInstancier()->{RgsConnexion::class} = $rgsConnexion;
+        self::getContainer()->set(RgsConnexion::class, $rgsConnexion);
+
+        $this->setUserWithRole(UserRole::Utilisateur);
         $this->expectOutputRegex("#<message>Votre certificat n'est pas RGS et ne vous permet donc pas de#");
-        $this->setExpectedException("Exception", "exit() called");
+        $this->expectExceptionMessage("exit() called");
         $this->heliosController->importAPIAction();
     }
 }

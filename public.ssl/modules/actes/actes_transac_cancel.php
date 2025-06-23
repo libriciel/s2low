@@ -64,11 +64,12 @@ if ($rel_trans->hasPendingCancelTrans()) {
 $rel_envelope = new ActesEnvelope($rel_trans->get("envelope_id"));
 $rel_envelope->init();
 
-// Vérification des permissions
-if (
-    ! ($me->isAdmin() && $me->get("authority_id") == $owner->get("authority_id"))
-    && ! ($me->getId() == $rel_envelope->get("user_id") && $me->checkDroit($module->get("name"), 'TT'))
-) {
+$userIsAdminAndTransactionOwner = $me->isAdmin() && $me->get("authority_id") === $owner->get("authority_id");
+$userOwnsEnvelopeAndHasModuleAccess = $me->getId() === $rel_envelope->get("user_id")
+    && $me->checkDroit($module->get("name"), 'TT');
+
+$hasAccess = $userIsAdminAndTransactionOwner || $userOwnsEnvelopeAndHasModuleAccess;
+if (! $hasAccess) {
     Helpers::returnAndExit(1, "Accès refusé.", Helpers::getLink("/modules/actes/index.php"));
 }
 

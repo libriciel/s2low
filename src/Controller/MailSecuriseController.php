@@ -32,7 +32,6 @@ class MailSecuriseController extends AbstractController
     {
         $this->doc = $mailLayout;
         $this->mailSecuriseNotification = $mailSecuriseNotification;
-        LegacyObjectsManager::setLegacyObjectInstancier();
         list($this->module, $this->me, $this->myAuthority) = MailInit::getIdentificationParameters();
     }
 

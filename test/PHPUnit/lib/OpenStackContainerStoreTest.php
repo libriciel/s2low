@@ -5,21 +5,19 @@ use S2lowLegacy\Lib\OpenStackContainerStore;
 use S2lowLegacy\Lib\OpenStackContainerWrapper;
 use S2lowLegacy\Lib\OpenStackContainerWrapperFactory;
 use S2lowLegacy\Lib\UnrecoverableException;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class OpenStackContainerStoreTest extends S2lowTestCase
 {
     private const GET_CONTAINER_WRAPPER = "getContainerWrapper";
     private const ACTES = "actes";
 
-    /** @var MockObject | OpenStackContainerWrapper  */
     private $openStackContainerWrapperMock;
-    /** @var MockObject | OpenStackContainerWrapperFactory */
     private $openStackContainerWrapperFactoryMock;
     private $openStackConfig;
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->openStackContainerWrapperMock = $this->getMockBuilder(OpenStackContainerWrapper::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -45,7 +43,6 @@ class OpenStackContainerStoreTest extends S2lowTestCase
 
     public function testExecuteOnUnavailableContainer()
     {
-
         $this->openStackContainerWrapperFactoryMock
             ->expects($this->once())
             ->method(self::GET_CONTAINER_WRAPPER)

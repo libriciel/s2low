@@ -25,7 +25,7 @@ class QueryResultTest extends S2lowTestCase
     public function testQuery()
     {
         $queryResult = $this->database->select("SELECT name,email,id FROM users ORDER BY id");
-        $this->assertEquals(12, $queryResult->num_row());
+        $this->assertEquals(18, $queryResult->num_row());
         $this->assertEquals(3, $queryResult->num_field());
         $this->assertEquals('eric@sigmalis.com', $queryResult->get_all_rows()[0]['email']);
     }

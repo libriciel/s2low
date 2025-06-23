@@ -19,7 +19,7 @@ $new_groupe_id = $argv[2];
 $do = isset($argv[3]) ? ($argv[3] == 'do') : false;
 
 
-$groupSQL = new GroupSQL($sqlQuery);
+$groupSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(GroupSQL::class);
 
 $old_group = $groupSQL->getInfo($old_groupe_id);
 
@@ -28,7 +28,7 @@ $new_group = $groupSQL->getInfo($new_groupe_id);
 
 echo "Déplacement des collectivités du groupe  --{$old_group['name']}-- vers le groupe --{$new_group['name']}--\n";
 
-$authoritySQL = new AuthoritySQL($sqlQuery);
+$authoritySQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(AuthoritySQL::class);
 
 $authorities_list = $authoritySQL->getAllGroup($old_groupe_id);
 
@@ -41,7 +41,7 @@ echo count($authorities_list) . " collectivités trouvées : \n";
 
 echo "\t- " . implode("\n\t- ", $authorities_list) . "\n";
 
-$autorityGroupSirenSQL = new AuthorityGroupSirenSQL($sqlQuery);
+$autorityGroupSirenSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(AuthorityGroupSirenSQL::class);
 
 
 foreach ($authorities_list as $authority_id => $authority_name) {

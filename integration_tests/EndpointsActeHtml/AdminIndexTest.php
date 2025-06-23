@@ -28,7 +28,9 @@ class AdminIndexTest extends S2lowIntegrationTestCase
      */
     public function testShouldReturnSuccessResponse(UserRole $role): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs($role);
+        $client = $this->client;
+        $this->setUserWithRole($role);
+
         $client->request('GET', self::ADMIN_INDEX);
 
         static::assertResponseIsSuccessful();
@@ -36,7 +38,9 @@ class AdminIndexTest extends S2lowIntegrationTestCase
 
     public function testShouldReturnRightContentWhenAuthenticatedAsSuperAdmin(): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::SuperAdministrateur);
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+
         $client->request('GET', self::ADMIN_INDEX);
 
         $response = $client->getResponse();
@@ -50,10 +54,10 @@ class AdminIndexTest extends S2lowIntegrationTestCase
      */
     public function testShouldDenyAccessWhenNotAuthenticatedAsAdmin(UserRole $role): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs($role);
-        $client->request('GET', self::ADMIN_INDEX);
+        $this->setUserWithRole($role);
+        $this->client->request('GET', self::ADMIN_INDEX);
 
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
 
         static::assertStringNotContainsString("Administration", $response->getContent());
     }

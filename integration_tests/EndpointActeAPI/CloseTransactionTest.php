@@ -18,7 +18,7 @@ class CloseTransactionTest extends S2lowIntegrationTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
+        $this->actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -57,7 +57,8 @@ class CloseTransactionTest extends S2lowIntegrationTestCase
         $_POST['status'] = $status;
 
 
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
+        $this->setUserWithRole(UserRole::Utilisateur);
+        $client = $this->client;
         $client->request('POST', '/modules/actes/actes_transac_close.php', [
             'api' => $api,
             'id' => $transactionId,

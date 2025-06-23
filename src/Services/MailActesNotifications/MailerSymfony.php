@@ -15,8 +15,10 @@ class MailerSymfony extends Mailer
 {
     private MailerInterface $mailer;
 
-    public function __construct(MailerInterface $mailer)
-    {
+    public function __construct(
+        MailerInterface $mailer,
+        private readonly string $tdt_from_email
+    ) {
         $this->mailer = $mailer;
         parent::__construct();
     }
@@ -68,7 +70,7 @@ class MailerSymfony extends Mailer
 
         foreach ($this->recipients as $recipient) {
             $email = (new Email())
-                ->from(TDT_FROM_EMAIL)
+                ->from($this->tdt_from_email)
                 ->to($recipient)
                 ->subject($subject)
                 ->text($body);
@@ -82,7 +84,6 @@ class MailerSymfony extends Mailer
                     $email->attachFromPath($file);
                 }
             }
-
             foreach ($this->dataAsFile as $dataAsFile) {
                 $email->attach($dataAsFile['data'], $dataAsFile['filename'], 'application/octet-stream');
             }

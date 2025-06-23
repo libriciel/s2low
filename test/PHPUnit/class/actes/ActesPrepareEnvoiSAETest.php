@@ -1,12 +1,13 @@
 <?php
 
+use IntegrationTests\S2lowIntegrationTestCase;
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\ActesPrepareEnvoiSAE;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\PastellProperties;
 
-class ActesPrepareEnvoiSAETest extends S2lowTestCase
+class ActesPrepareEnvoiSAETest extends S2lowIntegrationTestCase
 {
     use ActesUtilitiesTestTrait;
     use PastellConfigurationTestTrait;
@@ -16,7 +17,7 @@ class ActesPrepareEnvoiSAETest extends S2lowTestCase
      */
     private function getActesPrepareEnvoiSAE()
     {
-        return $this->getObjectInstancier()->get(ActesPrepareEnvoiSAE::class);
+        return self::getContainer()->get(ActesPrepareEnvoiSAE::class);
     }
 
     /**
@@ -25,7 +26,7 @@ class ActesPrepareEnvoiSAETest extends S2lowTestCase
     public function testSetArchiveEnAttenteEnvoiSEABadState()
     {
         $transaction_id = $this->createTransaction(1);
-        $result = $this->getActesPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(1, $transaction_id);
+        $result = $this->getActesPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(13, $transaction_id);
         $this->assertFalse($result);
         $this->assertEquals(
             "Impossible d'archiver une transaction qui n'est pas en état « Acquittement reçu » ou « Validé ».",
@@ -40,7 +41,7 @@ class ActesPrepareEnvoiSAETest extends S2lowTestCase
     {
         $this->configurePastell();
         $transaction_id = $this->createTransaction(4);
-        $result = $this->getActesPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(1, $transaction_id);
+        $result = $this->getActesPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(13, $transaction_id);
         $this->assertNotFalse($result);
     }
 
@@ -54,7 +55,7 @@ class ActesPrepareEnvoiSAETest extends S2lowTestCase
 
         $authoritySQL->updateSAE(1, new PastellProperties());
         $this->assertFalse(
-            $this->getActesPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(1, $transaction_id)
+            $this->getActesPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(13, $transaction_id)
         );
 
         $this->assertEquals(
@@ -69,13 +70,18 @@ class ActesPrepareEnvoiSAETest extends S2lowTestCase
     public function testAccesRefuse()
     {
         $transaction_id = $this->createTransaction(4);
-        $result = $this->getActesPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(5, $transaction_id);
+        $result = $this->getActesPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(53, $transaction_id);
         $this->assertFalse($result);
         $this->assertEquals("Accès interdit", $this->getActesPrepareEnvoiSAE()->getLastError());
     }
 
     public function getActesTransactionsSQL(): \S2lowLegacy\Class\actes\ActesTransactionsSQL
     {
-        return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+        return self::getContainer()->get(ActesTransactionsSQL::class);
+    }
+
+    public function getObjectInstancier()
+    {
+        return self::getContainer();
     }
 }

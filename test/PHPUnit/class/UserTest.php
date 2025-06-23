@@ -16,16 +16,16 @@ class UserTest extends S2lowTestCase
         $user = new User();
         $user->setId(2);
         $user->init();
-        $this->assertEquals(2, $user->getNbUserWithMyCertificate());
+        $this->assertEquals(1, $user->getNbUserWithMyCertificate());
     }
 
     public function testGetCertificateInfo()
     {
         $user = new User();
-        $user->setId(2);
+        $user->setId(1);
         $user->init();
         $info = $user->getCertificateInfo();
-        $this->assertEquals('hash_adullact', $info['certificate_hash']);
+        $this->assertEquals('Q1pUbEb5DK53BkYf0arDl/3zl5U=', $info['certificate_hash']);
     }
 
     public function testGetDn()

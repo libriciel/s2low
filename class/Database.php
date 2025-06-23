@@ -11,7 +11,7 @@ class Database
     /** @var SQLQuery */
     private $sqlQuery;
 
-    private $is_in_a_transaction;
+    protected $is_in_a_transaction;
 
     /**
      * @var bool indique s'il y a une erreur dans la transaction
@@ -115,18 +115,18 @@ class Database
         }
     }
 
-    /**
-     * @param $sql
-     * @return array
-     * @throws Exception
-     */
     public function getOneLine($sql, $params = [])
     {
-        if (! is_array($params)) {
+        return $this->getOneValue($sql, $params);
+    }
+
+    public function query($sql, $params = [])
+    {
+        if (!is_array($params)) {
             $params = func_get_args();
             array_shift($params);
         }
-        return $this->sqlQuery->queryOne($sql, $params);
+        return $this->sqlQuery->query($sql, $params);
     }
 
     /**
@@ -136,11 +136,16 @@ class Database
      */
     public function getOneValue($sql, $params = [])
     {
-        if (! is_array($params)) {
+        if (!is_array($params)) {
             $params = func_get_args();
             array_shift($params);
         }
         return $this->sqlQuery->queryOne($sql, $params);
+    }
+
+    public function getOneCol($sql, $params = [])
+    {
+        return $this->sqlQuery->queryOneCol($sql, $params);
     }
 
     /**
@@ -156,5 +161,10 @@ class Database
     public function getPdo(): PDO
     {
         return $this->sqlQuery->getPdo();
+    }
+
+    public function disconnect(): void
+    {
+        $this->sqlQuery->disconnect();
     }
 }

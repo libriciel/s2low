@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class;
 
+use S2lowLegacy\Lib\ObjectInstancierFactory;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\UserSQL;
@@ -92,20 +93,17 @@ class Log extends DataObject
             $logEntry->set("visibility", $visibility);
         }
 
-
-        $sqlQuery = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(SQLQuery::class);
-
         $authority_id = false;
         $authority_group_id = false;
         if ($userid) {
-            $userSQL = new UserSQL($sqlQuery);
+            $userSQL = ObjectInstancierFactory::getObjetInstancier()->get(UserSQL::class);
             $info = $userSQL->getInfo($userid);
             if ($info) {
                 $authority_id = $info['authority_id'];
             }
         }
         if ($authority_id) {
-            $authoritySQL = new AuthoritySQL($sqlQuery);
+            $authoritySQL = ObjectInstancierFactory::getObjetInstancier()->get(AuthoritySQL::class);
             $info = $authoritySQL->getInfo($authority_id);
             if ($info) {
                 $authority_group_id = $info['authority_group_id'];

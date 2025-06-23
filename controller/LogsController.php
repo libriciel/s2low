@@ -17,13 +17,11 @@ use S2lowLegacy\Model\UserSQL;
 
 class LogsController extends Controller
 {
-    /** @return LogsHistoriqueSQL $logsHistoriqueSQL */
     private function getLogsHistoriqueSQL()
     {
         return $this->getObjectInstancier()->get(LogsHistoriqueSQL::class);
     }
 
-    /** @return LogsRequestSQL $logsRequestSQL */
     private function getLogsRequestSQL()
     {
         return $this->getObjectInstancier()->get(LogsRequestSQL::class);
@@ -68,14 +66,14 @@ class LogsController extends Controller
         $this->verifUser();
         $this->title = "Tedetis : Journal d'évènements";
 
-        $authoritySQL = new AuthoritySQL($this->getSQLQuery());
+        $authoritySQL = $this->getObjectInstancier()->get(AuthoritySQL::class);
 
         $h1_title = "Journal d'évènements";
 
-        $moduleSQL = new ModuleSQL($this->getSQLQuery());
+        $moduleSQL = $this->getObjectInstancier()->get(ModuleSQL::class);
         $this->module_list = $moduleSQL->getActiveModuleList();
 
-        $logsSQL = new LogsSQL($this->getSQLQuery());
+        $logsSQL = $this->getObjectInstancier()->get(LogsSQL::class);
         $this->loglevel_list = $logsSQL->getLogLevelList();
 
         if ($this->date_debut < $logs_history_date_max) {
@@ -100,7 +98,7 @@ class LogsController extends Controller
             $this->authorities_list = $authoritySQL->getAll();
             $authority_id = $this->fauthority;
         } elseif ($this->me->isGroupAdmin()) {
-            $groupSQL = new GroupSQL($this->getSQLQuery());
+            $groupSQL = $this->getObjectInstancier()->get(GroupSQL::class);
             $groupe_info = $groupSQL->getInfo($this->me->get("authority_group_id"));
             $h1_title .= " du groupe «&nbsp;{$groupe_info['name']}&nbsp;»";
             $this->authorities_list = $authoritySQL->getAllGroup($this->me->get("authority_group_id"));
@@ -120,12 +118,12 @@ class LogsController extends Controller
         $this->h1_title = $h1_title;
 
 
-        $this->userSQL = new UserSQL($this->getSQLQuery());
+        $this->userSQL = $this->getObjectInstancier()->get(UserSQL::class);
 
 
         $this->has_logs_request = $this->getLogsRequestSQL()->hasRequest($this->me->get('id'));
 
-        $logsSQL = new LogsSQL($this->getSQLQuery());
+        $logsSQL = $this->getObjectInstancier()->get(LogsSQL::class);
         $offset = ($this->page_number - 1) * $this->taille_page;
         $this->logs_list = $logsSQL->getList($authority_group_id, $authority_id, $user_id, $this->fuser, $this->fmodule, $this->fseverity, $this->fmessage, $visibility, $offset, $this->taille_page, $this->date_debut, $this->date_fin);
 

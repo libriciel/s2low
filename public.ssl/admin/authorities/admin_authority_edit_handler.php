@@ -17,7 +17,7 @@ use S2lowLegacy\Model\AuthoritySQL;
 
 list($objectInstancier, $sqlQuery, $helios_use_passtrans_as_default) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, SQLQuery::class, 'helios_use_passtrans_as_default']
+        [ObjectInstancier::class, SQLQuery::class, 'app.helios_use_passtrans_as_default']
     );
 
 $me = new User();
@@ -64,7 +64,7 @@ $newmailnotif = 'true';
 
 $form_location =  Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=$id");
 
-$authoritySQL = new AuthoritySQL($sqlQuery);
+$authoritySQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(AuthoritySQL::class);
 
 if (! $authoritySQL->verifDepartmentAndDistrict($department, $district)) {
     Helpers::exitOrDisplayError(

@@ -18,7 +18,7 @@ class GetTransactionStatusTest extends S2lowIntegrationTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
+        $this->actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -65,7 +65,10 @@ class GetTransactionStatusTest extends S2lowIntegrationTestCase
 
         $_GET['transaction'] = $transactionId;
 
-        $client = $this->getAuthenticatedClientWithUserLoggedAs($userRole);
+
+        $client = $this->client;
+        $this->setUserWithRole($userRole);
+
         $client->request('GET', '/modules/actes/actes_transac_get_status.php', [
             'transaction' => $transactionId,
         ]);

@@ -13,7 +13,7 @@ class AuthoritySQLTest extends S2lowTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->authoritySQL = new AuthoritySQL($this->getSQLQuery());
+        $this->authoritySQL = self::getContainer()->get(AuthoritySQL::class);
     }
 
     public function testGetInfo()
@@ -37,7 +37,7 @@ class AuthoritySQLTest extends S2lowTestCase
     public function testGetSAEProperties()
     {
         $this->authoritySQL->getSAEProperties();
-        $this->noAssertion();
+        self::expectNotToPerformAssertions();
     }
 
     public function testGetSAEPropertiesType()
@@ -106,12 +106,13 @@ class AuthoritySQLTest extends S2lowTestCase
     public function testGetAllForExport()
     {
         $info = $this->authoritySQL->getAllForExport();
+
         $this->assertEquals(
-            array (
+            [
                 0 =>
-                    array (
+                    [
                         'name' => 'Bourg-en-Bresse',
-                        'email' => null,
+                        'email' => '',
                         'siren' => '123456789',
                         'address' => null,
                         'postal_code' => null,
@@ -122,12 +123,12 @@ class AuthoritySQLTest extends S2lowTestCase
                         'district' => '1',
                         'status' => 1,
                         'group_name' => 'Groupe de test',
-                        'description' => 'Conseil régional',
-                    ),
+                        'description' => 'Région',
+                    ],
                 1 =>
-                    array (
+                    [
                         'name' => 'Saint-Andre de Corcy',
-                        'email' => null,
+                        'email' => 'email',
                         'siren' => '999999999',
                         'address' => null,
                         'postal_code' => null,
@@ -139,8 +140,24 @@ class AuthoritySQLTest extends S2lowTestCase
                         'status' => 1,
                         'group_name' => 'Groupe de test',
                         'description' => null,
-                    ),
-            ),
+                    ],
+                2 =>
+                    [
+                        "name" => "une nouvelle authority",
+                        "email" => null,
+                        "siren" => "123456780",
+                        "address" => null,
+                        "postal_code" => null,
+                        "city" => null,
+                        "telephone" => null,
+                        "fax" => null,
+                        "department" => null,
+                        "district" => null,
+                        "status" => 1,
+                        "group_name" => "Groupe de test",
+                        "description" => null,
+                    ],
+            ],
             $info
         );
     }

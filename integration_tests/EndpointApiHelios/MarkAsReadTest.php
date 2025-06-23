@@ -16,7 +16,7 @@ class MarkAsReadTest extends S2lowIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+        $this->heliosTransactionsSQL = self::getContainer()->get(HeliosTransactionsSQL::class);
     }
 
     public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
@@ -26,15 +26,15 @@ class MarkAsReadTest extends S2lowIntegrationTestCase
 
     public function testShouldMarkAsRead(): void
     {
-        $this->createUserWithDefaultCertificatAs(UserRole::Utilisateur);
-
         $collectiviteId = 1;
         $filename = 'filename.xml';
 
         $PESRetourId = $this->addPESRetourToCollectivite($collectiviteId, $filename);
         $_GET['id'] = $PESRetourId;
 
-        $client = $this->getAuthenticatedClientAttachedToDefaultCertificat();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
+
         $client->request(
             'GET',
             '/modules/helios/api/helios_change_status.php',

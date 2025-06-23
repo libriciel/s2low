@@ -3,12 +3,11 @@
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\ShellCommand;
 
-class AntivirusTest extends S2lowSimpleTestCase
+class AntivirusTest extends S2lowTestCase
 {
     protected function setUp(): void
     {
         parent::setUp();
-        $this->getObjectInstancier()->set('antivirus_command', 'ls');
     }
 
     private function getAntivirus()

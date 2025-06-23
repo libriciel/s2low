@@ -3,18 +3,19 @@
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Class\User;
 
-$module = new Module();
+$module = LegacyObjectsManager::getLegacyObjectInstancier()->get(Module::class);
 if (!$module->initByName("helios")) {
     $_SESSION["error"] = "Erreur d'initialisation du module";
     header("Location: " . WEBSITE_SSL);
     exit();
 }
 
-$me = new User();
+$me = LegacyObjectsManager::getLegacyObjectInstancier()->get(User::class);
 
 if (!$me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
@@ -35,7 +36,7 @@ if ($module->getParam("paper") == "on") {
 }
 
 
-$rgsConnexion = new RgsConnexion();
+$rgsConnexion = LegacyObjectsManager::getLegacyObjectInstancier()->get(RgsConnexion::class);
 if (! $rgsConnexion->isRgsConnexion()) {
     $_SESSION["error"] = "Votre certificat n'est pas conforme au RGS, vous ne pouvez pas télétransmettre !";
     header("Location: " . Helpers::getLink("/modules/helios/index.php"));
@@ -45,7 +46,7 @@ if (! $rgsConnexion->isRgsConnexion()) {
 
 $myAuthority = new Authority($me->get("authority_id"));
 
-$doc = new HTMLLayout();
+$doc = LegacyObjectsManager::getLegacyObjectInstancier()->get(HTMLLayout::class);
 
 $js = <<<EOJS
 <script type="text/javascript">

@@ -2,6 +2,7 @@
 
 namespace S2low\Tests\Services;
 
+use Monolog\Level;
 use S2low\Services\PdfValidator;
 use S2lowTestCase;
 use UnexpectedValueException;
@@ -16,7 +17,7 @@ class PdfValidatorTest extends S2lowTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->pdfValidator = $this->getObjectInstancier()->get(PdfValidator::class);
+        $this->pdfValidator = $this->getPdfValidator();
     }
 
     public function testCheckValidFile()
@@ -40,9 +41,19 @@ class PdfValidatorTest extends S2lowTestCase
         } catch (\Exception $exception) {
             //Juste là pour permettre le test après.
         }
-        $this->assertEquals(
-            "Fichier pdf corrompu : test_pdf_corrupted.pdf",
-            $this->getLogRecords()[0]["message"]
+
+        $this->assertTrue(
+            $this->testHandler->hasRecord(
+                "Fichier pdf corrompu : test_pdf_corrupted.pdf",
+                Level::Error
+            )
+        );
+    }
+
+    private function getPdfValidator(): PdfValidator
+    {
+        return new PdfValidator(
+            $this->s2lowLogger
         );
     }
 }

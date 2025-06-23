@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Boot\S2lowBootstrap;
 use S2lowLegacy\Class\S2lowLogger;
 
 require_once(__DIR__ . "/../../init/init.php");

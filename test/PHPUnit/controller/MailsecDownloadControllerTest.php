@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable;
+use S2lowLegacy\Class\mailsec\MailTransactionSQL;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Controller\MailsecDownloadController;
 use S2lowLegacy\Lib\Environnement;
@@ -22,24 +24,29 @@ class MailsecDownloadControllerTest extends S2lowTestCase
 
         $tmpFolder = new TmpFolder();
         $mail_files_upload_root = $tmpFolder->create();
+        $mail_files_without_transac_dir = $mail_files_upload_root;
         mkdir($mail_files_upload_root . "/" . $this->fn_download_payload);
         file_put_contents(
             $this->getArchivePath($mail_files_upload_root),
             "test"
         );
-        $this->getObjectInstancier()->set('mail_files_upload_root', $mail_files_upload_root);
 
+        $mailsecDownloadController = self::getContainer()->get(MailsecDownloadController::class);
+        $mailIncludedFilesCloudStorable = new MailIncludedFilesCloudStorable(
+            self::getContainer()->get(MailTransactionSQL::class),
+            $mail_files_upload_root,
+            $mail_files_without_transac_dir
+        );
+        self::getContainer()->set(MailIncludedFilesCloudStorable::class, $mailIncludedFilesCloudStorable);
 
-        $mailsecDownloadController = $this->getObjectInstancier()->get(MailsecDownloadController::class);
-
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('filename', 'mail.zip');
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('root', $this->fn_download_payload);
+        self::getContainer()->get(Environnement::class)->get()->set('filename', 'mail.zip');
+        self::getContainer()->get(Environnement::class)->get()->set('root', $this->fn_download_payload);
 
         ob_start();
         try {
             $mailsecDownloadController->downloadAction();
         } catch (Exception $e) {
-/* Nothing to do */
+            /* Nothing to do */
         }
         $contents = ob_get_contents();
         ob_end_clean();
@@ -58,24 +65,30 @@ class MailsecDownloadControllerTest extends S2lowTestCase
 
         $tmpFolder = new TmpFolder();
         $mail_files_upload_root = $tmpFolder->create();
+        $mail_files_without_transac_dir = $mail_files_upload_root;
+
         mkdir($mail_files_upload_root . "/" . $this->fn_download_payload);
         copy(
             __DIR__ . "/fixtures/mailsec/mail.zip",
             $this->getArchivePath($mail_files_upload_root)
         );
 
-        $this->getObjectInstancier()->set('mail_files_upload_root', $mail_files_upload_root);
+        $mailsecDownloadController = self::getContainer()->get(MailsecDownloadController::class);
+        $mailIncludedFilesCloudStorable = new MailIncludedFilesCloudStorable(
+            self::getContainer()->get(MailTransactionSQL::class),
+            $mail_files_upload_root,
+            $mail_files_without_transac_dir
+        );
+        self::getContainer()->set(MailIncludedFilesCloudStorable::class, $mailIncludedFilesCloudStorable);
 
-        $mailsecDownloadController = $this->getObjectInstancier()->get(MailsecDownloadController::class);
-
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('filename', 'foo.txt');
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('root', $this->fn_download_payload);
+        self::getContainer()->get(Environnement::class)->get()->set('filename', 'foo.txt');
+        self::getContainer()->get(Environnement::class)->get()->set('root', $this->fn_download_payload);
 
         ob_start();
         try {
             $mailsecDownloadController->downloadAction();
         } catch (Exception $e) {
-/* Nothing to do */
+            /* Nothing to do */
         }
         $contents = ob_get_contents();
         ob_end_clean();
@@ -95,18 +108,24 @@ class MailsecDownloadControllerTest extends S2lowTestCase
 
         $tmpFolder = new TmpFolder();
         $mail_files_upload_root = $tmpFolder->create();
+        $mail_files_without_transac_dir = $mail_files_upload_root;
+
         mkdir($mail_files_upload_root . "/" . $this->fn_download_payload);
         copy(
             __DIR__ . "/fixtures/mailsec/mail.zip",
             $this->getArchivePath($mail_files_upload_root)
         );
 
-        $this->getObjectInstancier()->set('mail_files_upload_root', $mail_files_upload_root);
+        $mailsecDownloadController = self::getContainer()->get(MailsecDownloadController::class);
+        $mailIncludedFilesCloudStorable = new MailIncludedFilesCloudStorable(
+            self::getContainer()->get(MailTransactionSQL::class),
+            $mail_files_upload_root,
+            $mail_files_without_transac_dir
+        );
+        self::getContainer()->set(MailIncludedFilesCloudStorable::class, $mailIncludedFilesCloudStorable);
 
-        $mailsecDownloadController = $this->getObjectInstancier()->get(MailsecDownloadController::class);
-
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('filename', 'fooé.txt');
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('root', $this->fn_download_payload);
+        self::getContainer()->get(Environnement::class)->get()->set('filename', 'fooé.txt');
+        self::getContainer()->get(Environnement::class)->get()->set('root', $this->fn_download_payload);
 
         ob_start();
         try {
@@ -130,7 +149,7 @@ class MailsecDownloadControllerTest extends S2lowTestCase
     public function testDownloadWhenFileDoesNotExist()
     {
         $this->createMailTransaction();
-        $mailsecDownloadController = $this->getObjectInstancier()->get(MailsecDownloadController::class);
+        $mailsecDownloadController = self::getContainer()->get(MailsecDownloadController::class);
 
         $this->expectException(RedirectException::class);
         $mailsecDownloadController->downloadAction();

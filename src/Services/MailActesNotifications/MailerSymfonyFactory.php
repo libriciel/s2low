@@ -18,8 +18,10 @@ class MailerSymfonyFactory
      * @param \Symfony\Component\Mailer\MailerInterface $mailer
      */
 
-    public function __construct(MailerInterface $mailer)
-    {
+    public function __construct(
+        MailerInterface $mailer,
+        private readonly string $tdt_from_email
+    ) {
         $this->mailer = $mailer;
     }
 
@@ -28,6 +30,9 @@ class MailerSymfonyFactory
      */
     public function getInstance(): MailerSymfony
     {
-        return new MailerSymfony($this->mailer);
+        return new MailerSymfony(
+            $this->mailer,
+            $this->tdt_from_email
+        );
     }
 }

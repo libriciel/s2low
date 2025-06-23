@@ -31,6 +31,7 @@ class ActesArchiveControler
     private ActesEnvelopeSQL $actesEnvelopeSQL;
     private ActesTypePJSQL $actesTypePJSQL;
     private ActesCloudStorage $actesEnvelopeCloudStorage;
+    private BordereauPdfGenerator $bordereauPdfGenerator;
 
     /**
      * @throws \S2lowLegacy\Lib\UnrecoverableException
@@ -45,6 +46,7 @@ class ActesArchiveControler
         ActesEnvelopeSQL $actesEnvelopeSQL,
         ActesTypePJSQL $actesTypePJSQL,
         ActesCloudStorage $cloudStorage,
+        BordereauPdfGenerator $bordereauPdfGenerator
     ) {
         $this->pastellWrapperFactory = $pastellWrapperFactory;
         $this->actesTransactionsSQL = $actesTransactionsSQL;
@@ -55,6 +57,7 @@ class ActesArchiveControler
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
         $this->actesTypePJSQL = $actesTypePJSQL;
         $this->actesEnvelopeCloudStorage = $cloudStorage;
+        $this->bordereauPdfGenerator = $bordereauPdfGenerator;
     }
 
     /**
@@ -77,7 +80,6 @@ class ActesArchiveControler
      */
     public function sendArchive(int $transaction_id): void
     {
-
         $this->logger->info("Envoi de La transaction $transaction_id sur le SAE");
         if (! $this->isTransactionInGoodStatus($transaction_id)) {
             return;
@@ -100,6 +102,7 @@ class ActesArchiveControler
                 $message .=  " - id_d=$id_d";
             }
             $this->logger->error($message);
+
             $this->actesTransactionsSQL->updateStatus(
                 $transaction_id,
                 ActesStatusSQL::STATUS_ERREUR_SAE_DOC_INDISPONIBLES,
@@ -133,7 +136,6 @@ class ActesArchiveControler
             $transactionsInfo = $this->actesTransactionsSQL->getInfo($transaction_id);
 
             $this->authoritySQL->verifHasPastell($transactionsInfo[ActesTransactionsSQL::AUTHORITY_ID]);
-
             $actesFileForArchive = $this->prepareTransfert($transaction_id, $tmp_folder);
 
             $id_d = $this->createPastellDocument($transaction_id);
@@ -199,12 +201,9 @@ class ActesArchiveControler
         $date_postage = $this->actesTransactionsSQL->getStatusInfo($transactionsInfo['id'], 1);
         $actesFilesForSAE->date_postage = date("d/m/Y", strtotime($date_postage['date']));
 
-        $objectInstancier = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
-        $bordereauPdfGenerator = $objectInstancier->get(BordereauPdfGenerator::class);
-
         $actesFilesForSAE->bordereau_filepath = $tmp_folder . "/bordereau_acquit.pdf";
 
-        $bordereauPdfGenerator->generate($transaction_id, $actesFilesForSAE->bordereau_filepath, false, "F");
+        $this->bordereauPdfGenerator->generate($transaction_id, $actesFilesForSAE->bordereau_filepath, false, "F");
 
         array_shift($actesFile);
         array_shift($actesFile);

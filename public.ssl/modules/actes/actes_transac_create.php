@@ -9,9 +9,11 @@ use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\Database;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\FileUploader;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\RgsConnexion;
@@ -23,7 +25,7 @@ use S2lowLegacy\Lib\SQLQuery;
 $tooManyAnnexes = isset(error_get_last()["message"]) && error_get_last(
 )["message"] == "Maximum number of allowable file uploads has been exceeded";
 
-list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([ObjectInstancier::class, SQLQuery::class]);
 
 $errorMsg = "";
@@ -44,28 +46,24 @@ if ($tooManyAnnexes) {
 }
 
 // Instanciation du module courant
-$module = new Module();
+$module = LegacyObjectsManager::getLegacyObjectInstancier()->get(Module::class);
 if (!$module->initByName("actes")) {
     Helpers:: returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
 }
 
-$me = new User();
-
+$me = LegacyObjectsManager::getLegacyObjectInstancier()->get(User::class);
 if (!$me->authenticate()) {
     Helpers:: returnAndExit(1, "Échec de l'authentification", Helpers::getLink("connexion-status"));
 }
-
 if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->checkDroit($module->get("name"), 'CS')) {
     Helpers:: returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
-
 if ($module->getParam("paper") == "on") {
     Helpers:: returnAndExit(1, "Mode « papier » actif. Accès interdit.", Helpers::getLink("/modules/actes/"));
 }
-
 $must_signed = Helpers::getVarFromPost("must_signed", true);
 
-$rgsConnexion = new RgsConnexion();
+$rgsConnexion = LegacyObjectsManager::getLegacyObjectInstancier()->get(RgsConnexion::class);
 if (!$must_signed && !$rgsConnexion->isRgsConnexion()) {
     Helpers:: returnAndExit(
         1,
@@ -73,8 +71,6 @@ if (!$must_signed && !$rgsConnexion->isRgsConnexion()) {
         Helpers::getLink("/modules/actes/")
     );
 }
-
-
 $myAuthority = new Authority($me->get("authority_id"));
 
 // Recuperation des variables du POST
@@ -233,10 +229,9 @@ for ($i = 1; $i <= 5; $i++) {
     $classification[] = ${"classif" . $i};
 }
 
-$actesClassificationCodesSQL = new ActesClassificationCodesSQL($sqlQuery);
+$actesClassificationCodesSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(ActesClassificationCodesSQL::class);
 $classification_description = $actesClassificationCodesSQL->getDescription($myAuthority->getId(), $classification);
 $trans->set("classification_string", $classification_description);
-
 $trans->set("classification_date", ActesClassification:: getLastRevisionDate($myAuthority->getId()));
 
 
@@ -460,7 +455,6 @@ if (!$env->checkArchiveSize()) {
 
 // Purge des fichiers intermédiaires
 $env->purgeFiles();
-
 
 if (!$env->save()) {
     $msg = "Erreur lors de l'enregistrement de l'enveloppe :\n" . $env->getErrorMsg();

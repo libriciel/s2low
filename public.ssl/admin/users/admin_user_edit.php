@@ -5,6 +5,7 @@ use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Group;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
@@ -185,7 +186,7 @@ if ($him->getId()) {
     $userService_list = $serviceUser->getServiceFromUser($him->getId());
 }
 
-$userSQL = new UserSQL($sqlQuery);
+$userSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(UserSQL::class);
 
 $ident_method_id = $userSQL->getIdentificationMethod($him->getId() ?: $new_id);
 $ident_method_libelle = $userSQL->getIdentificationMethodeLibelle($ident_method_id);

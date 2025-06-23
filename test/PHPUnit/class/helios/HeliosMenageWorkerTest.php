@@ -6,7 +6,10 @@ namespace PHPUnit\class\helios;
 
 use Exception;
 use HeliosUtilitiesTestTrait;
+use Monolog\Level;
 use S2lowLegacy\Class\helios\HeliosMenageWorker;
+use S2lowLegacy\Class\helios\PESAllerCloudStorable;
+use S2lowLegacy\Class\helios\PESAllerCloudStorage;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
@@ -16,9 +19,6 @@ class HeliosMenageWorkerTest extends S2lowTestCase
 {
     use HeliosUtilitiesTestTrait;
 
-    private TmpFolder $tmpFolder;
-    private string $helios_files_upload_root;
-    private string $repertoirePesAllerSansTransaction;
     private HeliosMenageWorker $worker;
     private OpenStackSwiftWrapper $swift;
     private HeliosTransactionsSQL $transactionsSQL;
@@ -36,23 +36,19 @@ class HeliosMenageWorkerTest extends S2lowTestCase
         $this->tmpFolder = new TmpFolder();
         $this->helios_files_upload_root = $this->tmpFolder->create();
         $this->repertoirePesAllerSansTransaction = $this->tmpFolder->create();
-        $this->getObjectInstancier()->set('helios_files_upload_root', $this->helios_files_upload_root);
-        $this->getObjectInstancier()->set('repertoirePesAllerSansTransaction', $this->repertoirePesAllerSansTransaction);
-
         $this->swift = $this->getMockBuilder(OpenStackSwiftWrapper::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->getObjectInstancier()->set(OpenStackSwiftWrapper::class, $this->swift);
 
-        $this->worker = $this->getObjectInstancier()->get(HeliosMenageWorker::class);
+        $this->worker = $this->getHeliosMenageWorker();
 
-        $this->transactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+        $this->transactionsSQL = self::getContainer()->get(HeliosTransactionsSQL::class);
     }
 
     /**
      * This method is called after each test.
      */
-    protected function tearDown(): void
+    public function tearDown(): void
     {
         $this->tmpFolder->delete($this->helios_files_upload_root);
         $this->tmpFolder->delete($this->repertoirePesAllerSansTransaction);
@@ -74,9 +70,11 @@ class HeliosMenageWorkerTest extends S2lowTestCase
         $this->swift->expects(self::never())->method('fileExistsOnCloud');
         $this->worker->work(1);
         static::assertFileExists($pes_aller_path);
-        $this->assertLogMessage(
-            'File ab3321d34d3fb32b52332befa534c9854fff677b too young to die : not deleted',
-            1
+        self::assertTrue(
+            $this->testHandler->hasRecord(
+                'File ab3321d34d3fb32b52332befa534c9854fff677b too young to die : not deleted',
+                Level::Debug
+            )
         );
     }
 
@@ -92,13 +90,18 @@ class HeliosMenageWorkerTest extends S2lowTestCase
         static::assertFileExists(
             $this->repertoirePesAllerSansTransaction . '/ab3321d34d3fb32b52332befa534c9854fff677b'
         );
-        $this->assertLogMessage(
-            'File ' . $pes_aller_path . ' not existing on cloud : not deleted',
-            2
+
+        self::assertTrue(
+            $this->testHandler->hasRecord(
+                'File ' . $pes_aller_path . ' not existing on cloud : not deleted',
+                Level::Info
+            )
         );
-        $this->assertLogMessage(
-            "Unable to find object id for the file $pes_aller_path",
-            3
+        self::assertTrue(
+            $this->testHandler->hasRecord(
+                "Unable to find object id for the file $pes_aller_path",
+                Level::Notice
+            )
         );
     }
 
@@ -114,9 +117,12 @@ class HeliosMenageWorkerTest extends S2lowTestCase
         static::assertFileDoesNotExist(
             $this->repertoirePesAllerSansTransaction . '/ab3321d34d3fb32b52332befa534c9854fff677b'
         );
-        $this->assertLogMessage(
-            "Deleting file : $pes_aller_path",
-            2
+
+        self::assertTrue(
+            $this->testHandler->hasRecord(
+                "Deleting file : $pes_aller_path",
+                Level::Info
+            )
         );
     }
 
@@ -147,5 +153,28 @@ class HeliosMenageWorkerTest extends S2lowTestCase
             touch($pes_aller_path, 0);
         }
         return $pes_aller_path;
+    }
+
+    private function getHeliosMenageWorker(): HeliosMenageWorker
+    {
+        return new HeliosMenageWorker(
+            $this->getPesAllerCloudStorage()
+        );
+    }
+
+    private function getPesAllerCloudStorage(): PESAllerCloudStorage
+    {
+        $pesAllerCloudStorable = new PesAllerCloudStorable(
+            $this->helios_files_upload_root,
+            self::getContainer()->get(HeliosTransactionsSQL::class),
+            $this->repertoirePesAllerSansTransaction,
+        );
+
+        return new PesAllerCloudStorage(
+            $pesAllerCloudStorable,
+            $this->swift,
+            $this->logger,
+            openstack_enable: false
+        );
     }
 }
