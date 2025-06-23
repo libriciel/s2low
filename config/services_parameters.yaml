@@ -1,0 +1,5 @@
+imports:
+  - { resource: services_actes.yaml }
+  - { resource: services_cloud_provider.yaml }
+parameters:
+  app.antivirus_command: '/usr/bin/clamdscan'

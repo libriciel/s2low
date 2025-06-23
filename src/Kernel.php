@@ -30,11 +30,9 @@ class Kernel extends BaseKernel
         $container->import('../config/{packages}/' . $this->environment . '/*.yaml');
 
         if ($this->environment !== 'test') {
-            $container->import('../config/services_cloud_provider.yaml');
-            $container->import('../config/services_actes.yaml');
+            $container->import('../config/services_parameters.yaml');
         } else {
-            $container->import('../config/services_cloud_provider_test.yaml');
-            $container->import('../config/services_actes_test.yaml');
+            $container->import('../config/services_parameters_test.yaml');
         }
 
         if (is_file(\dirname(__DIR__) . '/config/services.yaml')) {
