@@ -39,7 +39,7 @@ class S2lowTestListener implements \PHPUnit\Framework\TestListener
 
     public function startTestSuite(\PHPUnit\Framework\TestSuite $suite): void
     {
-        new Kernel('test', (bool) $_SERVER['APP_DEBUG']);
+        new Kernel('test', false);
         $postgreSQLControler = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
             ->get(PostgreSQLController::class);
 
@@ -52,7 +52,7 @@ class S2lowTestListener implements \PHPUnit\Framework\TestListener
 
     public function startTest(\PHPUnit\Framework\Test $test): void
     {
-        new Kernel('test', (bool) $_SERVER['APP_DEBUG']);
+        new Kernel('test', false);
         $sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
         $sqlQuery->query("SELECT SETVAL('users_id_seq', (SELECT MAX(id)+1 FROM users))");
         $sqlQuery->query("SELECT SETVAL('authority_siret_id_seq', (SELECT MAX(id)+1 FROM authority_siret))");
