@@ -1,21 +1,12 @@
 parameters:
-  actes.ministere.url: '%env(ACTES_MINISTERE_URL)%'
-  actes.ministere.authentification_type: '%env(ACTES_MINISTERE_AUTHENTICATION)%'
-  actes.ministere.login: '%env(ACTES_MINISTERE_LOGIN)%'
-  actes.ministere.password: '%env(ACTES_MINISTERE_PASSWORD)%'
-  actes.ministere.client_certificat: '%env(ACTES_MINISTERE_CERTIFICATE)%'
-  actes.ministere.client_certificate_key: '%env(ACTES_MINISTERE_CERTIFICATE_KEY)%'
-  actes.ministere.client_certificate_key_password: '%env(ACTES_MINISTERE_CERTIFICATE_KEY_PASS)%'
-  actes.ministere.server_certificate_path: '%env(ACTES_MINISTERE_SERVER_CERTIFICATE_PATH)%'
-  actes.ministere.adapt_protocol: '%env(ACTES_MINISTERE_ADAPT_PROTOCOL)%'
-  actes.use_legacy_protocol_default: true
-  actes.use_legacy_protocol: '%env(bool:default:actes.use_legacy_protocol_default:ACTES_MINISTERE_USE_LEGACY_PROTOCOL)%'
-  actes.ministere_acronyme: 'MI'
-  # Répertoire de stockage des fichiers envoyés par les utilisateurs (archives .tar.gz)
-  actes.files_upload_root: '/data/tdt-workspace/actes/uploads'
-  # Répertoire de stockage des vieux fichiers envoyés par les utilisateurs (archives .tar.gz) sans transaction associée
-  actes.repertoireEnveloppeSansTransaction: '/data/tdt-workspace/actes/sans_transaction'
-  # Répertoire temporaire de stockage des réponses du ministère par mail
-  actes.response_tmp_local_path: '/data/tdt-workspace/actes/response_tmp'
-  # Répertoire temporaire de stockage des réponses en erreur du ministère
-  actes.response_error_path: '/data/tdt-workspace/actes/response_error'
+  actes:
+    ministere:
+      url: '%env(ACTES_MINISTERE_URL)%'
+      authentification_type: '%env(ACTES_MINISTERE_AUTHENTICATION)%'
+      login: '%env(ACTES_MINISTERE_LOGIN)%'
+      password: '%env(ACTES_MINISTERE_PASSWORD)%'
+      client_certificat: '%env(ACTES_MINISTERE_CERTIFICATE)%'
+      client_certificate_key: '%env(ACTES_MINISTERE_CERTIFICATE_KEY)%'
+      client_certificate_key_password: '%env(ACTES_MINISTERE_CERTIFICATE_KEY_PASS)%'
+      server_certificate_path: '%env(ACTES_MINISTERE_SERVER_CERTIFICATE_PATH)%'
+      adapt_protocol: '%env(ACTES_MINISTERE_ADAPT_PROTOCOL)%'
