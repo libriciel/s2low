@@ -1,5 +1,5 @@
 parameters:
-  actes.ministere.url.: 'http://simulateur/Simulateur/actesPost'
+  actes.ministere.url: 'http://simulateur/Simulateur/actesPost'
   actes.ministere.authentification_type: 'NONE'
   actes.ministere.login: ''
   actes.ministere.password: ''
