@@ -1,0 +1,12 @@
+parameters:
+  actes:
+    ministere:
+      url: 'http://simulateur/Simulateur/actesPost'
+      authentification_type: 'NONE'
+      login: ''
+      password: ''
+      client_certificat: ''
+      client_certificate_key: ''
+      client_certificate_key_password: ''
+      server_certificate_path: ''
+      adapt_protocol: 'false'
