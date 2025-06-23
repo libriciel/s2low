@@ -52,6 +52,8 @@ when@dev:
 when@test:
   monolog:
     handlers:
+      critical_mailer: null
+      symfony_mailer: null
       main:
         type: fingers_crossed
         action_level: error
