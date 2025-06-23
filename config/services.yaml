@@ -1,7 +1,4 @@
 # config/services.yaml
-imports:
-  - { resource: services_cloud_provider.yaml }
-  - { resource: services_actes.yaml }
 parameters:
   app.database_name: '%env(POSTGRES_DB)%'
   app.database_host: '%env(POSTGRES_HOST)%'
