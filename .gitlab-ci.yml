@@ -95,7 +95,7 @@ unit_test:
         DONT_RETRIEVE_VALIDCA: "true"
         XDEBUG_MODE: coverage
         APP_ENV: test
-        MAILER_DSN: in-memory://
+        MAILER_DSN: 'smtp://null'
     script:
         - cd /var/www/s2low/
         - composer test-cover
