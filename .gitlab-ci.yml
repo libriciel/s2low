@@ -99,7 +99,7 @@ unit_test:
         MAILER_DSN: smtp://mailsec:25?verify_peer=0
     script:
         - echo "Scanning with verbose output..."
-        - /usr/bin/clamdscan -r -v /var/www/s2low/test/PHPUnit/class/fixtures/classification.xml || echo "Clamscan exited with code $?"
+        - /usr/bin/clamdscan -v /var/www/s2low/test/PHPUnit/class/fixtures/classification.xml || echo "Clamscan exited with code $?"
         - cd /var/www/s2low/
         - composer test-cover
         - cp -rf coverage $CI_PROJECT_DIR
