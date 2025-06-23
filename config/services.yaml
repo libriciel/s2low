@@ -63,7 +63,6 @@ parameters:
   app.mail_file_upload_root: '%app.workspace_directory%mail/'
   app.mail_files_without_transac_dir: '%app.mail_file_upload_root%%sans_transaction/'
   app.openstack_enable.default: false
-  app.antivirus_command: '/usr/bin/clamdscan'
   app.pdf_stamp_url.default: 'http://pdf-stamp:8080'
   app.pdf_stamp_url: '%env(default:app.pdf_stamp_url.default:PDF_STAMP_URL)%'
   app.image_for_stamp.default: '%kernel.project_dir%/public.ssl/custom/images/s2low-stamp.png"'

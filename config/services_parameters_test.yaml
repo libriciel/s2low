@@ -1,0 +1,5 @@
+imports:
+  - { resource: services_actes_test.yaml }
+  - { resource: services_cloud_provider_test.yaml }
+parameters:
+  app.antivirus_command: 'ls'
