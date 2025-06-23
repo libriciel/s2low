@@ -7,24 +7,20 @@ namespace IntegrationTests;
 use Exception;
 use S2low\Enum\ModulePermission;
 use S2low\Enum\UserRole;
+use S2lowLegacy\Lib\PemCertificateFactory;
 
 /**
  *
  */
 class WebIntegrationTest extends S2lowIntegrationTestCase
 {
-    protected function tearDown(): void
-    {
-
-        parent::tearDown();
-        self::ensureKernelShutdown();
-    }
     /**
      * @throws \Exception
      */
     public function testCertificate(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $_GET = ['name' => 'ac-libriciel-personnel-g2.pem'];// 2/ Le client symfony ne modifie pas la variable _SERVER
         $crawler = $client->request('GET', 'admin/utilities/certificate.php');
@@ -41,7 +37,8 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testAddSirenController(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $_POST = [ 'id' => '1','siren' => '212901136'];
 
@@ -60,7 +57,8 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testListGroups(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $crawler = $client->request('POST', '/admin/groups/list_groups.php');
         static::assertMatchesRegularExpression(     //Le groupe de test est bien présent dans la page
@@ -75,7 +73,8 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testListCertificates(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $crawler = $client->request('GET', 'admin/utilities/certificate_list.php');
         static::assertMatchesRegularExpression(     //L'AC personnel ADULLACT G2 est bien présent'
@@ -90,11 +89,12 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testInfoConnexion(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $crawler = $client->request('GET', 'api/info-connexion.php');
         static::assertMatchesRegularExpression(     //On a bien le mail de l'user
-            '#eric@sigmalis.com#',
+            '#eric\+user@with-certif.com#',
             $crawler->html()
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
@@ -105,7 +105,8 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testConnexion()
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $crawler = $client->request('GET', 'api/test-connexion.php');
         static::assertMatchesRegularExpression(     //On a bien le mail de l'user
@@ -120,23 +121,8 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testRGS(): void
     {
-        $certificatRgsDeuxEtoiles = $this->pemCertificateFactory->getFromString(
-            file_get_contents(__DIR__ . '/../test/api/Eric_Pommateau_RGS_2_etoiles.pem')
-        );
-
-        $this->createUser(
-            UserRole::SuperAdministrateur,
-            $certificatRgsDeuxEtoiles->getContent(),
-            $certificatRgsDeuxEtoiles->getHash(),
-            ModulePermission::Modification
-        );
-
-        $client = $this->createClientWithCertificat(
-            $certificatRgsDeuxEtoiles->getContent(),
-            $certificatRgsDeuxEtoiles->getContentStrippedFromBegin()
-        );
-
-        $crawler = $client->request('GET', 'api/test-rgs.php');
+        $this->logAs(2);
+        $crawler = $this->client->request('GET', 'api/test-rgs.php');
         static::assertMatchesRegularExpression(     //Le certificat n'est pas RGS => KO
             '#KO#',
             $crawler->html()
@@ -149,7 +135,8 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testAncienSystemeNotif(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'admin/ancien_systeme_notif.php');
@@ -165,7 +152,8 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testAdminIndex(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'admin/index.php');
         static::assertMatchesRegularExpression(
@@ -180,7 +168,8 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testPasDeSAE(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'admin/pas-de-sae.php');
         static::assertMatchesRegularExpression(
@@ -195,7 +184,8 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testStats(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'admin/stats.php');
         static::assertMatchesRegularExpression(
@@ -210,7 +200,8 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testEditAnnuaire(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
         $crawler = $client->request('GET', 'modules/mail/edit-annuaire.php');
         static::assertMatchesRegularExpression(

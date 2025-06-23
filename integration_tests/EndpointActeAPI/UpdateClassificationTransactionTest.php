@@ -23,7 +23,9 @@ class UpdateClassificationTransactionTest extends S2lowIntegrationTestCase
         $api = 1;
         $_POST['api'] = $api;
 
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
+
         $client->request('POST', '/modules/actes/actes_classification_request.php', [
             'api' => $api,
         ]);

@@ -1,7 +1,9 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesRetriever;
+use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 
 class ActesEnveloppeTest extends S2lowTestCase
 {
@@ -29,10 +31,13 @@ class ActesEnveloppeTest extends S2lowTestCase
     {
         $tmpFolder = new TmpFolder();
         $my_tmp_folder = $tmpFolder->create();
-        $this->getObjectInstancier()->set('actes_files_upload_root', $my_tmp_folder);
         file_put_contents("$my_tmp_folder/test.txt", "foo");
-        /** @var ActesRetriever $actesRetriever */
-        $actesRetriever = $this->getObjectInstancier()->get(ActesRetriever::class);
+        $actesRetriever = new ActesRetriever(
+            $my_tmp_folder,
+            self::getContainer()->get(OpenStackSwiftWrapper::class),
+            self::getContainer()->get(S2lowLogger::class)
+        );
+        self::getContainer()->set(ActesRetriever::class, $actesRetriever);
         $file_path = $actesRetriever->getPath("test.txt");
         file_put_contents($file_path, "toto");
         $actesEnvelope = new ActesEnvelope();

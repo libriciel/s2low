@@ -31,6 +31,15 @@ class AuthorityTest extends S2lowTestCase
         );
     }
 
+    public function mails(): array
+    {
+        return[
+            [ 'email','email',''],
+            [ 'broadcast_email','email',''],
+            ['default_broadcast_email','email',''],
+        ];
+    }
+
     /**
      * Test simple d'init utilisant les données en BDD de S2lowTestCase
      * @return void
@@ -44,7 +53,7 @@ class AuthorityTest extends S2lowTestCase
         $authority->set($mailField, $value1);
         $authority->save(false, false);
 
-        $authority1 = new Authority(1);
+        $authority1 = new Authority(2);
         $authority1->init();
         static::assertEquals(
             $value1,
@@ -53,24 +62,12 @@ class AuthorityTest extends S2lowTestCase
         $authority1->set($mailField, $value2);
         $authority1->save(false, false);
 
-        $authority2 = new Authority(1);
+        $authority2 = new Authority(3);
         $authority2->init();
         static::assertEquals(
             $value2,
             $authority2->get($mailField)
         );
-    }
-
-    /**
-     * @return array[]
-     */
-    public function mails(): array
-    {
-        return[
-            [ 'email','email',''],
-            [ 'broadcast_email','email',''],
-            ['default_broadcast_email','email',''],
-        ];
     }
 
     /**

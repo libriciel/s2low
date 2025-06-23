@@ -7,14 +7,21 @@ parameters:
   app.database_host: '%env(POSTGRES_HOST)%'
   app.database_login: '%env(POSTGRES_USER)%'
   app.database_password: '%env(POSTGRES_PASSWORD)%'
+  app.workspace_directory.default: '/data/tdt-workspace/'
+  app.workspace_directory: '%env(default:app.workspace_directory.default:WORKSPACE_DIRECTORY)%'
   app.relative_legacy_ssl_path: 'public.ssl/'
   app.old_timestamp_token_directory: '/data/timestamp-token/'            #TODO : utiliser OLD_TIMESTAMP_TOKEN_DIRECTORY
   app.timestamp_token_retention_nb_days: 781                             #TODO : utiliser HELIOS_RETENTION_RETOURS_NB_JOURS
   app.helios_files_upload_root: '/data/tdt-workspace/helios/sending/'    #TODO : utiliser les variables d'environnement
+  app.actes.files_upload_root: '%app.workspace_directory%actes/uploads'
   app.default_use_prod_notifications: false
   app.use_prod_notifications: '%env(bool:default:app.default_use_prod_notifications:USE_PROD_NOTIFICATIONS)%'
   app.default_actes_appli_trigramme: 'abc'
   app.actes_appli_trigramme: '%env(default:app.default_actes_appli_trigramme:ACTES_APPLI_TRIGRAMME)%'
+  app.actes_appli_quadrigramme.default: 'TACT'
+  app.actes_appli_quadrigramme: '%env(default:app.actes_appli_quadrigramme.default:ACTES_APPLI_QUADRIGRAMME)%'
+  app.actes_dont_valid_signing_certificate.default: 'false'
+  app.actes_dont_valid_signing_certificate: '%env(default:app.actes_dont_valid_signing_certificate.default:ACTES_DONT_VALID_SIGNING_CERTIFICATE)%'
   app.helios_ftp_p_appli: '%env(HELIOS_FTP_P_APPLI)%'
   app.helios_ftp_server: '%env(HELIOS_FTP_SERVER)%'
   app.helios_ftp_port: '%env(HELIOS_FTP_PORT)%'
@@ -34,11 +41,19 @@ parameters:
   app.helios_passtrans_password: '%env(HELIOS_PASSTRANS_PASSWORD)%'
   app.helios_passtrans_sending_destination: '%env(HELIOS_PASSTRANS_SENDING_DESTINATION)%'
   app.helios_passtrans_response_server_path: '%env(HELIOS_PASSTRANS_RESPONSE_SERVER_PATH)%'
+  app.helios_file_root: '%app.workspace_directory%helios/'
+  app.helios_counter_file: '%app.helios_file_root%counter.txt'
+  app.helios_responses_root: '%app.helios_file_root%response/'
+  app.helios_repertoire_pes_aller_sans_transaction: '%app.helios_file_root%%%orphelins/'
   app.use_legacy_bordereau_model: '%env(USE_LEGACY_BORDEREAU_MODEL)%'
-  app.beanstalkd_server: '%env(BEANSTAKLD_SERVER)%'
-  app.beanstalkd_port: '%env(BEANSTAKLD_PORT)%'
-  app.redis_server: '%env(REDIS_SERVER)%'
-  app.redis_port: '%env(REDIS_PORT)%'
+  app.beanstalkd_server.default: 'beanstalkd'
+  app.beanstalkd_server: '%env(default:app.beanstalkd_server.default:BEANSTAKLD_SERVER)%'
+  app.beanstalkd_port.default: '11300'
+  app.beanstalkd_port: '%env(default:app.beanstalkd_port.default:BEANSTAKLD_PORT)%'
+  app.redis_server.default: 'redis'
+  app.redis_server: '%env(default:app.redis_server.default:REDIS_SERVER)%'
+  app.redis_port.default: '6379'
+  app.redis_port: '%env(default:app.redis_port.default:REDIS_PORT)%'
   app.actes_imap_host: '%env(ACTES_IMAP_HOST)%'
   app.actes_imap_port: '%env(ACTES_IMAP_PORT)%'
   app.actes_imap_login: '%env(ACTES_IMAP_LOGIN)%'
@@ -48,10 +63,41 @@ parameters:
   app.mail.tedetis_from: '%env(MAIL_TEDETIS_FROM)%'
   app.mail.secure_description: '%env(MAIL_SECURE_DESCRIPTION)%'
   app.mail.use_legacy_secure_mail: '%env(USE_LEGACY_SECURE_MAIL_FIELDS)%'
+  app.mail_file_upload_root: '%app.workspace_directory%mail/'
+  app.mail_files_without_transac_dir: '%app.mail_file_upload_root%%sans_transaction/'
+  app.openstack_enable.default: false
+  app.antivirus_command: '/usr/bin/clamdscan'
+  app.pdf_stamp_url.default: 'http://pdf-stamp:8080'
+  app.pdf_stamp_url: '%env(default:app.pdf_stamp_url.default:PDF_STAMP_URL)%'
+  app.image_for_stamp.default: '%kernel.project_dir%/public.ssl/custom/images/s2low-stamp.png"'
+  app.image_for_stamp: '%env(default:app.image_for_stamp.default:IMAGE_FOR_STAMP)%'
+  app.actes_enveloppe_sans_transaction: '%app.workspace_directory%actes/sans_transaction'
+  app.actes_ministere_acronyme: 'MI'
+  app.truststore_path: '/data/certificate/truststore/'
+  app.database_json_definition_file_path: '%kernel.project_dir%/db/s2low.sql.json'
+  app.database_sql_definition_filepath: '%kernel.project_dir%/db/s2low.sql'
+  app.actes_response_tmp_local_path: '%app.workspace_directory%actes/response_tmp'
+  app.actes_response_error_path: '%app.workspace_directory%actes/response_error'
+  app.pades_valid_url: 'http://pades-valid:8080'
+  app.website_ssl: 'https://s2low.docker.libriciel.fr/'
+  app.website: 'http://s2low.docker.libriciel.fr/'
+  app.openssl_path: '/usr/bin/openssl'
+  app.xmlsec_path: '/usr/bin/xmlsec1'
+  app.only_use_validcargs.default: 'false'
+  app.only_use_validcargs: '%env(bool:default:app.only_use_validcargs.default:ONLY_USE_VALIDCARGS)%'
+  app.path_to_rgs_valid_ca: '/etc/s2low/ssl/validca/'
+  app.path_to_rgs_valid_cargs: '/etc/s2low/ssl/validcargs/'
+  app.use_prod_notification.default: 'false'
+  app.use_prod_notification: '%env(default:app.use_prod_notification.default:USE_PROD_NOTIFICATIONS)%'
+  app.schema_pes_path: '%kernel.project_dir%/xsd/schemas_pes_v5.24/'
+  app.helios_use_passtrans_as_default.default: false
+  app.helios_use_passtrans_as_default: '%env(default:app.helios_use_passtrans_as_default.default:HELIOS_USE_PASSTRANS_AS_DEFAULT)%'
+  app.helios_ocre_file_path: '%app.helios_file_root%ocre/'
+
   app.openstack_enable: '%env(OPENSTACK_ENABLE)'
   app.convert_api_logins_from_iso.default: 'false'
   app.convert_api_logins_from_iso: '%env(default:app.convert_api_logins_from_iso.default:CONVERT_API_LOGINS_FROM_ISO)%'
-  app.mail.tdt_from_email: '%env(TDT_FROM_EMAIL)%'
+  app.mail.tdt_from_email: '%env(string:TDT_FROM_EMAIL)%'
   app.mail.email_admin_technique: '%env(EMAIL_ADMIN_TECHNIQUE)%'
   app.log.file: '%env(string:default:app.log.file.default:LOG_FILE)%'
   app.log.file.default: '/data/log/s2low.log'
@@ -65,6 +111,31 @@ services:
       $subject: '%app.mail.message%'
       $s2lowFromMail: '%app.mail.tedetis_from%'
       $fromDescription: '%app.mail.secure_description%'
+      $actes_files_upload_root: '%app.actes.files_upload_root%'
+      $actes_ministere_acronyme: '%app.actes_ministere_acronyme%'
+      $helios_files_upload_root: '%app.helios_files_upload_root%'
+      $helios_responses_root: '%app.helios_responses_root%'
+      $mail_files_upload_root: '%app.mail_file_upload_root%'
+      $actes_response_tmp_local_path: '%app.actes_response_tmp_local_path%'
+      $actes_response_error_path: '%app.actes_response_error_path%'
+      $website: "%app.website%"
+      $actes_appli_trigramme: '%app.actes_appli_trigramme%'
+      $actes_appli_quadrigramme: '%app.actes_appli_quadrigramme%'
+      $database_json_definition_filepath: '%app.database_json_definition_file_path%'
+      $database_sql_definition_filepath: '%app.database_sql_definition_filepath%'
+      $opensslPath: "%app.openssl_path%"
+      $rgs_validca_path: '%app.path_to_rgs_valid_ca%'
+      $use_prod_notifications: '%app.use_prod_notification%'
+      $beanstalkd_server: 'app.beanstalkd_server'
+      $beanstalkd_port: 'app.beanstalkd_port'
+      $tdt_from_email: "%app.mail.tdt_from_email%"
+      $projectDirectory: "%kernel.project_dir%"
+      $environment: "%kernel.environment%"
+
+#  rgs_valid_ca_path:
+#    class: string
+#    factory: [ '@S2low\Factory\RgsValidCaPathFactory', 'create' ]
+#    public: false
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Namespace s2low : contient le code développé après le passage en Symfony.
@@ -72,6 +143,12 @@ services:
   S2low\:
     resource: '../src/*'
     exclude: '../src/Kernel.php'
+
+  S2lowLegacy\Boot\S2lowBootstrap:
+    class: 'S2lowLegacy\Boot\S2lowBootstrap'
+    autowire: true
+    autoconfigure: true
+    public: true
 
   S2low\Command\RebuildQueueCommand:
     arguments:
@@ -173,6 +250,7 @@ services:
     public: true
 
   S2lowLegacy\Mail\IMailHeader:
+    public: true
     factory: ['@S2low\Factory\MailHeaderFactory', 'create']
     arguments:
       $useLegacySecureMailFields: '%app.mail.use_legacy_secure_mail%'
@@ -182,13 +260,9 @@ services:
   # ---------------------------------------------------------------------------------------------------------------------
   S2lowLegacy\Controller\:
     resource: '../controller/*'
-    autowire: false
-    autoconfigure: false
-    public: false
-
-  S2lowLegacy\Controller\Controller:
-    factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Controller\Controller' ]
+    autowire: true
+    autoconfigure: true
+    public: true
 
   S2lowLegacy\Lib\:
     resource: '../lib/*'
@@ -202,10 +276,6 @@ services:
     shared: true
     autowire: true
     factory: ['S2lowLegacy\Lib\SigTermHandler', 'getInstance']
-
-  S2lowLegacy\Lib\FrontController:
-    factory: [ '\S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Lib\FrontController' ]
 
   S2lowLegacy\Lib\OpenStackContainerFetcher:
     autowire: false #Pas un service, est renvoyé par une factory
@@ -224,8 +294,13 @@ services:
       $logger: '@monolog.logger.request'
 
   S2lowLegacy\Lib\OpenStackSwiftWrapper:
-    factory: ['\S2lowLegacy\Class\LegacyObjectsManager','getObject']
-    arguments: ['S2lowLegacy\Lib\OpenStackSwiftWrapper']
+    arguments:
+      $openstack_enable: '%app.openstack_enable%'
+
+  S2lowLegacy\Lib\X509Certificate:
+    autowire: true
+    autoconfigure: true
+    public: true
 
   S2lowLegacy\Lib\ParsedownExtended:
     autowire: false #doit être configuré explicitement
@@ -236,29 +311,21 @@ services:
   S2lowLegacy\Lib\Recuperateur:
     autowire: false #pas un service
 
-  S2lowLegacy\Lib\RgsCertificate:
-    arguments:
-      $openssl_path: "todo"
-
   S2lowLegacy\Lib\SQLQuery:
     autoconfigure: true
     autowire: true
     public: true
-    arguments:
-      $databaseName: '%app.database_name%'
-      $databaseHost: '%app.database_host%'
-      $databaseLogin: '%app.database_login%'
-      $databasePassword: '%app.database_password%'
 
   S2lowLegacy\Lib\SessionWrapper:
     factory: ['S2low\Factory\SessionWrapperFactory', 'create']
 
   S2lowLegacy\Lib\Environnement:
+    public: true
     factory: ['@S2low\Factory\EnvironnementFactory', 'create']
 
   S2lowLegacy\Lib\XadesSignature:
     arguments:
-      $xmlsec1_path: "todo"
+      $xmlsec1_path: "%app.xmlsec_path%"
 
   # ---------------------------------------------------------------------------------------------------------------------
   # Sous Namespace  S2lowLegacy/Model : aucune dépendance, peut être instancié directement par le service container
@@ -271,6 +338,7 @@ services:
     public: true
 
   S2lowLegacy\Model\MessageAdminSQL:
+    public: true
     arguments:
       $cachePath: "/var/run/htmlpurifier"
 
@@ -288,8 +356,8 @@ services:
     public: true
 
   S2lowLegacy\Class\Antivirus:
-    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
-    arguments: ['S2lowLegacy\Class\Antivirus']
+    arguments:
+      $antivirus_command: '%app.antivirus_command%'
 
   S2lowLegacy\Class\BatchUploadHandler:
     autowire: false
@@ -313,10 +381,6 @@ services:
     autowire: false
     autoconfigure: false
     public: false
-
-  S2lowLegacy\Class\Initialisation:
-    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
-    arguments: ['S2lowLegacy\Class\Initialisation']
 
   S2lowLegacy\Class\InitData:
      autowire: false
@@ -344,8 +408,8 @@ services:
     public: false
 
   S2lowLegacy\Class\helios\PESAllerCloudStorable:
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\helios\PESAllerCloudStorable' ]
+    arguments:
+      $repertoirePesAllerSansTransaction: '%app.helios_repertoire_pes_aller_sans_transaction%'
 
   S2lowLegacy\Class\helios\PESAllerCloudStorage:
     arguments:
@@ -356,12 +420,6 @@ services:
     autowire: false
 
   S2lowLegacy\Class\DatePicker: # TODO :verify
-    autowire: false
-
-  S2lowLegacy\Class\HttpsConnexion:
-    autowire: false
-
-  S2lowLegacy\Class\Mail: #TODO Impossible pour l'instant ( chargé par PEAR )
     autowire: false
 
   S2lowLegacy\Class\Mailer: #TODO Impossible pour l'instant ( chargé par PEAR )
@@ -376,20 +434,17 @@ services:
   S2lowLegacy\Class\ModulePermission: #Impossible : doit nécésairement être paramétré par module
     autowire: false
 
-  S2lowLegacy\Class\OpensslTSWrapper:
-    arguments:
-      $opensslPath: "todo"
-
   S2lowLegacy\Class\PDFStampWrapper:
-    factory: ['\S2lowLegacy\Class\LegacyObjectsManager','getObject']
-    arguments: ['S2lowLegacy\Class\PDFStampWrapper']
+    arguments:
+      $pdf_stamp_url: '%app.pdf_stamp_url%'
+      $image_for_stamp: '%app.image_for_stamp%'
 
   S2lowLegacy\Class\QueryResult:
     autowire: false
 
   S2lowLegacy\Class\PadesValid:
     arguments:
-      $pades_valid_url: "todo"
+      $pades_valid_url: "%app.pades_valid_url%"
 
   S2lowLegacy\Class\RedisMutexWrapper:
     arguments:
@@ -397,29 +452,21 @@ services:
       $redis_port: "%app.redis_port%"
 
   S2lowLegacy\Class\S2lowRedirect:
+    public: true
     arguments:
-      $website_ssl: "todo"
-      $website: "todo"
+      $website_ssl: "%app.website_ssl%"
+      $website: "%app.website%"
 
   S2lowLegacy\Class\TGZExtractor:
-    autowire: false #(pas un service)
+    autowire: false
 
   S2lowLegacy\Class\VerifyPKCS7Signature:
-    arguments:
-      $authorized_ca_path: "todo"
-
-  S2lowLegacy\Class\VerifyPadesSignature:
-    arguments:
-      $rgs_validca_path: "todo"
+    autowire: false
 
   S2lowLegacy\Class\VerifyPemCertificate:
-    arguments:
-      $authorized_ca_path: "todo"
+    autowire: false
 
   S2lowLegacy\Class\Versionning:
-    autowire: false #Pas un service
-
-  S2lowLegacy\Class\WorkerRunner:
     autowire: false
 
   S2lowLegacy\Class\CustomizableWorkerRunner:
@@ -435,12 +482,7 @@ services:
     autowire: false
 
   S2lowLegacy\Class\XSDValidation:
-    arguments:
-      $xsdPath: "todo"
-
-  S2lowLegacy\Class\WorkerScript:
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\WorkerScript' ]
+    autowire: false
 
   S2lowLegacy\Class\actes\ActesMinistereProperties:
     arguments:
@@ -457,29 +499,25 @@ services:
 
   S2lowLegacy\Class\actes\ActesAntivirusWorker:
     tags: ['s2low.queue_rebuilding_worker']
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\actes\ActesAntivirusWorker' ]
+    public: true
 
   S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker:
+    public: true
     tags: ['s2low.queue_rebuilding_worker']
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker' ]
+    arguments:
+      $actes_dont_valid_signing_certificate: '%app.actes_dont_valid_signing_certificate%'
 
   S2lowLegacy\Class\actes\ActesEnvoiFichierWorker:
     tags: ['s2low.queue_rebuilding_worker']
-    arguments:
-      $actes_ministere_acronyme: '%actes.ministere_acronyme%'
-
+    public: true
 
   S2lowLegacy\Class\actes\ActesAnalyseFichierRecuWorker:
     tags: ['s2low.queue_rebuilding_worker']
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\actes\ActesAnalyseFichierRecuWorker' ]
+    public: true
 
   S2lowLegacy\Class\actes\ActesEnvoiSaeWorker:
     tags: ['s2low.queue_rebuilding_worker']
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\actes\ActesEnvoiSaeWorker' ]
+    public: true
 
   S2lowLegacy\Class\actes\ClassificationString:
     autowire: false
@@ -493,63 +531,36 @@ services:
       $password: '%app.actes_imap_password%'
       $imap_options: '%app.actes_imap_options%'
 
+  S2lowLegacy\Class\actes\ActesFiles:
+    autowire: false
 
   S2low\Services\Helios\HeliosAnalyseFichierAEnvoyerWorker:
     tags: ['s2low.queue_rebuilding_worker']
+    public: true
 
   S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker:
     tags: ['s2low.queue_rebuilding_worker']
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker' ]
-
-  S2lowLegacy\Class\actes\ActesAnalyseFichierRecuController:
-    arguments:
-      $actes_response_tmp_local_path: '%actes.response_tmp_local_path%'
-      $actes_response_error_path: '%actes.response_error_path%'
-      $actes_files_upload_root: '%actes.files_upload_root%'
-      $actes_ministere_acronyme: '%actes.ministere_acronyme%'
-
+    public: true
 
   S2lowLegacy\Class\actes\ActesArchive:
     autowire: false #Pas un service ??
-
-  S2lowLegacy\Class\actes\ActesCloudStorable:
-      factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-      arguments: [ 'S2lowLegacy\Class\actes\ActesCloudStorable' ]
 
   S2lowLegacy\Class\actes\ActesCloudStorage:
     arguments:
       $logger: '@monolog.logger.request'
       $openstack_enable: '%app.openstack_enable%'
 
-  S2lowLegacy\Class\actes\ActesConventions:
-     arguments:
-       $actes_files_upload_root: '%actes.files_upload_root%'
-
-  S2lowLegacy\Class\actes\ActesMenage:
-    autowire: false
-    #arguments:                                 TODO : pour plus tard, quand j'aurais compris la config du Logger
-    #  $actes_files_upload_root: "fdsfdsfsdfs"
-
-  S2lowLegacy\Class\actes\ActesFiles:
-    arguments:
-      $root_workspace_path: "todo"
-
   S2lowLegacy\Class\actes\ActesFileSender:
     arguments:
-      $trustore_path: '/data/certificate/truststore/'
-
-
-  S2lowLegacy\Class\actes\ActesImapRetrieve:
-    arguments:
-      $actes_response_tmp_local_path: '%actes.response_tmp_local_path%'
+      $trustore_path: '%app.truststore_path%'
 
   S2lowLegacy\Class\Parapheur:
     autowire: false #Initialisé avec les données à traiter ...
 
   S2lowLegacy\Class\actes\ActesNameArchive:
     arguments:
-      $trigramme: "todo"
+      $trigramme: "%app.actes_appli_trigramme%"
+      $quadrigramme: "%app.actes_appli_quadrigramme%"
 
   S2lowLegacy\Class\actes\ActesNotification:
     arguments:
@@ -567,91 +578,44 @@ services:
 
   S2lowLegacy\Class\actes\BordereauPdfGenerator:
     autowire: true
+    public: true
     arguments:
       $extractDataForBordereauPDF: "@S2lowLegacy\\Class\\actes\\ExtractDataForBordereauPDF"
       $actesPdf: "@S2lowLegacy\\Class\\actes\\ActesPdf"
 
-  S2lowLegacy\Class\actes\ActesPrepareEnvoiSAE:
-    autowire: false #LOGGER !!!
-
-  S2lowLegacy\Class\actes\ActesResponsesError:
-    arguments:
-      $actes_response_error_path: '%actes.response_error_path%'
-
-  S2lowLegacy\Class\actes\ActesRetriever:
-    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
-    arguments: ['S2lowLegacy\Class\actes\ActesRetriever']
-    #arguments:
-    #  $actes_files_upload_root: "todo"
-
-  S2lowLegacy\Class\actes\ActesScriptHelper:
-    arguments:
-      $actes_appli_trigramme: "todo"
-
-  S2lowLegacy\Class\actes\ActesStatistiques:
-    autowire: false #Pas un service
-
-  S2lowLegacy\Class\helios\FTPService:
-    autowire: false
-
   S2lowLegacy\Class\helios\FichierCompteur:
-    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
-    arguments: ['S2lowLegacy\Class\helios\FichierCompteur']
+    arguments:
+      $helios_counter_file: '%app.helios_counter_file%'
 
   S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu:
     arguments:
-      $schema_pes_path: "todo"
-      $email_admin_technique: "todo"
-      $tdt_from_email: "todo"
-
-  S2lowLegacy\Class\helios\HeliosEnvoiSAE:
-    autowire: false #TODO : logger
-
-  S2lowLegacy\Class\helios\HeliosExport:
-    arguments:
-      $helios_responses_root: "todo"
-
-  S2lowLegacy\Class\helios\HeliosFiles:
-    arguments:
-      $helios_file_upload: "todo"
+      $schema_pes_path: "%app.schema_pes_path%"
+      $email_admin_technique: "%app.mail.email_admin_technique%"
+    public: true
 
   S2lowLegacy\Class\helios\HeliosPESValidation:
     arguments:
-      $helios_xsd_path: "todo"
-
-  S2lowLegacy\Class\helios\HeliosPrepareEnvoiSAE:
-    autowire: false #TODO : logger
-
-  S2lowLegacy\Class\helios\HeliosVerificationSAE:
-    autowire: false #TODO: logger
-
-  S2lowLegacy\Class\helios\PESAcquitCloudStorable:
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\helios\PESAcquitCloudStorable' ]
+      $helios_xsd_path: "%app.schema_pes_path%"
 
   S2lowLegacy\Class\helios\PESAcquitCloudStorage:
+    public: true
     arguments:
       $logger: '@monolog.logger.request'
       $openstack_enable: '%app.openstack_enable%'
-
-  S2lowLegacy\Class\helios\PESRetourCloudStorable:
-    factory: [ 'S2lowLegacy\Class\LegacyObjectsManager','getObject' ]
-    arguments: [ 'S2lowLegacy\Class\helios\PESRetourCloudStorable' ]
 
   S2lowLegacy\Class\helios\PESRetourCloudStorage:
+    autowire: true
+    public: true
     arguments:
       $logger: '@monolog.logger.request'
       $openstack_enable: '%app.openstack_enable%'
 
-  S2lowLegacy\Class\helios\PesAllerRetriever:
-    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
-    arguments: ['S2lowLegacy\Class\helios\PesAllerRetriever']
-
   S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable:
-    factory: ['S2lowLegacy\Class\LegacyObjectsManager','getObject']
-    arguments: ['S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable']
+    arguments:
+      $mail_files_without_transac_dir: '%app.mail_files_without_transac_dir%'
 
   S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage:
+    public: true
     arguments:
       $logger: '@monolog.logger.request'
       $openstack_enable: '%app.openstack_enable%'
@@ -662,6 +626,39 @@ services:
 
   S2lowLegacy\Lib\OpenStackContainerStore:
     factory: ['@S2low\Factory\OpenStackContainerStoreFactory', "create"]
+
+  S2lowLegacy\Class\actes\ActesCloudStorable:
+    arguments:
+      $repertoireActesEnveloppeSansTransaction: '%app.actes_enveloppe_sans_transaction%'
+
+  S2lowLegacy\Lib\ObjectInstancier:
+    public: true
+    arguments:
+      $container: '@service_container'
+
+  S2lowLegacy\Controller\HeliosController:
+    public: true
+
+  PDO:
+    class: PDO
+    shared: true
+    factory: ['@S2low\Factory\PDOFactory', 'create']
+
+  S2low\Factory\PDOFactory:
+    shared: true
+    arguments:
+      $hostname:  '%app.database_host%'
+      $name:  '%app.database_name%'
+      $login: '%app.database_login%'
+      $password:  '%app.database_password%'
+
+  S2low\Services\MailActesNotifications\MailerSymfony:
+    public: true
+
+  S2lowLegacy\Class\HTMLLayout:
+    public: true
+#  S2lowLegacy\Class\Database:
+#    public: true
 
   S2low\Logger\MailerProcessor:
     tags:

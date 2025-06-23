@@ -1,6 +1,7 @@
 <?php
 
 use malkusch\lock\mutex\PHPRedisMutex;
+use Monolog\Level;
 use Pheanstalk\PheanstalkInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
@@ -9,6 +10,7 @@ use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\RedisMutexWrapper;
 use S2lowLegacy\Class\SigTermHandlerFactory;
 use S2lowLegacy\Class\WorkerScript;
+use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SigTermHandler;
 
 class WorkerScriptTest extends S2lowTestCase
@@ -39,10 +41,23 @@ class WorkerScriptTest extends S2lowTestCase
         $IWorker->method("getAllId")->willReturn([1]);
         /** @var IWorker $IWorker */
 
-        $workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
+        $workerScript = $this->createWorkerScript();
         $workerScript->rebuildQueue($IWorker);
-        $logs_records = $this->getLogRecords();
-        $this->assertEquals("Ajout en file d'attente", $logs_records[1]['message']);
+        self::assertTrue(
+            $this->testHandler->hasRecord(
+                'Ajout en file d\'attente',
+                Level::Info
+            )
+        );
+    }
+
+    private function createWorkerScript()
+    {
+        return new WorkerScript(
+            self::getContainer()->get(BeanstalkdWrapper::class),
+            $this->s2lowLogger,
+            self::getContainer()->get(ObjectInstancier::class),
+        );
     }
 
     public function testPutJobByQueueName()

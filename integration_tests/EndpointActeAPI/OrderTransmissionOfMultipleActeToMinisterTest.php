@@ -18,7 +18,7 @@ class OrderTransmissionOfMultipleActeToMinisterTest extends S2lowIntegrationTest
     protected function setUp(): void
     {
         parent::setUp();
-        $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
+        $this->actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -37,7 +37,9 @@ class OrderTransmissionOfMultipleActeToMinisterTest extends S2lowIntegrationTest
         $_GET['id'] = $ids;
         $_GET['url_return'] = $urlReturn;
 
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
+
         $client->request('GET', '/modules/actes/actes_transac_post_confirm_api_multi.php', [
             'id[]' => $ids,
             'url_return' => $urlReturn,

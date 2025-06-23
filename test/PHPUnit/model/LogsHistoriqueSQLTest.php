@@ -6,7 +6,6 @@ use S2lowLegacy\Model\LogsSQL;
 
 class LogsHistoriqueSQLTest extends S2lowTestCase
 {
-    /** @var  LogsHistoriqueSQL */
     private $logsHistoriqueSQL;
 
     private $last_month;
@@ -17,11 +16,29 @@ class LogsHistoriqueSQLTest extends S2lowTestCase
         $this->last_month = date("Y-m-d", strtotime("-2 month"));
         $today = date("Y-m-d");
 
-        $logsSQL = new LogsSQL($this->getSQLQuery());
-        $logsSQL->addLog($this->last_month, 1, "actes", "TdT", 1, 'SADM', 'message test 1', false);
-        $logsSQL->addLog($today, 1, "actes", "TdT", 1, 'SADM', 'message test 2', false);
+        $logsSQL = self::getContainer()->get(LogsSQL::class);
+        $logsSQL->addLog(
+            $this->last_month,
+            1,
+            "actes",
+            "TdT",
+            1,
+            'SADM',
+            'message test 1',
+            false
+        );
+        $logsSQL->addLog(
+            $today,
+            1,
+            "actes",
+            "TdT",
+            1,
+            'SADM',
+            'message test 2',
+            false
+        );
 
-        $this->logsHistoriqueSQL = new LogsHistoriqueSQL($this->getSQLQuery());
+        $this->logsHistoriqueSQL = self::getContainer()->get(LogsHistoriqueSQL::class);
         $this->logsHistoriqueSQL->vidange(1);
     }
 

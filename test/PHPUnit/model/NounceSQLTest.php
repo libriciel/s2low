@@ -10,7 +10,7 @@ class NounceSQLTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->nounceSQL = $this->getObjectInstancier()->{NounceSQL::class};
+        $this->nounceSQL = self::getContainer()->get(NounceSQL::class);
     }
 
     public function testGetNounce()
@@ -24,9 +24,9 @@ class NounceSQLTest extends S2lowTestCase
         $sql = "INSERT into nounce(creation) VALUES (?)";
         $this->getSQLQuery()->query($sql, date("c", strtotime("now -1 hours")));
         $sql = "SELECT count(*) FROM nounce";
-        $this->assertEquals(1, $this->getSQLQuery()->queryOne($sql));
+        $this->assertEquals(4, $this->getSQLQuery()->queryOne($sql));
         $this->nounceSQL->menage();
-        $this->assertEquals(0, $this->getSQLQuery()->queryOne($sql));
+        $this->assertEquals(3, $this->getSQLQuery()->queryOne($sql));
     }
 
     public function testVerify()

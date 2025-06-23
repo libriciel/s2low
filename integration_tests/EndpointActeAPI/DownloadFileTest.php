@@ -20,8 +20,8 @@ class DownloadFileTest extends S2lowIntegrationTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-        $this->client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
+        $this->actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
+        $this->setUserWithRole(UserRole::Utilisateur);
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -29,7 +29,7 @@ class DownloadFileTest extends S2lowIntegrationTestCase
         return $this->actesTransactionsSQL;
     }
 
-    protected function getObjectInstancier(): ObjectInstancier
+    protected function getObjectInstancier()
     {
         return ObjectInstancierFactory::getObjetInstancier();
     }
@@ -64,10 +64,9 @@ class DownloadFileTest extends S2lowIntegrationTestCase
         $archiveName = 'abc-TACT--123456789--20250313-0.tar.gz';
         $archivePath = __DIR__ . '/../fixtures/' . $archiveName;
 
-        $vfsUrl = vfsStream::url('test/helios/' . $archiveName);
+        $vfsUrl = vfsStream::url('test/' . $archiveName);
         copy($archivePath, $vfsUrl);
         $archivePathFromVfs = $vfsUrl;
-
         $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, $archivePathFromVfs);
 
         $this->createActeIncludedFiles($transactionId);

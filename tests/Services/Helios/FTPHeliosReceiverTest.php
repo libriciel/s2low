@@ -21,7 +21,6 @@ class FTPHeliosReceiverTest extends S2lowTestCase
      */
     public function testRetrieveEmptyRemoteDir()
     {
-        /** @var  S2lowLogger | MockObject $s2lowLogger */
         $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
 
         $ftpHeliosConnection = $this->getMockBuilder(DGFiPConnection::class)

@@ -16,7 +16,7 @@ class DownloadAcquitFileTest extends S2lowIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+        $this->heliosTransactionsSQL = self::getContainer()->get(HeliosTransactionsSQL::class);
     }
 
     public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
@@ -40,8 +40,6 @@ class DownloadAcquitFileTest extends S2lowIntegrationTestCase
      */
     public function testDownloadAcquitFile($data): void
     {
-        $this->createUserWithDefaultCertificatAs(UserRole::Utilisateur);
-
         $transactionId = $this->createTransaction(
             1,
             $data['status'],
@@ -55,7 +53,10 @@ class DownloadAcquitFileTest extends S2lowIntegrationTestCase
         copy($sampleXMLPath, $newSampleXML);
 
         $this->addPESAcquitTo($transactionId, $acquitFilename);
-        $client = $this->getAuthenticatedClientAttachedToDefaultCertificat();
+
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
+
         $client->request(
             'GET',
             '/modules/helios/helios_download_acquit.php',

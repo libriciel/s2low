@@ -7,8 +7,10 @@ namespace IntegrationTests\EndpointsActeHtml;
 use Exception;
 use IntegrationTests\S2lowIntegrationTestCase;
 use PHPUnit\ActesUtilitiesTestTrait;
+use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\Database;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 
 class ActesIntegrationTest extends S2lowIntegrationTestCase
@@ -22,7 +24,7 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
+        $this->actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
     }
     protected function tearDown(): void
     {
@@ -46,7 +48,9 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesAnalyseResponse(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+
         $enveloppeName = 'enveloppe';
         $this->copyEnveloppeToErrorDirectory($enveloppeName);
         $_GET['file'] = $enveloppeName; // Comme l'objet Récupérateur est set dans le script, ça ne fonctionne pas
@@ -67,7 +71,9 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testDeleteResponse(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+
         $enveloppeName = 'enveloppe';
         $this->copyEnveloppeToErrorDirectory($enveloppeName);
         $_GET['file'] = $enveloppeName; // Comme l'objet Récupérateur est set dans le script, ça ne fonctionne pas
@@ -86,7 +92,9 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testDownloadResponse(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+
         $enveloppeName = 'enveloppe';
         $this->copyEnveloppeToErrorDirectory($enveloppeName);
         $_GET['file'] = $enveloppeName; // Comme l'objet Récupérateur est set dans le script, ça ne fonctionne pas
@@ -104,7 +112,8 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testResponsesActesError(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $crawler = $client->request('GET', 'modules/actes/admin/responses-actes-error.php');
         static::assertMatchesRegularExpression(
@@ -119,7 +128,8 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesStats(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
         $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
@@ -143,7 +153,8 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacArchiver(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
 
@@ -161,7 +172,8 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacGetARActe(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
         $_GET['id'] = $transaction_id;
@@ -179,7 +191,8 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacRollBackAttente(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
         $_POST['id'] = $transaction_id;
@@ -201,7 +214,9 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacSetError(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
         $_POST['id'] = $transaction_id;
 
@@ -222,7 +237,8 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacShow(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
         $_GET['id'] = $transaction_id;
@@ -241,7 +257,8 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacSign(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $client->request('GET', 'modules/actes/actes_transac_sign.php');
         static::assertMatchesRegularExpression(
@@ -256,7 +273,8 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesIndex(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
 
         $crawler = $client->request('GET', 'modules/actes/index.php');
@@ -276,7 +294,8 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testActesTransacClose(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
         $_POST['id'] = $transaction_id;
@@ -296,7 +315,9 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
      */
     private function copyEnveloppeToErrorDirectory(string $enveloppeName): void
     {
-        $this->enveloppeInErrorPath = "/data/tdt-workspace/actes/response_error/$enveloppeName/";
+        $actesResponseErrorPath = self::getContainer()->getParameter('app.actes_response_error_path');
+        $this->enveloppeInErrorPath = $actesResponseErrorPath . "/" . $enveloppeName . "/";
+
         mkdir($this->enveloppeInErrorPath);
         copy(
             __DIR__ . '/../../test/PHPUnit/class/fixtures/test-courrier-simple/034-000000000-20170701-20170725A-AI-2-1_0.xml',

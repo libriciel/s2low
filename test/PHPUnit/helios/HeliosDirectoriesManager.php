@@ -12,9 +12,7 @@ class HeliosDirectoriesManager
     public $helios_response_root;
     public $helios_ocre;
     public $helios_responses_error_path;
-    /**
-     * @var \S2lowLegacy\Model\HeliosTransactionsSQL
-     */
+
     public string $helios_files_upload_root;
     private string $baseDirectory;
 

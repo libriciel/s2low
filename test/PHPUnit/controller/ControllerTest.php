@@ -1,5 +1,8 @@
 <?php
 
+use IntegrationTests\S2lowIntegrationTestCase;
+use S2low\Enum\UserRole;
+use S2lowLegacy\Class\Authentification;
 use S2lowLegacy\Controller\Controller;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\ObjectInstancier;
@@ -7,7 +10,7 @@ use S2lowLegacy\Lib\Recuperateur;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Lib\SQLQuery;
 
-class ControllerTest extends S2lowTestCase
+class ControllerTest extends S2lowIntegrationTestCase
 {
     /**
      * @var Controller
@@ -17,7 +20,7 @@ class ControllerTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->controller = new Controller($this->getObjectInstancier());
+        $this->controller = self::getContainer()->get(Controller::class);
     }
 
     public function testViewParameter()
@@ -39,7 +42,7 @@ class ControllerTest extends S2lowTestCase
 
     public function testGetViewParameterException()
     {
-        $this->setExpectedException("Exception", 'parameter foo not found');
+        $this->expectExceptionMessage('parameter foo not found');
         $this->controller->foo;
     }
 
@@ -51,39 +54,46 @@ class ControllerTest extends S2lowTestCase
 
     public function testRedirect()
     {
-        $this->setExpectedException(RedirectException::class, "Redirect to http://redirect_url with message : error message");
+        $this->expectException(RedirectException::class);
+        $this->expectExceptionMessage("Redirect to http://redirect_url with message : error message");
         $this->controller->redirect("http://redirect_url", "error message");
         $this->assertEquals("error message", $_SESSION['error']);
     }
 
     public function testVerifAdmin()
     {
-        $this->setSuperAdminAuthentication();
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->controller->verifAdmin();
-        $this->noAssertion();
+        self::expectNotToPerformAssertions();
     }
 
     public function testVerifNotConnected()
     {
-        $this->setExpectedException("Exception", "Message : Aucune information de certificat trouvée");
+        $authentication = $this->getAuthentication();
+        self::getContainer()->set(Authentification::class, $authentication);
+
+        $this->expectExceptionMessage("Message : Aucune information de certificat trouvée");
         $this->controller->verifAdmin();
     }
 
     public function testVerifNotAdmin()
     {
-        $this->setServerInfo([
+        $server = [
             'SSL_CLIENT_VERIFY' => "SUCCESS",
             'SSL_CLIENT_S_DN' => "adullact_user",
             'SSL_CLIENT_I_DN' => "adullact_user",
             'TESTING_CERTIFICATE_HASH' => "hash_adullact_user",
-        ]);
-        $this->setExpectedException("Exception", "Redirect to");
+        ];
+        $authentication = $this->getAuthentication($server);
+        self::getContainer()->set(Authentification::class, $authentication);
+
+        $this->expectExceptionMessage("Redirect to");
         $this->controller->verifAdmin();
     }
 
     public function testRenderDefault()
     {
-        $this->setSuperAdminAuthentication();
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->controller->title = "Titre mock";
         $this->controller->template_milieu = __DIR__ . "/../lib/fixtures/MockMockTemplate.php";
         $this->controller->side_bar = false;
@@ -93,7 +103,7 @@ class ControllerTest extends S2lowTestCase
 
     public function testRender()
     {
-        $this->setSuperAdminAuthentication();
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->expectOutputString("<h1>Mock Mock Template</h1>");
         $this->controller->render(__DIR__ . "/../lib/fixtures/MockMockTemplate.php");
     }
@@ -106,7 +116,7 @@ class ControllerTest extends S2lowTestCase
 
     public function testActionAfter()
     {
-        $this->setSuperAdminAuthentication();
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->controller->title = "Titre mock";
         $this->controller->template_milieu = __DIR__ . "/../lib/fixtures/MockMockTemplate.php";
         $this->controller->side_bar = false;
@@ -131,77 +141,84 @@ class ControllerTest extends S2lowTestCase
 
     public function testRedirectSSL()
     {
-        $this->setExpectedException(RedirectException::class, "/toto/index.php?foo=bar");
+        $this->expectException(RedirectException::class);
+        $this->expectExceptionMessage("/toto/index.php?foo=bar");
         $this->controller->redirectSSL("/toto/index.php", "foo=bar");
     }
 
     public function testVerifGroupAdmin()
     {
-        $this->setAdminGroupAuthentication();
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->controller->verifGroupAdmin(2);
-        $this->noAssertion();
+        self::expectNotToPerformAssertions();
     }
 
     public function testVerifGroupAdminSuperAdmin()
     {
-        $this->setSuperAdminAuthentication();
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->controller->verifGroupAdmin(2);
-        $this->noAssertion();
+        self::expectNotToPerformAssertions();
     }
 
     public function testVerifGroupAdminNotAuthorized()
     {
-        $this->setAdminGroup2Authentication();
-        $this->setExpectedException("Exception", "Accès refusé");
+        $this->logAs(3);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Accès refusé");
         $this->controller->verifGroupAdmin(1);
     }
 
     public function testSetMessage()
     {
         $this->controller->setMessage("test");
-        $this->noAssertion();
+        self::expectNotToPerformAssertions();
     }
 
     public function testVerifSuperAdmin()
     {
-        $this->setSuperAdminAuthentication();
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->controller->verifSuperAdmin();
-        $this->noAssertion();
+        self::expectNotToPerformAssertions();
     }
 
     public function testVerifSuperAdminFailed()
     {
-        $this->setAdminGroupAuthentication();
-        $this->setExpectedException("Exception", "Redirect to");
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Redirect to");
         $this->controller->verifSuperAdmin();
     }
 
     public function testVerifAdminAdminGroupOK()
     {
-        $this->setAdminGroupAuthentication();
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
         $this->controller->verifAdmin(2);
-        $this->noAssertion();
+        self::expectNotToPerformAssertions();
     }
 
     public function testVerifAdminAdminGroupFailed()
     {
-        $this->setAdminGroup2Authentication();
-        $this->setExpectedException("Exception", "Redirect to");
+        $this->logAs(3);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Redirect to");
         $this->controller->verifAdmin(1);
     }
 
     public function testVerifAdminOK()
     {
-        $this->setAdminCol2Authentication();
-        $this->controller->verifAdmin(2);
-        $this->noAssertion();
+        $this->setUserWithRole(UserRole::AdministrateurCollectivite);
+        $this->controller->verifAdmin(1);
+        self::expectNotToPerformAssertions();
     }
 
     public function testVerifAdminFail()
     {
-        $this->setAdminCol2Authentication();
-        $this->setExpectedException("Exception", "Redirect to");
-        $this->controller->verifAdmin(1);
+        $this->setUserWithRole(UserRole::AdministrateurCollectivite);
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Redirect to");
+        $this->controller->verifAdmin(2);
     }
 
     public function testGetObjectInstancier()
@@ -211,16 +228,34 @@ class ControllerTest extends S2lowTestCase
 
     public function testDisplayErrorAndExitAPI()
     {
-        $this->setAdminGroup2Authentication();
-        $this->getObjectInstancier()->get(Environnement::class)->post()->set('api', '1');
-        $this->setExpectedException("Exception", "Exit");
+        $this->logAs(3);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $environnement = self::getContainer()->get(Environnement::class);
+        $environnement->post()->set('api', '1');
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Exit");
         $this->expectOutputRegex("#Acc\\\u00e8s refus\\\u00e9#");
-        $this->controller->verifAdmin(1);
+
+        $objectInstancierMocked = $this->getMockBuilder(ObjectInstancier::class)
+            ->setConstructorArgs([self::getContainer()])
+            ->getMock();
+
+        $objectInstancierMocked->method('get')->willReturnCallback(function ($class) use ($environnement) {
+            if ($class === Environnement::class) {
+                return $environnement;
+            }
+            return self::getContainer()->get($class);
+        });
+
+        $controller = new Controller(
+            $objectInstancierMocked,
+        );
+        $controller->verifAdmin(1);
     }
 
     public function testIsApiCall()
     {
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('api', '1');
+        self::getContainer()->get(Environnement::class)->get()->set('api', '1');
         $this->assertTrue($this->controller->isApiCall());
     }
 }

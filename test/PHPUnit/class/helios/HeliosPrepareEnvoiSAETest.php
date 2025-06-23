@@ -1,8 +1,12 @@
 <?php
 
+use Monolog\Level;
 use S2lowLegacy\Class\helios\HeliosPrepareEnvoiSAE;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
+use S2lowLegacy\Class\helios\PesAllerRetriever;
+use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
+use S2lowLegacy\Model\UserSQL;
 
 class HeliosPrepareEnvoiSAETest extends S2lowTestCase
 {
@@ -14,12 +18,15 @@ class HeliosPrepareEnvoiSAETest extends S2lowTestCase
         return $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
     }
 
-    /**
-     * @return HeliosPrepareEnvoiSAE|mixed
-     */
-    private function getHeliosPrepareEnvoiSAE()
+    private function getHeliosPrepareEnvoiSAE(): HeliosPrepareEnvoiSAE
     {
-        return $this->getObjectInstancier()->get(HeliosPrepareEnvoiSAE::class);
+        return new HeliosPrepareEnvoiSAE(
+            self::getContainer()->get(PesAllerRetriever::class),
+            $this->logger,
+            self::getContainer()->get(UserSQL::class),
+            self::getContainer()->get(AuthoritySQL::class),
+            self::getContainer()->get(HeliosTransactionsSQL::class),
+        );
     }
 
     private function getHeliosTransactionSQL()
@@ -32,14 +39,18 @@ class HeliosPrepareEnvoiSAETest extends S2lowTestCase
         $this->configurePastell();
         $transaction_id = $this->createTransaction();
         $this->assertTrue(
-            $this->getHeliosPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(1, $transaction_id)
+            $this->getHeliosPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(13, $transaction_id)
         );
         $this->assertEquals(
             HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
             $this->getHeliosTransactionSQL()->getLastStatusInfo($transaction_id)['status_id']
         );
-        $this->assertLogMessage(
-            "La transaction $transaction_id passe en attente de transmission au SAE"
+
+        $this->assertTrue(
+            $this->testHandler->hasRecord(
+                "La transaction $transaction_id passe en attente de transmission au SAE",
+                Level::Info
+            )
         );
     }
 
@@ -48,24 +59,31 @@ class HeliosPrepareEnvoiSAETest extends S2lowTestCase
         $transaction_id = $this->createTransaction();
         $this->getHeliosTransactionSQL()->updateStatus($transaction_id, 1, "n'importe quoi");
         $this->assertFalse(
-            $this->getHeliosPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(1, $transaction_id)
+            $this->getHeliosPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(11, $transaction_id)
         );
         $this->assertEquals(
             HeliosStatusSQL::POSTE,
             $this->getHeliosTransactionSQL()->getLastStatusInfo($transaction_id)['status_id']
         );
-        $this->assertLogMessage(
-            "Impossible d'archiver une transaction qui n'est pas en état « Information disponible », « acquitté » ou « refusé »."
+        $this->assertTrue(
+            $this->testHandler->hasRecord(
+                "Impossible d'archiver une transaction qui n'est pas en état « Information disponible », « acquitté » ou « refusé ».",
+                Level::Error
+            )
         );
     }
 
     public function testSetArchiveEnAttenteEnvoiSAEBadTransaction()
     {
         $this->assertFalse(
-            $this->getHeliosPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(1, 12)
+            $this->getHeliosPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(113, 12)
         );
-        $this->assertLogMessage(
-            "La transaction 12 n'existe pas"
+
+        $this->assertTrue(
+            $this->testHandler->hasRecord(
+                "La transaction 12 n'existe pas",
+                Level::Error
+            )
         );
     }
 
@@ -73,9 +91,14 @@ class HeliosPrepareEnvoiSAETest extends S2lowTestCase
     {
         $transaction_id = $this->createTransaction();
         $this->assertFalse(
-            $this->getHeliosPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(5, $transaction_id)
+            $this->getHeliosPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEA(3, $transaction_id)
         );
-        $this->assertLogMessage("Accès interdit");
+        $this->assertTrue(
+            $this->testHandler->hasRecord(
+                "Accès interdit",
+                Level::Error
+            )
+        );
     }
 
     public function testsetArchiveEnAttenteEnvoiSEAManuellement()
@@ -89,9 +112,12 @@ class HeliosPrepareEnvoiSAETest extends S2lowTestCase
         );
 
         $this->getHeliosPrepareEnvoiSAE()->setArchiveEnAttenteEnvoiSEAManuellement(1, -1);
-        $this->assertLogMessage(
-            "La transaction $transaction_id passe en attente de transmission au SAE",
-            3
+
+        $this->assertTrue(
+            $this->testHandler->hasRecord(
+                "La transaction $transaction_id passe en attente de transmission au SAE",
+                Level::Info
+            )
         );
     }
 }

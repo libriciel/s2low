@@ -4,6 +4,7 @@ namespace S2lowLegacy\Controller;
 
 use DOMDocument;
 use Exception;
+use Psr\Log\LoggerInterface;
 use S2low\Services\Helios\HeliosAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\helios\HeliosStorePESAllerWorker;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
@@ -27,8 +28,10 @@ class HeliosController extends Controller
 
     private $helios_max_upload_size;
 
-    public function __construct(ObjectInstancier $objectInstancier)
-    {
+    public function __construct(
+        ObjectInstancier $objectInstancier,
+        private readonly LoggerInterface $logger,
+    ) {
         parent::__construct($objectInstancier);
         $this->setHeliosMaxUploadSize(HELIOS_MAX_UPLOAD_SIZE);
     }
@@ -81,8 +84,7 @@ class HeliosController extends Controller
 
     public function import($user_id)
     {
-        /** @var RgsConnexion $rgsConnexion */
-        $rgsConnexion = $this->getObjectInstancier()->{RgsConnexion::class};
+        $rgsConnexion = $this->getObjectInstancier()->get(RgsConnexion::class);
         if (! $rgsConnexion->isRgsConnexion()) {
             throw new Exception("Votre certificat n'est pas RGS et ne vous permet donc pas de télétransmettre");
         }
@@ -111,7 +113,7 @@ class HeliosController extends Controller
             throw new Exception($message);
         }
 
-        $heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+        $heliosTransactionSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
         try {
             $SHA1 = sha1_file($_FILES['enveloppe']['tmp_name']);
         } catch (Exception $e) {
@@ -123,28 +125,26 @@ class HeliosController extends Controller
         }
 
         $pes_aller_destination = $this->getPesAllerRetriever()->getPathForNonExistingFile($SHA1);
+        $pes_aller_original_name = $_FILES['enveloppe']['name'];
+
         try {
-            $pes_aller_original_name = $_FILES['enveloppe']['name'];
-            if (!move_uploaded_file_wrapper($_FILES['enveloppe']['tmp_name'], $pes_aller_destination)) {
-                throw new Exception("Échec lors du téléchargement du fichier");
-            }
+            move_uploaded_file_wrapper($_FILES['enveloppe']['tmp_name'], $pes_aller_destination);
         } catch (Exception $e) {
-            throw new Exception("Échec lors du téléchargement du fichier");
+            $this->logger->error($e->getMessage());
         }
         return $this->importFile($user_id, $pes_aller_destination, $pes_aller_original_name);
     }
 
     public function importFile($user_id, $filepath, $original_filename)
     {
-        $heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+        $heliosTransactionSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
 
-        $userSQL = new UserSQL($this->getSQLQuery());
+        $userSQL = $this->getObjectInstancier()->get(UserSQL::class);
         $user_info = $userSQL->getInfo($user_id);
-
-        $authoritySQL = new AuthoritySQL($this->getSQLQuery());
+        $authoritySQL = $this->getObjectInstancier()->get(AuthoritySQL::class);
         $authority_info = $authoritySQL->getInfo($user_info['authority_id']);
 
-        $moduleSQL = new ModuleSQL($this->getSQLQuery());
+        $moduleSQL = $this->getObjectInstancier()->get(ModuleSQL::class);
         $module_info = $moduleSQL->getInfoByName(self::MODULE_NAME);
 
         $must_signed = Helpers::getVarFromPost("must_signed", true);
@@ -239,8 +239,8 @@ class HeliosController extends Controller
 
     public function updateSiretFromPESAller($min_id = 0)
     {
-        $authoritySiretSQL = new AuthoritySiretSQL($this->getSQLQuery());
-        $heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+        $authoritySiretSQL = $this->getObjectInstancier()->get(AuthoritySiretSQL::class);
+        $heliosTransactionSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
         $id_list = $heliosTransactionSQL->getAllId($min_id);
         foreach ($id_list as $transaction_id) {
             $info = $heliosTransactionSQL->getInfo($transaction_id);
@@ -292,7 +292,7 @@ class HeliosController extends Controller
                 throw new Exception('KO');
             }
 
-            $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
+            $heliosRetourSQL = $this->getObjectInstancier()->get(HeliosRetourSQL::class);
             $envelops = $heliosRetourSQL->getList($me->get("authority_id"));
 
 

@@ -47,8 +47,8 @@ class AdminUtilitiesCertificateController extends Controller
         }
 
         $rgsCertificate = new RgsCertificate(
-            $this->getObjectInstancier()->get('openssl_path'),
-            $this->getObjectInstancier()->get('rgs_validca_path')
+            $this->getObjectInstancier()->getParameter('app.openssl_path'),
+            $this->getObjectInstancier()->getParameter('app.path_to_rgs_valid_ca')
         );
         $clientCertChain = null;
         if (isset($files['certificat']['tmp_chaine']) && file_exists(file_get_contents($files['certificat']['tmp_chaine']))) {
@@ -58,8 +58,8 @@ class AdminUtilitiesCertificateController extends Controller
         $certificate_info['is_rgs'] = $rgsCertificate->isRgsCertificate(file_get_contents($files['certificat']['tmp_name']), $clientCertChain);
 
         $rgsCertificate = new RgsCertificate(
-            $this->getObjectInstancier()->get('openssl_path'),
-            $this->getObjectInstancier()->get('extended_validca_path')
+            $this->getObjectInstancier()->getParameter('app.openssl_path'),
+            $this->getObjectInstancier()->getParameter('app.path_to_rgs_valid_cargs')
         );
         $certificate_info['is_extended'] = $rgsCertificate->isRgsCertificate(file_get_contents($files['certificat']['tmp_name']), $clientCertChain);
 

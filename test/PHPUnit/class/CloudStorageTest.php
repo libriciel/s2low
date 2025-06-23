@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PHPUnit\class;
 
 use Exception;
+use Monolog\Level;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\CloudStorage;
@@ -12,6 +13,7 @@ use S2lowLegacy\Class\ICloudStorable;
 use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
+use S2lowLegacy\Model\LogsRequestData;
 use S2lowTestCase;
 use Symfony\Component\Finder\Finder;
 use UnexpectedValueException;
@@ -67,8 +69,8 @@ class CloudStorageTest extends S2lowTestCase
     {
         return new CloudStorage(
             $iCloudStorable,
-            $this->getObjectInstancier()->get(OpenStackSwiftWrapper::class),
-            $this->getObjectInstancier()->get(LoggerInterface::class),
+            self::getContainer()->get(OpenStackSwiftWrapper::class),
+            $this->logger,
             true
         );
     }
@@ -119,7 +121,13 @@ class CloudStorageTest extends S2lowTestCase
             $this->getCloudStorage($this->getICloudStorable($file_to_send))
                 ->storeObject(42)
         );
-        $this->assertLogMessage('Stored object [OK] : 42', 3);
+
+        self::assertTrue(
+            $this->testHandler->hasRecord(
+                "Stored object [OK] : 42",
+                Level::Info
+            )
+        );
     }
 
     /**
@@ -131,8 +139,12 @@ class CloudStorageTest extends S2lowTestCase
         static::assertFalse(
             $this->getCloudStorage($iCloudStorable)->storeObject(42)
         );
-        $this->assertLogMessage(
-            'Unable to store object #42 in cloud : file_path_on_disk not found !'
+
+        self::assertTrue(
+            $this->testHandler->hasRecord(
+                "Unable to store object #42 in cloud : file_path_on_disk not found !",
+                Level::Error
+            )
         );
     }
 
@@ -145,8 +157,12 @@ class CloudStorageTest extends S2lowTestCase
         static::assertFalse(
             $this->getCloudStorage($iCloudStorable)->storeObject(42)
         );
-        $this->assertLogMessage(
-            'Unable to store object #42 in cloud : file this_file_did_not_exists did not exist !'
+
+        self::assertTrue(
+            $this->testHandler->hasRecord(
+                "Unable to store object #42 in cloud : file this_file_did_not_exists did not exist !",
+                Level::Error
+            )
         );
     }
 
@@ -160,8 +176,12 @@ class CloudStorageTest extends S2lowTestCase
         static::assertFalse(
             $this->getCloudStorage($iCloudStorable)->storeObject(42)
         );
-        $this->assertLogMessage(
-            'Unable to store object #42 in cloud : file_path_on_cloud not found ?!?'
+
+        self::assertTrue(
+            $this->testHandler->hasRecord(
+                "Unable to store object #42 in cloud : file_path_on_cloud not found ?!?",
+                Level::Error
+            )
         );
     }
 
@@ -175,7 +195,12 @@ class CloudStorageTest extends S2lowTestCase
         $iCloudStorable = $this->getICloudStorable($file_to_send, $file_to_send);
         $this->getCloudStorage($iCloudStorable)->deleteIfIsInCloud(42);
         static::assertFileDoesNotExist($file_to_send);
-        $this->assertLogMessage("Deleting object #42 : $file_to_send");
+        self::assertTrue(
+            $this->testHandler->hasRecord(
+                "Deleting object #42 : $file_to_send",
+                Level::Info
+            )
+        );
     }
 
     /**
@@ -188,7 +213,12 @@ class CloudStorageTest extends S2lowTestCase
         $iCloudStorable = $this->getICloudStorable($file_to_send, 'foo');
         $this->getCloudStorage($iCloudStorable)->deleteIfIsInCloud(42);
         static::assertFileExists($file_to_send);
-        $this->assertLogMessage('Object #42 not existing on cloud : not deleted (foo not found)');
+        self::assertTrue(
+            $this->testHandler->hasRecord(
+                "Object #42 not existing on cloud : not deleted (foo not found)",
+                Level::Info
+            )
+        );
     }
 
     /**
@@ -209,15 +239,19 @@ class CloudStorageTest extends S2lowTestCase
 
         $this->getCloudStorage($iCloudStorable)->deleteIfIsInCloud(42);
         static::assertFileExists($file_to_send);
-        $this->assertLogMessage(
-            "Problème lors de la supression de l'objet #42 $file_to_send : test unitaire"
+        self::assertTrue(
+            $this->testHandler->hasRecord(
+                "Problème lors de la supression de l'objet #42 $file_to_send : test unitaire",
+                Level::Alert
+            )
         );
     }
 
     private function assertNbJourDerniereModif(): void
     {
-        $this->assertLogMessage(
-            'Nombre de jour depuis la derniere modif : 0'
+        $this->testHandler->hasRecord(
+            "Nombre de jour depuis la derniere modif : 0",
+            Level::Info
         );
     }
 
@@ -237,9 +271,12 @@ class CloudStorageTest extends S2lowTestCase
         $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk();
         static::assertFileExists($file_to_send);
         $this->assertNbJourDerniereModif();
-        $this->assertLogMessage(
-            'File foo.txt too young to die : not deleted',
-            1
+
+        self::assertTrue(
+            $this->testHandler->hasRecordThatContains(
+                "File foo.txt too young to die : not deleted",
+                Level::Debug
+            )
         );
     }
 
@@ -261,9 +298,12 @@ class CloudStorageTest extends S2lowTestCase
 
         $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0);
         $this->assertNbJourDerniereModif();
-        $this->assertLogMessage(
-            "Deleting file : $file_to_send",
-            2
+
+        self::assertTrue(
+            $this->testHandler->hasRecordThatContains(
+                "Deleting file : $file_to_send",
+                Level::Info
+            )
         );
     }
 
@@ -287,9 +327,12 @@ class CloudStorageTest extends S2lowTestCase
         $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0);
         static::assertFileExists($file_to_send);
         $this->assertNbJourDerniereModif();
-        $this->assertLogMessage(
-            "File $file_to_send not existing on cloud : not deleted",
-            2
+
+        self::assertTrue(
+            $this->testHandler->hasRecord(
+                "File $file_to_send not existing on cloud : not deleted",
+                Level::Info
+            )
         );
     }
 
@@ -327,7 +370,12 @@ class CloudStorageTest extends S2lowTestCase
             ->willReturn(basename($file_to_send));
 
         $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0);
-        $this->assertLogMessage('42 set to available', 3);
+        self::assertTrue(
+            $this->testHandler->hasRecord(
+                "42 set to available",
+                Level::Info
+            )
+        );
     }
 
     /**
@@ -347,10 +395,17 @@ class CloudStorageTest extends S2lowTestCase
         );
 
         $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0);
-        $this->assertMatchesRegularExpressionLogMessage('#Unable to find object id for the file#', 3);
-        $this->assertLogMessage(
-            "rename done to $path_relative_to_upload_dir in $files_without_transaction_dir",
-            4
+        self::assertTrue(
+            $this->testHandler->hasRecordThatMatches(
+                "#Unable to find object id for the file#",
+                Level::Notice
+            )
+        );
+        self::assertTrue(
+            $this->testHandler->hasRecord(
+                "rename done to $path_relative_to_upload_dir in $files_without_transaction_dir",
+                Level::Info
+            )
         );
 
         static::assertFileDoesNotExist($file_to_send); //Le fichier original est supprimé
@@ -460,8 +515,13 @@ class CloudStorageTest extends S2lowTestCase
         $iCloudStorable->expects(static::exactly($nbOfSetAvailableCalls))->method('setAvailable');
         $iCloudStorable->expects(static::exactly($nbOfsetInCloudCalls))->method('setInCloud');
         $this->getCloudStorage($iCloudStorable)->deleteFilesOnDisk(0);
-        foreach ($logs as $key => $line) {
-            $this->assertMatchesRegularExpressionLogMessage($line, $key);
+        foreach ($logs as $log) {
+            self::assertTrue(
+                $this->testHandler->hasRecordThatMatches(
+                    $log,
+                    Level::Info,
+                )
+            );
         }
     }
 
@@ -472,13 +532,38 @@ class CloudStorageTest extends S2lowTestCase
         // S'il est marqué comme sur le cloud en BDD, il faut corriger : il n'y est pas.
         return [
             'withBothAvailableAndTransactionInCloud' =>
-                [true, true, 0, 1, ['3' => '#passé à is_in_cloud = false#']],
+                [
+                    true,
+                    true,
+                    0,
+                    1,
+                    [
+                        '#passé à is_in_cloud = false#',
+                    ]
+                ],
             'withNotAvailableAndTransactionInCloud' =>
-                [false, true, 1, 1,  ['3' => '#set to available#', '4' => '#passé à is_in_cloud = false#']],
+                [
+                    false,
+                    true,
+                    1,
+                    1,
+                    [
+                        '#set to available#',
+                        '#passé à is_in_cloud = false#',
+                    ]
+                ],
             'withOnlyAvailable' =>
-                [true, false, 0, 0,  []],
+                [true, false, 0, 0, []],
             'withNotAvailableAndNotInCloud' =>
-                [false,false, 1, 0,['3' => '#set to available#']]
+                [
+                    false,
+                    false,
+                    1,
+                    0,
+                    [
+                        '#set to available#',
+                    ]
+                ]
         ];
     }
 

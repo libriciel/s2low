@@ -1,6 +1,7 @@
 <?php
 
 use GuzzleHttp\Exception\ConnectException;
+use Monolog\Level;
 use S2lowLegacy\Lib\OpenStackStateManager;
 use S2lowLegacy\Lib\PausingQueueException;
 use Monolog\Logger;
@@ -8,23 +9,6 @@ use Psr\Http\Message\RequestInterface;
 
 class OpenStackStateManagerTest extends S2lowTestCase
 {
-    /**
-     * @var Logger
-     */
-    private $logger;
-    /**
-     * @var \Monolog\Handler\StreamHandler
-     */
-    private $handler;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->logger = new Logger("test");
-        $this->handler = new  Monolog\Handler\TestHandler();
-        $this->logger->pushHandler($this->handler);
-    }
-
     public function testMaxConsecutiveExceptions()
     {
 
@@ -85,9 +69,11 @@ class OpenStackStateManagerTest extends S2lowTestCase
 
         $classe->declareException($exception);
 
-        $this->assertEquals(
-            "[Openstack][1] {$message}",
-            $this->handler->getRecords()[0]["message"]
+        $this->assertTrue(
+            $this->testHandler->hasRecord(
+                "[Openstack][1] {$message}",
+                Level::Error
+            )
         );
     }
 

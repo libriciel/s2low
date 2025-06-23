@@ -10,8 +10,10 @@ class ActesCreator
 
     private $last_envelope_id;
 
-    public function __construct(ActesTransactionsSQL $actesTransactionsSQL, ActesEnvelopeSQL $actesEnvelopeSQL)
-    {
+    public function __construct(
+        ActesTransactionsSQL $actesTransactionsSQL,
+        ActesEnvelopeSQL $actesEnvelopeSQL
+    ) {
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
     }
@@ -25,9 +27,9 @@ class ActesCreator
             copy($archive_path, $tmp_dir . "/$archive_name");
         }
 
-        $this->last_envelope_id = $this->actesEnvelopeSQL->create(1, basename($tmp_dir) . "/$archive_name");
+        $this->last_envelope_id = $this->actesEnvelopeSQL->create(13, basename($tmp_dir) . "/$archive_name");
 
-        $transaction_id = $this->actesTransactionsSQL->create($this->last_envelope_id, $status, 1, 1);
+        $transaction_id = $this->actesTransactionsSQL->create($this->last_envelope_id, $status, 13, 1);
 
         $this->actesTransactionsSQL->updateStatus(
             $transaction_id,

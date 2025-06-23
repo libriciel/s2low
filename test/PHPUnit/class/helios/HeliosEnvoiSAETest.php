@@ -1,99 +1,83 @@
 <?php
 
+use Monolog\Level;
+use org\bovigo\vfs\vfsStream;
 use S2lowLegacy\Class\helios\HeliosEnvoiSAE;
 use S2lowLegacy\Class\helios\HeliosPrepareEnvoiSAE;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
-use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Class\helios\PESAllerCloudStorable;
+use S2lowLegacy\Class\helios\PESAllerCloudStorage;
+use S2lowLegacy\Class\helios\PesAllerRetriever;
+use S2lowLegacy\Class\PastellWrapperFactory;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
+use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
+use S2lowLegacy\Model\PastellPropertiesSQL;
 
 class HeliosEnvoiSAETest extends S2lowTestCase
 {
     use HeliosUtilitiesTestTrait;
     use PastellConfigurationTestTrait;
 
-    public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
-    {
-        return $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
-    }
-
-    /**
-     * @return string
-     * @throws Exception
-     */
-    private function mockOpenStack()
-    {
-        $tmpFolder = new TmpFolder();
-        $tmp_folder = $tmpFolder->create();
-        $pes_aller_path = $tmp_folder . "/ab3321d34d3fb32b52332befa534c9854fff677b";
-        file_put_contents($pes_aller_path, "<test></test>");
-        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $openStackSwiftWrapper->method("fileExistsOnCloud")->willReturn(true);
-        $openStackSwiftWrapper->method("retrieveFile")->willReturn($pes_aller_path);
-        $this->getObjectInstancier()->set(OpenStackSwiftWrapper::class, $openStackSwiftWrapper);
-        $this->getObjectInstancier()->set('helios_files_upload_root', $tmp_folder);
-        return $pes_aller_path;
-    }
+    private OpenStackSwiftWrapper $openStackSwiftWrapper;
+    private HeliosEnvoiSAE $heliosEnvoiSAE;
 
     /**
      * @throws Exception
      */
     public function testSend()
     {
-        $pes_aller_path = $this->mockOpenStack();
-        $this->mockPastellFactory();
-        $transaction_id = $this->setTransactionEnattente();
+        $mockedPastellFactory = $this->mockPastellFactory();
+        $heliosEnvoiSAE = $this->createHeliosEnvoiSae($mockedPastellFactory);
+        $transaction_id = $this->setTransactionEnAttente();
 
-        $this->assertFileExists($pes_aller_path);
+        $this->assertFileExists($this->tmpPathFolder);
 
         $this->assertTrue(
-            $this->getObjectInstancier()->get(HeliosEnvoiSAE::class)->sendArchive($transaction_id)
+            $heliosEnvoiSAE->sendArchive($transaction_id)
         );
 
-        $this->assertFileDoesNotExist($pes_aller_path);
-        $this->assertLogMessage("Début du traitement de la transaction $transaction_id", 1);
-        $this->assertLogMessage("Début de la récupération des fichiers de la transaction $transaction_id", 2);
-        $this->assertLogMessage("Début du transfert vers FakeURL de la transaction $transaction_id", 3);
-        $this->assertMatchesRegularExpressionLogMessage("/Deleting object #$transaction_id/", 4);
-        $this->assertLogMessage("La transaction $transaction_id a été envoyée à Pastell", 5);
+        $this->assertFileExists($this->tmpPathFolder);
+
+        $this->assertTrue(
+            $this->testHandler->hasRecordThatContains(
+                "Début du traitement de la transaction $transaction_id",
+                Level::Info
+            )
+        );
+        $this->assertTrue(
+            $this->testHandler->hasRecordThatContains(
+                "Début de la récupération des fichiers de la transaction $transaction_id",
+                Level::Info
+            )
+        );
+        $this->assertTrue(
+            $this->testHandler->hasRecordThatContains(
+                "Début de la récupération des fichiers de la transaction $transaction_id",
+                Level::Info
+            )
+        );
+        $this->assertTrue(
+            $this->testHandler->hasRecordThatContains(
+                "Début du transfert vers FakeURL de la transaction $transaction_id",
+                Level::Info
+            )
+        );
+        $this->assertTrue(
+            $this->testHandler->hasRecordThatMatches(
+                "/Deleting object #$transaction_id/",
+                Level::Info
+            )
+        );
+        $this->assertTrue(
+            $this->testHandler->hasRecordThatContains(
+                "La transaction $transaction_id a été envoyée à Pastell",
+                Level::Info
+            )
+        );
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testSendWithCloudError()
-    {
-        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $openStackSwiftWrapper->method("fileExistsOnCloud")->willReturn(true);
-        $openStackSwiftWrapper->method("retrieveFile")->willReturn('');
-        $this->getObjectInstancier()->set(OpenStackSwiftWrapper::class, $openStackSwiftWrapper);
-        $this->getObjectInstancier()->set('helios_files_upload_root', '/whatever/');
-
-        $this->mockPastellFactory();
-        $transaction_id = $this->setTransactionEnattente();
-
-        static::assertFalse(
-            $this->getObjectInstancier()->get(HeliosEnvoiSAE::class)->sendArchive($transaction_id)
-        );
-
-        $this->assertLogMessage(
-            "Documents indisponibles pour la transaction $transaction_id  : Impossible de récupérer le PES ALLER ab3321d34d3fb32b52332befa534c9854fff677b",
-            3
-        );
-
-        /** @var HeliosTransactionsSQL $heliosTransactionsSQL */
-        $heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
-        $this->assertEquals(
-            HeliosStatusSQL::STATUS_ERREUR_SAE_DOC_INDISPONIBLES,
-            $heliosTransactionsSQL->getLatestStatusId($transaction_id)
-        );
-    }
-
-    private function setTransactionEnattente()
+    private function setTransactionEnAttente(): int
     {
         $this->configurePastell();
         $transaction_id = $this->createTransaction();
@@ -106,19 +90,52 @@ class HeliosEnvoiSAETest extends S2lowTestCase
     /**
      * @throws Exception
      */
+    public function testSendWithCloudError()
+    {
+        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $openStackSwiftWrapper->method("fileExistsOnCloud")->willReturn(true);
+        $openStackSwiftWrapper->method("retrieveFile")->willReturn('');
+
+        $heliosEnvoiSae = $this->createHeliosEnvoiSae(openStackSwiftWrapper: $openStackSwiftWrapper);
+        $transaction_id = $this->setTransactionEnAttente();
+
+        static::assertFalse(
+            $heliosEnvoiSae->sendArchive($transaction_id)
+        );
+
+        $this->assertTrue(
+            $this->testHandler->hasRecordThatContains(
+                "Documents indisponibles pour la transaction $transaction_id  : Impossible de récupérer le PES ALLER ab3321d34d3fb32b52332befa534c9854fff677b",
+                Level::Error
+            )
+        );
+        $heliosTransactionsSQL = $this->getHeliosTransactionsSQL();
+        $this->assertEquals(
+            HeliosStatusSQL::STATUS_ERREUR_SAE_DOC_INDISPONIBLES,
+            $heliosTransactionsSQL->getLatestStatusId($transaction_id)
+        );
+    }
+
+    /**
+     * @throws Exception
+     */
     public function testSendTransactionEnErreur()
     {
-        $this->mockOpenStack();
-
-        $this->mockPastellFactory(false, "Erreur renvoyé par le mock");
-        $transaction_id = $this->setTransactionEnattente();
+        $mockPastell = $this->mockPastellFactory(false, "Erreur renvoyé par le mock");
+        $heliosEnvoiSAE = $this->createHeliosEnvoiSae($mockPastell);
+        $transaction_id = $this->setTransactionEnAttente();
 
         $this->assertFalse(
-            $this->getObjectInstancier()->get(HeliosEnvoiSAE::class)->sendArchive($transaction_id)
+            $heliosEnvoiSAE->sendArchive($transaction_id)
         );
-        $this->assertLogMessage(
-            "La transaction $transaction_id n'a pas pu être envoyée sur Pastell : Erreur renvoyé par le mock",
-            4
+
+        $this->assertTrue(
+            $this->testHandler->hasRecordThatContains(
+                "La transaction $transaction_id n'a pas pu être envoyée sur Pastell : Erreur renvoyé par le mock",
+                Level::Error
+            )
         );
     }
 
@@ -127,12 +144,23 @@ class HeliosEnvoiSAETest extends S2lowTestCase
      */
     public function testSendAllArchive()
     {
-        $this->mockOpenStack();
-        $this->mockPastellFactory("xyzt", false);
-        $transaction_id = $this->setTransactionEnattente();
-        $this->getObjectInstancier()->get(HeliosEnvoiSAE::class)->sendAllArchive();
-        $this->assertLogMessage("1 transactions à envoyer...", 2);
-        $this->assertLogMessage("La transaction $transaction_id a été envoyée à Pastell", 8);
+        $transaction_id = $this->setTransactionEnAttente();
+        $mockPastell = $this->mockPastellFactory();
+        $heliosEnvoiSAE = $this->createHeliosEnvoiSae($mockPastell);
+        $heliosEnvoiSAE->sendAllArchive();
+
+        $this->assertTrue(
+            $this->testHandler->hasRecordThatContains(
+                "1 transactions à envoyer...",
+                Level::Info
+            )
+        );
+        $this->assertTrue(
+            $this->testHandler->hasRecordThatContains(
+                "La transaction $transaction_id a été envoyée à Pastell",
+                Level::Info
+            )
+        );
     }
 
     /**
@@ -140,16 +168,18 @@ class HeliosEnvoiSAETest extends S2lowTestCase
      */
     public function testWhenErrorMessageIsTooLong()
     {
-        $this->mockOpenStack();
         $error_message = str_repeat('X', 1024);
-        $this->mockPastellFactory(false, $error_message);
-        $transaction_id = $this->setTransactionEnattente();
+        $mockPastell = $this->mockPastellFactory(false, $error_message);
+        $heliosEnvoiSAE = $this->createHeliosEnvoiSae($mockPastell);
+        $transaction_id = $this->setTransactionEnAttente();
         $this->assertFalse(
-            $this->getObjectInstancier()->get(HeliosEnvoiSAE::class)->sendArchive($transaction_id)
+            $heliosEnvoiSAE->sendArchive($transaction_id)
         );
-        $this->assertLogMessage(
-            "La transaction $transaction_id n'a pas pu être envoyée sur Pastell : $error_message",
-            4
+        $this->assertTrue(
+            $this->testHandler->hasRecordThatContains(
+                "La transaction $transaction_id n'a pas pu être envoyée sur Pastell : $error_message",
+                Level::Error
+            )
         );
     }
 
@@ -158,15 +188,17 @@ class HeliosEnvoiSAETest extends S2lowTestCase
      */
     public function testErreurEnvoiSAE()
     {
-        $this->mockOpenStack();
-        $this->mockPastellFactory('dsf', "", true);
-        $transaction_id = $this->setTransactionEnattente();
+        $transaction_id = $this->setTransactionEnAttente();
+
         $this->assertFalse(
-            $this->getObjectInstancier()->get(HeliosEnvoiSAE::class)->sendArchive($transaction_id)
+            $this->heliosEnvoiSAE->sendArchive($transaction_id)
         );
-        $this->assertLogMessage(
-            "La transaction $transaction_id n'a pas pu être envoyée sur Pastell : [Exception] Error Send SAE",
-            4
+
+        $this->assertTrue(
+            $this->testHandler->hasRecordThatContains(
+                "La transaction $transaction_id n'a pas pu être envoyée sur Pastell : [Exception] Error Send SAE",
+                Level::Error
+            )
         );
     }
 
@@ -175,15 +207,80 @@ class HeliosEnvoiSAETest extends S2lowTestCase
      */
     public function testErreurEnvoiSAEPuisErreurSuppression()
     {
-        $this->mockOpenStack();
-        $this->mockPastellFactory('dsf', "", true, true);
-        $transaction_id = $this->setTransactionEnattente();
+        $transaction_id = $this->setTransactionEnAttente();
         $this->assertFalse(
-            $this->getObjectInstancier()->get(HeliosEnvoiSAE::class)->sendArchive($transaction_id)
+            $this->heliosEnvoiSAE->sendArchive($transaction_id)
         );
-        $this->assertLogMessage(
+
+        $this->testHandler->hasRecordThatContains(
             "La transaction $transaction_id n'a pas pu être envoyée sur Pastell : [Exception] Error Send SAE et erreur lors de la suppression de dsf\[Exception] Error on delete",
-            4
+            Level::Error
         );
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->secondTmpPathFolder = vfsStream::url('test2');
+        $pesAllerPath = $this->tmpPathFolder . "/ab3321d34d3fb32b52332befa534c9854fff677b";
+        file_put_contents($pesAllerPath, "<test></test>");
+
+        $this->openStackSwiftWrapper = $this->getOpenStackSwiftWrapperMocked($pesAllerPath);
+        $this->heliosEnvoiSAE = $this->createHeliosEnvoiSae();
+    }
+
+    private function getOpenStackSwiftWrapperMocked($pesAllerPath): OpenStackSwiftWrapper
+    {
+        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $openStackSwiftWrapper->method("fileExistsOnCloud")->willReturn(true);
+        $openStackSwiftWrapper->method("retrieveFile")->willReturn($pesAllerPath);
+
+        return $openStackSwiftWrapper;
+    }
+
+    private function createHeliosEnvoiSae(
+        PastellWrapperFactory $mockPastellFactory = null,
+        OpenStackSwiftWrapper $openStackSwiftWrapper = null
+    ): HeliosEnvoiSAE {
+        $pesAllerRetriever = $this->getPesAllerRetriever($openStackSwiftWrapper);
+        $pastellWrapperFactory = $mockPastellFactory ?? $this->mockPastellFactory('dsf', "", true, true);
+        $pastellPropertiesSQL = $this->getContainer()->get(PastellPropertiesSQL::class);
+        $pesAllerCloudStorable = new PesAllerCloudStorable(
+            $this->tmpPathFolder,
+            self::getContainer()->get(HeliosTransactionsSQL::class),
+            $this->secondTmpPathFolder,
+        );
+        $pesAllerCloudStorage = new PesAllerCloudStorage(
+            $pesAllerCloudStorable,
+            $openStackSwiftWrapper ?? $this->openStackSwiftWrapper,
+            $this->logger,
+            openstack_enable: false
+        );
+
+        return new HeliosEnvoiSAE(
+            $pesAllerRetriever,
+            $pastellWrapperFactory,
+            $this->logger,
+            self::getContainer()->get(AuthoritySQL::class),
+            $this->getHeliosTransactionsSQL(),
+            $pastellPropertiesSQL,
+            $pesAllerCloudStorage
+        );
+    }
+
+    private function getPesAllerRetriever(OpenStackSwiftWrapper $openStackSwiftWrapper = null): PesAllerRetriever
+    {
+        return new PesAllerRetriever(
+            $this->tmpPathFolder,
+            $openStackSwiftWrapper ?? $this->openStackSwiftWrapper,
+            $this->s2lowLogger,
+        );
+    }
+
+    public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
+    {
+        return self::getContainer()->get(HeliosTransactionsSQL::class);
     }
 }

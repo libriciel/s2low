@@ -18,7 +18,7 @@ class CreatePESAllerTest extends S2lowIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+        $this->heliosTransactionsSQL = self::getContainer()->get(HeliosTransactionsSQL::class);
     }
 
     public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
@@ -53,8 +53,7 @@ class CreatePESAllerTest extends S2lowIntegrationTestCase
      */
     public function testCreatePESAller($data): void
     {
-        $this->createUserWithDefaultCertificatAs(UserRole::Utilisateur);
-
+        $this->setUserWithRole(UserRole::Utilisateur);
         $this->createTransaction(
             1,
             $data['status'],
@@ -74,7 +73,7 @@ class CreatePESAllerTest extends S2lowIntegrationTestCase
             true
         );
 
-        $vfsUrl = vfsStream::url('test/helios/' . $fileName);
+        $vfsUrl = vfsStream::url('test/' . $fileName);
         copy($filePath, $vfsUrl);
         $filePathFromUseCaseCode = $vfsUrl;
 
@@ -89,7 +88,7 @@ class CreatePESAllerTest extends S2lowIntegrationTestCase
             ];
         }
 
-        $client = $this->getAuthenticatedClientAttachedToDefaultCertificat();
+        $client = $this->client;
         $client->request(
             'GET',
             '/modules/helios/api/helios_importer_fichier.php',

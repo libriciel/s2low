@@ -1,5 +1,7 @@
 <?php
 
+namespace S2lowLegacy\Boot;
+
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Controller\PostgreSQLController;
 use S2lowLegacy\Lib\SQLQuery;
@@ -9,10 +11,12 @@ class S2lowBootstrap
 {
     private $sqlQuery;
 
-    public function __construct(SQLQuery $sqlQuery, PostgreSQLController $postgreSQLController)
-    {
+    public function __construct(
+        SQLQuery $sqlQuery,
+        private readonly PostgreSQLController $postgreSQLController,
+        private readonly UserSQL $userSQL,
+    ) {
         $this->sqlQuery = $sqlQuery;
-        $this->postgreSQLController = $postgreSQLController;
     }
 
     public function bootstrap()
@@ -42,6 +46,11 @@ class S2lowBootstrap
         } catch (Exception $e) {
             $this->log("Erreur : " . $e->getMessage());
         }
+    }
+
+    private function log($message)
+    {
+        echo "[" . date("Y-m-d H:i:s") . "][S2LOW bootstrap] $message\n";
     }
 
     /**
@@ -87,80 +96,14 @@ class S2lowBootstrap
         }
     }
 
-    private function dbUpdate()
+    private function getHostname()
     {
-        $this->postgreSQLController->alterDatabase(function ($message) {
-            $this->log($message);
-        });
+        return parse_url(WEBSITE_SSL, PHP_URL_HOST);
     }
 
-    private function insertDemos()
+    private function getMailHostname()
     {
-
-        if ($this->sqlQuery->queryOne("SELECT * FROM users WHERE role='SADM'")) {
-            $this->log("L'utilisateur admin existe déjà");
-            return;
-        }
-
-        $authority_id = $this->sqlQuery->queryOne(
-            "INSERT INTO authorities (id, status, name) VALUES(nextval('authorities_id_seq'), 1, 'Administrateurs') RETURNING id"
-        );
-        $this->log("Création de l'utilisateur admin [certificat DEMO-SUPER Adullact G3]");
-
-        $him = new User();
-
-        $him->set("name", "admin");
-        $him->set("givenname", "admin");
-        $him->set("email", "noreply@libriciel.net");
-        $him->set("status", 1);
-        $him->set("authority_id", $authority_id);
-        $him->set("role", 'SADM');
-
-        $him->set("certFilePath", __DIR__ . "/certificate/demosuper.pem");
-        if (!$him->save()) {
-            throw new Exception("Erreur lors de l'enregistrement de l'utilisateur : " . $him->getErrorMsg());
-        }
-
-        $user_id = $him->getId();
-
-        $userSQL = new UserSQL($this->sqlQuery);
-        $userSQL->saveCertificateRGS2Etoiles($user_id, "");
-
-        $this->log("Utilisateur créé avec succès");
-    }
-
-    public function populateDatabase()
-    {
-        $data = file_get_contents(__DIR__ . "/database/database_populate.json");
-        $all = json_decode($data, true);
-        foreach ($all as $table => $table_definition) {
-            foreach ($table_definition as $line) {
-                $sql = "SELECT * " .
-                    " FROM $table WHERE id=?";
-                if ($this->sqlQuery->queryOne($sql, $line['id'])) {
-                    continue;
-                }
-                $all_id = array();
-                $all_value = array();
-                $point = array();
-                foreach ($line as $id => $value) {
-                    $all_id[] = $id;
-                    if ($value === '') {
-                        $all_value[] = null;
-                    } elseif ($value === "0") {
-                        $all_value[] = 0;
-                    } else {
-                        $all_value[] = $value ?: '';
-                    }
-                    $point[] = "?";
-                }
-                $all_id = implode(",", $all_id);
-                $point = implode(",", $point);
-                $sql2 = "INSERT INTO $table ($all_id) VALUES ($point)";
-                $this->log($sql2);
-                $this->sqlQuery->query($sql2, $all_value);
-            }
-        }
+        return parse_url(WEBSITE_MAIL, PHP_URL_HOST);
     }
 
     public function installHorodateur()
@@ -214,18 +157,77 @@ class S2lowBootstrap
         return true;
     }
 
-    private function log($message)
+    private function dbUpdate()
     {
-        echo "[" . date("Y-m-d H:i:s") . "][S2LOW bootstrap] $message\n";
+        $this->postgreSQLController->alterDatabase(function ($message) {
+            $this->log($message);
+        });
     }
 
-    private function getHostname()
+    private function insertDemos()
     {
-        return parse_url(WEBSITE_SSL, PHP_URL_HOST);
+        if ($this->sqlQuery->queryOne("SELECT * FROM users WHERE role='SADM'")) {
+            $this->log("L'utilisateur admin existe déjà");
+            return;
+        }
+
+        $authority_id = $this->sqlQuery->queryOne(
+            "INSERT INTO authorities (id, status, name) VALUES(nextval('authorities_id_seq'), 1, 'Administrateurs') RETURNING id"
+        );
+        $this->log("Création de l'utilisateur admin [certificat DEMO-SUPER Adullact G3]");
+
+        $him = new User();
+
+        $him->set("name", "admin");
+        $him->set("givenname", "admin");
+        $him->set("email", "noreply@libriciel.net");
+        $him->set("status", 1);
+        $him->set("authority_id", $authority_id);
+        $him->set("role", 'SADM');
+
+        $him->set("certFilePath", __DIR__ . "/certificate/demosuper.pem");
+        if (!$him->save()) {
+            throw new \Exception("Erreur lors de l'enregistrement de l'utilisateur : " . $him->getErrorMsg());
+        }
+
+        $user_id = $him->getId();
+
+        $this->userSQL->saveCertificateRGS2Etoiles($user_id, "");
+
+        $this->log("Utilisateur créé avec succès");
     }
 
-    private function getMailHostname()
+    public function populateDatabase()
     {
-        return parse_url(WEBSITE_MAIL, PHP_URL_HOST);
+        $data = file_get_contents(__DIR__ . "/database/database_populate.json");
+        $all = json_decode($data, true);
+        foreach ($all as $table => $table_definition) {
+            foreach ($table_definition as $line) {
+                $sql = "SELECT * " .
+                    " FROM $table WHERE id=?";
+                if ($this->sqlQuery->queryOne($sql, $line['id'])) {
+                    continue;
+                }
+                $all_id = array();
+                $all_value = array();
+                $point = array();
+                foreach ($line as $id => $value) {
+                    $all_id[] = $id;
+                    if ($value === '') {
+                        $all_value[] = null;
+                    } elseif ($value === "0") {
+                        $all_value[] = 0;
+                    } else {
+                        $all_value[] = $value ?: '';
+                    }
+                    $point[] = "?";
+                }
+                $all_id = implode(",", $all_id);
+                $point = implode(",", $point);
+                $sql2 = "INSERT INTO $table ($all_id) VALUES ($point)";
+                $this->log($sql2);
+                $this->sqlQuery->query($sql2, $all_value);
+            }
+        }
     }
 }

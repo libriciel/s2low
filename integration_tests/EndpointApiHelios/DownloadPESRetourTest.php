@@ -16,7 +16,7 @@ class DownloadPESRetourTest extends S2lowIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
+        $this->heliosTransactionsSQL = self::getContainer()->get(HeliosTransactionsSQL::class);
     }
 
     public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
@@ -56,17 +56,18 @@ class DownloadPESRetourTest extends S2lowIntegrationTestCase
      */
     public function testDownloadPESRetour($data): void
     {
-        $this->createUserWithDefaultCertificatAs(UserRole::Archiviste);
-
         $collectiviteId = 1;
         $sampleXMLPath = __DIR__ . "/../../integration_tests/fixtures/XMLTest.xml";
         $PESRetourFilename = "XMLTest.xml";
-        $newSampleXML = HELIOS_RESPONSES_ROOT . "/" . $PESRetourFilename;
+        $heliosResponseRoot = self::getContainer()->getParameter('app.helios_responses_root');
+
+        $newSampleXML = $heliosResponseRoot . "/" . $PESRetourFilename;
         copy($sampleXMLPath, $newSampleXML);
 
         $PESRetourId = $this->addPESRetourToCollectivite($collectiviteId, $PESRetourFilename);
 
-        $client = $this->getAuthenticatedClientAttachedToDefaultCertificat();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Archiviste);
 
         if ($data['use_pes_retour_id']) {
             $PESRetourId = $data['use_good_pes_retour_id'] ? $PESRetourId : 1234567;
@@ -77,7 +78,6 @@ class DownloadPESRetourTest extends S2lowIntegrationTestCase
         } else {
             $requestGetParam = [];
         }
-
         $client->request(
             'GET',
             '/modules/helios/api/helios_get_retour.php',

@@ -93,6 +93,6 @@ class LogTimestampTokenGarbageTest extends S2lowTestCase
 
     public function getLogHistoriqueSQL(): LogsHistoriqueSQL
     {
-        return $this->getObjectInstancier()->get(LogsHistoriqueSQL::class);
+        return self::getContainer()->get(LogsHistoriqueSQL::class);
     }
 }

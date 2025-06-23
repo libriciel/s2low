@@ -56,11 +56,11 @@ if [ -z "$DONT_INIT_DATABASE" ] ; then
     sleep 5
   done
 
-  php /var/www/s2low/docker-resources/init-docker.php
-
-  if [ "${POSTGRES_DATABASE_TEST}" ]; then
-      php /var/www/s2low/docker-resources/init-bdd-test.php
-  fi
+  php /var/www/s2low/bin/console init:bootstrap
+#
+#  if [ "${POSTGRES_DATABASE_TEST}" ]; then
+#    php /var/www/s2low/bin/console init:db-test
+#  fi
 fi
 
 #Si la variable OPENSTACK_ENABLE n'existe pas il faut la définir sinon supervisor retournera une erreur

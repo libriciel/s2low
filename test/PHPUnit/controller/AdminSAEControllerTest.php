@@ -1,20 +1,22 @@
 <?php
 
+use IntegrationTests\S2lowIntegrationTestCase;
+use S2low\Enum\UserRole;
 use S2lowLegacy\Controller\AdminSAEController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\PastellProperties;
 
-class AdminSAEControllerTest extends S2lowTestCase
+class AdminSAEControllerTest extends S2lowIntegrationTestCase
 {
     public function testEditAction()
     {
-        $this->setSuperAdminAuthentication();
-        $adminServiceController = $this->getObjectInstancier()->get(AdminSAEController::class);
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $adminServiceController = self::getContainer()->get(AdminSAEController::class);
 
 
-        $authoritySQL = new AuthoritySQL($this->getSQLQuery());
+        $authoritySQL = self::getContainer()->get(AuthoritySQL::class);
         $pastellProperties = new PastellProperties();
         $pastellProperties->url = "test";
         $pastellProperties->login = "login";
@@ -23,7 +25,7 @@ class AdminSAEControllerTest extends S2lowTestCase
 
         $authoritySQL->updateSAE(1, $pastellProperties);
 
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('id', 1);
+        self::getContainer()->get(Environnement::class)->get()->set('id', 1);
 
         $adminServiceController->_actionBefore("AdminSAE", "edit");
         $adminServiceController->editAction();  //BUG ??
@@ -36,10 +38,11 @@ class AdminSAEControllerTest extends S2lowTestCase
      */
     public function testTestAction()
     {
-        $this->setSuperAdminAuthentication();
-        $adminServiceController = $this->getObjectInstancier()->get(AdminSAEController::class);
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('id', 1);
-        $this->setExpectedException(Exception::class, "Redirect to");
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $adminServiceController = self::getContainer()->get(AdminSAEController::class);
+        self::getContainer()->get(Environnement::class)->get()->set('id', 1);
+        self::expectException(Exception::class);
+        self::expectExceptionMessage("Redirect to");
         $adminServiceController->testAction();
     }
 }

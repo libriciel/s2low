@@ -7,6 +7,7 @@ namespace PHPUnit\class\mail;
 use Exception;
 use MailsecUtilitiesTestTrait;
 use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable;
+use S2lowLegacy\Class\mailsec\MailTransactionSQL;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowTestCase;
 
@@ -14,9 +15,23 @@ class MailIncludedFilesCloudStorageTest extends S2lowTestCase
 {
     use MailsecUtilitiesTestTrait;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->mail_files_upload_root = $this->tmpPathFolder;
+        $this->mail_files_without_transac_dir = $this->secondTmpPathFolder;
+    }
+
+
+
     private function getMailIncludedFilesCloudStorage(): MailIncludedFilesCloudStorable
     {
-        return $this->getObjectInstancier()->get(MailIncludedFilesCloudStorable::class);
+        return new MailIncludedFilesCloudStorable(
+            self::getContainer()->get(MailTransactionSQL::class),
+            $this->mail_files_upload_root,
+            $this->mail_files_without_transac_dir
+        );
     }
 
     public function testGetContainerName(): void
@@ -38,10 +53,9 @@ class MailIncludedFilesCloudStorageTest extends S2lowTestCase
 
     public function testGetFilePathOnDisk(): void
     {
-        $this->getObjectInstancier()->set('mail_files_upload_root', sys_get_temp_dir());
         $mail_transaction_id = $this->createMailTransaction();
         static::assertSame(
-            $this->getArchivePath(sys_get_temp_dir()),
+            $this->getArchivePath($this->tmpPathFolder),
             $this->getMailIncludedFilesCloudStorage()->getFilePathOnDisk($mail_transaction_id)
         );
     }
@@ -97,7 +111,8 @@ class MailIncludedFilesCloudStorageTest extends S2lowTestCase
             $this->getArchivePath($mail_files_upload_root),
             'test'
         );
-        $this->getObjectInstancier()->set('mail_files_upload_root', $mail_files_upload_root);
+        $this->mail_files_upload_root = $mail_files_upload_root;
+
         $this->createMailTransaction();
         $finder = $this->getMailIncludedFilesCloudStorage()->getFinder();
         static::assertSame(1, $finder->count());
@@ -126,8 +141,8 @@ class MailIncludedFilesCloudStorageTest extends S2lowTestCase
         mkdir($mail_files_without_transac_dir . 'test/', 0777, true);
         file_put_contents($mail_files_without_transac_dir . 'test/mail.zip', 'test2');
 
-        $this->getObjectInstancier()->set('mail_files_upload_root', $mail_files_upload_root);
-        $this->getObjectInstancier()->set('mail_files_without_transac_dir', $mail_files_without_transac_dir);
+        $this->mail_files_upload_root = $mail_files_upload_root;
+        $this->mail_files_without_transac_dir = $mail_files_without_transac_dir;
         $this->createMailTransaction();
         $finder = $this->getMailIncludedFilesCloudStorage()->getFinder();
         static::assertSame(1, $finder->count());
@@ -155,9 +170,9 @@ class MailIncludedFilesCloudStorageTest extends S2lowTestCase
         $mail_files_without_transac_dir = $tmpFolder->create();
         mkdir($mail_files_without_transac_dir . 'test/', 0777, true);
         file_put_contents($mail_files_without_transac_dir . 'test/mail.zip', 'test2');
+        $this->mail_files_upload_root = $mail_files_upload_root;
+        $this->mail_files_without_transac_dir = $mail_files_without_transac_dir;
 
-        $this->getObjectInstancier()->set('mail_files_upload_root', $mail_files_upload_root);
-        $this->getObjectInstancier()->set('mail_files_without_transac_dir', $mail_files_without_transac_dir);
         $this->createMailTransaction();
         $finder = $this->getMailIncludedFilesCloudStorage()->getFinder();
         static::assertSame(1, $finder->count());

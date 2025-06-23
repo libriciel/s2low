@@ -18,7 +18,6 @@ class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
         mkdir($tmp_folder . "/000000000/");
         $actes_path = $tmp_folder . "/000000000/test.tar.gz";
         file_put_contents("$actes_path", "foo");
-        $this->getObjectInstancier()->set('actes_files_upload_root', $tmp_folder);
         return $actes_path;
     }
 
@@ -79,12 +78,12 @@ class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
         $this->mockOpenStack(false);
 
         $this->assertFileExists($actes_path);
-        $actesMenageEnveloppeWorker = $this->getObjectInstancier()->get(ActesMenageEnveloppeWorker::class);
+        $actesMenageEnveloppeWorker = self::getContainer()->get(ActesMenageEnveloppeWorker::class);
         $actesMenageEnveloppeWorker->setNbDayInDisk(0);
         $actesMenageEnveloppeWorker->work(false);
         static::assertFileDoesNotExist($actes_path);
         static::assertFileExists(
-            $this->getObjectInstancier()->get('repertoireActesEnveloppeSansTransaction') . '/' . basename($actes_path)
+            self::getContainer()->getParameter('app.actes_enveloppe_sans_transaction') . '/' . basename($actes_path)
         );
         static::assertDirectoryExists(dirname($actes_path));
     }

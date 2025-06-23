@@ -19,7 +19,7 @@ class RespondDocumentToMinistereResponseTest extends S2lowIntegrationTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
+        $this->actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -101,7 +101,9 @@ class RespondDocumentToMinistereResponseTest extends S2lowIntegrationTestCase
             true
         );
 
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
+
         $client->request(
             'POST',
             '/modules/actes/actes_transac_reponse_create.php',
