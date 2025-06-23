@@ -1,7 +1,7 @@
 framework:
   mailer:
     dsn: "%app.mail.dsn%"
-when@dev:
+when@test:
   framework:
     mailer:
       dsn: 'null://null'
