@@ -1,0 +1,37 @@
+parameters:
+  cloud_provider:
+    actes:
+      url: 'https://auth.cloud.ovh.net/v3'
+      username: ''
+      password: ''
+      tenant: '0750189044_S2LOWDEV'
+      region: 'fr1'
+      container_prefix: 's2low_dev_'
+    helios_aller:
+      url: 'https://auth.cloud.ovh.net/v3'
+      username: ''
+      password: ''
+      tenant: '0750189044_S2LOWDEV'
+      region: 'fr1'
+      container_prefix: 's2low_dev_'
+    helios_acquit:
+      url: 'https://auth.cloud.ovh.net/v3'
+      username: ''
+      password: ''
+      tenant: '0750189044_S2LOWDEV'
+      region: 'fr1'
+      container_prefix: 's2low_dev_'
+    helios_retour:
+      url: 'https://auth.cloud.ovh.net/v3'
+      username: ''
+      password: ''
+      tenant: '0750189044_S2LOWDEV'
+      region: 'fr1'
+      container_prefix: 's2low_dev_'
+    mailsec:
+      url: 'https://auth.cloud.ovh.net/v3'
+      username: ''
+      password: ''
+      tenant: '0750189044_S2LOWDEV'
+      region: 'fr1'
+      container_prefix: 's2low_dev_'

@@ -1,3 +1,5 @@
+imports:
+  - { resource: services_cloud_provider_test.yaml }
 parameters:
   app.database_name: '%env(POSTGRES_DATABASE_TEST)%'
   app.database_host: '%env(POSTGRES_HOST_TEST)%'
