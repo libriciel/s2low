@@ -24,6 +24,8 @@ class ObjectInstancier
             $result = $this->container->get($name);
         } catch (ServiceNotFoundException $e) {
             try {
+                // Si cela ne fonctionne pas on esssaye de voir si un parametre existe a ce nom.
+                // Ce test existe par soucis de retrocompatibilité avec cette methode get.
                 $result = $this->container->getParameter($name);
             } catch (Exception $secondeException) {
                 throw $e;
