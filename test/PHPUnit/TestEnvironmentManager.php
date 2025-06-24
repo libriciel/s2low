@@ -81,19 +81,6 @@ class TestEnvironmentManager
         $session = array();
         $server = array();
 
-        $actesMinistereProperties = new ActesMinistereProperties(
-            ACTES_MINISTERE_URL,
-            ACTES_MINISTERE_AUTHENTICATION,
-            ACTES_MINISTERE_LOGIN,
-            ACTES_MINISTERE_PASSWORD,
-            ACTES_MINISTERE_CERTIFICATE,
-            ACTES_MINISTERE_CERTIFICATE_KEY,
-            ACTES_MINISTERE_CERTIFICATE_KEY_PASS,
-            ACTES_MINISTERE_ADAPT_PROTOCOL,
-            ACTES_MINISTERE_SERVER_CERTIFICATE_PATH
-        );
-        $this->getObjectInstancier()->set(ActesMinistereProperties::class, $actesMinistereProperties);
-
         $sessionWrapper = new SessionWrapper($session);
         $environnement = new Environnement(
             $get,

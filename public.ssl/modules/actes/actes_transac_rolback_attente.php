@@ -34,12 +34,15 @@ $status_id = (int) $recuperateur->get('status_id', ActesStatusSQL::STATUS_EN_ATT
 switch ($status_id) {
     case ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION:
         $message = "La transaction $id a été passée manuellement en attente de transmission";
-        $workerClassName = ActesEnvoiFichierWorker::class;
+        $workerQueueName = ActesEnvoiFichierWorker::QUEUE_NAME;
+        $queueTTR = ActesEnvoiFichierWorker::PHEANSTALK_TTR;
         break;
 
     case ActesStatusSQL::STATUS_POSTE:
         $message = "La transaction $id a été passée manuellement en posté";
-        $workerClassName = ActesAnalyseFichierAEnvoyerWorker::class;
+        $workerQueueName = ActesAnalyseFichierAEnvoyerWorker::QUEUE_NAME;
+        $queueTTR = ActesAnalyseFichierAEnvoyerWorker::PHEANSTALK_TTR;
+
         break;
 
     default:
@@ -53,7 +56,7 @@ $actesTransactionSQL->updateStatus($id, $status_id, $message);
 
 $info = $actesTransactionSQL->getInfo($id);
 
-$workerScript->putJobByClassName($workerClassName, $info['envelope_id']);
+$workerScript->putJobByQueueName($workerQueueName, $info['envelope_id'], $queueTTR);
 
 $_SESSION['error'] = $message;
 header_wrapper("Location: actes_transac_show.php?id=$id");

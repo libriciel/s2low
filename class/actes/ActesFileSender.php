@@ -21,6 +21,40 @@ class ActesFileSender
 
     public function send($filepath)
     {
+        if ($this->actesMinistereProperties->use_legacy_protocol) {
+            return $this->sendLegacy($filepath);
+        }
+        $curlWrapper = new CurlWrapper();
+        $curlWrapper->setTimeout(60, 60 * 3);
+        $curlWrapper->setProperties(CURLOPT_USERAGENT, 'curl/7.81.1');
+
+
+        $url = $this->actesMinistereProperties->url;
+
+        $curlWrapper->setProperties(CURLOPT_SSL_VERIFYPEER, 1);
+        $curlWrapper->setProperties(CURLOPT_SSL_VERIFYHOST, 2);
+        $curlWrapper->setProperties(CURLOPT_CERTINFO, 1);
+        $curlWrapper->setProperties(CURLOPT_CAPATH, $this->truststorePath);
+
+        $curlWrapper->setClientCertificate(
+            $this->actesMinistereProperties->client_certificate,
+            $this->actesMinistereProperties->client_certificate_key,
+            $this->actesMinistereProperties->client_certificate_key_password
+        );
+
+        $curlWrapper->addPostFile(basename($filepath), $filepath);
+
+        $curlWrapper->get($url);
+
+        if ($curlWrapper->getHTTPCode() != 201) {
+            throw new Exception($curlWrapper->getLastError());
+        }
+
+        return true;
+    }
+
+    public function sendLegacy($filepath)
+    {
         $curlWrapper = new CurlWrapper();
         $curlWrapper->setTimeout(60, 60 * 3);
 

@@ -150,7 +150,11 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
             "Accepté par le TdT : validation OK"
         );
 
-        $this->workerScript->putJobByClassName(ActesEnvoiFichierWorker::class, $enveloppe_id);
+        $this->workerScript->putJobByQueueName(
+            ActesEnvoiFichierWorker::QUEUE_NAME,
+            $enveloppe_id,
+            ActesEnvoiFichierWorker::PHEANSTALK_TTR
+        );
         return true;
     }
 
