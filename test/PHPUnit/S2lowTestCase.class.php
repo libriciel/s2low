@@ -162,12 +162,4 @@ abstract class S2lowTestCase extends KernelTestCase
     {
         $this->assertTrue(true);
     }
-
-    /**
-     * @deprecated only for refacto purpose, delete this methode si vous la voyez
-     */
-    public function log()
-    {
-        dd($this->testHandler->getRecords());
-    }
 }
