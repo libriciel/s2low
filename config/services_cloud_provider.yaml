@@ -1,4 +1,5 @@
 parameters:
+  # Valeurs des parametres specifiques au cloud provider. Attention, utilisables uniquement des array.
   cloud_provider:
     actes:
       url: '%env(ACTES_OPENSTACK_AUTHENTICATION_URL_V3)%'
