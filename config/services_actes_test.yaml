@@ -8,3 +8,4 @@ parameters:
   actes.ministere.client_certificate_key_password: ''
   actes.ministere.server_certificate_path: ''
   actes.ministere.adapt_protocol: 'false'
+  actes.use_legacy_protocol: true

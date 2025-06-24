@@ -8,3 +8,4 @@ parameters:
   actes.ministere.client_certificate_key_password: '%env(ACTES_MINISTERE_CERTIFICATE_KEY_PASS)%'
   actes.ministere.server_certificate_path: '%env(ACTES_MINISTERE_SERVER_CERTIFICATE_PATH)%'
   actes.ministere.adapt_protocol: '%env(ACTES_MINISTERE_ADAPT_PROTOCOL)%'
+  actes.use_legacy_protocol: '%env(ACTES_MINISTERE_USE_LEGACY_PROTOCOL)%'
