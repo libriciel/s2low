@@ -1,10 +1,11 @@
 <?php
 
 use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\User;
-use S2lowLegacy\Lib\FrontController;
+use S2lowLegacy\Lib\JSONoutput;
 
-$jsonOutput = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(FrontController::class);
+$jsonOutput = LegacyObjectsManager::getLegacyObjectInstancier()->get(JSONoutput::class);
 
 $me = new User();
 
@@ -13,8 +14,7 @@ if (! $me->authenticate()) {
 }
 
 if (! $me->isGroupAdminOrSuper()) {
-    $jsonOutput->displayErrorAndExit("Accès refusé");
+    $jsonOutput->displayErrorAndExit('Accès refusé');
 }
-
 
 $jsonOutput->display(Authority::getAuthorityTypesIdName());
