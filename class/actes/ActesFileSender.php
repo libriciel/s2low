@@ -31,7 +31,6 @@ class ActesFileSender
 
         $url = $this->actesMinistereProperties->url;
 
-        $curlWrapper->setProperties(CURLOPT_VERBOSE, 1);
         $curlWrapper->setProperties(CURLOPT_SSL_VERIFYPEER, 1);
         $curlWrapper->setProperties(CURLOPT_SSL_VERIFYHOST, 2);
         $curlWrapper->setProperties(CURLOPT_CERTINFO, 1);
