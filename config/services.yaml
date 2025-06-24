@@ -1,116 +1,126 @@
-# config/services.yaml
 parameters:
-  app.database_name: '%env(POSTGRES_DB)%'
+  # Parametres a definir obligatoirement
   app.database_host: '%env(POSTGRES_HOST)%'
   app.database_login: '%env(POSTGRES_USER)%'
+  app.database_name: '%env(POSTGRES_DB)%'
   app.database_password: '%env(POSTGRES_PASSWORD)%'
-  app.workspace_directory.default: '/data/tdt-workspace/'
-  app.workspace_directory: '%env(default:app.workspace_directory.default:WORKSPACE_DIRECTORY)%'
-  app.relative_legacy_ssl_path: 'public.ssl/'
-  app.old_timestamp_token_directory: '/data/timestamp-token/'            #TODO : utiliser OLD_TIMESTAMP_TOKEN_DIRECTORY
-  app.timestamp_token_retention_nb_days: 781                             #TODO : utiliser HELIOS_RETENTION_RETOURS_NB_JOURS
-  app.helios_files_upload_root: '/data/tdt-workspace/helios/sending/'    #TODO : utiliser les variables d'environnement
-  app.actes.files_upload_root: '%app.workspace_directory%actes/uploads'
-  app.default_use_prod_notifications: false
-  app.use_prod_notifications: '%env(bool:default:app.default_use_prod_notifications:USE_PROD_NOTIFICATIONS)%'
-  app.default_actes_appli_trigramme: 'abc'
-  app.actes_appli_trigramme: '%env(default:app.default_actes_appli_trigramme:ACTES_APPLI_TRIGRAMME)%'
-  app.actes_appli_quadrigramme.default: 'TACT'
-  app.actes_appli_quadrigramme: '%env(default:app.actes_appli_quadrigramme.default:ACTES_APPLI_QUADRIGRAMME)%'
-  app.actes_dont_valid_signing_certificate.default: 'false'
-  app.actes_dont_valid_signing_certificate: '%env(default:app.actes_dont_valid_signing_certificate.default:ACTES_DONT_VALID_SIGNING_CERTIFICATE)%'
-  app.helios_ftp_response_tmp_local_path: '/data/tdt-workspace/helios/response_tmp/'
-  app.helios_responses_error_path: '/data/tdt-workspace/helios/response_error/'
   app.helios_sending_destination: '%env(HELIOS_SENDING_DESTINATION)%'
-  app.helios_file_root: '%app.workspace_directory%helios/'
-  app.helios_counter_file: '%app.helios_file_root%counter.txt'
-  app.helios_responses_root: '%app.helios_file_root%response/'
-  app.helios_repertoire_pes_aller_sans_transaction: '%app.helios_file_root%%%orphelins/'
-  app.use_legacy_bordereau_model: '%env(USE_LEGACY_BORDEREAU_MODEL)%'
-  app.beanstalkd_server.default: 'beanstalkd'
-  app.beanstalkd_server: '%env(default:app.beanstalkd_server.default:BEANSTAKLD_SERVER)%'
-  app.beanstalkd_port.default: '11300'
+
+  # Parametres avec des valeurs par default
+  app.actes_appli_quadrigramme: '%env(default:app.actes_appli_quadrigramme.default:ACTES_APPLI_QUADRIGRAMME)%'
+  app.actes_appli_trigramme: '%env(default:app.actes_appli_trigramme.default:ACTES_APPLI_TRIGRAMME)%'
+  app.actes_dont_valid_signing_certificate: '%env(default:app.actes_dont_valid_signing_certificate.default:ACTES_DONT_VALID_SIGNING_CERTIFICATE)%'
+  app.actes_imap_host: '%env(default:app.actes_imap_host.default:ACTES_IMAP_HOST)%'
+  app.actes_imap_login: '%env(default:app.actes_imap_login.default:ACTES_IMAP_LOGIN)%'
+  app.actes_imap_options: '%env(default:app.actes_imap_options.default:ACTES_IMAP_OPTIONS)%'
+  app.actes_imap_password: '%env(default:app.actes_imap_password.default:ACTES_IMAP_PASSWORD)%'
+  app.actes_imap_port: '%env(default:app.actes_imap_port.default:ACTES_IMAP_PORT)%'
   app.beanstalkd_port: '%env(default:app.beanstalkd_port.default:BEANSTAKLD_PORT)%'
-  app.redis_server.default: 'redis'
-  app.redis_server: '%env(default:app.redis_server.default:REDIS_SERVER)%'
-  app.redis_port.default: '6379'
+  app.beanstalkd_server: '%env(default:app.beanstalkd_server.default:BEANSTAKLD_SERVER)%'
+  app.convert_api_logins_from_iso: '%env(default:app.convert_api_logins_from_iso.default:CONVERT_API_LOGINS_FROM_ISO)%'
+  app.helios_use_passtrans_as_default: '%env(default:app.helios_use_passtrans_as_default.default:HELIOS_USE_PASSTRANS_AS_DEFAULT)%'
+  app.image_for_stamp: '%env(default:app.image_for_stamp.default:IMAGE_FOR_STAMP)%'
+  app.log.file: '%env(string:default:app.log.file.default:LOG_FILE)%'
+  app.mail.dsn: '%env(string:default:app.mail.dsn.default:MAILER_DSN)%'
+  app.mail.message: '%env(default:app.mail.message.default:MAIL_MESSAGE)%'
+  app.mail.secure_description: '%env(default:app.mail.secure_description:MAIL_SECURE_DESCRIPTION)%'
+  app.mail.tedetis_from: '%env(default:app.mail.tedetis_from.default:MAIL_TEDETIS_FROM)%'
+  app.mail.use_legacy_secure_mail: '%env(default:app.mail.use_legacy_secure_mail.default:USE_LEGACY_SECURE_MAIL_FIELDS)%'
+  app.only_use_validcargs: '%env(default:app.only_use_validcargs.default:ONLY_USE_VALIDCARGS)%'
+  app.openstack_enable: '%env(default:app.openstack_enable.default:OPENSTACK_ENABLE)'
+  app.pdf_stamp_url: '%env(default:app.pdf_stamp_url.default:PDF_STAMP_URL)%'
   app.redis_port: '%env(default:app.redis_port.default:REDIS_PORT)%'
-  app.actes_imap_host: '%env(ACTES_IMAP_HOST)%'
-  app.actes_imap_port: '%env(ACTES_IMAP_PORT)%'
-  app.actes_imap_login: '%env(ACTES_IMAP_LOGIN)%'
-  app.actes_imap_password: '%env(ACTES_IMAP_PASSWORD)%'
-  app.actes_imap_options: '%env(ACTES_IMAP_OPTIONS)%'
-  app.mail.message: '%env(MAIL_MESSAGE)%'
-  app.mail.tedetis_from: '%env(MAIL_TEDETIS_FROM)%'
-  app.mail.secure_description: '%env(MAIL_SECURE_DESCRIPTION)%'
-  app.mail.use_legacy_secure_mail: '%env(USE_LEGACY_SECURE_MAIL_FIELDS)%'
-  app.mail_file_upload_root: '%app.workspace_directory%mail/'
-  app.mail_files_without_transac_dir: '%app.mail_file_upload_root%%sans_transaction/'
+  app.redis_server: '%env(default:app.redis_server.default:REDIS_SERVER)%'
+  app.use_legacy_bordereau_model: '%env(default:app.use_legacy_bordereau_model.default:USE_LEGACY_BORDEREAU_MODEL)%'
+  app.use_prod_notifications: '%env(default:app.use_prod_notifications.default:USE_PROD_NOTIFICATIONS)%'
+  app.workspace_directory: '%env(default:app.workspace_directory.default:WORKSPACE_DIRECTORY)%'
+
+  # Valeurs par default de parametres
+  app.actes_appli_quadrigramme.default: 'TACT'
+  app.actes_appli_trigramme.default: 'abc'
+  app.actes_dont_valid_signing_certificate.default: false
+  app.actes_imap_host.default: 'mail'
+  app.actes_imap_login.default: 's2low@s2low.docker.libriciel.fr'
+  app.actes_imap_options.default: '/imap/notls/novalidate-cert'
+  app.actes_imap_password.default: 'password'
+  app.actes_imap_port.default: 143
+  app.beanstalkd_port.default: 11300
+  app.beanstalkd_server.default: 'beanstalkd'
+  app.convert_api_logins_from_iso.default: false
+  app.helios_use_passtrans_as_default.default: false
+  app.image_for_stamp.default: '%kernel.project_dir%/public.ssl/custom/images/s2low-stamp.png'
+  app.log.file.default: '/data/log/s2low.log'
+  app.mail.dsn.default: 'smtp://maildev:1025?verify_peer=0'
+  app.mail.message.default: 'Vous avez reçu un courrier recommandé par S2LOW'
+  app.mail.secure_description.default: 'ne-pas-repondre'
+  app.mail.tedetis_from.default: 's2low-mailsec@s2low.docker.libriciel.fr'
+  app.mail.use_legacy_secure_mail.default: false
+  app.only_use_validcargs.default: false
   app.openstack_enable.default: false
   app.pdf_stamp_url.default: 'http://pdf-stamp:8080'
-  app.pdf_stamp_url: '%env(default:app.pdf_stamp_url.default:PDF_STAMP_URL)%'
-  app.image_for_stamp.default: '%kernel.project_dir%/public.ssl/custom/images/s2low-stamp.png"'
-  app.image_for_stamp: '%env(default:app.image_for_stamp.default:IMAGE_FOR_STAMP)%'
+  app.redis_port.default: 6379
+  app.redis_server.default: 'redis'
+  app.use_legacy_bordereau_model.default: true
+  app.use_prod_notifications.default: false
+
+  # Variables Globale
+  app.actes.files_upload_root: '%app.workspace_directory%actes/uploads'
   app.actes_enveloppe_sans_transaction: '%app.workspace_directory%actes/sans_transaction'
+  app.actes_response_error_path: '%app.workspace_directory%actes/response_error'
+  app.actes_response_tmp_local_path: '%app.workspace_directory%actes/response_tmp'
   app.actes_ministere_acronyme: 'MI'
-  app.truststore_path: '/data/certificate/truststore/'
   app.database_json_definition_file_path: '%kernel.project_dir%/db/s2low.sql.json'
   app.database_sql_definition_filepath: '%kernel.project_dir%/db/s2low.sql'
-  app.actes_response_tmp_local_path: '%app.workspace_directory%actes/response_tmp'
-  app.actes_response_error_path: '%app.workspace_directory%actes/response_error'
-  app.pades_valid_url: 'http://pades-valid:8080'
-  app.website_ssl: 'https://s2low.docker.libriciel.fr/'
-  app.website: 'http://s2low.docker.libriciel.fr/'
+  app.helios_counter_file: '%app.helios_file_root%counter.txt'
+  app.helios_file_root: '%app.workspace_directory%helios/'
+  app.helios_files_upload_root: '/data/tdt-workspace/helios/sending/'
+  app.helios_ftp_response_tmp_local_path: '/data/tdt-workspace/helios/response_tmp/'
+  app.helios_ocre_file_path: '%app.helios_file_root%ocre/'
+  app.helios_repertoire_pes_aller_sans_transaction: '%app.helios_file_root%orphelins/'
+  app.helios_responses_root: '%app.helios_file_root%response/'
+  app.helios_responses_error_path: '/data/tdt-workspace/helios/response_error/'
+  app.mail_file_upload_root: '%app.workspace_directory%mail/'
+  app.mail_files_without_transac_dir: '%app.mail_file_upload_root%%sans_transaction/'
+  app.old_timestamp_token_directory: '/data/timestamp-token/'
   app.openssl_path: '/usr/bin/openssl'
-  app.xmlsec_path: '/usr/bin/xmlsec1'
-  app.only_use_validcargs.default: 'false'
-  app.only_use_validcargs: '%env(bool:default:app.only_use_validcargs.default:ONLY_USE_VALIDCARGS)%'
+  app.pades_valid_url: 'http://pades-valid:8080'
   app.path_to_rgs_valid_ca: '/etc/s2low/ssl/validca/'
   app.path_to_rgs_valid_cargs: '/etc/s2low/ssl/validcargs/'
-  app.use_prod_notification.default: 'false'
-  app.use_prod_notification: '%env(default:app.use_prod_notification.default:USE_PROD_NOTIFICATIONS)%'
+  app.relative_legacy_ssl_path: 'public.ssl/'
   app.schema_pes_path: '%kernel.project_dir%/xsd/schemas_pes_v5.24/'
-  app.helios_use_passtrans_as_default.default: false
-  app.helios_use_passtrans_as_default: '%env(default:app.helios_use_passtrans_as_default.default:HELIOS_USE_PASSTRANS_AS_DEFAULT)%'
-  app.helios_ocre_file_path: '%app.helios_file_root%ocre/'
-
-  app.openstack_enable: '%env(OPENSTACK_ENABLE)'
-  app.convert_api_logins_from_iso.default: 'false'
-  app.convert_api_logins_from_iso: '%env(default:app.convert_api_logins_from_iso.default:CONVERT_API_LOGINS_FROM_ISO)%'
-  app.mail.tdt_from_email: '%env(string:TDT_FROM_EMAIL)%'
-  app.mail.email_admin_technique: '%env(EMAIL_ADMIN_TECHNIQUE)%'
-  app.log.file: '%env(string:default:app.log.file.default:LOG_FILE)%'
-  app.log.file.default: '/data/log/s2low.log'
-  app.mail.dsn: '%env(string:default:app.mail.dsn.default:MAILER_DSN)%'
-  app.mail.dsn.default: 'smtp://maildev:1025?verify_peer=0'
+  app.timestamp_token_retention_nb_days: 781
+  app.truststore_path: '/data/certificate/truststore/'
+  app.website: 'http://s2low.docker.libriciel.fr/'
+  app.website_ssl: 'https://s2low.docker.libriciel.fr/'
+  app.workspace_directory.default: '/data/tdt-workspace/'
+  app.xmlsec_path: '/usr/bin/xmlsec1'
 services:
   _defaults:
     autowire: true
     autoconfigure: true
     bind:
-      $subject: '%app.mail.message%'
-      $s2lowFromMail: '%app.mail.tedetis_from%'
-      $fromDescription: '%app.mail.secure_description%'
+      $actes_appli_quadrigramme: '%app.actes_appli_quadrigramme%'
+      $actes_appli_trigramme: '%app.actes_appli_trigramme%'
       $actes_files_upload_root: '%app.actes.files_upload_root%'
       $actes_ministere_acronyme: '%app.actes_ministere_acronyme%'
+      $actes_response_error_path: '%app.actes_response_error_path%'
+      $actes_response_tmp_local_path: '%app.actes_response_tmp_local_path%'
+      $database_json_definition_filepath: '%app.database_json_definition_file_path%'
+      $database_sql_definition_filepath: '%app.database_sql_definition_filepath%'
+      $environment: '%kernel.environment%'
+      $fromDescription: '%app.mail.secure_description%'
       $helios_files_upload_root: '%app.helios_files_upload_root%'
       $helios_responses_root: '%app.helios_responses_root%'
       $mail_files_upload_root: '%app.mail_file_upload_root%'
-      $actes_response_tmp_local_path: '%app.actes_response_tmp_local_path%'
-      $actes_response_error_path: '%app.actes_response_error_path%'
-      $website: "%app.website%"
-      $actes_appli_trigramme: '%app.actes_appli_trigramme%'
-      $actes_appli_quadrigramme: '%app.actes_appli_quadrigramme%'
-      $database_json_definition_filepath: '%app.database_json_definition_file_path%'
-      $database_sql_definition_filepath: '%app.database_sql_definition_filepath%'
-      $opensslPath: "%app.openssl_path%"
+      $opensslPath: '%app.openssl_path%'
+      $projectDirectory: '%kernel.project_dir%'
       $rgs_validca_path: '%app.path_to_rgs_valid_ca%'
-      $use_prod_notifications: '%app.use_prod_notification%'
-      $beanstalkd_server: 'app.beanstalkd_server'
-      $beanstalkd_port: 'app.beanstalkd_port'
-      $tdt_from_email: "%app.mail.tdt_from_email%"
-      $projectDirectory: "%kernel.project_dir%"
-      $environment: "%kernel.environment%"
+      $s2lowFromMail: '%app.mail.tedetis_from%'
+      $subject: '%app.mail.message%'
+      $tdt_from_email: '%app.mail.tdt_from_email%'
+      $use_prod_notifications: '%app.use_prod_notifications%'
+      $website: '%app.website%'
+
 
 #  rgs_valid_ca_path:
 #    class: string
@@ -545,7 +555,6 @@ services:
   S2lowLegacy\Class\actes\ActesNotification:
     arguments:
       $actes_appli_trigramme: "%app.actes_appli_trigramme%"
-      $use_prod_notifications: "%app.use_prod_notifications%"
 
   S2lowLegacy\Class\actes\ActesPdf:
     autowire: true

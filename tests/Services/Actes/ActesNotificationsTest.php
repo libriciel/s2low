@@ -109,7 +109,7 @@ class ActesNotificationsTest extends S2lowTestCase
             self::getContainer()->get(ActesRetriever::class),
             self::getContainer()->get(BordereauPdfGenerator::class),
             self::getContainer()->get(Environment::class),
-            self::getContainer()->getParameter('app.use_prod_notification'),
+            self::getContainer()->getParameter('app.use_prod_notifications'),
         );
     }
 
