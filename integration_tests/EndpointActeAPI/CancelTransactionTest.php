@@ -19,7 +19,6 @@ class CancelTransactionTest extends S2lowIntegrationTestCase
     {
         parent::setUp();
         $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
