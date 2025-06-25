@@ -24,9 +24,6 @@ class HeliosControllerTest extends S2lowIntegrationTestCase
     {
         parent::setUp();
 
-//        org\bovigo\vfs\vfsStream::setup("test");
-//        $this->testStreamUrl = org\bovigo\vfs\vfsStream::url("test");
-
         mkdir($this->tmpPathFolder . "/helios");
 
         $tmp_file = $this->tmpPathFolder . "/pes_aller.xml";
@@ -39,11 +36,6 @@ class HeliosControllerTest extends S2lowIntegrationTestCase
             'error' => UPLOAD_ERR_OK
         );
 
-//        $this->setRGSAuthentification();
-
-//        $this->getObjectInstancier()->set("helios_files_upload_root", $this->testStreamUrl);
-
-//        $this->setUserAuthentification();
         $pesAllerRetriever = new PesAllerRetriever(
             $this->tmpPathFolder,
             self::getContainer()->get(OpenStackSwiftWrapper::class),
