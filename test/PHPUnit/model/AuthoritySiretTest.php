@@ -14,7 +14,7 @@ class AuthoritySiretTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->authoritySiret = self::getContainer()->get(AuthoritySiretSQL::class);
+        $this->authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
         ;
     }
 
@@ -70,7 +70,6 @@ class AuthoritySiretTest extends S2lowTestCase
     public function testBlocked()
     {
         $id = $this->authoritySiret->add(1, self::SIRET_EXEMPLE);
-
         $this->authoritySiret->blocked($id);
         $blocked_list = $this->authoritySiret->siretListBlocked(1);
         $this->assertEquals(1, count($blocked_list));

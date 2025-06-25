@@ -19,7 +19,7 @@ class GroupSQLTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->groupeSQL = self::getContainer()->get(GroupSQL::class);
+        $this->groupeSQL = new GroupSQL($this->getSQLQuery());
     }
 
     public function testGetInfo()

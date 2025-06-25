@@ -12,7 +12,7 @@ class UsersPermsSQLTest extends S2lowTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->usersPermsSQL = self::getContainer()->get(UsersPermsSQL::class);
+        $this->usersPermsSQL = new UsersPermsSQL($this->getSQLQuery());
     }
 
     public function testGetInfoPerms()

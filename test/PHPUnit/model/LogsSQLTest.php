@@ -23,7 +23,7 @@ class LogsSQLTest extends S2lowTestCase
             false,
             1
         );
-        $this->logsSQL = self::getContainer()->get(LogsSQL::class);
+        $this->logsSQL = new LogsSQL($this->getSQLQuery());
     }
 
     public function testGetLogLevelList()
@@ -90,7 +90,7 @@ class LogsSQLTest extends S2lowTestCase
 
     public function testGetMinDate()
     {
-        $logsSQL = self::getContainer()->get(LogsSQL::class);
+        $logsSQL = new LogsSQL($this->getSQLQuery());
         $today = date("Y-m-d H:i:s");
         $logsSQL->addLog(
             $today,
