@@ -43,14 +43,9 @@ class S2lowBootstrap
             $this->dbUpdate();
             $this->insertDemoS();
             $this->populateDatabase();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->log("Erreur : " . $e->getMessage());
         }
-    }
-
-    private function log($message)
-    {
-        echo "[" . date("Y-m-d H:i:s") . "][S2LOW bootstrap] $message\n";
     }
 
     /**
@@ -92,69 +87,8 @@ class S2lowBootstrap
         exec("$script $hostname $apachePrivKeyFullPath $apacheFullChainFullPath", $output, $return_var);
         $this->log(implode("\n", $output));
         if ($return_var != 0) {
-            throw new Exception("Impossible de générer ou de trouver le certificat du site $hostname !");
+            throw new \Exception("Impossible de générer ou de trouver le certificat du site $hostname !");
         }
-    }
-
-    private function getHostname()
-    {
-        return parse_url(WEBSITE_SSL, PHP_URL_HOST);
-    }
-
-    private function getMailHostname()
-    {
-        return parse_url(WEBSITE_MAIL, PHP_URL_HOST);
-    }
-
-    public function installHorodateur()
-    {
-        $key_file = TIMESTAMPING_PRIV_KEY;
-        $cert_file = TIMESTAMPING_CERT;
-
-        if (file_exists($cert_file)) {
-            $this->log("Certificat de l'horodateur déjà présent");
-            return;
-        }
-        $this->log("Création des certificat d'horodatage");
-        $hostname = $this->getHostname();
-
-        $script = __DIR__ . "/certificate/generate-timestamp-certificate.sh $hostname $key_file $cert_file 2>&1";
-
-        exec("$script ", $output, $return_var);
-        $this->log(implode("\n", $output));
-        if ($return_var != 0) {
-            throw new Exception("Impossible de générer le certificat du timestamp !");
-        }
-
-        file_put_contents(TIMESTAMPING_PRIV_KEY_PASS, "");
-
-        $username = 'www-data';
-        chown($key_file, $username);
-        chown($cert_file, $username);
-
-        $this->log("Certificat d'horodatage créé");
-    }
-
-    public function installLibersign()
-    {
-        if (file_exists(__DIR__ . "/../public.ssl/libersign/update.json")) {
-            $this->log("Libersign est déjà installé");
-            return true;
-        }
-        if (empty(LIBERSIGN_INSTALLER)) {
-            $this->log("Lien vers l'installeur de Libersign non trouvée");
-            return true;
-        }
-        return $this->majLibersign();
-    }
-
-    public function majLibersign()
-    {
-        $this->log("Installation de Libersign");
-        $make = file_get_contents(LIBERSIGN_INSTALLER);
-        file_put_contents("/tmp/libersign_make.sh", $make);
-        exec("/bin/bash /tmp/libersign_make.sh PROD", $output, $result);
-        return true;
     }
 
     private function dbUpdate()
@@ -166,6 +100,7 @@ class S2lowBootstrap
 
     private function insertDemos()
     {
+
         if ($this->sqlQuery->queryOne("SELECT * FROM users WHERE role='SADM'")) {
             $this->log("L'utilisateur admin existe déjà");
             return;
@@ -229,5 +164,71 @@ class S2lowBootstrap
                 $this->sqlQuery->query($sql2, $all_value);
             }
         }
+    }
+
+    public function installHorodateur()
+    {
+        $key_file = TIMESTAMPING_PRIV_KEY;
+        $cert_file = TIMESTAMPING_CERT;
+
+        if (file_exists($cert_file)) {
+            $this->log("Certificat de l'horodateur déjà présent");
+            return;
+        }
+        $this->log("Création des certificat d'horodatage");
+        $hostname = $this->getHostname();
+
+        $script = __DIR__ . "/certificate/generate-timestamp-certificate.sh $hostname $key_file $cert_file 2>&1";
+
+        exec("$script ", $output, $return_var);
+        $this->log(implode("\n", $output));
+        if ($return_var != 0) {
+            throw new Exception("Impossible de générer le certificat du timestamp !");
+        }
+
+        file_put_contents(TIMESTAMPING_PRIV_KEY_PASS, "");
+
+        $username = 'www-data';
+        chown($key_file, $username);
+        chown($cert_file, $username);
+
+        $this->log("Certificat d'horodatage créé");
+    }
+
+    public function installLibersign()
+    {
+        if (file_exists(__DIR__ . "/../public.ssl/libersign/update.json")) {
+            $this->log("Libersign est déjà installé");
+            return true;
+        }
+        if (empty(LIBERSIGN_INSTALLER)) {
+            $this->log("Lien vers l'installeur de Libersign non trouvée");
+            return true;
+        }
+        return $this->majLibersign();
+    }
+
+    public function majLibersign()
+    {
+        $this->log("Installation de Libersign");
+        $make = file_get_contents(LIBERSIGN_INSTALLER);
+        file_put_contents("/tmp/libersign_make.sh", $make);
+        exec("/bin/bash /tmp/libersign_make.sh PROD", $output, $result);
+        return true;
+    }
+
+    private function log($message)
+    {
+        echo "[" . date("Y-m-d H:i:s") . "][S2LOW bootstrap] $message\n";
+    }
+
+    private function getHostname()
+    {
+        return parse_url(WEBSITE_SSL, PHP_URL_HOST);
+    }
+
+    private function getMailHostname()
+    {
+        return parse_url(WEBSITE_MAIL, PHP_URL_HOST);
     }
 }
