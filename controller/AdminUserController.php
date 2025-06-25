@@ -26,7 +26,7 @@ class AdminUserController extends Controller
     public function __construct(ObjectInstancier $objectInstancier)
     {
         parent::__construct($objectInstancier);
-        $this->userSQL = $objectInstancier->get(UserSQL::class);
+        $this->userSQL = new UserSQL($this->getSQLQuery());
     }
 
     private function getFromFile($name)
@@ -79,13 +79,13 @@ class AdminUserController extends Controller
 
         $user_info = false;
         if ($user_id) {
-            $userSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(UserSQL::class);
+            $userSQL = new UserSQL($this->getSQLQuery());
             $user_info = $userSQL->getInfo($user_id);
             if (!$user_info) {
                 throw new Exception("Erreur lors de la modification de l'utilisateur");
             }
         } elseif ($user_id_a_cloner) {
-            $userSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(UserSQL::class);
+            $userSQL = new UserSQL($this->getSQLQuery());
             $user_info = $userSQL->getInfo($user_id_a_cloner);
             if (!$user_info) {
                 throw new Exception("Erreur lors du clonage de l'utilisateur");
@@ -355,7 +355,7 @@ class AdminUserController extends Controller
         $msg = ($mod) ? "Modification" : "Création";
         $msg .= " de l'utilisateur " . $him->getPrettyName() . " (id=" . $him->getId() . "). Résultat ok.";
 
-        $userSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(UserSQL::class);
+        $userSQL = new UserSQL($this->getSQLQuery());
 
         if ($auth_method != UserSQL::IDENT_METHOD_RGS_2_ETOILES) {
             $userSQL->deleteCertificateRGS2Etoiles($him->getId());

@@ -62,7 +62,7 @@ class S2lowIntegrationTestCase extends WebTestCase
 
     public function getSQLQuery(): SQLQuery
     {
-        return self::getContainer()->get(SQLQuery::class);
+        return $this->sqlQuery;
     }
 
     /**
@@ -78,6 +78,7 @@ class S2lowIntegrationTestCase extends WebTestCase
         $_FILES = [];
         $_SERVER['QUERY_STRING'] = '';
 
+        $this->sqlQuery = self::getContainer()->get(SQLQuery::class);
         self::getContainer()->get(PDOFactory::class)->create()->exec(file_get_contents(__DIR__ . '/../test/PHPUnit/s2low-test.sql'));
         $this->projectDir = self::getContainer()->getParameter("kernel.project_dir");
         vfsStream::setup('test');

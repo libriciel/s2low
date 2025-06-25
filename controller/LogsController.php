@@ -66,14 +66,14 @@ class LogsController extends Controller
         $this->verifUser();
         $this->title = "Tedetis : Journal d'évènements";
 
-        $authoritySQL = $this->getObjectInstancier()->get(AuthoritySQL::class);
+        $authoritySQL = new AuthoritySQL($this->getSQLQuery());
 
         $h1_title = "Journal d'évènements";
 
-        $moduleSQL = $this->getObjectInstancier()->get(ModuleSQL::class);
+        $moduleSQL = new ModuleSQL($this->getSQLQuery());
         $this->module_list = $moduleSQL->getActiveModuleList();
 
-        $logsSQL = $this->getObjectInstancier()->get(LogsSQL::class);
+        $logsSQL = new LogsSQL($this->getSQLQuery());
         $this->loglevel_list = $logsSQL->getLogLevelList();
 
         if ($this->date_debut < $logs_history_date_max) {
@@ -98,7 +98,7 @@ class LogsController extends Controller
             $this->authorities_list = $authoritySQL->getAll();
             $authority_id = $this->fauthority;
         } elseif ($this->me->isGroupAdmin()) {
-            $groupSQL = $this->getObjectInstancier()->get(GroupSQL::class);
+            $groupSQL = new GroupSQL($this->getSQLQuery());
             $groupe_info = $groupSQL->getInfo($this->me->get("authority_group_id"));
             $h1_title .= " du groupe «&nbsp;{$groupe_info['name']}&nbsp;»";
             $this->authorities_list = $authoritySQL->getAllGroup($this->me->get("authority_group_id"));
@@ -118,12 +118,12 @@ class LogsController extends Controller
         $this->h1_title = $h1_title;
 
 
-        $this->userSQL = $this->getObjectInstancier()->get(UserSQL::class);
+        $this->userSQL = new UserSQL($this->getSQLQuery());
 
 
         $this->has_logs_request = $this->getLogsRequestSQL()->hasRequest($this->me->get('id'));
 
-        $logsSQL = $this->getObjectInstancier()->get(LogsSQL::class);
+        $logsSQL = new LogsSQL($this->getSQLQuery());
         $offset = ($this->page_number - 1) * $this->taille_page;
         $this->logs_list = $logsSQL->getList($authority_group_id, $authority_id, $user_id, $this->fuser, $this->fmodule, $this->fseverity, $this->fmessage, $visibility, $offset, $this->taille_page, $this->date_debut, $this->date_fin);
 

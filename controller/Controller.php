@@ -168,7 +168,7 @@ class Controller
         }
 
         if ($authority_id) {
-            $authoritySQL = $this->objectInstancier->get(AuthoritySQL::class);
+            $authoritySQL = new AuthoritySQL($this->getSQLQuery());
             $info = $authoritySQL->getInfo($authority_id);
 
             if ($this->me->isGroupAdmin()) {
@@ -193,7 +193,7 @@ class Controller
         }
 
         if ($this->me->isGroupAdmin()) {
-            $authoritySQL = $this->objectInstancier->get(AuthoritySQL::class);
+            $authoritySQL = new AuthoritySQL($this->getSQLQuery());
             $info = $authoritySQL->getInfo($authority_id);
             if ($info['authority_group_id'] == $this->me->get("authority_group_id")) {
                 return;

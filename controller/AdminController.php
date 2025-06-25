@@ -41,7 +41,7 @@ class AdminController extends Controller
         $id = $recuperateur->getInt('id');
         $this->siret = $recuperateur->get('siret');
 
-        $authoritySQL = $this->getObjectInstancier()->get(AuthoritySQL::class);
+        $authoritySQL = new AuthoritySQL($this->getSQLQuery());
         $this->authority_info = $authoritySQL->getInfo($id);
         if (! $this->authority_info) {
             $this->displayErrorAndExit("Aucune collectivité trouvée", "/admin/authorities/admin_authorities.php");
@@ -50,7 +50,7 @@ class AdminController extends Controller
         $this->verifAdmin($id);
 
         $this->authority_id = $id;
-        $authoritySiret = $this->getAuthoritySiretSQL();
+        $authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
         $this->siret_list = $authoritySiret->siretList($id);
         $this->siret_blocked_list = $authoritySiret->siretListBlocked($id);
         if ($this->isApiCall()) {
@@ -78,7 +78,7 @@ class AdminController extends Controller
         $authority_id = $recuperateur->getInt('authority_id');
         $siret = $this->getSiretFactory()->get($recuperateur->get('siret'));
 
-        $authoritySQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(AuthoritySQL::class);
+        $authoritySQL = new AuthoritySQL($this->getSQLQuery());
         $this->authority_info = $authoritySQL->getInfo($authority_id);
         if (! $this->authority_info) {
             $this->displayErrorAndExit("Aucune collectivité trouvée", "/admin/authorities/admin_authorities.php");
@@ -89,7 +89,7 @@ class AdminController extends Controller
             $this->displayErrorAndExit("Le numéro SIRET n'est pas valide", "/admin/authorities/admin_authority_siret.php?id=$authority_id&siret={$siret->getValue()}");
         } // @codeCoverageIgnore
 
-        $authoritySiret = LegacyObjectsManager::getLegacyObjectInstancier()->get(AuthoritySiretSQL::class);
+        $authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
         $authoritySiret->add($authority_id, $siret->getValue());
         $this->displayAndExit("Numéro SIRET ajouté", "/admin/authorities/admin_authority_siret.php?id=$authority_id");
     }
@@ -100,7 +100,7 @@ class AdminController extends Controller
         $this->verifSuperAdmin();
         $recuperateur = $this->getRecuperateurPost();
         $authority_siret_id = $recuperateur->getInt('authority_siret_id');
-        $authoritySiret = LegacyObjectsManager::getLegacyObjectInstancier()->get(AuthoritySiretSQL::class);
+        $authoritySiret = new AuthoritySiretSQL($this->getSQLQuery());
         $info = $authoritySiret->getInfo($authority_siret_id);
         $authoritySiret->del($authority_siret_id);
         $this->displayAndExit("Numéro SIRET retiré", "/admin/authorities/admin_authority_siret.php?id={$info['authority_id']}&siret={$info['siret']}");
@@ -177,7 +177,7 @@ class AdminController extends Controller
             $this->fgroup = $user_authority_group_id;
         }
 
-        $authoritySQL = $this->getObjectInstancier()->get(AuthoritySQL::class);
+        $authoritySQL = new AuthoritySQL($this->getSQLQuery());
         $this->authorities = $authoritySQL->getList($this->fgroup, $this->ftype, $this->fname, $this->fsiren, $this->fsiret, ($this->page_number - 1) * $this->taille_page, $this->taille_page);
 
         $nb_authorities = $authoritySQL->getNb($this->fgroup, $this->ftype, $this->fname, $this->fsiren, $this->fsiret);
@@ -188,20 +188,20 @@ class AdminController extends Controller
             $this->controller_exit();
         }
 
-        $authorityTypes = $this->getObjectInstancier()->get(AuthorityTypesSQL::class);
+        $authorityTypes = new AuthorityTypesSQL($this->getSQLQuery());
         $this->authority_types = $authorityTypes->getChildList();
 
         $this->side_bar = $pagerHTML->getHTML($this->page_number, $nb_authorities, $this->taille_page);
         ;
 
         if ($this->me->isGroupAdmin()) {
-            $userSQL = $this->getObjectInstancier()->get(UserSQL::class);
+            $userSQL = new UserSQL($this->getSQLQuery());
             $group_name = $userSQL->getGroupeName($this->me->getId());
             $this->titre = "Gestion des collectivités du groupe $group_name";
             $this->groupe_list = false;
         } else {
             $this->titre = "Gestion des collectivités";
-            $groupeSQL = $this->getObjectInstancier()->get(GroupSQL::class);
+            $groupeSQL = new GroupSQL($this->getSQLQuery());
             $this->groupe_list = $groupeSQL->getAll();
         }
     }
