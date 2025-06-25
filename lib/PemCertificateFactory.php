@@ -40,7 +40,9 @@ class PemCertificateFactory
     {
         return new PemCertificate(
             $content,
-            $this->parsePemCertificate($content)
+            $this->parsePemCertificate($content),
+            $this->parsePemCertificate($content)['subject'],
+            $this->parsePemCertificate($content)['issuer'],
         );
     }
 

@@ -14,14 +14,18 @@ class PemCertificate
     private $dateValidFrom;
     /** @var DateTime  */
     private $dateValidTo;
+    private array $subjectDN;
+    private array $issuerDN;
 
-    public function __construct(string $content, array $x509)
+    public function __construct(string $content, array $x509, array $subjectDN, array $issuerDN)
     {
         $this->content = $content;
         $this->dateValidFrom = new DateTime();
         $this->dateValidFrom->setTimestamp($x509['validFrom_time_t']);
         $this->dateValidTo = new DateTime();
         $this->dateValidTo->setTimestamp($x509['validTo_time_t']);
+        $this->subjectDN = $subjectDN;
+        $this->issuerDN = $issuerDN;
     }
 
     public function getContent(): string
@@ -60,5 +64,20 @@ class PemCertificate
         $pem_data = mb_substr($this->content, mb_strpos($this->content, $begin) + mb_strlen($begin));
         $pem_data = trim(mb_substr($pem_data, 0, mb_strpos($pem_data, $end)));
         return $pem_data;
+    }
+
+    public function getSubjectDN(): array
+    {
+        return $this->subjectDN;
+    }
+
+    public function getIssuerDN(): array
+    {
+        return $this->issuerDN;
+    }
+
+    public function isAutosigned(): bool
+    {
+        return $this->subjectDN === $this->issuerDN;
     }
 }
