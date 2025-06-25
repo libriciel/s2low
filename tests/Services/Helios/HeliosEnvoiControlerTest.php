@@ -14,7 +14,6 @@ use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionMode;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager;
 use S2low\Services\Helios\HeliosEnvoiControler;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
-use S2low\Tests\S2lowSymfonyWebTestCase;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\helios\FichierCompteur;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
