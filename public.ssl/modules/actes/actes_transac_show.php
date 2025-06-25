@@ -501,9 +501,9 @@ if (!$trans->hasPendingCancelTrans()) {
         $actionHtml .= "</div>\n";
     }//fin if qui verifie type == 1 et status == 4
 
-    $actesTransactionsSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(ActesTransactionsSQL::class);
+    $actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
     $transactionsInfo = $actesTransactionsSQL->getInfo($trans->getId());
-    $authoritySQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(AuthoritySQL::class);
+    $authoritySQL = new AuthoritySQL($sqlQuery);
     $authorityInfo = $authoritySQL->getInfo($transactionsInfo['authority_id']);
 
     if ($trans->isType(TypeTransaction::TransmissionActe) && in_array($transStatus, [4,5,14,20]) && $trans->canValidate()) {
@@ -658,7 +658,7 @@ if (isset($actionHtml)) {
 
 
 if ($transStatus == 18 && $me->checkDroit("actes", "CS")) {
-    $actesIncludedFileSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(ActesIncludedFileSQL::class);
+    $actesIncludedFileSQL = new ActesIncludedFileSQL($sqlQuery);
     $tab_included_files = $actesIncludedFileSQL->getSendFile($id);
 
 

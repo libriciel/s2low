@@ -17,7 +17,7 @@ list($objectInstancier,$sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::get
 throw new Exception("Script désactivé pour le moment. Avec le stockage objet, on peut se poser la question du ménage...");
 
 
-$actesTransactionsSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(ActesTransactionsSQL::class);
+$actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
 
 $allEnvelopes = $actesTransactionsSQL->getEnvelopeToDelete();
 

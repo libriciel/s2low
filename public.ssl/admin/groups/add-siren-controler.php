@@ -30,7 +30,7 @@ $recuperateur = new Recuperateur($_POST);
 $id = $recuperateur->get('id');
 $siren = $sirenFactory->get($recuperateur->get('siren'));
 
-$authorityGroup = LegacyObjectsManager::getLegacyObjectInstancier()->get(GroupSQL::class);
+$authorityGroup = new GroupSQL($sqlQuery);
 
 if (!(is_numeric($id) && floatval($id) == intval(floatval($id)))) {
     $_SESSION['error'] = "L'id $id fournie n'est pas un entier.";
@@ -50,7 +50,7 @@ if (!$siren->isValid()) {
     exit;
 }
 
-$authorityGroupSirenSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(AuthorityGroupSirenSQL::class);
+$authorityGroupSirenSQL = new AuthorityGroupSirenSQL($sqlQuery);
 
 if ($authorityGroupSirenSQL->exist($id, $siren->getValue())) {
     $_SESSION['error'] = 'Le siren existe déjà dans ce groupe';

@@ -46,12 +46,13 @@ if ($tooManyAnnexes) {
 }
 
 // Instanciation du module courant
-$module = LegacyObjectsManager::getLegacyObjectInstancier()->get(Module::class);
+$module = new Module();
 if (!$module->initByName("actes")) {
     Helpers:: returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
 }
 
-$me = LegacyObjectsManager::getLegacyObjectInstancier()->get(User::class);
+$me = new User();
+
 if (!$me->authenticate()) {
     Helpers:: returnAndExit(1, "Échec de l'authentification", Helpers::getLink("connexion-status"));
 }
@@ -234,7 +235,7 @@ for ($i = 1; $i <= 5; $i++) {
     $classification[] = ${"classif" . $i};
 }
 
-$actesClassificationCodesSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(ActesClassificationCodesSQL::class);
+$actesClassificationCodesSQL = new ActesClassificationCodesSQL($sqlQuery);
 $classification_description = $actesClassificationCodesSQL->getDescription($myAuthority->getId(), $classification);
 $trans->set("classification_string", $classification_description);
 

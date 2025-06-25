@@ -6,7 +6,7 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 require_once __DIR__ . "/../../init/init.php";
 $sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
-$heliosTransactionSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(HeliosTransactionsSQL::class);
+$heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
 
 $nbJours = 30;
 $help = false;

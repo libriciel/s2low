@@ -22,7 +22,7 @@ $sql = "SELECT id,user_id FROM helios_transactions WHERE authority_id = ? AND la
 
 $all_info = $sqlQuery->query($sql, $authority_id, HeliosTransactionsSQL::ATTENTE_POSTEE);
 
-$heliosTransactionSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(HeliosTransactionsSQL::class);
+$heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
 
 
 foreach ($all_info as $info) {

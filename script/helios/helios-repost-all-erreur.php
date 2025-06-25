@@ -13,7 +13,7 @@ list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::ge
         [ObjectInstancier::class, SQLQuery::class]
     );
 
-$heliosTransactionSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(HeliosTransactionsSQL::class);
+$heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
 
 
 $sql = "SELECT helios_transactions.id,helios_transactions.submission_date,filename,message FROM helios_transactions " .

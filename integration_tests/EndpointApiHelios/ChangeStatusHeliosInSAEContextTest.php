@@ -17,7 +17,7 @@ class ChangeStatusHeliosInSAEContextTest extends S2lowIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->heliosTransactionsSQL = self::getContainer()->get(HeliosTransactionsSQL::class);
+        $this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->getSQLQuery());
     }
 
     public function getHeliosTransactionsSQL(): HeliosTransactionsSQL

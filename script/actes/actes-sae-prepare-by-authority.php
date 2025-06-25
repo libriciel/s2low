@@ -44,7 +44,7 @@ $nb_transaction = count($transaction_id_list);
 echo "$nb_transaction vont être traité\n";
 
 
-$actesTransactionsSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(ActesTransactionsSQL::class);
+$actesTransactionsSQL = new ActesTransactionsSQL($sqlQuery);
 
 $actesPrepareEnvoiSAE = $objectInstancier->get(ActesPrepareEnvoiSAE::class);
 
