@@ -85,9 +85,9 @@ class Authentification
             if ($e->getMessage() === "La connexion n'a pas pu être établie") {
                 $redirect = Helpers::getLink("/login.php");
             }
-
             Helpers::returnAndExit(1, $e->getMessage(), $redirect);
         }
+
         return $id_list[0];
     }
 
@@ -104,6 +104,7 @@ class Authentification
         } // @codeCoverageIgnore
 
         $list_id = $this->userSQL->getListIdFromConnexion($connexion_info['certificate_hash'], $connexion_info['certificate_rgs_2_etoiles']);
+
         if (! in_array($user_id, $list_id)) {
             Helpers::returnAndExit(1, "La connexion n'a pas pu être établie", Helpers::getLink("/login.php"));
         } // @codeCoverageIgnore
@@ -123,7 +124,9 @@ class Authentification
         } else {
             throw new Exception("Méthode d'authentification non reconnue");
         }
+
         $certificateInfos = $this->httpsConnexion->getCertificateInfo();
+
         if (!$certificateInfos) {
             throw new Exception("Aucune information de certificat trouvée");
         }
@@ -171,6 +174,7 @@ class Authentification
             $connexion_info['login']
         );
         $ids = [];
+
         foreach ($possibleUsersInDB as $possibleUser) {
             if (
                 $this->passwordHandler->passwordMatchesHash(
@@ -182,6 +186,7 @@ class Authentification
                 $ids[] = $possibleUser["id"];
             }
         }
+
         return $ids;
     }
 

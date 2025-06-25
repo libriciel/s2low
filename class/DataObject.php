@@ -21,6 +21,7 @@ class DataObject
 {
     protected $id;
     protected $errorMsg = null;
+
     /**
      * @var Database
      */
@@ -167,93 +168,10 @@ class DataObject
         return true;
     }
 
-    /**
-     * \brief Méthode d'enregistrement d'une entité dans la base de données
-     * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (true par défaut)
-     * \return true si succès, false sinon
-     */
-    public function save($validate = true)
-    {
-        $saveSQLRequest = $this->buildSaveSQLRequest($validate);
-
-        if (!$saveSQLRequest->isValid()) {
-            return false;
-        }
-
-        if (!$this->db->exec($saveSQLRequest->getRequest(), $saveSQLRequest->getParams())) {
-            $this->errorMsg = "Erreur lors de la sauvegarde de l'entité";
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param mixed $validate
-     * @return DataObjectSaveSQLRequest
-     */
-    public function buildSaveSQLRequest(bool $validate): DataObjectSaveSQLRequest
-    {
-        $new = true;
-        $error = true;
-
-        if (isset($this->id)) {
-            $new = false;
-        }
-
-        if ($validate) {
-            if (!$this->validate()) {
-                return new DataObjectSaveSQLRequest(false, "", []);
-            }
-        }
-
-        if ($new) {
-            if (!($this->id = $this->getNextId())) {
-                $this->errorMsg = "Erreur de récupération du nouvel ID";
-                return new DataObjectSaveSQLRequest(false, "", []);
-            }
-
-
-            $fields = ["id"];
-            $params = [$this->id];
-            $values = "? ";
-
-            foreach ($this->dbFields as $field => $val) {
-                if (isset($this->$field) && mb_strlen($this->$field) > 0) {
-                    $values .= ", ?";
-                    $fields[] = $field;
-                    $params[] = $this->$field;
-                }
-            }
-
-            $sql = "INSERT INTO " . $this->objectName . " (";
-            $sql .= implode(", ", $fields);
-            $sql .= ") VALUES ( $values )";
-        } else { // Mise à jour
-            $sql = "UPDATE " . $this->objectName . " SET ";
-
-            $fields = array();
-            $params = array();
-            foreach ($this->dbFields as $field => $val) {
-                if (isset($this->$field) && mb_strlen($this->$field) > 0) {
-                    $str = $field . "= ?";
-                    $params[] = $this->$field;
-                    $fields[] = $str;
-                }
-            }
-
-            $sql .= implode(", ", $fields);
-
-            $sql .= " WHERE id=?";
-            $params[] = $this->id;
-        }
-        return new DataObjectSaveSQLRequest(true, $sql, $params);
-    }
-
-    /**
-     * \brief Méthode permettant de valider les attributs de l'entité courante (bon type, présence...)
-     * \return true si succès, false sinon
-     */
+  /**
+   * \brief Méthode permettant de valider les attributs de l'entité courante (bon type, présence...)
+   * \return true si succès, false sinon
+  */
     public function validate()
     {
         $this->errorMsg = "";
@@ -335,10 +253,32 @@ class DataObject
         }
     }
 
-    /**
-     * \brief Méthode de récupération du prochain identifiant dans la base de données pour cette entité
-     * \return l'identifiant ou null si échec
-     */
+  /**
+   * \brief Méthode d'enregistrement d'une entité dans la base de données
+   * \param $validate booléen (optionnel) Demande la validation ou non des données de l'entité avant enregistrement (true par défaut)
+   * \return true si succès, false sinon
+  */
+    public function save($validate = true)
+    {
+
+        $saveSQLRequest = $this->buildSaveSQLRequest($validate);
+
+        if (!$saveSQLRequest->isValid()) {
+            return false;
+        }
+
+        if (! $this->db->exec($saveSQLRequest->getRequest(), $saveSQLRequest->getParams())) {
+            $this->errorMsg = "Erreur lors de la sauvegarde de l'entité";
+            return false;
+        }
+
+        return true;
+    }
+
+  /**
+   * \brief Méthode de récupération du prochain identifiant dans la base de données pour cette entité
+   * \return l'identifiant ou null si échec
+  */
     protected function getNextId()
     {
         $sql = "SELECT nextval('" . $this->objectName . "_id_seq') AS id";
@@ -393,25 +333,21 @@ class DataObject
         return implode(',', $ret);
     }
 
-    /**
-     * \brief Méthode d'initialisation du pager
-     * \param $fields chaîne : Liste des champs à récupérer
-     * \param $from chaîne : Liste des tables dans lesquelles récupérer les données (peut inclure des jointures)
-     * \param $cond chaîne (optionnel) : Chaîne conditionnelle (comporte une instruction WHERE)
-     * \param $order chaîne (optionnel) : Chaîne définissant l'ordre de tri pour les résultats (SQL)
-     * \param $count entier (optionnel) : Nombre de résultat par page désirés
-     * \param $page entier (optionnel) : Page courante désirée
-     * \return True en cas de succès, false sinon
-     */
-    public function pagerInit(
-        $fields,
-        $from,
-        $cond = null,
-        $order = null,
-        $count = null,
-        $page = null,
-        $sortWay = "DESC"
-    ) {
+  // Méthodes de pagination
+
+
+  /**
+   * \brief Méthode d'initialisation du pager
+   * \param $fields chaîne : Liste des champs à récupérer
+   * \param $from chaîne : Liste des tables dans lesquelles récupérer les données (peut inclure des jointures)
+   * \param $cond chaîne (optionnel) : Chaîne conditionnelle (comporte une instruction WHERE)
+   * \param $order chaîne (optionnel) : Chaîne définissant l'ordre de tri pour les résultats (SQL)
+   * \param $count entier (optionnel) : Nombre de résultat par page désirés
+   * \param $page entier (optionnel) : Page courante désirée
+   * \return True en cas de succès, false sinon
+  */
+    public function pagerInit($fields, $from, $cond = null, $order = null, $count = null, $page = null, $sortWay = "DESC")
+    {
         $this->fields = $fields;
         $this->from = $from;
         $this->cond = $cond;
@@ -540,5 +476,67 @@ class DataObject
         $this->errorMsg = null;
 
         return $msg;
+    }
+
+    /**
+     * @param mixed $validate
+     * @return DataObjectSaveSQLRequest
+     */
+    public function buildSaveSQLRequest(bool $validate): DataObjectSaveSQLRequest
+    {
+        $new = true;
+        $error = true;
+
+        if (isset($this->id)) {
+            $new = false;
+        }
+
+        if ($validate) {
+            if (!$this->validate()) {
+                return new DataObjectSaveSQLRequest(false, "", []);
+            }
+        }
+
+        if ($new) {
+            if (!($this->id = $this->getNextId())) {
+                $this->errorMsg = "Erreur de récupération du nouvel ID";
+                return new DataObjectSaveSQLRequest(false, "", []);
+            }
+
+
+            $fields = ["id"];
+            $params = [$this->id];
+            $values = "? ";
+
+            foreach ($this->dbFields as $field => $val) {
+                if (isset($this->$field) && mb_strlen($this->$field) > 0) {
+                    $values .= ", ?";
+                    $fields[] = $field;
+                    $params[] = $this->$field;
+                }
+            }
+
+            $sql = "INSERT INTO " . $this->objectName . " (";
+            $sql .= implode(", ", $fields);
+            $sql .= ") VALUES ( $values )";
+        } else { // Mise à jour
+            $sql = "UPDATE " . $this->objectName . " SET ";
+
+            $fields = array();
+            $params = array();
+            foreach ($this->dbFields as $field => $val) {
+                if (isset($this->$field) && mb_strlen($this->$field) > 0) {
+                    $str = $field . "= ?";
+                    $params[] = $this->$field;
+                    $fields[] = $str;
+                }
+            }
+
+            $sql .= implode(", ", $fields);
+
+            $sql .= " WHERE id=?";
+            $params[] = $this->id;
+        }
+        return new DataObjectSaveSQLRequest(true, $sql, $params);
     }
 }

@@ -41,6 +41,7 @@ when@prod:
         type: stream
         channels: [ deprecation ]
         path: php://stderr
+
 when@dev:
   monolog:
     handlers:

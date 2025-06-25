@@ -36,9 +36,9 @@ class HeliosPurgeTest extends S2lowIntegrationTestCase
 
         $this->heliosController = self::getContainer()->get(HeliosController::class);
         $this->heliosFilesFactory = new HeliosFilesFactory(
+            $this->heliosTransactionSQL,
             $this->heliosUtils->helios_files_upload_root,
             $this->heliosUtils->helios_response_root,
-            $this->heliosTransactionSQL,
         );
 
         $this->heliosAnalyseFichierRecu = self::getContainer()->get(HeliosAnalyseFichierRecu::class);

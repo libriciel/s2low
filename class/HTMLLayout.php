@@ -23,6 +23,7 @@ use S2lowLegacy\Model\UserSQL;
 class HTMLLayout extends Layout
 {
     protected $template = false;
+
     protected ObjectInstancier $container;
     private $errorDisabled;
 

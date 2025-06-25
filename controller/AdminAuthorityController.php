@@ -33,7 +33,7 @@ class AdminAuthorityController extends Controller
 
         $convention_filepath = $this->actesConventions->getConventionFilepath($authority_id);
 
-        if (!$convention_filepath || !file_exists($convention_filepath)) {
+        if (! $convention_filepath || ! file_exists($convention_filepath)) {
             $this->redirect(
                 "/admin/authorities/admin_authority_edit.php?id=" . $authority_id,
                 "Impossible de récupérer la convention"
