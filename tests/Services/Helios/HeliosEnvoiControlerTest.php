@@ -131,8 +131,8 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
     {
         $this->workerScript->expects(static::never())->method('putJobByQueueName');
         $id_transaction = $this->validatePesAller('pes_aller_utf8.xml');
-        $info_transaction = $this->transactionsSQL->getInfo($id_transaction);
 
+        $info_transaction = $this->transactionsSQL->getInfo($id_transaction);
         static::assertEquals(HeliosTransactionsSQL::ERREUR, $info_transaction['last_status_id']);
         $last_status_info = $this->transactionsSQL->getLastStatusInfo($id_transaction);
 
