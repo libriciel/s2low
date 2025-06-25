@@ -57,10 +57,6 @@ if [ -z "$DONT_INIT_DATABASE" ] ; then
   done
 
   php /var/www/s2low/bin/console init:bootstrap
-#
-#  if [ "${POSTGRES_DATABASE_TEST}" ]; then
-#    php /var/www/s2low/bin/console init:db-test
-#  fi
 fi
 
 #Si la variable OPENSTACK_ENABLE n'existe pas il faut la définir sinon supervisor retournera une erreur
