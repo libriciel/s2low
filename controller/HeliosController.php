@@ -125,12 +125,13 @@ class HeliosController extends Controller
         }
 
         $pes_aller_destination = $this->getPesAllerRetriever()->getPathForNonExistingFile($SHA1);
-        $pes_aller_original_name = $_FILES['enveloppe']['name'];
-
         try {
-            move_uploaded_file_wrapper($_FILES['enveloppe']['tmp_name'], $pes_aller_destination);
+            $pes_aller_original_name = $_FILES['enveloppe']['name'];
+            if (!move_uploaded_file_wrapper($_FILES['enveloppe']['tmp_name'], $pes_aller_destination)) {
+                throw new Exception("Échec lors du téléchargement du fichier");
+            }
         } catch (Exception $e) {
-            $this->logger->error($e->getMessage());
+            throw new Exception("Échec lors du téléchargement du fichier");
         }
         return $this->importFile($user_id, $pes_aller_destination, $pes_aller_original_name);
     }
