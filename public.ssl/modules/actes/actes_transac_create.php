@@ -55,12 +55,15 @@ $me = LegacyObjectsManager::getLegacyObjectInstancier()->get(User::class);
 if (!$me->authenticate()) {
     Helpers:: returnAndExit(1, "Échec de l'authentification", Helpers::getLink("connexion-status"));
 }
+
 if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->checkDroit($module->get("name"), 'CS')) {
     Helpers:: returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
+
 if ($module->getParam("paper") == "on") {
     Helpers:: returnAndExit(1, "Mode « papier » actif. Accès interdit.", Helpers::getLink("/modules/actes/"));
 }
+
 $must_signed = Helpers::getVarFromPost("must_signed", true);
 
 $rgsConnexion = LegacyObjectsManager::getLegacyObjectInstancier()->get(RgsConnexion::class);
@@ -71,6 +74,8 @@ if (!$must_signed && !$rgsConnexion->isRgsConnexion()) {
         Helpers::getLink("/modules/actes/")
     );
 }
+
+
 $myAuthority = new Authority($me->get("authority_id"));
 
 // Recuperation des variables du POST
@@ -232,6 +237,7 @@ for ($i = 1; $i <= 5; $i++) {
 $actesClassificationCodesSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(ActesClassificationCodesSQL::class);
 $classification_description = $actesClassificationCodesSQL->getDescription($myAuthority->getId(), $classification);
 $trans->set("classification_string", $classification_description);
+
 $trans->set("classification_date", ActesClassification:: getLastRevisionDate($myAuthority->getId()));
 
 
@@ -455,6 +461,7 @@ if (!$env->checkArchiveSize()) {
 
 // Purge des fichiers intermédiaires
 $env->purgeFiles();
+
 
 if (!$env->save()) {
     $msg = "Erreur lors de l'enregistrement de l'enveloppe :\n" . $env->getErrorMsg();
