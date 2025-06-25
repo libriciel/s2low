@@ -80,6 +80,7 @@ class ActesArchiveControler
      */
     public function sendArchive(int $transaction_id): void
     {
+
         $this->logger->info("Envoi de La transaction $transaction_id sur le SAE");
         if (! $this->isTransactionInGoodStatus($transaction_id)) {
             return;
@@ -102,7 +103,6 @@ class ActesArchiveControler
                 $message .=  " - id_d=$id_d";
             }
             $this->logger->error($message);
-
             $this->actesTransactionsSQL->updateStatus(
                 $transaction_id,
                 ActesStatusSQL::STATUS_ERREUR_SAE_DOC_INDISPONIBLES,
@@ -136,6 +136,7 @@ class ActesArchiveControler
             $transactionsInfo = $this->actesTransactionsSQL->getInfo($transaction_id);
 
             $this->authoritySQL->verifHasPastell($transactionsInfo[ActesTransactionsSQL::AUTHORITY_ID]);
+
             $actesFileForArchive = $this->prepareTransfert($transaction_id, $tmp_folder);
 
             $id_d = $this->createPastellDocument($transaction_id);

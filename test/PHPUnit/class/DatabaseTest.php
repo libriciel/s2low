@@ -154,21 +154,6 @@ class DatabaseTest extends TestCase
         $this->assertEquals('eric@sigmalis.com', $result);
     }
 
-    public function testGetOneCol()
-    {
-        $query = "SELECT email FROM users ORDER BY id";
-        $params = [];
-
-        $this->sqlQueryMock->expects($this->once())
-            ->method('queryOneCol')
-            ->with($query, $params)
-            ->willReturn(['eric@sigmalis.com', 'eric+10@sigmalis.com']);
-
-        $result = $this->database->getOneCol($query, $params);
-
-        $this->assertEquals(['eric@sigmalis.com', 'eric+10@sigmalis.com'], $result);
-    }
-
     public function testFetchAll()
     {
         $query = "SELECT * FROM users ORDER BY id";

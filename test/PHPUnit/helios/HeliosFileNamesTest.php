@@ -36,9 +36,9 @@ class HeliosFileNamesTest extends S2lowIntegrationTestCase
 
         $this->heliosController = self::getContainer()->get(HeliosController::class);
         $this->heliosFilesFactory = new HeliosFilesFactory(
+            $this->heliosTransactionSQL,
             $this->heliosDirectoriesManager->helios_files_upload_root,
             $this->heliosDirectoriesManager->helios_response_root,
-            $this->heliosTransactionSQL,
         );
 
         $this->heliosAnalyseFichierRecu = self::getContainer()->get(HeliosAnalyseFichierRecu::class);

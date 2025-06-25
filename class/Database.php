@@ -136,16 +136,11 @@ class Database
      */
     public function getOneValue($sql, $params = [])
     {
-        if (!is_array($params)) {
+        if (! is_array($params)) {
             $params = func_get_args();
             array_shift($params);
         }
         return $this->sqlQuery->queryOne($sql, $params);
-    }
-
-    public function getOneCol($sql, $params = [])
-    {
-        return $this->sqlQuery->queryOneCol($sql, $params);
     }
 
     /**
