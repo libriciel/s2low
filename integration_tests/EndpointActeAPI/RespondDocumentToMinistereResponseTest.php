@@ -19,7 +19,7 @@ class RespondDocumentToMinistereResponseTest extends S2lowIntegrationTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
+        $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL

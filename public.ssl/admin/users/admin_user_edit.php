@@ -186,7 +186,7 @@ if ($him->getId()) {
     $userService_list = $serviceUser->getServiceFromUser($him->getId());
 }
 
-$userSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(UserSQL::class);
+$userSQL = new UserSQL($sqlQuery);
 
 $ident_method_id = $userSQL->getIdentificationMethod($him->getId() ?: $new_id);
 $ident_method_libelle = $userSQL->getIdentificationMethodeLibelle($ident_method_id);

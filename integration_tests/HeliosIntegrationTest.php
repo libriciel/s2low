@@ -19,7 +19,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->heliosTransactionsSQL = self::getContainer()->get(HeliosTransactionsSQL::class);
+        $this->heliosTransactionsSQL = new HeliosTransactionsSQL($this->sqlQuery);
     }
 
     protected function tearDown(): void
@@ -79,6 +79,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
         $pesAller = $this->addPesAllerInErrorPath();
 
         $_GET['file'] = $pesAller->getFilename();
+
         $client->request('GET', 'modules/helios/admin/analyse-response.php');
         static::assertMatchesRegularExpression(
             '#identificant NomFic 03f432a4f6d35110bf309fb525eb61f7#',

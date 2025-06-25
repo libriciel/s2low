@@ -8,14 +8,14 @@ use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Class\User;
 
-$module = LegacyObjectsManager::getLegacyObjectInstancier()->get(Module::class);
+$module = new Module();
 if (!$module->initByName("helios")) {
     $_SESSION["error"] = "Erreur d'initialisation du module";
     header("Location: " . WEBSITE_SSL);
     exit();
 }
 
-$me = LegacyObjectsManager::getLegacyObjectInstancier()->get(User::class);
+$me = new User();
 
 if (!$me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
@@ -46,7 +46,7 @@ if (! $rgsConnexion->isRgsConnexion()) {
 
 $myAuthority = new Authority($me->get("authority_id"));
 
-$doc = LegacyObjectsManager::getLegacyObjectInstancier()->get(HTMLLayout::class);
+$doc = new HTMLLayout();
 
 $js = <<<EOJS
 <script type="text/javascript">

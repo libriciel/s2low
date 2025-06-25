@@ -8,7 +8,7 @@ require_once(__DIR__ . "/../../init/init.php");
 list($sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 
-$actesTransactionSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(ActesTransactionsSQL::class);
+$actesTransactionSQL = new ActesTransactionsSQL($sqlQuery);
 
 $sql = "
 SELECT transaction_id,date FROM actes_transactions  

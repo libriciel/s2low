@@ -64,7 +64,7 @@ $newmailnotif = 'true';
 
 $form_location =  Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=$id");
 
-$authoritySQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(AuthoritySQL::class);
+$authoritySQL = new AuthoritySQL($sqlQuery);
 
 if (! $authoritySQL->verifDepartmentAndDistrict($department, $district)) {
     Helpers::exitOrDisplayError(

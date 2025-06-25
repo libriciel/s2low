@@ -30,11 +30,11 @@ if ($initData->userInfo['role'] != 'SADM') {
 $recuperateur = new Recuperateur($_GET);
 $filename = $recuperateur->get('file');
 
-$heliosResponsesError = LegacyObjectsManager::getLegacyObjectInstancier()->get(HeliosResponsesError::class);
-$heliosTransactionSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(HeliosTransactionsSQL::class);
-$authoritySQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(AuthoritySQL::class);
-$heliosRetourSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(HeliosRetourSQL::class);
-$authoritySiretSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(AuthoritySiretSQL::class);
+$heliosResponsesError = new HeliosResponsesError();
+$heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
+$authoritySQL = new AuthoritySQL($sqlQuery);
+$heliosRetourSQL = new HeliosRetourSQL($sqlQuery);
+$authoritySiretSQL = new AuthoritySiretSQL($sqlQuery);
 
 $_SESSION['error'] = '';
 
