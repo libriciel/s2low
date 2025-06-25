@@ -84,6 +84,7 @@ class MailerSymfony extends Mailer
                     $email->attachFromPath($file);
                 }
             }
+
             foreach ($this->dataAsFile as $dataAsFile) {
                 $email->attach($dataAsFile['data'], $dataAsFile['filename'], 'application/octet-stream');
             }

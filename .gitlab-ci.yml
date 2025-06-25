@@ -17,7 +17,6 @@ include:
 stages:
     - build
     - static-analysis
-    - debug-clamscan
     - test
     - quality
     - deploy
