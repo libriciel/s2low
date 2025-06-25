@@ -18,7 +18,6 @@ class RgsConnexion
 
     public function getClientCertChain()
     {
-
         $i = 0;
         $clientCertChain = '';
         while (isset($this->server_global['SSL_CLIENT_CERT_CHAIN_' . $i])) {

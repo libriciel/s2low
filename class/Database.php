@@ -11,7 +11,7 @@ class Database
     /** @var SQLQuery */
     private $sqlQuery;
 
-    protected $is_in_a_transaction;
+    private $is_in_a_transaction;
 
     /**
      * @var bool indique s'il y a une erreur dans la transaction
@@ -115,6 +115,11 @@ class Database
         }
     }
 
+    /**
+     * @param $sql
+     * @return array
+     * @throws Exception
+     */
     public function getOneLine($sql, $params = [])
     {
         return $this->getOneValue($sql, $params);

@@ -93,17 +93,20 @@ class Log extends DataObject
             $logEntry->set("visibility", $visibility);
         }
 
+
+        $sqlQuery = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(SQLQuery::class);
+
         $authority_id = false;
         $authority_group_id = false;
         if ($userid) {
-            $userSQL = ObjectInstancierFactory::getObjetInstancier()->get(UserSQL::class);
+            $userSQL = new UserSQL($sqlQuery);
             $info = $userSQL->getInfo($userid);
             if ($info) {
                 $authority_id = $info['authority_id'];
             }
         }
         if ($authority_id) {
-            $authoritySQL = ObjectInstancierFactory::getObjetInstancier()->get(AuthoritySQL::class);
+            $authoritySQL = new AuthoritySQL($sqlQuery);
             $info = $authoritySQL->getInfo($authority_id);
             if ($info) {
                 $authority_group_id = $info['authority_group_id'];
