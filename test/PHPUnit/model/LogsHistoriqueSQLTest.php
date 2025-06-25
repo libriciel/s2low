@@ -16,7 +16,7 @@ class LogsHistoriqueSQLTest extends S2lowTestCase
         $this->last_month = date("Y-m-d", strtotime("-2 month"));
         $today = date("Y-m-d");
 
-        $logsSQL = self::getContainer()->get(LogsSQL::class);
+        $logsSQL = new LogsSQL($this->getSQLQuery());
         $logsSQL->addLog(
             $this->last_month,
             1,
@@ -38,7 +38,7 @@ class LogsHistoriqueSQLTest extends S2lowTestCase
             false
         );
 
-        $this->logsHistoriqueSQL = self::getContainer()->get(LogsHistoriqueSQL::class);
+        $this->logsHistoriqueSQL = new LogsHistoriqueSQL($this->getSQLQuery());
         $this->logsHistoriqueSQL->vidange(1);
     }
 

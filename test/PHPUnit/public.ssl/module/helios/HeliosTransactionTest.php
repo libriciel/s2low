@@ -18,7 +18,7 @@ class HeliosTransactionTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->heliosTransactionsSQL = self::getContainer()->get(HeliosTransactionsSQL::class);
+        $this->heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
     }
 
     public function getHeliosTransactionsSQL(): HeliosTransactionsSQL

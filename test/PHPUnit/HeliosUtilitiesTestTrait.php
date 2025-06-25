@@ -70,7 +70,7 @@ trait HeliosUtilitiesTestTrait
         $size = 0;
         $sha1 = 'sha1';
 
-        $heliosRetourSQL = self::getContainer()->get(HeliosRetourSQL::class);
+        $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
         return $heliosRetourSQL->add(
             $collectiviteId,
             $siret,

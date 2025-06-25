@@ -13,7 +13,7 @@ class ModuleSQLTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->moduleSQL = self::getContainer()->get(ModuleSQL::class);
+        $this->moduleSQL = new ModuleSQL($this->getSQLQuery());
     }
 
     public function testGetInfoByName()
@@ -44,7 +44,7 @@ class ModuleSQLTest extends S2lowTestCase
 
     public function testGetModuleForSuperAdmin()
     {
-        $userSQL = self::getContainer()->get(UserSQL::class);
+        $userSQL = new UserSQL($this->getSQLQuery());
         $userInfo = $userSQL->getInfo(1);
         $info = $this->moduleSQL->getModulesForUser($userInfo);
         $this->assertEquals('actes', $info[0]['name']);
@@ -52,7 +52,7 @@ class ModuleSQLTest extends S2lowTestCase
 
     public function testGetModuleForGroupAdmin()
     {
-        $userSQL = self::getContainer()->get(UserSQL::class);
+        $userSQL = new UserSQL($this->getSQLQuery());
         $userInfo = $userSQL->getInfo(1);
         $info = $this->moduleSQL->getModulesForUser($userInfo);
         $this->assertEquals('helios', $info[1]['name']);
@@ -60,7 +60,7 @@ class ModuleSQLTest extends S2lowTestCase
 
     public function testGetModuleForUser()
     {
-        $userSQL = self::getContainer()->get(UserSQL::class);
+        $userSQL = new UserSQL($this->getSQLQuery());
         $userInfo = $userSQL->getInfo(5);
         $info = $this->moduleSQL->getModulesForUser($userInfo);
         $this->assertEmpty($info);

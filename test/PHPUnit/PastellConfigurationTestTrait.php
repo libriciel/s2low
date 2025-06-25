@@ -10,16 +10,16 @@ use S2lowLegacy\Model\PastellPropertiesSQL;
 
 trait PastellConfigurationTestTrait
 {
-    protected function configurePastell($authority_id = 1): void
+    protected function configurePastell($authority_id = 1)
     {
-        $authoritySQL = $this->getObjectInstancier()->get(AuthoritySQL::class);
+        $authoritySQL = new AuthoritySQL($this->getSQLQuery());
         $pastellProperties = new PastellProperties();
         $pastellProperties->url = "FakeURL";
         $pastellProperties->id_e = 12;
         $pastellProperties->actes_send_auto = true;
         $pastellProperties->helios_send_auto = true;
         $authoritySQL->updateSAE($authority_id, $pastellProperties);
-        $pastellPropertiesSQL  = $this->getObjectInstancier()->get(PastellPropertiesSQL::class);
+        $pastellPropertiesSQL  = new PastellPropertiesSQL($this->getSQLQuery());
         $pastellPropertiesSQL->editProperties($authority_id, $pastellProperties);
     }
 

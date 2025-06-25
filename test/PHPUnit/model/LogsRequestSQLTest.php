@@ -21,7 +21,7 @@ class LogsRequestSQLTest extends S2lowTestCase
         $this->logsRequestData->date_debut  = "1970-01-01";
         $this->logsRequestData->date_fin  = "2000-01-01";
 
-        $this->logsRequestSQL = self::getContainer()->get(LogsRequestSQL::class);
+        $this->logsRequestSQL = new LogsRequestSQL($this->getSQLQuery());
         $this->logs_request_id = $this->logsRequestSQL->newRequest($this->logsRequestData);
     }
 
