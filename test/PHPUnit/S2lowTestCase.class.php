@@ -65,12 +65,12 @@ abstract class S2lowTestCase extends KernelTestCase
         return self::getContainer()->get(SQLQuery::class);
     }
 
-    public function createTestHandler(): TestHandler
+    private function createTestHandler(): TestHandler
     {
         return new Monolog\Handler\TestHandler();
     }
 
-    public function createLogger(TestHandler $testHandler): LoggerInterface
+    private function createLogger(TestHandler $testHandler): LoggerInterface
     {
         $logger = new \Monolog\Logger('phpunit');
         $logger->pushHandler($testHandler);
@@ -78,77 +78,9 @@ abstract class S2lowTestCase extends KernelTestCase
         return $logger;
     }
 
-    public function createS2lowLogger(LoggerInterface $logger): S2lowLogger
+    private function createS2lowLogger(LoggerInterface $logger): S2lowLogger
     {
         return new S2lowLogger($logger);
-    }
-
-    protected function setServerInfo(array $server_info)
-    {
-        $this->testEnvironmentManager->setServerInfo($server_info);
-    }
-
-    public function setAdminGroupAuthentication()
-    {
-        $this->testEnvironmentManager->setAdminGroupAuthentication();
-    }
-
-    public function setAdminGroup2Authentication()
-    {
-        $this->testEnvironmentManager->setAdminGroup2Authentication();
-    }
-
-
-    public function setAdminColAuthentication()
-    {
-        $this->testEnvironmentManager->setAdminColAuthentication();
-    }
-
-    public function setAdminCol2Authentication()
-    {
-        $this->testEnvironmentManager->setAdminCol2Authentication();
-    }
-
-    /**
-     * @return void
-     */
-    public function setRGSAuthentification(): void
-    {
-        throw new Exception("seek this answer to debug 6234d5463");
-        $rgsConnexion = $this->getMockBuilder(RgsConnexion::class)->disableOriginalConstructor()->getMock();
-        $rgsConnexion->method('isRgsConnexion')->willReturn(true);
-        $this->getObjectInstancier()->{RgsConnexion::class} = $rgsConnexion;
-    }
-
-    public function setUserAuthentification()
-    {
-        $this->testEnvironmentManager->setUserAuthentification();
-    }
-
-    public function setArchAuthentification(): void
-    {
-        $this->testEnvironmentManager->setArchAuthentification();
-    }
-
-    /**
-     * @deprecated methode deprecated il faut maintenant injecter un logger avec le testHandler
-     */
-    public function getLogRecords()
-    {
-        throw new Exception("seek this answer to debug 62345463");
-    }
-
-    public function assertLogMessage($expected_message, Level $level): void
-    {
-        throw new Exception("seek this answer to debug 848756543");
-    }
-
-    public function assertMatchesRegularExpressionLogMessage($expected_message, $num_log = 0)
-    {
-        $this->assertMatchesRegularExpression(
-            $expected_message,
-            $this->getLogRecords()[$num_log]['message']
-        );
     }
 
     /** @deprecated  */
@@ -156,10 +88,5 @@ abstract class S2lowTestCase extends KernelTestCase
     {
         $this->expectException($e);
         $this->expectExceptionMessage($message);
-    }
-    /** @deprecated  */
-    public function noAssertion()
-    {
-        $this->assertTrue(true);
     }
 }
