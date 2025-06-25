@@ -113,7 +113,7 @@ class HeliosController extends Controller
             throw new Exception($message);
         }
 
-        $heliosTransactionSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+        $heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
         try {
             $SHA1 = sha1_file($_FILES['enveloppe']['tmp_name']);
         } catch (Exception $e) {
@@ -138,11 +138,12 @@ class HeliosController extends Controller
 
     public function importFile($user_id, $filepath, $original_filename)
     {
-        $heliosTransactionSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+        $heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
 
-        $userSQL = $this->getObjectInstancier()->get(UserSQL::class);
+        $userSQL = new UserSQL($this->getSQLQuery());
         $user_info = $userSQL->getInfo($user_id);
-        $authoritySQL = $this->getObjectInstancier()->get(AuthoritySQL::class);
+
+        $authoritySQL = new AuthoritySQL($this->getSQLQuery());
         $authority_info = $authoritySQL->getInfo($user_info['authority_id']);
 
         $moduleSQL = $this->getObjectInstancier()->get(ModuleSQL::class);
@@ -240,8 +241,8 @@ class HeliosController extends Controller
 
     public function updateSiretFromPESAller($min_id = 0)
     {
-        $authoritySiretSQL = $this->getObjectInstancier()->get(AuthoritySiretSQL::class);
-        $heliosTransactionSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+        $authoritySiretSQL = new AuthoritySiretSQL($this->getSQLQuery());
+        $heliosTransactionSQL = new HeliosTransactionsSQL($this->getSQLQuery());
         $id_list = $heliosTransactionSQL->getAllId($min_id);
         foreach ($id_list as $transaction_id) {
             $info = $heliosTransactionSQL->getInfo($transaction_id);
@@ -293,7 +294,7 @@ class HeliosController extends Controller
                 throw new Exception('KO');
             }
 
-            $heliosRetourSQL = $this->getObjectInstancier()->get(HeliosRetourSQL::class);
+            $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
             $envelops = $heliosRetourSQL->getList($me->get("authority_id"));
 
 

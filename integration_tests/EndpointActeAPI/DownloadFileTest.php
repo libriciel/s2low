@@ -20,7 +20,7 @@ class DownloadFileTest extends S2lowIntegrationTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
+        $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
         $this->setUserWithRole(UserRole::Utilisateur);
     }
 
@@ -67,6 +67,7 @@ class DownloadFileTest extends S2lowIntegrationTestCase
         $vfsUrl = vfsStream::url('test/' . $archiveName);
         copy($archivePath, $vfsUrl);
         $archivePathFromVfs = $vfsUrl;
+
         $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, $archivePathFromVfs);
 
         $this->createActeIncludedFiles($transactionId);

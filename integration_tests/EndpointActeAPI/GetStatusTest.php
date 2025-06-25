@@ -17,7 +17,7 @@ class GetStatusTest extends S2lowIntegrationTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
+        $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
         $this->client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
     }
 
@@ -85,6 +85,7 @@ class GetStatusTest extends S2lowIntegrationTestCase
 
         $differentValuesInArrays = array_diff($responseArray, $responseModelArray);
         $nbOfDifferentValuesInArrays = count($differentValuesInArrays);
+
         self::assertTrue($nbOfDifferentValuesInArrays === 0, "Les statuts différents.");
     }
 }
