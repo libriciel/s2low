@@ -64,6 +64,8 @@ class Authentification
      */
     private function detectConnexionID(int $authentProcess = Authentification::AUTHENTIFICATION_BY_APACHE)
     {
+        //TODO Refactorer les Helper:redirect
+
         try {
             if (
                 $this->httpsConnexion->hasNonceParameters()

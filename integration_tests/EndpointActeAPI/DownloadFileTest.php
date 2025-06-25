@@ -29,7 +29,7 @@ class DownloadFileTest extends S2lowIntegrationTestCase
         return $this->actesTransactionsSQL;
     }
 
-    protected function getObjectInstancier()
+    protected function getObjectInstancier(): ObjectInstancier
     {
         return ObjectInstancierFactory::getObjetInstancier();
     }
