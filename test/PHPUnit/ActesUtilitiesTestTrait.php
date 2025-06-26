@@ -75,7 +75,7 @@ trait ActesUtilitiesTestTrait
             );
             copy($archivePath, $destination);
             $sql = 'UPDATE actes_envelopes SET file_path=?,file_size=? WHERE id=?';
-            self::getContainer()->get(Database::class)->query(
+            self::getContainer()->get(SQLQuery::class)->query(
                 $sql,
                 $relative_path,
                 filesize($archivePath),
@@ -85,7 +85,7 @@ trait ActesUtilitiesTestTrait
         $unique_id = $this->getActesTransactionsSQL()->guessUniqueId($transaction_id);
 
         $sql = 'UPDATE actes_transactions SET unique_id=? WHERE id=?';
-        self::getContainer()->get(Database::class)->query($sql, $unique_id, $transaction_id);
+        self::getContainer()->get(SQLQuery::class)->query($sql, $unique_id, $transaction_id);
 
 
         return $transaction_id;

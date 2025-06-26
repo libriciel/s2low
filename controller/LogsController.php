@@ -17,11 +17,13 @@ use S2lowLegacy\Model\UserSQL;
 
 class LogsController extends Controller
 {
+    /** @return LogsHistoriqueSQL $logsHistoriqueSQL */
     private function getLogsHistoriqueSQL()
     {
         return $this->getObjectInstancier()->get(LogsHistoriqueSQL::class);
     }
 
+    /** @return LogsRequestSQL $logsRequestSQL */
     private function getLogsRequestSQL()
     {
         return $this->getObjectInstancier()->get(LogsRequestSQL::class);

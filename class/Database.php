@@ -122,16 +122,11 @@ class Database
      */
     public function getOneLine($sql, $params = [])
     {
-        return $this->getOneValue($sql, $params);
-    }
-
-    public function query($sql, $params = [])
-    {
-        if (!is_array($params)) {
+        if (! is_array($params)) {
             $params = func_get_args();
             array_shift($params);
         }
-        return $this->sqlQuery->query($sql, $params);
+        return $this->sqlQuery->queryOne($sql, $params);
     }
 
     /**

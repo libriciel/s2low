@@ -1,6 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\Database;
+use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\GroupSQL;
 
 class GroupSQLTest extends S2lowTestCase
@@ -78,14 +79,14 @@ class GroupSQLTest extends S2lowTestCase
      */
     public function testGroupeVide()
     {
-        $database = self::getContainer()->get(Database::class);
-        $database->query("DELETE FROM users_perms");
-        $database->query("DELETE FROM users");
-        $database->query("DELETE FROM modules_authorities");
-        $database->query("DELETE FROM nounce");
-        $database->query("DELETE FROM authority_siret");
-        $database->query("DELETE FROM authorities");
-        $database->query("DELETE FROM authority_groups");
+        $sqlQuery = self::getContainer()->get(SQLQuery::class);
+        $sqlQuery->query("DELETE FROM users_perms");
+        $sqlQuery->query("DELETE FROM users");
+        $sqlQuery->query("DELETE FROM modules_authorities");
+        $sqlQuery->query("DELETE FROM nounce");
+        $sqlQuery->query("DELETE FROM authority_siret");
+        $sqlQuery->query("DELETE FROM authorities");
+        $sqlQuery->query("DELETE FROM authority_groups");
         $this->groupeSQL->getGroupsIdName();
         self::expectNotToPerformAssertions();
     }
