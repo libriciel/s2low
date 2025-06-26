@@ -80,4 +80,12 @@ class PemCertificate
     {
         return $this->subjectDN === $this->issuerDN;
     }
+
+    /**
+     * @throws Exception
+     */
+    public function checkValidity()
+    {
+        $this->checkCertificateIsValidAtDate(new DateTime());
+    }
 }

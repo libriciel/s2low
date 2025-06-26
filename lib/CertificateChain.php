@@ -2,6 +2,8 @@
 
 namespace S2lowLegacy\Lib;
 
+use Exception;
+
 class CertificateChain
 {
     /**
@@ -38,5 +40,25 @@ class CertificateChain
     public function getLastIssuerDN(): array
     {
         return end($this->certificates)->getIssuerDN();
+    }
+
+    public function getLeafSubjectDN(): array
+    {
+        return $this->certificates[0]->getSubjectDN();
+    }
+
+    public function getCertificates(): array
+    {
+        return $this->certificates;
+    }
+
+    public function checkValidity()
+    {
+        foreach ($this->certificates as $certificate) {
+            $certificate->checkValidity();
+        }
+        if (!$this->hasValidPathToRoot()) {
+            throw new Exception('Chaine sans certificat racine');
+        }
     }
 }
