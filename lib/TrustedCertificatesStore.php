@@ -17,7 +17,7 @@ class TrustedCertificatesStore
         }
     }
 
-    public function getAvailableCertificatesFileNames(): array
+    private function getAvailableCertificatesFileNames(): array
     {
         $availableCertificatesFileNames = [];
         foreach (glob($this->rootPath . '/*.pem') as $certificateFileName) {
