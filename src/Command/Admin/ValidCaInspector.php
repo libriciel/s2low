@@ -56,6 +56,7 @@ class ValidCaInspector extends Command
             $io->title($certificateChain->getLeafSubjectDN()['CN']);
             try {
                 $certificateChain->checkValidity();
+                $io->success('Aucune erreur détectée');
             } catch (Exception $e) {
                 $io->error($e->getMessage());
             }

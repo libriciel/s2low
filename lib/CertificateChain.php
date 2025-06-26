@@ -55,7 +55,11 @@ class CertificateChain
     public function checkValidity()
     {
         foreach ($this->certificates as $certificate) {
-            $certificate->checkValidity();
+            try {
+                $certificate->checkValidity();
+            } catch (Exception $e) {
+                throw new Exception('[' . $certificate->getSubjectDN()['CN'] . '] : ' . $e->getMessage());
+            }
         }
         if (!$this->hasValidPathToRoot()) {
             throw new Exception('Chaine sans certificat racine');
