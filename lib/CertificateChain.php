@@ -29,4 +29,14 @@ class CertificateChain
         }
         return $certificate->isAutosigned();
     }
+
+    public function addCertificateInPath(PemCertificate $pemCertificate): void
+    {
+        $this->certificates[] = $pemCertificate;
+    }
+
+    public function getLastIssuerDN(): array
+    {
+        return end($this->certificates)->getIssuerDN();
+    }
 }
