@@ -16,7 +16,7 @@
 
 namespace S2lowLegacy\Class;
 
-use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\ModuleSQL;
 use S2lowLegacy\Model\UserSQL;
 
@@ -24,7 +24,6 @@ class HTMLLayout extends Layout
 {
     protected $template = false;
 
-    protected ObjectInstancier $container;
     private $errorDisabled;
 
 
@@ -35,7 +34,6 @@ class HTMLLayout extends Layout
         } elseif (defined("DEFAULT_HTML_TEMPLATE")) {
             $this->template = DEFAULT_HTML_TEMPLATE;
         }
-        $this->container = LegacyObjectsManager::getLegacyObjectInstancier();
     }
 
     public function disableError()
@@ -115,10 +113,11 @@ class HTMLLayout extends Layout
     public function buildMenu(User $user = null, $displayInline = false)
     {
 
-        $userSQL = $this->container->get(UserSQL::class);
-        $moduleSQL = $this->container->get(ModuleSQL::class);
+        $sqlQuery = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(SQLQuery::class);
 
+        $userSQL = new UserSQL($sqlQuery);
         $userInfo = $userSQL->getInfo($user->getId());
+        $moduleSQL = new ModuleSQL($sqlQuery);
 
         $modulesInfo = $moduleSQL->getModulesForUser($userInfo);
 

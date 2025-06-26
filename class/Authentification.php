@@ -74,8 +74,7 @@ class Authentification
             ) {
                 return $this->getConnexionIdFromNounce($this->httpsConnexion->getNonceParameters());
             }
-            $connexionInfo = $this->getAllConnexionInfo($authentProcess);
-            $id_list = $this->getIdFromConnexionInfo($connexionInfo);
+            $id_list = $this->getIdFromConnexionInfo($this->getAllConnexionInfo($authentProcess));
             if (empty($id_list)) {
                 throw new Exception("Le certificat n'est pas valide : aucun compte trouvé");
             }

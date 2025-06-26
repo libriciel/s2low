@@ -2,7 +2,6 @@
 
 namespace S2lowLegacy\Class;
 
-use S2lowLegacy\Lib\ObjectInstancierFactory;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\UserSQL;

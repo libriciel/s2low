@@ -5,7 +5,6 @@ namespace S2lowLegacy\Controller;
 use Exception;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
-use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;

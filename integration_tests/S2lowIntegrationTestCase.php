@@ -172,19 +172,19 @@ class S2lowIntegrationTestCase extends WebTestCase
 
     protected function setUserAuthority(int $authorityId, int $userId = 13): void
     {
-        self::getContainer()->get(Database::class)->query('UPDATE users SET authority_id = ? WHERE users.id = ?', [$authorityId, $userId]);
+        self::getContainer()->get(SQLQuery::class)->query('UPDATE users SET authority_id = ? WHERE users.id = ?', [$authorityId, $userId]);
     }
 
     protected function setUserWithRole(UserRole $userRole, int $userId = 13): void
     {
-        self::getContainer()->get(Database::class)->query('UPDATE users SET role = ? WHERE id = ?', [$userRole->value, $userId]);
+        self::getContainer()->get(SQLQuery::class)->query('UPDATE users SET role = ? WHERE id = ?', [$userRole->value, $userId]);
     }
 
     protected function setUserWithPermission(ModulePermission $modulePermission): void
     {
-        self::getContainer()->get(Database::class)->query('UPDATE users_perms SET perm = ? WHERE user_id = 13 AND module_id = 1', [$modulePermission->value]);
-        self::getContainer()->get(Database::class)->query('UPDATE users_perms SET perm = ? WHERE user_id = 13 AND module_id = 2', [$modulePermission->value]);
-        self::getContainer()->get(Database::class)->query('UPDATE users_perms SET perm = ? WHERE user_id = 13 AND module_id = 3', [$modulePermission->value]);
+        self::getContainer()->get(SQLQuery::class)->query('UPDATE users_perms SET perm = ? WHERE user_id = 13 AND module_id = 1', [$modulePermission->value]);
+        self::getContainer()->get(SQLQuery::class)->query('UPDATE users_perms SET perm = ? WHERE user_id = 13 AND module_id = 2', [$modulePermission->value]);
+        self::getContainer()->get(SQLQuery::class)->query('UPDATE users_perms SET perm = ? WHERE user_id = 13 AND module_id = 3', [$modulePermission->value]);
     }
 
     protected function logAs(int $userId): void
@@ -208,7 +208,7 @@ class S2lowIntegrationTestCase extends WebTestCase
 
     protected function setAuthorityGroupUserAs(int $authorityGroupId, int $userId = 13): void
     {
-        self::getContainer()->get(Database::class)->query('UPDATE users SET authority_group_id = ? WHERE id = ?', [$authorityGroupId, $userId]);
+        self::getContainer()->get(SQLQuery::class)->query('UPDATE users SET authority_group_id = ? WHERE id = ?', [$authorityGroupId, $userId]);
     }
 
     protected function getAuthentication(

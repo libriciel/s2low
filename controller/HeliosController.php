@@ -146,7 +146,7 @@ class HeliosController extends Controller
         $authoritySQL = new AuthoritySQL($this->getSQLQuery());
         $authority_info = $authoritySQL->getInfo($user_info['authority_id']);
 
-        $moduleSQL = $this->getObjectInstancier()->get(ModuleSQL::class);
+        $moduleSQL = new ModuleSQL($this->getSQLQuery());
         $module_info = $moduleSQL->getInfoByName(self::MODULE_NAME);
 
         $must_signed = Helpers::getVarFromPost("must_signed", true);
