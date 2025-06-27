@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace S2low\Command\Admin;
 
 use Exception;
@@ -49,10 +51,9 @@ class ValidCaInspector extends Command
 
         $availableCertificates = $trustedCertificatesStore->getAvailableCertificates();
 
-        $certificateChains = $this->certificateChainsBuilder->build($availableCertificates);
+        $certificateChains = $this->certificateChainsBuilder->build(...$availableCertificates);
 
         foreach ($certificateChains as $certificateChain) {
-            /** @var \S2lowLegacy\Lib\CertificateChain $certificateChain */
             $io->title($certificateChain->getLeafSubjectDN()['CN']);
             try {
                 $certificateChain->checkValidity();

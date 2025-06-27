@@ -3,6 +3,7 @@
 namespace S2lowLegacy\Lib;
 
 use Exception;
+use PHPUnit\lib\CertificateChainException;
 
 class CertificateChain
 {
@@ -11,35 +12,44 @@ class CertificateChain
      */
     private array $certificates;
 
-    public function __construct(array $certificates)
+    public function __construct(PemCertificate ...$certificates)
     {
         $this->certificates = $certificates;
     }
 
-    public function hasValidPathToRoot(): bool
+    private function isChainSequentiallyValid(): bool
     {
-        $expectedSubjectDN = $this->certificates[0]->getSubjectDN();
-        $lastCertificateKey = count($this->certificates) - 1;
-        foreach ($this->certificates as $key => $certificate) {
-            if ($certificate->getSubjectDN() !== $expectedSubjectDN) {
-                return false;
+        if (count($this->certificates) > 1) {
+            for ($i = 0; $i < count($this->certificates) - 1; $i++) {
+                if (!$this->certificates[$i + 1]->isIssuedBy($this->certificates[$i])) {
+                    return false;
+                }
             }
-            if ($key === $lastCertificateKey) {
-                break;
-            }
-            $expectedSubjectDN = $certificate->getIssuerDN();
         }
-        return $certificate->isAutosigned();
+        return true;
     }
 
-    public function addCertificateInPath(PemCertificate $pemCertificate): void
+    public function hasValidPathToRoot(): bool
     {
+        return $this->isChainSequentiallyValid() && $this->getLastCertificate()->isAutosigned();
+    }
+
+    /**
+     * @throws \PHPUnit\lib\CertificateChainException
+     */
+    public function appendCertificate(PemCertificate $pemCertificate): void
+    {
+        if (!$pemCertificate->isIssuedBy($this->getLastCertificate())) {
+            throw new CertificateChainException(
+                'Erreur lors de la création de la chaine de certification'
+            );
+        }
         $this->certificates[] = $pemCertificate;
     }
 
     public function getLastIssuerDN(): array
     {
-        return end($this->certificates)->getIssuerDN();
+        return $this->getLastCertificate()->getIssuerDN();
     }
 
     public function getLeafSubjectDN(): array
@@ -52,17 +62,27 @@ class CertificateChain
         return $this->certificates;
     }
 
-    public function checkValidity()
+    /**
+     * @throws CertificateChainException
+     */
+    public function checkValidity(): void
     {
         foreach ($this->certificates as $certificate) {
             try {
                 $certificate->checkValidity();
             } catch (Exception $e) {
-                throw new Exception('[' . $certificate->getSubjectDN()['CN'] . '] : ' . $e->getMessage());
+                throw new CertificateChainException(
+                    '[' . $certificate->getSubjectDN()['CN'] . '] : ' . $e->getMessage()
+                );
             }
         }
         if (!$this->hasValidPathToRoot()) {
-            throw new Exception('Chaine sans certificat racine');
+            throw new CertificateChainException('Chaine sans certificat racine');
         }
+    }
+
+    private function getLastCertificate(): PemCertificate
+    {
+        return $this->certificates[count($this->certificates) - 1];
     }
 }

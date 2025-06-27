@@ -34,17 +34,23 @@ class CertificateChainBuilderTest extends TestCase
         $certificateChainBuilder = new CertificateChainsBuilder();
         /** @var CertificateChain[] $certificateChains */
         $certificateChains = $certificateChainBuilder->build(
-            [$this->x509_pem_certificate,$this->x509_ca_certificate,$this->x509_intermediate_certificate]
+            $this->x509_pem_certificate,
+            $this->x509_ca_certificate,
+            $this->x509_intermediate_certificate
         );
         self::assertTrue($certificateChains[0]->hasValidPathToRoot());
     }
 
+    /**
+     * @throws \PHPUnit\lib\CertificateChainException
+     */
     public function testBuild2()
     {
         $certificateChainBuilder = new CertificateChainsBuilder();
         /** @var CertificateChain[] $certificateChains */
         $certificateChains = $certificateChainBuilder->build(
-            [$this->x509_pem_certificate,$this->x509_ca_certificate]
+            $this->x509_pem_certificate,
+            $this->x509_ca_certificate
         );
         // Il y a deux chaines de certificats :
         //  -> x509_pem_certificate n'a pas de path to root valide

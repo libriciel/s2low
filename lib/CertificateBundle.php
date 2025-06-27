@@ -9,7 +9,7 @@ class CertificateBundle
     /** @var \S2lowLegacy\Lib\PemCertificate[] */
     private array $certificates;
 
-    public function __construct(array $certificates)
+    public function __construct(PemCertificate ...$certificates)
     {
         $this->certificates = $certificates;
     }
@@ -17,23 +17,20 @@ class CertificateBundle
     /**
      * @throws Exception
      */
-    public function getCertificateWithSubjectMatching(array $expectedSubject): null|PemCertificate
+    public function findBySubjectDN(array $subjectDN): ?PemCertificate
     {
         foreach ($this->certificates as $certificate) {
-            if ($expectedSubject === $certificate->getSubjectDN()) {
+            if ($subjectDN === $certificate->getSubjectDN()) {
                 return $certificate;
             }
         }
         return null;
     }
 
-    /**
-     * @throws Exception
-     */
-    public function getCertificateWithIssuerMatching(array $expectedIssuer): null|PemCertificate
+    public function findByIssuerDN(array $issuerDN): ?PemCertificate
     {
         foreach ($this->certificates as $certificate) {
-            if ($expectedIssuer === $certificate->getIssuerDN() && !$certificate->isAutosigned()) {
+            if ($issuerDN === $certificate->getIssuerDN() && !$certificate->isAutosigned()) {
                 return $certificate;
             }
         }

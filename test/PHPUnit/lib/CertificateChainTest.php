@@ -34,29 +34,29 @@ class CertificateChainTest extends TestCase
 
     public function testHasValidPathToRoot()
     {
-        $certificateChain = new CertificateChain([
+        $certificateChain = new CertificateChain(
             $this->x509_pem_certificate,
             $this->x509_intermediate_certificate,
             $this->x509_ca_certificate
-        ]);
+        );
         self::assertTrue($certificateChain->hasValidPathToRoot());
     }
 
     public function testHasValidPathToRootBrokenPath()
     {
-        $certificateChain = new CertificateChain([
+        $certificateChain = new CertificateChain(
             $this->x509_pem_certificate,
             $this->x509_ca_certificate
-        ]);
+        );
         self::assertFalse($certificateChain->hasValidPathToRoot());
     }
 
     public function testHasValidPathToRootNoAutosignedAtRoot()
     {
-        $certificateChain = new CertificateChain([
+        $certificateChain = new CertificateChain(
             $this->x509_pem_certificate,
             $this->x509_intermediate_certificate,
-        ]);
+        );
         self::assertFalse($certificateChain->hasValidPathToRoot());
     }
 }

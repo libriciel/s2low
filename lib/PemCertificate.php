@@ -88,4 +88,9 @@ class PemCertificate
     {
         $this->checkCertificateIsValidAtDate(new DateTime());
     }
+
+    public function isIssuedBy(PemCertificate $childCertificate): bool
+    {
+        return $this->getSubjectDN() === $childCertificate->getIssuerDN();
+    }
 }

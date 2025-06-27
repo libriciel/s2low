@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Lib;
 
+use _PHPStan_e140197a0\Symfony\Component\String\Exception\RuntimeException;
 use Exception;
 use Psr\Log\LoggerInterface;
 
@@ -13,11 +14,11 @@ class TrustedCertificatesStore
         private LoggerInterface $logger
     ) {
         if (!is_dir($this->rootPath)) {
-            throw new Exception("Root path '{$this->rootPath}' does not exist");
+            throw new RuntimeException("Root path '{$this->rootPath}' does not exist");
         }
     }
 
-    private function getAvailableCertificatesFileNames(): array
+    private function getCertificatesFileNames(): array
     {
         $availableCertificatesFileNames = [];
         foreach (glob($this->rootPath . '/*.pem') as $certificateFileName) {
@@ -31,7 +32,7 @@ class TrustedCertificatesStore
     public function getAvailableCertificates(): array
     {
         $availableCertificates = [];
-        foreach ($this->getAvailableCertificatesFileNames() as $certificateFileName) {
+        foreach ($this->getCertificatesFileNames() as $certificateFileName) {
             try {
                 $availableCertificates[] = $this->pemCertificateFactory
                     ->getFromString(file_get_contents($certificateFileName));
