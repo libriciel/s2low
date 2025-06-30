@@ -31,7 +31,6 @@ class ActesArchiveControler
     private ActesEnvelopeSQL $actesEnvelopeSQL;
     private ActesTypePJSQL $actesTypePJSQL;
     private ActesCloudStorage $actesEnvelopeCloudStorage;
-    private BordereauPdfGenerator $bordereauPdfGenerator;
 
     /**
      * @throws \S2lowLegacy\Lib\UnrecoverableException
@@ -46,7 +45,6 @@ class ActesArchiveControler
         ActesEnvelopeSQL $actesEnvelopeSQL,
         ActesTypePJSQL $actesTypePJSQL,
         ActesCloudStorage $cloudStorage,
-        BordereauPdfGenerator $bordereauPdfGenerator
     ) {
         $this->pastellWrapperFactory = $pastellWrapperFactory;
         $this->actesTransactionsSQL = $actesTransactionsSQL;
@@ -57,7 +55,6 @@ class ActesArchiveControler
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
         $this->actesTypePJSQL = $actesTypePJSQL;
         $this->actesEnvelopeCloudStorage = $cloudStorage;
-        $this->bordereauPdfGenerator = $bordereauPdfGenerator;
     }
 
     /**
@@ -202,9 +199,12 @@ class ActesArchiveControler
         $date_postage = $this->actesTransactionsSQL->getStatusInfo($transactionsInfo['id'], 1);
         $actesFilesForSAE->date_postage = date("d/m/Y", strtotime($date_postage['date']));
 
+        $objectInstancier = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
+        $bordereauPdfGenerator = $objectInstancier->get(BordereauPdfGenerator::class);
+
         $actesFilesForSAE->bordereau_filepath = $tmp_folder . "/bordereau_acquit.pdf";
 
-        $this->bordereauPdfGenerator->generate($transaction_id, $actesFilesForSAE->bordereau_filepath, false, "F");
+        $bordereauPdfGenerator->generate($transaction_id, $actesFilesForSAE->bordereau_filepath, false, "F");
 
         array_shift($actesFile);
         array_shift($actesFile);
