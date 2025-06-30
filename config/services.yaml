@@ -641,8 +641,10 @@ services:
 
   S2lowLegacy\Class\HTMLLayout:
     public: true
-#  S2lowLegacy\Class\Database:
-#    public: true
+
+  S2lowLegacy\Class\Database:
+    public: true
+    shared: false
 
   S2low\Logger\MailerProcessor:
     tags:
