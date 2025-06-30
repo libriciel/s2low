@@ -3,7 +3,6 @@
 namespace S2lowLegacy\Controller;
 
 use Exception;
-use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\PagerHTML;
 use S2lowLegacy\Lib\FancyDate;
 use S2lowLegacy\Lib\JSONoutput;
