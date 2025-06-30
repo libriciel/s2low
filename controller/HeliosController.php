@@ -27,9 +27,8 @@ class HeliosController extends Controller
 
     private $helios_max_upload_size;
 
-    public function __construct(
-        ObjectInstancier $objectInstancier
-    ) {
+    public function __construct(ObjectInstancier $objectInstancier)
+    {
         parent::__construct($objectInstancier);
         $this->setHeliosMaxUploadSize(HELIOS_MAX_UPLOAD_SIZE);
     }
