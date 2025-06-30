@@ -3,7 +3,6 @@
 namespace S2lowLegacy\Class;
 
 use S2lowLegacy\Lib\ObjectInstancier;
-use S2lowLegacy\Lib\SQLQuery;
 
 /**
  * @deprecated Fin du DatabasePool. Il faut autowire Database::class
