@@ -23,7 +23,8 @@ class AdminAuthorityControllerTest extends S2lowIntegrationTestCase
         );
         $this->setUserWithRole(UserRole::SuperAdministrateur);
         self::getContainer()->get(Environnement::class)->get()->set('authority_id', 1);
-        $adminAuthorityController = $this->getAdminAuthorityController($actesConvention);
+        self::getContainer()->set(ActesConventions::class, $actesConvention);
+        $adminAuthorityController = $this->getAdminAuthorityController();
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('exit() called');
@@ -39,7 +40,7 @@ class AdminAuthorityControllerTest extends S2lowIntegrationTestCase
     {
         $this->setUserWithRole(UserRole::SuperAdministrateur);
         self::getContainer()->get(Environnement::class)->get()->set('authority_id', 1);
-        $adminAuthorityController = $this->getAdminAuthorityController(self::getContainer()->get(ActesConventions::class));
+        $adminAuthorityController = $this->getAdminAuthorityController();
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Redirect to /admin/authorities/admin_authority_edit.php?id=1 with message : Impossible de récupérer la convention');
 
@@ -65,7 +66,7 @@ class AdminAuthorityControllerTest extends S2lowIntegrationTestCase
     public function testExportListAction()
     {
         $this->setUserWithRole(UserRole::SuperAdministrateur);
-        $adminAuthorityController = $this->getAdminAuthorityController(self::getContainer()->get(ActesConventions::class));
+        $adminAuthorityController = $this->getAdminAuthorityController();
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('exit() called');
         $this->expectOutputRegex("#Bourg-en-Bresse#");
@@ -78,7 +79,7 @@ class AdminAuthorityControllerTest extends S2lowIntegrationTestCase
     public function testExportListActionGroupAdmin()
     {
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
-        $adminAuthorityController = $this->getAdminAuthorityController(self::getContainer()->get(ActesConventions::class));
+        $adminAuthorityController = $this->getAdminAuthorityController();
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('exit() called');
         $this->expectOutputRegex("#Bourg-en-Bresse#");
@@ -91,16 +92,15 @@ class AdminAuthorityControllerTest extends S2lowIntegrationTestCase
     public function testExportListActionUser()
     {
         $this->setUserWithRole(UserRole::AdministrateurCollectivite);
-        $adminAuthorityController = $this->getAdminAuthorityController(self::getContainer()->get(ActesConventions::class));
+        $adminAuthorityController = $this->getAdminAuthorityController();
         $this->expectException(RedirectException::class);
         $this->expectExceptionMessage('Vous devez être administrateur de groupe ou super admin');
         $adminAuthorityController->exportListAction();
     }
 
-    private function getAdminAuthorityController($actesConvention): AdminAuthorityController
+    private function getAdminAuthorityController(): AdminAuthorityController
     {
         return new AdminAuthorityController(
-            $actesConvention,
             self::getContainer()->get(ObjectInstancier::class),
         );
     }

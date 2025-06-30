@@ -5,19 +5,11 @@ namespace S2lowLegacy\Controller;
 use S2lowLegacy\Class\actes\ActesConventions;
 use S2lowLegacy\Class\CSVOutput;
 use S2lowLegacy\Class\Helpers;
-use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Model\AuthoritySQL;
 
 class AdminAuthorityController extends Controller
 {
-    public function __construct(
-        private readonly ActesConventions $actesConventions,
-        ObjectInstancier $objectInstancier,
-    ) {
-        parent::__construct($objectInstancier);
-    }
-
     /**
      * @throws RedirectException
      */
@@ -31,7 +23,9 @@ class AdminAuthorityController extends Controller
 
         $this->verifAdmin($authority_id);
 
-        $convention_filepath = $this->actesConventions->getConventionFilepath($authority_id);
+        $actesConvention = $this->getObjectInstancier()->get(ActesConventions::class);
+
+        $convention_filepath = $actesConvention->getConventionFilepath($authority_id);
 
         if (! $convention_filepath || ! file_exists($convention_filepath)) {
             $this->redirect(
