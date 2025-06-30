@@ -7,12 +7,14 @@ use S2lowLegacy\Lib\RgsCertificate;
 class RgsConnexion
 {
     private $last_message;
+    private $openssl_path;
+    private $rgs_validca_path;
     private $server_global;
 
-    public function __construct(
-        private string $openssl_path,
-        private string $rgs_validca_path,
-    ) {
+    public function __construct()
+    {
+        $this->setOpenSSLPath(OPENSSL_PATH);
+        $this->setRgsValidCaPath(RGS_VALIDCA_PATH);
         $this->setServerGlobal($_SERVER);
     }
 
