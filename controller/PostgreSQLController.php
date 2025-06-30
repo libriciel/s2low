@@ -21,7 +21,6 @@ class PostgreSQLController
     private $sqlQuery;
     private string $projectDirectory;
     private string $environment;
-    private Database $database;
 
     public function __construct(
         string $database_json_definition_filepath,
@@ -32,7 +31,6 @@ class PostgreSQLController
         PostgreSQLSchemaInfo $postgreSQLSchemaInfo,
         PostgreSQLDifference $postgreSQLDifference,
         PostgreSQLDifferenceToSQL $postgreSQLDifferenceToSQL,
-        Database $database
     ) {
         $this->postgreSQLSchemaInfo = $postgreSQLSchemaInfo;
         $this->postgreSQLDifference = $postgreSQLDifference;
@@ -42,7 +40,6 @@ class PostgreSQLController
         $this->database_sql_definition_filepath = $database_sql_definition_filepath;
         $this->sqlQuery = $sqlQuery;
         $this->environment = $environment;
-        $this->database = $database;
     }
 
 
