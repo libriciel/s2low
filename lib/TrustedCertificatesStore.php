@@ -2,9 +2,9 @@
 
 namespace S2lowLegacy\Lib;
 
-use _PHPStan_e140197a0\Symfony\Component\String\Exception\RuntimeException;
 use Exception;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 class TrustedCertificatesStore
 {
