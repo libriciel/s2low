@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use S2low\Exception\UnrecognizedServerException;
 use S2lowLegacy\Class\CurlWrapper;
 use Exception;
 use S2lowLegacy\Lib\X509Certificate;
@@ -104,7 +105,9 @@ class ActesFileSender
             $expected_hash = $x509Certificate->getBase64Hash($expected_certificat);
 
             if ($actual_hash != $expected_hash) {
-                throw new Exception("Le certificat recu ($actual_hash) ne correspond pas à celui attendu ($expected_hash)");
+                throw new UnrecognizedServerException(
+                    "Le certificat recu ($actual_hash) ne correspond pas à celui attendu ($expected_hash)"
+                );
             }
         }
 

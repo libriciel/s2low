@@ -2,10 +2,12 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use S2low\Exception\UnrecognizedServerException;
 use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\S2lowLogger;
 use Exception;
+use S2lowLegacy\Lib\PausingQueueException;
 
 class ActesEnvoiFichierWorker implements IWorker
 {
@@ -59,6 +61,7 @@ class ActesEnvoiFichierWorker implements IWorker
      * @param $enveloppe_id
      * @return bool
      * @throws RecoverableException
+     * @throws \S2lowLegacy\Lib\PausingQueueException
      */
     public function work($enveloppe_id)
     {
@@ -89,6 +92,11 @@ class ActesEnvoiFichierWorker implements IWorker
         try {
             $archive_path =  $this->actesScriptHelper->getArchivePath($enveloppe_id);
             $this->actesFileSender->send($archive_path);
+        } catch (UnrecognizedServerException $e) {
+            $message = $e->getMessage();
+            $message = "[$envelope_libelle] Erreur serveur rencontrée lors de l'envoir de l'archive : $message";
+            $this->logger->error($message);
+            throw new PausingQueueException($message, $e->getCode(), $e);
         } catch (Exception $e) {
             $message = $e->getMessage();
             $message = "[$envelope_libelle] Impossible d'envoyer l'archive : $message";

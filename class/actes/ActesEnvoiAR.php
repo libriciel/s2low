@@ -2,9 +2,11 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use S2low\Exception\UnrecognizedServerException;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use Exception;
+use S2lowLegacy\Lib\PausingQueueException;
 use S2lowLegacy\Lib\SigTermHandler;
 use Libriciel\LibActes\FichierXML\MessageMetierDemandePieceComplementaire;
 use Libriciel\LibActes\FichierXML\MessageMetierARDemandePieceComplementaire;
@@ -136,7 +138,13 @@ class ActesEnvoiAR
         $archiveDataReponse->fichierXML = array($messageMetierAR);
         $archive_path = $archive->generateZip($archiveDataReponse, $tmp_folder);
 
-        $this->actesFileSender->send($archive_path);
+        try {
+            $this->actesFileSender->send($archive_path);
+        } catch (UnrecognizedServerException $exception) {
+            $message = "[$transaction_id] " . $exception->getMessage();
+            $this->logger->error($message);
+            throw new PausingQueueException($message, $exception->getCode(), $exception);
+        }
 
         $this->actesScriptHelper->updateStatusAndLog(
             array($transaction_id),
