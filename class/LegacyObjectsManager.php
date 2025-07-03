@@ -3,8 +3,9 @@
 namespace S2lowLegacy\Class;
 
 use RuntimeException;
+use S2low\Kernel;
 use S2lowLegacy\Lib\ObjectInstancier;
-use S2lowLegacy\Lib\ObjectInstancierFactory;
+use Symfony\Component\Dotenv\Dotenv;
 
 /**
  * @deprecated Fin du ObjectInstancier. Il faut autowire votre service
@@ -15,7 +16,10 @@ class LegacyObjectsManager
     public static function getLegacyObjectInstancier(): ObjectInstancier
     {
         if (!isset(self::$objectInstancier)) {
-            throw new RuntimeException('ObjectInstancier not initialized');
+            require dirname(__DIR__) . '/vendor/autoload.php';
+
+            (new Dotenv())->bootEnv("/data/config/.env");
+            new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
         }
 
         return self::$objectInstancier;
