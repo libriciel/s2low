@@ -15,12 +15,6 @@ class ActesSignaturesTest extends S2lowTestCase
 {
     use ActesUtilitiesTestTrait;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
-
     /**
      * @throws Exception
      */
