@@ -1,5 +1,6 @@
 <?php
 
+use PHPUnit\Framework\MockObject\MockObject;
 use S2lowLegacy\Class\VerifyPadesSignature;
 use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
@@ -8,7 +9,7 @@ use S2lowLegacy\Lib\PemCertificateFactory;
 
 class VerifyPadesSignatureTest extends S2lowTestCase
 {
-    private $verifyPemCertificateMock;
+    private MockObject|VerifyPemCertificate $verifyPemCertificateMock;
     private $verifyPadesSignatureWithMock;
     private $verifyPadesSignature;
     private $pemCertificateMock;
