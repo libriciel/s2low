@@ -5,7 +5,7 @@ use S2lowLegacy\Lib\X509Certificate;
 class X509CertificateTest extends S2lowTestCase
 {
     private $serverSave;
-    private $x509Certificate;
+    private X509Certificate $x509Certificate;
 
     public function setUp(): void
     {
