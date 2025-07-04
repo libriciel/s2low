@@ -22,7 +22,6 @@
     "ext-ssh2": "*",
     "ext-zip": "^1.15",
     "ext-zlib": "*",
-    "doctrine/annotations": "^1.13",
     "egulias/email-validator": "^3.2",
     "erusev/parsedown": "^1.7",
     "ezyang/htmlpurifier": "^4.14",
