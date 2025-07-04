@@ -24,7 +24,7 @@ class MailsecDownloadControllerTest extends S2lowTestCase
 
         $tmpFolder = new TmpFolder();
         $mail_files_upload_root = $tmpFolder->create();
-        $mail_files_without_transac_dir = $mail_files_upload_root;
+        $mail_files_without_transac_dir = $tmpFolder->create();
         mkdir($mail_files_upload_root . "/" . $this->fn_download_payload);
         file_put_contents(
             $this->getArchivePath($mail_files_upload_root),
@@ -65,7 +65,7 @@ class MailsecDownloadControllerTest extends S2lowTestCase
 
         $tmpFolder = new TmpFolder();
         $mail_files_upload_root = $tmpFolder->create();
-        $mail_files_without_transac_dir = $mail_files_upload_root;
+        $mail_files_without_transac_dir = $tmpFolder->create();
 
         mkdir($mail_files_upload_root . "/" . $this->fn_download_payload);
         copy(
@@ -108,7 +108,7 @@ class MailsecDownloadControllerTest extends S2lowTestCase
 
         $tmpFolder = new TmpFolder();
         $mail_files_upload_root = $tmpFolder->create();
-        $mail_files_without_transac_dir = $mail_files_upload_root;
+        $mail_files_without_transac_dir = $tmpFolder->create();;
 
         mkdir($mail_files_upload_root . "/" . $this->fn_download_payload);
         copy(
