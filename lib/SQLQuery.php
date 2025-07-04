@@ -6,6 +6,7 @@ use Closure;
 use Exception;
 use PDO;
 use PDOStatement;
+use S2lowLegacy\Class\LegacyObjectsManager;
 
 class SQLQuery
 {
