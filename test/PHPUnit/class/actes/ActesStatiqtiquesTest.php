@@ -85,6 +85,7 @@ class ActesStatiqtiquesTest extends S2lowTestCase
 
     public function testGetVolumeWithTransmittedTransaction()
     {
+        /** @var ActesStatistiques $actesStatistiques */
         $actesStatistiques = $this->getObjectInstancier()->get(ActesStatistiques::class);
 
         $actesCreator = new ActesCreator(
