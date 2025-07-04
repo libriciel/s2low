@@ -23,7 +23,7 @@ class UserSQLTest extends S2lowTestCase
 
     public function testGetNbUserWithMyCertificate()
     {
-        $this->assertEquals(1, $this->userSQL->getNbUserWithMyCertificate('Q1pUbEb5DK53BkYf0arDl/3zl5U='));
+        $this->assertEquals(4, $this->userSQL->getNbUserWithMyCertificate('T5k4Cv8eWZMDNWo0h/a6DgDLTVw='));
     }
 
     public function testGetInfoFromCertificateInfo()
