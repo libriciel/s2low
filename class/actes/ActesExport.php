@@ -140,6 +140,11 @@ class ActesExport
 
         $actes_path = $this->actesRetriever->getPath($transaction_info['file_path']);
 
+        if (!$actes_path) {
+            $this->s2lowLogger->info("{$transaction_info['id']} : fichiers non trouvés, transaction ignorée");
+            return;
+        }
+
         $all_file = $this->actesIncludedFileSQL->getAll($transaction_info['id']);
 
         $tmpFolder = new TmpFolder();
