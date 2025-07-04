@@ -262,8 +262,9 @@ class HeliosTransactionTest extends S2lowTestCase
      */
     private function createGroupe(): mixed
     {
+        /** @var GroupSQL $groupSQL */
         $groupSQL = self::getContainer()->get(GroupSQL::class);
-        $groupeId = $groupSQL->edit(1, "GroupeTestHeliosTransaction", 1);
+        $groupeId = $groupSQL->edit(null, "GroupeTestHeliosTransaction", 1);
         return $groupeId;
     }
 }
