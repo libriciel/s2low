@@ -19,6 +19,9 @@ class HeliosMenageWorkerTest extends S2lowTestCase
 {
     use HeliosUtilitiesTestTrait;
 
+    private TmpFolder $tmpFolder;
+    private string $helios_files_upload_root;
+    private string $repertoirePesAllerSansTransaction;
     private HeliosMenageWorker $worker;
     private OpenStackSwiftWrapper $swift;
     private HeliosTransactionsSQL $transactionsSQL;
