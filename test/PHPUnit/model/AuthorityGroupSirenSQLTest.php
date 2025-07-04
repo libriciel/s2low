@@ -35,11 +35,12 @@ class AuthorityGroupSirenSQLTest extends S2lowTestCase
         $this->authorityGroupSirenSQL->add(1, '123456789');
         $this->authorityGroupSirenSQL->add(1, '999999999');
         $this->authorityGroupSirenSQL->add(1, '123456780');
+        $this->authorityGroupSirenSQL->add(1, '000000000');
 
         $listColl1 = $this->authorityGroupSirenSQL->getAvailableSiren(1, 1);
-        static::assertSame(['123456789'], $listColl1);
+        static::assertSame(['000000000', '123456789'], $listColl1);
         $listColl1 = $this->authorityGroupSirenSQL->getAvailableSiren(1, 2);
-        static::assertSame(['999999999'], $listColl1);
+        static::assertSame(['000000000', '999999999'], $listColl1);
     }
 
     public function testGetUnusedSirenUsedInAnotherGroup()
