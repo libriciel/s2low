@@ -187,23 +187,22 @@ class ActesApiControllerTest extends S2lowIntegrationTestCase
      */
     public function testNbCreatedActesByAuthoritiesAndMonth(): void
     {
-//        $this->setUserWithRole(UserRole::AdministrateurGroupe);
-//        $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
-//        $this->getEnvironment()->get()->set('month', '7');
-//        $this->getEnvironment()->get()->set('year', '2017');
-//
-//        ob_start();
-//        $acteApiController = new ActesAPIController(
-//            self::getContainer()->get(ObjectInstancier::class)
-//        );
-//        $acteApiController->nbCreatedActesByAuthorityGroupIdAndMonthAction();
-//        $data = ob_get_contents();
-//        ob_end_clean();
-//        static::assertJsonStringEqualsJsonFile(
-//            __DIR__ . '/fixtures/nbTransactionPerAuthorities.json',
-//            $data
-//        );
-        self::assertTrue(true);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
+        $this->getEnvironment()->get()->set('month', '7');
+        $this->getEnvironment()->get()->set('year', '2017');
+
+
+        $this->client->request(
+            'GET',
+            'modules/actes/api/nb_actes_by_authorities_and_date.php',
+        );
+
+        $data = $this->client->getResponse()->getContent();
+        static::assertJsonStringEqualsJsonFile(
+            __DIR__ . '/fixtures/nbTransactionPerAuthorities.json',
+            $data
+        );
     }
 
     /**
@@ -211,36 +210,24 @@ class ActesApiControllerTest extends S2lowIntegrationTestCase
      */
     public function testNbCreatedActesByAuthoritiesAndMonthGroupProvided(): void
     {
-//        $this->createTransaction(1);
-//        $this->getEnvironment()->get()->set('month', '7');
-//        $this->getEnvironment()->get()->set('year', '2017');
-//        $this->getEnvironment()->get()->set('authority_group_id', '1');
-//        $this->setUserWithRole(UserRole::SuperAdministrateur);
-//
-//        $objectInstancierMocked = $this->getMockBuilder(ObjectInstancier::class)
-//            ->setConstructorArgs([self::getContainer()])
-//            ->getMock();
-//        $environnement = $this->getEnvironment();
-//        $objectInstancierMocked->method('get')->willReturnCallback(function ($class) use ($environnement) {
-//            if ($class === Environnement::class) {
-//                return $environnement;
-//            }
-//            return self::getContainer()->get($class);
-//        });
-//
-//        ob_start();
-//        $acteApiController = new ActesAPIController(
-//            $objectInstancierMocked
-//        );
-//        $acteApiController->nbCreatedActesByAuthorityGroupIdAndMonthAction();
-//        $data = ob_get_contents();
-//        ob_end_clean();
-//
-//        static::assertJsonStringEqualsJsonFile(
-//            __DIR__ . '/fixtures/nbTransactionPerAuthorities.json',
-//            $data
-//        );
-        self::assertTrue(true);
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
+
+        $this->getEnvironment()->get()->set('month', '7');
+        $this->getEnvironment()->get()->set('year', '2017');
+        $this->getEnvironment()->get()->set('authority_group_id', '1');
+
+        $this->client->request(
+            'GET',
+            'modules/actes/api/nb_actes_by_authorities_and_date.php',
+        );
+        $data = $this->client->getResponse()->getContent();
+
+
+        static::assertJsonStringEqualsJsonFile(
+            __DIR__ . '/fixtures/nbTransactionPerAuthorities.json',
+            $data
+        );
     }
 
     /**
@@ -248,23 +235,24 @@ class ActesApiControllerTest extends S2lowIntegrationTestCase
      */
     public function testNbCreatedActesByAuthoritiesAndMonthNoGroupProvided(): void
     {
+        $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $sql = 'UPDATE authorities SET authority_group_id=NULL WHERE authority_group_id=1';
+        self::getContainer()->get(SQLQuery::class)->query($sql);
 
-//        $this->createTransaction(1);
-//        $this->getEnvironment()->get()->set('month', '7');
-//        $this->getEnvironment()->get()->set('year', '2017');
-//        $this->getEnvironment()->get()->set('authority_group_id', '1');
-//        $this->setUserWithRole(UserRole::AdministrateurGroupe);
-//        $sql = 'UPDATE authorities SET authority_group_id=NULL WHERE authority_group_id=1';
-//        self::getContainer()->get(SQLQuery::class)->query($sql);
-//        ob_start();
-//        $this->getActesAPIController()->nbCreatedActesByAuthorityGroupIdAndMonthAction();
-//        $data = ob_get_contents();
-//        ob_end_clean();
-//        static::assertJsonStringEqualsJsonFile(
-//            __DIR__ . '/fixtures/nbTransactionPerAuthoritiesFailed.json',
-//            $data
-//        );
-        self::assertTrue(true);
+        $this->getEnvironment()->get()->set('month', '7');
+        $this->getEnvironment()->get()->set('year', '2017');
+
+        $this->client->request(
+            'GET',
+            'modules/actes/api/nb_actes_by_authorities_and_date.php',
+        );
+        $data = $this->client->getResponse()->getContent();
+
+        static::assertJsonStringEqualsJsonFile(
+            __DIR__ . '/fixtures/nbTransactionPerAuthoritiesFailed.json',
+            $data
+        );
     }
     private function getEnvironment(): Environnement
     {
