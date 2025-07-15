@@ -23,7 +23,7 @@ parameters:
   app.log.file: '%env(string:default:app.log.file.default:LOG_FILE)%'
   app.mail.dsn: '%env(string:default:app.mail.dsn.default:MAILER_DSN)%'
   app.mail.message: '%env(default:app.mail.message.default:MAIL_MESSAGE)%'
-  app.mail.secure_description: '%env(default:app.mail.secure_description:MAIL_SECURE_DESCRIPTION)%'
+  app.mail.secure_description: '%env(default:app.mail.secure_description.default:MAIL_SECURE_DESCRIPTION)%'
   app.mail.tedetis_from: '%env(default:app.mail.tedetis_from.default:MAIL_TEDETIS_FROM)%'
   app.mail.use_legacy_secure_mail: '%env(default:app.mail.use_legacy_secure_mail.default:USE_LEGACY_SECURE_MAIL_FIELDS)%'
   app.only_use_validcargs: '%env(default:app.only_use_validcargs.default:ONLY_USE_VALIDCARGS)%'
