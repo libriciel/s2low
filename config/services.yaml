@@ -284,6 +284,7 @@ services:
       $logger: '@monolog.logger.request'
 
   S2lowLegacy\Lib\OpenStackSwiftWrapper:
+    public: true
     arguments:
       $openstack_enable: '%app.openstack_enable%'
 
@@ -346,6 +347,7 @@ services:
     public: true
 
   S2lowLegacy\Class\Antivirus:
+    public: true
     arguments:
       $antivirus_command: '%app.antivirus_command%'
 
@@ -390,13 +392,15 @@ services:
   S2lowLegacy\Class\helios\HeliosSAEDateManager:
     autowire: false
     autoconfigure: false
-    public: false
+    public: true
 
   S2lowLegacy\Class\helios\PESAllerCloudStorable:
+    public: true
     arguments:
       $repertoirePesAllerSansTransaction: '%app.helios_repertoire_pes_aller_sans_transaction%'
 
   S2lowLegacy\Class\helios\PESAllerCloudStorage:
+    public: true
     arguments:
       $logger: '@monolog.logger.request'
       $openstack_enable: '%app.openstack_enable%'
@@ -420,6 +424,7 @@ services:
     autowire: false
 
   S2lowLegacy\Class\PDFStampWrapper:
+    public: true
     arguments:
       $pdf_stamp_url: '%app.pdf_stamp_url%'
       $image_for_stamp: '%app.image_for_stamp%'
@@ -428,6 +433,7 @@ services:
     autowire: false
 
   S2lowLegacy\Class\PadesValid:
+    public: true
     arguments:
       $pades_valid_url: "%app.pades_valid_url%"
 
