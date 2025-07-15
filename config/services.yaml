@@ -330,7 +330,7 @@ services:
     factory: ['@S2low\Factory\EnvironnementFactory', 'create']
 
   S2lowLegacy\Lib\XadesSignature:
-    public: true
+    public: false
     arguments:
       $xmlsec1_path: "%app.xmlsec_path%"
 
