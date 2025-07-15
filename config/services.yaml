@@ -141,15 +141,18 @@ services:
     public: true
 
   S2low\Command\RebuildQueueCommand:
+    public: true
     arguments:
       - !tagged_iterator s2low.queue_rebuilding_worker
 
   S2low\Services\LogTimestampTokenGarbage:
+    public: true
     arguments:
       $old_timestamp_token_directory: '%app.old_timestamp_token_directory%'
       $timestamp_token_retention_nb_days: '%app.timestamp_token_retention_nb_days%'
 
   S2low\Services\Helios\FTPHeliosReceiverFactory:
+    public: true
     arguments:
       $helios_ftp_response_tmp_local_path: "%app.helios_ftp_response_tmp_local_path%"
       $helios_responses_error_path: "%app.helios_responses_error_path%"
@@ -158,6 +161,7 @@ services:
     autowire: false
 
   S2low\Services\Helios\DGFiPConnection\PasstransConnection:
+    public: true
     class: S2low\Services\Helios\DGFiPConnection\DGFiPConnectionConfiguration
     arguments:
       $server: "%app.helios_passtrans_server%"
@@ -171,6 +175,7 @@ services:
       $helios_ftp_p_appli: "%app.helios_ftp_p_appli%"
 
   S2low\Services\Helios\DGFiPConnection\GatewayConnection:
+    public: true
     class: S2low\Services\Helios\DGFiPConnection\DGFiPConnectionConfiguration
     arguments:
       $server: "%app.helios_ftp_server%"
@@ -184,11 +189,13 @@ services:
       $helios_ftp_p_appli: "%app.helios_ftp_p_appli%"
 
   S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager:
+    public: true
     arguments:
       $passtransConnection: '@S2low\Services\Helios\DGFiPConnection\PasstransConnection'
       $gatewayConnection: '@S2low\Services\Helios\DGFiPConnection\GatewayConnection'
 
   S2low\Legacy\LegacyRouteLoader:
+    public: true
     tags: [ routing.loader ]
     arguments:
       $project_dir: '%kernel.project_dir%'
@@ -198,10 +205,12 @@ services:
     public: true
 
   S2low\Controller\HeliosAdminController:
+    public: true
     arguments:
       $helios_ftp_p_appli: '%app.helios_ftp_p_appli%'
 
   S2lowLegacy\Class\actes\IActesPdf:
+    public: true
     factory: ['@S2low\Factory\ActesPdfFactory','create']
 
   # ---------------------------------------------------------------------------------------------------------------------
@@ -209,12 +218,14 @@ services:
   # ---------------------------------------------------------------------------------------------------------------------
 
   S2low\Factory\ActesPdfFactory:
+    public: true
     autowire: true
     autoconfigure: true
     arguments:
       $useLegacyBordereauModel: '%app.use_legacy_bordereau_model%'
 
   S2low\Factory\MailHeaderFactory:
+    public: true
     arguments:
       $mailHeader: '@S2lowLegacy\Mail\MailHeader'
       $mailHeaderLegacy: '@S2lowLegacy\Mail\MailHeaderLegacy'
@@ -225,6 +236,7 @@ services:
       $cloudProvidersConfig: '%cloud_provider%'
 
   S2low\Factory\EnvironnementFactory:
+    public: true
     arguments:
       $convert_api_logins_from_iso: '%app.convert_api_logins_from_iso%'
 
@@ -263,6 +275,7 @@ services:
       - '../lib/OpenStackConfig.php'
 
   S2lowLegacy\Lib\SigTermHandler:
+    public: true
     shared: true
     autowire: true
     factory: ['S2lowLegacy\Lib\SigTermHandler', 'getInstance']
@@ -280,6 +293,7 @@ services:
     autowire: false #Pas un service, est renvoyé par une factory
 
   S2lowLegacy\Lib\OpenStackContainerWrapperFactory:
+    public: true
     arguments:
       $logger: '@monolog.logger.request'
 
@@ -308,6 +322,7 @@ services:
     public: true
 
   S2lowLegacy\Lib\SessionWrapper:
+    public: true
     factory: ['S2low\Factory\SessionWrapperFactory', 'create']
 
   S2lowLegacy\Lib\Environnement:
@@ -315,6 +330,7 @@ services:
     factory: ['@S2low\Factory\EnvironnementFactory', 'create']
 
   S2lowLegacy\Lib\XadesSignature:
+    public: true
     arguments:
       $xmlsec1_path: "%app.xmlsec_path%"
 
@@ -352,9 +368,11 @@ services:
       $antivirus_command: '%app.antivirus_command%'
 
   S2lowLegacy\Class\BatchUploadHandler:
+    public: true
     autowire: false
 
   S2lowLegacy\Class\BeanstalkdWrapper:
+    public: true
     arguments:
       $beanstalkd_server: "%app.beanstalkd_server%"
       $beanstalkd_port: "%app.beanstalkd_port%"
@@ -438,6 +456,7 @@ services:
       $pades_valid_url: "%app.pades_valid_url%"
 
   S2lowLegacy\Class\RedisMutexWrapper:
+    public: true
     arguments:
       $redis_server: "%app.redis_server%"
       $redis_port: "%app.redis_port%"
@@ -476,6 +495,7 @@ services:
     autowire: false
 
   S2lowLegacy\Class\actes\ActesMinistereProperties:
+    public: true
     arguments:
       $url: '%actes.ministere.url%'
       $authentification_type: '%actes.ministere.authentification_type%'
@@ -489,8 +509,8 @@ services:
       $use_legacy_protocol: '%actes.use_legacy_protocol%'
 
   S2lowLegacy\Class\actes\ActesAntivirusWorker:
-    tags: ['s2low.queue_rebuilding_worker']
     public: true
+    tags: ['s2low.queue_rebuilding_worker']
 
   S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker:
     public: true
@@ -499,21 +519,23 @@ services:
       $actes_dont_valid_signing_certificate: '%app.actes_dont_valid_signing_certificate%'
 
   S2lowLegacy\Class\actes\ActesEnvoiFichierWorker:
-    tags: ['s2low.queue_rebuilding_worker']
     public: true
+    tags: ['s2low.queue_rebuilding_worker']
 
   S2lowLegacy\Class\actes\ActesAnalyseFichierRecuWorker:
-    tags: ['s2low.queue_rebuilding_worker']
     public: true
+    tags: ['s2low.queue_rebuilding_worker']
 
   S2lowLegacy\Class\actes\ActesEnvoiSaeWorker:
-    tags: ['s2low.queue_rebuilding_worker']
     public: true
+    tags: ['s2low.queue_rebuilding_worker']
 
   S2lowLegacy\Class\actes\ClassificationString:
+    public: true
     autowire: false
 
   S2lowLegacy\Class\actes\ActesImapProperties:
+    public: true
     autowire: true
     arguments:
       $host: '%app.actes_imap_host%'
@@ -526,22 +548,24 @@ services:
     autowire: false
 
   S2low\Services\Helios\HeliosAnalyseFichierAEnvoyerWorker:
-    tags: ['s2low.queue_rebuilding_worker']
     public: true
+    tags: ['s2low.queue_rebuilding_worker']
 
   S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker:
-    tags: ['s2low.queue_rebuilding_worker']
     public: true
+    tags: ['s2low.queue_rebuilding_worker']
 
   S2lowLegacy\Class\actes\ActesArchive:
     autowire: false #Pas un service ??
 
   S2lowLegacy\Class\actes\ActesCloudStorage:
+    public: true
     arguments:
       $logger: '@monolog.logger.request'
       $openstack_enable: '%app.openstack_enable%'
 
   S2lowLegacy\Class\actes\ActesFileSender:
+    public: true
     arguments:
       $trustore_path: '%app.truststore_path%'
 
@@ -549,17 +573,19 @@ services:
     autowire: false #Initialisé avec les données à traiter ...
 
   S2lowLegacy\Class\actes\ActesNameArchive:
+    public: true
     arguments:
       $trigramme: "%app.actes_appli_trigramme%"
       $quadrigramme: "%app.actes_appli_quadrigramme%"
 
   S2lowLegacy\Class\actes\ActesNotification:
+    public: true
     arguments:
       $actes_appli_trigramme: "%app.actes_appli_trigramme%"
 
   S2lowLegacy\Class\actes\ActesPdf:
-    autowire: true
     public: true
+    autowire: true
     arguments:
       $img: "/var/www/s2low/public.ssl/custom/images/bandeau-s2low-190.jpg" #TODO : utiliser la variable d'env ?
 
@@ -567,23 +593,25 @@ services:
     autowire: false # Pas utilisé en v5 ...
 
   S2lowLegacy\Class\actes\BordereauPdfGenerator:
-    autowire: true
     public: true
+    autowire: true
     arguments:
       $extractDataForBordereauPDF: "@S2lowLegacy\\Class\\actes\\ExtractDataForBordereauPDF"
       $actesPdf: "@S2lowLegacy\\Class\\actes\\ActesPdf"
 
   S2lowLegacy\Class\helios\FichierCompteur:
+    public: true
     arguments:
       $helios_counter_file: '%app.helios_counter_file%'
 
   S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu:
+    public: true
     arguments:
       $schema_pes_path: "%app.schema_pes_path%"
       $email_admin_technique: "%app.mail.email_admin_technique%"
-    public: true
 
   S2lowLegacy\Class\helios\HeliosPESValidation:
+    public: true
     arguments:
       $helios_xsd_path: "%app.schema_pes_path%"
 
@@ -594,13 +622,14 @@ services:
       $openstack_enable: '%app.openstack_enable%'
 
   S2lowLegacy\Class\helios\PESRetourCloudStorage:
-    autowire: true
     public: true
+    autowire: true
     arguments:
       $logger: '@monolog.logger.request'
       $openstack_enable: '%app.openstack_enable%'
 
   S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable:
+    public: true
     arguments:
       $mail_files_without_transac_dir: '%app.mail_files_without_transac_dir%'
 
@@ -615,9 +644,11 @@ services:
     tags: [ 'controller.service_arguments' ]
 
   S2lowLegacy\Lib\OpenStackContainerStore:
+    public: true
     factory: ['@S2low\Factory\OpenStackContainerStoreFactory', "create"]
 
   S2lowLegacy\Class\actes\ActesCloudStorable:
+    public: true
     arguments:
       $repertoireActesEnveloppeSansTransaction: '%app.actes_enveloppe_sans_transaction%'
 
@@ -630,11 +661,13 @@ services:
     public: true
 
   PDO:
+    public: true
     class: PDO
     shared: true
     factory: ['@S2low\Factory\PDOFactory', 'create']
 
   S2low\Factory\PDOFactory:
+    public: true
     shared: true
     arguments:
       $hostname:  '%app.database_host%'
@@ -653,5 +686,6 @@ services:
     shared: false
 
   S2low\Logger\MailerProcessor:
+    public: true
     tags:
       - { name: monolog.processor }
