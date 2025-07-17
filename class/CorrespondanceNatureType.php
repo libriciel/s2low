@@ -4,7 +4,6 @@ namespace S2lowLegacy\Class;
 
 class NatureType
 {
-
     const CORRESPONDANCE = [
           '1' => '99_DE',
           '2' => '99_AR',
@@ -18,5 +17,4 @@ class NatureType
     {
         return self::CORRESPONDANCE[$correspondanceNature];
     }
-
 }

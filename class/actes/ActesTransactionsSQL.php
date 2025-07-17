@@ -412,7 +412,7 @@ WHERE
         $limit,
         ?string $min_submission_date = null,
         ?string $max_submission_date = null,
-        ?int $type_acte
+        ?int $type_acte = null
     ): array | false {
         $offset = intval($offset);
         $limit = intval($limit);
