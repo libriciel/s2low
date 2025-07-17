@@ -17,7 +17,7 @@ use S2lowLegacy\Model\AuthoritySQL;
 
 list($objectInstancier, $sqlQuery, $helios_use_passtrans_as_default) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, SQLQuery::class, 'helios_use_passtrans_as_default']
+        [ObjectInstancier::class, SQLQuery::class, 'app.helios_use_passtrans_as_default']
     );
 
 $me = new User();

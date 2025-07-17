@@ -26,15 +26,15 @@ class GetListePesRetourCollectiviteTest extends S2lowIntegrationTestCase
 
     public function testGetList(): void
     {
-        $this->createUserWithDefaultCertificatAs(UserRole::Utilisateur);
-
         $collectiviteId = 1;
         $filename = 'filename.xml';
 
         $_GET['collectivite'] = $collectiviteId;
 
         $this->addPESRetourToCollectivite($collectiviteId, $filename);
-        $client = $this->getAuthenticatedClientAttachedToDefaultCertificat();
+
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
 
         $client->request(
             'GET',

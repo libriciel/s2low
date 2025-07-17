@@ -76,6 +76,7 @@ class GetActesOfSpecificStatusTest extends S2lowIntegrationTestCase
      */
     public function testShouldReturnOk($data): void
     {
+        $client = $this->client;
         $this->createTransaction(ActesStatusSQL::STATUS_VALIDE);
 
         for ($i = $data['nbTransactionToCreate']; $i > 0; $i--) {
@@ -90,7 +91,7 @@ class GetActesOfSpecificStatusTest extends S2lowIntegrationTestCase
         $_GET['min_date'] = $data['minDate'];
         $_GET['max_date'] = $data['maxDate'];
 
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::SuperAdministrateur);
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $client->request('GET', '/modules/actes/api/list_actes.php', [
             'status_id' => $statusId,
             'offset' => $data['offset'],

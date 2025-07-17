@@ -2,28 +2,26 @@
 
 namespace S2lowLegacy\Lib;
 
+/**
+ * @deprecated Fin du ObjectInstancier. Il faut autowire votre service
+ */
 class ObjectInstancierFactory
 {
     /** @var  ObjectInstancier */
-    private static $objetInstancier;
+    private static ObjectInstancier $objectInstancier;
 
-    public static function setObjectInstancier(ObjectInstancier $objectInstancier)
+    public static function setObjectInstancier(ObjectInstancier $objectInstancier): void
     {
-        self::$objetInstancier = $objectInstancier;
+        self::$objectInstancier = $objectInstancier;
     }
 
     public static function getObjetInstancier()
     {
-        return self::$objetInstancier;
-    }
-
-    public static function issetObjectInstancier(): bool
-    {
-        return isset(self::$objetInstancier);
+        return self::$objectInstancier;
     }
 
     public static function resetObjectInstancier(): void
     {
-        self::$objetInstancier = null;
+//
     }
 }

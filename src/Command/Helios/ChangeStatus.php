@@ -28,7 +28,6 @@ class ChangeStatus extends Command
         private HeliosTransactionsSQL $transactionsSQL,
         $name = null
     ) {
-        $this->statuses = new Statuses($this->statusSQL->getAllStatus());
         parent::__construct($name);
     }
 
@@ -63,6 +62,8 @@ class ChangeStatus extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->statuses = new Statuses($this->statusSQL->getAllStatus());
+
         $io = new SymfonyStyle($input, $output);
 
         try {

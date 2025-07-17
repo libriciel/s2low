@@ -1,9 +1,6 @@
 <?php
 
-// VerifyPadesSignature::validateSignature et VerifyPadesSignature::validateSignature :
-// - renvoient void si ok
-// - throw une exception sinon
-
+use PHPUnit\Framework\MockObject\MockObject;
 use S2lowLegacy\Class\VerifyPadesSignature;
 use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
@@ -12,17 +9,9 @@ use S2lowLegacy\Lib\PemCertificateFactory;
 
 class VerifyPadesSignatureTest extends S2lowTestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|VerifyPemCertificate
-     */
-    private $verifyPemCertificateMock;
-    /** @var VerifyPadesSignature | PHPUnit\Framework\MockObject\  */
+    private MockObject|VerifyPemCertificate $verifyPemCertificateMock;
     private $verifyPadesSignatureWithMock;
-    /** @var VerifyPadesSignature  */
     private $verifyPadesSignature;
-    /**
-     * @var PemCertificate|\PHPUnit\Framework\MockObject\MockObject
-     */
     private $pemCertificateMock;
 
     private function getSignature(
@@ -43,10 +32,11 @@ class VerifyPadesSignatureTest extends S2lowTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->verifyPemCertificateMock = $this->getMockBuilder(VerifyPemCertificate::class)
             ->disableOriginalConstructor()
             ->getMock();
-        /** @var  $verifyPemCertificateFactoryMock \PHPUnit\Framework\MockObject\MockObject | VerifyPemCertificateFactory */
+
         $verifyPemCertificateFactoryMock = $this->getMockBuilder(VerifyPemCertificateFactory::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -79,11 +69,6 @@ class VerifyPadesSignatureTest extends S2lowTestCase
         );
     }
 
-    //Integration tests
-
-    /**
-     * @throws \Exception
-     */
     public function testValidateSigned()
     {
         $signature = json_decode(

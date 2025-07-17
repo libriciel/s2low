@@ -53,8 +53,7 @@ class CreatePESAllerTest extends S2lowIntegrationTestCase
      */
     public function testCreatePESAller($data): void
     {
-        $this->createUserWithDefaultCertificatAs(UserRole::Utilisateur);
-
+        $this->setUserWithRole(UserRole::Utilisateur);
         $this->createTransaction(
             1,
             $data['status'],
@@ -65,6 +64,7 @@ class CreatePESAllerTest extends S2lowIntegrationTestCase
         $fileContent = file_get_contents($filePath);
         $fileType = 'application/xml';
         $fileError = UPLOAD_ERR_OK;
+        $toTestFilePath = sys_get_temp_dir() . '/' . $fileName;
 
         $toUploadFile = new UploadedFile(
             $filePath,
@@ -74,22 +74,24 @@ class CreatePESAllerTest extends S2lowIntegrationTestCase
             true
         );
 
-        $vfsUrl = vfsStream::url('test/helios/' . $fileName);
-        copy($filePath, $vfsUrl);
-        $filePathFromUseCaseCode = $vfsUrl;
+        try {
+            copy($filePath, $toTestFilePath);
+        } catch (\Exception $e) {
+            $this->fail("Impossible de copier le fichier de test : $filePath");
+        }
 
         $_FILES['enveloppe'] = '';
         if ($data['with_enveloppe']) {
             $_FILES['enveloppe'] = [
                 'name' => $fileName,
                 'type' => $fileType,
-                'tmp_name' => $filePathFromUseCaseCode,
+                'tmp_name' => $toTestFilePath,
                 'error' => $fileError,
                 'size' => 107
             ];
         }
 
-        $client = $this->getAuthenticatedClientAttachedToDefaultCertificat();
+        $client = $this->client;
         $client->request(
             'GET',
             '/modules/helios/api/helios_importer_fichier.php',

@@ -1,5 +1,7 @@
 <?php
 
+use S2lowLegacy\Class\Database;
+use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\GroupSQL;
 
 class GroupSQLTest extends S2lowTestCase
@@ -29,7 +31,7 @@ class GroupSQLTest extends S2lowTestCase
 
     public function testCreate()
     {
-        $id = $this->groupeSQL->edit(0, self::GROUPE_2_NAME, 1);
+        $id = $this->groupeSQL->edit(1, self::GROUPE_2_NAME, 1);
         $info = $this->groupeSQL->getInfo($id);
         $this->assertEquals(self::GROUPE_2_NAME, $info['name']);
     }
@@ -77,12 +79,15 @@ class GroupSQLTest extends S2lowTestCase
      */
     public function testGroupeVide()
     {
-        $this->getSQLQuery()->query("DELETE FROM users_perms");
-        $this->getSQLQuery()->query("DELETE FROM users");
-        $this->getSQLQuery()->query("DELETE FROM modules_authorities");
-        $this->getSQLQuery()->query("DELETE FROM authorities");
-        $this->getSQLQuery()->query("DELETE FROM authority_groups");
+        $sqlQuery = self::getContainer()->get(SQLQuery::class);
+        $sqlQuery->query("DELETE FROM users_perms");
+        $sqlQuery->query("DELETE FROM users");
+        $sqlQuery->query("DELETE FROM modules_authorities");
+        $sqlQuery->query("DELETE FROM nounce");
+        $sqlQuery->query("DELETE FROM authority_siret");
+        $sqlQuery->query("DELETE FROM authorities");
+        $sqlQuery->query("DELETE FROM authority_groups");
         $this->groupeSQL->getGroupsIdName();
-        $this->noAssertion();
+        self::expectNotToPerformAssertions();
     }
 }

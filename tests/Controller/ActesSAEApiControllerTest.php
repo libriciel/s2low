@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace S2low\Tests\Controller;
 
 use Exception;
+use IntegrationTests\S2lowIntegrationTestCase;
 use PHPUnit;
 use PHPUnit\Framework\MockObject\MockObject;
 use S2low\Controller\ActesSAEApiController;
 use S2low\DTO\SAEStateTransitionRequest;
+use S2low\Enum\UserRole;
 use S2low\Kernel;
 use S2low\Services\Actes\ActesSAEStateTransitionner;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
@@ -17,7 +19,7 @@ use S2lowLegacy\Class\User;
 use S2lowLegacy\Controller\Controller;
 use S2lowTestCase;
 
-class ActesSAEApiControllerTest extends S2lowTestCase
+class ActesSAEApiControllerTest extends S2lowIntegrationTestCase
 {
     use PHPUnit\ActesUtilitiesTestTrait;
 
@@ -28,28 +30,14 @@ class ActesSAEApiControllerTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $legacyController = $this->getMockBuilder(Controller::class)
-            ->disableOriginalConstructor()->getMock();
-        $this->actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+        $this->actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
 
-        $this->mockUser = $this->getMockBuilder(User::class)
-            ->disableOriginalConstructor()->getMock();
-        $legacyController->method('getUser')->willReturn($this->mockUser);
-        $this->actesSAEApiController = new ActesSAEApiController(
-            $legacyController,
-            new ActesSAEStateTransitionner($this->actesTransactionsSQL)
-        );
-
-        $kernel = new Kernel('test', true);
-        $kernel->boot();
-
-        $this->actesSAEApiController->setContainer($kernel->getContainer());
+        $this->actesSAEApiController = self::getContainer()->get(ActesSAEApiController::class);
+        $this->actesSAEApiController->setContainer(self::getContainer());
     }
 
     public function testNoArchivistRights(): void
     {
-        $this->mockUser->expects(static::once())->method('isArchivist')->willReturn(false);
-
         static::assertSame(
             '{"error":"L\u0027utilisateur n\u0027est pas archiviste"}',
             $this->actesSAEApiController->manageSAEState(
@@ -60,8 +48,7 @@ class ActesSAEApiControllerTest extends S2lowTestCase
 
     public function testNoTransaction(): void
     {
-        $this->mockUser->expects(static::once())->method('isArchivist')->willReturn(true);
-
+        $this->setUserWithRole(UserRole::Archiviste);
         static::assertSame(
             '{"error":"Transaction 1165464894 non existante"}',
             $this->actesSAEApiController->manageSAEState(
@@ -75,14 +62,16 @@ class ActesSAEApiControllerTest extends S2lowTestCase
      */
     public function testTransactionWrongAuthority(): void
     {
-        $this->mockUser->method('isArchivist')->willReturn(true);
-        $this->mockUser->method('get')->with('authority_id')->willReturn(2);
-        // La transaction est créé avec l'autorité 1, l'user ne doit donc normalement pas y accéder
-        $created_trans_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+        $this->setUserWithRole(UserRole::Archiviste);
+        $this->setUserAuthority(2);
+
+        $created_trans_id = $this->createTransaction(
+            status: ActesStatusSQL::STATUS_ACQUITTEMENT_RECU
+        );
 
         static::assertSame(
             '{"error":"Mauvaise collectivite"}',
-            $this->actesSAEApiController->manageSAEState(new SAEStateTransitionRequest($created_trans_id, 1))
+            $this->actesSAEApiController->manageSAEState(new SAEStateTransitionRequest($created_trans_id, ActesStatusSQL::STATUS_POSTE))
                 ->getContent()
         );
     }
@@ -92,9 +81,7 @@ class ActesSAEApiControllerTest extends S2lowTestCase
      */
     public function testTransactionWrongStatuses(int $inputStatus, int $outputStatus, string $message): void
     {
-        $this->mockUser->method('isArchivist')->willReturn(true);
-        $this->mockUser->method('get')->with('authority_id')->willReturn(1);
-        // La transaction est créé avec l'autorité 1, l'user ne doit y accéder
+        $this->setUserWithRole(UserRole::Archiviste);
         $created_trans_id = $this->createTransaction($inputStatus);
 
         static::assertSame(
@@ -123,9 +110,7 @@ class ActesSAEApiControllerTest extends S2lowTestCase
      */
     public function testSuccessfulStatusSwitch(): void
     {
-        $this->mockUser->method('isArchivist')->willReturn(true);
-        $this->mockUser->method('get')->with('authority_id')->willReturn(1);
-        // La transaction est créé avec l'autorité 1, l'user ne doit y accéder
+        $this->setUserWithRole(UserRole::Archiviste);
         $created_trans_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
 
         static::assertSame(
@@ -146,6 +131,6 @@ class ActesSAEApiControllerTest extends S2lowTestCase
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
     {
-        return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+        return self::getContainer()->get(ActesTransactionsSQL::class);
     }
 }

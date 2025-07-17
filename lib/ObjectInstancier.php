@@ -3,97 +3,50 @@
 namespace S2lowLegacy\Lib;
 
 use Exception;
-use ReflectionClass;
-use ReflectionParameter;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * @deprecated Fin de l'ObjectInstancier. Il faut autowire votre service
+ */
 class ObjectInstancier
 {
-    private $objects;
-
-    public function __construct()
-    {
-        $this->objects = array(ObjectInstancier::class => $this);
-    }
-
-    public function __get($name)
-    {
-        return $this->get($name);
-    }
-
-    public function __set($name, $value)
-    {
-        $this->set($name, $value);
+    public function __construct(
+        private readonly ContainerInterface $container
+    ) {
     }
 
     public function get($name): mixed
     {
-        if (! isset($this->objects[$name])) {
-            $this->objects[$name] =  $this->newInstance($name);
+        try {
+            $result = $this->container->get($name);
+        } catch (ServiceNotFoundException $e) {
+            try {
+                // Si cela ne fonctionne pas on esssaye de voir si un parametre existe a ce nom.
+                // Ce test existe par soucis de retrocompatibilité avec cette methode get.
+                $result = $this->container->getParameter($name);
+            } catch (Exception $secondeException) {
+                throw $e;
+            }
         }
-        return $this->objects[$name];
+
+        return $result;
     }
 
     public function getArray(array $names): array
     {
-        $objects = [];
+        $arrayResult = [];
         foreach ($names as $name) {
-            $objects[] = $this->get($name);
+            $arrayResult[] = $this->get($name);
         }
-        return $objects;
+
+        return $arrayResult;
     }
 
-    public function unset_object($name)
+    public function getParameter(string $name): mixed
     {
-        unset($this->objects[$name]);
-    }
-
-    public function set($name, $value)
-    {
-        $this->objects[$name] = $value;
-    }
-
-    private function newInstance($className)
-    {
-        $reflexionClass = new ReflectionClass($className);
-        if (! $reflexionClass->hasMethod('__construct')) {
-            return $reflexionClass->newInstance();
-        }
-        $constructor = $reflexionClass->getMethod('__construct');
-        $allParameters = $constructor->getParameters();
-        $param = $this->bindParameters($className, $allParameters);
-        return $reflexionClass->newInstanceArgs($param);
-    }
-
-    /**
-     * @throws \ReflectionException
-     */
-    private function bindParameters($className, array $allParameters)
-    {
-        $param = [];
-        /** @var ReflectionParameter $parameters */
-        foreach ($allParameters as $parameters) {
-            $type = $parameters->getType();
-            if ($type !== null && !$type->isBuiltin()) {
-                $class = new ReflectionClass($type->getName());
-                $param_name = $class->getName();
-            } else {
-                $param_name = $parameters->getName();
-            }
-            try {
-                $bind_value = $this->$param_name;
-            } catch (Exception $e) {
-                //throw $e;
-                //On a pas trouvé le paramètre...
-            }
-
-            if (! isset($bind_value)) {
-                if ($parameters->isOptional()) {
-                    return $param;
-                }
-                throw new Exception("Impossible d'instancier $className car le parametre {$parameters->name} est manquant");
-            }
-            $param[] = $bind_value;
-        }
-        return $param;
+        return $this->container->getParameter($name);
     }
 }

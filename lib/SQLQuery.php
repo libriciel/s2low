@@ -6,22 +6,13 @@ use Closure;
 use Exception;
 use PDO;
 use PDOStatement;
+use S2lowLegacy\Class\LegacyObjectsManager;
 
 class SQLQuery
 {
-    private const DATABASE_TYPE = "pgsql";
     private const SLOW_QUERY_IN_MS = 2000;
 
-    private const CLIENT_ENCODING_DEFAULT = "UTF-8";
-
-    private $databaseName;
-    private $databaseHost;
-    private $databaseLogin;
-    private $databasePassword;
     private $slow_query_in_ms;
-    private $pdo;
-
-    private $client_encoding;
 
     /** @var  PDOStatement */
     private $lastPdoStatement;
@@ -29,23 +20,14 @@ class SQLQuery
     private $hasMoreResult;
 
     public function __construct(
-        string $databaseName,
-        string $databaseHost,
-        string $databaseLogin,
-        string $databasePassword
+        private ?PDO $pdo
     ) {
-        $this->databaseName = $databaseName;
-        $this->databaseLogin = $databaseLogin;
-        $this->databasePassword = $databasePassword;
-        $this->databaseHost = $databaseHost;
-
         $this->setSlowQuery(self::SLOW_QUERY_IN_MS);
-        $this->setClientEncoding(self::CLIENT_ENCODING_DEFAULT);
     }
 
-    public function disconnect(): void
+    public function setSlowQuery($millisecond): void
     {
-        $this->pdo = null;
+        $this->slow_query_in_ms = $millisecond;
     }
 
     public function sleep($time_in_second)
@@ -54,50 +36,37 @@ class SQLQuery
         sleep($time_in_second);
     }
 
-    public function setDatabaseHost($host): void
+    public function disconnect(): void
     {
-        $this->databaseHost = $host;
+        $this->pdo = null;
     }
 
-    public function setCredential($login, $password): void
+    public function queryOne($query, $param = false)
     {
-        $this->databaseLogin = $login;
-        $this->databasePassword = $password;
-    }
 
-    public function setSlowQuery($millisecond): void
-    {
-        $this->slow_query_in_ms  = $millisecond;
-    }
-
-    public function setClientEncoding($client_encoding): void
-    {
-        $this->client_encoding = $client_encoding;
-    }
-
-    public function getPdo(): PDO
-    {
-        if (! $this->pdo) {
-            $dsn = self::DATABASE_TYPE . ":host=" . $this->databaseHost;
-            if ($this->databaseName) {
-                $dsn .= ";dbname=" . $this->databaseName;
-            }
-            $this->pdo = new PDO($dsn, $this->databaseLogin, $this->databasePassword);
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->query("SET CLIENT_ENCODING TO '{$this->client_encoding}';");
-            $this->query("SET standard_conforming_strings = off;");
+        if (!is_array($param)) {
+            $param = func_get_args();
+            array_shift($param);
         }
-        return $this->pdo;
+        $result = $this->query($query, $param);
+        if (!$result) {
+            return false;
+        }
+
+        $result = $result[0];
+        if (count($result) == 1) {
+            return reset($result);
+        }
+        return $result;
     }
 
     public function query($query, $param = false): array
     {
         $start = microtime(true);
-        if (! is_array($param)) {
+        if (!is_array($param)) {
             $param = func_get_args();
             array_shift($param);
         }
-
         try {
             $pdoStatement = $this->getPdo()->prepare($query);
         } catch (Exception $e) {
@@ -118,39 +87,26 @@ class SQLQuery
 
         $duration = microtime(true) - $start;
         if ($duration > $this->slow_query_in_ms) {
-            $requete =  $pdoStatement->queryString . "|" . implode(",", $param);
+            $requete = $pdoStatement->queryString . "|" . implode(",", $param);
             trigger_error("Requete lente ({$duration}ms): $requete", E_USER_WARNING);
         } // @codeCoverageIgnore
 
         return $result;
     }
 
-    public function queryOne($query, $param = false)
+    public function getPdo(): PDO
     {
-        if (! is_array($param)) {
-            $param = func_get_args();
-            array_shift($param);
-        }
-        $result = $this->query($query, $param);
-        if (! $result) {
-            return false;
-        }
-
-        $result = $result[0];
-        if (count($result) == 1) {
-            return reset($result);
-        }
-        return $result;
+        return $this->pdo;
     }
 
     public function queryOneCol($query, $param = false): array
     {
-        if (! is_array($param)) {
+        if (!is_array($param)) {
             $param = func_get_args();
             array_shift($param);
         }
         $result = $this->query($query, $param);
-        if (! $result) {
+        if (!$result) {
             return array();
         }
         $r = array();
@@ -163,7 +119,7 @@ class SQLQuery
 
     public function prepareAndExecute($query, $param = false): void
     {
-        if (! is_array($param)) {
+        if (!is_array($param)) {
             $param = func_get_args();
             array_shift($param);
         }
@@ -171,6 +127,17 @@ class SQLQuery
         $this->lastPdoStatement->execute($param);
         $this->hasMoreResult = true;
         $this->fetch();
+    }
+
+    public function fetch()
+    {
+        $result = $this->nextResult;
+        $this->nextResult = $this->lastPdoStatement->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT);
+
+        if (!$this->nextResult) {
+            $this->hasMoreResult = false;
+        }
+        return $result;
     }
 
     public function exec($query): void
@@ -181,17 +148,6 @@ class SQLQuery
     public function hasMoreResult()
     {
         return $this->hasMoreResult;
-    }
-
-    public function fetch()
-    {
-        $result = $this->nextResult;
-        $this->nextResult = $this->lastPdoStatement->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT);
-
-        if (! $this->nextResult) {
-            $this->hasMoreResult = false;
-        }
-        return $result;
     }
 
     public function waitStarting(Closure $log_function, $nb_retry_max = 60): bool
@@ -209,9 +165,9 @@ class SQLQuery
                 $log_function("[essai $nb_retry] PostgreSQL n'a pas démarré ... on attend une seconde de plus");
                 sleep(1);
             }
-        } while (! $connected && $nb_retry < $nb_retry_max);
+        } while (!$connected && $nb_retry < $nb_retry_max);
 
-        if (! $connected) {
+        if (!$connected) {
             $log_function("PostgreSQL n'a pas démarré après $nb_retry essai...");
         }
         return $connected;

@@ -77,8 +77,6 @@ class GetStatusTest extends S2lowIntegrationTestCase
      */
     public function testShouldReturnGoodStatus($data): void
     {
-        $this->createUserWithDefaultCertificatAs(UserRole::Utilisateur);
-
         $transactionId = $this->createTransaction(
             1,
             $data['status'],
@@ -86,7 +84,9 @@ class GetStatusTest extends S2lowIntegrationTestCase
 
         $_GET['transaction'] = $transactionId;
 
-        $client = $this->getAuthenticatedClientAttachedToDefaultCertificat();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
+
         $client->request(
             'GET',
             '/modules/helios/api/helios_transac_get_status.php',

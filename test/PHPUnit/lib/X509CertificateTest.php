@@ -2,19 +2,26 @@
 
 use S2lowLegacy\Lib\X509Certificate;
 
-class X509CertificateTest extends PHPUnit_Framework_TestCase
+class X509CertificateTest extends S2lowTestCase
 {
-    /**
-     * @var X509Certificate
-     */
-    private $x509Certificate;
+    private $serverSave;
+    private X509Certificate $x509Certificate;
 
     public function setUp(): void
     {
         parent::setUp();
+        $this->serverSave = $_SERVER;
+        $_SERVER = [];
         $_SERVER['SSL_CLIENT_VERIFY'] = false;
         $this->x509Certificate = new X509Certificate();
     }
+
+    public function tearDown(): void
+    {
+        $_SERVER = $this->serverSave;
+        parent::tearDown();
+    }
+
 
     public function testPemCleaning()
     {
@@ -44,6 +51,7 @@ class X509CertificateTest extends PHPUnit_Framework_TestCase
 
     public function testRetrieveClientInfoWithEmptyCert()
     {
+//        $_SERVER = [];
         $_SERVER['SSL_CLIENT_VERIFY'] = "SUCCESS";
         $info = $this->x509Certificate->retrieveClientInfo();
         $this->assertFalse($info);
@@ -95,7 +103,8 @@ class X509CertificateTest extends PHPUnit_Framework_TestCase
 
     public function testGetInfoFailed2()
     {
-        $this->setExpectedException("Exception", "Impossible de lire le certificat");
+        $this->expectException("Exception");
+        $this->expectExceptionMessage("Impossible de lire le certificat");
         $this->x509Certificate->getInfo("toto");
     }
 

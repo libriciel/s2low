@@ -6,6 +6,8 @@ namespace PHPUnit\controller;
 
 use Exception;
 use HeliosUtilitiesTestTrait;
+use IntegrationTests\S2lowIntegrationTestCase;
+use S2low\Enum\UserRole;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Controller\HeliosSAEController;
 use S2lowLegacy\Lib\Environnement;
@@ -13,25 +15,13 @@ use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use S2lowTestCase;
 
-class HeliosSAEControllerTest extends S2lowTestCase
+class HeliosSAEControllerTest extends S2lowIntegrationTestCase
 {
     use HeliosUtilitiesTestTrait;
 
-    /**
-     * @var \S2lowLegacy\Controller\HeliosSAEController
-     */
     private HeliosSAEController $heliosSAEController;
 
-    /**
-     * @throws Exception
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->setRGSAuthentification();
-    }
-
-    protected function tearDown(): void
+    public function tearDown(): void
     {
         $_POST = [];
         parent::tearDown();
@@ -39,19 +29,16 @@ class HeliosSAEControllerTest extends S2lowTestCase
 
     public function testUserCannotAccess(): void
     {
-        $this->setUserAuthentification();
+        $this->setUserWithRole(UserRole::Utilisateur);
         $this->initController();
         $this->expectException(RedirectException::class);
         $this->expectExceptionMessage('Redirect to ' . WEBSITE_SSL . ' with message : Accès refusé');
         $this->heliosSAEController->changeStatusAction();
     }
 
-    /**
-     * @throws \S2lowLegacy\Lib\RedirectException
-     */
     public function testUserCannotAccessApi(): void
     {
-        $this->setUserAuthentification();
+        $this->setUserWithRole(UserRole::Utilisateur);
         $this->initController();
         $this->heliosSAEController->getRecuperateurPost()->set('api', true);
 
@@ -69,7 +56,7 @@ class HeliosSAEControllerTest extends S2lowTestCase
 
     public function testSuperAdminNoTransaction(): void
     {
-        $this->setSuperAdminAuthentication();
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->initController();
         $this->expectException(RedirectException::class);
         $this->expectExceptionMessage('Redirect to / with message : Cette transaction n\'existe pas');
@@ -82,7 +69,7 @@ class HeliosSAEControllerTest extends S2lowTestCase
 
     public function testSuperAdminOneTransactionChangeImpossible(): void
     {
-        $this->setSuperAdminAuthentication();
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->initController();
 
         $transaction_id = $this->createTransaction(1, HeliosStatusSQL::POSTE);
@@ -102,7 +89,7 @@ class HeliosSAEControllerTest extends S2lowTestCase
 
         static::assertSame(
             'Impossible de changer le status de la transaction',
-            $this->getObjectInstancier()->get(Environnement::class)->session()->get('error')
+            self::getContainer()->get(Environnement::class)->session()->get('error')
         );
 
         static::assertSame(
@@ -113,7 +100,7 @@ class HeliosSAEControllerTest extends S2lowTestCase
 
     public function testSuperAdminOneTransactionChangePossible(): void
     {
-        $this->setSuperAdminAuthentication();
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->initController();
 
         $transaction_id = $this->createTransaction(1, HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE);
@@ -132,7 +119,7 @@ class HeliosSAEControllerTest extends S2lowTestCase
 
         static::assertSame(
             'Le status de la transaction a été modifiée',
-            $this->getObjectInstancier()->get(Environnement::class)->session()->get('error')
+            self::getContainer()->get(Environnement::class)->session()->get('error')
         );
 
         static::assertSame(
@@ -143,7 +130,7 @@ class HeliosSAEControllerTest extends S2lowTestCase
 
     public function testSuperAdminOneTransactionStringTransactionId(): void
     {
-        $this->setSuperAdminAuthentication();
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->initController();
 
         $this->heliosSAEController->getRecuperateurPost()->set('api', true);
@@ -164,7 +151,7 @@ class HeliosSAEControllerTest extends S2lowTestCase
 
     public function testSuperAdminOneTransactionBadTransactionId(): void
     {
-        $this->setSuperAdminAuthentication();
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->initController();
 
         $this->heliosSAEController->getRecuperateurPost()->set('api', true);
@@ -188,7 +175,7 @@ class HeliosSAEControllerTest extends S2lowTestCase
      */
     public function testSuperAdminOneTransactionChangePossibleApi(): void
     {
-        $this->setSuperAdminAuthentication();
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->initController();
 
         $transaction_id = $this->createTransaction(1, HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE);
@@ -217,7 +204,7 @@ class HeliosSAEControllerTest extends S2lowTestCase
 
     public function testArchOneTransactionChangePossible(): void
     {
-        $this->setArchAuthentification();
+        $this->setUserWithRole(UserRole::Archiviste);
         $this->initController();
 
         $transaction_id = $this->createTransaction(1, HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE);
@@ -236,7 +223,7 @@ class HeliosSAEControllerTest extends S2lowTestCase
 
         static::assertSame(
             'Le status de la transaction a été modifiée',
-            $this->getObjectInstancier()->get(Environnement::class)->session()->get('error')
+            self::getContainer()->get(Environnement::class)->session()->get('error')
         );
 
         static::assertSame(
@@ -247,7 +234,7 @@ class HeliosSAEControllerTest extends S2lowTestCase
 
     public function testArchOneTransactionWrongTransactionNumber(): void
     {
-        $this->setArchAuthentification();
+        $this->setUserWithRole(UserRole::Archiviste);
         $this->initController();
 
         // On récupère un transaction_id sans transaction
@@ -271,7 +258,7 @@ class HeliosSAEControllerTest extends S2lowTestCase
 
     public function testArchOneTransactionDifferentAuthorities(): void
     {
-        $this->setArchAuthentification();
+        $this->setUserWithRole(UserRole::Archiviste);
         $this->initController();
 
         $transaction_id = $this->createTransaction(2, HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE);
@@ -296,7 +283,7 @@ class HeliosSAEControllerTest extends S2lowTestCase
 
     public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
     {
-        return $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
+        return self::getContainer()->get(HeliosTransactionsSQL::class);
     }
 
     /**
@@ -304,7 +291,7 @@ class HeliosSAEControllerTest extends S2lowTestCase
      */
     private function initController(): void
     {
-        $this->heliosSAEController = new HeliosSAEController($this->getObjectInstancier());
+        $this->heliosSAEController = self::getContainer()->get(HeliosSAEController::class);
         $this->heliosSAEController->verifUser();
     }
 }

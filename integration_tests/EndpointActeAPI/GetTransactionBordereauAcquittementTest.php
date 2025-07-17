@@ -32,7 +32,9 @@ class GetTransactionBordereauAcquittementTest extends S2lowIntegrationTestCase
 
         $_GET['trans_id'] = $transactionId;
 
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
+
         $client->request('GET', '/modules/actes/actes_create_pdf.php', [
             'trans_id' => $transactionId
         ]);

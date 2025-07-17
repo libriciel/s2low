@@ -2,6 +2,7 @@
 
 namespace S2low;
 
+use S2lowLegacy\Lib\ObjectInstancier;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
@@ -14,14 +15,25 @@ class Kernel extends BaseKernel
     public function __construct(string $environment, bool $debug)
     {
         require_once(__DIR__ . "/../init/init.php");
-        \S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
         parent::__construct($environment, $debug);
+        $this->boot();
+
+        $objectInstancier = new ObjectInstancier($this->getContainer());
+        \S2lowLegacy\Class\LegacyObjectsManager::setObjectInstancier($objectInstancier);
+        \S2lowLegacy\Lib\ObjectInstancierFactory::setObjectInstancier($objectInstancier);
+        \S2lowLegacy\Class\DatabasePool::setObjectInstancier($objectInstancier);
     }
 
     protected function configureContainer(ContainerConfigurator $container): void
     {
         $container->import('../config/{packages}/*.yaml');
         $container->import('../config/{packages}/' . $this->environment . '/*.yaml');
+
+        if ($this->environment !== 'test') {
+            $container->import('../config/services_parameters.yaml');
+        } else {
+            $container->import('../config/services_parameters_test.yaml');
+        }
 
         if (is_file(\dirname(__DIR__) . '/config/services.yaml')) {
             $container->import('../config/services.yaml');

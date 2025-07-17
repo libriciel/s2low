@@ -5,6 +5,7 @@ use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Group;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;

@@ -3,6 +3,13 @@ parameters:
   app.database_host: '%env(POSTGRES_HOST_TEST)%'
   app.database_login: '%env(POSTGRES_USER_TEST)%'
   app.database_password: '%env(POSTGRES_PASSWORD_TEST)%'
+  app.openstack_enable: false
+  app.helios_use_passtrans_as_default: false
+  app.actes.files_upload_root: '/tmp'
   app.mail.tdt_from_email: 'Tiers de télétransmission <s2low@s2low.docker.libriciel.fr>'
   app.mail.email_admin_technique: 'noreply@libriciel.net'
   app.log.file: '/data/log/s2low.log'
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true

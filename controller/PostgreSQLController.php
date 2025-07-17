@@ -4,6 +4,8 @@ namespace S2lowLegacy\Controller;
 
 use Closure;
 use Exception;
+use S2low\Exceptions\BadEnvironmentException;
+use S2lowLegacy\Class\Database;
 use S2lowLegacy\Lib\PostgreSQLDifference;
 use S2lowLegacy\Lib\PostgreSQLDifferenceToSQL;
 use S2lowLegacy\Lib\PostgreSQLSchemaInfo;
@@ -17,21 +19,27 @@ class PostgreSQLController
     private $database_json_definition_filepath;
     private $database_sql_definition_filepath;
     private $sqlQuery;
+    private string $projectDirectory;
+    private string $environment;
 
     public function __construct(
+        string $database_json_definition_filepath,
+        string $database_sql_definition_filepath,
+        string $projectDirectory,
+        string $environment,
         SQLQuery $sqlQuery,
         PostgreSQLSchemaInfo $postgreSQLSchemaInfo,
         PostgreSQLDifference $postgreSQLDifference,
         PostgreSQLDifferenceToSQL $postgreSQLDifferenceToSQL,
-        $database_json_definition_filepath,
-        $database_sql_definition_filepath
     ) {
         $this->postgreSQLSchemaInfo = $postgreSQLSchemaInfo;
         $this->postgreSQLDifference = $postgreSQLDifference;
+        $this->projectDirectory = $projectDirectory;
         $this->postgreSQLDifferenceToSQL = $postgreSQLDifferenceToSQL;
         $this->database_json_definition_filepath = $database_json_definition_filepath;
         $this->database_sql_definition_filepath = $database_sql_definition_filepath;
         $this->sqlQuery = $sqlQuery;
+        $this->environment = $environment;
     }
 
 
@@ -84,5 +92,18 @@ class PostgreSQLController
         $sql_content = implode("\n", $sql_command) . "\n";
 
         file_put_contents($this->database_sql_definition_filepath, $sql_content);
+    }
+
+    public function populateDbTest(): void
+    {
+        if ($this->environment === 'test') {
+            $this->alterDatabase(function ($message) {
+            });
+
+            $data = file_get_contents($this->projectDirectory . '/test/PHPUnit/s2low-test.sql');
+            $this->sqlQuery->exec($data);
+        } else {
+            throw new BadEnvironmentException();
+        }
     }
 }

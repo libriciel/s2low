@@ -46,7 +46,8 @@ class CreateActeFromArchiveTest extends S2lowIntegrationTestCase
      */
     public function testShouldReturnOk($data): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
 
         $originalFileName = 'abc-TACT--123456789--20250313-0.tar.gz';
         $toTestFileName = 'abc-TACT--123456789--20250313-1.tar.gz';

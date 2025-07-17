@@ -60,7 +60,7 @@ if (!$module->isActive() || !$me->checkDroit($module->get('name'), 'TT')) {
 }
 
 
-$rgsConnexion = new RgsConnexion();
+$rgsConnexion = LegacyObjectsManager::getLegacyObjectInstancier()->get(RgsConnexion::class);
 if (! $rgsConnexion->isRgsConnexion()) {
     return_error_api_api_multi(
         "La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}"

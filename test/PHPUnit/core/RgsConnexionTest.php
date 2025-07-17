@@ -1,9 +1,9 @@
 <?php
 
+use IntegrationTests\S2lowIntegrationTestCase;
 use S2lowLegacy\Class\RgsConnexion;
-use PHPUnit\Framework\TestCase;
 
-class RgsConnexionTest extends TestCase
+class RgsConnexionTest extends S2lowIntegrationTestCase
 {
     private const SSL_CLIENT_VERIFY = 'SSL_CLIENT_VERIFY';
     private const SUCCESS = "SUCCESS";
@@ -19,12 +19,19 @@ class RgsConnexionTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->rgsConnexion = new RgsConnexion();
+        $this->rgsConnexion = self::getContainer()->get(RgsConnexion::class);
     }
 
     public function testIsRgsConnexion()
     {
-        $this->assertFalse($this->rgsConnexion->isRgsConnexion());
+        $server = [];
+
+        $rgsConnexion = new RgsConnexion(
+            self::getContainer()->getParameter('app.openssl_path'),
+            self::getContainer()->getParameter('app.path_to_rgs_valid_ca'),
+        );
+        $rgsConnexion->setServerGlobal($server);
+        $this->assertFalse($rgsConnexion->isRgsConnexion());
     }
 
     public function testIsRgsConnexionNotVerify()

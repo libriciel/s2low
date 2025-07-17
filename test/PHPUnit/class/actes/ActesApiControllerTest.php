@@ -5,41 +5,44 @@ declare(strict_types=1);
 namespace PHPUnit\class\actes;
 
 use Exception;
+use IntegrationTests\S2lowIntegrationTestCase;
 use PHPUnit\ActesUtilitiesTestTrait;
+use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Controller\ActesAPIController;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowTestCase;
 
-class ActesApiControllerTest extends S2lowTestCase
+class ActesApiControllerTest extends S2lowIntegrationTestCase
 {
     use ActesUtilitiesTestTrait;
 
 
     private function getActesAPIController(): ActesAPIController
     {
-        return $this->getObjectInstancier()->get(ActesAPIController::class);
+        return self::getContainer()->get(ActesAPIController::class);
     }
 
     public function testActesStatus(): void
     {
-        $this->setUserAuthentification();
+        $this->setUserWithRole(UserRole::Utilisateur);
         $this->expectOutputRegex('#En attente de transmission#');
         $this->getActesAPIController()->listStatusAction();
     }
 
     public function testNbActes(): void
     {
-        $this->setUserAuthentification();
+        $this->setUserWithRole(UserRole::Utilisateur);
         $this->expectOutputString("{\"status_id\":0,\"authority_id\":1,\"nb_transactions\":0}");
         $this->getActesAPIController()->nbActesAction();
     }
 
     public function testListActes(): void
     {
-        $this->setUserAuthentification();
+        $this->setUserWithRole(UserRole::Utilisateur);
         $this->expectOutputString(
             $this->emptyResponse(0) // Le status 0 correspond à la valeur par défaut de getInt()
         );
@@ -52,7 +55,7 @@ class ActesApiControllerTest extends S2lowTestCase
     public function testListActesWithActe(): void
     {
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
-        $this->setUserAuthentification();
+        $this->setUserWithRole(UserRole::Utilisateur);
         $this->getEnvironment()->get()->set('status_id', ActesStatusSQL::STATUS_POSTE);
 
         $this->getActesAPIController()->listActesAction();
@@ -75,7 +78,7 @@ class ActesApiControllerTest extends S2lowTestCase
     ): void {
         $id = $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
         $this->updateStatus($id, ActesStatusSQL::STATUS_TRANSMIS, 'message', '2017-08-01');
-        $this->setUserAuthentification();
+        $this->setUserWithRole(UserRole::Utilisateur);
         $this->getEnvironment()->get()->set('status_id', $status);
         $this->getEnvironment()->get()->set('min_date', $minDate);
         $this->getEnvironment()->get()->set('max_date', $maxDate);
@@ -148,7 +151,7 @@ class ActesApiControllerTest extends S2lowTestCase
 
     public function testActionAfter()
     {
-        $this->setUserAuthentification();
+        $this->setUserWithRole(UserRole::Utilisateur);
         $this->expectOutputString('');
         $this->getActesAPIController()->_actionAfter();
     }
@@ -159,7 +162,7 @@ class ActesApiControllerTest extends S2lowTestCase
     public function testListDocumentPrefectureAction()
     {
         $this->createRelatedTransaction();
-        $this->setUserAuthentification();
+        $this->setUserWithRole(UserRole::Utilisateur);
         $this->expectOutputRegex('#"number":"20170728C"#');
         $this->getActesAPIController()->listDocumentPrefectureAction();
     }
@@ -171,7 +174,7 @@ class ActesApiControllerTest extends S2lowTestCase
     public function testActionMarkAsRead(): void
     {
         $transaction_id = $this->createRelatedTransaction();
-        $this->setUserAuthentification();
+        $this->setUserWithRole(UserRole::Utilisateur);
         $this->expectOutputRegex('#"number":"20170728C".*\{"result":"ok"\}\[\]#');
         $this->getActesAPIController()->listDocumentPrefectureAction();
         $this->getEnvironment()->get()->set('transaction_id', $transaction_id);
@@ -184,15 +187,18 @@ class ActesApiControllerTest extends S2lowTestCase
      */
     public function testNbCreatedActesByAuthoritiesAndMonth(): void
     {
-        $this->createTransaction(1);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
         $this->getEnvironment()->get()->set('month', '7');
         $this->getEnvironment()->get()->set('year', '2017');
 
-        $this->setAdminGroupAuthentication();
-        ob_start();
-        $this->getActesAPIController()->nbCreatedActesByAuthorityGroupIdAndMonthAction();
-        $data = ob_get_contents();
-        ob_end_clean();
+
+        $this->client->request(
+            'GET',
+            'modules/actes/api/nb_actes_by_authorities_and_date.php',
+        );
+
+        $data = $this->client->getResponse()->getContent();
         static::assertJsonStringEqualsJsonFile(
             __DIR__ . '/fixtures/nbTransactionPerAuthorities.json',
             $data
@@ -204,16 +210,20 @@ class ActesApiControllerTest extends S2lowTestCase
      */
     public function testNbCreatedActesByAuthoritiesAndMonthGroupProvided(): void
     {
-        $this->createTransaction(1);
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
+
         $this->getEnvironment()->get()->set('month', '7');
         $this->getEnvironment()->get()->set('year', '2017');
         $this->getEnvironment()->get()->set('authority_group_id', '1');
-        $this->setSuperAdminAuthentication();
 
-        ob_start();
-        $this->getActesAPIController()->nbCreatedActesByAuthorityGroupIdAndMonthAction();
-        $data = ob_get_contents();
-        ob_end_clean();
+        $this->client->request(
+            'GET',
+            'modules/actes/api/nb_actes_by_authorities_and_date.php',
+        );
+        $data = $this->client->getResponse()->getContent();
+
+
         static::assertJsonStringEqualsJsonFile(
             __DIR__ . '/fixtures/nbTransactionPerAuthorities.json',
             $data
@@ -225,18 +235,20 @@ class ActesApiControllerTest extends S2lowTestCase
      */
     public function testNbCreatedActesByAuthoritiesAndMonthNoGroupProvided(): void
     {
+        $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $sql = 'UPDATE authorities SET authority_group_id=NULL WHERE authority_group_id=1';
+        self::getContainer()->get(SQLQuery::class)->query($sql);
 
-        $this->createTransaction(1);
         $this->getEnvironment()->get()->set('month', '7');
         $this->getEnvironment()->get()->set('year', '2017');
-        $this->getEnvironment()->get()->set('authority_group_id', '1');
-        $this->setAdminGroupAuthentication();
-        $sql = 'UPDATE authorities SET authority_group_id=NULL WHERE authority_group_id=1';
-        $this->getObjectInstancier()->get(SQLQuery::class)->query($sql);
-        ob_start();
-        $this->getActesAPIController()->nbCreatedActesByAuthorityGroupIdAndMonthAction();
-        $data = ob_get_contents();
-        ob_end_clean();
+
+        $this->client->request(
+            'GET',
+            'modules/actes/api/nb_actes_by_authorities_and_date.php',
+        );
+        $data = $this->client->getResponse()->getContent();
+
         static::assertJsonStringEqualsJsonFile(
             __DIR__ . '/fixtures/nbTransactionPerAuthoritiesFailed.json',
             $data
@@ -244,7 +256,7 @@ class ActesApiControllerTest extends S2lowTestCase
     }
     private function getEnvironment(): Environnement
     {
-        return $this->getObjectInstancier()->get(Environnement::class);
+        return self::getContainer()->get(Environnement::class);
     }
 
     private function emptyResponse(int $status): string
@@ -259,6 +271,6 @@ class ActesApiControllerTest extends S2lowTestCase
 
     public function getActesTransactionsSQL(): ActesTransactionsSQL
     {
-        return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+        return self::getContainer()->get(ActesTransactionsSQL::class);
     }
 }

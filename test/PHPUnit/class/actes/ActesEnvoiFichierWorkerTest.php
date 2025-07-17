@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace PHPUnit\class\actes;
 
 use Exception;
+use Monolog\Level;
 use PHPUnit\Framework\MockObject\MockObject;
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesEnvoiFichierWorker;
 use S2lowLegacy\Class\actes\ActesFileSender;
+use S2lowLegacy\Class\actes\ActesScriptHelper;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
+use S2lowLegacy\Class\actes\ActesTransmissionWindowsSQL;
 use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Model\LogsSQL;
@@ -24,14 +28,14 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
     {
         parent::setUp();
         $this->siren = '491011698';
-        $this->enveloppe_directory = $this->getObjectInstancier()->get('actes_files_upload_root') . '/' . $this->siren;
+        $this->enveloppe_directory = $this->tmpPathFolder . '/' . $this->siren;
         mkdir($this->enveloppe_directory);
 
         $actesFileSender = $this->getMockBuilder(ActesFileSender::class)->disableOriginalConstructor()->getMock();
-        $this->getObjectInstancier()->set(ActesFileSender::class, $actesFileSender);
+        self::getContainer()->set(ActesFileSender::class, $actesFileSender);
     }
 
-    protected function tearDown(): void
+    public function tearDown(): void
     {
         (new TmpFolder())->delete($this->enveloppe_directory);
         parent::tearDown();
@@ -47,11 +51,11 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
             ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION,
             __DIR__ . '/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz'
         );
-        $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+        $actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
 
         /** @var ActesEnvoiFichierWorker $actesEnvoiFichierController */
-        $actesEnvoiFichierController = $this->getObjectInstancier()->get(ActesEnvoiFichierWorker::class);
+        $actesEnvoiFichierController = self::getContainer()->get(ActesEnvoiFichierWorker::class);
         $actesEnvoiFichierController->work($transaction_info['envelope_id']);
 
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
@@ -62,7 +66,7 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
             'Transmis au MI',
             $lastTransactionWorkflowInfo['message']
         );
-        $logsSQL = $this->getObjectInstancier()->get(LogsSQL::class);
+        $logsSQL = self::getContainer()->get(LogsSQL::class);
         $liste = $logsSQL->getLastLog();
         static::assertMatchesRegularExpression("#Transaction.*[0-9]* : passage à l'état transmis#", $liste['message']);
     }
@@ -77,14 +81,14 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
             __DIR__ . '/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz'
         );
 
-        $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+        $actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
 
         $envelope_id = $transaction_info['envelope_id'];
 
-        $actesEnvoiFichierController = $this->getObjectInstancier()->get(ActesEnvoiFichierWorker::class);
+        $actesEnvoiFichierWorker = $this->getActesEnvoiFichierWorker();
 
-        $actesEnvoiFichierController->work($envelope_id);
+        $actesEnvoiFichierWorker->work($envelope_id);
 
 
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
@@ -96,9 +100,11 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
             $lastTransactionWorkflowInfo['message']
         );
 
-        static::assertSame(
-            "La transaction $transaction_id à poster n'est pas en attente de transmission : état 3 trouvé",
-            $this->getLogRecords()[0]['message']
+        self::assertTrue(
+            $this->testHandler->hasRecord(
+                "La transaction $transaction_id à poster n'est pas en attente de transmission : état 3 trouvé",
+                Level::Error
+            )
         );
     }
 
@@ -125,8 +131,12 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
         static::assertSame(ActesStatusSQL::STATUS_EN_ATTENTE_DE_TRANSMISSION, $transaction_info['last_status_id']);
 
-        $logs = $this->getLogRecords();
-        static::assertMatchesRegularExpression('#Erreur du mock#', $logs[3]['message']);
+        self::assertTrue(
+            $this->testHandler->hasRecordThatMatches(
+                '#Erreur du mock#',
+                Level::Error
+            )
+        );
     }
 
     private function createTransaction($status, $archive_path)
@@ -145,5 +155,18 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
         $sql = 'INSERT INTO actes_transactions_workflow(transaction_id, status_id, date, message, flux_retour) VALUES (?,?,now(),?,?)';
         $this->getSQLQuery()->queryOne($sql, $transaction_id, $status, 'Creation', '');
         return $transaction_id;
+    }
+
+    private function getActesEnvoiFichierWorker(): ActesEnvoiFichierWorker
+    {
+        return new ActesEnvoiFichierWorker(
+            $this->s2lowLogger,
+            self::getContainer()->get(ActesTransactionsSQL::class),
+            self::getContainer()->get(ActesEnvelopeSQL::class),
+            self::getContainer()->get(ActesScriptHelper::class),
+            self::getContainer()->get(ActesTransmissionWindowsSQL::class),
+            self::getContainer()->get(ActesFileSender::class),
+            self::getContainer()->getParameter('app.actes_ministere_acronyme'),
+        );
     }
 }

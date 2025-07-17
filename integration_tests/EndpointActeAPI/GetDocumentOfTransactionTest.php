@@ -45,7 +45,8 @@ class GetDocumentOfTransactionTest extends S2lowIntegrationTestCase
 
         $_GET['id'] = $transactionId;
 
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
         $client->request('GET', '/modules/actes/actes_transac_get_document.php', [
             'id' => $transactionId
         ]);

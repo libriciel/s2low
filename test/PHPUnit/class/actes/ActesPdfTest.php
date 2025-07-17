@@ -1,31 +1,28 @@
 <?php
 
+use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\ActesPdf;
+use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\BordereauPdfGenerator;
 use S2lowLegacy\Class\actes\IActesPdf;
 
 class ActesPdfTest extends S2lowTestCase
 {
+    use ActesUtilitiesTestTrait;
+
     public function testCreatePdf()
     {
         $this->getObjectInstancier()->set(IActesPdf::class, new ActesPdf(SITEROOT . "public.ssl/custom/images/bandeau-s2low-190.jpg"));
 
-        $transaction_id = $this->createTransaction(4);
+        $transaction_id = $this->createTransactionOfType(4);
 
         $bordereauPdfGenerator = $this->getObjectInstancier()->get(BordereauPdfGenerator::class);
 
         $this->assertNotEmpty($bordereauPdfGenerator->generate($transaction_id, "test_pdf.pdf", true, "S"));
     }
 
-
-    private function createTransaction($status)
+    protected function getActesTransactionsSQL(): ActesTransactionsSQL
     {
-        $sql = "INSERT INTO actes_envelopes(user_id,siren,department) VALUES(1,'123456789','034') returning ID";
-        $envelope_id = $this->getSQLQuery()->queryOne($sql);
-
-        $sql = "INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,decision_date,number,nature_code,auto_broadcasted,type) VALUES (?,?,?,?,?,?,?,?,?) returning ID;";
-        $transaction_id = $this->getSQLQuery()->queryOne($sql, $envelope_id, $status, 1, 1, "2017-07-01", "20170728C", 3, 0, '1');
-
-        return $transaction_id;
+        return self::getContainer()->get(ActesTransactionsSQL::class);
     }
 }

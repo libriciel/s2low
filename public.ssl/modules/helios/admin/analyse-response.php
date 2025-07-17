@@ -42,7 +42,10 @@ ob_start();
 try {
     $filepath = $heliosResponsesError->getFilepath($filename);
 
-    $heliosAnalyseFichierRecu->analyseOneFile($filepath, HELIOS_RESPONSES_ROOT, HELIOS_OCRE_FILE_PATH, true);
+    $heliosResponseRoot = LegacyObjectsManager::getLegacyObjectInstancier()->getParameter('app.helios_responses_root');
+    $heliosOcreFilePath = LegacyObjectsManager::getLegacyObjectInstancier()->getParameter('app.helios_ocre_file_path');
+
+    $heliosAnalyseFichierRecu->analyseOneFile($filepath, $heliosResponseRoot, $heliosOcreFilePath, true);
 } catch (Exception $e) {
     $_SESSION['error'] = $e->getMessage();
 }

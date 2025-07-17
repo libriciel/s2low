@@ -1,6 +1,8 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+use S2lowLegacy\Boot\S2lowBootstrap;
+use S2lowLegacy\Model\UserSQL;
 
 class S2lowBootstrapTest extends TestCase
 {
@@ -17,7 +19,8 @@ class S2lowBootstrapTest extends TestCase
         # Si une clé privée existe déjà dans le répertoire apache, on utilise celle-ci et rien n'est créé.
         $S2lowBootstrap = new S2lowBootstrap(
             $this->getMockBuilder(\S2lowLegacy\Lib\SQLQuery::class)->disableOriginalConstructor()->getMock(),
-            $this->getMockBuilder(\S2lowLegacy\Controller\PostgreSQLController::class)->disableOriginalConstructor()->getMock()
+            $this->getMockBuilder(\S2lowLegacy\Controller\PostgreSQLController::class)->disableOriginalConstructor()->getMock(),
+            $this->getMockBuilder(UserSQL::class)->disableOriginalConstructor()->getMock()
         );
 
         file_put_contents($this->apachePath . "/privKeyFilename", "privKeyContent");
@@ -42,7 +45,8 @@ class S2lowBootstrapTest extends TestCase
 
         $S2lowBootstrap = new S2lowBootstrap(
             $this->getMockBuilder(\S2lowLegacy\Lib\SQLQuery::class)->disableOriginalConstructor()->getMock(),
-            $this->getMockBuilder(\S2lowLegacy\Controller\PostgreSQLController::class)->disableOriginalConstructor()->getMock()
+            $this->getMockBuilder(\S2lowLegacy\Controller\PostgreSQLController::class)->disableOriginalConstructor()->getMock(),
+            $this->getMockBuilder(UserSQL::class)->disableOriginalConstructor()->getMock()
         );
 
         mkdir($this->letsencryptPath . "/testhost");
@@ -66,7 +70,8 @@ class S2lowBootstrapTest extends TestCase
         # Si aucun certificat n'existe, la clé privée et la clé publique sont créés dans $apacheSSLPath
         $S2lowBootstrap = new S2lowBootstrap(
             $this->getMockBuilder(\S2lowLegacy\Lib\SQLQuery::class)->disableOriginalConstructor()->getMock(),
-            $this->getMockBuilder(\S2lowLegacy\Controller\PostgreSQLController::class)->disableOriginalConstructor()->getMock()
+            $this->getMockBuilder(\S2lowLegacy\Controller\PostgreSQLController::class)->disableOriginalConstructor()->getMock(),
+            $this->getMockBuilder(UserSQL::class)->disableOriginalConstructor()->getMock()
         );
 
         $S2lowBootstrap->installSelfSignedCertificateIfNoneExists(

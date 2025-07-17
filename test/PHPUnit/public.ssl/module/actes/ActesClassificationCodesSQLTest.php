@@ -1,6 +1,8 @@
 <?php
 
 use S2lowLegacy\Class\actes\ActesClassificationCodesSQL;
+use S2lowLegacy\Class\Database;
+use S2lowLegacy\Lib\SQLQuery;
 
 class ActesClassificationCodesSQLTest extends S2lowTestCase
 {
@@ -23,19 +25,25 @@ class ActesClassificationCodesSQLTest extends S2lowTestCase
 
     public function testGetDescription()
     {
-        $actesClassificationCodesSQL = new ActesClassificationCodesSQL($this->getSQLQuery());
+        $sqlQuery = self::getContainer()->get(SQLQuery::class);
+        $database = self::getContainer()->get(Database::class);
+        $actesClassificationCodesSQL = new ActesClassificationCodesSQL($sqlQuery);
         $this->assertEquals("toto", $actesClassificationCodesSQL->getDescription(1, array(1,2,3)));
     }
 
     public function testGetDescriptionNotExists()
     {
-        $actesClassificationCodesSQL = new ActesClassificationCodesSQL($this->getSQLQuery());
+        $sqlQuery = self::getContainer()->get(SQLQuery::class);
+        $database = self::getContainer()->get(Database::class);
+        $actesClassificationCodesSQL = new ActesClassificationCodesSQL($sqlQuery);
         $this->assertEquals("toto", $actesClassificationCodesSQL->getDescription(1, array(1,2,3,1)));
     }
 
     public function testgetAllDescription()
     {
-        $actesClassificationCodesSQL = new ActesClassificationCodesSQL($this->getSQLQuery());
+        $sqlQuery = self::getContainer()->get(SQLQuery::class);
+        $database = self::getContainer()->get(Database::class);
+        $actesClassificationCodesSQL = new ActesClassificationCodesSQL($sqlQuery);
         $result = $actesClassificationCodesSQL->getAllDescription(1);
         $this->assertEquals("toto", $result[1]['children'][2]['children'][3]['description']);
     }

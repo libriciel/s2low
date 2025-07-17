@@ -39,6 +39,9 @@ class CancelTransactionTest extends S2lowIntegrationTestCase
      */
     public function testShouldReturnOk($isRealTransactionId, $stringInResponse): void
     {
+        $this->setUserWithRole(UserRole::Utilisateur);
+        $client = $this->client;
+
         if ($isRealTransactionId) {
             $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
         } else {
@@ -50,7 +53,6 @@ class CancelTransactionTest extends S2lowIntegrationTestCase
         $_POST['api'] = $api;
         $_POST['id'] = $transactionId;
 
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
         $client->request('POST', '/modules/actes/actes_transac_cancel.php', [
             'api' => $api,
             'id' => $transactionId,

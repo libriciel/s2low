@@ -23,7 +23,7 @@ trait PastellConfigurationTestTrait
         $pastellPropertiesSQL->editProperties($authority_id, $pastellProperties);
     }
 
-    protected function mockPastellFactory($id_d = "xyzt", $getLastErrorReturn = false, $sendSAEThrowError = false, $deleteThrowError = false)
+    protected function mockPastellFactory($id_d = "xyzt", $getLastErrorReturn = false, $sendSAEThrowError = false, $deleteThrowError = false): PastellWrapperFactory
     {
         /** @var PHPUnit\Framework\MockObject\MockObject $pastell */
         $pastell = $this->getMockBuilder(PastellWrapper::class)->disableOriginalConstructor()->getMock();
@@ -40,7 +40,8 @@ trait PastellConfigurationTestTrait
         }
         $pastellFactory = $this->getMockBuilder(PastellWrapperFactory::class)->disableOriginalConstructor()->getMock();
         $pastellFactory->method('getNewInstance')->willReturn($pastell);
-        $this->getObjectInstancier()->set(PastellWrapperFactory::class, $pastellFactory);
+
+        return $pastellFactory;
     }
 
     /**

@@ -9,9 +9,11 @@ use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Class\Authority;
+use S2lowLegacy\Class\Database;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\FileUploader;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\RgsConnexion;
@@ -23,7 +25,7 @@ use S2lowLegacy\Lib\SQLQuery;
 $tooManyAnnexes = isset(error_get_last()["message"]) && error_get_last(
 )["message"] == "Maximum number of allowable file uploads has been exceeded";
 
-list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([ObjectInstancier::class, SQLQuery::class]);
 
 $errorMsg = "";
@@ -65,7 +67,7 @@ if ($module->getParam("paper") == "on") {
 
 $must_signed = Helpers::getVarFromPost("must_signed", true);
 
-$rgsConnexion = new RgsConnexion();
+$rgsConnexion = LegacyObjectsManager::getLegacyObjectInstancier()->get(RgsConnexion::class);
 if (!$must_signed && !$rgsConnexion->isRgsConnexion()) {
     Helpers:: returnAndExit(
         1,

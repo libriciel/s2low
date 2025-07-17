@@ -157,4 +157,9 @@ class Database
     {
         return $this->sqlQuery->getPdo();
     }
+
+    public function disconnect(): void
+    {
+        $this->sqlQuery->disconnect();
+    }
 }

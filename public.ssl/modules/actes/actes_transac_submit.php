@@ -6,6 +6,7 @@ use S2lowLegacy\Class\actes\ActesStoreEnveloppeWorker;
 use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\RgsConnexion;
@@ -56,7 +57,7 @@ if (!is_uploaded_file_wrapper($enveloppe["tmp_name"])) {
     );
 }
 
-$rgsConnexion = new RgsConnexion();
+$rgsConnexion = LegacyObjectsManager::getLegacyObjectInstancier()->get(RgsConnexion::class);
 if (!$rgsConnexion->isRgsConnexion()) {
     Helpers:: returnAndExit(
         1,

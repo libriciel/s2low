@@ -53,9 +53,9 @@ class ModuleSQLTest extends S2lowTestCase
     public function testGetModuleForGroupAdmin()
     {
         $userSQL = new UserSQL($this->getSQLQuery());
-        $userInfo = $userSQL->getInfo(7);
+        $userInfo = $userSQL->getInfo(1);
         $info = $this->moduleSQL->getModulesForUser($userInfo);
-        $this->assertEquals('helios', $info[0]['name']);
+        $this->assertEquals('helios', $info[1]['name']);
     }
 
     public function testGetModuleForUser()

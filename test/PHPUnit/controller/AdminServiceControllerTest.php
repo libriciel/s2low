@@ -1,12 +1,14 @@
 <?php
 
+use IntegrationTests\S2lowIntegrationTestCase;
+use S2low\Enum\UserRole;
 use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Controller\AdminServiceController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Model\ServiceUserSQL;
 
-class AdminServiceControllerTest extends S2lowTestCase
+class AdminServiceControllerTest extends S2lowIntegrationTestCase
 {
     private const NOM_SERVICE = 'mon service';
 
@@ -16,13 +18,13 @@ class AdminServiceControllerTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->setSuperAdminAuthentication();
-        $this->adminServiceController = $this->getObjectInstancier()->get(AdminServiceController::class);
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $this->adminServiceController = self::getContainer()->get(AdminServiceController::class);
     }
 
     private function createService($name = self::NOM_SERVICE): int
     {
-        $serviceUserSQL = $this->getObjectInstancier()->get(ServiceUserSQL::class);
+        $serviceUserSQL = self::getContainer()->get(ServiceUserSQL::class);
         return $serviceUserSQL->add($name, 1);
     }
 
@@ -64,16 +66,16 @@ class AdminServiceControllerTest extends S2lowTestCase
      */
     private function addService()
     {
-        $this->getObjectInstancier()->get(Environnement::class)->post()->set('name', self::NOM_SERVICE);
-        $this->getObjectInstancier()->get(Environnement::class)->post()->set('authority_id', 1);
-        $this->getObjectInstancier()->get(Environnement::class)->post()->set('api', 1);
+        self::getContainer()->get(Environnement::class)->post()->set('name', self::NOM_SERVICE);
+        self::getContainer()->get(Environnement::class)->post()->set('authority_id', 1);
+        self::getContainer()->get(Environnement::class)->post()->set('api', 1);
         $this->adminServiceController->addAction();
     }
 
     public function testListService()
     {
         $this->createService();
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('authority_id', 1);
+        self::getContainer()->get(Environnement::class)->get()->set('authority_id', 1);
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("exit() called");
         $this->expectOutputRegex("#\"name\":\"mon service\"#");
@@ -83,8 +85,8 @@ class AdminServiceControllerTest extends S2lowTestCase
     public function testAddUserAction()
     {
         $service_id = $this->createService();
-        $this->getObjectInstancier()->get(Environnement::class)->post()->set('id_user', 1);
-        $this->getObjectInstancier()->get(Environnement::class)->post()->set('id_service', $service_id);
+        self::getContainer()->get(Environnement::class)->post()->set('id_user', 13);
+        self::getContainer()->get(Environnement::class)->post()->set('id_service', $service_id);
         $this->expectException(RedirectException::class);
         $this->expectExceptionMessage("Redirect to");
         $this->adminServiceController->addUserAction();
@@ -96,7 +98,7 @@ class AdminServiceControllerTest extends S2lowTestCase
     public function testDetail()
     {
         $service_id = $this->createService();
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('id', $service_id);
+        self::getContainer()->get(Environnement::class)->get()->set('id', $service_id);
         $this->assertTrue($this->adminServiceController->detailAction());
     }
 
@@ -109,7 +111,7 @@ class AdminServiceControllerTest extends S2lowTestCase
 
     public function testDetailWhenNoServiceIdDitNotExist()
     {
-        $this->getObjectInstancier()->get(Environnement::class)->get()->set('id', 42);
+        self::getContainer()->get(Environnement::class)->get()->set('id', 42);
         $this->expectException(RedirectException::class);
         $this->expectExceptionMessage("Redirect to /admin/services/admin_services.php with message :");
         $this->adminServiceController->detailAction();
@@ -119,8 +121,8 @@ class AdminServiceControllerTest extends S2lowTestCase
     {
         $parent_id = $this->createService('parent');
         $enfant_id = $this->createService('enfant');
-        $this->getObjectInstancier()->get(Environnement::class)->post()->set('id', $parent_id);
-        $this->getObjectInstancier()->get(Environnement::class)->post()->set('service_id', $enfant_id);
+        self::getContainer()->get(Environnement::class)->post()->set('id', $parent_id);
+        self::getContainer()->get(Environnement::class)->post()->set('service_id', $enfant_id);
         $this->expectException(RedirectException::class);
         $this->expectExceptionMessage("Parent modifié");
         $this->adminServiceController->addParentAction();
@@ -129,11 +131,11 @@ class AdminServiceControllerTest extends S2lowTestCase
     public function testEnleverUtilisateur()
     {
         $service_id = $this->createService();
-        $serviceUser = $this->getObjectInstancier()->get(ServiceUser::class);
+        $serviceUser = self::getContainer()->get(ServiceUser::class);
         $serviceUser->addUser(1, $service_id);
 
-        $this->getObjectInstancier()->get(Environnement::class)->post()->set('id_user', [1]);
-        $this->getObjectInstancier()->get(Environnement::class)->post()->set('id_service', $service_id);
+        self::getContainer()->get(Environnement::class)->post()->set('id_user', [1]);
+        self::getContainer()->get(Environnement::class)->post()->set('id_service', $service_id);
         try {
             $this->adminServiceController->enleverUtilisateurAction();
             $this->assertFalse(true);
@@ -149,7 +151,7 @@ class AdminServiceControllerTest extends S2lowTestCase
     public function testEnleverUtilisateurWhenNoUserIdProvided()
     {
         $service_id = $this->createService();
-        $this->getObjectInstancier()->get(Environnement::class)->post()->set('id_service', $service_id);
+        self::getContainer()->get(Environnement::class)->post()->set('id_service', $service_id);
         $this->expectException(RedirectException::class);
         $this->expectExceptionMessage("Il faut sélectionner un utilisateur à enlever du service");
         $this->adminServiceController->enleverUtilisateurAction();
@@ -157,11 +159,11 @@ class AdminServiceControllerTest extends S2lowTestCase
 
     public function testSupprimerService()
     {
-        $serviceUserSQL = $this->getObjectInstancier()->get(ServiceUserSQL::class);
+        $serviceUserSQL = self::getContainer()->get(ServiceUserSQL::class);
         $service_id = $this->createService();
         $this->assertNotEmpty($serviceUserSQL->getInfo($service_id));
         try {
-            $this->getObjectInstancier()->get(Environnement::class)->post()->set('id', $service_id);
+            self::getContainer()->get(Environnement::class)->post()->set('id', $service_id);
             $this->adminServiceController->supprimerServiceAction();
             $this->assertFalse(true);
         } catch (RedirectException $e) {

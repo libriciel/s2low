@@ -22,7 +22,6 @@ class BatchSignTest extends S2lowIntegrationTestCase
     {
         parent::setUp();
         $this->actesTransactionsSQL = new ActesTransactionsSQL($this->sqlQuery);
-        ObjectInstancierFactory::resetObjectInstancier();
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
@@ -32,7 +31,8 @@ class BatchSignTest extends S2lowIntegrationTestCase
 
     public function testShouldReturnSuccessResponse(): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
         $client->request('GET', self::BATCH_SIGN_ENDPOINT);
 
         static::assertResponseIsSuccessful();
@@ -40,8 +40,8 @@ class BatchSignTest extends S2lowIntegrationTestCase
 
     public function testShouldRedirectIndexWithErrorMessage(): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
-
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
         $client->request('GET', self::BATCH_SIGN_ENDPOINT);
         $response = $client->getResponse();
 
@@ -53,7 +53,8 @@ class BatchSignTest extends S2lowIntegrationTestCase
 
     public function testShouldDisplayUiToSignActes(): void
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur, ModulePermission::Modification);
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
         $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
         $this->createActeIncludedFiles($transactionId);
 
@@ -76,7 +77,9 @@ class BatchSignTest extends S2lowIntegrationTestCase
 
     public function testShouldErrorIfNotGoodPerms()
     {
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur, ModulePermission::Visualisation);
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
+        $this->setUserWithPermission(ModulePermission::Visualisation);
         $client->request('GET', self::BATCH_SIGN_ENDPOINT);
 
         $response = $client->getResponse();

@@ -62,18 +62,19 @@ class GetStatusTest extends S2lowIntegrationTestCase
           "7": "Document re\u00e7u",
           "8": "Acquittement envoy\u00e9",
           "9": "Document envoy\u00e9",
-          "10": "Refus d\'envoi",
+          "10": "Refus d\'envoie",
           "11": "Acquittement de document re\u00e7u",
           "12": "Envoy\u00e9 au SAE",
           "13": "Archiv\u00e9 par le SAE",
           "14": "Erreur lors de l\'archivage",
           "15": "Re\u00e7u par le SAE",
           "16": "D\u00e9truite",
-          "17": "En attente d\'\u00eatre post\u00e9",
+          "17": "En attente d\'\u00eatre post\u00e9e",
           "18": "En attente d\'\u00eatre sign\u00e9",
           "19": "En attente de transmission au SAE",
           "20": "Erreur lors de l\'envoi au SAE",
-          "21": "Document re\u00e7u (pas d\'AR)"
+          "21": "Document re\u00e7u (pas d\'AR)",
+          "22": "Impossible d\'envoyer au SAE (documents indisponibles)"
         }';
 
         $response = $this->prepareAndGetResponse();

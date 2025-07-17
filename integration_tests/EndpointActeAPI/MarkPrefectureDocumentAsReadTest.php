@@ -36,7 +36,9 @@ class MarkPrefectureDocumentAsReadTest extends S2lowIntegrationTestCase
 
         $_GET['transaction_id'] = '$transactionId';
 
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
+
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
         $client->request('GET', '/modules/actes/api/document_prefecture_mark_as_read.php', [
             'transaction_id' => $transactionId,
         ]);

@@ -6,6 +6,7 @@ namespace IntegrationTests;
 
 use Exception;
 use HeliosUtilitiesTestTrait;
+use S2low\Enum\UserRole;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use SplFileInfo;
 
@@ -23,9 +24,11 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
 
     protected function tearDown(): void
     {
-        foreach (glob(HELIOS_RESPONSES_ERROR_PATH . '/*') as $file) {
+        $heliosResponsesErrorPath = self::getContainer()->getParameter('app.helios_responses_error_path');
+        foreach (glob($heliosResponsesErrorPath . '/*') as $file) {
             unlink($file);
         }
+        parent::tearDown();
     }
 
     /**
@@ -33,8 +36,8 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosDeleteResponse(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
-
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $pesAller = $this->addPesAllerInErrorPath();
 
         $_GET['file'] = $pesAller->getFilename();
@@ -53,11 +56,11 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosDownloadResponse(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $pesAller = $this->addPesAllerInErrorPath();
 
         $_GET['file'] = $pesAller->getFilename();
-
         $crawler = $client->request('GET', 'modules/helios/admin/download-response.php');
         static::assertMatchesRegularExpression(
             '#03f432a4f6d35110bf309fb525eb61f7#',           //nomfic du pes_aller de test
@@ -71,7 +74,8 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosAnalyseResponse(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $pesAller = $this->addPesAllerInErrorPath();
 
         $_GET['file'] = $pesAller->getFilename();
@@ -89,7 +93,8 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosResponseError(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $pesAller = $this->addPesAllerInErrorPath();
 
         $crawler = $client->request('GET', 'modules/helios/admin/responses-helios-error.php');
@@ -110,11 +115,13 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosTransmisNonAcquitte(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+
         $this->createTransaction(
             1,
             HeliosTransactionsSQL::TRANSMIS,
-            '01-01-1970'
+            '1970-05-28 16:13:51.945858+02'
         );
 
         $crawler = $client->request('GET', 'modules/helios/admin/transmis-non-acquitte.php');
@@ -151,7 +158,8 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosStatsTransaction(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $crawler = $client->request('GET', 'modules/helios/helios_stats_transaction.php');
 
@@ -167,7 +175,8 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosTransacArchiver(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $transaction_id = $this->createTransaction(
             1,
             HeliosTransactionsSQL::INFORMATION_DISPONIBLE,
@@ -188,7 +197,8 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosTransacClose(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $transaction_id = $this->createTransaction(
             1,
             HeliosTransactionsSQL::INFORMATION_DISPONIBLE,
@@ -210,7 +220,8 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosTransacDelete(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $transaction_id = $this->createTransaction(
             1,
             HeliosTransactionsSQL::INFORMATION_DISPONIBLE,
@@ -235,7 +246,8 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosTransacRollBack(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $transaction_id = $this->createTransaction();
 
         $_POST['id'] = $transaction_id;
@@ -253,7 +265,8 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosTransacSetError(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $transaction_id = $this->createTransaction();
 
         $_POST['id'] = $transaction_id;
@@ -271,7 +284,8 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosTransacSign(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $client->request('GET', 'modules/helios/helios_transac_sign.php');
         static::assertMatchesRegularExpression(
@@ -286,7 +300,8 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosTransacValidatePesAller(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $transaction_id = $this->createTransaction();
 
         $_GET['id'] = $transaction_id;
@@ -300,7 +315,8 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     public function testHeliosIndex(): void
     {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->createTransaction();
 
         $crawler = $client->request('GET', 'modules/helios/index.php');
@@ -325,7 +341,8 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
      */
     private function addPesAllerInErrorPath(): SplFileInfo
     {
-        $pesAller = new SplFileInfo(HELIOS_RESPONSES_ERROR_PATH . uniqid('test') . '.xml');
+        $heliosResponsesErrorPath = self::getContainer()->getParameter('app.helios_responses_error_path');
+        $pesAller = new SplFileInfo($heliosResponsesErrorPath . uniqid('test') . '.xml');
 
         file_put_contents(
             $pesAller->getPathname(),

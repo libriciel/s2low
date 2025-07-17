@@ -1,13 +1,16 @@
 <?php
 
+use Monolog\Level;
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\ActesExport;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
+use S2lowLegacy\Class\actes\ActesRetriever;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\ActeTamponne;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\UnrecoverableException;
+use S2lowLegacy\Model\AuthoritySQL;
 
 class ActesExportTest extends S2lowTestCase
 {
@@ -16,11 +19,18 @@ class ActesExportTest extends S2lowTestCase
     private const ENVELOPPE_TEST_PATH = __DIR__ . "/fixtures/abc-TACT--000000000--20170803-16.tar.gz";
     private const XML_TEST = "<test></test>";
 
-    private function getActesExport()
+    private function getActesExport(): ActesExport
     {
         $acteTamponne = $this->getMockBuilder(ActeTamponne::class)->disableOriginalConstructor()->getMock();
-        $this->getObjectInstancier()->set(ActeTamponne::class, $acteTamponne);
-        return $this->getObjectInstancier()->get(ActesExport::class);
+
+        return new ActesExport(
+            $this->s2lowLogger,
+            self::getContainer()->get(AuthoritySQL::class),
+            self::getContainer()->get(ActesTransactionsSQL::class),
+            self::getContainer()->get(ActesRetriever::class),
+            self::getContainer()->get(ActesIncludedFileSQL::class),
+            $acteTamponne,
+        );
     }
 
     /**
@@ -41,11 +51,11 @@ class ActesExportTest extends S2lowTestCase
             ActesStatusSQL::STATUS_ACQUITTEMENT_RECU
         );
 
-        $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+        $actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
 
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
 
-        $actesIncludedFileSQL = $this->getObjectInstancier()->get(ActesIncludedFileSQL::class);
+        $actesIncludedFileSQL = self::getContainer()->get(ActesIncludedFileSQL::class);
 
         $actesIncludedFileSQL->addIncludedFile(
             $transaction_info['envelope_id'],
@@ -77,16 +87,19 @@ class ActesExportTest extends S2lowTestCase
             $tmp_folder . "/$transaction_id/034-000000000-20170801-20170803E-AI-1-1_1.pdf"
         );
 
-
         $tmpFolder->delete($tmp_folder);
-        $log_records = $this->getLogRecords();
-        $this->assertEquals(
-            "[COPIE OK] 034-000000000-20170801-20170803E-AI-1-1_0.xml -> $tmp_folder/$transaction_id/034-000000000-20170801-20170803E-AI-1-1_0.xml",
-            $log_records[4]['message']
+
+        $this->assertTrue(
+            $this->testHandler->hasRecord(
+                "[COPIE OK] 034-000000000-20170801-20170803E-AI-1-1_0.xml -> $tmp_folder/$transaction_id/034-000000000-20170801-20170803E-AI-1-1_0.xml",
+                Level::Debug
+            )
         );
-        $this->assertEquals(
-            "[DUMP OK] $tmp_folder/$transaction_id/ACK_{$transaction_id}.xml",
-            $log_records[6]['message']
+        $this->assertTrue(
+            $this->testHandler->hasRecord(
+                "[DUMP OK] $tmp_folder/$transaction_id/ACK_{$transaction_id}.xml",
+                Level::Debug
+            )
         );
     }
 
@@ -120,12 +133,16 @@ class ActesExportTest extends S2lowTestCase
     {
         $actesExport = $this->getActesExport();
         $actesExport->export(1, "/tmp/", 0, 0);
-        $log_records = $this->getLogRecords();
-        $this->assertEquals("Aucune transaction ne correspond aux critères", $log_records[2]['message']);
+        $this->assertTrue(
+            $this->testHandler->hasRecord(
+                "Aucune transaction ne correspond aux critères",
+                Level::Info
+            )
+        );
     }
 
     public function getActesTransactionsSQL(): ActesTransactionsSQL
     {
-        return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
+        return self::getContainer()->get(ActesTransactionsSQL::class);
     }
 }

@@ -18,7 +18,7 @@ use S2lowLegacy\Class\RgsConnexion;
 
 LegacyObjectsManager::getLegacyObjectInstancier()->get(Initialisation::class)->doInit();
 
-$rgsConnexion = new RgsConnexion();
+$rgsConnexion = LegacyObjectsManager::getLegacyObjectInstancier()->get(RgsConnexion::class);
 
 $message = 'OK';
 if (! $rgsConnexion->isRgsConnexion()) {

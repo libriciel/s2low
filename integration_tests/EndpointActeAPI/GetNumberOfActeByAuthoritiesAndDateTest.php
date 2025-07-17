@@ -72,7 +72,9 @@ class GetNumberOfActeByAuthoritiesAndDateTest extends S2lowIntegrationTestCase
         $_GET['month'] = $month;
         $_GET['year'] = $year;
 
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::SuperAdministrateur);
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+
         $client->request('GET', '/modules/actes/api/nb_actes_by_authorities_and_date.php', [
             'authority_group_id' => $collectiviteGroupId,
             'month' => $month,
@@ -107,7 +109,8 @@ class GetNumberOfActeByAuthoritiesAndDateTest extends S2lowIntegrationTestCase
         $_GET['month'] = $month;
         $_GET['year'] = $year;
 
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
         $client->request('GET', '/modules/actes/api/nb_actes_by_authorities_and_date.php', [
             'authority_group_id' => $collectiviteGroupId,
             'month' => $month,

@@ -61,7 +61,7 @@ if (!$module->isActive() || !$me->checkDroit($module->get('name'), 'TT')) {
     exit();
 }
 
-$rgsConnexion = new RgsConnexion();
+$rgsConnexion = LegacyObjectsManager::getLegacyObjectInstancier()->get(RgsConnexion::class);
 if (! $rgsConnexion->isRgsConnexion()) {
     $_SESSION['error'] = 'La télétransmission nécessite un certificat RGS' .
     "<br/>Erreur : {$rgsConnexion->getLastMessage()}";

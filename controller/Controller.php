@@ -35,7 +35,6 @@ class Controller
     {
         $this->objectInstancier = $objectInstancier;
         $this->viewParameter = array();
-        $this->setFiles($_FILES);
     }
 
     public function __get($key)

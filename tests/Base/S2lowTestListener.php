@@ -2,8 +2,10 @@
 
 namespace S2low\Tests\Base;
 
-use S2lowLegacy\Lib\ObjectInstancier;
+use S2low\Kernel;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Controller\PostgreSQLController;
+use S2lowLegacy\Lib\SQLQuery;
 use Throwable;
 
 class S2lowTestListener implements \PHPUnit\Framework\TestListener
@@ -16,8 +18,11 @@ class S2lowTestListener implements \PHPUnit\Framework\TestListener
     {
     }
 
-    public function addFailure(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\AssertionFailedError $e, float $time): void
-    {
+    public function addFailure(
+        \PHPUnit\Framework\Test $test,
+        \PHPUnit\Framework\AssertionFailedError $e,
+        float $time
+    ): void {
     }
 
     public function addIncompleteTest(\PHPUnit\Framework\Test $test, Throwable $t, float $time): void
@@ -34,18 +39,11 @@ class S2lowTestListener implements \PHPUnit\Framework\TestListener
 
     public function startTestSuite(\PHPUnit\Framework\TestSuite $suite): void
     {
-        if ($suite->getName() === "S2low_integration") {
-            \S2lowLegacy\Class\LegacyObjectsManager::resetObjectInstancier();
-        } elseif ($suite->getName() === "S2low") {
-            /** @var ObjectInstancier $objectInstancier */
-            $objectInstancier = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
-                ->get(ObjectInstancier::class);
-            $postgreSQLControler = $objectInstancier->get(PostgreSQLController::class);
+        new Kernel('test', false);
+        $postgreSQLControler = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+            ->get(PostgreSQLController::class);
 
-            $postgreSQLControler->alterDatabase(function ($message) {
-                echo $message . "\n";
-            });
-        }
+        $postgreSQLControler->populateDbTest();
     }
 
     public function endTestSuite(\PHPUnit\Framework\TestSuite $suite): void
@@ -54,6 +52,14 @@ class S2lowTestListener implements \PHPUnit\Framework\TestListener
 
     public function startTest(\PHPUnit\Framework\Test $test): void
     {
+        new Kernel('test', false);
+        $sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+        $sqlQuery->query("SELECT SETVAL('users_id_seq', (SELECT MAX(id)+1 FROM users))");
+        $sqlQuery->query("SELECT SETVAL('authority_siret_id_seq', (SELECT MAX(id)+1 FROM authority_siret))");
+        $sqlQuery->query("SELECT SETVAL('nounce_id_seq', (SELECT MAX(id)+1 FROM nounce))");
+        $sqlQuery->query("SELECT SETVAL('authorities_id_seq', (SELECT MAX(id)+1 FROM authorities))");
+        $sqlQuery->query("SELECT SETVAL('helios_transactions_id_seq', (SELECT MAX(id)+1 FROM helios_transactions))");
+        $sqlQuery->query("SELECT SETVAL('authority_groups_id_seq', (SELECT MAX(id)+1 FROM authority_groups))");
     }
 
     public function endTest(\PHPUnit\Framework\Test $test, float $time): void

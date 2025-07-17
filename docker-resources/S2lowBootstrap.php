@@ -1,5 +1,7 @@
 <?php
 
+namespace S2lowLegacy\Boot;
+
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Controller\PostgreSQLController;
 use S2lowLegacy\Lib\SQLQuery;
@@ -9,10 +11,12 @@ class S2lowBootstrap
 {
     private $sqlQuery;
 
-    public function __construct(SQLQuery $sqlQuery, PostgreSQLController $postgreSQLController)
-    {
+    public function __construct(
+        SQLQuery $sqlQuery,
+        private readonly PostgreSQLController $postgreSQLController,
+        private readonly UserSQL $userSQL,
+    ) {
         $this->sqlQuery = $sqlQuery;
-        $this->postgreSQLController = $postgreSQLController;
     }
 
     public function bootstrap()
@@ -39,7 +43,7 @@ class S2lowBootstrap
             $this->dbUpdate();
             $this->insertDemoS();
             $this->populateDatabase();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->log("Erreur : " . $e->getMessage());
         }
     }
@@ -83,7 +87,7 @@ class S2lowBootstrap
         exec("$script $hostname $apachePrivKeyFullPath $apacheFullChainFullPath", $output, $return_var);
         $this->log(implode("\n", $output));
         if ($return_var != 0) {
-            throw new Exception("Impossible de générer ou de trouver le certificat du site $hostname !");
+            throw new \Exception("Impossible de générer ou de trouver le certificat du site $hostname !");
         }
     }
 
@@ -118,13 +122,12 @@ class S2lowBootstrap
 
         $him->set("certFilePath", __DIR__ . "/certificate/demosuper.pem");
         if (!$him->save()) {
-            throw new Exception("Erreur lors de l'enregistrement de l'utilisateur : " . $him->getErrorMsg());
+            throw new \Exception("Erreur lors de l'enregistrement de l'utilisateur : " . $him->getErrorMsg());
         }
 
         $user_id = $him->getId();
 
-        $userSQL = new UserSQL($this->sqlQuery);
-        $userSQL->saveCertificateRGS2Etoiles($user_id, "");
+        $this->userSQL->saveCertificateRGS2Etoiles($user_id, "");
 
         $this->log("Utilisateur créé avec succès");
     }

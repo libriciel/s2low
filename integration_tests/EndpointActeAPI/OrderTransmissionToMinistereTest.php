@@ -36,7 +36,9 @@ class OrderTransmissionToMinistereTest extends S2lowIntegrationTestCase
         $_GET['id'] = $id;
         $_GET['url_return'] = $urlReturn;
 
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
+
         $client->request('GET', '/modules/actes/actes_transac_post_confirm_api.php', [
             'id' => $id,
             'url_return' => $urlReturn,

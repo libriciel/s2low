@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesStatistiques;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
@@ -41,12 +42,12 @@ class ActesStatiqtiquesTest extends S2lowTestCase
 
     public function testGetVolumeWithTransaction()
     {
-        /** @var ActesStatistiques $actesStatistiques */
         $actesStatistiques = $this->getObjectInstancier()->get(ActesStatistiques::class);
 
-        /** @var \ActesCreator $actesCreator */
-        $actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
-
+        $actesCreator = new ActesCreator(
+            self::getContainer()->get(ActesTransactionsSQL::class),
+            self::getContainer()->get(ActesEnvelopeSQL::class),
+        );
         $actesCreator->createTransaction(
             ActesStatusSQL::STATUS_POSTE,
             null,
@@ -87,10 +88,10 @@ class ActesStatiqtiquesTest extends S2lowTestCase
         /** @var ActesStatistiques $actesStatistiques */
         $actesStatistiques = $this->getObjectInstancier()->get(ActesStatistiques::class);
 
-        /** @var \ActesCreator $actesCreator */
-        $actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
-
-        /** @var ActesTransactionsSQL $actesTransactionsSQL */
+        $actesCreator = new ActesCreator(
+            self::getContainer()->get(ActesTransactionsSQL::class),
+            self::getContainer()->get(ActesEnvelopeSQL::class),
+        );
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
 
         $transaction_id = $actesCreator->createTransaction(
@@ -132,13 +133,13 @@ class ActesStatiqtiquesTest extends S2lowTestCase
 
     public function testGetVolumeWithTransmittedTransactionWithGroupAdminUser()
     {
-        /** @var ActesStatistiques $actesStatistiques */
         $actesStatistiques = $this->getObjectInstancier()->get(ActesStatistiques::class);
         $actesStatistiques->setGroup(1);
 
-        /** @var \ActesCreator $actesCreator */
-        $actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
-
+        $actesCreator = new ActesCreator(
+            self::getContainer()->get(ActesTransactionsSQL::class),
+            self::getContainer()->get(ActesEnvelopeSQL::class),
+        );
         /** @var ActesTransactionsSQL $actesTransactionsSQL */
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
 
@@ -181,13 +182,13 @@ class ActesStatiqtiquesTest extends S2lowTestCase
 
     public function testGetVolumeWithTransmittedTransactionWithGroupAdminUserOtherColl()
     {
-        /** @var ActesStatistiques $actesStatistiques */
         $actesStatistiques = $this->getObjectInstancier()->get(ActesStatistiques::class);
         $actesStatistiques->setGroup(2);
 
-        /** @var \ActesCreator $actesCreator */
-        $actesCreator = $this->getObjectInstancier()->get(ActesCreator::class);
-
+        $actesCreator = new ActesCreator(
+            self::getContainer()->get(ActesTransactionsSQL::class),
+            self::getContainer()->get(ActesEnvelopeSQL::class),
+        );
         /** @var ActesTransactionsSQL $actesTransactionsSQL */
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
 

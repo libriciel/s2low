@@ -81,8 +81,7 @@ class HeliosController extends Controller
 
     public function import($user_id)
     {
-        /** @var RgsConnexion $rgsConnexion */
-        $rgsConnexion = $this->getObjectInstancier()->{RgsConnexion::class};
+        $rgsConnexion = $this->getObjectInstancier()->get(RgsConnexion::class);
         if (! $rgsConnexion->isRgsConnexion()) {
             throw new Exception("Votre certificat n'est pas RGS et ne vous permet donc pas de télétransmettre");
         }

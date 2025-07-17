@@ -39,6 +39,7 @@ class GetAllFilesOfAnActeTest extends S2lowIntegrationTestCase
      */
     public function testShouldReturnOk($isRealTransaction, $stringInResponse): void
     {
+        $this->setUserWithRole(UserRole::Utilisateur);
         if ($isRealTransaction) {
             $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
             $this->createActeIncludedFiles($transactionId);
@@ -48,7 +49,7 @@ class GetAllFilesOfAnActeTest extends S2lowIntegrationTestCase
 
         $_GET['transaction'] = $transactionId;
 
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
+        $client = $this->client;
         $client->request(
             'GET',
             '/modules/actes/actes_transac_get_files_list.php',

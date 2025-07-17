@@ -101,7 +101,9 @@ class RespondDocumentToMinistereResponseTest extends S2lowIntegrationTestCase
             true
         );
 
-        $client = $this->getAuthenticatedClientWithUserLoggedAs(UserRole::Utilisateur);
+        $client = $this->client;
+        $this->setUserWithRole(UserRole::Utilisateur);
+
         $client->request(
             'POST',
             '/modules/actes/actes_transac_reponse_create.php',
