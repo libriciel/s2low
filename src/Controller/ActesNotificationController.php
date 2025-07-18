@@ -20,10 +20,10 @@ class ActesNotificationController extends \Symfony\Bundle\FrameworkBundle\Contro
         $this->actesNotification = $actesNotification;
     }
 
-    /**
-     * @Route("/modules/actes/actes_transac_notify.php", name="app_modules_actes_transac_notify")
-     * @throws \Exception
-     */
+    #[Route(
+        path: '/modules/actes/actes_transac_notify.php',
+        name: 'app_modules_actes_transac_notify',
+    )]
     public function notify()
     {
         // Instanciation du module courant

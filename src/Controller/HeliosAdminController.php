@@ -23,9 +23,12 @@ class HeliosAdminController extends AbstractController
     }
 
     /**
-     * @Route("/modules/helios/admin/transmis-non-acquitte-by-mail.php",name="app_modules_helios_admin_transmis_non_acquitte_by_mail")
      * @throws Exception
      */
+    #[Route(
+        path: '/modules/helios/admin/transmis-non-acquitte-by-mail.php',
+        name: 'app_modules_helios_admin_transmis_non_acquitte_by_mail',
+    )]
     public function transmisNonAcquitteParMail(): RedirectResponse
     {
         $initData = $this->initialisation->doInit();

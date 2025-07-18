@@ -35,10 +35,10 @@ class MailSecuriseController extends AbstractController
         list($this->module, $this->me, $this->myAuthority) = MailInit::getIdentificationParameters();
     }
 
-    /**
-     * @Route("/modules/mail/index.php", name="app_modules_mail_index")
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
-     */
+    #[Route(
+        path: '/modules/mail/index.php',
+        name: 'app_modules_mail_index',
+    )]
     public function handleRequest(): StreamedResponse
     {
 
@@ -86,9 +86,9 @@ class MailSecuriseController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/modules/mail/api/send-mail.php")
-     */
+    #[Route(
+        path: '/modules/mail/api/send-mail.php',
+    )]
     public function handleApiRequest(): Response
     {
         //Quickfix pour homogénéiser l'utilisation de Helpers::getVarFromRequest

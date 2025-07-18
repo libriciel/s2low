@@ -13,13 +13,12 @@ class HeliosPesAllerListController extends AbstractController
     public function __construct(private Controller $legacyController, private HeliosTransactionsSQL $heliosTransactionsSQL)
     {
     }
-    /**
-     * @Route(
-     *     "/modules/helios/api/list_pes_aller.php",
-     *     name="app_modules_helios_api_list_pes_aller",
-     *     methods="GET"
-     * )
-     */
+
+    #[Route(
+        path: '/modules/helios/api/list_pes_aller.php',
+        name: 'app_modules_helios_api_list_pes_aller',
+        methods: 'GET'
+    )]
     public function list(): JsonResponse
     {
         $this->legacyController->verifUser();
