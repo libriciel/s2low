@@ -33,6 +33,7 @@ $min_transaction_id = $argv[3] ?? 0;
 $max_transaction_id = $argv[4] ?? ActesTransactionsSQL::MAX_ID;
 $tampon = $argv[5] ?? false;
 
+/** @var ActesExport $actesExport */
 $actesExport = $objectInstancier->get(ActesExport::class);
 $actesExport->setTamponnerFichier($tampon);
 
