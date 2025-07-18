@@ -11,10 +11,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class NotConnectedController extends AbstractController
 {
-    /**
-     * @Route("/connexion-status/", name="app_connection-status")
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
-     */
+    #[Route(
+        path: '/connexion-status/',
+        name: 'app_connection-status',
+    )]
     public function handleRequest(): Response
     {
         return new StreamedResponse(
