@@ -47,9 +47,13 @@ class AdminUtilitiesController extends AbstractController
     }
 
     /**
-     * @Route("/admin/utilities/admin_send_global_message.php",name="app_admin_utilities_admin_send_global_message")
      * @throws \Exception
      */
+    #[Route(
+        path: '/admin/utilities/admin_send_global_message.php',
+        name: 'app_admin_utilities_admin_send_global_message',
+        methods: ['POST', 'GET']
+    )]
     public function doSendAction(Request $request): RedirectResponse
     {
 
