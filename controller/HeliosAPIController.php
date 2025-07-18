@@ -1,8 +1,7 @@
 <?php
 
-namespace S2lowLegacy\Class\helios;
+namespace S2lowLegacy\Controller;
 
-use S2lowLegacy\Controller\Controller;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 

@@ -13,6 +13,11 @@
       "authority_id": 2,
       "name": "Saint-Andre de Corcy",
       "nb_transactions": 0
+    },
+    {
+      "authority_id": 3,
+      "name": "une nouvelle authority",
+      "nb_transactions": 0
     }
   ],
   "result": "ok"
