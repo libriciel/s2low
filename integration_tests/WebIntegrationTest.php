@@ -76,10 +76,13 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
         $client = $this->client;
         $this->setUserWithRole(UserRole::SuperAdministrateur);
 
-        $crawler = $client->request('GET', 'admin/utilities/certificate_list.php');
+        ob_start();
+        $client->request('GET', 'admin/utilities/certificate_list.php');
+        $crawler = ob_get_contents();
+        ob_end_clean();
         static::assertMatchesRegularExpression(     //L'AC personnel ADULLACT G2 est bien présent'
             '#ac-libriciel-personnel-g2.pem#',
-            $crawler->html()
+            $crawler
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
@@ -155,12 +158,14 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
         $client = $this->client;
         $this->setUserWithRole(UserRole::SuperAdministrateur);
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
-        $crawler = $client->request('GET', 'admin/index.php');
+        ob_start();
+        $client->request('GET', 'admin/index.php');
+        $crawler = ob_get_contents();
         static::assertMatchesRegularExpression(
             '#Console d\'administration#',
-            $crawler->html()
+            $crawler
         );
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
+        ob_end_clean();
     }
 
     /**

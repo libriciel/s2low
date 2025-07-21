@@ -35,11 +35,10 @@ class GetTransactionBordereauAcquittementTest extends S2lowIntegrationTestCase
         $client = $this->client;
         $this->setUserWithRole(UserRole::Utilisateur);
 
+        ob_start();
         $client->request('GET', '/modules/actes/actes_create_pdf.php', [
             'trans_id' => $transactionId
         ]);
-
-        $response = $client->getResponse();
 
         static::assertStringContainsString(
             "%PDF-1.3
@@ -48,7 +47,9 @@ class GetTransactionBordereauAcquittementTest extends S2lowIntegrationTestCase
 /Parent 1 0 R
 /Resources 2 0 R
 /Contents 4 0 R>>",
-            $response->getContent()
+            ob_get_contents()
         );
+
+        ob_end_clean();
     }
 }

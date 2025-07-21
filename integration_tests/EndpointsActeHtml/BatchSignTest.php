@@ -59,7 +59,7 @@ class BatchSignTest extends S2lowIntegrationTestCase
         $this->createActeIncludedFiles($transactionId);
 
         $_POST["liste_id"] = [$transactionId];
-
+        ob_start();
         $client->request(
             'POST',
             self::BATCH_SIGN_ENDPOINT,
@@ -67,11 +67,11 @@ class BatchSignTest extends S2lowIntegrationTestCase
                 'liste_id[]' => $transactionId,
             ]
         );
-
-        $response = $client->getResponse();
+        $response = ob_get_contents();
+        ob_end_clean();
         static::assertStringContainsString(
             'ACTES - Signature de plusieurs Actes',
-            $response->getContent()
+            $response
         );
     }
 

@@ -31,18 +31,15 @@ class GetClassificationXMLTest extends S2lowIntegrationTestCase
         $api = 1;
         $_POST['api'] = $api;
 
-        $client = $this->client;
-        $client->request('POST', '/modules/actes/actes_classification_fetch.php', [
+        ob_start();
+
+        $this->client->request('POST', '/modules/actes/actes_classification_fetch.php', [
             'api' => $api,
         ]);
 
-        $response = $client->getResponse();
+        $content = ob_get_contents();
+        ob_end_clean();
 
-        static::assertTrue($this->headerReturnXMLFile($response));
-    }
-
-    private function headerReturnXMLFile(Response $response): bool
-    {
-        return str_contains($response->getContent(), 'Content-type: text/xml');
+        static::assertTrue(str_contains($content, 'Content-type: text/xml'));
     }
 }

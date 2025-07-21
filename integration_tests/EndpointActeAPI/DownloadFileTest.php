@@ -42,6 +42,7 @@ class DownloadFileTest extends S2lowIntegrationTestCase
         $_GET['tampon'] = false;
         $_GET['date_affichage'] = date('Y-m-d');
 
+        ob_start();
         $this->client->request(
             'GET',
             '/modules/actes/actes_download_file.php',
@@ -51,10 +52,8 @@ class DownloadFileTest extends S2lowIntegrationTestCase
                 'date_affichage' => $_GET['date_affichage'],
             ],
         );
-
-        $response = $this->client->getResponse();
-        $content = $response->getContent();
-
+        $content = ob_get_contents();
+        ob_end_clean();
         static::assertStringContainsString("Content-type: application/pdf", $content);
         static::assertStringContainsString("filename=\"PDFTest.pdf\"", $content);
     }

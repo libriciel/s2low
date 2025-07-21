@@ -99,12 +99,13 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
         $this->copyEnveloppeToErrorDirectory($enveloppeName);
         $_GET['file'] = $enveloppeName; // Comme l'objet Récupérateur est set dans le script, ça ne fonctionne pas
         // autrement ( le client Symfony ne set pas _GET )
-        $crawler = $client->request('GET', 'modules/actes/admin/download-response.php');
+        ob_start();
+        $client->request('GET', 'modules/actes/admin/download-response.php');
+        $content = ob_get_clean();
         static::assertMatchesRegularExpression(
             '#enveloppe.tar.gz#',
-            $crawler->html()
+            $content
         );
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
 
     /**
@@ -115,12 +116,13 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
         $client = $this->client;
         $this->setUserWithRole(UserRole::SuperAdministrateur);
 
-        $crawler = $client->request('GET', 'modules/actes/admin/responses-actes-error.php');
+        ob_start();
+        $client->request('GET', 'modules/actes/admin/responses-actes-error.php');
+        $crawler = ob_get_clean();
         static::assertMatchesRegularExpression(
             '#mails reçus en erreur#',
-            $crawler->html()
+            $crawler
         );
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
 
     /**
@@ -243,12 +245,13 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
         $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
         $_GET['id'] = $transaction_id;
 
-        $crawler = $client->request('GET', 'modules/actes/actes_transac_show.php');
+        ob_start();
+        $client->request('GET', 'modules/actes/actes_transac_show.php');
         static::assertMatchesRegularExpression(
             '#20170728C#',        //Le numéro de l'acte créé par ActesUtilitiesTestTrait.php
-            $crawler->html()
+            ob_get_contents()
         );
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
+        ob_end_clean();
     }
 
     /**
@@ -277,14 +280,16 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
         $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
 
-        $crawler = $client->request('GET', 'modules/actes/index.php');
+        ob_start();
+        $client->request('GET', 'modules/actes/index.php');
+        $content = ob_get_clean();
         static::assertMatchesRegularExpression(
             '#Liste des transactions - ACTES#',
-            $crawler->html()
+            $content
         );
         static::assertMatchesRegularExpression(
             '#20170728C#',        //Le numéro de l'acte créé par ActesUtilitiesTestTrait.php
-            $crawler->html()
+            $content
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }

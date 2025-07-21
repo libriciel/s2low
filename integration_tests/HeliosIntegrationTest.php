@@ -319,14 +319,17 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
         $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->createTransaction();
 
-        $crawler = $client->request('GET', 'modules/helios/index.php');
+        ob_start();
+        $client->request('GET', 'modules/helios/index.php');
+        $crawler = ob_get_contents();
+        ob_end_clean();
         static::assertMatchesRegularExpression(
             '#Liste des fichiers postés#',
-            $crawler->html()
+            $crawler
         );
         static::assertMatchesRegularExpression(
             '#toto\.txt#',                      //Le nom du fichier créé par HeliosUtilitiesTestTrait
-            $crawler->html()
+            $crawler
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
