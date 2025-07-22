@@ -320,8 +320,9 @@ ob_start();
 
     <?php
         $rgsCertificate = new RgsCertificate(OPENSSL_PATH, RGS_VALIDCA_PATH);
-        $is_rgs = $rgsCertificate->isRgsCertificate($him->get("certificate"));
-        $has_sslclient_purpose = $rgsCertificate->hasSSlClientPurpose($him->get("certificate"));
+        $is_rgs = $rgsCertificate->isRgsCertificate($him->get('certificate'));
+        $rgsCertificateExtended = new RgsCertificate(OPENSSL_PATH, EXTENDED_VALIDCA_PATH);
+        $has_sslclient_purpose = $rgsCertificateExtended->hasSSlClientPurpose($him->get('certificate'));
     ?>
     <?php if (! $is_rgs) : ?>
         <div class="alert alert-warning col-md-9 col-md-offset-1">
