@@ -2,9 +2,8 @@
 
 ## 5.1.2 - 2025-07-22
 
-### Corrections
-
 - Utiliser le validca étendu pour vérifier le purpose des certificats #1360
+- Fix le probleme empêchant d'exécuter certain script seul.
 
 ## 5.1.1 - 2025-07-18
 

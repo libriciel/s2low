@@ -2,10 +2,8 @@
 
 namespace S2lowLegacy\Class;
 
-use RuntimeException;
-use S2low\Kernel;
+use S2low\Factory\KernelFactory;
 use S2lowLegacy\Lib\ObjectInstancier;
-use Symfony\Component\Dotenv\Dotenv;
 
 /**
  * @deprecated Fin du LegacyObjectsManager. Il faut autowire votre service
@@ -13,31 +11,26 @@ use Symfony\Component\Dotenv\Dotenv;
 class LegacyObjectsManager
 {
     private static ObjectInstancier $objectInstancier;
-    public static function getLegacyObjectInstancier(): ObjectInstancier
-    {
-        if (!isset(self::$objectInstancier)) {
-            require dirname(__DIR__) . '/vendor/autoload.php';
-
-            (new Dotenv())->bootEnv("/data/config/.env");
-            new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
-        }
-
-        return self::$objectInstancier;
-    }
 
     public static function setObjectInstancier(ObjectInstancier $objectInstancier): void
     {
         self::$objectInstancier = $objectInstancier;
     }
 
-    public static function setLegacyObjectInstancier(): void
+    public static function getLegacyObjectInstancier(): ObjectInstancier
     {
-//
+        self::ensureKernelIsUp();
+
+        return self::$objectInstancier;
     }
 
-    public static function resetObjectInstancier()
+    public static function ensureKernelIsUp(): void
     {
-//
+        $kernelIsNotUp = !isset(self::$objectInstancier); // Egale car le kernel set l'ObjectInstancier dans son construct.
+
+        if ($kernelIsNotUp) {
+            KernelFactory::start();
+        }
     }
 
     /**
@@ -45,10 +38,18 @@ class LegacyObjectsManager
      */
     public static function getObject(string $className)
     {
-        if (!isset(self::$objectInstancier)) {
-            throw new RuntimeException('ObjectInstancier not initialized');
-        }
+        self::ensureKernelIsUp();
 
         return self::$objectInstancier->get($className);
+    }
+
+    public static function setLegacyObjectInstancier(): void
+    {
+        self::ensureKernelIsUp();
+    }
+
+    public static function resetObjectInstancier()
+    {
+//
     }
 }
