@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.2 - 2025-07-22
+
+## Corrections
+
+- fix le probleme de connection avec les serveurs de la DGCL
+
 ## 5.1.1 - 2025-07-18
 
 ### Évolutions
