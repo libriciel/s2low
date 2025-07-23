@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.2 - 2025-07-22
+
+### Corrections
+
+- Utiliser le validca étendu pour vérifier le purpose des certificats #1360
+
 ## 5.1.1 - 2025-07-18
 
 ### Évolutions
@@ -20,6 +26,12 @@
 ### Sécurité
 
 - Correction d'un message d'erreur trop verbeux #1246
+
+### Limitations connues
+
+- La configuration du serveur DGCL n'est pas correctement récupérée depuis les variables d'environnement
+- Utilisation du validca RGS au lieu du validca étendu pour la validation du purpose du certificat
+- Problème d'affichage des mails sécurisés
 
 ## 5.1.0 - 2025-02-12
 
