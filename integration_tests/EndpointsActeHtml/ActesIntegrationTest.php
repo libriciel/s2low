@@ -116,9 +116,9 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
         $client = $this->client;
         $this->setUserWithRole(UserRole::SuperAdministrateur);
 
-
+        ob_start();
         $client->request('GET', 'modules/actes/admin/responses-actes-error.php');
-        $crawler = ob_get_contents();
+        $crawler = ob_get_clean();
 
         static::assertMatchesRegularExpression(
             '#mails reçus en erreur#',
