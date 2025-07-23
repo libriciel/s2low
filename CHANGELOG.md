@@ -29,7 +29,7 @@
 
 ### Limitations connues
 
-- La configuration du sreveur DGCL n'est pas correctement récupérée depuis les variables d'environnement
+- La configuration du serveur DGCL n'est pas correctement récupérée depuis les variables d'environnement
 - Utilisation du validca RGS au lieu du validca étendu pour la validation du purpose du certificat
 - Problème d'affichage des mails sécurisés
 
