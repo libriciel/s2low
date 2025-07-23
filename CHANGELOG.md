@@ -1,10 +1,11 @@
 # Changelog
 
-## 5.1.2 - 2025-07-22
+## 5.1.2 - 2025-07-23
 
 
-- Correction de l'affichage des mails securisés et d'un probleme empêchant d'exécuter certain script seul. #1361
+- Correction de l'affichage des mails securisés et d'un probleme empêchant d'exécuter certains scripts seuls. #1361
 - Utiliser le validca étendu pour vérifier le purpose des certificats #1360
+- Corriger la récupération des paramètres booléens depuis les variables d'environnement #1359
 
 ## 5.1.1 - 2025-07-18
 
