@@ -24,6 +24,7 @@
 - Continuer d'exporter les actes même lorsque des fichiers ne sont pas disponibles dans le cloud #1345
 - Correction de /admin/authorities/admin_authority_types.php #1340
 - Correction du cron qui lance périodiquement la commande beanstalkd:rebuild-queue #1365
+- Correction de la commande worker:process-failed et suppression de la commande Legacy #1364
 
 ### Sécurité
 
@@ -35,6 +36,7 @@
 - Utilisation du validca RGS au lieu du validca étendu pour la validation du purpose du certificat
 - Problème d'affichage des mails sécurisés
 - Le cron qui lance périodiquement la commande beanstalkd:rebuild-queue ne fonctionne plus
+- [eventlistener:process-failed] ne fonctionne pas
 
 ## 5.1.0 - 2025-02-12
 
