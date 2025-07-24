@@ -112,8 +112,8 @@ class WorkerRunnerWithDataFromBeanstalkd implements WorkerRunner
                 }
                 $queue->release(
                     $job,
-                    PheanstalkInterface::DEFAULT_PRIORITY,
-                    WorkersDelayRetry::get($this->worker)
+                    WorkersQueueProperties::getPriority($this->worker),
+                    WorkersQueueProperties::getDelay($this->worker)
                 );
                 continue;
             }
