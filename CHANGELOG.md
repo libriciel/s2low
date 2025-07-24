@@ -23,6 +23,7 @@
 - Correction de la remise à zéro du fichier compteur Helios #1314
 - Continuer d'exporter les actes même lorsque des fichiers ne sont pas disponibles dans le cloud #1345
 - Correction de /admin/authorities/admin_authority_types.php #1340
+- Correction de la commande worker:process-failed et suppression de la commande Legacy #1364
 
 ### Sécurité
 
@@ -33,6 +34,7 @@
 - La configuration du serveur DGCL n'est pas correctement récupérée depuis les variables d'environnement
 - Utilisation du validca RGS au lieu du validca étendu pour la validation du purpose du certificat
 - Problème d'affichage des mails sécurisés
+- [eventlistener:process-failed] ne fonctionne pas
 
 ## 5.1.0 - 2025-02-12
 

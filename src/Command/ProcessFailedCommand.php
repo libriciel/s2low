@@ -12,12 +12,18 @@ use Symfony\Component\Console\Command\Command;
     name: 'worker:process-failed',
     description: 'Log les processus qui fail.',
 )]
-class ProcessFailedCommand
+class ProcessFailedCommand extends Command
 {
+    /**
+     * @var \Mtdowling\Supervisor\EventListener
+     */
+    private EventListener $listener;
+
     public function __construct(
-        private readonly EventListener $listener,
         private readonly LoggerInterface $logger
     ) {
+        $this->listener = new EventListener();
+        parent::__construct();
     }
 
     protected function execute(
