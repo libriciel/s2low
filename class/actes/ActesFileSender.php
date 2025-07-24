@@ -56,7 +56,7 @@ class ActesFileSender
     public function sendLegacy($filepath)
     {
         $curlWrapper = new CurlWrapper();
-        $curlWrapper->setTimeout(60, 60 * 3);
+        $curlWrapper->setTimeout(60, 60);
 
         $url = $this->actesMinistereProperties->url;
 

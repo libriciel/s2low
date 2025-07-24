@@ -114,7 +114,7 @@ class WorkerRunnerWithDataFromBeanstalkd implements WorkerRunner
                 $queue->release(
                     $job,
                     PheanstalkInterface::DEFAULT_PRIORITY,
-                    self::QUEUE_DELAY_RETRY_IN_SECONDS
+                    $this->getDelayRetryInSeconds()
                 );
                 continue;
             }
@@ -125,5 +125,13 @@ class WorkerRunnerWithDataFromBeanstalkd implements WorkerRunner
             $this->sigTermHandler->setExitOnSignal(true);
         }
         return true;
+    }
+    public function getDelayRetryInSeconds(): int
+    {
+        $constName = get_class($this->worker) . '::QUEUE_DELAY_RETRY_IN_SECONDS';
+        if (defined($constName)) {
+            return constant($constName);
+        }
+        return self::QUEUE_DELAY_RETRY_IN_SECONDS;
     }
 }
