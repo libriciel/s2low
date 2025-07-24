@@ -11,7 +11,6 @@ class ActesEnvoiFichierWorker implements IWorker
 {
     public const QUEUE_NAME = "actes-envoi-fichier";
     public const PHEANSTALK_TTR = 60 * 5;
-    public const QUEUE_DELAY_RETRY_IN_SECONDS = 60 * 5;
     private $actesTransactionsSQL;
     private $logger;
     private $actesEnvelopeSQL;

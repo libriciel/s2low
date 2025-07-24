@@ -10,7 +10,6 @@ use Throwable;
 
 class WorkerRunnerWithDataFromBeanstalkd implements WorkerRunner
 {
-    private const QUEUE_DELAY_RETRY_IN_SECONDS = 60;
     private const NB_MAX_JOBS_TRAITES = 100; // uniquement pour le mode beanstalked
     /**
      * @var \S2lowLegacy\Class\IWorker
@@ -114,7 +113,7 @@ class WorkerRunnerWithDataFromBeanstalkd implements WorkerRunner
                 $queue->release(
                     $job,
                     PheanstalkInterface::DEFAULT_PRIORITY,
-                    $this->getDelayRetryInSeconds()
+                    WorkersDelayRetry::get($this->worker)
                 );
                 continue;
             }
@@ -125,13 +124,5 @@ class WorkerRunnerWithDataFromBeanstalkd implements WorkerRunner
             $this->sigTermHandler->setExitOnSignal(true);
         }
         return true;
-    }
-    public function getDelayRetryInSeconds(): int
-    {
-        $constName = get_class($this->worker) . '::QUEUE_DELAY_RETRY_IN_SECONDS';
-        if (defined($constName)) {
-            return constant($constName);
-        }
-        return self::QUEUE_DELAY_RETRY_IN_SECONDS;
     }
 }
