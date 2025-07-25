@@ -93,7 +93,7 @@ services:
 
     maildev:
         restart: unless-stopped
-        image: hubdocker.libriciel.fr/maildev/maildev:2.0.5
+        image: hubdocker.libriciel.fr/maildev/maildev:2.2.1
         networks:
             - services
         ports:
