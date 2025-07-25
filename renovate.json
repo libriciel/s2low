@@ -9,5 +9,6 @@
       "matchUpdateTypes": ["major"],
       "enabled": false
     }
-  ]
+  ],
+  "prHourlyLimit": 3
 }
