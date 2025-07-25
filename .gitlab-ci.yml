@@ -13,8 +13,10 @@ include:
   - template: Jobs/Secret-Detection.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
   - template: Security/Container-Scanning.gitlab-ci.yml
+  - component: $LIBRICIEL_CATALOG_PATH/renovate-runner/runner@1.2.1
 
 stages:
+    - .pre
     - build
     - static-analysis
     - test
