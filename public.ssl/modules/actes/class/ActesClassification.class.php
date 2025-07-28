@@ -72,7 +72,11 @@ class ActesClassification extends DataObject
             $stmt->bindColumn(4, $version_date, PDO::PARAM_STR);
             $stmt->bindColumn(5, $xml_data, PDO::PARAM_LOB);
             $stmt->fetch(PDO::FETCH_BOUND);
-            $contents = stream_get_contents($xml_data);
+            try {
+                $contents = stream_get_contents($xml_data);
+            } catch (TypeError $e) {
+                return false;
+            }
             fclose($xml_data);
             //return $contents;
             //if (! $result->isError() && $result->num_row() == 1) {
