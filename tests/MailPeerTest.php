@@ -11,9 +11,9 @@ use S2lowLegacy\Mail\MailTransaction;
 class MailPeerTest extends \S2lowTestCase
 {
     private MailTransaction $mailTransaction;
-    public function __construct()
+    public function setUp(): void
     {
-        parent::__construct();
+        parent::setUp();
         $this->mailTransaction = self::getContainer()->get(MailTransaction::class);
     }
 
