@@ -172,7 +172,6 @@ class MailPeer
     public static function DeleteMailTransation($transId)
     {
         //Note EP : bon, j'ai fais avec les moyens du bord en sachant qu'on ne devrait plus utilisé ce module...
-        global $module;
         global $me;
 
 
@@ -210,7 +209,7 @@ class MailPeer
             1,
             false,
             'USER',
-            $module->get("name"),
+            NULL,
             $me
         );
 
