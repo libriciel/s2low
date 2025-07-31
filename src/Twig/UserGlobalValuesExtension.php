@@ -9,7 +9,6 @@ use Twig\Extension\GlobalsInterface;
 
 class UserGlobalValuesExtension extends AbstractExtension implements GlobalsInterface
 {
-
     public function __construct(
         private readonly Initialisation $initialisation
     ) {
@@ -46,7 +45,7 @@ class UserGlobalValuesExtension extends AbstractExtension implements GlobalsInte
     }
 
     // TODO : NE PAS MERGE  Code, il faudra faire une classe pour gerer ca
-    private function getNbDaysBeforeCertificatExpire($userInfo) : int
+    private function getNbDaysBeforeCertificatExpire($userInfo): int
     {
         $x509Certificate = new X509Certificate();
         $expiration_time =  strtotime($x509Certificate->getExpirationDate($userInfo['certificate']));

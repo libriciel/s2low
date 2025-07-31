@@ -15,7 +15,7 @@ enum Module : int
 
     public function name(): string
     {
-        return match($this) {
+        return match ($this) {
             self::ACTES => 'actes',
             self::HELIOS => 'helios',
             self::MAIL => 'mail',

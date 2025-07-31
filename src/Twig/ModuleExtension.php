@@ -9,7 +9,6 @@ use Twig\TwigFunction;
 
 class ModuleExtension extends AbstractExtension
 {
-
     public function __construct(
         private readonly ModuleSQL $moduleSQL,
     ) {
