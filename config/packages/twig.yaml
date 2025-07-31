@@ -1,5 +1,18 @@
 twig:
     file_name_pattern: '*.twig'
+    debug: true
+    cache: false
+    auto_reload: true
+    globals:
+        url_index_ssl: '/'
+        title: '%app.website_default_title%'
+        s2low_banner: '/custom/images/bandeau_s2low.jpg'
+        jqueryJsUrl: '/jsmodules/jquery.js'
+        jqueryuiJsUrl: '/jsmodules/jqueryui.js'
+        tedetisJsUrl: '/javascript/tedetis.js'
+        bootstrapMinCssUrl: '/custom/styles/bootstrap.min.css'
+        bootstrapThemeMinCssUrl: '/custom/styles/bootstrap-theme.min.css'
+        styleBsCssUrl: '/custom/styles/style_bs.css'
 
 when@test:
     twig:

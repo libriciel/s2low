@@ -34,6 +34,7 @@ parameters:
   app.use_legacy_bordereau_model: '%env(bool:default:app.use_legacy_bordereau_model.default:USE_LEGACY_BORDEREAU_MODEL)%'
   app.use_prod_notifications: '%env(bool:default:app.use_prod_notifications.default:USE_PROD_NOTIFICATIONS)%'
   app.workspace_directory: '%env(default:app.workspace_directory.default:WORKSPACE_DIRECTORY)%'
+  app.website_default_title: '%env(default:app.website_default_title.default:WEBSITE_TITLE)%'
 
   # Valeurs par default de parametres
   app.actes_appli_quadrigramme.default: 'TACT'
@@ -62,6 +63,7 @@ parameters:
   app.redis_server.default: 'redis'
   app.use_legacy_bordereau_model.default: true
   app.use_prod_notifications.default: false
+  app.website_default_title.default: 'Tiers de télétransmission'
 
   # Variables Globale
   app.actes.files_upload_root: '%app.workspace_directory%actes/uploads'
@@ -159,6 +161,9 @@ services:
 
   S2low\Services\Helios\DGFiPConnection\DGFiPConnectionConfiguration:
     autowire: false
+
+  S2low\Twig\DateFormatterExtension:
+    tags: ['twig.extension']
 
   S2low\Services\Helios\DGFiPConnection\PasstransConnection:
     public: true
