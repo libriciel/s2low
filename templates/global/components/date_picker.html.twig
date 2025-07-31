@@ -1,3 +1,9 @@
-<script>$(function() {$("#datepicker_{{ name }}").datepicker({"altFormat":"yy-mm-dd","dateFormat":"dd MM yy","altField":"#{{ name }}"});});</script>
-{#<input type="text" class="form-control" value = "Choisir une date" name="datepicker_min_ack_date" id="datepicker_min_ack_date"><input type="hidden" id="min_ack_date" name="min_ack_date"  />#}
-<input type="text" class="form-control" value = "Choisir une date" name="datepicker_{{ name }}" id="datepicker_{{ name }}"><input type="hidden" id="{{ name }}" name="{{ name }}"  />
+<script>$(function () {
+        $("#datepicker_{{ name }}").datepicker({
+            "altFormat": "yy-mm-dd",
+            "dateFormat": "dd MM yy",
+            "altField": "#{{ name }}"
+        });
+    });</script>
+<input type="text" class="form-control" value="{% if label_date == null %}Choisir une date{% else %}{{ label_date }}{% endif %}" name="datepicker_{{ name }}"
+       id="datepicker_{{ name }}"><input type="hidden" id="{{ name }}" name="{{ name }}" value="{{ date }}"/>

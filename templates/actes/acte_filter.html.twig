@@ -1,7 +1,7 @@
 {% set module_user_perm = getUserPermOnModule(module_name, user_info.id) %}
     {% if not isSadmOrGadm(user_info.role) and ( module_user_perm == 'RW' or module_user_perm == 'CS ') %}
         <div id="actions_area">
-            <h2>Actions</h2>
+            <h2>Actions {{ nb_transactions }}</h2>
             <a href="/modules/actes/actes_transac_add.php" class="btn btn-primary">Créer une transaction</a>
             <a href="/modules/actes/actes_transac_import.php" class="btn btn-primary">Importer une enveloppe</a>
             <a href="/modules/actes/actes_batch_handle.php" class="btn btn-primary">Traitement par lots</a>
@@ -30,8 +30,8 @@
             <div class="col-md-3">
                 {% include 'global/components/selecteur.html.twig' with {
                     'name': 'nature',
-                    'data': trans_types,
-                    'selectedValue': nature,
+                    'data': trans_natures,
+                    'selectedValue': fnature,
                 } %}
             </div>
         </div>
@@ -60,6 +60,7 @@
             <label for="min_submission_date" class="col-md-3">Date de postage minimale</label>
             <div class="col-md-3">
                 {% include 'global/components/date_picker.html.twig' with {
+                    'label_date': datepicker_min_submission_date,
                     'date': fmin_submission_date,
                     'name': 'min_submission_date',
                 } %}
@@ -67,6 +68,7 @@
             <label for="min_ack_date" class="col-md-3">Date d'acquittement minimale</label>
             <div class="col-md-3">
                 {% include 'global/components/date_picker.html.twig' with {
+                    'label_date': datepicker_min_ack_date,
                     'date': fmin_ack_date,
                     'name': 'min_ack_date',
                 } %}
@@ -76,6 +78,7 @@
             <label for="max_submission_date" class="col-md-3">Date de postage maximale</label>
             <div class="col-md-3">
                 {% include 'global/components/date_picker.html.twig' with {
+                    'label_date': datepicker_max_submission_date,
                     'date': fmax_submission_date,
                     'name': 'max_submission_date',
                 } %}
@@ -83,6 +86,7 @@
             <label for="max_ack_date" class="col-md-3">Date d'acquittement maximale</label>
             <div class="col-md-3">
                 {% include 'global/components/date_picker.html.twig' with {
+                    'label_date': datepicker_max_ack_date,
                     'date': fmax_ack_date,
                     'name': 'max_ack_date',
                 } %}
