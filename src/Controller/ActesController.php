@@ -71,7 +71,7 @@ class ActesController extends AbstractController
 
         return $this->render('actes/index.html.twig', [
             'module_name' => Initialisation::MODULENAMEACTES,
-            'nombre_de_page' => ceil($nb_transactions / $criteria->count),
+            'nombre_de_pages' => ceil($nb_transactions / $criteria->count),
             'limit_transaction_par_page' => $criteria->count,
             'trans_types' => $transTypes,
             'trans_natures' => $transNatures,

@@ -4,6 +4,10 @@ twig:
     cache: false
     auto_reload: true
     globals:
+        webmaster: 'webmaster@s2low.docker.libriciel.fr'
+        support_url: '/'
+        release_note_url: '/'
+        version_infos: 'Version 5.1.2 - Révision 341317 - Thu Jul 24 13:01:20 UTC 2025'
         url_index_ssl: '/'
         title: '%app.website_default_title%'
         s2low_banner: '/custom/images/bandeau_s2low.jpg'

@@ -13,7 +13,7 @@ class ActesSearchCriteria
 
     // Tri
     #[Assert\Choice(choices: ['asc', 'desc'])]
-    public string $sortway = 'asc';
+    public string $sortway = 'desc';
     public string $order = 'id';
 
     // Filtres simples

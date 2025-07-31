@@ -1,4 +1,4 @@
-<select name="{{ name }}" id="{{ name }}" class="form-control {{ css_class }}">
+<select name="{{ name }}" id="{{ name }}" class="form-control {% if css_class is defined %}{{ css_class }}{% endif %}">
     <option value="">Choisissez</option>
     {% if data is defined %}
     {% for key, value in data %}

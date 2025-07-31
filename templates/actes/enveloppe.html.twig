@@ -48,7 +48,7 @@
             <td headers="nature">{{ enveloppe.nature_descr }}</td>
             <td headers="status">{{ enveloppe.current_status_name }}</td>
             <td headers="mail">
-                {% for id, courrier_info in enveloppe.courrier_info %}($envelope['courrier_info'] as $id => $info)
+                {% for id, courrier_info in enveloppe.courrier_info %}
                     <a href="/modules/actes/actes_transac_show.php?id={{ id }}">
                         courrier_info.type_str
                         {% if courrier_info.sens is defined %}
