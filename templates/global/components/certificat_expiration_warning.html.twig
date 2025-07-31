@@ -1,0 +1,15 @@
+{# global/components/certificat_expiration_warning.html.twig #}
+{% set NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_WARNING = 90 %}
+{% set NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_DANGER = 7 %}
+
+{% if nb_day_before_certificate_expire < NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_DANGER %}
+    {% set css_class = 'danger' %}
+{% elseif nb_day_before_certificate_expire < NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_WARNING %}
+    {% set css_class = 'warning' %}
+{% endif %}
+
+{% if css_class is defined %}
+    <div class="alert alert-{{ css_class }} message-admin">
+        Votre certificat expire dans {{ nb_day_before_certificate_expire }} jours !
+    </div>
+{% endif %}

@@ -1,0 +1,10 @@
+<select name="{{ name }}" id="{{ name }}" class="form-control {{ css_class }}">
+    <option value="">Choisissez</option>
+    {% if data is defined %}
+    {% for key, value in data %}
+    <option value="{{ key }}" {{ key == selectedValue ? 'selected="selected"' : '' }}>
+        {{ value }}
+    </option>
+    {% endfor %}
+    {% endif %}
+</select>

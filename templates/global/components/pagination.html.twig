@@ -1,0 +1,77 @@
+{# global/components/pagination.html.twig #}
+{% set current_params = app.request.query.all %}
+<div id="display-items">
+    <h2>Afficher par page</h2>
+    <ul class="pagination pagination-sm">
+        {% for current_nb_affichage_par_page in [10, 20, 50, 100] %}
+            {% if limit_transaction_par_page == current_nb_affichage_par_page %}
+                <li class="disabled"><a href="#">{{ current_nb_affichage_par_page }}</a></li>
+            {% else %}
+                <li>
+                    <a href="{{ path(app.request.attributes.get('_route'), current_params|merge({ 'count': current_nb_affichage_par_page, 'page': 1 })) }}"
+                       title="Afficher {{ current_nb_affichage_par_page }} éléments par page">
+                        {{ current_nb_affichage_par_page }}
+                    </a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+
+<div id="pages">
+    <h2>Page</h2>
+    <ul class="pagination pagination-sm">
+        {% set page_number = app.request.query.get('page', 1) %}
+        {% set nombre_de_page = nombre_de_page|default(1) %}
+
+        {% if page_number > 1 %}
+            <li>
+                <a href="{{ path(app.request.attributes.get('_route'), current_params|merge({ 'page': page_number - 1 })) }}" title="Page précédente">&laquo;</a>
+            </li>
+        {% else %}
+            <li class="disabled"><a href="#">&laquo;</a></li>
+        {% endif %}
+
+        {# Construction manuelle des pages à afficher #}
+        {% set page_to_show_before_filtre = [
+            1, 2, 3,
+            page_number - 2, page_number - 1, page_number, page_number + 1, page_number + 2,
+            nombre_de_page - 2, nombre_de_page - 1, nombre_de_page
+        ] %}
+        {% set final_pages_to_show = [] %}
+        {% for p in page_to_show_before_filtre %}
+            {% if p > 0 and p <= nombre_de_page and p not in final_pages_to_show %}
+                {% set final_pages_to_show = final_pages_to_show|merge([p]) %}
+            {% endif %}
+        {% endfor %}
+        {% set final_pages_to_show = final_pages_to_show|sort %}
+
+        {# Affichage des pages avec ellipses #}
+        {% set last_displayed = 0 %}
+        {% for p in final_pages_to_show %}
+            {% if last_displayed and p > last_displayed + 1 %}
+                <li class="disabled"><a href="#">…</a></li>
+            {% endif %}
+            {% if p == page_number %}
+                <li class="active"><a href="#" title="Page courante">{{ p }}</a></li>
+            {% else %}
+                <li>
+                    <a href="{{ path(app.request.attributes.get('_route'), current_params|merge({ 'page': p })) }}"
+                       title="Afficher la page {{ p }}">
+                        {{ p }}
+                    </a>
+                </li>
+            {% endif %}
+            {% set last_displayed = p %}
+        {% endfor %}
+
+        {# Lien suivant #}
+        {% if page_number < nombre_de_page %}
+            <li>
+                <a href="{{ path(app.request.attributes.get('_route'), current_params|merge({ 'page': page_number + 1 })) }}" title="Page suivante">&raquo;</a>
+            </li>
+        {% else %}
+            <li class="disabled"><a href="#">&raquo;</a></li>
+        {% endif %}
+    </ul>
+</div>

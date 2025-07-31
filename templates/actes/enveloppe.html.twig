@@ -1,0 +1,81 @@
+{% set current_params = app.request.query.all %}
+<dl>
+    <dt>
+        <a href="#tedetis" onclick="toggle_envelope_content({{ index }});" id="expander_{{ index }}"
+           class="expander btn btn-default btn-xs">-</a>
+        1 transaction de l'enveloppe n°<a
+                href="{{ path(app.request.attributes.get('_route'), current_params|merge({ 'order': 'id', 'sortway': 'desc'})) }}"
+                title="Trier par identifiant">{{ enveloppe.envelope_id }}</a>
+        déposée le <a
+                href="{{ path(app.request.attributes.get('_route'), current_params|merge({ 'order': 'submission_date', 'sortway': 'desc'})) }}"
+                title="Trier par date de dépôt">{{ enveloppe.submission_date }}</a>
+        {% if isSadm(user_info.role) %}
+            de la collectivité {{ enveloppe.authority_name }}
+        {% endif %}
+    </dt>
+</dl>
+<dd id="envelope_content_{{ index }}" class="envelope_content" style="display: block">
+    <table id="transactions-list" class="data-table table table-bordered">
+        <caption>Liste des transactions en fonction des choix de filtrage</caption>
+        <thead>
+        <tr class="active">
+            <th id="selection">Sél.</th>
+            <th id="transaction-type">Type de transaction</th>
+            <th id="act-number">Numéro de l'acte</th>
+            <th id="act-internal-number">Numéro Interne de l'acte</th>
+            <th id="object">Objet</th>
+            <th id="nature">Nature</th>
+            <th id="status">Etat</th>
+            <th id="mail">courrier ministère</th>
+            <th id="follower">Suivie par</th>
+            <th id="actions">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td headers="selection">
+                {% if enveloppe.type == 1 and enveloppe.current_status in [4,5,14,18,20] %}
+                    <input type="checkbox"
+                           name="liste_id[]"
+                           value="{{ enveloppe.transaction_id }}"
+                           id="checkbox{{ enveloppe.transaction_id }}"/>
+                {% endif %}
+            </td>
+            <td headers="transaction-type">{{ enveloppe.type_str }}</td>
+            <td headers="act-number">{{ enveloppe.transaction_id }}</td>
+            <td headers="act-internal-number">{{ enveloppe.number }}</td>
+            <td headers="object" class="long_field">{{ makeLabelDisplayable(enveloppe.subject) }}</td>
+            <td headers="nature">{{ enveloppe.nature_descr }}</td>
+            <td headers="status">{{ enveloppe.current_status_name }}</td>
+            <td headers="mail">
+                {% for id, courrier_info in enveloppe.courrier_info %}($envelope['courrier_info'] as $id => $info)
+                    <a href="/modules/actes/actes_transac_show.php?id={{ id }}">
+                        courrier_info.type_str
+                        {% if courrier_info.sens is defined %}
+                            courrier_info.sens
+                        {% else %}
+                            envoyé
+                        {% endif %}
+                    </a>
+                    <br/>
+                {% endfor %}
+            </td>
+            <td headers="follower">{{ enveloppe.givenname }} {{ enveloppe.name }}</td>
+            <td headers="actions">
+                <a href="/modules/actes/actes_transac_show.php?id={{ enveloppe.transaction_id }}"
+                   class="icon">
+                    <img src="/custom/images/erreur.png"
+                         alt="image_modif" title="Afficher le détail"/>
+                </a>
+                {% if enveloppe.archive_url %}
+                    <a href="enveloppe.archive_url"
+                       class="icon">
+                        <img src="/custom/images/icone_archivage.png"
+                             alt="image_archivage" title="Accéder à  l'archivage de cette transaction"/>
+                    </a>
+                {% endif %}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</dd>

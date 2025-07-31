@@ -1,0 +1,59 @@
+<h2>
+    <p>Liste des enveloppes de transactions</p>
+</h2>
+
+    {% if enveloppes|length > 0 %}
+        <button id="expand-all" onclick="show_all()" class="toggle-action">Tout déplier<span class="hidden-info">les enveloppes de transactions</span></button>
+        <button id="collapse-all" onclick="hide_all()" class="toggle-action">Tout replier<span class="hidden-info">les enveloppes de transactions</span></button>
+    {% else %}
+        <p>Pas de transaction trouvée correspondant aux critères de filtrage</p>
+    {% endif %}
+
+<div id="enveloppe-area">
+    <form id="div_chck" onsubmit="return afficheWarning()" action="/modules/actes/actes_transac_close.php" method="post">
+        <div class="form-group">
+            <dl class="envelopes_list">
+                {% for enveloppe in enveloppes %}
+                    {% include 'actes/enveloppe.html.twig' with {
+                        'enveloppe': enveloppe,
+                        'index': loop.index
+                    } %}
+                {% endfor %}
+            </dl>
+            <div id="selection-actions">
+                <a href="#tedetis" onclick="GereChkbox('div_chck','1');" title="Tout sélectionner" class="btn btn-default">Tout sélectionner</a>
+                <a href="#tedetis" onclick="GereChkbox('div_chck','0');" title="Tout désélectionner" class="btn btn-default">Tout desélectionner</a>
+                <a href="#tedetis" onclick="GereChkbox('div_chck','2');" title="Inverser la sélection" class="btn btn-default">Inverser la sélection</a>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="change-status" class="col-md-5 control-label">Passer les transactions sélectionnées en état</label>
+            <div class="col-md-2">
+                <select id ="change-status" name="status" class="form-control">
+                    <option value="valid">Validé</option>
+                    <option value="invalid">Refusé</option>
+                    <option value="sae">En attente de transmission au SAE</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-default col-md-offset-3 col-md-2">Exécuter</button>
+        </div>
+    </form>
+    <div class="form-group">
+        <form id='form-sign' action="/modules/actes/actes_batch_sign.php" method="post">
+            <input id='signer_button' type='submit' class='btn btn-default' value="Signer les transactions sélectionnées">
+        </form>
+        <script type='text/javascript'>
+            $(document).ready(function() {
+                $("#signer_button").click(function(){
+                    $("input:checkbox:checked").each(function() {
+                        $("#form-sign").append("<input type='hidden' name='liste_id[]' value='" + $(this).val() + "' />");
+                    });
+                    $("#form-sign").submit();
+                    return false;
+                })
+            });
+        </script>
+
+    </div>
+
+</div>

@@ -1,0 +1,112 @@
+{% set module_user_perm = getUserPermOnModule(module_name, user_info.id) %}
+    {% if not isSadmOrGadm(user_info.role) and ( module_user_perm == 'RW' or module_user_perm == 'CS ') %}
+        <div id="actions_area">
+            <h2>Actions</h2>
+            <a href="/modules/actes/actes_transac_add.php" class="btn btn-primary">Créer une transaction</a>
+            <a href="/modules/actes/actes_transac_import.php" class="btn btn-primary">Importer une enveloppe</a>
+            <a href="/modules/actes/actes_batch_handle.php" class="btn btn-primary">Traitement par lots</a>
+        </div>
+    {% endif %}
+<h2>
+    <span>Filtrage</span>
+    <button id="expand-all" onclick="javascript:expand_area('filtering-area');" class="toggle-action">Tout
+        déplier<span class="hidden-info">le formulaire de filtrage</span></button>
+    <button id="collapse-all" onclick="javascript:collapse_area('filtering-area');" class="toggle-action">Tout
+        replier<span class="hidden-info">le formulaire de filtrage</span></button>
+</h2>
+<div id="filtering-area">
+    <form action="/modules/actes/index.php" method="get" role="form"
+          class="form-horizontal">
+        <div class="form-group">
+            <label for="type" class="col-md-3 control-label">Type de transaction</label>
+            <div class="col-md-3">
+                {% include 'global/components/selecteur.html.twig' with {
+                    'name': 'type',
+                    'data': trans_types,
+                    'selectedValue': ftype,
+                } %}
+            </div>
+            <label for="nature" class="col-md-3 control-label">Nature d'actes</label>
+            <div class="col-md-3">
+                {% include 'global/components/selecteur.html.twig' with {
+                    'name': 'nature',
+                    'data': trans_types,
+                    'selectedValue': nature,
+                } %}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="status" class="col-md-3 control-label">État</label>
+            <div class="col-md-3">
+                {% include 'global/components/selecteur.html.twig' with {
+                    'name': 'status',
+                    'data': status,
+                    'selectedValue': fstatus,
+                } %}
+            </div>
+            <label for="number" class="col-md-3 control-label">Le numéro contient</label>
+            <div class="col-md-3">
+                <input id="number" class="form-control" type="text" name="num" size="20" maxlength="25" value="{{ fnum }}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="object" class="col-md-offset-6 col-md-3 control-label">L'objet contient</label>
+            <div class="col-md-3">
+                <input id="object" class="form-control" type="text" name="objet" size="20" maxlength="25"
+                       value="{{ objet }}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="min_submission_date" class="col-md-3">Date de postage minimale</label>
+            <div class="col-md-3">
+                {% include 'global/components/date_picker.html.twig' with {
+                    'date': fmin_submission_date,
+                    'name': 'min_submission_date',
+                } %}
+            </div>
+            <label for="min_ack_date" class="col-md-3">Date d'acquittement minimale</label>
+            <div class="col-md-3">
+                {% include 'global/components/date_picker.html.twig' with {
+                    'date': fmin_ack_date,
+                    'name': 'min_ack_date',
+                } %}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="max_submission_date" class="col-md-3">Date de postage maximale</label>
+            <div class="col-md-3">
+                {% include 'global/components/date_picker.html.twig' with {
+                    'date': fmax_submission_date,
+                    'name': 'max_submission_date',
+                } %}
+            </div>
+            <label for="max_ack_date" class="col-md-3">Date d'acquittement maximale</label>
+            <div class="col-md-3">
+                {% include 'global/components/date_picker.html.twig' with {
+                    'date': fmax_ack_date,
+                    'name': 'max_ack_date',
+                } %}
+            </div>
+        </div>
+        {% if isSadm(user_info.role) %}
+            <div class="form-group">
+                <label for="authority" class="col-md-3 control-label">Collectivité</label>
+                <div class="col-md-3">
+                    {% include 'global/components/selecteur.html.twig' with {
+                        'name': 'authority',
+                        'data': allCollectivite,
+                        'selectedValue': filtreAuthority,
+                        'css_class': 'zselect_authorities'
+                    } %}
+                </div>
+            </div>
+        {% endif %}
+        <div class="form-group">
+            <button type="submit" class="col-md-offset-3 col-md-3 btn btn-default">Filtrer</button>
+            <a href="/modules/actes/index.php"
+               class="col-md-offset-3 col-md-3 btn btn-default">
+                Remise à zéro
+            </a>
+        </div>
+    </form>
+</div>

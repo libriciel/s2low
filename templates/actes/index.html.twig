@@ -1,0 +1,19 @@
+{# actes/index.html.twig #}
+{% extends 'base.html.twig' %}
+{% block title %}Liste des transactions - ACTES - S²low{% endblock %}
+{% block head %}
+    <script type="text/javascript" src="/jsmodules/select2.js"></script>
+    <script type="text/javascript" src="/javascript/zselect_s2low.js"></script>
+{% endblock %}
+
+{% block pagination %}
+    {% include 'global/components/pagination.html.twig' with
+        { nb_total_page: nombre_de_transactions } %}
+{% endblock %}
+{% block h1 %}
+    ACTES - Dématérialisation du contrôle de légalité
+{% endblock %}
+{% block body %}
+    {% include 'actes/acte_filter.html.twig' %}
+    {% include 'actes/acte_list.html.twig' %}
+{% endblock %}

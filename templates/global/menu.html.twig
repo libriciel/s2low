@@ -1,0 +1,27 @@
+{# Global/menu.html.twig #}
+    {% if user_info.name is defined %}
+        <div id="menu-header">
+            <div>
+                Bienvenue {{ user_info.name }} {{ user_info.lastname }}
+                {% include 'global/components/certificat_expiration_warning.html.twig' with {'nb_day_before_certificate_expire': nb_day_before_certificate_expire} %}
+            </div>
+            <div>
+                Rôle {{ user_info.role_str }}
+            </div>
+            {% if user_info.nb_user_with_my_certificate > 1 %}
+                <a href='/logout.php'>déconnexion</a>
+            {% endif %}
+        </div>
+    {% else %}
+        <div id="menu-header">
+            <a href="{{ url_index_ssl }}">Accéder au site</a><br/>
+            (Certificat nécessaire)
+        </div>
+    {% endif %}
+    {% if global_warning_message is defined %}
+        <div>
+            <a class="label label-warning" href="/">
+                global_warning_message </a> {# TODO :  raccorder le warning message #}
+        </div>
+    {% endif %}
+    {% include 'menu-sections.html.twig' %}
