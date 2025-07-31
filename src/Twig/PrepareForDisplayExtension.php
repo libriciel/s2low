@@ -15,8 +15,8 @@ class PrepareForDisplayExtension extends AbstractExtension
         ];
     }
 
-    public function makeLabelDisplayable(string $label): string
+    public function makeLabelDisplayable(?string $label): string
     {
-        return Helpers :: truncateString($label);
+        return isset($label) ? Helpers :: truncateString($label) : '';
     }
 }
