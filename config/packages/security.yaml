@@ -1,0 +1,11 @@
+security:
+  providers:
+    ssl_user_provider:
+      id: S2low\Security\SSLUserProvider
+  firewalls:
+    main:
+      pattern: ^/
+      provider: ssl_user_provider
+      custom_authenticators:
+        - S2low\Security\FromApacheAuthenticator
+      stateless: true
