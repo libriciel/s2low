@@ -38,7 +38,12 @@ class FromApacheAuthenticator extends AbstractAuthenticator
         $raw = openssl_x509_fingerprint($pem, 'sha1', /*raw_output*/ true);
         $certHash = base64_encode($raw);
 
-        $userId = $this->userSql->getIdsFromConnexionInfo($certHash, '')[0];
+        $nullableUserId = $this->userSql->getIdsFromConnexionInfo($certHash, '');
+        if (count($nullableUserId) !== 0) {
+            $userId = $nullableUserId[0];
+        } else {
+            throw new AuthenticationException('Connexion impossible.');
+        }
 
         return new SelfValidatingPassport(
             new UserBadge($userId, fn($id) => $this->userProvider->loadUserByIdentifier($id))
@@ -58,8 +63,9 @@ class FromApacheAuthenticator extends AbstractAuthenticator
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
+        return null;
         // si 2 certificats :
-        return new RedirectResponse("/login.php");
+//        return new RedirectResponse("/login.php");
         // sinon redirect erreur, certificat invalide / pas de certificat
     }
 }
