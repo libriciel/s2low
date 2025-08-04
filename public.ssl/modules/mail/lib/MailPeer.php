@@ -209,7 +209,7 @@ class MailPeer
             1,
             false,
             'USER',
-            null,
+            'mail',
             $me
         );
 
