@@ -6,8 +6,21 @@
   "packageRules": [
     {
       "matchPackageNames": ["/^.*postgre(?:s|sql).*/i"],
+      "enabled": false
+    },
+    {
       "matchUpdateTypes": ["major"],
       "enabled": false
+    },
+    {
+      "matchManagers": ["composer"],
+      "groupName": "Mises à jour Composer",
+      "groupSlug": "composer-deps"
+    },
+    {
+      "matchManagers": ["npm"],
+      "groupName": "Mises à jour NPM",
+      "groupSlug": "npm-deps"
     }
   ],
   "prHourlyLimit": 3
