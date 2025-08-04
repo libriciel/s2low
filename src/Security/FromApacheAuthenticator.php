@@ -38,7 +38,7 @@ class FromApacheAuthenticator extends AbstractAuthenticator
         $raw = openssl_x509_fingerprint($pem, 'sha1', /*raw_output*/ true);
         $certHash = base64_encode($raw);
 
-        $userId = $this->userSql->getIdsFromConnexionInfo($certHash,'')[0];
+        $userId = $this->userSql->getIdsFromConnexionInfo($certHash, '')[0];
 
         return new SelfValidatingPassport(
             new UserBadge($userId, fn($id) => $this->userProvider->loadUserByIdentifier($id))
