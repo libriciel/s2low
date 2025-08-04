@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.1.3
+
+- Correction de l'acces à actes_classification_fetch.php
+
+
 ## 5.1.2 - 2025-07-23
 
 
