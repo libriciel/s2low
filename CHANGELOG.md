@@ -24,6 +24,12 @@
 - Augmentation du TTR de `ActesAntivirusWorker` pour éviter des messages d'erreur #1393
 - Permettre la vérification des CRL pour les marchés publics de nature Contrats, conventions et avenants #1382
 
+### Suppressions
+
+- Suppression de la possibilité d'envoyer des mails à partir de S2low via l'API et l'interface.
+- Suppression de la possibilité d'enrichir le carnet d'adresse.
+- Il est toujours possible de consulter les mails existants.
+
 ## 5.1.2 - 2025-07-23
 
 ### Corrections

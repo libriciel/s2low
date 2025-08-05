@@ -77,12 +77,9 @@ endif;?>
                 <div class='actionmail'>
                     <h2> Actions générales </h2>
                     <ul>
-                        <li><a class="btn btn-primary btn-xs" href="ajouter-annuaire.php">Nouveau contact</a></li>
-                        <li><a class="btn btn-primary btn-xs" href="ajouter-groupe.php">Nouveau groupe</a></li>
                     <?php if ($groupe_id) : ?>
                         <li><a class="btn btn-primary btn-xs" href="supprimer-groupe.php?groupe_id=<?php echo $groupe_id?>">Supprimer le groupe</a></li>
                     <?php endif;?>      
-                        <li><a class="btn btn-primary btn-xs" href="import_annuaire_result.php">Importer</a></li>
                         <li><a class="btn btn-primary btn-xs" href="export_contacts.php">[Beta] Exporter les contacts</a></li>
                     </ul>    
                     <h2> Actions sur les contacts sélectionnés </h2>

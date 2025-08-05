@@ -20,10 +20,6 @@
         unset($_SESSION['last_error']);
  endif;?>
 
-    <h2>Actions</h2>
-    <div id="actions_area"> 
-            <a href="index.php?command=create" class="btn btn-primary">Nouveau message</a>
-    </div>
 <?php if (! empty($deleteMessage)) {
     foreach ($deleteMessage as $message) {
             echo "<p>$message</p>";

@@ -54,17 +54,11 @@ class MailController
 
         // action will be called in index.php,initialize by diffrent type of action.
         switch ($action) {
-            case "create":
-                $this->executeCreate();
-                break;
             case "list":
                 $this->executeList();
                 break;
             case "show":
                 $this->executeShow();
-                break;
-            case "send":
-                $this->executeSendAndDisplayResult();
                 break;
             case "SaveError":
                 $this->SaveError();
@@ -72,9 +66,6 @@ class MailController
             case "annuaire":
                 $this->exitIfNotAdmin();
                 $this->executeAnnuaire();
-                break;
-            case "savenewemail":
-                $this->executeSaveNewEmail();
                 break;
             default:
                 $this->executeList();
