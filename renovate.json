@@ -1,14 +1,74 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:recommended",
+    ":semanticCommits"
   ],
+  "branchPrefix": "renovate-",
+  "labels": ["deps", "renovate"],
+  "prHourlyLimit": 5,
+  "dependencyDashboard": true,
+  "deleteBranchAfterMerge": true,
+  "stabilityDays": 2,
   "packageRules": [
     {
       "matchPackageNames": ["/^.*postgre(?:s|sql).*/i"],
-      "matchUpdateTypes": ["major"],
       "enabled": false
+    },
+    {
+      "description": "Automerge patch & minor",
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true,
+      "automergeType": "pr"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["major"],
+      "groupName": "Majors NPM",
+      "prPriority": -1
+    },
+    {
+      "matchManagers": ["composer"],
+      "matchUpdateTypes": ["major"],
+      "groupName": "Majors Composer",
+      "prPriority": -1
+    },
+    {
+      "description": "Infra & runtime",
+      "matchManagers": ["dockerfile", "docker-compose"],
+      "groupName": "Infra"
+    },
+    {
+      "description": "Mises à jour Composer",
+      "matchManagers": ["composer"],
+      "groupName": "Composer deps",
+      "groupSlug": "composer-deps"
+    },
+    {
+      "description": "Mises à jour NPM",
+      "matchManagers": ["npm"],
+      "groupName": "NPM deps",
+      "groupSlug": "npm-deps"
+    },
+    {
+      "description": "Symfony écosystème (composer)",
+      "matchPackagePatterns": ["^symfony/"],
+      "groupName": "Symfony",
+      "semanticCommitScope": "symfony"
+    },
+    {
+      "description": "Alerte vulnérabilités",
+      "vulnerabilityAlerts": {
+        "enabled": true
+      },
+      "labels": ["security"],
+      "automerge": true,
+      "automergeType": "pr",
+      "prPriority": 10
+    },
+    {
+      "matchDatasources": ["docker"],
+      "pinDigests": true
     }
-  ],
-  "prHourlyLimit": 3
+  ]
 }
