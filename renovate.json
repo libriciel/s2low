@@ -1,5 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "assignees": ["project_25_bot_7b3ca4887e2797fc60846fd1099a8070"],
   "extends": [
     "config:recommended",
     ":semanticCommits"
@@ -34,11 +35,6 @@
       "prPriority": -1
     },
     {
-      "description": "Infra & runtime",
-      "matchManagers": ["dockerfile", "docker-compose"],
-      "groupName": "Infra"
-    },
-    {
       "description": "Mises à jour Composer",
       "matchManagers": ["composer"],
       "groupName": "Composer deps",
@@ -62,9 +58,16 @@
         "enabled": true
       },
       "labels": ["security"],
-      "automerge": true,
+      "automerge": false,
       "automergeType": "pr",
       "prPriority": 10
+    },
+    {
+      "description": "Infra & runtime",
+      "matchUpdateTypes": ["patch", "major", "minor"],
+      "matchManagers": ["dockerfile", "docker-compose"],
+      "groupName": "Infra",
+      "automerge": false
     },
     {
       "matchDatasources": ["docker"],
