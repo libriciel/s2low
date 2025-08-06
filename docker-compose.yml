@@ -29,7 +29,6 @@ services:
             POSTGRES_DB: ${POSTGRES_DB:-s2lowdb}
             POSTGRES_HOST: ${POSTGRES_HOST:-db}
             CONVERT_API_LOGINS_FROM_ISO: ${CONVERT_API_LOGINS_FROM_ISO:-false}
-            LIBERSIGN_INSTALLER: ${LIBERSIGN_INSTALLER:-https://libersign.libriciel.fr/make.sh}
             HELIOS_FTP_P_APPLI: ${HELIOS_FTP_P_APPLI:-GHELPES2}
             HELIOS_NB_FILES_ENVOI: ${HELIOS_NB_FILES_ENVOI:-1}
             HELIOS_SENDING_DESTINATION: ${HELIOS_SENDING_DESTINATION:-/entree/}
@@ -160,7 +159,6 @@ services:
             - /var/www/s2low/ext/standalone:mode=770,uid=${UID:-33},gid=${GID:-33},size=500M
             - /var/www/s2low/var/cache:mode=770,uid=${UID:-33},gid=${GID:-33},size=500M
             - /var/www/s2low/var/log:mode=770,uid=${UID:-33},gid=${GID:-33},size=500M
-            - /var/www/parapheur/libersign:mode=770,uid=${UID:-33},gid=${GID:-33},size=500M
         user: "${UID:-33}:${GID:-33}"
 
     clamav:

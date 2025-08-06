@@ -164,24 +164,6 @@ if (!defined('TEDETIS_TMP_PATH')) {
         define('TEDETIS_TMP_PATH', '/tmp/');
 }
 
-
-//Paramètre pour l'outil de signature Libersign
-if (!defined("LIBERSIGN_URL")) {
-        define("LIBERSIGN_URL", Helpers::getLink("/libersign/"));
-}
-
-if (!defined("LIBERSIGN_HELP_URL")) {
-    define("LIBERSIGN_HELP_URL", "https://www.libriciel.fr");
-}
-
-if (!defined("LIBERSIGN_EXTENSION_UPDATE_URL")) {
-    define("LIBERSIGN_EXTENSION_UPDATE_URL", Helpers::getLink("/libersign/"));
-}
-
-if (! defined("LIBERSIGN_INSTALLER")) {
-    define("LIBERSIGN_INSTALLER", "https://libersign.libriciel.fr/make.sh");
-}
-
 //Paramètre outils de signature XML
 if (!defined("XMLSEC1_PATH")) {
     define("XMLSEC1_PATH", "/usr/bin/xmlsec1");

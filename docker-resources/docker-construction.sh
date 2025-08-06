@@ -59,9 +59,6 @@ chmod +x /usr/local/bin/wait-for-certificates.sh
 
 /usr/bin/curl -s https://validca.libriciel.fr/retrieve-validca.sh | /bin/bash -s /etc/s2low/ssl
 
-# Pour libersign
-mkdir -p /var/www/parapheur/libersign
-
 cd /tmp/
 
 # Module Apache
