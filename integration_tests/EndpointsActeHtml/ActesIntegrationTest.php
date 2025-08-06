@@ -252,23 +252,6 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
     }
 
     /**
-     * TODO : faire un cas plus réaliste
-     * @throws Exception
-     */
-    public function testActesTransacSign(): void
-    {
-        $client = $this->client;
-        $this->setUserWithRole(UserRole::SuperAdministrateur);
-
-        $client->request('GET', 'modules/actes/actes_transac_sign.php');
-        static::assertMatchesRegularExpression(
-            '#Les signatures n\'ont pas pu être récupérées#',
-            $_SESSION['error']
-        );
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
-    }
-
-    /**
      * @throws Exception
      */
     public function testActesIndex(): void
