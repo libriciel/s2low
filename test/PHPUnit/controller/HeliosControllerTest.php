@@ -83,21 +83,6 @@ class HeliosControllerTest extends S2lowIntegrationTestCase
         }
     }
 
-    public function testImportMustSign()
-    {
-        $this->expectOutputRegex("#<resultat>OK</resultat>#");
-        $_POST['must_signed'] = true;
-        $this->importAPI();
-        $output = $this->getActualOutput();
-        $output = preg_replace("#header.*called\n#", "", $output);
-        $xml = simplexml_load_string($output);
-        $transaction_id = $xml->id;
-        $info = $this->heliosTransactionSQL->getInfo($transaction_id);
-        $this->assertEquals(HeliosTransactionsSQL::ATTENTE_SIGNEE, $info['last_status_id']);
-        $info_wf = $this->heliosTransactionSQL->getWorkflow($transaction_id);
-        $this->assertEquals(HeliosTransactionsSQL::ATTENTE_SIGNEE, $info_wf[0]['status_id']);
-    }
-
     /**
      * @preserveGlobalState disabled
      * @runInSeparateProcess

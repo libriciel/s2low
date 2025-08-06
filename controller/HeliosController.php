@@ -146,18 +146,13 @@ class HeliosController extends Controller
         $moduleSQL = new ModuleSQL($this->getSQLQuery());
         $module_info = $moduleSQL->getInfoByName(self::MODULE_NAME);
 
-        $must_signed = Helpers::getVarFromPost("must_signed", true);
-
         $siren = $authority_info['siren'];
 
         $filesize = filesize($filepath);
         $sha1 = sha1_file($filepath);
         $id_transaction = $heliosTransactionSQL->create($original_filename, $sha1, $user_id, $user_info['authority_id'], $filesize, $siren);
 
-        if ($must_signed) {
-            $state = HeliosTransactionsSQL::ATTENTE_SIGNEE;
-            $message = "Fichier en attente d'être signé";
-        } elseif (! $moduleSQL->hasDroit($module_info['id'], $user_id, 'TT')) {
+        if (! $moduleSQL->hasDroit($module_info['id'], $user_id, 'TT')) {
             $state = HeliosTransactionsSQL::ATTENTE_POSTEE;
             $message = "Fichier en attente d'être télétransmis";
         } else {
