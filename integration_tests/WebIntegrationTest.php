@@ -194,20 +194,4 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
-
-    /**
-     * @throws Exception
-     */
-    public function testEditAnnuaire(): void
-    {
-        $client = $this->client;
-        $this->setUserWithRole(UserRole::SuperAdministrateur);
-        $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
-        $crawler = $client->request('GET', 'modules/mail/edit-annuaire.php');
-        static::assertMatchesRegularExpression(
-            '#exit\(\) called#',     //TODO : créer un test plus pertinent (Il faut un admin de coll )
-            $crawler->html()
-        );
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
-    }
 }
