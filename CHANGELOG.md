@@ -1,9 +1,10 @@
 # Changelog
 
-## 5.1.3 
+## 5.1.3
 
-## Correction
+### Correction
 
+- Retire les espaces present dans le champ Helios FTP dans l'interface d'administration Helios. #1344
 - Corrige un probleme d'affichage lors de la suppression d'un mail #1362
 
 ## 5.1.2 - 2025-07-23
