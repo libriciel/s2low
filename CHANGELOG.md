@@ -2,8 +2,9 @@
 
 ## 5.1.3
 
-### Correction
+## Corrections
 
+- Correction de l'acces à actes_classification_fetch.php
 - Retire les espaces present dans le champ Helios FTP dans l'interface d'administration Helios. #1344
 - Corrige un probleme d'affichage lors de la suppression d'un mail #1362
 
