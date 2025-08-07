@@ -2,7 +2,9 @@
 
 ## 6.0.0
 
-- Suppression de la possibilité de demander la signature lors de la creation d'un Acte ou un PES Aller
+### Suppression
+
+- Suppression de l'outil de signature intégré #1113
 
 ## 5.1.2 - 2025-07-23
 
