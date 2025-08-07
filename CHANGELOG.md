@@ -2,7 +2,7 @@
 
 ## 5.1.3
 
-- Correction de l'acces à actes_classification_fetch.php
+- Correction de l'acces à actes_classification_fetch.php #1373
 
 
 ## 5.1.2 - 2025-07-23
