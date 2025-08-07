@@ -23,19 +23,6 @@ class GroupeMail extends DataObject
         parent::__construct($id);
     }
 
-    public function addUser($id)
-    {
-        assert(!!$this->id);
-        $sql = "SELECT * FROM mail_user_groupe WHERE id_user = ? AND id_groupe = ?";
-        $result = $this->db->select($sql, [$id,$this->id]);
-        if ($result->num_row() != 0) {
-            return;
-        }
-
-        $sql = "INSERT INTO mail_user_groupe(id_user,id_groupe) VALUES (?, ?)";
-        $this->db->exec($sql, [$id,$this->id]);
-    }
-
     public function removeUser($id)
     {
         assert(!!$this->id);
@@ -90,14 +77,5 @@ class GroupeMail extends DataObject
         }
 
         return $tabResult;
-    }
-
-    public function getNbUtilisateur()
-    {
-        assert(!!$this->id);
-        $sql = "SELECT count(*) as nb FROM mail_user_groupe WHERE id_groupe=?";
-        $result = $this->db->select($sql, [$this->id]);
-        $ligne = $result->get_next_row();
-        return $ligne['nb'];
     }
 }

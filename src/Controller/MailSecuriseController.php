@@ -85,33 +85,4 @@ class MailSecuriseController extends AbstractController
             }
         );
     }
-
-    #[Route(
-        path: '/modules/mail/api/send-mail.php',
-    )]
-    public function handleApiRequest(): Response
-    {
-        //Quickfix pour homogénéiser l'utilisation de Helpers::getVarFromRequest
-        // On spécifie qu'on utilise bien l'API ...
-        $_POST["api"] = 1;
-
-        if (isset($_POST['password'])) {
-            $_POST['psw1'] = $_POST['password'];
-            $_POST['psw2'] = $_POST['password'];
-        }
-
-        $_POST['FileNumber'] = count($_FILES);
-
-        $MailCtl = new MailController($this->me, $this->doc, $this->module, $this->myAuthority, $this->mailSecuriseNotification);
-        ob_start();
-        $mailId = $MailCtl->executeSend();
-        ob_end_clean();
-
-        if ($mailId) {
-            return new Response("OK:$mailId\n");
-        } else {
-            $erreur = $MailCtl->getLastError();
-            return new Response("ERROR:$erreur\n");
-        }
-    }
 }
