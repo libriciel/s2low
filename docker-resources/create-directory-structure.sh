@@ -22,7 +22,9 @@ DIRECTORIES=("/data/tdt-workspace/actes" \
 "/data/tdt-workspace/logs-export" \
 "/data/tdt-workspace/uploads/etat_civil" \
 "/data/log/apache2/" \
-"/var/run/htmlpurifier/")
+"/var/run/htmlpurifier/" \
+"/etc/apache2/ssl/app" \
+"/etc/apache2/ssl/mailsec")
 
 echo "Création/modification des répertoires nécessaires "$(id -u):$(id -g)
 

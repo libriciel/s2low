@@ -14,6 +14,14 @@ fi
 #TODO : vérifier le nombre de paramètres
 #TODO : vérifier que $2 et $3 sont bien des chemins vers des fichiers ?!
 
+DIR_PATH=$(dirname ${CERTIFICATE_PATH})
+
+if [ ! -d ${DIR_PATH} ]
+then
+    mkdir -p ${DIR_PATH}
+    echo "Le dossier ${DIR_PATH} a été créé"
+fi
+
 SCRIPT_BASE=$(dirname $0)
 
 if [ -f ${PRIVKEY_PATH} ]

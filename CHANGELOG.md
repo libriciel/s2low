@@ -1,12 +1,13 @@
 # Changelog
 
-## 5.1.3
+## 5.1.3 
+
+## Correction
 
 - Correction de l'acces à actes_classification_fetch.php #1373
-
+- Corrige un probleme d'affichage lors de la suppression d'un mail #1362
 
 ## 5.1.2 - 2025-07-23
-
 
 - Correction de l'affichage des mails securisés et d'un probleme empêchant d'exécuter certains scripts seuls. #1361
 - Utiliser le validca étendu pour vérifier le purpose des certificats #1360
