@@ -53,11 +53,6 @@ class HeliosEnvoiWorker implements IWorker
         $this->heliosEnvoiControler->sendOneTransaction($data, $this->usePasstrans);
     }
 
-    public function getMutexName($data): string
-    {
-        return sprintf("helios-transaction-%s", $data);
-    }
-
     public function isDataValid($data): bool
     {
         $status_id = $this->heliosTransactionsSQL->getLatestStatusId($data);

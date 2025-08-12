@@ -55,11 +55,6 @@ class ActesPrepareSaeWorker implements IWorker
         );
     }
 
-    public function getMutexName($data): string
-    {
-        return sprintf("actes-transaction-%s", $data);
-    }
-
     public function isDataValid($data): bool
     {
         return true;

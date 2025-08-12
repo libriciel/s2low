@@ -49,11 +49,6 @@ class ActesMenageEnveloppeWorker implements IWorker
         $this->actesCloudStorage->deleteFilesOnDisk($this->nb_days_in_disk, true);
     }
 
-    public function getMutexName($data): string
-    {
-        return $this->getQueueName();
-    }
-
     public function isDataValid($data): bool
     {
         return true;

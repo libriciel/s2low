@@ -47,11 +47,6 @@ class HeliosStorePESAcquitWorker implements IWorker
         $this->PESAcquitCloudStorage->storeObject($data);
     }
 
-    public function getMutexName($data): string
-    {
-        return sprintf("%s-%s", self::QUEUE_NAME, $data);
-    }
-
     public function isDataValid($data): bool
     {
         return true;

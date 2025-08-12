@@ -55,11 +55,6 @@ class ActesAntivirusWorker implements IWorker
         return $id;
     }
 
-    public function getMutexName($data): string
-    {
-        return sprintf("actes-transaction-%s", $data);
-    }
-
     public function isDataValid($data): bool
     {
         $transaction_id = $data;

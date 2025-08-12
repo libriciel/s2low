@@ -62,14 +62,6 @@ class AcCertificatesRetrieverWorker implements IWorker
     /**
      * @inheritDoc
      */
-    public function getMutexName($data): string
-    {
-        return sprintf("%s-%s", self::QUEUE_NAME, $data);
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function isDataValid($data): bool
     {
         return true;
