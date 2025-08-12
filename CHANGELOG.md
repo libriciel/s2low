@@ -9,6 +9,7 @@
 - Corrige un probleme d'affichage lors de la suppression d'un mail #1362
 - Augmentation du TTR de ActesAntivirusWorker pour éviter des messages d'erreur #1393
 - Permettre la vérification des CRL pour les Marchés publics de nature Contrats, conventions et avenants #1382
+- Corrige le cron mailsec-menage.php
 
 ## 5.1.2 - 2025-07-23
 
