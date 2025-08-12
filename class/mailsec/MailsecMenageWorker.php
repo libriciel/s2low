@@ -11,7 +11,7 @@ class MailsecMenageWorker implements IWorker
     private const NB_DAYS_IN_DISK = 15;
 
     public function __construct(
-        private MailIncludedFilesCloudStorable $mailIncludedFilesCloudStorage
+        private MailIncludedFilesCloudStorage $mailIncludedFilesCloudStorage
     ) {
     }
 
