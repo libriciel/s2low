@@ -36,7 +36,6 @@ class CustomizableWorkerRunner implements WorkerRunner
         $this->s2lowLogger->info('Démarrage en mode supervisord');
 
         try {
-            $this->worker->start();
             $this->jobFetchingStrategies->init($this->worker, $this->s2lowLogger);
             $this->checkAll();
             $workerhasRunSuccessfully = true;
@@ -55,12 +54,6 @@ class CustomizableWorkerRunner implements WorkerRunner
                 [$e->getTraceAsString()]
             );
             $workerhasRunSuccessfully = false;
-        } finally {
-            try {
-                $this->worker->end();
-            } catch (Throwable $finallyThrowable) {
-                $this->s2lowLogger->error($finallyThrowable->getMessage());
-            }
         }
 
         $sleep = $this->min_execution_time_in_seconds - (time() - $start);

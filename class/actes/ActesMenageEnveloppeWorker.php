@@ -53,20 +53,4 @@ class ActesMenageEnveloppeWorker implements IWorker
     {
         return true;
     }
-
-    /**
-     * @return void
-     */
-    public function start(): void
-    {
-        // TODO: Implement start() method.
-    }
-
-    /**
-     * @return void
-     */
-    public function end(): void
-    {
-        // TODO: Implement end() method.
-    }
 }

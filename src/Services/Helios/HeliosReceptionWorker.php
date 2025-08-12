@@ -17,21 +17,12 @@ class HeliosReceptionWorker implements IWorker
 {
     public const QUEUE_NAME = 'helios-reception-fichier';
 
-    private WorkerScript $workerScript;
-    private S2lowLogger $s2lowLogger;
-    private FTPHeliosReceiver $ftpFileGetter;
-    private bool $usePasstrans;
-
     public function __construct(
-        S2lowLogger $s2lowLogger,
-        WorkerScript $workerScript,
-        FTPHeliosReceiver $FTPHeliosReceiver,
-        bool $usePasstrans = false
+        private readonly S2lowLogger $s2lowLogger,
+        private readonly WorkerScript $workerScript,
+        private readonly FTPHeliosReceiverManager $receiverManager,
+        private bool $usePasstrans = false
     ) {
-        $this->s2lowLogger = $s2lowLogger;
-        $this->workerScript = $workerScript;
-        $this->ftpFileGetter = $FTPHeliosReceiver;
-        $this->usePasstrans = $usePasstrans;
     }
 
     public function getQueueName(): string
@@ -52,7 +43,7 @@ class HeliosReceptionWorker implements IWorker
     {
         try {
             $this->s2lowLogger->info("Début de la récupération [{$this->getQueueName()}]");
-            return $this->ftpFileGetter->retrieveNames();
+            return $this->receiverManager->get()->retrieveNames();
         } catch (Exception $e) {
             $this->s2lowLogger->info("Probleme lors de la recuperation des noms : " . $e->getMessage());
             exit;
@@ -65,7 +56,7 @@ class HeliosReceptionWorker implements IWorker
     public function work($data): void
     {
         try {
-            $this->ftpFileGetter->recupOneFile($data);
+            $this->receiverManager->get()->recupOneFile($data);
             if ($this->workerScript) {
                 $this->workerScript->putJobByClassName(HeliosAnalyseFichierRecuWorker::class, $data);
             }
@@ -85,15 +76,5 @@ class HeliosReceptionWorker implements IWorker
     public function isDataValid($data): bool
     {
         return true;
-    }
-
-    public function start(): void
-    {
-        $this->ftpFileGetter->debutTraitement();
-    }
-
-    public function end(): void
-    {
-        $this->ftpFileGetter->finTraitement();
     }
 }
