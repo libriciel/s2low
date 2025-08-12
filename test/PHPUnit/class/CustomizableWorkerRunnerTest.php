@@ -114,12 +114,8 @@ class CustomizableWorkerRunnerTest extends TestCase
 
         // Le heliosReceptionWorker est capable de traiter
         $this->heliosReceptionWorker->method('isDataValid')->willReturn(true);
-        $this->heliosReceptionWorker->method('end')->willThrowException(new Exception('Bitter End'));
         $this->workerRunner->setMinExecutionTimeInSeconds(1);
         $this->workerRunner->work();
-        static::assertTrue(
-            $this->testHandler->hasErrorThatContains('Bitter End')
-        );
         static::assertTrue(
             $this->testHandler->hasInfoThatMatches('/Arret du script/')
         );
@@ -152,7 +148,7 @@ class CustomizableWorkerRunnerTest extends TestCase
             ->expects(static::exactly(2))
             ->method('work')
             ->willReturnCallback(function () use ($matcher) {
-                if ($matcher->getInvocationCount() === 1) {
+                if ($matcher->getInvocationCount() === 0) {
                     throw new RecoverableException();
                 }
                 return 'data';
@@ -172,46 +168,108 @@ class CustomizableWorkerRunnerTest extends TestCase
 
     public function testWorkerScriptException(): void
     {
+        // peekReady retourne un job : il n'y a pas besoin de rebuild la queue
         $this->queue->method('peekReady')->willReturn($this->Job);
-        $this->queue->method('reserve')->willReturn($this->Job);
+        $this->workerScript->expects(static::never())->method('rebuildQueue');
 
-        // Le heliosReceptionWorker renvoie une WorkerScriptException à l'appel de start
-        $this->heliosReceptionWorker->expects(static::once())
-            ->method('start')
-            ->willThrowException(new WorkerScriptException('Un message informatif'));
+        // La queue va renvoyer un seul job, puis false quand elle est vide
+        $this->queue->method('reserve')->willReturnOnConsecutiveCalls($this->Job, $this->Job);
 
-        $this->workerRunner->setMinExecutionTimeInSeconds(1);
+        $this->Job->expects(static::exactly(1))->method('getData')->willReturn('data');
+
+        // Le job est supprimé
+        $this->queue->expects(self::exactly(1))->method('delete')->with($this->Job);
+
+        // Le heliosReceptionWorker ne traite qu'un job
+        $this->heliosReceptionWorker->expects(self::exactly(1))
+            ->method('isDataValid')
+            ->with('data')
+            ->willReturn(true);
+
+        // car il rencontre une WorkerScriptException la première fois, et ne traite pas la seconde
+        $matcher     = static::exactly(2);
+        $this->heliosReceptionWorker
+            ->expects(static::exactly(1))
+            ->method('work')
+            ->willReturnCallback(function () use ($matcher) {
+                if ($matcher->getInvocationCount() === 0) {
+                    throw new WorkerScriptException('Un message informatif');
+                }
+                return 'data';
+            });
+
         static::assertTrue($this->workerRunner->work());
     }
 
     public function testPausingQueueException(): void
     {
+        // peekReady retourne un job : il n'y a pas besoin de rebuild la queue
         $this->queue->method('peekReady')->willReturn($this->Job);
-        $this->queue->method('reserve')->willReturn($this->Job);
+        $this->workerScript->expects(static::never())->method('rebuildQueue');
 
-        // Le heliosReceptionWorker renvoie une WorkerScriptException à l'appel de start
-        $this->heliosReceptionWorker->expects(static::once())
-            ->method('start')
-            ->willThrowException(new PausingQueueException('Un message informatif'));
+        // La queue va renvoyer un seul job, puis false quand elle est vide
+        $this->queue->method('reserve')->willReturnOnConsecutiveCalls($this->Job, $this->Job);
 
-        $this->workerRunner->setMinExecutionTimeInSeconds(1);
+        $this->Job->expects(static::exactly(1))->method('getData')->willReturn('data');
+
+        // Le job est supprimé
+        $this->queue->expects(self::exactly(1))->method('delete')->with($this->Job);
+
+        // Le heliosReceptionWorker ne traite qu'un job
+        $this->heliosReceptionWorker->expects(self::exactly(1))
+            ->method('isDataValid')
+            ->with('data')
+            ->willReturn(true);
+
+        // car il rencontre une PausingQueueException la première fois, et ne traite pas la seconde
+        $matcher     = static::exactly(2);
+        $this->heliosReceptionWorker
+            ->expects(static::exactly(1))
+            ->method('work')
+            ->willReturnCallback(function () use ($matcher) {
+                if ($matcher->getInvocationCount() === 0) {
+                    throw new PausingQueueException('Un message informatif');
+                }
+                return 'data';
+            });
+
         static::assertTrue($this->workerRunner->work());
         static::assertTrue(
             $this->testHandler->hasInfoThatMatches('/Pausing queue for 30 seconds/')
         );
-        // Le temps de pause est supérieur au MinExecutionTime
-        // On n'a donc pas d'éntrée log 'Arret du script'
     }
 
     public function testThrowable(): void
     {
+        // peekReady retourne un job : il n'y a pas besoin de rebuild la queue
         $this->queue->method('peekReady')->willReturn($this->Job);
-        $this->queue->method('reserve')->willReturn($this->Job);
+        $this->workerScript->expects(static::never())->method('rebuildQueue');
 
-        // Le heliosReceptionWorker renvoie une WorkerScriptException à l'appel de start
-        $this->heliosReceptionWorker->expects(static::once())
-            ->method('start')
-            ->willThrowException(new Error('Un message informatif'));
+        // La queue va renvoyer un seul job, puis false quand elle est vide
+        $this->queue->method('reserve')->willReturnOnConsecutiveCalls($this->Job, $this->Job);
+
+        $this->Job->expects(static::exactly(1))->method('getData')->willReturn('data');
+
+        // Le job est supprimé
+        $this->queue->expects(self::exactly(1))->method('delete')->with($this->Job);
+
+        // Le heliosReceptionWorker ne traite qu'un job
+        $this->heliosReceptionWorker->expects(self::exactly(1))
+            ->method('isDataValid')
+            ->with('data')
+            ->willReturn(true);
+
+        // car il rencontre une PausingQueueException la première fois, et ne traite pas la seconde
+        $matcher     = static::exactly(2);
+        $this->heliosReceptionWorker
+            ->expects(static::exactly(1))
+            ->method('work')
+            ->willReturnCallback(function () use ($matcher) {
+                if ($matcher->getInvocationCount() === 0) {
+                    throw new Error('Un message informatif');
+                }
+                return 'data';
+            });
 
         $this->workerRunner->setMinExecutionTimeInSeconds(1);
         static::assertFalse($this->workerRunner->work());

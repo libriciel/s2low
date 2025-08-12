@@ -63,14 +63,4 @@ class HeliosEnvoiWorker implements IWorker
     {
         return self::QUEUE_NAME . ($usePasstrans ? '-passtrans' : '');
     }
-
-    public function start(): void
-    {
-        // TODO: Implement start() method.
-    }
-
-    public function end(): void
-    {
-        // TODO: Implement end() method.
-    }
 }

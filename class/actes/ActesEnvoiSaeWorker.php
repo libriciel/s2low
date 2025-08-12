@@ -47,14 +47,4 @@ class ActesEnvoiSaeWorker implements IWorker
     {
         return true;
     }
-
-    public function start(): void
-    {
-        // TODO: Implement start() method.
-    }
-
-    public function end(): void
-    {
-        // TODO: Implement end() method.
-    }
 }
