@@ -41,11 +41,6 @@ class HeliosMenagePesAcquitWorker implements IWorker
         $this->pesAcquitCloudStorage->deleteFilesOnDisk(self::NB_DAYS_IN_DISK, true);
     }
 
-    public function getMutexName($data): string
-    {
-        return $this->getQueueName();
-    }
-
     public function isDataValid($data): bool
     {
         return true;

@@ -229,11 +229,6 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
         return false;
     }
 
-    public function getMutexName($data): string
-    {
-        return sprintf("actes-transaction-%s", $data);
-    }
-
     public function isDataValid($data): bool
     {
         $enveloppe_id = $data;

@@ -107,11 +107,6 @@ class ActesEnvoiFichierWorker implements IWorker
         return true;
     }
 
-    public function getMutexName($data): string
-    {
-        return sprintf("actes-transaction-%s", $data);
-    }
-
     public function isDataValid($data): bool
     {
         return true;

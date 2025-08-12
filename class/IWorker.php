@@ -35,12 +35,6 @@ interface IWorker
      */
     public function work($data);
 
-
-    /**
-     * @param $data
-     */
-    public function getMutexName($data): string;
-
     /**
      * @param $data
      * @return boolean indique si les données sont encore valide (i.e la transaction dans le bon état par exemple), si false, on sort le travail de la file

@@ -64,6 +64,10 @@ class WorkerRunnerWithDataFromBeanstalkd implements WorkerRunner
         }
         $this->s2lowLogger->debug('Sortie section critique');
     }
+    public function getMutexName(string $queueName, ?string $data): string
+    {
+        return sprintf('%s-%s', $queueName, $data);
+    }
     public function work(): bool
     {
 
@@ -89,7 +93,7 @@ class WorkerRunnerWithDataFromBeanstalkd implements WorkerRunner
                 $data = $job->getData();
                 $this->s2lowLogger->info('Travail en cours', [$data]);
 
-                $mutex = $this->redisMutexWrapper->getMutex($this->worker->getMutexName($data));
+                $mutex = $this->redisMutexWrapper->getMutex($this->getMutexName($this->worker->getQueueName(), $data));
                 $workerToUse = $this->worker;
                 $mutex->synchronized(function () use ($workerToUse, $data) {
                     $this->syncrhonizedWork($workerToUse, $data);
