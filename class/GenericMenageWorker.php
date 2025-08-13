@@ -1,25 +1,23 @@
 <?php
 
-namespace S2lowLegacy\Class\helios;
+namespace S2lowLegacy\Class;
 
-use S2lowLegacy\Class\IWorker;
 use Exception;
 
-class HeliosMenageWorker implements IWorker
+class GenericMenageWorker implements IWorker
 {
-    public const QUEUE_NAME = 'helios-menage';
     private const NB_DAYS_IN_DISK = 15;
     public function __construct(
-        private readonly PESAllerCloudStorage $PESAllerCloudStorage
+        private readonly CloudStorage $cloudStorage,
+        private readonly string $queueName
     ) {
     }
-
     public function getQueueName(): string
     {
-        return sprintf('%s-%s', self::QUEUE_NAME, gethostname());
+        return sprintf('%s-%s', $this->queueName, gethostname());
     }
 
-    public function getData($id): mixed
+    public function getData($id): int
     {
         return $id;
     }
@@ -29,6 +27,7 @@ class HeliosMenageWorker implements IWorker
         return [1];
     }
 
+
     /**
      * @param $data
      * @return void
@@ -36,7 +35,7 @@ class HeliosMenageWorker implements IWorker
      */
     public function work($data): void
     {
-        $this->PESAllerCloudStorage->deleteFilesOnDisk(self::NB_DAYS_IN_DISK);
+        $this->cloudStorage->deleteFilesOnDisk(self::NB_DAYS_IN_DISK);
     }
 
     public function isDataValid($data): bool
