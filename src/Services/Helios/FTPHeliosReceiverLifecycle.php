@@ -2,9 +2,9 @@
 
 namespace S2low\Services\Helios;
 
-class FTPHeliosReceiverManager
+class FTPHeliosReceiverLifecycle
 {
-    private bool $isConnected = false;
+    private bool $needsToStartTraitement = true;
     public function __construct(private readonly FTPHeliosReceiver $receiver)
     {
     }
@@ -14,8 +14,9 @@ class FTPHeliosReceiverManager
     }
     public function get(): FTPHeliosReceiver
     {
-        if ($this->isConnected) {
+        if ($this->needsToStartTraitement) {
             $this->receiver->debutTraitement();
+            $this->needsToStartTraitement = false;
         }
         return $this->receiver;
     }

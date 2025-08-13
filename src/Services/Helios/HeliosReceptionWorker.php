@@ -20,7 +20,7 @@ class HeliosReceptionWorker implements IWorker
     public function __construct(
         private readonly S2lowLogger $s2lowLogger,
         private readonly WorkerScript $workerScript,
-        private readonly FTPHeliosReceiverManager $receiverManager,
+        private readonly FTPHeliosReceiverLifecycle $receiverManager,
         private bool $usePasstrans = false
     ) {
     }
