@@ -48,14 +48,16 @@ class FTPHeliosReceiverFactory
      * @param bool $usePasstrans
      * @return \S2low\Services\Helios\FTPHeliosReceiver
      */
-    public function get(bool $usePasstrans): FTPHeliosReceiver
+    public function get(bool $usePasstrans): FTPHeliosReceiverLifecycle
     {
 
-        return new FTPHeliosReceiver(
+        $FTPHeliosReceiver = new FTPHeliosReceiver(
             $this->s2lowLogger,
             $this->connectionsConfigurationManager->get($usePasstrans),
             $this->localPath,
             $this->helios_responses_error_path
         );
+
+        return new FTPHeliosReceiverLifecycle($FTPHeliosReceiver);
     }
 }

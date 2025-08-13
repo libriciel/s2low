@@ -9,7 +9,7 @@ use RuntimeException;
 use PHPUnit\Framework\TestCase;
 use S2low\Services\Helios\DGFiPConnection\FTPFileRetrieveException;
 use S2low\Services\Helios\FTPHeliosReceiver;
-use S2low\Services\Helios\FTPHeliosReceiverManager;
+use S2low\Services\Helios\FTPHeliosReceiverLifecycle;
 use S2low\Services\Helios\HeliosReceptionWorker;
 use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker;
 use S2lowLegacy\Class\RecoverableException;
@@ -33,7 +33,7 @@ class HeliosReceptionWorkerTest extends TestCase
         $this->FTPHeliosReceiver = $this->getMockBuilder(FTPHeliosReceiver::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->FTPHeliosReceiverManager = $this->getMockBuilder(FTPHeliosReceiverManager::class)
+        $this->FTPHeliosReceiverManager = $this->getMockBuilder(FTPHeliosReceiverLifecycle::class)
             ->disableOriginalConstructor()
             ->getMock();
         $this->FTPHeliosReceiverManager->method('get')->willReturn($this->FTPHeliosReceiver);
