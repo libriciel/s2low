@@ -46,7 +46,11 @@ class VerifyPadesSignature
     {
         $pemCertificate = $this->validateSignatureWithoutCertificateChecking($signature);
         if (!$mustCheckInCertificateStore) {
-            return;
+            // TODO : supprimer
+            // la fonction validateCertificateFomSignature laisse déjà passer les cas ou on n'est pas capable de
+            // construire une chaine de certification dans le magasin de certificat.
+            // Il n'est donc pas nécessaire de distinguer ce cas.
+            // on laisse ça là au cas ou on a cassé un autre cas et qu'il faudrait refaire un patch rapidement.
         }
         $this->validateCertificateFomSignature(
             $pemCertificate->getContent(),
