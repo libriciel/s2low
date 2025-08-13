@@ -42,9 +42,12 @@ class VerifyPadesSignature
      * @param $signature
      * @throws Exception
      */
-    public function validateSignature($signature): void
+    public function validateSignature($signature, bool $mustCheckInCertificateStore = true): void
     {
         $pemCertificate = $this->validateSignatureWithoutCertificateChecking($signature);
+        if (!$mustCheckInCertificateStore) {
+            return;
+        }
         $this->validateCertificateFomSignature(
             $pemCertificate->getContent(),
             $this->getTimestampFromSignature($signature)

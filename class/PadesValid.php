@@ -46,11 +46,7 @@ class PadesValid
             return false;
         }
         foreach ($result->signatures as $signature) {
-            if ($certificateChecking) {
-                $this->verifyPadesSignature->validateSignature($signature);
-            } else {
-                $this->verifyPadesSignature->validateSignatureWithoutCertificateChecking($signature);
-            }
+            $this->verifyPadesSignature->validateSignature($signature, $certificateChecking);
         }
         return true;
     }

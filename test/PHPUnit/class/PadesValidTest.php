@@ -47,10 +47,10 @@ class PadesValidTest extends S2lowTestCase
     }
 
     private function createPadesValidForValidation(
-        array $callRepartition = [1,0],
-        string $exceptionMessage = null,
-        string $returnString = '{"signatures":["une signature"],"signed":true}'
+        bool $mustCheckInCertificateStore = true,
+        string $exceptionMessage = null
     ) {
+        $returnString = '{"signatures":["une signature"],"signed":true}';
 
         $curlWrapperMock = $this->getMockBuilder(CurlWrapper::class)
             ->disableOriginalConstructor()
@@ -71,22 +71,15 @@ class PadesValidTest extends S2lowTestCase
 
         if (! is_null($exceptionMessage)) {
             $verifyPadesSignatureMock->expects(
-                $this->exactly($callRepartition[0])
+                $this->exactly(1)
             )->method('validateSignature')->willThrowException(
                 new Exception($exceptionMessage)
-            );
-            $verifyPadesSignatureMock->expects(
-                $this->exactly($callRepartition[1])
-            )->method('validateSignatureWithoutCertificateChecking')->willThrowException(
-                new Exception($exceptionMessage)
-            );
+            )->with("une signature", $mustCheckInCertificateStore);
         } else {
             $verifyPadesSignatureMock->expects(
-                $this->exactly($callRepartition[0])
-            )->method('validateSignature');
-            $verifyPadesSignatureMock->expects(
-                $this->exactly($callRepartition[1])
-            )->method('validateSignatureWithoutCertificateChecking');
+                $this->exactly(1)
+            )->method('validateSignature')
+                ->with("une signature", $mustCheckInCertificateStore);
         }
 
         $padesValid = new PadesValid("bli", $curlWrapperFactoryMock, $verifyPadesSignatureMock);
@@ -174,7 +167,7 @@ class PadesValidTest extends S2lowTestCase
 
     public function testWithoutCertificateChecking()
     {
-        $padesValid = $this->createPadesValidForValidation([0,1]);
+        $padesValid = $this->createPadesValidForValidation(false);
 
         $this->assertTrue(
             $padesValid->validate("/vers/un/fichier", false)
@@ -184,7 +177,7 @@ class PadesValidTest extends S2lowTestCase
     public function testExceptionThrowGetsThrough()
     {
         $padesValid = $this->createPadesValidForValidation(
-            [1,0],
+            true,
             "Une Exception"
         );
 
