@@ -689,3 +689,41 @@ services:
     public: true
     tags:
       - { name: monolog.processor }
+
+  S2lowLegacy\Class\GenericMenageWorker:
+    autowire: false
+
+  actes.menageEnveloppeWorker:
+    class: 'S2lowLegacy\Class\GenericMenageWorker'
+    public: true
+    arguments:
+      $cloudStorage: '@S2lowLegacy\Class\actes\ActesCloudStorage'
+      $queueName: "actes-enveloppe-menage"
+
+  helios.menagePesAcquitWorker:
+    class: 'S2lowLegacy\Class\GenericMenageWorker'
+    public: true
+    arguments:
+      $cloudStorage: '@S2lowLegacy\Class\helios\PESAcquitCloudStorage'
+      $queueName: "helios-pes-acquit-menage"
+
+  helios.menagePesRetourWorker:
+    class: 'S2lowLegacy\Class\GenericMenageWorker'
+    public: true
+    arguments:
+      $cloudStorage: '@S2lowLegacy\Class\helios\PESRetourCloudStorage'
+      $queueName: "helios-pes-retour-menage"
+
+  helios.menagePesAllerWorker:
+    class: 'S2lowLegacy\Class\GenericMenageWorker'
+    public: true
+    arguments:
+      $cloudStorage: '@S2lowLegacy\Class\helios\PESAllerCloudStorage'
+      $queueName: "helios-pes-aller-menage"
+
+  mail.menageWorker:
+    class: 'S2lowLegacy\Class\GenericMenageWorker'
+    public: true
+    arguments:
+      $cloudStorage: '@S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage'
+      $queueName: "mailsec-menage"

@@ -7,7 +7,7 @@ namespace PHPUnit\class\helios;
 use Exception;
 use HeliosUtilitiesTestTrait;
 use Monolog\Level;
-use S2lowLegacy\Class\helios\HeliosMenageWorker;
+use S2lowLegacy\Class\GenericMenageWorker;
 use S2lowLegacy\Class\helios\PESAllerCloudStorable;
 use S2lowLegacy\Class\helios\PESAllerCloudStorage;
 use S2lowLegacy\Class\TmpFolder;
@@ -22,7 +22,7 @@ class HeliosMenageWorkerTest extends S2lowTestCase
     private TmpFolder $tmpFolder;
     private string $helios_files_upload_root;
     private string $repertoirePesAllerSansTransaction;
-    private HeliosMenageWorker $worker;
+    private GenericMenageWorker $worker;
     private OpenStackSwiftWrapper $swift;
     private HeliosTransactionsSQL $transactionsSQL;
 
@@ -158,10 +158,11 @@ class HeliosMenageWorkerTest extends S2lowTestCase
         return $pes_aller_path;
     }
 
-    private function getHeliosMenageWorker(): HeliosMenageWorker
+    private function getHeliosMenageWorker(): GenericMenageWorker
     {
-        return new HeliosMenageWorker(
-            $this->getPesAllerCloudStorage()
+        return new GenericMenageWorker(
+            $this->getPesAllerCloudStorage(),
+            'queueName'
         );
     }
 

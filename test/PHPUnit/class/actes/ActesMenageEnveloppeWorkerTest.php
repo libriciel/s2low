@@ -1,6 +1,7 @@
 <?php
 
-use S2lowLegacy\Class\actes\ActesMenageEnveloppeWorker;
+declare(strict_types=1);
+
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackContainerStore;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
@@ -17,7 +18,8 @@ class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
         $tmp_folder = $tmpFolder->create();
         mkdir($tmp_folder . "/000000000/");
         $actes_path = $tmp_folder . "/000000000/test.tar.gz";
-        file_put_contents("$actes_path", "foo");
+        file_put_contents("$actes_path", 'foo');
+        touch($actes_path, 0);
         return $actes_path;
     }
 
@@ -62,8 +64,7 @@ class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
         $this->mockOpenStack();
 
         $this->assertFileExists($actes_path);
-        $actesMenageEnveloppeWorker = $this->getObjectInstancier()->get(ActesMenageEnveloppeWorker::class);
-        $actesMenageEnveloppeWorker->setNbDayInDisk(0);
+        $actesMenageEnveloppeWorker = $this->getObjectInstancier()->get('actes.menageEnveloppeWorker');
         $actesMenageEnveloppeWorker->work(false);
         $this->assertFileDoesNotExist($actes_path);
         $this->assertDirectoryDoesNotExist(dirname($actes_path));
@@ -78,8 +79,7 @@ class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
         $this->mockOpenStack(false);
 
         $this->assertFileExists($actes_path);
-        $actesMenageEnveloppeWorker = self::getContainer()->get(ActesMenageEnveloppeWorker::class);
-        $actesMenageEnveloppeWorker->setNbDayInDisk(0);
+        $actesMenageEnveloppeWorker = self::getContainer()->get('actes.menageEnveloppeWorker');
         $actesMenageEnveloppeWorker->work(false);
         static::assertFileDoesNotExist($actes_path);
         static::assertFileExists(
@@ -98,8 +98,7 @@ class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
         $this->mockOpenStack(true);
 
         $this->assertFileExists($actes_path);
-        $actesMenageEnveloppeWorker = $this->getObjectInstancier()->get(ActesMenageEnveloppeWorker::class);
-        $actesMenageEnveloppeWorker->setNbDayInDisk(0);
+        $actesMenageEnveloppeWorker = $this->getObjectInstancier()->get('actes.menageEnveloppeWorker');
         $actesMenageEnveloppeWorker->work(false);
         $this->assertFileDoesNotExist($actes_path);
         $this->assertDirectoryExists(dirname($actes_path));
