@@ -689,12 +689,22 @@ services:
   S2lowLegacy\Class\GenericMenageWorker:
     autowire: false
 
+  S2lowLegacy\Class\GenericStoreWorker:
+    autowire: false
+
   actes.menageEnveloppeWorker:
     class: 'S2lowLegacy\Class\GenericMenageWorker'
     public: true
     arguments:
       $cloudStorage: '@S2lowLegacy\Class\actes\ActesCloudStorage'
       $queueName: "actes-enveloppe-menage"
+
+  actes.storeEnveloppeWorker:
+    class: 'S2lowLegacy\Class\GenericStoreWorker'
+    public: true
+    arguments:
+      $cloudStorage: '@S2lowLegacy\Class\actes\ActesCloudStorage'
+      $queueName: "actes-store-enveloppe"
 
   helios.menagePesAcquitWorker:
     class: 'S2lowLegacy\Class\GenericMenageWorker'
@@ -703,12 +713,26 @@ services:
       $cloudStorage: '@S2lowLegacy\Class\helios\PESAcquitCloudStorage'
       $queueName: "helios-pes-acquit-menage"
 
+  helios.storePesAcquitWorker:
+    class: 'S2lowLegacy\Class\GenericStoreWorker'
+    public: true
+    arguments:
+      $cloudStorage: '@S2lowLegacy\Class\helios\PESAcquitCloudStorage'
+      $queueName: "helios-store-pes-acquit"
+
   helios.menagePesRetourWorker:
     class: 'S2lowLegacy\Class\GenericMenageWorker'
     public: true
     arguments:
       $cloudStorage: '@S2lowLegacy\Class\helios\PESRetourCloudStorage'
       $queueName: "helios-pes-retour-menage"
+
+  helios.storePesRetourWorker:
+    class: 'S2lowLegacy\Class\GenericStoreWorker'
+    public: true
+    arguments:
+      $cloudStorage: '@S2lowLegacy\Class\helios\PESRetourCloudStorage'
+      $queueName: "helios-store-pes-retour"
 
   helios.menagePesAllerWorker:
     class: 'S2lowLegacy\Class\GenericMenageWorker'
@@ -717,9 +741,23 @@ services:
       $cloudStorage: '@S2lowLegacy\Class\helios\PESAllerCloudStorage'
       $queueName: "helios-pes-aller-menage"
 
+  helios.storePesAllerWorker:
+    class: 'S2lowLegacy\Class\GenericStoreWorker'
+    public: true
+    arguments:
+      $cloudStorage: '@S2lowLegacy\Class\helios\PESAllerCloudStorage'
+      $queueName: "helios-store-pes-aller"
+
   mail.menageWorker:
     class: 'S2lowLegacy\Class\GenericMenageWorker'
     public: true
     arguments:
       $cloudStorage: '@S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage'
       $queueName: "mailsec-menage"
+
+  mail.storeWorker:
+    class: 'S2lowLegacy\Class\GenericStoreWorker'
+    public: true
+    arguments:
+      $cloudStorage: '@S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage'
+      $queueName: "mailsec-included-file"

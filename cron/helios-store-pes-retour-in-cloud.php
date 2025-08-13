@@ -1,14 +1,13 @@
 #! /usr/bin/php
 <?php
 
-use S2lowLegacy\Class\helios\HeliosStorePESRetourWorker;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\WorkerRunnerBuilder;
 
 require_once(__DIR__ . "/../init/init.php");
 /** @var WorkerRunnerBuilder $workerBuilder */
 [$workerBuilder,$worker] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([WorkerRunnerBuilder::class,HeliosStorePESRetourWorker::class]);
+    ->getArray([WorkerRunnerBuilder::class,'helios.storePesRetourWorker']);
 
 $workerBuilder->scriptWithLogs(
     $worker,

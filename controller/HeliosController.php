@@ -5,7 +5,6 @@ namespace S2lowLegacy\Controller;
 use DOMDocument;
 use Exception;
 use S2low\Services\Helios\HeliosAnalyseFichierAEnvoyerWorker;
-use S2lowLegacy\Class\helios\HeliosStorePESAllerWorker;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Log;
@@ -169,8 +168,9 @@ class HeliosController extends Controller
         $msg = "Création de la transation n°" . $id_transaction . ". Résultat ok.";
         Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', self::MODULE_NAME, false, $user_id);
 
+        /** @var WorkerScript $workerScript */
         $workerScript = $this->getObjectInstancier()->get(WorkerScript::class);
-        $workerScript->putJobByClassName(HeliosStorePESAllerWorker::class, $id_transaction);
+        $workerScript->putJobByQueueName('helios-store-pes-aller', $id_transaction);
         if ($state == HeliosTransactionsSQL::POSTE) {
             //TODO : Quickfix pour permettre d'utiliser un Worker utilisant des composants Symfony
             $workerScript->putJobByQueueName(HeliosAnalyseFichierAEnvoyerWorker::QUEUE_NAME, $id_transaction);

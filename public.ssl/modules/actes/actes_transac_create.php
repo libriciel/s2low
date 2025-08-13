@@ -4,12 +4,9 @@ use S2lowLegacy\Class\actes\ActesAntivirusWorker;
 use S2lowLegacy\Class\actes\ActesClassificationCodesSQL;
 use S2lowLegacy\Class\actes\ActesEnvelopeSerialSQL;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
-use S2lowLegacy\Class\actes\ActesStoreEnveloppeWorker;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Class\Authority;
-use S2lowLegacy\Class\Database;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\FileUploader;
 use S2lowLegacy\Class\Helpers;
@@ -531,8 +528,9 @@ $actesTrantransactionSQL = $objectInstancier->get(ActesTransactionsSQL::class);
 $info_actes = $actesTrantransactionSQL->getInfo($trans->getId());
 
 
+/** @var WorkerScript $workerScript */
 $workerScript = $objectInstancier->get(WorkerScript::class);
-$workerScript->putJobByClassName(ActesStoreEnveloppeWorker::class, $env->getId());
+$workerScript->putJobByQueueName('actes-store-enveloppe', $env->getId());
 
 if ($info_actes['last_status_id'] == ActesStatusSQL::STATUS_POSTE) {
     $workerScript->putJobByClassName(ActesAntivirusWorker::class, $trans->getId());

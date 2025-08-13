@@ -2,7 +2,6 @@
 
 use S2low\Services\Helios\HeliosAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\helios\HeliosSignature;
-use S2lowLegacy\Class\helios\HeliosStorePESAllerWorker;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Initialisation;
@@ -117,7 +116,8 @@ for ($i = 1; $i <= $nb_signature; $i++) {
 
     $heliosTransactionSQL->updateStatus($id, HeliosTransactionsSQL::POSTE, 'Fichier signé');
 
-    $workerScript->putJobByClassName(HeliosStorePESAllerWorker::class, $id);
+    /** @var WorkerScript $workerScript */
+    $workerScript->putJobByQueueName('helios-store-pes-aller', $id);
     $workerScript->putJobByQueueName(HeliosAnalyseFichierAEnvoyerWorker::QUEUE_NAME, $id);
 }
 

@@ -2,7 +2,6 @@
 
 use S2lowLegacy\Class\actes\ActesAntivirusWorker;
 use S2lowLegacy\Class\actes\ActesNameArchive;
-use S2lowLegacy\Class\actes\ActesStoreEnveloppeWorker;
 use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
@@ -251,7 +250,8 @@ foreach ($transacs as $trans) {
     $apiMsg .= $trans->getId() . "\n";
 }
 
-$workerScript->putJobByClassName(ActesStoreEnveloppeWorker::class, $env->getId());
+/** @var WorkerScript $workerScript */
+$workerScript->putJobByQueueName('actes-store-enveloppe', $env->getId());
 $workerScript->putJobByClassName(ActesAntivirusWorker::class, $trans->getId());
 
 
