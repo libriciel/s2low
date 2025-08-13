@@ -5,7 +5,6 @@ use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesSignature;
-use S2lowLegacy\Class\actes\ActesStoreEnveloppeWorker;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Initialisation;
@@ -94,8 +93,8 @@ try {
 
         $actesEnvelopeSQL->setTransactionInCloudRemove($transaction_info['envelope_id']);
 
-        $workerScript->putJobByClassName(
-            ActesStoreEnveloppeWorker::class,
+        $workerScript->putJobByQueueName(
+            'actes-store-enveloppe',
             $transaction_info['envelope_id']
         );
 

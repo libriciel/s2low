@@ -6,7 +6,7 @@ namespace PHPUnit\class\helios;
 
 use Exception;
 use HeliosUtilitiesTestTrait;
-use S2lowLegacy\Class\helios\HeliosStorePESAllerWorker;
+use S2lowLegacy\Class\GenericStoreWorker;
 use S2lowLegacy\Class\helios\PESAllerCloudStorage;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use S2lowTestCase;
@@ -22,8 +22,8 @@ class HeliosStorePESAllerWorkerTest extends S2lowTestCase
     public function testGetAllId()
     {
         $transaction_id = $this->createTransaction();
-        /** @var HeliosStorePESAllerWorker $heliosStorePESAllerWorker */
-        $heliosStorePESAllerWorker = $this->getObjectInstancier()->get(HeliosStorePESAllerWorker::class);
+        /** @var GenericStoreWorker $heliosStorePESAllerWorker */
+        $heliosStorePESAllerWorker = $this->getObjectInstancier()->get('helios.storePesAllerWorker');
         static::assertEquals([$transaction_id], $heliosStorePESAllerWorker->getAllId());
     }
 
@@ -37,7 +37,7 @@ class HeliosStorePESAllerWorkerTest extends S2lowTestCase
 
         $storageMock->expects(static::once())->method('storeObject')->with(6587);
 
-        $heliosStorePESAllerWorker = new HeliosStorePESAllerWorker($storageMock);
+        $heliosStorePESAllerWorker = new GenericStoreWorker($storageMock, 'queueName');
 
         $heliosStorePESAllerWorker->work(6587);
     }
