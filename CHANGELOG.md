@@ -7,6 +7,7 @@
 - Retire les espaces present dans le champ Helios FTP dans l'interface d'administration Helios. #1344
 - Correction de l'acces à actes_classification_fetch.php #1373
 - Corrige un probleme d'affichage lors de la suppression d'un mail #1362
+- [Hélios] Correction de la redirection après le clic sur "Passer la transaction en erreur" #1376
 
 ## 5.1.2 - 2025-07-23
 

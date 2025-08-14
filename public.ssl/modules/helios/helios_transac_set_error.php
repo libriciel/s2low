@@ -42,3 +42,4 @@ Log::newEntry(
 
 $_SESSION['error'] = "La transaction $id a été passée en erreur.";
 header("Location: helios_transac_show.php?id=$id");
+exit();
