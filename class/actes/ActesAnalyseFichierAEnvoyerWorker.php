@@ -25,7 +25,6 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
     private $actesScriptHelper;
     private $padesValid;
     private $workerScript;
-    private $actes_dont_valid_signing_certificate;
     private $actesTypePJSQL;
     /** @var \S2low\Services\PdfValidator  */
     private $pdfValidator;
@@ -42,7 +41,6 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
         ActesScriptHelper $actesScriptHelper,
         PadesValid $padesValid,
         WorkerScript $workerScript,
-        $actes_dont_valid_signing_certificate,
         ActesTypePJSQL $actesTypePJSQL,
         PdfValidator $pdfValidator,
         ArchiveValidatorFactory $archiveValidatorFactory
@@ -54,7 +52,6 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
         $this->actesScriptHelper = $actesScriptHelper;
         $this->padesValid = $padesValid;
         $this->workerScript = $workerScript;
-        $this->actes_dont_valid_signing_certificate = $actes_dont_valid_signing_certificate;
         $this->actesTypePJSQL = $actesTypePJSQL;
         $this->pdfValidator = $pdfValidator;
         $this->archiveValidatorFactory = $archiveValidatorFactory;
@@ -101,9 +98,6 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
 
         $this->logger->debug("id_tdt : {$this->actes_appli_trigramme}, id_appli : {$this->actes_appli_quadrigramme}");
 
-
-        $must_validate_certificate = $this->mustValidateCertificate($transaction_ids);
-
         $archive = $this->archiveValidatorFactory->get(
             $this->actes_appli_trigramme,
             $this->actes_appli_quadrigramme,
@@ -128,7 +122,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
             } catch (Error $error) {
                 throw new Exception($error->getMessage(), $error->getCode(), $error);
             }
-            $this->validatePades($archive_path, $tmp_dir, $must_validate_certificate);
+            $this->validatePades($archive_path, $tmp_dir);
         } catch (RecoverableException $e) {
             $tmpFolder->delete($tmp_dir);
             $this->logger->error("[$envelope_libelle] : erreur lors de l'analyse PADES VALID : " . $e->getMessage());
@@ -161,7 +155,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
     /**
      * @throws RecoverableException
      */
-    private function validatePades($archive_filepath, $tmp_dir, $must_validate_certificate): void
+    private function validatePades($archive_filepath, $tmp_dir): void
     {
         $archive = new \Libriciel\LibActes\Archive();
 
@@ -171,10 +165,10 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
             foreach ($fichierXML->getFileList() as $filekey) {
                 if (is_array($fichierXML->$filekey)) {
                     foreach ($fichierXML->$filekey as $i => $filepath) {
-                        $this->validatePADESOneFile($filepath, $must_validate_certificate);
+                        $this->validatePADESOneFile($filepath);
                     }
                 } else {
-                    $this->validatePADESOneFile($fichierXML->$filekey, $must_validate_certificate);
+                    $this->validatePADESOneFile($fichierXML->$filekey);
                 }
             }
         }
@@ -183,7 +177,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
     /**
      * @throws RecoverableException
      */
-    private function validatePADESOneFile($filepath, $must_validate_certificate): void
+    private function validatePADESOneFile($filepath): void
     {
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime_type = finfo_file($finfo, $filepath);
@@ -194,39 +188,12 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
 
         $this->pdfValidator->check($filepath);
         try {
-            $this->padesValid->validate($filepath, $must_validate_certificate);
+            $this->padesValid->validate($filepath);
         } catch (RecoverableException $e) {
             throw $e;
         } catch (Exception $e) {
             throw new Exception("Problème sur " . basename($filepath) . " : " . $e->getMessage(), $e->getCode(), $e);
         }
-    }
-
-    /**
-     *
-     * On ne valide pas le certificat sur les marchés publics car les soumissionnaire peuvent le signer avec n'importe quel certificat
-     * Cela n'est de toute manière pas une exigence.
-     * On le fait sur le reste pour s'assurer que la collectivité signe avec des certificat valides (délib, arreté, ...)
-     *
-     *
-     * @param $transaction_ids
-     * @return bool
-     */
-    private function mustValidateCertificate($transaction_ids): bool
-    {
-        if ($this->actes_dont_valid_signing_certificate) {
-            return false;
-        }
-        $transactions_info = $this->actesTransactionsSQL->getInfo($transaction_ids[0]);
-
-        $this->logger->debug("test {$transaction_ids[0]}", $transactions_info);
-
-        if ($transactions_info['nature_code'] != 4 || mb_substr($transactions_info['classification'], 0, 3) != '1.1') {
-            $this->logger->debug("validate certificate on");
-            return true;
-        }
-        $this->logger->debug("validate certificate off");
-        return false;
     }
 
     public function getMutexName($data): string
