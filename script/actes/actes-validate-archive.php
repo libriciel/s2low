@@ -1,5 +1,7 @@
 <?php
 
+use Libriciel\LibActes\ArchiveValidator;
+
 require_once __DIR__ . "/../../init/init.php";
 $objectInstancier = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier();
 
@@ -11,7 +13,10 @@ if ($argc < 1) {
 
 $archive_path = $argv[1];
 
-$archive = new \Libriciel\LibActes\ArchiveValidator($objectInstancier->get('actes_appli_trigramme'), $objectInstancier->get('actes_appli_quadrigramme'));
+$archive = new ArchiveValidator(
+    $objectInstancier->get('app.actes_appli_trigramme'),
+    $objectInstancier->get('app.actes_appli_quadrigramme')
+);
 
 try {
     $archive->validate($archive_path);
