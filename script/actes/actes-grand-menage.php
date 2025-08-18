@@ -1,15 +1,15 @@
 <?php
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\actes\ActesMenage;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\ScriptSleeping;
 
 require_once(__DIR__ . "/../../init/init.php");
 list($objectInstancier, $logger) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
-    ->get([ObjectInstancier::class, S2lowLogger::class]);
+    ->get([ObjectInstancier::class, LoggerInterface::class]);
 
-$objectInstancier->set("Monolog\Logger", $logger->withName('ACTES-GRAND-MENAGE'));
+//$objectInstancier->set("Monolog\Logger", $logger->withName('ACTES-GRAND-MENAGE'));
 
 
 if (empty($argv[1])) {

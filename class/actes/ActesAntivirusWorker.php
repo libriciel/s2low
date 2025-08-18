@@ -2,9 +2,9 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\IWorker;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\WorkerScript;
 use Exception;
 
@@ -29,7 +29,7 @@ class ActesAntivirusWorker implements IWorker
         ActesRetriever $actesRetriever,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         Antivirus $antivirus,
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         WorkerScript $workerScript
     ) {
         $this->actesTransactionSQL = $actesTransactionSQL;

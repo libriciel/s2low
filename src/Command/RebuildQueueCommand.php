@@ -3,8 +3,8 @@
 namespace S2low\Command;
 
 use LogicException;
+use Psr\Log\LoggerInterface;
 use S2low\Services\Helios\HeliosEnvoiWorkerFactory;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\WorkerScript;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,9 +17,9 @@ class RebuildQueueCommand extends Command
 {
     private iterable $workers;
     /**
-     * @var S2lowLogger
+     * @var LoggerInterface
      */
-    private S2lowLogger $s2lowLogger;
+    private LoggerInterface $s2lowLogger;
     /**
      * @var WorkerScript
      */
@@ -32,19 +32,18 @@ class RebuildQueueCommand extends Command
     /**
      * @param iterable $workers
      * @param \S2low\Services\Helios\HeliosEnvoiWorkerFactory $heliosEnvoiWorkerFactory
-     * @param \S2lowLegacy\Class\S2lowLogger $s2lowLogger
+     * @param LoggerInterface $s2lowLogger
      * @param \S2lowLegacy\Class\WorkerScript $workerScript
      */
     public function __construct(
         iterable $workers,
         HeliosEnvoiWorkerFactory $heliosEnvoiWorkerFactory,
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         WorkerScript $workerScript
     ) {
         $this->workers = $workers;
         $this->heliosEnvoiWorkerFactory = $heliosEnvoiWorkerFactory;
         $this->s2lowLogger = $s2lowLogger;
-        $this->s2lowLogger->enableStdOut();
         $this->workerScript = $workerScript;
         parent::__construct();
     }
@@ -93,8 +92,6 @@ class RebuildQueueCommand extends Command
      */
     private function rebuildQueue(mixed $worker): void
     {
-        $this->s2lowLogger->setName($worker->getQueueName() . '-rebuild-queue');
-        $this->workerScript->setLogger($this->s2lowLogger);
         $this->workerScript->rebuildQueue($worker);
     }
 }

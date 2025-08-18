@@ -2,8 +2,8 @@
 
 namespace S2lowLegacy\Class\helios;
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Class\S2lowLogger;
 use Exception;
 use S2lowLegacy\Lib\UnrecoverableException;
 use S2lowLegacy\Model\AuthoritySQL;
@@ -19,7 +19,7 @@ class HeliosExport
     private $helios_responses_root;
 
     public function __construct(
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         AuthoritySQL $authoritySQL,
         HeliosTransactionsSQL $heliosTransactionsSQL,
         PesAllerRetriever $pesAllerRetriever,

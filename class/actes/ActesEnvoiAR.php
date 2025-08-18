@@ -2,7 +2,7 @@
 
 namespace S2lowLegacy\Class\actes;
 
-use S2lowLegacy\Class\S2lowLogger;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\TmpFolder;
 use Exception;
 use S2lowLegacy\Lib\SigTermHandler;
@@ -25,7 +25,7 @@ class ActesEnvoiAR
 
     public function __construct(
         ActesTransactionsSQL $actesTransactionsSQL,
-        S2lowLogger $logger,
+        LoggerInterface $logger,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         ActesEnvelopeSerialSQL $actesEnvelopeSerialSQL,
         ActesFileSender $actesFileSender,

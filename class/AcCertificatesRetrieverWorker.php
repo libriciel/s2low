@@ -2,13 +2,15 @@
 
 namespace S2lowLegacy\Class;
 
+use Psr\Log\LoggerInterface;
+
 class AcCertificatesRetrieverWorker implements IWorker
 {
     public const QUEUE_NAME = 'certificates-retriever';
     private const COMMAND = "/usr/bin/curl -s https://validca.libriciel.fr/retrieve-validca.sh | /bin/bash -s /etc/s2low/ssl 2>&1";
     private const COMMAND_APACHE = "apachectl graceful";
 
-    public function __construct(private readonly S2lowLogger $logger)
+    public function __construct(private readonly LoggerInterface $logger)
     {
     }
     /**

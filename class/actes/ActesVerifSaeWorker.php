@@ -2,9 +2,9 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\PastellWrapperFactory;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\SimpleXMLWrapper;
 use Exception;
 use S2lowLegacy\Model\PastellPropertiesSQL;
@@ -22,7 +22,7 @@ class ActesVerifSaeWorker implements IWorker
 
     public function __construct(
         ActesTransactionsSQL $actesTransactionsSQL,
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         PastellPropertiesSQL $pastellPropetiesSQL,
         PastellWrapperFactory $pastellWrapperFactory
     ) {

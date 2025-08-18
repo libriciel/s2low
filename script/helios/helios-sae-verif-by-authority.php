@@ -1,8 +1,8 @@
 <?php
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Class\helios\HeliosVerificationSaeWorker;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
@@ -16,8 +16,7 @@ if ($argc < 2) {
     exit(-1);
 }
 
-$s2LowLogger = $objectInstancier->get(S2lowLogger::class);
-$s2LowLogger->enableStdOut();
+$s2LowLogger = $objectInstancier->get(LoggerInterface::class);
 
 $authority_id = $argv[1];
 

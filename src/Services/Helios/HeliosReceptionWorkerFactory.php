@@ -2,15 +2,15 @@
 
 namespace S2low\Services\Helios;
 
-use S2lowLegacy\Class\S2lowLogger;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\WorkerScript;
 
 class HeliosReceptionWorkerFactory
 {
     /**
-     * @var \S2lowLegacy\Class\S2lowLogger
+     * @var LoggerInterface
      */
-    private S2lowLogger $s2lowLogger;
+    private LoggerInterface $s2lowLogger;
     /**
      * @var \S2lowLegacy\Class\WorkerScript
      */
@@ -21,7 +21,7 @@ class HeliosReceptionWorkerFactory
     private FTPHeliosReceiverFactory $ftpHeliosReceiverFactory;
 
     public function __construct(
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         WorkerScript $workerScript,
         FTPHeliosReceiverFactory $FTPHeliosReceiverFactory
     ) {

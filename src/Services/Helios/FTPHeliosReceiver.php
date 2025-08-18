@@ -6,8 +6,8 @@ namespace S2low\Services\Helios;
 
 use Exception;
 use Iterator;
+use Psr\Log\LoggerInterface;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnection;
-use S2lowLegacy\Class\S2lowLogger;
 
 /**
  *
@@ -16,7 +16,7 @@ class FTPHeliosReceiver
 {
     private string $localPath;
 
-    private S2lowLogger $s2lowLogger;
+    private LoggerInterface $s2lowLogger;
     /**
      * @var \S2low\Services\Helios\DGFiPConnection\DGFiPConnection|null
      */
@@ -25,13 +25,13 @@ class FTPHeliosReceiver
     private string $helios_responses_error_path;
 
     /**
-     * @param S2lowLogger $s2lowLogger
+     * @param LoggerInterface $s2lowLogger
      * @param DGFiPConnection $heliosConnection
      * @param string $helios_ftp_response_tmp_local_path
      * @param string $helios_responses_error_path
      */
     public function __construct(
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         DGFiPConnection $heliosConnection,
         string $helios_ftp_response_tmp_local_path,
         string $helios_responses_error_path

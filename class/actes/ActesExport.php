@@ -2,7 +2,7 @@
 
 namespace S2lowLegacy\Class\actes;
 
-use S2lowLegacy\Class\S2lowLogger;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\TGZExtractor;
 use S2lowLegacy\Class\TmpFolder;
 use Exception;
@@ -22,7 +22,7 @@ class ActesExport
     private $tamponner_fichier = false;
 
     public function __construct(
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         AuthoritySQL $authoritySQL,
         ActesTransactionsSQL $actesTransactionsSQL,
         ActesRetriever $actesRetriever,
