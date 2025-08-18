@@ -1,10 +1,10 @@
 <?php
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\Helpers;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\User;
 
-$logger = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(S2lowLogger::class);
+$logger = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(LoggerInterface::class);
 
 $me = new User();
 

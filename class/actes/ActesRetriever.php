@@ -2,8 +2,8 @@
 
 namespace S2lowLegacy\Class\actes;
 
-use S2lowLegacy\Class\S2lowLogger;
 use Exception;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 
 class ActesRetriever
@@ -15,7 +15,7 @@ class ActesRetriever
     public function __construct(
         $actes_files_upload_root,
         OpenStackSwiftWrapper $openStackSwiftWrapper,
-        S2lowLogger $logger
+        LoggerInterface $logger
     ) {
         $this->actes_files_upload_root = $actes_files_upload_root;
         $this->openStackSwiftWrapper = $openStackSwiftWrapper;

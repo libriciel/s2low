@@ -19,7 +19,7 @@ use S2lowLegacy\Class\helios\FichierCompteur;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Class\helios\HeliosTransmissionWindowsSQL;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
-use S2lowLegacy\Class\S2lowLogger;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\WorkerScript;
@@ -541,7 +541,7 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
         $pesAllerRetriever = new PesAllerRetriever(
             $this->testStreamUrl . '/helios/',
             self::getContainer()->get(OpenStackSwiftWrapper::class),
-            self::getContainer()->get(S2lowLogger::class)
+            self::getContainer()->get(LoggerInterface::class)
         );
 
         return new HeliosEnvoiControler(
@@ -579,7 +579,7 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
                 $this->connectBuilder
             ),
             new FichierCompteur($this->counterDir . '/counter.txt'),
-            static::getContainer()->get(S2lowLogger::class),
+            static::getContainer()->get(LoggerInterface::class),
             new PesAllerReader(),
             new HeliosNamesGenerator(),
             new VerifyPemCertificateFactory()

@@ -8,7 +8,7 @@ use S2low\Enum\UserRole;
 use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu;
 use S2lowLegacy\Class\helios\HeliosFilesFactory;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
-use S2lowLegacy\Class\S2lowLogger;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Controller\HeliosController;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
@@ -74,7 +74,7 @@ class HeliosFileNamesTest extends S2lowIntegrationTestCase
         $pesAllerRetriever = new PesAllerRetriever(
             $this->heliosDirectoriesManager->helios_files_upload_root,
             self::getContainer()->get(OpenStackSwiftWrapper::class),
-            self::getContainer()->get(S2lowLogger::class)
+            self::getContainer()->get(LoggerInterface::class)
         );
 
         self::getContainer()->set(PesAllerRetriever::class, $pesAllerRetriever);

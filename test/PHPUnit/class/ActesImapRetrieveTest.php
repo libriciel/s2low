@@ -7,12 +7,12 @@ use Monolog\Handler\TestHandler;
 use Monolog\Level;
 use Monolog\Logger;
 use PhpImap;
+use Psr\Log\LoggerInterface;
 use S2lowTestCase;
 use stdClass;
 use S2lowLegacy\Class\actes\ActesImapProperties;
 use S2lowLegacy\Class\actes\ActesImapRetrieve;
 use S2lowLegacy\Class\ImapMailBoxFactory;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\SigTermHandler;
 
@@ -23,72 +23,64 @@ class ActesImapRetrieveTest extends S2lowTestCase
      */
     public function testRetrieve()
     {
-        $testHandler = new TestHandler();
-        $logger = new Logger('test');
-        $logger->pushHandler($testHandler);
-
-        $s2lowLogger =  new S2lowLogger(
-            $logger
-        );
-
         $actesImapRetrieve = new ActesImapRetrieve(
             $this->getImapProperties(),
             $this->getVFS(),
             $this->getImapMailBoxFactory(),
-            $s2lowLogger,
+            $this->logger,
             SigTermHandler::getInstance(),
             $this->getWorkerScript()
         );
         $actesImapRetrieve->retrieve();
 
         $this->assertTrue(
-            $testHandler->hasRecord(
+            $this->testHandler->hasRecord(
                 "Connexion au serveur IMAP mail.example.com:993/imap/ssl avec l'utilisateur login",
                 Level::Info
             )
         );
 
         $this->assertTrue(
-            $testHandler->hasRecord(
+            $this->testHandler->hasRecord(
                 "Il y a 1 messages dans la boite au lettres",
                 Level::Info
             )
         );
 
         $this->assertTrue(
-            $testHandler->hasRecord(
+            $this->testHandler->hasRecord(
                 "Récupération du message : 13",
                 Level::Info
             )
         );
 
         $this->assertTrue(
-            $testHandler->hasRecord(
+            $this->testHandler->hasRecord(
                 "Suppression du message : 13",
                 Level::Info
             )
         );
 
         $this->assertTrue(
-            $testHandler->hasInfoThatContains(
+            $this->testHandler->hasInfoThatContains(
                 "Sauvegarde du contenu du message HTML"
             )
         );
 
         $this->assertTrue(
-            $testHandler->hasInfoThatContains(
+            $this->testHandler->hasInfoThatContains(
                 "Sauvegarde de"
             )
         );
 
         $this->assertTrue(
-            $testHandler->hasInfoThatContains(
+            $this->testHandler->hasInfoThatContains(
                 "foo-école.pdf"
             )
         );
 
         $this->assertTrue(
-            $testHandler->hasInfoThatContains(
+            $this->testHandler->hasInfoThatContains(
                 "Déplacement du répertoire"
             )
         );
@@ -150,14 +142,11 @@ class ActesImapRetrieveTest extends S2lowTestCase
      */
     public function testRetrieveDirectoryCreationFailed()
     {
-        $s2lowLogger = $this->getObjectInstancier()->get(S2lowLogger::class);
-
-
         $actesImapRetrieve = new ActesImapRetrieve(
             $this->getImapProperties(),
             $this->getVFS() . "/foo/bar",
             $this->getImapMailBoxFactory(),
-            $s2lowLogger,
+            $this->logger,
             SigTermHandler::getInstance(),
             $this->getWorkerScript()
         );
@@ -171,54 +160,46 @@ class ActesImapRetrieveTest extends S2lowTestCase
      */
     public function testRetrieveMailWithEmptyBody()
     {
-        $testHandler = new TestHandler();
-        $logger = new Logger('test');
-        $logger->pushHandler($testHandler);
-
-        $s2lowLogger = new S2lowLogger(
-            $logger
-        );
-
         $actesImapRetrieve = new ActesImapRetrieve(
             $this->getImapProperties(),
             $this->getVFS(),
             $this->getImapMailBoxFactory(""),
-            $s2lowLogger,
+            $this->logger,
             SigTermHandler::getInstance(),
             $this->getWorkerScript()
         );
         $actesImapRetrieve->retrieve();
 
         $this->assertTrue(
-            $testHandler->hasRecord(
+            $this->testHandler->hasRecord(
                 "Connexion au serveur IMAP mail.example.com:993/imap/ssl avec l'utilisateur login",
                 Level::Info
             )
         );
 
         $this->assertTrue(
-            $testHandler->hasRecord(
+            $this->testHandler->hasRecord(
                 "Il y a 1 messages dans la boite au lettres",
                 Level::Info
             )
         );
 
         $this->assertTrue(
-            $testHandler->hasRecord(
+            $this->testHandler->hasRecord(
                 "Récupération du message : 13",
                 Level::Info
             )
         );
 
         $this->assertTrue(
-            $testHandler->hasRecord(
+            $this->testHandler->hasRecord(
                 "Le corps du mail est vide, il ne sera pas sauvegardé",
                 Level::Info
             )
         );
 
         $this->assertTrue(
-            $testHandler->hasRecord(
+            $this->testHandler->hasRecord(
                 "Suppression du message : 13",
                 Level::Info
             )
@@ -226,19 +207,19 @@ class ActesImapRetrieveTest extends S2lowTestCase
 
 
         $this->assertTrue(
-            $testHandler->hasInfoThatContains(
+            $this->testHandler->hasInfoThatContains(
                 "Sauvegarde de"
             )
         );
 
         $this->assertTrue(
-            $testHandler->hasInfoThatContains(
+            $this->testHandler->hasInfoThatContains(
                 "foo-école.pdf"
             )
         );
 
         $this->assertTrue(
-            $testHandler->hasInfoThatContains(
+            $this->testHandler->hasInfoThatContains(
                 "Déplacement du répertoire"
             )
         );

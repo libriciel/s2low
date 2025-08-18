@@ -3,7 +3,7 @@
 namespace S2low\Tests\Services;
 
 use Exception;
-use S2lowLegacy\Class\S2lowLogger;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Model\LogsHistoriqueSQL;
 use S2low\Services\LogTimestampTokenGarbage;
 use S2low\Tests\LogsHistoriqueSQLTrait;
@@ -41,7 +41,7 @@ class LogTimestampTokenGarbageTest extends S2lowTestCase
             $this->old_timestamp_token_directory,
             $this->timestamp_token_retention_nb_days,
             $logsHistoriqueSQL,
-            $this->getObjectInstancier()->get(S2lowLogger::class)
+            $this->getObjectInstancier()->get(LoggerInterface::class)
         );
 
         $tmp_folder = $logTimestampTokenGarbage->getOldTimestampTokenDirectory();
@@ -68,7 +68,7 @@ class LogTimestampTokenGarbageTest extends S2lowTestCase
             $this->old_timestamp_token_directory,
             $this->timestamp_token_retention_nb_days,
             $logsHistoriqueSQL,
-            $this->getObjectInstancier()->get(S2lowLogger::class)
+            $this->getObjectInstancier()->get(LoggerInterface::class)
         );
 
         $info = $logTimestampTokenGarbage->getInfo(1);

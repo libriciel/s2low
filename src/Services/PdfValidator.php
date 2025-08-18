@@ -2,18 +2,18 @@
 
 namespace S2low\Services;
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\RecoverableException;
-use S2lowLegacy\Class\S2lowLogger;
 use Exception;
 use Symfony\Component\Process\Process;
 use UnexpectedValueException;
 
 class PdfValidator
 {
-    /** @var S2lowLogger  */
+    /** @var LoggerInterface  */
     private $logger;
 
-    public function __construct(S2lowLogger $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }

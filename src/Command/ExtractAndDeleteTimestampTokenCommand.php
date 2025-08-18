@@ -2,9 +2,8 @@
 
 namespace S2low\Command;
 
-use S2lowLegacy\Class\S2lowLogger;
+use Psr\Log\LoggerInterface;
 use S2low\Services\LogTimestampTokenGarbage;
-use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -21,7 +20,7 @@ class ExtractAndDeleteTimestampTokenCommand extends Command
 
     public function __construct(
         LogTimestampTokenGarbage $logTimestampTokenGarbage,
-        S2lowLogger $s2lowLogger
+        LoggerInterface $s2lowLogger
     ) {
         $this->logTimestampTokenGarbage = $logTimestampTokenGarbage;
         $this->s2lowLogger = $s2lowLogger;
@@ -96,8 +95,6 @@ class ExtractAndDeleteTimestampTokenCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $io->title($this->getDescription());
-        $consoleHandler = new ConsoleHandler($output);
-        $this->s2lowLogger->addHandler($consoleHandler);
         $limit = (int)$input->getOption('limit');
 
         if ($input->getOption(self::OLDER_THAN)) {

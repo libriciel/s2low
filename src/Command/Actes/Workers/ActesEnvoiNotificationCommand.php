@@ -2,8 +2,8 @@
 
 namespace S2low\Command\Actes\Workers;
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\actes\ActesNotification;
-use S2lowLegacy\Class\S2lowLogger;
 use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -21,9 +21,8 @@ class ActesEnvoiNotificationCommand extends Command
 {
     public function __construct(
         private readonly ActesNotification $actesNotification,
-        private readonly S2lowLogger $logger
+        private readonly LoggerInterface $logger
     ) {
-        $this->logger->setName("actes-notification");
         parent::__construct();
     }
 
@@ -50,10 +49,6 @@ class ActesEnvoiNotificationCommand extends Command
             throw new UnexpectedValueException("minimumExecutionTime should be an integer");
         }
         $min_exec_time = (int)$input->getArgument('minimumExecutionTime');
-        $this->logger->enableStdOut(false);
-        if (! $input->getOption('silent')) {
-            $this->logger->enableStdOut();
-        }
         $start = time();
         $this->logger->info("Debut " . date("Y-m-d H:i:s", $start));
         try {

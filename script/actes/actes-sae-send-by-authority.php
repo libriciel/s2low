@@ -1,9 +1,9 @@
 <?php
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\actes\ActesEnvoiSaeWorker;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Lib\ObjectInstancier;
 
 require_once(__DIR__ . "/../../init/init.php");
@@ -16,8 +16,7 @@ if ($argc < 2) {
     exit(-1);
 }
 
-$s2LowLogger = $objectInstancier->get(S2lowLogger::class);
-$s2LowLogger->enableStdOut();
+$s2LowLogger = $objectInstancier->get(LoggerInterface::class);
 
 $authority_id = $argv[1];
 

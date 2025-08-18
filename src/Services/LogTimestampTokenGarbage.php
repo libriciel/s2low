@@ -2,7 +2,7 @@
 
 namespace S2low\Services;
 
-use S2lowLegacy\Class\S2lowLogger;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Model\LogsHistoriqueSQL;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -11,13 +11,13 @@ class LogTimestampTokenGarbage
     private string $old_timestamp_token_directory;
     private int $timestamp_token_retention_nb_days;
     private LogsHistoriqueSQL $logsHistoriqueSQL;
-    private S2lowLogger $s2lowLogger;
+    private LoggerInterface $s2lowLogger;
 
     public function __construct(
         string $old_timestamp_token_directory,     //Quickfix PHP 8
         int $timestamp_token_retention_nb_days,     //Quickfix PHP 8
         LogsHistoriqueSQL $logsHistoriqueSQL,
-        S2lowLogger $s2lowLogger
+        LoggerInterface $s2lowLogger
     ) {
         $this->timestamp_token_retention_nb_days = $timestamp_token_retention_nb_days;
         $this->old_timestamp_token_directory = $old_timestamp_token_directory;

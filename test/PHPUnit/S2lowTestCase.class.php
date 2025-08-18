@@ -7,7 +7,6 @@ use Monolog\Level;
 use S2low\Factory\PDOFactory;
 use S2lowLegacy\Class\Database;
 use S2lowLegacy\Class\RgsConnexion;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -78,9 +77,9 @@ abstract class S2lowTestCase extends KernelTestCase
         return $logger;
     }
 
-    private function createS2lowLogger(LoggerInterface $logger): S2lowLogger
+    private function createS2lowLogger(LoggerInterface $logger): LoggerInterface
     {
-        return new S2lowLogger($logger);
+        return $logger;
     }
 
     /** @deprecated  */

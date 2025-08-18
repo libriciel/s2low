@@ -2,11 +2,10 @@
 
 namespace S2low\Command;
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Model\AuthoritySQL;
-use S2lowLegacy\Class\S2lowLogger;
 use Exception;
 use S2lowLegacy\Model\UserSQL;
-use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,7 +33,7 @@ class ChangeMailDomainCommand extends Command
 
 
     public function __construct(
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         User $user,
         UserSQL $userSQL,
         AuthoritySQL $authoritySQL
@@ -105,8 +104,6 @@ class ChangeMailDomainCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $io->title($this->getDescription());
-        $consoleHandler = new ConsoleHandler($output);
-        $this->s2lowLogger->addHandler($consoleHandler);
 
         try {
             $authorities = $this->getAuthoritiesTomodify(

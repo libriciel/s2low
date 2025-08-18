@@ -12,18 +12,18 @@ use S2low\Services\Helios\FTPHeliosReceiver;
 use S2low\Services\Helios\HeliosReceptionWorker;
 use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker;
 use S2lowLegacy\Class\RecoverableException;
-use S2lowLegacy\Class\S2lowLogger;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\WorkerScript;
 
 class HeliosReceptionWorkerTest extends TestCase
 {
-    private S2lowLogger $logger;
+    private LoggerInterface $logger;
     private WorkerScript $workerScript;
     private FTPHeliosReceiver $FTPHeliosReceiver;
     protected function setUp(): void
     {
         parent::setUp();
-        $this->logger = $this->getMockBuilder(S2lowLogger::class)
+        $this->logger = $this->getMockBuilder(LoggerInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
         $this->workerScript = $this->getMockBuilder(WorkerScript::class)
