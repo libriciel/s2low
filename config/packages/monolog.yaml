@@ -1,85 +1,126 @@
-monolog:
-  channels:
-    - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
-  handlers:
-    all_logs_file:
-      type: stream
-      path: '%app.log.file%'
-      formatter: monolog.formatter.line
-      channels: [ "!deprecation" ]
-      level: notice
-
-    main:
-      type: fingers_crossed
-      action_level: error
-      handler: logs_by_service_error_stream
-      excluded_http_codes: [ 404, 405 ]
-      buffer_size: 50
-
-    logs_by_service_error_stream:
-      type: stream
-      path: php://stderr
-      level: error
-      formatter: monolog.formatter.json
-
-    logs_by_service_stream:
-      type: stream
-      path: php://stdout
-      formatter: monolog.formatter.line
-      level: info
-      process_psr_3_messages: true
-      channels: [ "!event", "!doctrine", "!deprecation" ]
-
-    logs_by_service_stream_info_only:
-      type: filter
-      handler: logs_by_service_stream
-      max_level: warning
-
-    deprecation:
-      type: stream
-      channels: [ deprecation ]
-      path: php://stderr
-
-    critical_mailer:
-      type: fingers_crossed
-      action_level: critical
-      handler: symfony_mailer
-
-    symfony_mailer:
-      type: symfony_mailer
-      from_email: '%app.mail.tdt_from_email%'
-      to_email: '%app.mail.email_admin_technique%'
-      subject: '[%%datetime%%] %%extra.service_name%%.%%level_name%%: %%message%% %%context%% { "pid" : %%extra.pid%% }'
-      level: critical
-      formatter: monolog.formatter.html
-
-when@test:
+when@dev:
   monolog:
+    channels:
+      - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
     handlers:
-      nested:
+      all_logs_file:
         type: stream
-        path: "%kernel.logs_dir%/%kernel.environment%.log"
-        level: debug
+        path: '%app.log.file%'
+        formatter: monolog.formatter.line
+        channels: [ "!deprecation" ]
+        level: notice
 
       main:
         type: fingers_crossed
         action_level: error
-        handler: nested
-        excluded_http_codes: [404, 405]
-        channels: ["!event"]
+        handler: logs_by_service_error_stream
+        excluded_http_codes: [ 404, 405 ]
+        buffer_size: 50
+
+      logs_by_service_error_stream:
+        type: stream
+        path: php://stderr
+        level: error
+        formatter: monolog.formatter.json
 
       logs_by_service_stream:
         type: stream
-        path: /dev/null
-      logs_by_service_error_stream:
+        path: php://stdout
+        formatter: monolog.formatter.line
+        level: info
+        process_psr_3_messages: true
+        channels: [ "!event", "!doctrine", "!deprecation" ]
+
+      logs_by_service_stream_info_only:
+        type: filter
+        handler: logs_by_service_stream
+        max_level: warning
+
+      deprecation:
         type: stream
-        path: /dev/null
+        channels: [ deprecation ]
+        path: php://stderr
+
+      critical_mailer:
+        type: fingers_crossed
+        action_level: critical
+        handler: symfony_mailer
+
+      symfony_mailer:
+        type: symfony_mailer
+        from_email: '%app.mail.tdt_from_email%'
+        to_email: '%app.mail.email_admin_technique%'
+        subject: '[%%datetime%%] %%extra.service_name%%.%%level_name%%: %%message%% %%context%% { "pid" : %%extra.pid%% }'
+        level: critical
+        formatter: monolog.formatter.html
+
+when@prod:
+  monolog:
+    channels:
+      - deprecation
+    handlers:
       all_logs_file:
         type: stream
-        path: /dev/null
+        path: '%app.log.file%'
+        formatter: monolog.formatter.line
+        channels: [ "!deprecation" ]
+        level: notice
+
+      main:
+        type: fingers_crossed
+        action_level: error
+        handler: logs_by_service_error_stream
+        excluded_http_codes: [ 404, 405 ]
+        buffer_size: 50
+
+      logs_by_service_error_stream:
+        type: stream
+        path: php://stderr
+        level: error
+        formatter: monolog.formatter.json
+
+      logs_by_service_stream:
+        type: stream
+        path: php://stdout
+        formatter: monolog.formatter.line
+        level: info
+        process_psr_3_messages: true
+        channels: [ "!event", "!doctrine", "!deprecation" ]
+
+      logs_by_service_stream_info_only:
+        type: filter
+        handler: logs_by_service_stream
+        max_level: warning
+
+      deprecation:
+        type: stream
+        channels: [ deprecation ]
+        path: php://stderr
+
       critical_mailer:
-        type: stream
-        path: /dev/null
+        type: fingers_crossed
+        action_level: critical
+        handler: symfony_mailer
+
       symfony_mailer:
+        type: symfony_mailer
+        from_email: '%app.mail.tdt_from_email%'
+        to_email: '%app.mail.email_admin_technique%'
+        subject: '[%%datetime%%] %%extra.service_name%%.%%level_name%%: %%message%% %%context%% { "pid" : %%extra.pid%% }'
+        level: critical
+        formatter: monolog.formatter.html
+
+
+when@test:
+  monolog:
+    handlers:
+      main:
+        type: fingers_crossed
+        action_level: error
+        handler: nested
+        excluded_http_codes: [ 404, 405 ]
+        channels: [ "!event" ]
+      nested:
         type: stream
-        path: /dev/null
+        path: "%kernel.logs_dir%/%kernel.environment%.log"
+        level: debug
