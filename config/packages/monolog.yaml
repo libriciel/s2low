@@ -1,7 +1,7 @@
 monolog:
   channels:
     - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
-  handler:
+  handlers:
     all_logs_file:
       type: stream
       path: '%app.log.file%'
