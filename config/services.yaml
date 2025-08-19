@@ -33,6 +33,7 @@ parameters:
   app.use_legacy_bordereau_model: '%env(bool:default:app.use_legacy_bordereau_model.default:USE_LEGACY_BORDEREAU_MODEL)%'
   app.use_prod_notifications: '%env(bool:default:app.use_prod_notifications.default:USE_PROD_NOTIFICATIONS)%'
   app.workspace_directory: '%env(default:app.workspace_directory.default:WORKSPACE_DIRECTORY)%'
+  app.service_name: '%env(default:app.service_name.default:SERVICE_NAME)%'
 
   # Valeurs par default de parametres
   app.actes_appli_quadrigramme.default: 'TACT'
@@ -60,6 +61,7 @@ parameters:
   app.redis_server.default: 'redis'
   app.use_legacy_bordereau_model.default: true
   app.use_prod_notifications.default: false
+  app.service_name.default: 's2low'
 
   # Variables Globale
   app.actes.files_upload_root: '%app.workspace_directory%actes/uploads'
@@ -119,13 +121,15 @@ services:
       $use_prod_notifications: '%app.use_prod_notifications%'
       $website: '%app.website%'
 
+  monolog.formatter.line:
+    class: Monolog\Formatter\LineFormatter
+    arguments:
+      - "[%%datetime%%] %%extra.service_name%%.%%level_name%%: %%message%% %%context%% {\"pid\":%%extra.pid%%}\n"
+      - "c"
+      - 'true'
 
-#  rgs_valid_ca_path:
-#    class: string
-#    factory: [ '@S2low\Factory\RgsValidCaPathFactory', 'create' ]
-#    public: false
 
-# ---------------------------------------------------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------------------------------------------------
 # Namespace s2low : contient le code développé après le passage en Symfony.
 # ---------------------------------------------------------------------------------------------------------------------
   S2low\:
@@ -687,5 +691,12 @@ services:
 
   S2low\Logger\MailerProcessor:
     public: true
+    tags:
+      - { name: monolog.processor }
+
+  S2low\Logger\ServiceNameProcessor:
+    public: true
+    arguments:
+      $serviceName: '%app.service_name%'
     tags:
       - { name: monolog.processor }
