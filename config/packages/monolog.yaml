@@ -69,12 +69,12 @@ when@test:
         channels: ["!event"]
 
       logs_by_service_stream:
-        type: null
+        type: "null"
       logs_by_service_error_stream:
-        type: null
+        type: "null"
       all_logs_file:
-        type: null
+        type: "null"
       critical_mailer:
-        type: null
+        type: "null"
       symfony_mailer:
-        type: null
+        type: "null"
