@@ -204,22 +204,21 @@ class CustomizableWorkerRunnerTest extends TestCase
 
     public function testThrowable(): void
     {
-//        $this->queue->method('peekReady')->willReturn($this->Job);
-//        $this->queue->method('reserve')->willReturn($this->Job);
-//
-//        // Le heliosReceptionWorker renvoie une WorkerScriptException à l'appel de start
-//        $this->heliosReceptionWorker->expects(static::once())
-//            ->method('start')
-//            ->willThrowException(new Error('Un message informatif'));
-//
-//        $this->workerRunner->setMinExecutionTimeInSeconds(1);
-//        static::assertFalse($this->workerRunner->work());
-//        static::assertTrue(
-//            $this->testHandler->hasCriticalThatContains("Erreur lors de l'execution du script : Un message informatif")
-//        );
-//        static::assertTrue(
-//            $this->testHandler->hasInfoThatMatches('/Arret du script/')
-//        );
-        self::assertTrue(true);
+        $this->queue->method('peekReady')->willReturn($this->Job);
+        $this->queue->method('reserve')->willReturn($this->Job);
+
+        // Le heliosReceptionWorker renvoie une WorkerScriptException à l'appel de start
+        $this->heliosReceptionWorker->expects(static::once())
+            ->method('start')
+            ->willThrowException(new Error('Un message informatif'));
+
+        $this->workerRunner->setMinExecutionTimeInSeconds(1);
+        static::assertFalse($this->workerRunner->work());
+        static::assertTrue(
+            $this->testHandler->hasCriticalThatContains("Erreur lors de l'execution du script : Un message informatif")
+        );
+        static::assertTrue(
+            $this->testHandler->hasInfoThatMatches('/Arret du script/')
+        );
     }
 }
