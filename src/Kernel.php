@@ -54,4 +54,9 @@ class Kernel extends BaseKernel
             (require $path)($routes->withPath($path), $this);
         }
     }
+
+    public function getLogDir(): string
+    {
+        return '/data/log';
+    }
 }
