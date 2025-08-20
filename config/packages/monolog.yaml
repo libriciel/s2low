@@ -25,6 +25,13 @@ monolog:
 when@dev:
   monolog:
     handlers:
+      all_logs_file:
+        type: stream
+        path: '%app.log.file%'
+        formatter: monolog.formatter.line
+        channels: [ "!deprecation" ]
+        level: notice
+
       main:
         type: fingers_crossed
         action_level: error
@@ -35,12 +42,22 @@ when@dev:
       logs_by_service_error_stream:
         type: stream
         path: php://stderr
-        level: debug
+        level: error
         formatter: monolog.formatter.json
-      console:
-        type: console
-        process_psr_3_messages: false
-        channels: [ "!event", "!doctrine" ]
+
+      logs_by_service_stream:
+        type: stream
+        path: php://stdout
+        formatter: monolog.formatter.line
+        level: info
+        process_psr_3_messages: true
+        channels: [ "!event", "!doctrine", "!deprecation" ]
+
+      logs_by_service_stream_info_only:
+        type: filter
+        handler: logs_by_service_stream
+        max_level: warning
+
       deprecation:
         type: stream
         channels: [ deprecation ]
