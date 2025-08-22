@@ -34,6 +34,7 @@ parameters:
   app.use_prod_notifications: '%env(bool:default:app.use_prod_notifications.default:USE_PROD_NOTIFICATIONS)%'
   app.workspace_directory: '%env(default:app.workspace_directory.default:WORKSPACE_DIRECTORY)%'
   app.service_name: '%env(default:app.service_name.default:SERVICE_NAME)%'
+  app.max_age_logs_files: '%env(int:default:app.max_age_logs_files.default:MAX_AGE_LOGS_FILES)%'
 
   # Valeurs par default de parametres
   app.actes_appli_quadrigramme.default: 'TACT'
@@ -62,6 +63,7 @@ parameters:
   app.use_legacy_bordereau_model.default: true
   app.use_prod_notifications.default: false
   app.service_name.default: 's2low'
+  app.max_age_logs_files.default: 180
 
   # Variables Globale
   app.actes.files_upload_root: '%app.workspace_directory%actes/uploads'
@@ -145,6 +147,10 @@ services:
     autowire: true
     autoconfigure: true
     public: true
+
+  S2low\Command\TestCommand:
+    arguments:
+      $test: '%app.max_age_logs_files%'
 
   S2low\Command\RebuildQueueCommand:
     public: true

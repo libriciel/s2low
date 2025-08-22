@@ -7,7 +7,7 @@ monolog:
       path: '%app.log.file%'
       formatter: monolog.formatter.line
       channels: [ "!deprecation" ]
-      max_files: 180
+      max_files: '%app.max_age_logs_files%'
       level: notice
 
     critical_mailer:
@@ -31,7 +31,7 @@ when@prod:
         path: '%kernel.logs_dir%/%app.service_name%.log'
         formatter: 'monolog.formatter.line'
         channels: [ "!deprecation" ]
-        max_files: 180
+        max_files: '%app.max_age_logs_files%'
         level: info
 
 when@dev:
@@ -42,7 +42,7 @@ when@dev:
         path: '%kernel.logs_dir%/%app.service_name%.log'
         formatter: 'monolog.formatter.line'
         channels: [ "!deprecation" ]
-        max_files: 180
+        max_files: '%app.max_age_logs_files%'
         level: info
 
 when@test:
