@@ -1,12 +1,13 @@
 monolog:
   channels:
-    - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
+    - deprecation
   handlers:
     all_logs_file:
-      type: stream
+      type: rotating_file
       path: '%app.log.file%'
       formatter: monolog.formatter.line
       channels: [ "!deprecation" ]
+      max_files: 180
       level: notice
 
     critical_mailer:
@@ -22,98 +23,34 @@ monolog:
       level: critical
       formatter: monolog.formatter.html
 
-when@dev:
-  monolog:
-    handlers:
-      all_logs_file:
-        type: stream
-        path: '%app.log.file%'
-        formatter: monolog.formatter.line
-        channels: [ "!deprecation" ]
-        level: notice
-
-      main:
-        type: fingers_crossed
-        action_level: error
-        handler: logs_by_service_error_stream
-        excluded_http_codes: [ 404, 405 ]
-        buffer_size: 50
-
-      logs_by_service_error_stream:
-        type: stream
-        path: php://stderr
-        level: error
-        formatter: monolog.formatter.json
-
-      logs_by_service_stream:
-        type: stream
-        path: php://stdout
-        formatter: monolog.formatter.line
-        level: info
-        process_psr_3_messages: true
-        channels: [ "!event", "!doctrine", "!deprecation" ]
-
-      logs_by_service_stream_info_only:
-        type: filter
-        handler: logs_by_service_stream
-        max_level: warning
-
-      deprecation:
-        type: stream
-        channels: [ deprecation ]
-        path: php://stderr
-
 when@prod:
   monolog:
     handlers:
-      all_logs_file:
-        type: stream
-        path: '%app.log.file%'
-        formatter: monolog.formatter.line
+      instance-specific:
+        type: rotating_file
+        path: '%kernel.logs_dir%/%app.service_name%.log'
+        formatter: 'monolog.formatter.line'
         channels: [ "!deprecation" ]
-        level: notice
-
-      main:
-        type: fingers_crossed
-        action_level: error
-        handler: logs_by_service_error_stream
-        excluded_http_codes: [ 404, 405 ]
-        buffer_size: 50
-
-      logs_by_service_error_stream:
-        type: stream
-        path: php://stderr
-        level: error
-        formatter: monolog.formatter.json
-
-      logs_by_service_stream:
-        type: stream
-        path: php://stdout
-        formatter: monolog.formatter.line
+        max_files: 180
         level: info
-        process_psr_3_messages: true
-        channels: [ "!event", "!doctrine", "!deprecation" ]
 
-      logs_by_service_stream_info_only:
-        type: filter
-        handler: logs_by_service_stream
-        max_level: warning
-
-      deprecation:
-        type: stream
-        channels: [ deprecation ]
-        path: php://stderr
+when@dev:
+  monolog:
+    handlers:
+      instance-specific:
+        type: rotating_file
+        path: '%kernel.logs_dir%/%app.service_name%.log'
+        formatter: 'monolog.formatter.line'
+        channels: [ "!deprecation" ]
+        max_files: 180
+        level: info
 
 when@test:
   monolog:
     handlers:
-      main:
-        type: fingers_crossed
-        action_level: error
-        handler: nested
-        excluded_http_codes: [ 404, 405 ]
-        channels: [ "!event" ]
-      nested:
-        type: stream
-        path: "%kernel.logs_dir%/%kernel.environment%.log"
+      buffer:
+        type: buffer
+        handler: test
         level: debug
+      test:
+        type: test
