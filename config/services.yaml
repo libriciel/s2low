@@ -148,10 +148,6 @@ services:
     autoconfigure: true
     public: true
 
-  S2low\Command\TestCommand:
-    arguments:
-      $test: '%app.max_age_logs_files%'
-
   S2low\Command\RebuildQueueCommand:
     public: true
     arguments:
