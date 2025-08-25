@@ -17,6 +17,12 @@
   },
   "packageRules": [
     {
+      "description": "Bloque les mises à jour des images Docker Ubuntu",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ubuntu"],
+      "enabled": false
+    },
+    {
       "matchPackagePatterns": ["^.*postgre(?:s|sql).*$"],
       "enabled": false
     },
