@@ -35,6 +35,7 @@ parameters:
   app.workspace_directory: '%env(default:app.workspace_directory.default:WORKSPACE_DIRECTORY)%'
   app.service_name: '%env(default:app.service_name.default:SERVICE_NAME)%'
   app.max_age_logs_files: '%env(int:default:app.max_age_logs_files.default:MAX_AGE_LOGS_FILES)%'
+  app.log_path: '%env(default:app.log_path.default:LOG_PATH)%'
 
   # Valeurs par default de parametres
   app.actes_appli_quadrigramme.default: 'TACT'
@@ -49,7 +50,7 @@ parameters:
   app.convert_api_logins_from_iso.default: false
   app.helios_use_passtrans_as_default.default: false
   app.image_for_stamp.default: '%kernel.project_dir%/public.ssl/custom/images/s2low-stamp.png'
-  app.log.file.default: '/data/log/s2low.log'
+  app.log.file.default: '%app.log_path%s2low-global.log'
   app.mail.dsn.default: 'smtp://maildev:1025?verify_peer=0'
   app.mail.message.default: 'Vous avez reçu un courrier recommandé par S2LOW'
   app.mail.secure_description.default: 'ne-pas-repondre'
@@ -62,8 +63,9 @@ parameters:
   app.redis_server.default: 'redis'
   app.use_legacy_bordereau_model.default: true
   app.use_prod_notifications.default: false
-  app.service_name.default: 's2low'
+  app.service_name.default: 'app'
   app.max_age_logs_files.default: 180
+  app.log_path.default: '/data/log/'
 
   # Variables Globale
   app.actes.files_upload_root: '%app.workspace_directory%actes/uploads'
