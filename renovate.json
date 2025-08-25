@@ -10,12 +10,22 @@
   "prHourlyLimit": 5,
   "dependencyDashboard": true,
   "stabilityDays": 2,
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "binarySource": "docker",
   "vulnerabilityAlerts": {
     "enabled": true,
     "labels": ["security"],
     "automerge": false
   },
   "packageRules": [
+    {
+      "description": "Bloque les mises à jour des images Docker Ubuntu",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ubuntu"],
+      "enabled": false
+    },
     {
       "matchPackagePatterns": ["^.*postgre(?:s|sql).*$"],
       "enabled": false
