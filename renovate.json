@@ -9,11 +9,15 @@
   "labels": ["deps", "renovate"],
   "prHourlyLimit": 5,
   "dependencyDashboard": true,
-  "deleteBranchAfterMerge": true,
   "stabilityDays": 2,
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security"],
+    "automerge": false
+  },
   "packageRules": [
     {
-      "matchPackageNames": ["/^.*postgre(?:s|sql).*/i"],
+      "matchPackagePatterns": ["^.*postgre(?:s|sql).*$"],
       "enabled": false
     },
     {
@@ -51,16 +55,6 @@
       "matchPackagePatterns": ["^symfony/"],
       "groupName": "Symfony",
       "semanticCommitScope": "symfony"
-    },
-    {
-      "description": "Alerte vulnérabilités",
-      "vulnerabilityAlerts": {
-        "enabled": true
-      },
-      "labels": ["security"],
-      "automerge": false,
-      "automergeType": "pr",
-      "prPriority": 10
     },
     {
       "description": "Infra & runtime",
