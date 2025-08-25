@@ -2,13 +2,17 @@ monolog:
   channels:
     - deprecation
   handlers:
-    all_logs_file:
+    notice_global_log:
+      type: fingers_crossed
+      action_level: notice
+      handler: global_file
+
+    global_file:
       type: rotating_file
       path: '%app.log.file%'
       formatter: monolog.formatter.line
       channels: [ "!deprecation" ]
       max_files: '%app.max_age_logs_files%'
-      level: notice
 
     critical_mailer:
       type: fingers_crossed
@@ -28,10 +32,10 @@ when@prod:
     handlers:
       instance-specific:
         type: rotating_file
-        path: '%kernel.logs_dir%/%app.service_name%.log'
+        path: '%app.log_path%%app.service_name%.log'
         formatter: 'monolog.formatter.line'
         channels: [ "!deprecation" ]
-        max_files: '%app.max_age_logs_files%'
+        max_files: 30
         level: info
 
 when@dev:
@@ -39,7 +43,7 @@ when@dev:
     handlers:
       instance-specific:
         type: rotating_file
-        path: '%kernel.logs_dir%/%app.service_name%.log'
+        path: '%app.log_path%%app.service_name%.log'
         formatter: 'monolog.formatter.line'
         channels: [ "!deprecation" ]
         max_files: '%app.max_age_logs_files%'
