@@ -8,7 +8,7 @@
 - Correction de l'acces à actes_classification_fetch.php #1373
 - Corrige un probleme d'affichage lors de la suppression d'un mail #1362
 - Augmentation du TTR de ActesAntivirusWorker pour éviter des messages d'erreur #1393
-- Corrige le cron mailsec-menage.php
+- Corrige le cron mailsec-menage.php #1380
 
 ## 5.1.2 - 2025-07-23
 
