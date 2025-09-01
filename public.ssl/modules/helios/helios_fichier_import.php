@@ -88,14 +88,6 @@ ob_start();
             </td>
         </tr>
         <tr>
-            <th scope="col">
-                <label for="must_signed" class="control-label">Signer le fichier PES avant de le télétransmettre</label>
-            </th>
-            <td>
-                <input type="checkbox"  name="must_signed" id="must_signed"/>
-            </td>
-        </tr>
-        <tr>
             <th scope="col">&nbsp;</th>
             <td>
                 <button class="btn btn-primary" type="submit" value="">Importer le fichier</button>

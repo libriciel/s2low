@@ -2,7 +2,6 @@
 
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\DatabasePool;
-use S2lowLegacy\Class\helios\HeliosSignature;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\Helpers;
@@ -12,12 +11,11 @@ use S2lowLegacy\Class\ModulePermission;
 use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Controller\HeliosSAEController;
-use S2lowLegacy\Controller\LibersignController;
 use S2lowLegacy\Model\AuthoritySQL;
 
-list($heliosSAEController, $pesAllerRetriever, $libersignController ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($heliosSAEController, $pesAllerRetriever ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [HeliosSAEController::class, PesAllerRetriever::class, LibersignController::class]
+        [HeliosSAEController::class, PesAllerRetriever::class]
     );
 
 $module = new Module();
@@ -287,79 +285,6 @@ if (isset($actionHtml)) {
     $html .= "<h2>Actions</h2>\n";
     $html .= $actionHtml;
 }
-
-
-if ($currentStatusId == 13 && $me->checkDroit($module->get("name"), 'CS')) {
-    $html .= "<h3>Signature du fichier PES</h3>";
-
-    $heliosSignature = new HeliosSignature();
-    try {
-        $pesaller_path = $pesAllerRetriever->getPath($trans->get('sha1'));
-        $signatureInfo = $heliosSignature->getInfoForSignature($pesaller_path);
-        $id_pes = $signatureInfo['bordereau_id'];
-
-        ob_start();
-        $libersignController->displayLibersignJS();
-
-        ?>
-
-        <script>
-            $(window).on('load',function() {
-
-                $(document).ready(function () {
-
-                    $("#box_result").hide();
-
-                    var siginfos = [];
-
-                    siginfos.push({
-                        hash: "<?php echo $signatureInfo['bordereau_hash']?>",
-                        pesid: "<?php echo $signatureInfo['bordereau_id']?>",
-                        pespolicyid: "urn:oid:1.2.250.1.131.1.5.18.21.1.7",
-                        pespolicydesc: "Politique de signature Helios de la DGFiP",
-                        pespolicyhash: "roF9+cfRHNPtVJolhdqfIqGMVuUXX8aR4rpiquf0u5E=",
-                        pesspuri: "https://www.collectivites-locales.gouv.fr/files/files/finances_locales/dematerialisation/ps_helios_dgfip.pdf",
-                        pescity: "<?php hecho(utf8_decode($authorityInfo->get('city')))?>",
-                        pespostalcode: "<?php hecho($authorityInfo->get('postal_code'))?>",
-                        pescountryname: "France",
-                        pesclaimedrole: "Ordonnateur",
-                        pesencoding: "iso-8859-1",
-                        format: "xades-env-1.2.2-sha256"
-                    });
-
-                    $(".libersign").libersign({
-                        iconType: "glyphicon",
-                        signatureInformations: siginfos
-                    }).on('libersign.sign', function (event, signatures) {
-                        //console.log(signatures);
-                        $("#signature_1").val(signatures[0]);
-                        $("#form_sign").submit();
-                    });
-                });
-            });
-        </script>
-
-        <div id='box_signature' class='box' style="width:920px" >
-            <h2>Signature</h2>
-            <div class="libersign"></div>
-        </div>
-
-<form action='<?php echo Helpers::getLink("modules/helios/helios_transac_sign.php");?>' id='form_sign' method='post'>
-    <input type='hidden' name='id_1' id='form_sign_id' value='<?php echo $id ?>'/>
-    <input type='hidden' name='nb_signature'  value='1'/>
-    <input type='hidden' name='signature_id_1' value='<?php echo $id_pes?>' />
-    <input type='hidden' name='signature_1' id='signature_1' value=''/>
-    <input type='hidden' name='is_bordereau_1' id='is_bordereau_1' value='<?php echo $signatureInfo['isbordereau'] ?>'/>
-    
-</form>
-        <?php
-        $html .= ob_get_contents();
-        ob_end_clean();
-    } catch (Exception $e) {
-        $html .= "<div class='alert alert-warning'><strong>Au moins un bordereau du fichier PES ne contient pas d'identifiant : la signature est impossible</strong></div>";
-    }
-}
-
 
 if ($currentStatusId == 14 && $me->checkDroit($module->get("name"), 'TT')) {
     ob_start(); ?>

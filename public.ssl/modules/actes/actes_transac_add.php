@@ -346,10 +346,6 @@ $html .= " 		<a href='#' id='removeField'>Supprimer la dernière pièce jointe</
 $html .= " </fieldset>\n";
 $html .= "</div>\n";
 
-
-$html .= "     <dt>Signer l'acte avant de le poster : <input type=\"checkbox\"  name=\"must_signed\" /></dt>\n";
-
-
 // adresses emails de diffusion
 $org = new Authority($me->get("authority_id"));
 $defaultbroadcast_email = $org->get("default_broadcast_email");

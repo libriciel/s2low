@@ -65,10 +65,8 @@ if ($module->getParam("paper") == "on") {
     Helpers:: returnAndExit(1, "Mode « papier » actif. Accès interdit.", Helpers::getLink("/modules/actes/"));
 }
 
-$must_signed = Helpers::getVarFromPost("must_signed", true);
-
 $rgsConnexion = LegacyObjectsManager::getLegacyObjectInstancier()->get(RgsConnexion::class);
-if (!$must_signed && !$rgsConnexion->isRgsConnexion()) {
+if (!$rgsConnexion->isRgsConnexion()) {
     Helpers:: returnAndExit(
         1,
         "La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}",
@@ -474,9 +472,7 @@ if (!$env->save()) {
 }
 
 $trans->set("envelope_id", $env->getId());
-if ($must_signed) {
-    $trans->setEnAttenteDeSignature(true);
-} elseif ($me->getPerm("actes") == 'CS') {
+if ($me->getPerm("actes") == 'CS') {
     $trans->setEnAttente(true);
 }
 

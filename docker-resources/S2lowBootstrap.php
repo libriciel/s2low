@@ -36,7 +36,6 @@ class S2lowBootstrap
                 "mailsec_fullchain.pem"
             );
             $this->installHorodateur();
-            $this->installLibersign();
             $this->sqlQuery->waitStarting(function ($m) {
                 echo "$m\n";
             });
@@ -193,28 +192,6 @@ class S2lowBootstrap
         chown($cert_file, $username);
 
         $this->log("Certificat d'horodatage créé");
-    }
-
-    public function installLibersign()
-    {
-        if (file_exists(__DIR__ . "/../public.ssl/libersign/update.json")) {
-            $this->log("Libersign est déjà installé");
-            return true;
-        }
-        if (empty(LIBERSIGN_INSTALLER)) {
-            $this->log("Lien vers l'installeur de Libersign non trouvée");
-            return true;
-        }
-        return $this->majLibersign();
-    }
-
-    public function majLibersign()
-    {
-        $this->log("Installation de Libersign");
-        $make = file_get_contents(LIBERSIGN_INSTALLER);
-        file_put_contents("/tmp/libersign_make.sh", $make);
-        exec("/bin/bash /tmp/libersign_make.sh PROD", $output, $result);
-        return true;
     }
 
     private function log($message)

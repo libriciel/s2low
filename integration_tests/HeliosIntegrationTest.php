@@ -140,22 +140,6 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
     /**
      * @throws \Exception
      */
-    public function testHeliosBatchSign(): void
-    {
-        $client = $this->getAuthenticatedClientWithSAdminUser();
-
-        $crawler = $client->request('GET', 'modules/helios/helios_batch_sign.php');
-
-        static::assertMatchesRegularExpression(
-            '#Message : Vous devez sélectionner au moins une transaction à signer.#',
-            $crawler->html()
-        );
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
-    }
-
-    /**
-     * @throws \Exception
-     */
     public function testHeliosStatsTransaction(): void
     {
         $client = $this->client;
@@ -274,22 +258,6 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
         $client->request('GET', 'modules/helios/helios_transac_set_error.php');
         static::assertMatchesRegularExpression(
             "#La transaction $transaction_id a été passée en erreur.#",
-            $_SESSION['error']
-        );
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function testHeliosTransacSign(): void
-    {
-        $client = $this->client;
-        $this->setUserWithRole(UserRole::SuperAdministrateur);
-
-        $client->request('GET', 'modules/helios/helios_transac_sign.php');
-        static::assertMatchesRegularExpression(
-            '#La signature a été enregistrée#',
             $_SESSION['error']
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête

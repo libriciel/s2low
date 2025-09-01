@@ -16,7 +16,6 @@ use S2lowLegacy\Class\ModulePermission;
 use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Controller\ActesSAEController;
-use S2lowLegacy\Controller\LibersignController;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\AuthoritySQL;
@@ -27,9 +26,9 @@ use Twig\Loader\FilesystemLoader;
 /** @var ActesTypePJSQL $actesTypePJSQL */
 /** @var SQLQuery $sqlQuery */
 /** @var ActesSAEController $actesSAEController */
-list($initialisation,$actesTypePJSQL, $sqlQuery,$actesSAEController,$libersignController) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($initialisation,$actesTypePJSQL, $sqlQuery,$actesSAEController) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [Initialisation::class, ActesTypePJSQL::class, SQLQuery::class, ActesSAEController::class, LibersignController::class]
+        [Initialisation::class, ActesTypePJSQL::class, SQLQuery::class, ActesSAEController::class]
     );
 
 $initData = $initialisation->doInit();
@@ -326,10 +325,6 @@ if (is_array($files)) {
 
         $html .= "</dd>";
         $html .= "</dl>\n";
-        if ($file['sign']) {
-            $html .= "<dt>Signature</dt>";
-            $html .= "<dd><a href=\"" . Helpers::getLink("/modules/actes/actes_get_signature.php?id=" . $file["id"] . "\" title=\"Télécharger le fichier\">Ce document est signé électroniquement</a></dd>");
-        }
 
         if ($file['code_pj']) {
             $html .= '<dt>Type de pièce jointe :</dt>';
@@ -615,7 +610,7 @@ if ($transStatus == 17 && $me->checkDroit("actes", "TT")) {
 $actionHtml .= "<div class=\"action\">\n";
 $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Horodatage : </label>\n<a onclick=\"window.open(this.href); return false;\" href=\"" .
     Helpers::getLink(
-        "/common/logs_view.php?module=actes&amp;severity=-1&amp;message=" . $trans->getId() . "\" title=\"Rechercher les logs relatifs à l'acte n°" . $trans->getId()  . " et sa signature\" >Rechercher les logs relatifs à l'acte</a>\n"
+        "/common/logs_view.php?module=actes&amp;severity=-1&amp;message=" . $trans->getId() . "\" title=\"Rechercher les logs relatifs à l'acte n°" . $trans->getId()  . " >Rechercher les logs relatifs à l'acte</a>\n"
     );
 $actionHtml .= "</div>\n</div>\n";
 
@@ -650,84 +645,9 @@ if ($me->isSuper()) {
     }
 }
 
-
 if (isset($actionHtml)) {
     $html .= "<h2>Actions</h2>\n";
     $html .= $actionHtml;
-}
-
-
-if ($transStatus == 18 && $me->checkDroit("actes", "CS")) {
-    $actesIncludedFileSQL = new ActesIncludedFileSQL($sqlQuery);
-    $tab_included_files = $actesIncludedFileSQL->getSendFile($id);
-
-
-    $tab_included_files = array_slice($tab_included_files, 0, 1);
-
-
-    $html .= "<h2>Signature de l'acte</h2>";
-    ob_start();
-
-    $libersignController->displayLibersignJS();
-
-    ?>
-
-    <script>
-        $(window).on('load',function() {
-
-            $(document).ready(function () {
-
-                $("#box_result").hide();
-
-                var siginfos = [];
-
-                <?php foreach ($tab_included_files as $i => $included_file) : ?>
-                siginfos.push({
-                    hash: "<?php echo $included_file['sha1'] ?>",
-                    format: "CMS"
-                });
-                <?php endforeach;?>
-
-                $(".libersign").libersign({
-                    iconType: "glyphicon",
-                    signatureInformations: siginfos
-                }).on('libersign.sign', function (event, signatures) {
-                    <?php foreach ($tab_included_files as $i => $included_file) : ?>
-                    $("#signature_<?php echo $i + 1?>").val(signatures[<?php echo $i ?>]);
-                    <?php endforeach;?>
-                    $("#form_sign").submit();
-                });
-
-            });
-        });
-    </script>
-
-    <div id='box_signature' class='box' style="width:920px" >
-        <h3>Signature</h3>
-        <div class="libersign"></div>
-    </div>
-
-    <form action='<?php echo Helpers::getLink("modules/actes/actes_transac_sign.php")?>' id='form_sign' method='post'>
-        <input type='hidden' name='id' id='form_sign_id' value='<?php echo $id?>'/>
-        <input type='hidden' name='nb_signature'  value='<?php echo count($tab_included_files)?>'/>
-        <?php foreach ($tab_included_files as $i => $included_file) : ?>
-            <input type='hidden' name='signature_id_<?php echo $i + 1?>' value='<?php echo $included_file['id']?>' />
-            <input type='hidden' name='signature_<?php echo $i + 1?>' id='signature_<?php echo $i + 1?>' value=''/>
-        <?php endforeach;?>
-    </form>
-
-
-
-
-    <?php
-        $html .= ob_get_contents();
-        ob_end_clean();
-        $html .= "<h3>Ne plus signer</h3>";
-        $html .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_post_without_signature.php\" onsubmit=\"return confirm('L\'acte ne sera pas signé. Êtes-vous certain de vouloir le poster sans signature ? ')\" method=\"post\">\n");
-        $html .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Ne plus signer l'acte et le poster</label>\n";
-        $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-        $html .= "<input type=\"submit\" value=\"Télétransmettre sans signature\" class=\"btn btn-warning\" />\n";
-        $html .= "</div></form>\n";
 }
 
 

@@ -1,7 +1,12 @@
 # Changelog
 
-## 5.1.2 - 2025-07-23
+## 6.0.0
 
+### Suppression
+
+- Suppression de l'outil de signature intégré #1113
+
+## 5.1.2 - 2025-07-23
 
 - Correction de l'affichage des mails securisés et d'un probleme empêchant d'exécuter certains scripts seuls. #1361
 - Utiliser le validca étendu pour vérifier le purpose des certificats #1360
