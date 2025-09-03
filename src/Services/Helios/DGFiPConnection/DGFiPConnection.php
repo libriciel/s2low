@@ -195,7 +195,7 @@ class DGFiPConnection
         // on ne se donne pas cette peine.
     }
 
-    public function getURLWithoutCredentials(): string
+    private function getURLWithoutCredentials(): string
     {
         return preg_replace('#//(.*?)@#', '//HIDDEN_URL_FOR_SECURITY@', $this->getURL());
     }
