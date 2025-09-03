@@ -222,12 +222,6 @@ services:
     arguments:
       $useLegacyBordereauModel: '%app.use_legacy_bordereau_model%'
 
-  S2low\Factory\MailHeaderFactory:
-    public: true
-    arguments:
-      $mailHeader: '@S2lowLegacy\Mail\MailHeader'
-      $mailHeaderLegacy: '@S2lowLegacy\Mail\MailHeaderLegacy'
-
   S2low\Factory\OpenStackConfigFactory:
     autowire: true
     arguments:
@@ -247,12 +241,6 @@ services:
     autowire: false
     autoconfigure: true
     public: true
-
-  S2lowLegacy\Mail\IMailHeader:
-    public: true
-    factory: ['@S2low\Factory\MailHeaderFactory', 'create']
-    arguments:
-      $useLegacySecureMailFields: '%app.mail.use_legacy_secure_mail%'
 
   # ---------------------------------------------------------------------------------------------------------------------
   # Namespace  S2lowLegacy : contient le code Legacy

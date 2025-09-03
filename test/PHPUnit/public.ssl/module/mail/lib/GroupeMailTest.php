@@ -28,22 +28,6 @@ class GroupeMailTest extends S2lowTestCase
         parent::tearDown();
     }
 
-    public function testgetGroupeIdFromName()
-    {
-        $this->assertEquals(
-            $this->groupeMail->getId(),
-            $this->groupeMail->getGroupeIdFromName($this->name, 1)
-        );
-    }
-
-    public function testgetGroupeIdFromNameWithInexistantName()
-    {
-        $this->assertEquals(
-            false,
-            $this->groupeMail->getGroupeIdFromName("A fake name", 1)
-        );
-    }
-
     public function testGetGroupeByAuthorityId()
     {
         $this->assertEquals(

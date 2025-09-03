@@ -2,7 +2,6 @@
 
 namespace S2lowLegacy\Mail;
 
-use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\DataObject;
 
 class GroupeMail extends DataObject
@@ -35,22 +34,6 @@ class GroupeMail extends DataObject
         $sql = "SELECT count(*) as nb FROM mail_user_groupe WHERE id_user=$id_user";
         $nb_groupe = $this->db->getOneValue($sql);
         return $nb_groupe != 0;
-    }
-
-
-    public function getGroupeIdFromName($name, $authority_id)
-    {
-
-        $db = DatabasePool::getInstance();
-
-        $sql = "SELECT id FROM mail_groupe WHERE name=? AND authority_id= ?";
-
-        $result = $db->select($sql, [$name,$authority_id]);
-        if ($result->num_row() == 0) {
-            return false;
-        }
-        $r =  $result->get_next_row();
-        return $r['id'];
     }
 
     public function getGroupeByAuthorityId($authority_id)

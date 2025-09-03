@@ -4,34 +4,26 @@ namespace S2low\Controller;
 
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
-use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MailInit;
 use Exception;
 use MailController;
-use S2low\Services\MailSecurises\MailSecuriseNotification;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Mail\MailLayout;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MailSecuriseController extends AbstractController
 {
     private MailLayout $doc;
-    /**
-     * @var \S2low\Services\MailSecurises\MailSecuriseNotification
-     */
-    private MailSecuriseNotification $mailSecuriseNotification;
     private Module $module;
     private User $me;
     private Authority $myAuthority;
 
-    public function __construct(MailLayout $mailLayout, MailSecuriseNotification $mailSecuriseNotification)
+    public function __construct(MailLayout $mailLayout)
     {
         $this->doc = $mailLayout;
-        $this->mailSecuriseNotification = $mailSecuriseNotification;
         list($this->module, $this->me, $this->myAuthority) = MailInit::getIdentificationParameters();
     }
 
@@ -73,7 +65,7 @@ class MailSecuriseController extends AbstractController
 
                         $doc->DisplayHead();
                     }
-                    $MailCtl = new MailController($me, $this->doc, $module, $myAuthority, $this->mailSecuriseNotification);
+                    $MailCtl = new MailController($me, $this->doc);
                     $MailCtl->run($command);
                     $doc->closeContent(true);
                     $doc->closeContainer(true);
