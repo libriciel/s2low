@@ -1,23 +1,26 @@
 # Changelog
 
-## 5.1.3
+## 5.1.3 - 2025-09-04
 
 ### Corrections
 
-- Correction d'un bug ajouté recemment empechant le transfert des mails sécurisés vers le stockage cloud. #1397
-- Correction d'un probleme de redirection entrainant un ecran blanc lors du passage d'une transaction Helios en erreur. #1394
-- Retire les espaces present dans le champ Helios FTP dans l'interface d'administration Helios. #1344
-- Correction de l'acces à actes_classification_fetch.php #1373
-- Corrige un probleme d'affichage lors de la suppression d'un mail #1362
-- Augmentation du TTR de ActesAntivirusWorker pour éviter des messages d'erreur #1393
-- Permettre la vérification des CRL pour les Marchés publics de nature Contrats, conventions et avenants #1382
+- Correction d'un bug empêchant le transfert des mails sécurisés vers le stockage cloud. #1397
+- Correction d’un problème de redirection entraînant un écran blanc lors du passage d'une transaction Helios en erreur. #1394
+- Retrait des espaces présents dans le champ Helios FTP dans l'interface d'administration Helios #1344
+- Correction de l'accès à `actes_classification_fetch.php` #1373
+- Correction d’un problème d'affichage lors de la suppression d'un mail #1362
+- Augmentation du TTR de `ActesAntivirusWorker` pour éviter des messages d'erreur #1393
+- Permettre la vérification des CRL pour les marchés publics de nature Contrats, conventions et avenants #1382
 
 ## 5.1.2 - 2025-07-23
 
-- Correction de l'affichage des mails securisés et d'un probleme empêchant d'exécuter certains scripts seuls. #1361
-- Utiliser le validca étendu pour vérifier le purpose des certificats #1360
-- Corriger la récupération des paramètres booléens depuis les variables d'environnement #1359
-- [Actes] Modification du timeout pour l'envoi à la DGCL et,après erreur du temps avant de renvoyer un fichier, et de sa priorité #1366  
+### Corrections
+
+- Correction de l'affichage des mails sécurisés et d’un problème empêchant l'exécution de certains scripts seuls. #1361
+- Utilisation du validca étendu pour vérifier le purpose des certificats #1360
+- Correction de la récupération des paramètres booléens depuis les variables d'environnement #1359
+- [Actes] Modification du timeout pour l'envoi à la DGCL et, après erreur, du délai avant de renvoyer un fichier ainsi
+que de sa priorité #1366  
 
 ## 5.1.1 - 2025-07-18
 
@@ -26,12 +29,13 @@
 - Permettre de poster les Pes Acquit Retour #1156
 - Permettre de configurer la configuration Apache SSLInsecureRenegotiation #1244
 - Afficher un message d'erreur lorsqu'un certificat utilisateur ne semble pas permettre l'authentification #1023
-- Permettre de se connecter aux nouveaux serveurs de la DGCL. Ajout de ACTES_MINISTERE_USE_LEGACY_PROTOCOL #1207
+- Connexion possible aux nouveaux serveurs de la DGCL. Ajout de `ACTES_MINISTERE_USE_LEGACY_PROTOCOL` #1207
 
 ### Corrections
 
 - Correction de la correspondance simulateur/ftp pour les instances de développement #1240
-- Ajout d'un filtre dans l'interface web pour sélectionner seulement des fichiers '.xml' lors d'import de PES aller dans S2low. #1269
+- Ajout d'un filtre dans l'interface web pour sélectionner seulement des fichiers `.xml` lors d'import de PES aller
+dans S2low. #1269
 - Correction de la remise à zéro du fichier compteur Helios #1314
 - Continuer d'exporter les actes même lorsque des fichiers ne sont pas disponibles dans le cloud #1345
 - Correction de /admin/authorities/admin_authority_types.php #1340
