@@ -4,6 +4,7 @@
 
 ### Corrections
 
+- Correction d'un bug ajouté recemment empechant le transfert des mails sécurisés vers le stockage cloud. #1397
 - Correction d'un probleme de redirection entrainant un ecran blanc lors du passage d'une transaction Helios en erreur. #1394
 - Retire les espaces present dans le champ Helios FTP dans l'interface d'administration Helios. #1344
 - Correction de l'acces à actes_classification_fetch.php #1373
