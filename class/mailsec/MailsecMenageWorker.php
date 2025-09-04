@@ -11,7 +11,7 @@ class MailsecMenageWorker implements IWorker
     private const NB_DAYS_IN_DISK = 15;
 
     public function __construct(
-        private MailIncludedFilesCloudStorable $mailIncludedFilesCloudStorage
+        private MailIncludedFilesCloudStorage $mailIncludedFilesCloudStorage
     ) {
     }
 
@@ -38,7 +38,7 @@ class MailsecMenageWorker implements IWorker
      */
     public function work($data)
     {
-        $this->mailIncludedFilesCloudStorage->deleteFilesOnDisk(self::NB_DAYS_IN_DISK, true);
+        $this->mailIncludedFilesCloudStorage->deleteFilesOnDisk(self::NB_DAYS_IN_DISK);
     }
 
     public function getMutexName($data): string

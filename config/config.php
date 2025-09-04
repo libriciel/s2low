@@ -363,11 +363,6 @@ if (!defined('ACTES_ALWAYS_CAN_VALIDATE')) {
     define('ACTES_ALWAYS_CAN_VALIDATE', false);
 }
 
-//Permet de ne jamais valider les certificats de signatures des actes
-if (!defined('ACTES_DONT_VALID_SIGNING_CERTIFICATE')) {
-    define('ACTES_DONT_VALID_SIGNING_CERTIFICATE', false);
-}
-
 //Permet d'utiliser le modèle de bordereau à l'ancienne
 if (!defined("USE_LEGACY_BORDEREAU_MODEL")) {
     define("USE_LEGACY_BORDEREAU_MODEL", true);

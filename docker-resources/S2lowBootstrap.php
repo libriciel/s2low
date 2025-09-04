@@ -9,14 +9,11 @@ use S2lowLegacy\Model\UserSQL;
 
 class S2lowBootstrap
 {
-    private $sqlQuery;
-
     public function __construct(
-        SQLQuery $sqlQuery,
+        private readonly SQLQuery $sqlQuery,
         private readonly PostgreSQLController $postgreSQLController,
         private readonly UserSQL $userSQL,
     ) {
-        $this->sqlQuery = $sqlQuery;
     }
 
     public function bootstrap()
@@ -27,13 +24,15 @@ class S2lowBootstrap
             $this->installSelfSignedCertificateIfNoneExists(
                 $this->getHostname(),
                 "privkey.pem",
-                "fullchain.pem"
+                "fullchain.pem",
+                apacheSSLPath: '/etc/apache2/ssl/app',
             );
             // Ajout du certificat domaine mailsec
             $this->installSelfSignedCertificateIfNoneExists(
                 $this->getMailHostname(),
-                "mailsec_privkey.pem",
-                "mailsec_fullchain.pem"
+                "privkey.pem",
+                "fullchain.pem",
+                apacheSSLPath: '/etc/apache2/ssl/mailsec',
             );
             $this->installHorodateur();
             $this->sqlQuery->waitStarting(function ($m) {

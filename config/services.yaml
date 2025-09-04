@@ -9,7 +9,6 @@ parameters:
   # Parametres avec des valeurs par default
   app.actes_appli_quadrigramme: '%env(default:app.actes_appli_quadrigramme.default:ACTES_APPLI_QUADRIGRAMME)%'
   app.actes_appli_trigramme: '%env(default:app.actes_appli_trigramme.default:ACTES_APPLI_TRIGRAMME)%'
-  app.actes_dont_valid_signing_certificate: '%env(default:app.actes_dont_valid_signing_certificate.default:ACTES_DONT_VALID_SIGNING_CERTIFICATE)%'
   app.actes_imap_host: '%env(default:app.actes_imap_host.default:ACTES_IMAP_HOST)%'
   app.actes_imap_login: '%env(default:app.actes_imap_login.default:ACTES_IMAP_LOGIN)%'
   app.actes_imap_options: '%env(default:app.actes_imap_options.default:ACTES_IMAP_OPTIONS)%'
@@ -38,7 +37,6 @@ parameters:
   # Valeurs par default de parametres
   app.actes_appli_quadrigramme.default: 'TACT'
   app.actes_appli_trigramme.default: 'abc'
-  app.actes_dont_valid_signing_certificate.default: false
   app.actes_imap_host.default: 'mail'
   app.actes_imap_login.default: 's2low@s2low.docker.libriciel.fr'
   app.actes_imap_options.default: '/imap/notls/novalidate-cert'
@@ -515,8 +513,6 @@ services:
   S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker:
     public: true
     tags: ['s2low.queue_rebuilding_worker']
-    arguments:
-      $actes_dont_valid_signing_certificate: '%app.actes_dont_valid_signing_certificate%'
 
   S2lowLegacy\Class\actes\ActesEnvoiFichierWorker:
     public: true

@@ -67,7 +67,7 @@ class DGFiPConnection
      */
     public function connect(): void
     {
-        $this->logger->info("Connection à {$this->getURL()}");
+        $this->logger->info("Connection à {$this->getURLWithoutCredentials()}");
         $this->serverProtocol->connect();
         $this->logger->info('Connecté');
     }
@@ -193,5 +193,10 @@ class DGFiPConnection
         $this->serverProtocol->deleteIfNeedBe($file);   // On pourrait détruire une fois qu'on est sûrs que le fichier
         // est copié dans un répertoire autre que tmp... Mais comme ce n'est utilisé que dans les protocoles de test,
         // on ne se donne pas cette peine.
+    }
+
+    private function getURLWithoutCredentials(): string
+    {
+        return preg_replace('#//(.*?)@#', '//HIDDEN_URL_FOR_SECURITY@', $this->getURL());
     }
 }
