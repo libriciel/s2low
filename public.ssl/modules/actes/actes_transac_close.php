@@ -46,6 +46,7 @@ $status = Helpers::getVarFromPost('status');
 $types = ActesTransaction::getStatusList();
 $myAuthority = new Authority($me->get('authority_id'));
 
+$new_status_id = null;
 if ($status == 'valid') {
     $new_status_id = 5;
 } elseif ($status == 'invalid') {
@@ -69,10 +70,11 @@ foreach ($liste_id as $id) {
         $owner->init();
     } else {
         Helpers::returnAndExit(1, "Erreur d'initialisation de la transaction.", Helpers::getLink('/modules/actes/index.php'));
+        exit;
     }
 
     if (!$trans->isType(TypeTransaction::TransmissionActe)) {
-        Helpers::returnAndExit(1, 'Ce type de transaction ne peut pas être cloturé.', Helpers::getLink('/modules/actes/actes_transac_show.php?id=') . $rel_trans->getId());
+        Helpers::returnAndExit(1, 'Ce type de transaction ne peut pas être cloturé.', Helpers::getLink('/modules/actes/actes_transac_show.php?id=') . $id);
     }
 
     if (! in_array($trans->get('last_status_id'), [4,5,14,20,18])) {

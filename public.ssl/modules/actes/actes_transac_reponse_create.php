@@ -80,19 +80,6 @@ if (empty($type_acte)) {
     );
 }
 
-if (empty($type_acte)) {
-    $correspondance_nature_type = array(
-        '1' => '99_DE',
-        '2' => '99_AR',
-        '3' => '99_AI',
-        '4' => '99_DC',
-        '5' => '99_BU',
-        '6' => '99_AU',
-    );
-    $type_acte = $correspondance_nature_type[$nature_code];
-}
-
-
 $type_transaction = $related_trans->get("type");
 $type_envoie = Helpers:: getVarFromPost("type_envoie", true);
 
@@ -175,6 +162,7 @@ if (isset($actePDFFile)) {
         $acteFileName = $actePDFFile["name"];
     } else {
         sortir_atrc("Envoi de fichier illégal.", $api);
+        exit;
     }
 
     $dest_name = $trans->getStdFileName($env, true, $type_acte);
@@ -185,6 +173,7 @@ if (isset($actePDFFile)) {
         // Ajout de la signature si présente
         $signFile = null;
 
+        $readFile = false;
         if (isset($actePDFFileSign["tmp_name"]) && is_uploaded_file_wrapper($actePDFFileSign["tmp_name"])) {
             $signFile = $actePDFFileSign["tmp_name"];
             $readFile = true;
@@ -201,52 +190,50 @@ if (isset($actePDFFile)) {
 }
 
 
-if (isset($acteAttachments)) {
-    for ($i = 0; $i < count($acteAttachments["tmp_name"] ?: []); $i++) {
-        if (mb_strlen($acteAttachments["tmp_name"][$i])) {
-            if (is_uploaded_file_wrapper($acteAttachments["tmp_name"][$i])) {
-                if (empty($type_pj[$i])) {
-                    Helpers:: returnAndExit(
-                        1,
-                        "Erreur lors de la réception du fichier annexe {$acteAttachments["name"][$i]} : typologie absente",
-                        Helpers::getLink("/modules/actes/actes_transac_add.php")
-                    );
-                }
+for ($i = 0; $i < count($acteAttachments["tmp_name"] ?: []); $i++) {
+    if (mb_strlen($acteAttachments["tmp_name"][$i])) {
+        if (is_uploaded_file_wrapper($acteAttachments["tmp_name"][$i])) {
+            if (empty($type_pj[$i])) {
+                Helpers:: returnAndExit(
+                    1,
+                    "Erreur lors de la réception du fichier annexe {$acteAttachments["name"][$i]} : typologie absente",
+                    Helpers::getLink("/modules/actes/actes_transac_add.php")
+                );
+            }
 
-                if (empty($type_pj[$i])) {
-                    //Type par defaut des annexes
-                    $type_pj[$i] = '99_AU';
-                }
+            if (empty($type_pj[$i])) {
+                //Type par defaut des annexes
+                $type_pj[$i] = '99_AU';
+            }
 
-                $dest_name = $trans->getStdFileName($env, true, $type_pj[$i]);
+            $dest_name = $trans->getStdFileName($env, true, $type_pj[$i]);
+            if (
+                !$trans->addAttachmentFile(
+                    $acteAttachments["name"][$i],
+                    $dest_name,
+                    $acteAttachments["tmp_name"][$i],
+                    true,
+                    $type_pj[$i]
+                )
+            ) {
+                $errorMsg .= "Erreur de validation d'un fichier de pièce jointe :\n" . $trans->getErrorMsg() . "\n";
+                $fileImportError = true;
+            } else {
+                // Ajout de la signature si présente
                 if (
-                    !$trans->addAttachmentFile(
-                        $acteAttachments["name"][$i],
-                        $dest_name,
-                        $acteAttachments["tmp_name"][$i],
-                        true,
-                        $type_pj[$i]
+                    isset($acteAttachmentsSign["tmp_name"][$i]) && is_uploaded_file_wrapper(
+                        $acteAttachmentsSign["tmp_name"][$i]
                     )
                 ) {
-                    $errorMsg .= "Erreur de validation d'un fichier de pièce jointe :\n" . $trans->getErrorMsg() . "\n";
-                    $fileImportError = true;
-                } else {
-                    // Ajout de la signature si présente
-                    if (
-                        isset($acteAttachmentsSign["tmp_name"][$i]) && is_uploaded_file_wrapper(
-                            $acteAttachmentsSign["tmp_name"][$i]
-                        )
-                    ) {
-                        if (!$trans->addAttachmentSign($acteAttachmentsSign["tmp_name"][$i])) {
-                            $errorMsg .= "Erreur lors du traitement de la signature du fichier " . $acteAttachments["name"][$i] . " :\n" . $trans->getErrorMsg(
+                    if (!$trans->addAttachmentSign($acteAttachmentsSign["tmp_name"][$i])) {
+                        $errorMsg .= "Erreur lors du traitement de la signature du fichier " . $acteAttachments["name"][$i] . " :\n" . $trans->getErrorMsg(
                             ) . "\n";
-                            $fileImportError = true;
-                        }
+                        $fileImportError = true;
                     }
                 }
-            } else {
-                sortir_atrc("Envoi de fichier illégal.", $api);
             }
+        } else {
+            sortir_atrc("Envoi de fichier illégal.", $api);
         }
     }
 }
@@ -307,6 +294,7 @@ if (!$trans->save()) {
     $env->deleteArchiveFile();
     $env->delete();
     sortir_atrc($msg, $api);
+    exit;
 } else {
     $msg = "Création de l'envelope n°" . $env->getId() . ". Résultat ok.";
     if (!Log:: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
