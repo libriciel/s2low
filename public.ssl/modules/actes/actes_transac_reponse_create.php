@@ -227,7 +227,7 @@ for ($i = 0; $i < count($acteAttachments["tmp_name"] ?: []); $i++) {
                 ) {
                     if (!$trans->addAttachmentSign($acteAttachmentsSign["tmp_name"][$i])) {
                         $errorMsg .= "Erreur lors du traitement de la signature du fichier " . $acteAttachments["name"][$i] . " :\n" . $trans->getErrorMsg(
-                            ) . "\n";
+                        ) . "\n";
                         $fileImportError = true;
                     }
                 }
