@@ -45,7 +45,6 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
             self::getContainer()->get(ActesScriptHelper::class),
             $padesValid,
             self::getContainer()->get(WorkerScript::class),
-            self::getContainer()->getParameter('app.actes_dont_valid_signing_certificate'),
             self::getContainer()->get(ActesTypePJSQL::class),
             self::getContainer()->get(PdfValidator::class),
             self::getContainer()->get(ArchiveValidatorFactory::class)
@@ -304,7 +303,6 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
      */
     public function testValidateAllNoChekingCertificateGlobale()
     {
-//        $this->getObjectInstancier()->set("actes_dont_valid_signing_certificate", true);
         $transaction_id = $this->validateAll(__DIR__ . "/../../fixtures/ok/abc-TACT--000000000--20181024-4.tar.gz");
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
         $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
@@ -378,7 +376,6 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
             $this->getObjectInstancier()->get(ActesScriptHelper::class),
             $this->getObjectInstancier()->get(PadesValid::class),
             $this->getObjectInstancier()->get(WorkerScript::class),
-            $this->getObjectInstancier()->getParameter('app.actes_dont_valid_signing_certificate'),
             $this->getObjectInstancier()->get(ActesTypePJSQL::class),
             $this->getObjectInstancier()->get(PdfValidator::class),
             $archiveValidatorFactory

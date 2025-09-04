@@ -39,18 +39,14 @@ class PadesValid
      * @throws RecoverableException
      * @throws \Exception
      */
-    public function validate(string $filepath, bool $certificateChecking = true): bool
+    public function validate(string $filepath): bool
     {
         $result = $this->getPadesValidResult($filepath);
         if ($result === false) {
             return false;
         }
         foreach ($result->signatures as $signature) {
-            if ($certificateChecking) {
-                $this->verifyPadesSignature->validateSignature($signature);
-            } else {
-                $this->verifyPadesSignature->validateSignatureWithoutCertificateChecking($signature);
-            }
+            $this->verifyPadesSignature->validateSignature($signature);
         }
         return true;
     }

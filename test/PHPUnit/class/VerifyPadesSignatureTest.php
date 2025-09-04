@@ -1,24 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
+namespace PHPUnit\class;
+
+use DateTime;
+use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use S2lowLegacy\Class\VerifyPadesSignature;
 use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Lib\PemCertificate;
 use S2lowLegacy\Lib\PemCertificateFactory;
+use S2lowTestCase;
+use stdClass;
 
 class VerifyPadesSignatureTest extends S2lowTestCase
 {
     private MockObject|VerifyPemCertificate $verifyPemCertificateMock;
-    private $verifyPadesSignatureWithMock;
-    private $verifyPadesSignature;
-    private $pemCertificateMock;
+    private VerifyPadesSignature $verifyPadesSignatureWithMock;
+    private VerifyPadesSignature $verifyPadesSignature;
+    private MockObject|PemCertificate $pemCertificateMock;
 
     private function getSignature(
         bool $valid = true,
-        string $signingCert = "certificat",
-        string $signatureDate = "1502268600000"
-    ) {
+        string $signingCert = 'certificat',
+        string $signatureDate = '1502268600000'
+    ): stdClass|MockObject {
         $signature = $this->getMockBuilder(stdClass::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -55,7 +63,7 @@ class VerifyPadesSignatureTest extends S2lowTestCase
             ->willReturn($this->pemCertificateMock);
 
         $this->verifyPadesSignatureWithMock = new VerifyPadesSignature(
-            "pathToValidCA",
+            'pathToValidCA',
             $verifyPemCertificateFactoryMock,
             $pemCertificateFactoryMock
         );
@@ -63,16 +71,19 @@ class VerifyPadesSignatureTest extends S2lowTestCase
         $verifyPemCertificateFactory = new VerifyPemCertificateFactory();
 
         $this->verifyPadesSignature = new VerifyPadesSignature(
-            __DIR__ . "/../lib/fixtures/validca/",
+            __DIR__ . '/../lib/fixtures/validca/',
             $verifyPemCertificateFactory,
             new PemCertificateFactory()
         );
     }
 
+    /**
+     * @throws Exception
+     */
     public function testValidateSigned()
     {
         $signature = json_decode(
-            file_get_contents(__DIR__ . "/fixtures/signature-pades/return-courrier-signe.json")
+            file_get_contents(__DIR__ . '/fixtures/signature-pades/return-courrier-signe.json')
         )->signatures[0];
 
         $this->expectNotToPerformAssertions();
@@ -85,7 +96,7 @@ class VerifyPadesSignatureTest extends S2lowTestCase
     public function testNotValidateSigned()
     {
         $signature = json_decode(
-            file_get_contents(__DIR__ . "/fixtures/signature-pades/return-courrier-alter.json")
+            file_get_contents(__DIR__ . '/fixtures/signature-pades/return-courrier-alter.json')
         )->signatures[0];
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("Au moins une signature n'est pas valide");
@@ -95,27 +106,14 @@ class VerifyPadesSignatureTest extends S2lowTestCase
     /**
      * @throws Exception
      */
-    public function testValidateSignedNoCertificatCheking()
-    {
-        $signature = json_decode(
-            file_get_contents(__DIR__ . "/fixtures/signature-pades/return-courrier-signe.json")
-        )->signatures[0];
-
-        $this->expectNotToPerformAssertions();
-        $this->verifyPadesSignature->validateSignatureWithoutCertificateChecking($signature);
-    }
-
-    /**
-     * @throws Exception
-     */
     public function testNotValidateAlteredSignature()
     {
         $signature = json_decode(
-            file_get_contents(__DIR__ . "/fixtures/signature-pades/return-courrier-alter.json")
+            file_get_contents(__DIR__ . '/fixtures/signature-pades/return-courrier-alter.json')
         )->signatures[0];
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("Au moins une signature n'est pas valide");
-        $this->verifyPadesSignature->validateSignatureWithoutCertificateChecking($signature);
+        $this->verifyPadesSignature->validateSignature($signature);
     }
 
     //Unit tests
@@ -133,26 +131,29 @@ class VerifyPadesSignatureTest extends S2lowTestCase
         $this->verifyPadesSignatureWithMock->validateSignature($signature);
     }
 
-    public function missingNecessaryFieldsProvider()
+    public function missingNecessaryFieldsProvider(): array
     {
         return [
             [
-                $this->getSignature(false, "", ""),
+                $this->getSignature(false, '', ''),
                 "Au moins une signature n'est pas valide"
             ],
             [
-                $this->getSignature(true, "", ""),
-                "Impossible de récupérer le certificat de signature"
+                $this->getSignature(true, '', ''),
+                'Impossible de récupérer le certificat de signature'
             ],
             [
-                $this->getSignature(true, "certificat", ""),
-                "Impossible de determiner la date de la signature"
+                $this->getSignature(true, 'certificat', ''),
+                'Impossible de determiner la date de la signature'
             ]
         ];
     }
 
     // checkCertificateWasValidAtSignatureTime
 
+    /**
+     * @throws \Exception
+     */
     public function testCertificateWasValidOnSignature()
     {
         $this->expectNotToPerformAssertions();
@@ -167,11 +168,11 @@ class VerifyPadesSignatureTest extends S2lowTestCase
         $date = new DateTime();
         $date->setTimestamp(1502268600);
         $this->pemCertificateMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('checkCertificateIsValidAtDate')
             ->with($date);
 
-        $this->verifyPadesSignatureWithMock->validateSignatureWithoutCertificateChecking($this->getSignature());
+        $this->verifyPadesSignatureWithMock->validateSignature($this->getSignature());
     }
 
     /**
@@ -181,52 +182,38 @@ class VerifyPadesSignatureTest extends S2lowTestCase
     {
         $this->pemCertificateMock
             ->method('checkCertificateIsValidAtDate')
-            ->willThrowException(new Exception("CkSugdE3ETSh9xhQ"));
+            ->willThrowException(new Exception('CkSugdE3ETSh9xhQ'));
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage("CkSugdE3ETSh9xhQ");
-        $this->verifyPadesSignatureWithMock->validateSignatureWithoutCertificateChecking($this->getSignature());
+        $this->expectExceptionMessage('CkSugdE3ETSh9xhQ');
+        $this->verifyPadesSignatureWithMock->validateSignature($this->getSignature());
     }
 
-    // Check checkCertificateWithoutCheckingCertificateChain est
-    //  - appelé par validateSignature
-    //  - pas appelé par validateSignatureWithoutCertificateChecking
-
-    public function testcheckCertificateWithoutCheckingCertificateChainIsCalled()
+    /**
+     * @throws \Exception
+     */
+    public function testcheckCertificatecheckCertificateWithOpenSSLIsCalled()
     {
         $this->verifyPemCertificateMock
-            ->expects($this->once())
-            ->method("checkCertificateWithOpenSSL")
+            ->expects(static::once())
+            ->method('checkCertificateWithOpenSSL')
             ->with(
-                $this->stringContains(
-                    "/s2low_valid_certifcate_"
+                static::stringContains(
+                    '/s2low_valid_certifcate_'
                 ),
-                $this->equalTo(VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS)
+                static::equalTo(VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS)
             );
 
         $this->verifyPadesSignatureWithMock->validateSignature($this->getSignature());
     }
 
-
-    public function testCheckCertificateWithOpenSSLIsNotCalled()
-    {
-
-        $this->verifyPemCertificateMock
-            ->expects($this->never())
-            ->method("checkCertificateWithOpenSSL");
-
-        $this->verifyPadesSignatureWithMock->validateSignatureWithoutCertificateChecking($this->getSignature());
-    }
-
-    // Test que l'exception lancée par checkCertificateWithoutCheckingCertificateChain passe le cas échéant
-
-    public function testcheckCertificateWithoutCheckingCertificateChainExceptionGoesThrough()
+    public function testcheckCertificateWithOpenSSLExceptionGoesThrough()
     {
         $this->verifyPemCertificateMock
-            ->method("checkCertificateWithOpenSSL")
-            ->willThrowException(new Exception("Exception de test LahgnjCM"));
+            ->method('checkCertificateWithOpenSSL')
+            ->willThrowException(new Exception('Exception de test LahgnjCM'));
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage("Exception de test LahgnjCM");
+        $this->expectExceptionMessage('Exception de test LahgnjCM');
         $this->verifyPadesSignatureWithMock->validateSignature($this->getSignature());
     }
 }

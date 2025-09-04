@@ -11,7 +11,9 @@ use Exception;
 class ActesAntivirusWorker implements IWorker
 {
     public const QUEUE_NAME = 'actes-antivirus';
-
+    public const PHEANSTALK_TTR = 60  * 2;  // Le timeout du process de clamdscan est à 60, on se laisse de la marge pour
+                                            // que le job reste reserved avant la fin du timeout pour éviter un
+                                            // mail d'erreur critique.
     private $actesTransactionSQL;
     private $actesRetriever;
     private $actesEnvelopeSQL;
