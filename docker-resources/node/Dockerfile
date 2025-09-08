@@ -1,3 +1,3 @@
-FROM node:current
+FROM node:current@sha256:701c8a634cb3ddbc1dc9584725937619716882525356f0989f11816ba3747a22
 
 RUN npm config set cache var/.npm --global
