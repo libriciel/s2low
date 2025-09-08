@@ -10,6 +10,7 @@
   "prHourlyLimit": 5,
   "dependencyDashboard": true,
   "stabilityDays": 2,
+  "rangeStrategy": "update-lockfile",
   "lockFileMaintenance": {
     "enabled": true
   },
@@ -19,6 +20,11 @@
     "automerge": false
   },
   "packageRules": [
+    {
+      "description": "Désactive toutes les mises à jour majeures",
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
     {
       "description": "Bloque les mises à jour des images Docker Ubuntu",
       "matchDatasources": ["docker"],
@@ -34,18 +40,6 @@
       "matchUpdateTypes": ["patch", "minor"],
       "automerge": true,
       "automergeType": "pr"
-    },
-    {
-      "matchManagers": ["npm"],
-      "matchUpdateTypes": ["major"],
-      "groupName": "Majors NPM",
-      "prPriority": -1
-    },
-    {
-      "matchManagers": ["composer"],
-      "matchUpdateTypes": ["major"],
-      "groupName": "Majors Composer",
-      "prPriority": -1
     },
     {
       "description": "Mises à jour Composer",
@@ -67,7 +61,7 @@
     },
     {
       "description": "Infra & runtime",
-      "matchUpdateTypes": ["patch", "major", "minor"],
+      "matchUpdateTypes": ["patch", "minor"],
       "matchManagers": ["dockerfile", "docker-compose"],
       "groupName": "Infra",
       "automerge": false
