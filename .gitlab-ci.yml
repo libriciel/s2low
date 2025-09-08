@@ -122,7 +122,7 @@ quality:
   only:
     - master
   image:
-    name: hubdocker.libriciel.fr/sonarsource/sonar-scanner-cli:11.4
+    name: hubdocker.libriciel.fr/sonarsource/sonar-scanner-cli:11.4@sha256:14f46a51cbfde162e30cfd673bff542eca59860a0e904bcd2614f192605bd704
     entrypoint: [ "/bin/sh", "-c" ]
   script:
     - sonar-scanner -Dsonar.token=$SONAR_LOGIN -Dsonar.host.url=$SONAR_HOST_URL

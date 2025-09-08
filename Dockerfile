@@ -47,7 +47,7 @@ USER root
 RUN /bin/bash /tmp/docker-resources/install-dev-requirements.sh
 USER "${USERNAME}"
 
-FROM node:18-slim as node_modules
+FROM node:18-slim@sha256:f9ab18e354e6855ae56ef2b290dd225c1e51a564f87584b9bd21dd651838830e as node_modules
 WORKDIR /var/www/s2low/
 COPY package*.json ./
 RUN pwd

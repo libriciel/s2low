@@ -3,7 +3,7 @@ name: s2low
 services:
     web:
         restart: unless-stopped
-        image: registry.libriciel.fr:443/public/plateforme/s2low:canary
+        image: registry.libriciel.fr:443/public/plateforme/s2low:canary@sha256:cb78418ab5f43c1f8bda0c726f37721fb309ded2efd86fdd5df373726be7b6e5
         networks:
           - openstack
           - dgcl
@@ -184,13 +184,13 @@ services:
 
     clamav:
         restart: unless-stopped
-        image: hubdocker.libriciel.fr/clamav/clamav:0.105
+        image: hubdocker.libriciel.fr/clamav/clamav:0.105@sha256:f3d1d4aec64b1e3e2b714f8778dab16f0bf2f6a2e348873e0f7f85082a0d8a23
         networks:
           - services
 
     pades-valid:
         restart: unless-stopped
-        image: registry.libriciel.fr/public/signature/pades-valid:1.4.10
+        image: registry.libriciel.fr/public/signature/pades-valid:1.4.10@sha256:e63795261768cbf7cd39f543fcea0c9efce9b6961f39536604ef16c40e69abcb
 
         networks:
           - services
@@ -200,14 +200,14 @@ services:
 
     pdf-stamp:
         restart: unless-stopped
-        image: registry.libriciel.fr/public/signature/pdf-stamp:2.7.15
+        image: registry.libriciel.fr/public/signature/pdf-stamp:2.7.15@sha256:e111a2b77e67415270b0e9c149d4c7b5460aa464d379b390e15d27292576e261
         networks:
           - services
         mem_limit: 2G
 
     redis:
         restart: unless-stopped
-        image: hubdocker.libriciel.fr/redis:7.4.5
+        image: hubdocker.libriciel.fr/redis:7.4.5@sha256:4421962706d7a901cbd435282515704040203d67c653160e3a46a27b79c40e19
         volumes:
             - ${REDIS_VOLUME:-redis_datadir}:/data
         command: redis-server --appendonly yes

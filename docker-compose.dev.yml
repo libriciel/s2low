@@ -58,7 +58,7 @@ services:
 
     phppgadmin:
         restart: unless-stopped
-        image: hubdocker.libriciel.fr/keepitcool/phppgadmin:5.1
+        image: hubdocker.libriciel.fr/keepitcool/phppgadmin:5.1@sha256:c7b27011ca7a7b07a59cbb6baeb8922c068c7a2f171fe92452f6026489ddd018
         networks:
           - services
         environment:
@@ -93,7 +93,7 @@ services:
 
     maildev:
         restart: unless-stopped
-        image: hubdocker.libriciel.fr/maildev/maildev:2.2.1
+        image: hubdocker.libriciel.fr/maildev/maildev:2.2.1@sha256:180ef51f65eefebb0e7122d8308813c1fd7bff164bc440ce5a3c2feee167a810
         networks:
             - services
         ports:
