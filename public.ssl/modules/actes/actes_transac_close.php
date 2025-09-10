@@ -70,7 +70,6 @@ foreach ($liste_id as $id) {
         $owner->init();
     } else {
         Helpers::returnAndExit(1, "Erreur d'initialisation de la transaction.", Helpers::getLink('/modules/actes/index.php'));
-        exit;
     }
 
     if (!$trans->isType(TypeTransaction::TransmissionActe)) {
