@@ -13,7 +13,7 @@ use S2lowLegacy\Class\WorkerScript;
 $errorMsg = "";
 
 if (!function_exists('sortir_atrc')) {
-    function sortir_atrc($message, $api)
+    function sortir_atrc($message, $api): never
     {
         global $related_id;
         if ($api) {
@@ -162,7 +162,6 @@ if (isset($actePDFFile)) {
         $acteFileName = $actePDFFile["name"];
     } else {
         sortir_atrc("Envoi de fichier illégal.", $api);
-        exit;
     }
 
     $dest_name = $trans->getStdFileName($env, true, $type_acte);
@@ -294,7 +293,6 @@ if (!$trans->save()) {
     $env->deleteArchiveFile();
     $env->delete();
     sortir_atrc($msg, $api);
-    exit;
 } else {
     $msg = "Création de l'envelope n°" . $env->getId() . ". Résultat ok.";
     if (!Log:: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name"), $me)) {
