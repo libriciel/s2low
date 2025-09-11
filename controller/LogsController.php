@@ -17,29 +17,29 @@ use S2lowLegacy\Model\UserSQL;
 
 class LogsController extends Controller
 {
-    protected string $fauthority;
-    protected string $fmodule;
-    protected string $fuser;
-    protected string $fmessage;
-    protected string|false $date_debut;
-    protected string|false $date_fin;
-    protected int $fseverity;
-    protected int $page_number;
-    protected int $taille_page;
-    protected string $title;
-    protected array $module_list;
-    protected array $loglevel_list;
-    protected array $authority_info;
-    protected FancyDate $fancyDate;
-    protected bool $has_pending_logs_request;
-    protected string $template_milieu;
-    protected array $authorities_list;
-    protected string $h1_title;
-    protected UserSQL $userSQL;
-    protected bool $has_logs_request;
-    protected array $logs_list;
-    protected string $side_bar;
-    protected array $logs_request_list;
+    public string $fauthority;
+    public string $fmodule;
+    public string $fuser;
+    public string $fmessage;
+    public string|false $date_debut;
+    public string|false $date_fin;
+    public int $fseverity;
+    public int $page_number;
+    public int $taille_page;
+    public string $title;
+    public array $module_list;
+    public array $loglevel_list;
+    public array $authority_info;
+    public FancyDate $fancyDate;
+    public bool $has_pending_logs_request;
+    public string $template_milieu;
+    public array $authorities_list;
+    public string $h1_title;
+    public UserSQL $userSQL;
+    public bool $has_logs_request;
+    public array $logs_list;
+    public string $side_bar;
+    public array $logs_request_list;
 
     /** @return LogsHistoriqueSQL $logsHistoriqueSQL */
     private function getLogsHistoriqueSQL()
@@ -55,6 +55,7 @@ class LogsController extends Controller
 
     public function viewAction()
     {
+
         $recuperateur = $this->getRecuperateurGet();
 
         $this->fauthority = $recuperateur->get("authority");
@@ -90,7 +91,7 @@ class LogsController extends Controller
         $this->taille_page =  $recuperateur->getInt('count', 10);
 
         $this->verifUser();
-        $this->title = "Tedetis : Journal d'évènements";
+        $this->setViewParameter('title', "Tedetis : Journal d'évènements");
 
         $authoritySQL = new AuthoritySQL($this->getSQLQuery());
 
@@ -110,7 +111,7 @@ class LogsController extends Controller
             $this->fancyDate = new FancyDate();
             $this->has_pending_logs_request =  $this->getLogsRequestSQL()->hasPendingRequest($this->me->get('id'));
 
-            $this->template_milieu = __DIR__ . "/../template/LogsCreateRequest.php";
+            $this->setViewParameter('template_milieu', __DIR__ . "/../template/LogsCreateRequest.php");
             return;
         }
 
@@ -160,8 +161,7 @@ class LogsController extends Controller
         }
 
         $pagerHTML  = new PagerHTML();
-        $this->side_bar = $pagerHTML->getHTML($this->page_number, $nb_logs, $this->taille_page);
-        ;
+        $this->setViewParameter('side_bar', $pagerHTML->getHTML($this->page_number, $nb_logs, $this->taille_page));
     }
 
 
