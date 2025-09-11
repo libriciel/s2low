@@ -162,7 +162,7 @@ class AdminControllerTest extends S2lowIntegrationTestCase
 
         $this->assertEquals("Gestion des collectivités du groupe Groupe de test", $adminController->getViewParameter('titre'));
 
-        $authorities = $adminController->getViewParameter('authorities');
+        $authorities = $adminController->authorities;
         foreach ($authorities as $authority) {
             $this->assertEquals(1, $authority['authority_group_id']);
         }
