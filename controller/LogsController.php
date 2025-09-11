@@ -17,6 +17,30 @@ use S2lowLegacy\Model\UserSQL;
 
 class LogsController extends Controller
 {
+    protected string $fauthority;
+    protected string $fmodule;
+    protected string $fuser;
+    protected string $fmessage;
+    protected string|false $date_debut;
+    protected string|false $date_fin;
+    protected int $fseverity;
+    protected int $page_number;
+    protected int $taille_page;
+    protected string $title;
+    protected array $module_list;
+    protected array $loglevel_list;
+    protected array $authority_info;
+    protected FancyDate $fancyDate;
+    protected bool $has_pending_logs_request;
+    protected string $template_milieu;
+    protected array $authorities_list;
+    protected string $h1_title;
+    protected UserSQL $userSQL;
+    protected bool $has_logs_request;
+    protected array $logs_list;
+    protected string $side_bar;
+    protected array $logs_request_list;
+
     /** @return LogsHistoriqueSQL $logsHistoriqueSQL */
     private function getLogsHistoriqueSQL()
     {
