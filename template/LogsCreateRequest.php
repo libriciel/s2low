@@ -16,19 +16,19 @@
     <table class="data-table table table-striped" aria-describedby="faire_une_demande_desc">
         <tr>
             <th scope="row">Date de début</th>
-            <td><?php echo $this->fancyDate->getDateFrancais($date_debut) ?>
-            <input type="hidden" name="date_debut" value="<?php echo $date_debut ?>" ?>
+            <td><?php echo $this->fancyDate->getDateFrancais($this->date_debut) ?>
+            <input type="hidden" name="date_debut" value="<?php echo $this->date_debut ?>"
             </td>
         </tr>
         <tr>
             <th scope="row">Date de fin</th>
-            <td><?php echo $this->fancyDate->getDateFrancais($date_fin) ?>
-                <input type="hidden" name="date_fin" value="<?php echo $date_fin ?>" ?>
+            <td><?php echo $this->fancyDate->getDateFrancais($this->date_fin) ?>
+                <input type="hidden" name="date_fin" value="<?php echo $this->date_fin ?>"
             </td>
         </tr>
 
     </table>
-        <?php if ($has_pending_logs_request) :  ?>
+        <?php if ($this->has_pending_logs_request) :  ?>
         <div class="alert alert-danger">Vous avez déjà une requête en cours. Veuillez attendre ou annuler la requete précédente.</div>
         <?php else : ?>
         <input type="submit" value="Confirmer la demande" class="btn btn-primary"/>
