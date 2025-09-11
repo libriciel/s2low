@@ -14,10 +14,32 @@ use S2lowLegacy\Model\AuthoritySiretSQL;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\AuthorityTypesSQL;
 use S2lowLegacy\Model\GroupSQL;
+use S2lowLegacy\Model\MessageAdmin;
 use S2lowLegacy\Model\UserSQL;
 
 class AdminController extends Controller
 {
+    public array|false $authority_info;
+    public string $authority_id;
+    protected array $siret_list;
+    protected array $siret_blocked_list;
+    protected Siret $siret_exemple;
+    protected string $ftype;
+    protected string $fname;
+    protected string $fgroup;
+    protected string $api;
+    protected string $fsiret;
+    protected int $count;
+    protected int $page_number;
+    protected int $taille_page;
+    public array $authorities;
+    protected array $authority_types;
+    protected array $groupe_list;
+    protected int $offset;
+    protected array $message_list;
+    protected FancyDate $fancyDate;
+    protected MessageAdmin $messageAdmin;
+
     public function _actionBefore($controller, $action)
     {
         parent::_actionBefore($controller, $action);
@@ -64,7 +86,7 @@ class AdminController extends Controller
         } //@codeCoverageIgnore
 
         $this->siret_exemple = $this->getSiretFactory()->generate();
-        $this->title = "Numéros SIRET - {$this->authority_info['name']}";
+        $this->setViewParameter('title', "Numéros SIRET - {$this->authority_info['name']}");
     }
 
     /**
@@ -157,7 +179,7 @@ class AdminController extends Controller
     {
         $this->verifAdmin();
         $pagerHTML  = new PagerHTML();
-        $this->title = "Gestion des collectivités | S²low";
+        $this->setViewParameter('title', "Gestion des collectivités | S²low");
         $recuperateur = $this->getRecuperateurGet();
 
         $this->ftype =  $recuperateur->get("type");
@@ -166,7 +188,7 @@ class AdminController extends Controller
         $this->api = $recuperateur->get("api");
         $this->fsiren = $this->getSirenFactory()->get($recuperateur->get("siren"))->getValue();
         $this->fsiret = $recuperateur->get("siret");
-        $this->count = $recuperateur->get("count") ?: 10;
+        $this->count = (int) $recuperateur->get("count") ?: 10;
         $this->page_number = $recuperateur->getInt('page', 1);
         $this->taille_page =  $recuperateur->getInt('count', 10);
 
@@ -190,16 +212,15 @@ class AdminController extends Controller
         $authorityTypes = new AuthorityTypesSQL($this->getSQLQuery());
         $this->authority_types = $authorityTypes->getChildList();
 
-        $this->side_bar = $pagerHTML->getHTML($this->page_number, $nb_authorities, $this->taille_page);
-        ;
+        $this->setViewParameter('side_bar', $pagerHTML->getHTML($this->page_number, $nb_authorities, $this->taille_page));
 
         if ($this->me->isGroupAdmin()) {
             $userSQL = new UserSQL($this->getSQLQuery());
             $group_name = $userSQL->getGroupeName($this->me->getId());
-            $this->titre = "Gestion des collectivités du groupe $group_name";
-            $this->groupe_list = false;
+            $this->setViewParameter('titre', "Gestion des collectivités du groupe $group_name");
+            $this->groupe_list = [];
         } else {
-            $this->titre = "Gestion des collectivités";
+            $this->setViewParameter('titre', "Gestion des collectivités");
             $groupeSQL = new GroupSQL($this->getSQLQuery());
             $this->groupe_list = $groupeSQL->getAll();
         }
@@ -210,9 +231,9 @@ class AdminController extends Controller
     {
         $this->verifSuperAdmin();
         $recuperateur = $this->getRecuperateurGet();
-        $this->{'offset'} = $recuperateur->getInt('offset', 0);
-        $this->{'message_list'} = $this->getMessageAdminSQL()->getAll($this->{'offset'}, 100);
-        $this->{'fancyDate'} = $this->getObjectInstancier()->get(FancyDate::class);
+        $this->offset = $recuperateur->getInt('offset', 0);
+        $this->message_list = $this->getMessageAdminSQL()->getAll($this->offset, 100);
+        $this->fancyDate = $this->getObjectInstancier()->get(FancyDate::class);
     }
 
     public function messageEditAction()
@@ -220,7 +241,7 @@ class AdminController extends Controller
         $this->verifSuperAdmin();
         $recuperateur = $this->getRecuperateurGet();
         $message_id = $recuperateur->getInt('message_id');
-        $this->{'messageAdmin'} = $this->getMessageAdminSQL()->getMessage($message_id);
+        $this->messageAdmin = $this->getMessageAdminSQL()->getMessage($message_id);
     }
 
     /**
