@@ -170,6 +170,10 @@ class CloudStorage
             if ($sigtermHandler->isSigtermCalled()) {
                 break;
             }
+            if (!file_exists($file->getRealPath())) {
+                $this->logger->debug(sprintf("Le fichier present ici : %s est introuvable.", $file->getRealPath()));
+                continue;
+            }
             if ($this->isRecentlyCreated($file, $no_access_during_nb_days)) {
                 $this->logger->debug("File {$file->getFilename()} too young to die : not deleted");
                 continue;
