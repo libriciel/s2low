@@ -53,7 +53,7 @@ class ActesCloudStorable implements ICloudStorable
     public function getFilePathOnCloud(int $object_id): string
     {
         $envelope_info = $this->actesEnvelopeSQL->getInfo($object_id);
-        return $envelope_info['file_path'];
+        return (string) $envelope_info['file_path'];
     }
 
     /**
