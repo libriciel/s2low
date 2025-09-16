@@ -9,13 +9,16 @@ use S2lowLegacy\Model\AuthoritySQL;
 
 class ActesExportController extends Controller
 {
+    protected string $date_debut;
+    protected string $date_fin;
+    protected string $authority_id;
+    protected array $authority_id_list;
     public const MAX_EXPORT_INTERVAL_IN_DAY = 400;
 
     public function indexAction()
     {
         $this->verifAdmin();
-        $this->{"title"} = "Actes - Export des informations";
-        $this->setViewParameter('me', $this->me);
+        $this->setViewParameter('title', "Actes - Export des informations");
         $authoritySQL = $this->getObjectInstancier()->get(AuthoritySQL::class);
 
         $date_debut = $this->getRecuperateurGet()->get('date_debut');
@@ -23,9 +26,9 @@ class ActesExportController extends Controller
         $this->authority_id = $this->getRecuperateurGet()->get('authority_id');
 
         if ($this->me->isSuper()) {
-            $this->{"authority_id_list"} = $authoritySQL->getAll();
+            $this->authority_id_list = $authoritySQL->getAll();
         } elseif ($this->me->isGroupAdmin()) {
-            $this->{"authority_id_list"} = $authoritySQL->getAllGroup($this->me->get('authority_group_id'));
+            $this->authority_id_list = $authoritySQL->getAllGroup($this->me->get('authority_group_id'));
         } else {
             $this->authority_id = $this->me->get('authority_id');
         }
