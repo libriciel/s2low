@@ -20,6 +20,16 @@ function retirer(){
     form.submit();
 }
 -->
+<?php
+/**
+ * @var array $groupeArray
+ * @var int $groupe_id
+ * @var Annuaire $annuaire
+ * @var array $mailAnnuaireArray
+ * @var array $groupe_name
+ */
+use S2lowLegacy\Mail\Annuaire;
+?>
 </script>
 
     <h1> Carnet d'adresses </h1>

@@ -467,19 +467,15 @@ class MailController
         return $mailTransaction->getID();
     }
 
-/**
- * \bref envoyer ajouter ou supprimer un contact dans l'annuaire.appelé juste par MailController::run();
- *
- * \param pas de paramètre
- */
+    /**
+     * \bref envoyer ajouter ou supprimer un contact dans l'annuaire.appelé juste par MailController::run();
+     *
+     * \param pas de paramètre
+     */
     protected function executeAnnuaire()
     {
         $email = Helpers :: getVarFromPost("email");
-
-
-
         $description = Helpers :: getVarFromPost("description");
-
         $id = Helpers :: getVarFromPost("id");
 
         if ($email != null) {
@@ -562,8 +558,10 @@ class MailController
         }
                 $this->doc->closeSideBar(true);
                 $this->doc->openContent(true);
+
         include __DIR__ . "/../template/annuaire.php";
     }
+
 
 /**
  * \bref: examiner la boit au lettre de tedetis,
