@@ -13,6 +13,13 @@ use S2lowLegacy\Class\TmpFolder;
 
 class ActesTransactionsValidateController extends Controller
 {
+    protected array $pades_result;
+    protected bool $pades_is_valide;
+    protected array $error_xml;
+    protected string $validation_message;
+    protected bool $archive_is_valide;
+    protected string $envelope_filename;
+    protected int $transaction_id;
     /**
      * @throws Exception
      */
@@ -39,8 +46,8 @@ class ActesTransactionsValidateController extends Controller
 
 
         $archive = new \Libriciel\LibActes\ArchiveValidator(
-            $this->getObjectInstancier()->get('actes_appli_trigramme'),
-            $this->getObjectInstancier()->get('actes_appli_quadrigramme')
+            $this->getObjectInstancier()->get('app.actes_appli_trigramme'),
+            $this->getObjectInstancier()->get('app.actes_appli_quadrigramme')
         );
 
         $error_xml = [];
@@ -98,7 +105,6 @@ class ActesTransactionsValidateController extends Controller
         $this->archive_is_valide = $archive_is_valide;
 
         $this->envelope_filename = basename($archive_path);
-        $this->title = "Validation d'une archive actes";
         $this->transaction_id = $transaction_id;
     }
 }
