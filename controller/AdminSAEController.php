@@ -17,6 +17,19 @@ use S2lowLegacy\Model\PastellPropertiesSQL;
 
 class AdminSAEController extends Controller
 {
+    protected int $id;
+    protected array $authorityInfo;
+    protected int $authority_id;
+    protected PastellProperties $pastellProperties;
+    protected int $actes_nb_en_retard;
+    protected int $actes_nb_en_attente_transmission_sae;
+    protected int $actes_nb_envoye_sae;
+    protected int $actes_erreur_lors_de_lenvoi_sae;
+    protected int $actes_erreur_lors_de_larchivage;
+    protected int $helios_nb_en_retard;
+    protected int $helios_nb_en_attente_transmission_sae;
+    protected int $helios_nb_envoye_au_sae;
+    protected int $helios_erreur_lors_de_lenvoi_sae;
     public function _actionBefore($controller, $action)
     {
         $this->verifSuperAdmin();
@@ -30,7 +43,6 @@ class AdminSAEController extends Controller
         $this->id = $id;
         $this->authorityInfo = $this->getObjectInstancier()->get(AuthoritySQL::class)->getInfo($id);
         $this->pastellProperties = $this->getObjectInstancier()->get(PastellPropertiesSQL::class)->getPastellProperties($id); //BUG ??
-        $this->title = "SAE - Configuration";
     }
 
     /**
@@ -80,8 +92,6 @@ class AdminSAEController extends Controller
         $pastellProperties->helios_transaction_id_min = $this->getRecuperateurPost()->getInt('helios_transaction_id_min');
         $pastellProperties->helios_transaction_id_max = $this->getRecuperateurPost()->getInt('helios_transaction_id_max');
 
-
-
         $this->getObjectInstancier()->get(PastellPropertiesSQL::class)->editProperties($id, $pastellProperties);
         $this->setErrorMessage("Les informations ont été mises à jour");
         $this->redirect("/admin/authorities/admin_authority_sae.php?id=$id");
@@ -99,29 +109,29 @@ class AdminSAEController extends Controller
 
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
 
-        $this->{'actes_nb_en_retard'} =
+        $this->actes_nb_en_retard =
             count($actesTransactionsSQL->getTransactionToArchive(
                 ActesPrepareSaeWorker::NB_DAYS_ARCHIVE_AFTER,
                 $authority_id,
                 $pastellProperties->actes_send_auto
             ));
-        $this->{'actes_nb_en_attente_transmission_sae'} =
+        $this->actes_nb_en_attente_transmission_sae = (int)
             $actesTransactionsSQL->getNbByStatusAndAuthority(
                 ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
                 $authority_id
             );
 
-        $this->{'actes_nb_envoye_sae'} =
+        $this->actes_nb_envoye_sae = (int)
             $actesTransactionsSQL->getNbByStatusAndAuthority(
                 ActesStatusSQL::STATUS_ENVOYE_AU_SAE,
                 $authority_id
             );
-        $this->{'actes_erreur_lors_de_larchivage'} =
+        $this->actes_erreur_lors_de_larchivage = (int)
             $actesTransactionsSQL->getNbByStatusAndAuthority(
                 ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE,
                 $authority_id
             );
-        $this->{'actes_erreur_lors_de_lenvoi_sae'} =
+        $this->actes_erreur_lors_de_lenvoi_sae = (int)
             $actesTransactionsSQL->getNbByStatusAndAuthority(
                 ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
                 $authority_id
@@ -129,7 +139,7 @@ class AdminSAEController extends Controller
 
         $heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
 
-        $this->{'helios_nb_en_retard'} =
+        $this->helios_nb_en_retard =
             count($heliosTransactionsSQL->getTransactionToPrepareToSAE(
                 HeliosPrepareSaeWorker::NB_DAYS_ARCHIVE_AFTER,
                 $authority_id,
@@ -137,24 +147,24 @@ class AdminSAEController extends Controller
             ));
 
 
-        $this->{'helios_nb_en_attente_transmission_sae'} =
+        $this->helios_nb_en_attente_transmission_sae = (int)
             $heliosTransactionsSQL->getNbByStatusAndAuthority(
                 HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
                 $authority_id
             );
-        $this->{'helios_nb_envoye_au_sae'} =
+        $this->helios_nb_envoye_au_sae = (int)
             $heliosTransactionsSQL->getNbByStatusAndAuthority(
                 HeliosStatusSQL::ENVOYER_AU_SAE,
                 $authority_id
             );
-        $this->{'helios_erreur_lors_de_lenvoi_sae'} =
+        $this->helios_erreur_lors_de_lenvoi_sae = (int)
             $heliosTransactionsSQL->getNbByStatusAndAuthority(
                 HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
                 $authority_id
             );
 
-        $this->{'authority_id'} = $authority_id;
-        $this->{'pastellProperties'} = $pastellProperties;
-        $this->title = "{$authority_info['name']} - Statistiques SAE";
+        $this->authority_id = $authority_id;
+        $this->pastellProperties = $pastellProperties;
+        $this->setViewParameter('title', "{$authority_info['name']} - Statistiques SAE");
     }
 }
