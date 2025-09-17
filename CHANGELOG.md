@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.4 -
+
+### Corrections
+
+- Le logrotate ne se lançait pas dans le container
+
 ## 5.1.3 - 2025-09-04
 
 ### Corrections
