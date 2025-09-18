@@ -78,7 +78,7 @@ parameters:
   app.helios_responses_root: '%app.helios_file_root%response/'
   app.helios_responses_error_path: '/data/tdt-workspace/helios/response_error/'
   app.mail_file_upload_root: '%app.workspace_directory%mail/'
-  app.mail_files_without_transac_dir: '%app.mail_file_upload_root%%sans_transaction/'
+  app.mail_files_without_transac_dir: '%app.mail_file_upload_root%sans_transaction/'
   app.old_timestamp_token_directory: '/data/timestamp-token/'
   app.openssl_path: '/usr/bin/openssl'
   app.pades_valid_url: 'http://pades-valid:8080'
