@@ -198,7 +198,7 @@ class Helpers
    * \param $redirect (optionnel) : URL vers laquelle rediriger
    * \param $apiMsg (optionnel) : message renvoyé dans le cas d'un appel par API (sinon $msg)
   */
-    public static function returnAndExit($status, $msg, $redirect = null, $apiMsg = null)
+    public static function returnAndExit($status, $msg, $redirect = null, $apiMsg = null): never
     {
 
         //Permet de logguer le résultat dans un fichier, nottamment utile pour Qualigraf
