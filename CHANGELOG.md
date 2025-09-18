@@ -6,6 +6,12 @@
 
 - Suppression de l'outil de signature intégré #1113
 
+## 5.1.4 - 2025-09-17
+
+### Corrections
+
+- Le logrotate ne se lançait pas dans le container
+
 ## 5.1.3 - 2025-09-04
 
 ### Corrections

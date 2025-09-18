@@ -1,3 +1,13 @@
+<?php
+/**
+ * @var array $mailEmisArray
+ * @var MailTransaction $mailTransaction
+ * @var array $mailIncludeFileArray
+ * @var string $fndownload
+ * @var array|bool $mailErrors
+ */
+?>
+
 <script src="/javascript/mailshow.js" type="text/javascript"></script>
  <h1> Mail - Système de mail sécurisé</h1>
         <h2>Actions</h2>
@@ -13,6 +23,7 @@
 
             use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
             use S2lowLegacy\Lib\ObjectInstancierFactory;
+            use S2lowLegacy\Mail\MailTransaction;
 
             $mailToSize = 0;
             $mailCcSize = 0;
