@@ -2,7 +2,9 @@
 
 namespace S2low\Tests\Base;
 
+use S2low\Factory\PDOFactory;
 use S2low\Kernel;
+use S2lowLegacy\Class\Database;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Controller\PostgreSQLController;
 use S2lowLegacy\Lib\SQLQuery;
@@ -39,11 +41,14 @@ class S2lowTestListener implements \PHPUnit\Framework\TestListener
 
     public function startTestSuite(\PHPUnit\Framework\TestSuite $suite): void
     {
-        new Kernel('test', false);
+        $kernel = new Kernel('test', false);
         $postgreSQLControler = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
             ->get(PostgreSQLController::class);
 
         $postgreSQLControler->populateDbTest();
+        LegacyObjectsManager::getLegacyObjectInstancier()->get(Database::class)->disconnect();
+        LegacyObjectsManager::getLegacyObjectInstancier()->get(PDOFactory::class)->closeAll();
+        $kernel->shutdown();
     }
 
     public function endTestSuite(\PHPUnit\Framework\TestSuite $suite): void
@@ -52,7 +57,7 @@ class S2lowTestListener implements \PHPUnit\Framework\TestListener
 
     public function startTest(\PHPUnit\Framework\Test $test): void
     {
-        new Kernel('test', false);
+        $kernel = new Kernel('test', false);
         $sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
         $sqlQuery->query("SELECT SETVAL('users_id_seq', (SELECT MAX(id)+1 FROM users))");
         $sqlQuery->query("SELECT SETVAL('authority_siret_id_seq', (SELECT MAX(id)+1 FROM authority_siret))");
@@ -60,6 +65,9 @@ class S2lowTestListener implements \PHPUnit\Framework\TestListener
         $sqlQuery->query("SELECT SETVAL('authorities_id_seq', (SELECT MAX(id)+1 FROM authorities))");
         $sqlQuery->query("SELECT SETVAL('helios_transactions_id_seq', (SELECT MAX(id)+1 FROM helios_transactions))");
         $sqlQuery->query("SELECT SETVAL('authority_groups_id_seq', (SELECT MAX(id)+1 FROM authority_groups))");
+        LegacyObjectsManager::getLegacyObjectInstancier()->get(Database::class)->disconnect();
+        LegacyObjectsManager::getLegacyObjectInstancier()->get(PDOFactory::class)->closeAll();
+        $kernel->shutdown();
     }
 
     public function endTest(\PHPUnit\Framework\Test $test, float $time): void

@@ -1,8 +1,5 @@
 parameters:
-  app.database_name: '%env(POSTGRES_DATABASE_TEST)%'
-  app.database_host: '%env(POSTGRES_HOST_TEST)%'
-  app.database_login: '%env(POSTGRES_USER_TEST)%'
-  app.database_password: '%env(POSTGRES_PASSWORD_TEST)%'
+  app.database_url: 'postgresql://dbusertest:dbpasswordtest@db_test:5432/s2lowtest?serverVersion=14&charset=utf8'
   app.openstack_enable: false
   app.helios_use_passtrans_as_default: false
   app.actes.files_upload_root: '/tmp'

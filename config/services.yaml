@@ -1,9 +1,5 @@
 parameters:
   # Parametres a definir obligatoirement
-  app.database_host: '%env(POSTGRES_HOST)%'
-  app.database_login: '%env(POSTGRES_USER)%'
-  app.database_name: '%env(POSTGRES_DB)%'
-  app.database_password: '%env(POSTGRES_PASSWORD)%'
   app.helios_sending_destination: '%env(HELIOS_SENDING_DESTINATION)%'
 
   # Parametres avec des valeurs par default
@@ -33,6 +29,7 @@ parameters:
   app.use_legacy_bordereau_model: '%env(bool:default:app.use_legacy_bordereau_model.default:USE_LEGACY_BORDEREAU_MODEL)%'
   app.use_prod_notifications: '%env(bool:default:app.use_prod_notifications.default:USE_PROD_NOTIFICATIONS)%'
   app.workspace_directory: '%env(default:app.workspace_directory.default:WORKSPACE_DIRECTORY)%'
+  app.database_url: '%env(DATABASE_URL)%'
 
   # Valeurs par default de parametres
   app.actes_appli_quadrigramme.default: 'TACT'
@@ -656,20 +653,10 @@ services:
   S2lowLegacy\Controller\HeliosController:
     public: true
 
-  PDO:
-    public: true
-    class: PDO
-    shared: true
-    factory: ['@S2low\Factory\PDOFactory', 'create']
-
   S2low\Factory\PDOFactory:
     public: true
     shared: true
-    arguments:
-      $hostname:  '%app.database_host%'
-      $name:  '%app.database_name%'
-      $login: '%app.database_login%'
-      $password:  '%app.database_password%'
+
 
   S2low\Services\MailActesNotifications\MailerSymfony:
     public: true

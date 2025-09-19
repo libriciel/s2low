@@ -6,7 +6,7 @@ use Closure;
 use Exception;
 use PDO;
 use PDOStatement;
-use S2lowLegacy\Class\LegacyObjectsManager;
+use S2low\Factory\PDOFactory;
 
 class SQLQuery
 {
@@ -18,10 +18,12 @@ class SQLQuery
     private $lastPdoStatement;
     private $nextResult;
     private $hasMoreResult;
+    private ?PDO $pdo;
 
     public function __construct(
-        private ?PDO $pdo
+        PDOFactory $pdoFactory
     ) {
+        $this->pdo = $pdoFactory->create();
         $this->setSlowQuery(self::SLOW_QUERY_IN_MS);
     }
 

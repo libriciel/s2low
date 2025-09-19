@@ -38,11 +38,6 @@ abstract class S2lowTestCase extends KernelTestCase
         $this->testHandler = $this->createTestHandler();
         $this->logger = $this->createLogger($this->testHandler);
         $this->s2lowLogger = $this->createS2lowLogger($this->logger);
-
-        $objectInstancier = new ObjectInstancier(self::getContainer());
-        \S2lowLegacy\Class\LegacyObjectsManager::setObjectInstancier($objectInstancier);
-        \S2lowLegacy\Lib\ObjectInstancierFactory::setObjectInstancier($objectInstancier);
-        \S2lowLegacy\Class\DatabasePool::setObjectInstancier($objectInstancier);
     }
 
     public function tearDown(): void
