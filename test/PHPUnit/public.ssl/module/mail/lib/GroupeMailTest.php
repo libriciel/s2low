@@ -28,34 +28,6 @@ class GroupeMailTest extends S2lowTestCase
         parent::tearDown();
     }
 
-    public function testAddAndRemoveUserToGroup()
-    {
-        $this->assertEquals(0, $this->groupeMail->getNbUtilisateur());
-        $this->assertEquals(false, $this->groupeMail->isUserInGroup(1));
-        $this->groupeMail->addUser(1);
-        $this->assertEquals(1, $this->groupeMail->getNbUtilisateur());
-        $this->assertEquals(true, $this->groupeMail->isUserInGroup(1));
-        $this->groupeMail->removeUser(1);
-        $this->assertEquals(0, $this->groupeMail->getNbUtilisateur());
-        $this->assertEquals(false, $this->groupeMail->isUserInGroup(1));
-    }
-
-    public function testgetGroupeIdFromName()
-    {
-        $this->assertEquals(
-            $this->groupeMail->getId(),
-            $this->groupeMail->getGroupeIdFromName($this->name, 1)
-        );
-    }
-
-    public function testgetGroupeIdFromNameWithInexistantName()
-    {
-        $this->assertEquals(
-            false,
-            $this->groupeMail->getGroupeIdFromName("A fake name", 1)
-        );
-    }
-
     public function testGetGroupeByAuthorityId()
     {
         $this->assertEquals(

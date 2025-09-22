@@ -74,24 +74,6 @@ class Annuaire
 
 
         $this->tabOK[] = $chaine;
-
-        if ($groupe_name) {
-            $this->addUserToGroupe($id_user, $groupe_name);
-        }
-    }
-
-    private function addUserToGroupe($id_user, $groupeName)
-    {
-        $groupe = new GroupeMail();
-        $id_groupe = $groupe->getGroupeIdFromName($groupeName, $this->authority_id);
-        if (! $id_groupe) {
-            $groupe->set("authority_id", $this->authority_id);
-            $groupe->set('name', $groupeName);
-            $groupe->save(false);
-            $id_groupe = $groupe->getGroupeIdFromName($groupeName, $this->authority_id);
-        }
-        $groupe = new GroupeMail($id_groupe);
-        $groupe->addUser($id_user);
     }
 
     private function saveAnnuaire($email, $description)
@@ -102,21 +84,6 @@ class Annuaire
         $annuaire->set("authority_id", $this->authority_id);
         $annuaire->save(false);
         return $annuaire->getId();
-    }
-
-    public function getTabError()
-    {
-        return $this->tabError;
-    }
-
-    public function getTabOK()
-    {
-        return $this->tabOK;
-    }
-
-    public function getTabAlreadyExist()
-    {
-        return $this->tabAlreadyExist;
     }
 
     public function getNbContact()

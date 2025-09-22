@@ -4,34 +4,26 @@ namespace S2low\Controller;
 
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
-use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MailInit;
 use Exception;
 use MailController;
-use S2low\Services\MailSecurises\MailSecuriseNotification;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Mail\MailLayout;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MailSecuriseController extends AbstractController
 {
     private MailLayout $doc;
-    /**
-     * @var \S2low\Services\MailSecurises\MailSecuriseNotification
-     */
-    private MailSecuriseNotification $mailSecuriseNotification;
     private Module $module;
     private User $me;
     private Authority $myAuthority;
 
-    public function __construct(MailLayout $mailLayout, MailSecuriseNotification $mailSecuriseNotification)
+    public function __construct(MailLayout $mailLayout)
     {
         $this->doc = $mailLayout;
-        $this->mailSecuriseNotification = $mailSecuriseNotification;
         list($this->module, $this->me, $this->myAuthority) = MailInit::getIdentificationParameters();
     }
 
@@ -73,7 +65,7 @@ class MailSecuriseController extends AbstractController
 
                         $doc->DisplayHead();
                     }
-                    $MailCtl = new MailController($me, $this->doc, $module, $myAuthority, $this->mailSecuriseNotification);
+                    $MailCtl = new MailController($me, $this->doc);
                     $MailCtl->run($command);
                     $doc->closeContent(true);
                     $doc->closeContainer(true);
@@ -84,34 +76,5 @@ class MailSecuriseController extends AbstractController
                 }
             }
         );
-    }
-
-    #[Route(
-        path: '/modules/mail/api/send-mail.php',
-    )]
-    public function handleApiRequest(): Response
-    {
-        //Quickfix pour homogénéiser l'utilisation de Helpers::getVarFromRequest
-        // On spécifie qu'on utilise bien l'API ...
-        $_POST["api"] = 1;
-
-        if (isset($_POST['password'])) {
-            $_POST['psw1'] = $_POST['password'];
-            $_POST['psw2'] = $_POST['password'];
-        }
-
-        $_POST['FileNumber'] = count($_FILES);
-
-        $MailCtl = new MailController($this->me, $this->doc, $this->module, $this->myAuthority, $this->mailSecuriseNotification);
-        ob_start();
-        $mailId = $MailCtl->executeSend();
-        ob_end_clean();
-
-        if ($mailId) {
-            return new Response("OK:$mailId\n");
-        } else {
-            $erreur = $MailCtl->getLastError();
-            return new Response("ERROR:$erreur\n");
-        }
     }
 }
