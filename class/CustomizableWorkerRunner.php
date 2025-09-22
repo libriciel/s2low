@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace S2lowLegacy\Class;
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Lib\PausingQueueException;
 use S2lowLegacy\Lib\SigTermHandler;
 use Throwable;
@@ -11,14 +12,14 @@ use Throwable;
 class CustomizableWorkerRunner implements WorkerRunner
 {
     private IWorker $worker;
-    private S2lowLogger $s2lowLogger;
+    private LoggerInterface $s2lowLogger;
     private int $min_execution_time_in_seconds;
     private SigTermHandler $sigTermHandler;
     private JobFetchingStrategy $jobFetchingStrategies;
 
     public function __construct(
         IWorker $worker,
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         SigTermHandler $sigTermHandler,
         int $min_execution_time_in_seconds,
         JobFetchingStrategy $jobFetchingStrategies

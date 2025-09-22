@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace S2low\Services\Helios\DGFiPConnection;
 
+use Psr\Log\LoggerInterface;
 use S2low\Services\FilesAndDirectoriesUtils\DirectoryManagerFactory;
 use S2low\Services\Helios\DGFiPConnection\Protocols\FtpServiceWrapper;
 use S2low\Services\Helios\DGFiPConnection\Protocols\SftpServiceWrapper;
-use S2lowLegacy\Class\S2lowLogger;
 
 /**
  * Permet d'instancier un objet DGFiPConnection
@@ -23,9 +23,9 @@ class DGFiPConnectionBuilder
      */
     private SftpServiceWrapper $sftpServiceWrapper;
     /**
-     * @var \S2lowLegacy\Class\S2lowLogger
+     * @var LoggerInterface
      */
-    private S2lowLogger $s2lowLogger;
+    private LoggerInterface $s2lowLogger;
     /**
      * @var DirectoryManagerFactory
      */
@@ -34,13 +34,13 @@ class DGFiPConnectionBuilder
     /**
      * @param \S2low\Services\Helios\DGFiPConnection\Protocols\FtpServiceWrapper $ftpServiceWrapper
      * @param \S2low\Services\Helios\DGFiPConnection\Protocols\SftpServiceWrapper $sftpServiceWrapper
-     * @param \S2lowLegacy\Class\S2lowLogger $s2lowLogger
+     * @param LoggerInterface $s2lowLogger
      * @param \S2low\Services\FilesAndDirectoriesUtils\DirectoryManagerFactory $directoryManagerFactory
      */
     public function __construct(
         FtpServiceWrapper $ftpServiceWrapper,
         SftpServiceWrapper $sftpServiceWrapper,
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         DirectoryManagerFactory $directoryManagerFactory
     ) {
         $this->ftpServiceWrapper = $ftpServiceWrapper;

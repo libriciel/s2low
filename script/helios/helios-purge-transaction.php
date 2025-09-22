@@ -1,7 +1,7 @@
 <?php
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\helios\HeliosSAEDateManager;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\helios\HeliosPurge;
@@ -10,7 +10,7 @@ require_once(__DIR__ . '/../../init/init.php');
 
 list($s2lowLogger, $heliosTransactionSQL, $heliosSAEDateManager, $heliosPurge ) =
     LegacyObjectsManager::getLegacyObjectInstancier()->getArray([
-        S2lowLogger::class, HeliosTransactionsSQL::class, HeliosSAEDateManager::class, HeliosPurge::class
+        LoggerInterface::class, HeliosTransactionsSQL::class, HeliosSAEDateManager::class, HeliosPurge::class
     ]);
 
 /**
@@ -18,9 +18,6 @@ list($s2lowLogger, $heliosTransactionSQL, $heliosSAEDateManager, $heliosPurge ) 
  */
 
 $delete_all = (isset($argv[1]) && $argv[1] == 'do');
-
-$s2lowLogger->setName('helios-purge-transaction');
-$s2lowLogger->enableStdOut(true);
 
 try {
     $date = $heliosSAEDateManager->getDateBeforeWhichWeDestroy();

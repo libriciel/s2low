@@ -2,8 +2,8 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\IWorker;
-use S2lowLegacy\Class\S2lowLogger;
 
 class ActesPrepareSaeWorker implements IWorker
 {
@@ -17,7 +17,7 @@ class ActesPrepareSaeWorker implements IWorker
 
     public function __construct(
         ActesTransactionsSQL $actesTransactionsSQL,
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         ActesPrepareEnvoiSAE $actesPrepareEnvoiSAE
     ) {
         $this->actesTransactionsSQL = $actesTransactionsSQL;

@@ -1,6 +1,7 @@
 <?php
 
 use PHPUnit\ActesUtilitiesTestTrait;
+use Psr\Log\LoggerInterface;
 use S2low\Services\PdfValidator;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\actes\ActesScriptHelper;
@@ -11,7 +12,6 @@ use S2lowLegacy\Class\actes\ActesUpdateClassificationSQL;
 use S2lowLegacy\Class\actes\ArchiveValidatorFactory;
 use S2lowLegacy\Class\PadesValid;
 use S2lowLegacy\Class\RecoverableException;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Model\LogsSQL;
@@ -369,7 +369,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
         $archiveValidatorFactory->method('get')->willReturn($archiveValidator);
 
         $worker = new ActesAnalyseFichierAEnvoyerWorker(
-            $this->getObjectInstancier()->get(S2lowLogger::class),
+            $this->getObjectInstancier()->get(LoggerInterface::class),
             $this->getObjectInstancier()->get(ActesTransactionsSQL::class),
             $this->getObjectInstancier()->getParameter('app.actes_appli_trigramme'),
             $this->getObjectInstancier()->getParameter('app.actes_appli_quadrigramme'),

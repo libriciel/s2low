@@ -26,7 +26,6 @@ use S2lowLegacy\Class\actes\BordereauPdfGenerator;
 use S2lowLegacy\Class\actes\IActesPdf;
 use S2lowLegacy\Class\CloudStorage;
 use S2lowLegacy\Class\PastellWrapperFactory;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\PastellPropertiesSQL;
 use S2lowTestCase;

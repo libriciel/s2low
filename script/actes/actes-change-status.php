@@ -1,13 +1,13 @@
 <?php
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Class\S2lowLogger;
 
 require_once(__DIR__ . "/../../init/init.php");
 list($s2LowLogger,$actesStatutsSQL,$actesTransactions) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [S2lowLogger::class,ActesStatusSQL::class,ActesTransactionsSQL::class]
+        [LoggerInterface::class,ActesStatusSQL::class,ActesTransactionsSQL::class]
     );
 
 function printStatus(array $actesStatuts)
@@ -40,8 +40,6 @@ function checkChange($transaction_id, $status_id, ActesTransactionsSQL $actesTra
 }
 
 $actesStatuts = $actesStatutsSQL->getAllStatus();
-
-$s2LowLogger->enableStdOut();
 
 if ($argc != 3) {
     $s2LowLogger->error("Nombre de paramètres incorrect. ( 2 Attendus, " . ($argc - 1) . " renseigné(s) )");

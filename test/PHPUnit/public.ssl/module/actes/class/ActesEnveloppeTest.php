@@ -1,7 +1,8 @@
 <?php
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\actes\ActesRetriever;
-use S2lowLegacy\Class\S2lowLogger;
+//use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 
@@ -35,7 +36,7 @@ class ActesEnveloppeTest extends S2lowTestCase
         $actesRetriever = new ActesRetriever(
             $my_tmp_folder,
             self::getContainer()->get(OpenStackSwiftWrapper::class),
-            self::getContainer()->get(S2lowLogger::class)
+            self::getContainer()->get(LoggerInterface::class)
         );
         self::getContainer()->set(ActesRetriever::class, $actesRetriever);
         $file_path = $actesRetriever->getPath("test.txt");

@@ -2,7 +2,7 @@
 
 namespace S2lowLegacy\Class\actes;
 
-use S2lowLegacy\Class\S2lowLogger;
+use Psr\Log\LoggerInterface;
 
 class ActesTransactionsCloser
 {
@@ -12,7 +12,7 @@ class ActesTransactionsCloser
 
     public function __construct(
         ActesTransactionsSQL $actesTransactionsSQL,
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         ActesScriptHelper $actesScriptHelper
     ) {
         $this->actesTransactionsSQL = $actesTransactionsSQL;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace S2low\Services\Helios;
 
+use Psr\Log\LoggerInterface;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager;
-use S2lowLegacy\Class\S2lowLogger;
 
 /**
  * Permet de genérer des FTPHeliosReceiver configurées pour se connecter en utilisant la configuration Passtrans
@@ -14,9 +14,9 @@ use S2lowLegacy\Class\S2lowLogger;
 class FTPHeliosReceiverFactory
 {
     /**
-     * @var \S2lowLegacy\Class\S2lowLogger
+     * @var LoggerInterface
      */
-    private S2lowLogger $s2lowLogger;
+    private LoggerInterface $s2lowLogger;
 
     private mixed $localPath;
     /**
@@ -27,13 +27,13 @@ class FTPHeliosReceiverFactory
 
 
     /**
-     * @param \S2lowLegacy\Class\S2lowLogger $s2lowLogger
+     * @param LoggerInterface $s2lowLogger
      * @param \S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager $connectionsConfigurationManager
      * @param $helios_ftp_response_tmp_local_path
      * @param $helios_responses_error_path
      */
     public function __construct(
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         DGFiPConnectionsManager $connectionsConfigurationManager,
         $helios_ftp_response_tmp_local_path,
         $helios_responses_error_path

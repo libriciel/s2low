@@ -3,10 +3,10 @@
 namespace S2lowLegacy\Class\actes;
 
 use Error;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\PadesValid;
 use S2lowLegacy\Class\RecoverableException;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Class\WorkerScript;
 use Exception;
@@ -34,7 +34,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
     private ArchiveValidatorFactory $archiveValidatorFactory;
 
     public function __construct(
-        S2lowLogger $logger,
+        LoggerInterface $logger,
         ActesTransactionsSQL $actesTransactionsSQL,
         $actes_appli_trigramme,
         $actes_appli_quadrigramme,

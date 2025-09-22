@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class;
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Model\PastellProperties;
 
 class PastellWrapperFactory
@@ -12,7 +13,7 @@ class PastellWrapperFactory
 
     public function __construct(
         CurlWrapperFactory $curlWrapperFactory,
-        S2lowLogger $s2lowLogger
+        LoggerInterface $s2lowLogger
     ) {
         $this->curlWrapperFactory = $curlWrapperFactory;
         $this->s2lowLogger = $s2lowLogger;

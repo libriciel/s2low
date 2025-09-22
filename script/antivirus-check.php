@@ -1,12 +1,11 @@
 <?php
 
 use S2lowLegacy\Class\Antivirus;
-use S2lowLegacy\Class\S2lowLogger;
 
 require_once(__DIR__ . "/../init/init.php");
-list($s2lowLogger, $antivirus) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($antivirus) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [S2lowLogger::class, Antivirus::class]
+        [Antivirus::class]
     );
 
 
@@ -17,7 +16,5 @@ if ($argc < 2) {
 }
 
 $file_path = $argv[1];
-
-$s2lowLogger->enableStdOut();
 
 $antivirus->checkArchiveSanity($file_path);

@@ -2,8 +2,8 @@
 
 namespace S2lowLegacy\Class\helios;
 
-use S2lowLegacy\Class\S2lowLogger;
 use Exception;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 
 class PesAllerRetriever
@@ -16,7 +16,7 @@ class PesAllerRetriever
     public function __construct(
         $helios_files_upload_root,
         OpenStackSwiftWrapper $openStackSwiftWrapper,
-        S2lowLogger $logger
+        LoggerInterface $logger
     ) {
         $this->helios_files_upload_root = $helios_files_upload_root;
         $this->openStackSwiftWrapper = $openStackSwiftWrapper;

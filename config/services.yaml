@@ -132,6 +132,10 @@ services:
     resource: '../src/*'
     exclude: '../src/Kernel.php'
 
+  Psr\Log\LoggerInterface:
+    alias: 'logger'
+    public: true
+
   S2lowLegacy\Boot\S2lowBootstrap:
     class: 'S2lowLegacy\Boot\S2lowBootstrap'
     autowire: true

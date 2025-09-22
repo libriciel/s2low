@@ -1,12 +1,12 @@
 <?php
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Module;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\User;
 
-/** @var S2lowLogger $logger */
-$logger = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(S2lowLogger::class);
+/** @var LoggerInterface $logger */
+$logger = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(LoggerInterface::class);
 
 
 // Instanciation du module courant

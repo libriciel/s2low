@@ -4,9 +4,9 @@ namespace S2lowLegacy\Class\actes;
 
 /* Archive au sens SEDA et pas au sens Actes ... */
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\PastellWrapperFactory;
 use S2lowLegacy\Class\RecoverableException;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TGZExtractor;
 use S2lowLegacy\Class\TmpFolder;
 use Exception;
@@ -26,7 +26,7 @@ class ActesArchiveControler
 
     private PastellPropertiesSQL $pastellPropetiesSQL;
 
-    private S2lowLogger $logger;
+    private LoggerInterface $logger;
 
     private ActesEnvelopeSQL $actesEnvelopeSQL;
     private ActesTypePJSQL $actesTypePJSQL;
@@ -38,7 +38,7 @@ class ActesArchiveControler
     public function __construct(
         ActesRetriever $actesRetriever,
         PastellPropertiesSQL $pastellPropertiesSQL,
-        S2lowLogger $logger,
+        LoggerInterface $logger,
         PastellWrapperFactory $pastellWrapperFactory,
         AuthoritySQL $authoritySQL,
         ActesTransactionsSQL $actesTransactionsSQL,

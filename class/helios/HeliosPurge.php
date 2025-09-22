@@ -2,21 +2,18 @@
 
 namespace S2lowLegacy\Class\helios;
 
-use S2lowLegacy\Class\S2lowLogger;
+use Psr\Log\LoggerInterface;
 
 class HeliosPurge
 {
-    /**
-     * @var \S2lowLegacy\Class\S2lowLogger
-     */
-    private S2lowLogger $s2lowLogger;
+    private LoggerInterface $s2lowLogger;
     /**
      * @var \S2lowLegacy\Class\helios\HeliosFilesFactory
      */
     private HeliosFilesFactory $heliosFilesFactory;
 
     public function __construct(
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         HeliosFilesFactory $heliosFilesFactory
     ) {
         $this->heliosFilesFactory = $heliosFilesFactory;
