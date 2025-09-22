@@ -12,6 +12,24 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 class AdminStatsController extends Controller
 {
+    protected int $actes_nb_en_retard;
+    protected int $actes_nb_en_attente_auto;
+    protected int $actes_nb_envoye_auto;
+    protected int $actes_erreur_lors_de_larchivage_auto;
+    protected int $actes_erreur_lors_de_lenvoi_sae_auto;
+    protected int $actes_nb_en_attente_sae_4h;
+    protected int $actes_nb_envoye_sae_4h;
+    protected int $actes_erreur_lors_de_larchivage;
+    protected int $actes_erreur_lors_de_lenvoi_sae;
+    protected int $helios_nb_en_retard;
+    protected int $helios_nb_en_attente_sae_auto;
+    protected int $helios_nb_envoye_sae_auto;
+    protected int $helios_erreur_lors_de_larchivage_auto;
+    protected int $helios_nb_en_attente_sae_4h;
+    protected int $helios_nb_envoye_sae_4h;
+    protected int $helios_erreur_lors_de_larchivage;
+    protected array $status_list;
+    protected array $info_list;
     public function _actionBefore($controller, $action)
     {
         $this->verifSuperAdmin();
@@ -20,12 +38,11 @@ class AdminStatsController extends Controller
 
     public function statsSAEGlobalAction()
     {
-
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
 
         $actesArchiveControler = $this->getObjectInstancier()->get(ActesArchiveControler::class);
 
-        $this->{'actes_nb_en_retard'} = count($actesTransactionsSQL->getTransactionToArchive(
+        $this->actes_nb_en_retard = count($actesTransactionsSQL->getTransactionToArchive(
             ActesPrepareSaeWorker::NB_DAYS_ARCHIVE_AFTER
         ));
         $this->actes_nb_en_attente_auto = count($actesArchiveControler->getAllTransactionIdToSend());
@@ -43,13 +60,10 @@ class AdminStatsController extends Controller
             true
         ));
 
-
-
-
-        $this->actes_nb_en_attente_sae_4h = $actesTransactionsSQL->getNbByStatus(ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE);
-        $this->actes_nb_envoye_sae_4h = $actesTransactionsSQL->getNbByStatus(ActesStatusSQL::STATUS_ENVOYE_AU_SAE);
-        $this->actes_erreur_lors_de_larchivage = $actesTransactionsSQL->getNbByStatus(ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE);
-        $this->actes_erreur_lors_de_lenvoi_sae = $actesTransactionsSQL->getNbByStatus(ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE);
+        $this->actes_nb_en_attente_sae_4h = (int) $actesTransactionsSQL->getNbByStatus(ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE);
+        $this->actes_nb_envoye_sae_4h = (int) $actesTransactionsSQL->getNbByStatus(ActesStatusSQL::STATUS_ENVOYE_AU_SAE);
+        $this->actes_erreur_lors_de_larchivage = (int) $actesTransactionsSQL->getNbByStatus(ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE);
+        $this->actes_erreur_lors_de_lenvoi_sae = (int) $actesTransactionsSQL->getNbByStatus(ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE);
 
 
         $heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
@@ -79,36 +93,33 @@ class AdminStatsController extends Controller
             )
         );
 
-
-
-
-        $this->helios_nb_en_attente_sae_4h = $heliosTransactionsSQL->getNbByStatus(HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE);
-        $this->helios_nb_envoye_sae_4h = $heliosTransactionsSQL->getNbByStatus(HeliosStatusSQL::ENVOYER_AU_SAE);
-        $this->helios_erreur_lors_de_larchivage = $heliosTransactionsSQL->getNbByStatus(HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE);
+        $this->helios_nb_en_attente_sae_4h = (int) $heliosTransactionsSQL->getNbByStatus(HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE);
+        $this->helios_nb_envoye_sae_4h = (int) $heliosTransactionsSQL->getNbByStatus(HeliosStatusSQL::ENVOYER_AU_SAE);
+        $this->helios_erreur_lors_de_larchivage = (int) $heliosTransactionsSQL->getNbByStatus(HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE);
     }
 
     public function SAEActesAction()
     {
         /** @var ActesTransactionsSQL $actesTransactionsSQL */
         $actesTransactionsSQL = $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
-        $this->{'status_list'} = [
+        $this->status_list = [
             ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
             ActesStatusSQL::STATUS_ENVOYE_AU_SAE,
             ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
             ActesStatusSQL::STATUS_ERREUR_LORS_DE_L_ARCHIVAGE,
         ];
-        $this->{'info_list'} = $actesTransactionsSQL->getNbTransactionGroupBySAEStatusForModeAuto($this->{'status_list'});
+        $this->info_list = $actesTransactionsSQL->getNbTransactionGroupBySAEStatusForModeAuto($this->status_list);
     }
 
     public function SAEHeliosAction()
     {
         /** @var HeliosTransactionsSQL $heliosTransactionsSQL */
         $heliosTransactionsSQL = $this->getObjectInstancier()->get(HeliosTransactionsSQL::class);
-        $this->{'status_list'} = [
+        $this->status_list = [
             HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
             HeliosStatusSQL::ENVOYER_AU_SAE,
             HeliosStatusSQL::STATUS_ERREUR_LORS_DE_L_ENVOI_SAE,
         ];
-        $this->{'info_list'} = $heliosTransactionsSQL->getNbTransactionGroupBySAEStatusForModeAuto($this->{'status_list'});
+        $this->info_list = $heliosTransactionsSQL->getNbTransactionGroupBySAEStatusForModeAuto($this->status_list);
     }
 }

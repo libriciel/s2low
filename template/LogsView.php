@@ -9,9 +9,9 @@ use S2lowLegacy\Class\DatePicker;
 <script type="text/javascript" src="<?php echo Helpers::getLink('/jsmodules/jqueryui.js');?>"></script>
 
 
-<h1><?php echo $h1_title ?></h1>
+<h1><?php echo $this->h1_title ?></h1>
 
-<?php if ($has_logs_request) : ?>
+<?php if ($this->has_logs_request) : ?>
 <div id="actions-area">
     <h2>Action</h2>
     <a class="btn btn-primary bouton" href="/common/logs_request_view.php" >Demandes de journal</a>
@@ -26,10 +26,10 @@ use S2lowLegacy\Class\DatePicker;
             <div class="col-md-3">
                 <select name="module" class="form-control">
                     <option value="">Choisissez</option>
-                    <?php foreach ($module_list as $module_info) : ?>
+                    <?php foreach ($this->module_list as $module_info) : ?>
                         <option
                                 value="<?php hecho($module_info['name']) ?>"
-                            <?php echo $fmodule == $module_info['name'] ? 'selected="selected"' : '' ?>
+                            <?php echo $this->fmodule == $module_info['name'] ? 'selected="selected"' : '' ?>
                         >
                             <?php hecho($module_info['name'])?>
                         </option>
@@ -39,11 +39,11 @@ use S2lowLegacy\Class\DatePicker;
             <label for="severity-choice" class="col-md-3 control-label">Sévérité</label>
             <div class="col-md-3">
                 <select name="severity" class="form-control">
-                    <option value="-1" <?php  echo $fseverity == -1 ? 'selected="selected"' : ''?>>Choisissez</option>
-                    <?php foreach ($loglevel_list as $loglevel_id => $loglevel_libelle) : ?>
+                    <option value="-1" <?php  echo $this->fseverity == -1 ? 'selected="selected"' : ''?>>Choisissez</option>
+                    <?php foreach ($this->loglevel_list as $loglevel_id => $loglevel_libelle) : ?>
                         <option
                                 value="<?php echo $loglevel_id?>"
-                            <?php  echo $fseverity == $loglevel_id ? 'selected="selected"' : ''?>
+                            <?php  echo $this->fseverity == $loglevel_id ? 'selected="selected"' : ''?>
                         >
                             <?php echo $loglevel_libelle ?>
                         </option>
@@ -54,12 +54,12 @@ use S2lowLegacy\Class\DatePicker;
         <div class="form-group">
             <label for="date_debut" class="col-md-3 control-label">Date de début</label>
             <div class="col-md-3">
-                <?php $datePickerDebut = new DatePicker('date_debut', $date_debut);
+                <?php $datePickerDebut = new DatePicker('date_debut', $this->date_debut);
                 echo $datePickerDebut->show(); ?>
             </div>
             <label for="date-fin" class="col-md-3 control-label">Date de fin</label>
             <div class="col-md-3">
-                <?php $datePickerFin = new DatePicker('date_fin', $date_fin);
+                <?php $datePickerFin = new DatePicker('date_fin', $this->date_fin);
                 echo $datePickerFin->show(); ?>
             </div>
         </div>
@@ -73,7 +73,7 @@ use S2lowLegacy\Class\DatePicker;
                         name="message"
                         size="20"
                         maxlength="25"
-                        value="<?php hecho($fmessage) ?>"
+                        value="<?php hecho($this->fmessage) ?>"
                 />
             </div>
         </div>
@@ -84,10 +84,10 @@ use S2lowLegacy\Class\DatePicker;
                     <div class="col-md-3">
                         <select name="authority" class="form-control">
                             <option value="">Choisissez</option>
-                            <?php foreach ($authorities_list as $authority_id => $authority_name) : ?>
+                            <?php foreach ($this->authorities_list as $authority_id => $authority_name) : ?>
                                 <option
                                         value="<?php hecho($authority_id) ?>"
-                                    <?php echo $fauthority == $authority_id ? 'selected="selected"' : '' ?>
+                                    <?php echo $this->fauthority == $authority_id ? 'selected="selected"' : '' ?>
                                 >
                                     <?php hecho($authority_name) ?>
                                 </option>
@@ -97,7 +97,7 @@ use S2lowLegacy\Class\DatePicker;
                 <?php endif; ?>
                 <label for="username-contain" class="col-md-3 control-label">Nom utilisateur contient</label>
                 <div class="col-md-3">
-                    <input id="username-contain" class="form-control" type="text" name="user" size="20" maxlength="25"  value="<?php hecho($fuser) ?>" />
+                    <input id="username-contain" class="form-control" type="text" name="user" size="20" maxlength="25"  value="<?php hecho($this->fuser) ?>" />
                 </div>
             </div>
         <?php endif; ?>
@@ -108,7 +108,7 @@ use S2lowLegacy\Class\DatePicker;
 </div>
 <h2>Entrées du journal</h2>
 <div id="journal_area">
-    <?php if (! $logs_list) : ?>
+    <?php if (! $this->logs_list) : ?>
         Aucune entrée du journal ne correspond au filtrage spécifié.
     <?php else : ?>
         <table class="logs data-table table table-striped">
@@ -126,7 +126,7 @@ use S2lowLegacy\Class\DatePicker;
             </thead>
             <tbody>
 
-            <?php foreach ($logs_list as $logEntry) : ?>
+            <?php foreach ($this->logs_list as $logEntry) : ?>
                 <tr>
                     <td headers="date">
                         <?php echo Helpers::getDateFromBDDDate($logEntry['date'], true) ?>
@@ -135,14 +135,14 @@ use S2lowLegacy\Class\DatePicker;
                         <?php hecho($logEntry['issuer']) ?>
                     </td>
                     <td headers="severity">
-                        <?php hecho($loglevel_list[$logEntry['severity']]) ?>
+                        <?php hecho($this->loglevel_list[$logEntry['severity']]) ?>
                     </td>
                     <td headers="module">
                         <?php hecho($logEntry['module']) ?>
                     </td>
                     <td headers="user">
                         <?php
-                        hecho($userSQL->getPrettyName($logEntry['name'], $logEntry['givenname'], $logEntry['login']))
+                        hecho($this->userSQL->getPrettyName($logEntry['name'], $logEntry['givenname'], $logEntry['login']))
                         ?>
                     </td>
 

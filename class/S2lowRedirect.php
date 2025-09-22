@@ -34,6 +34,6 @@ class S2lowRedirect
         $url = trim($site_base, "/") . "/" . ltrim($url_path, "/");
         $this->sessionWrapper->set(self::SESSION_MESSAGE_KEY, $error_message);
         header_wrapper("Location: $url");
-        exit_wrapper(1, $error_message);
+        exit_wrapper(1);
     }
 }
