@@ -7,7 +7,7 @@ if [ ${GID} -ne 33 ] ; then
 fi
 
 if [ ${UID} -ne 33 ] ; then
-  adduser --uid "${UID}" --gid "${GID}" --gecos "" --disabled-password "${USERNAME}"
+  adduser --uid "${UID}" --gid "${GID}" --gecos "" --disabled-password --no-create-home "${USERNAME}"
 fi
 
 # Debian stuff
