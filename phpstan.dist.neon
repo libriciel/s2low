@@ -1,12 +1,13 @@
 parameters:
-  bootstrapFiles:
-    - config/config.php
-  level: 0
-  paths:
-    - class
-    - controller
-    - lib
-    - model
-    - public.ssl
-    - script
-    - src
+    bootstrapFiles:
+        - config/config.php
+        - class/include.php
+    level: 0
+    paths:
+        - class
+        - controller
+        - lib
+        - model
+        - public.ssl
+        - script
+        - src
