@@ -15,19 +15,19 @@ use Twig\Loader\FilesystemLoader;
 <?php $loader = new FilesystemLoader(__DIR__ . '/../templates');
 $twig = new Environment($loader); ?>
 
-<h1><?php hecho($title) ?></h1>
+<h1><?php hecho($this->viewParameter['title']) ?></h1>
 
 <div id="filtering-area">
     <h2>Filtrage</h2>
     <form class="form-horizontal" action="actes_export_handler.php">
-        <?php if ($me->isGroupAdminOrSuper()) : ?>
+        <?php if ($this->me->isGroupAdminOrSuper()) : ?>
             <div class="form-group">
                 <label for="authority_id" class="col-md-3 control-label">Collectivité</label>
                 <div class="col-md-3">
                     <select class="form-control zselect_authorities" name="authority_id" id="authority_id">
                         <option value="">Toutes</option>
-                        <?php foreach ($authority_id_list as $key => $val) : ?>
-                            <option value="<?php hecho($key) ?> " <?php echo (strcmp($key, $authority_id) == 0) ? " selected='selected'" : ""; ?> >
+                        <?php foreach ($this->authority_id_list as $key => $val) : ?>
+                            <option value="<?php hecho($key) ?> " <?php echo (strcmp($key, $this->authority_id) == 0) ? " selected='selected'" : ""; ?> >
                                 <?php hecho($val)?>
                             </option>
                         <?php endforeach; ?>
@@ -35,21 +35,21 @@ $twig = new Environment($loader); ?>
                 </div>
             </div>
         <?php else : ?>
-            <input type="hidden" name="authority_id" value="<?php hecho($authority_id) ?>"/>
+            <input type="hidden" name="authority_id" value="<?php hecho($this->authority_id) ?>"/>
         <?php endif;?>
 
         <div class="form-group">
             <label for="date_debut" class="col-md-3 control-label">Date de début</label>
             <div class="col-md-3">
             <?php
-            $datePickerDebut = new DatePicker("date_debut", $date_debut);
+            $datePickerDebut = new DatePicker("date_debut", $this->date_debut);
             echo $datePickerDebut->show();
             ?>
             </div>
             <label for="date-fin" class="col-md-3 control-label">Date de fin</label>
             <div class="col-md-3">
             <?php
-            $datePickerFin = new DatePicker("date_fin", $date_debut);
+            $datePickerFin = new DatePicker("date_fin", $this->date_debut);
             echo $datePickerFin->show();
             ?>
             </div>
