@@ -84,11 +84,7 @@ unit_test:
           command: ["postgres","-c", "max_connections=200"]
     variables:
         XDEBUG_ON: "true"
-        POSTGRES_USER_TEST: s2lowuser
-        POSTGRES_PASSWORD_TEST: s2lowpassword
-        POSTGRES_DB_TEST: s2lowdb
-        POSTGRES_DATABASE_TEST: s2lowdb
-        POSTGRES_HOST_TEST: postgres
+        DATABASE_URL: "postgresql://s2lowuser:s2lowpassword@s2lowdb:5432/s2lowdb?serverVersion=14&charset=utf8"
         POSTGRES_HOST: postgres
         S2LOW_WEBSITE: "localhost"
         COMPOSER_PROCESS_TIMEOUT: 9000

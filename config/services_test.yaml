@@ -1,5 +1,4 @@
 parameters:
-  app.database_url: 'postgresql://dbusertest:dbpasswordtest@db_test:5432/s2lowtest?serverVersion=14&charset=utf8'
   app.openstack_enable: false
   app.helios_use_passtrans_as_default: false
   app.actes.files_upload_root: '/tmp'
