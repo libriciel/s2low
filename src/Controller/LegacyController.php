@@ -16,7 +16,7 @@ class LegacyController extends AbstractController
 
         chdir(dirname($legacyScript));
 
-        \ob_start();
+        ob_start();
 
         try {
             require $legacyScript;
