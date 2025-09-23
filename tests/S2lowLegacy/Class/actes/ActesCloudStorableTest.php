@@ -39,5 +39,4 @@ class ActesCloudStorableTest extends \S2lowTestCase
     {
         return self::getContainer()->get(SQLQuery::class)->queryOneCol("INSERT INTO actes_envelopes(user_id) VALUES(1) returning ID");
     }
-
 }
