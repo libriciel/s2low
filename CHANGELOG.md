@@ -6,6 +6,12 @@
 
 - Suppression de l'outil de signature intégré #1113
 
+## 5.1.5
+
+### Corrections
+
+- Correction d'un bug survenant parfois lors de la recuperation d'un fichier dans le cloud causant une exception critique. #1384
+
 ## 5.1.4 - 2025-09-17
 
 ### Corrections
