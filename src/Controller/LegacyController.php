@@ -16,7 +16,8 @@ class LegacyController extends AbstractController
 
         chdir(dirname($legacyScript));
 
-        ob_start();
+        \ob_start();
+
         try {
             require $legacyScript;
         } catch (Exception $e) {
@@ -30,6 +31,20 @@ class LegacyController extends AbstractController
             $headers[$trimmed[0]] = $trimmed[1];
         }
         header_remove_wrapper();
+
+        if ($this->isFileDownloadRequest($requestPath)) {
+            $headers['Content-Disposition'] = 'attachment';
+        }
+
         return new Response($content, 200, $headers);
+    }
+
+    private function isFileDownloadRequest(string $requestPath): bool
+    {
+        $downloadRequestPath = [
+            'modules/helios/admin/download-response.php',
+        ];
+
+        return in_array($requestPath, $downloadRequestPath);
     }
 }
