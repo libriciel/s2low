@@ -2,6 +2,7 @@
 
 namespace S2low\Services\ProcessCommand;
 
+use DateTime;
 use S2lowLegacy\Class\RecoverableException;
 use Exception;
 
@@ -64,11 +65,11 @@ class OpenSSLWrapper
     /**
      * @throws RecoverableException
      */
-    public function checkSNIsInCRL(string $crlPath, string $serialNumber): void
+    public function checkSNIsInCRL(string $crlPath, string $serialNumber, DateTime $dateTime): void
     {
         $this->commandLauncher->launch(
             ["openssl","crl","-in",$crlPath,"-text","-noout"],
-            new CheckSnInCRLCommandOutputTranslator($serialNumber)
+            new CheckSnInCRLCommandOutputTranslator($serialNumber, $dateTime)
         );
     }
 

@@ -11,6 +11,10 @@
 - Ajoute la possibilité de filtrer par type d'actes dans modules/actes/api/list_actes.php #1235
 - Passage de SimpleXML à XMLReader pour limiter l'empreinte mémoire de l'analyse des XML reçus #497
 
+### Corrections
+
+- Prise en compte de la date de révocation des certificats #576
+
 ### Suppression
 
 - Suppression de l'outil de signature intégré #1113

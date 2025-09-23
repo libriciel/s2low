@@ -7,9 +7,13 @@ use DateTimeZone;
 use RuntimeException;
 use S2low\DomainModel\Certificates\CRL;
 use S2low\DomainModel\Certificates\Revocation;
+use S2low\Exceptions\CrlParsingException;
 
 class CRLReader
 {
+    /**
+     * @throws \S2low\Exceptions\CrlParsingException
+     */
     public function read(string $content): CRL
     {
         $lines = preg_split('/\R/', $content);
@@ -23,7 +27,7 @@ class CRLReader
                 $dateString = $m[1];
                 $dt = DateTime::createFromFormat('M d H:i:s Y T', $dateString, new DateTimeZone('UTC'));
                 if ($dt === false) {
-                    throw new RuntimeException("Failed to parse date: $dateString");
+                    throw new CrlParsingException("Failed to parse date: $dateString");
                 }
                 $revocations[] = new Revocation($currentSerialNumber, $dt);
                 $currentSerialNumber = null;
