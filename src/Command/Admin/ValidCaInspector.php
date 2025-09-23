@@ -18,9 +18,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class ValidCaInspector extends Command
 {
     public function __construct(
-        private PemCertificateFactory $pemCertificateFactory,
-        private LoggerInterface $logger,
-        private CertificateChainsBuilder $certificateChainsBuilder
+        private CertificateChainsBuilder $certificateChainsBuilder,
+        private readonly TrustedCertificatesStore $trustedCertificatesStore
     ) {
         parent::__construct();
     }
@@ -43,13 +42,9 @@ class ValidCaInspector extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $trustedCertificatesStore = new TrustedCertificatesStore(
-            $input->getArgument('validca_dir'),
-            $this->pemCertificateFactory,
-            $this->logger
+        $availableCertificates = $this->trustedCertificatesStore->getAvailableCertificates(
+            $input->getArgument('validca_dir')
         );
-
-        $availableCertificates = $trustedCertificatesStore->getAvailableCertificates();
 
         $certificateChains = $this->certificateChainsBuilder->build(...$availableCertificates);
 

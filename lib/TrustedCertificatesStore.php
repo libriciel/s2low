@@ -9,19 +9,18 @@ use RuntimeException;
 class TrustedCertificatesStore
 {
     public function __construct(
-        private string $rootPath,
         private PemCertificateFactory $pemCertificateFactory,
         private LoggerInterface $logger
     ) {
-        if (!is_dir($this->rootPath)) {
-            throw new RuntimeException("Root path '{$this->rootPath}' does not exist");
-        }
     }
 
-    private function getCertificatesFileNames(): array
+    private function getCertificatesFileNames(string $rootPath): array
     {
+        if (!is_dir($rootPath)) {
+            throw new RuntimeException("Root path '{$rootPath}' does not exist");
+        }
         $availableCertificatesFileNames = [];
-        foreach (glob($this->rootPath . '/*.pem') as $certificateFileName) {
+        foreach (glob($rootPath . '/*.pem') as $certificateFileName) {
             if (!preg_match('/\_CRL.pem$/', $certificateFileName)) {
                 $availableCertificatesFileNames[] = $certificateFileName;
             }
@@ -29,10 +28,10 @@ class TrustedCertificatesStore
         return $availableCertificatesFileNames;
     }
 
-    public function getAvailableCertificates(): array
+    public function getAvailableCertificates(string $rootPath): array
     {
         $availableCertificates = [];
-        foreach ($this->getCertificatesFileNames() as $certificateFileName) {
+        foreach ($this->getCertificatesFileNames($rootPath) as $certificateFileName) {
             try {
                 $availableCertificates[] = $this->pemCertificateFactory
                     ->getFromString(file_get_contents($certificateFileName));

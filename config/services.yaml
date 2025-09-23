@@ -296,9 +296,6 @@ services:
   S2lowLegacy\Lib\CertificateChain:
     autowire: false
 
-  S2lowLegacy\Lib\TrustedCertificatesStore:
-    autowire: false
-
   S2lowLegacy\Lib\SigTermHandler:
     public: true
     shared: true

@@ -18,14 +18,14 @@ class CertificateChainBuilderTest extends TestCase
     {
         parent::__construct();
         $factory = new PemCertificateFactory();
-        $this->x509_pem_certificate = $factory->getFromString(
-            file_get_contents(self::BASE_CERTIFICATES_DIR . 's2low-test-u.pem')
+        $this->x509_pem_certificate = $factory->getFromFile(
+            self::BASE_CERTIFICATES_DIR . 's2low-test-u.pem'
         );
-        $this->x509_ca_certificate = $factory->getFromString(
-            file_get_contents(self::BASE_CERTIFICATES_DIR . 'AC_LIBRICIEL_RACINE_G1_CHAIN.pem')
+        $this->x509_ca_certificate = $factory->getFromFile(
+            self::BASE_CERTIFICATES_DIR . 'AC_LIBRICIEL_RACINE_G1_CHAIN.pem'
         );
-        $this->x509_intermediate_certificate = $factory->getFromString(
-            file_get_contents(self::BASE_CERTIFICATES_DIR . 'AC_LIBRICIEL_PERSONNEL_G2_CHAIN.pem')
+        $this->x509_intermediate_certificate = $factory->getFromFile(
+            self::BASE_CERTIFICATES_DIR . 'AC_LIBRICIEL_PERSONNEL_G2_CHAIN.pem'
         );
     }
 

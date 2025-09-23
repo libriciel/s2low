@@ -46,6 +46,11 @@ class PemCertificateFactory
         );
     }
 
+    public function getFromFile(string $filename): PemCertificate
+    {
+        return $this->getFromString(file_get_contents($filename));
+    }
+
     /**
      * @throws Exception
      */

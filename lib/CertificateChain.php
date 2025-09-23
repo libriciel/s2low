@@ -19,11 +19,12 @@ class CertificateChain
 
     private function isChainSequentiallyValid(): bool
     {
-        if (count($this->certificates) > 1) {
-            for ($i = 0; $i < count($this->certificates) - 1; $i++) {
-                if (!$this->certificates[$i + 1]->isIssuedBy($this->certificates[$i])) {
-                    return false;
-                }
+        $nbOfCertificatesInChain = count($this->certificates);
+        for ($i = 0; $i < $nbOfCertificatesInChain - 1; $i++) {
+            $currentCertificate = $this->certificates[$i];
+            $nextCertificateInChain = $this->certificates[$i + 1];
+            if (!$nextCertificateInChain->isIssuedBy($currentCertificate)) {
+                return false;
             }
         }
         return true;
@@ -41,7 +42,11 @@ class CertificateChain
     {
         if (!$pemCertificate->isIssuedBy($this->getLastCertificate())) {
             throw new CertificateChainException(
-                'Erreur lors de la création de la chaine de certification'
+                sprintf(
+                    'Erreur lors de la création de la chaine de certification (%s ne correspond pas à l\'emetteur %s)',
+                    implode('/', $pemCertificate->getIssuerDN()),
+                    implode('/', $this->getLastCertificate()->getSubjectDN())
+                )
             );
         }
         $this->certificates[] = $pemCertificate;

@@ -2,8 +2,6 @@
 
 namespace S2lowLegacy\Lib;
 
-use Exception;
-
 class CertificateBundle
 {
     /** @var \S2lowLegacy\Lib\PemCertificate[] */
@@ -14,9 +12,6 @@ class CertificateBundle
         $this->certificates = $certificates;
     }
 
-    /**
-     * @throws Exception
-     */
     public function findBySubjectDN(array $subjectDN): ?PemCertificate
     {
         foreach ($this->certificates as $certificate) {
@@ -35,5 +30,45 @@ class CertificateBundle
             }
         }
         return null;
+    }
+
+    /**
+     * @throws \PHPUnit\lib\CertificateChainException
+     */
+    public function getCertificateChain(PemCertificate $certificate): CertificateChain
+    {
+        $chain = new CertificateChain($certificate);
+        while (
+            !$chain->hasValidPathToRoot() && (
+            $nextCertificateInChain = $this->findBySubjectDN(
+                $chain->getLastIssuerDN()
+            )) !== null
+        ) {
+            $chain->appendCertificate($nextCertificateInChain);
+        }
+        return $chain;
+    }
+
+    /**
+     * @return \S2lowLegacy\Lib\PemCertificate[]
+     */
+    public function findCertificatesWithNoChildren(): array
+    {
+        $result = [];
+        foreach ($this->certificates as $certificate) {
+            if ($this->hasNoChildren($certificate)) {
+                $result[] = $certificate;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * @param \S2lowLegacy\Lib\PemCertificate $certificate
+     * @return bool
+     */
+    public function hasNoChildren(PemCertificate $certificate): bool
+    {
+        return $this->findByIssuerDN($certificate->getSubjectDN()) === null;
     }
 }
