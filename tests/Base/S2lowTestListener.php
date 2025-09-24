@@ -60,6 +60,7 @@ class S2lowTestListener implements \PHPUnit\Framework\TestListener
 
     public function startTest(\PHPUnit\Framework\Test $test): void
     {
+        gc_collect_cycles();
         new Kernel('test', false);
         $sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
         $sqlQuery->query("SELECT SETVAL('users_id_seq', (SELECT MAX(id)+1 FROM users))");
