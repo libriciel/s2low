@@ -10,7 +10,9 @@
 
 ### Corrections
 
+- Correction d'un bug qui empêchait aux Super Administrateurs de télécharger les fichiers pes acquit volumineux. #1410
 - Correction d'un bug survenant parfois lors de la recuperation d'un fichier dans le cloud causant une exception critique. #1384
+
 
 ## 5.1.4 - 2025-09-17
 
