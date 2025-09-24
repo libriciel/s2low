@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace S2low\Tests\Services\Certificates;
 
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use S2low\Exceptions\CrlParsingException;
 use S2low\Services\Certificates\CRLReader;
 use Symfony\Component\Process\Process;
 
@@ -16,14 +19,24 @@ class CRLReaderTest extends TestCase
         return $process->getOutput();
     }
 
-    public function test()
+    /**
+     * @throws \S2low\Exceptions\CrlParsingException
+     */
+    public function testRealCRL(): void
     {
         $crl = (new CRLReader())->read($this->readCRL());
-        $this->assertFalse(
+        static::assertFalse(
             $crl->isRevoked('7E7D2D8DFD990C6A', new DateTime('2022-06-20 16:32:17 GMT'))
         );
-        $this->assertTrue(
+        static::assertTrue(
             $crl->isRevoked('7E7D2D8DFD990C6A', new DateTime('2022-06-20 16:32:19 GMT'))
         );
+    }
+
+    public function testBadDate(): void
+    {
+        self::expectException(CrlParsingException::class);
+        self::expectExceptionMessage('Failed to parse date: ');
+        (new CRLReader())->read("Serial Number: FDSZ\nRevocation Date: Nope");
     }
 }
