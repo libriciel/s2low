@@ -9,14 +9,11 @@ use Symfony\Component\Process\Process;
 
 class CheckSnInCRLCommandOutputTranslator implements ICommandOutputTranslator
 {
-    /**
-     * @var \S2low\Services\Certificates\CRLReader
-     */
-    private CRLReader $crlReader;
-
-    public function __construct(private readonly string $serialNumber, private readonly DateTime $dateTime)
-    {
-        $this->crlReader = new CRLReader();
+    public function __construct(
+        private readonly string $serialNumber,
+        private readonly DateTime $dateTime,
+        private readonly CRLReader $crlReader
+    ) {
     }
 
     public function getCommandOutput(Process $process): AnalysedOutput

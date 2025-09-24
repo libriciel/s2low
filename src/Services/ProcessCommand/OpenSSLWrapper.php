@@ -17,8 +17,11 @@ class OpenSSLWrapper
      */
     private $commandLauncher;
 
-    public function __construct(string $authorized_ca_path, CommandLauncher $commandLauncher)
-    {
+    public function __construct(
+        string $authorized_ca_path,
+        CommandLauncher $commandLauncher,
+        private readonly CheckSnInCRLFactory $checkSnInCRLFactory
+    ) {
         $this->commandLauncher = $commandLauncher;
         $this->authorized_ca_path = $authorized_ca_path;
     }
@@ -69,7 +72,7 @@ class OpenSSLWrapper
     {
         $this->commandLauncher->launch(
             ["openssl","crl","-in",$crlPath,"-text","-noout"],
-            new CheckSnInCRLCommandOutputTranslator($serialNumber, $dateTime)
+            $this->checkSnInCRLFactory->get($serialNumber, $dateTime)
         );
     }
 

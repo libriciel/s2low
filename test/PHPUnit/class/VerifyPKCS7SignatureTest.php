@@ -1,5 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
+use S2low\Services\Certificates\CRLReader;
+use S2low\Services\ProcessCommand\CheckSnInCRLFactory;
+use S2low\Services\ProcessCommand\CommandLauncher;
+use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
@@ -17,20 +23,21 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
     public function testRightFileWithSignature()
     {
         $verifyPKCS7Signature = new VerifyPKCS7Signature(
-            __DIR__ . "/fixtures/signaturesPKCS7/ac",
+            __DIR__ . '/fixtures/signaturesPKCS7/ac',
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory(),
-            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
-                __DIR__ . "/fixtures/signaturesPKCS7/ac",
-                new \S2low\Services\ProcessCommand\CommandLauncher()
+            new OpenSSLWrapper(
+                __DIR__ . '/fixtures/signaturesPKCS7/ac',
+                new CommandLauncher(),
+                new CheckSnInCRLFactory(new CRLReader())
             )
         );
 
-        $this->assertTrue(
+        static::assertTrue(
             $verifyPKCS7Signature->verifySignature(
-                file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s"),
+                file_get_contents(__DIR__ . '/fixtures/signaturesPKCS7/test_pdf.pdf.p7s'),
                 [],
-                __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
+                __DIR__ . '/fixtures/signaturesPKCS7/test_pdf.pdf',
                 new DateTime('01-01-2025')
             )
         );
@@ -39,21 +46,22 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
     public function testWrongFileWithSignature()
     {
         $verifyPKCS7Signature = new VerifyPKCS7Signature(
-            __DIR__ . "/fixtures/signaturesPKCS7/ac",
+            __DIR__ . '/fixtures/signaturesPKCS7/ac',
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory(),
-            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
-                __DIR__ . "/fixtures/signaturesPKCS7/ac",
-                new \S2low\Services\ProcessCommand\CommandLauncher()
+            new OpenSSLWrapper(
+                __DIR__ . '/fixtures/signaturesPKCS7/ac',
+                new CommandLauncher(),
+                new CheckSnInCRLFactory(new CRLReader())
             )
         );
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage("La vérification de la signature a échoué");
+        $this->expectExceptionMessage('La vérification de la signature a échoué');
         $verifyPKCS7Signature->verifySignature(
-            file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s"),
+            file_get_contents(__DIR__ . '/fixtures/signaturesPKCS7/test_pdf.pdf.p7s'),
             [],
-            __DIR__ . "/fixtures/toto.txt",
+            __DIR__ . '/fixtures/toto.txt',
             new DateTime('01-01-2025')
         );
     }
@@ -61,21 +69,22 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
     public function testRightFileWithWrongAC()
     {
         $verifyPKCS7Signature = new VerifyPKCS7Signature(
-            __DIR__ . "/",
+            __DIR__ . '/',
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory(),
-            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
-                __DIR__ . "/",
-                new \S2low\Services\ProcessCommand\CommandLauncher()
+            new OpenSSLWrapper(
+                __DIR__ . '/',
+                new CommandLauncher(),
+                new CheckSnInCRLFactory(new CRLReader())
             )
         );
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage(" unable to get local issuer certificate");
+        $this->expectExceptionMessage(' unable to get local issuer certificate');
         $verifyPKCS7Signature->verifySignature(
-            file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s"),
+            file_get_contents(__DIR__ . '/fixtures/signaturesPKCS7/test_pdf.pdf.p7s'),
             [],
-            __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
+            __DIR__ . '/fixtures/signaturesPKCS7/test_pdf.pdf',
             new DateTime('01-01-2025')
         );
     }
@@ -99,21 +108,22 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
     public function testWrongDateIsTakenIntoAccount(DateTime $dateTime, string $message)
     {
         $verifyPKCS7Signature = new VerifyPKCS7Signature(
-            __DIR__ . "/fixtures/signaturesPKCS7/ac",
+            __DIR__ . '/fixtures/signaturesPKCS7/ac',
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory(),
-            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
-                __DIR__ . "/fixtures/signaturesPKCS7/ac",
-                new \S2low\Services\ProcessCommand\CommandLauncher()
+            new OpenSSLWrapper(
+                __DIR__ . '/fixtures/signaturesPKCS7/ac',
+                new CommandLauncher(),
+                new CheckSnInCRLFactory(new CRLReader())
             )
         );
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage($message);
         $verifyPKCS7Signature->verifySignature(
-            file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s"),
+            file_get_contents(__DIR__ . '/fixtures/signaturesPKCS7/test_pdf.pdf.p7s'),
             [],
-            __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
+            __DIR__ . '/fixtures/signaturesPKCS7/test_pdf.pdf',
             $dateTime
         );
     }
@@ -124,10 +134,10 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
     public function getWrongDate(): array
     {
         return [
-            [new DateTime("Jun 12 14:00:57 2020", new DateTimeZone("GMT")),
+            [new DateTime('Jun 12 14:00:57 2020', new DateTimeZone('GMT')),
                 "La date de la signature 12-Jun-2020 14:00:57 n'entre pas dans la date de validité du certificat 12-Jun-2020 16:00:58"
             ],
-            [new DateTime("Jun 10 14:00:59 2030", new DateTimeZone("GMT")),
+            [new DateTime('Jun 10 14:00:59 2030', new DateTimeZone('GMT')),
                 "La date de la signature 10-Jun-2030 14:00:59 n'entre pas dans la date de validité du certificat 12-Jun-2020 16:00:58"
             ]
         ];
@@ -140,19 +150,20 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
 
     public function testGoodDateIsTakenIntoAccount(DateTime $dateTime)
     {
-        $baseSignatureDir = __DIR__ . "/fixtures/signaturesPKCS7";
+        $baseSignatureDir = __DIR__ . '/fixtures/signaturesPKCS7';
 
         $verifyPKCS7Signature = new VerifyPKCS7Signature(
-            __DIR__ . "/fixtures/signaturesPKCS7/ac",
+            __DIR__ . '/fixtures/signaturesPKCS7/ac',
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory(),
-            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
-                __DIR__ . "/fixtures/signaturesPKCS7/ac",
-                new \S2low\Services\ProcessCommand\CommandLauncher()
+            new OpenSSLWrapper(
+                __DIR__ . '/fixtures/signaturesPKCS7/ac',
+                new CommandLauncher(),
+                new CheckSnInCRLFactory(new CRLReader())
             )
         );
 
-        $this->assertTrue(
+        static::assertTrue(
             $verifyPKCS7Signature->verifySignature(
                 file_get_contents("$baseSignatureDir/test_pdf.pdf.p7s"),
                 [],
@@ -168,8 +179,8 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
     public function getGoodDate(): array
     {
         return [
-            [new DateTime("Jan 26 15:00:58 2021", new DateTimeZone("GMT"))],// Debut de validité crl
-            [new DateTime("Jun 11 14:00:55 2025", new DateTimeZone("GMT"))] // Fin de validité myCA.pem
+            [new DateTime('Jan 26 15:00:58 2021', new DateTimeZone('GMT'))],// Debut de validité crl
+            [new DateTime('Jun 11 14:00:55 2025', new DateTimeZone('GMT'))] // Fin de validité myCA.pem
         ];
     }
 
@@ -178,14 +189,15 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
      */
     public function testverifyCertificate()
     {
-        $baseSignatureDir = __DIR__ . "/fixtures/signaturesPKCS7";
+        $baseSignatureDir = __DIR__ . '/fixtures/signaturesPKCS7';
         $verificator = new VerifyPKCS7Signature(
             "$baseSignatureDir/ac/",
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory(),
-            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
+            new OpenSSLWrapper(
                 "$baseSignatureDir/ac/",
-                new \S2low\Services\ProcessCommand\CommandLauncher()
+                new CommandLauncher(),
+                new CheckSnInCRLFactory(new CRLReader())
             )
         );
 

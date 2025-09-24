@@ -1,5 +1,7 @@
 <?php
 
+use S2low\Services\Certificates\CRLReader;
+use S2low\Services\ProcessCommand\CheckSnInCRLFactory;
 use S2low\Services\ProcessCommand\CommandLauncher;
 use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2lowLegacy\Class\actes\ActesClassificationCodesSQL;
@@ -897,7 +899,8 @@ class ActesTransaction extends DataObject
                             new PemCertificateFactory(),
                             new OpenSSLWrapper(
                                 RGS_VALIDCA_PATH,
-                                new CommandLauncher()
+                                new CommandLauncher(),
+                                new CheckSnInCRLFactory(new CRLReader())
                             )
                         );
                         $verifyPKCS7Signature->verifySignature(
