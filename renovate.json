@@ -32,14 +32,16 @@
       "enabled": false
     },
     {
-      "matchPackagePatterns": ["^.*postgre(?:s|sql).*$"],
+      "description": "Bloque les mises à jour des images Docker s2low",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["s2low"],
       "enabled": false
     },
     {
-      "description": "Automerge patch & minor",
-      "matchUpdateTypes": ["patch", "minor"],
-      "automerge": true,
-      "automergeType": "pr"
+      "description": "Bloque les mises à jour des images Docker PostgreSQL",
+      "matchDatasources": ["docker"],
+      "matchPackagePatterns": ["^.*postgre(?:s|sql).*$"],
+      "enabled": false
     },
     {
       "description": "Mises à jour Composer",
@@ -54,21 +56,14 @@
       "groupSlug": "npm-deps"
     },
     {
-      "description": "Symfony écosystème (composer)",
-      "matchPackagePatterns": ["^symfony/"],
-      "groupName": "Symfony",
-      "semanticCommitScope": "symfony"
-    },
-    {
-      "description": "Infra & runtime",
-      "matchUpdateTypes": ["patch", "minor"],
-      "matchManagers": ["dockerfile", "docker-compose"],
-      "groupName": "Infra",
-      "automerge": false
-    },
-    {
       "matchDatasources": ["docker"],
       "pinDigests": true
+    },
+    {
+      "description": "Pas de MR pour les updates de digest Docker",
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["digest"],
+      "enabled": false
     }
   ]
 }
