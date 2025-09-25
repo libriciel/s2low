@@ -5,7 +5,6 @@
 ### Évolutions
 
 - Modification de la gestion des logs. Ils sont maintenant géré directement dans l'application.
-- Nouvelle variable d'environnement MAX_AGE_LOGS_FILES qui definit le temps de conservation d'un fichier de log. La valeur par default est fixé à 180 jours.
 
 ### Corrections
 

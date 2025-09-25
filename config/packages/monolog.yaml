@@ -8,11 +8,10 @@ monolog:
       handler: global_file
 
     global_file:
-      type: rotating_file
+      type: stream
       path: '%app.log.file%'
       formatter: monolog.formatter.line
       channels: [ "!deprecation" ]
-      max_files: '%app.max_age_logs_files%'
 
     critical_mailer:
       type: fingers_crossed
@@ -31,22 +30,20 @@ when@prod:
   monolog:
     handlers:
       instance-specific:
-        type: rotating_file
+        type: stream
         path: '%app.log_path%%app.service_name%.log'
         formatter: 'monolog.formatter.line'
         channels: [ "!deprecation" ]
-        max_files: 30
         level: info
 
 when@dev:
   monolog:
     handlers:
       instance-specific:
-        type: rotating_file
+        type: stream
         path: '%app.log_path%%app.service_name%.log'
         formatter: 'monolog.formatter.line'
         channels: [ "!deprecation" ]
-        max_files: '%app.max_age_logs_files%'
         level: info
 
 when@test:
