@@ -9,6 +9,7 @@
 ### Corrections
 
 - Le logrotate ne se lançait pas dans le container
+- Correction de la vérification des certificats sur admin_user_edit et des archives actes #1367
 
 ## 5.1.3 - 2025-09-04
 
@@ -21,6 +22,9 @@
 - Correction d’un problème d'affichage lors de la suppression d'un mail #1362
 - Augmentation du TTR de `ActesAntivirusWorker` pour éviter des messages d'erreur #1393
 - Permettre la vérification des CRL pour les marchés publics de nature Contrats, conventions et avenants #1382
+- Retire les espaces present dans le champ Helios FTP dans l'interface d'administration Helios. #1344
+- Correction de l'acces à actes_classification_fetch.php #1373
+- Corrige un probleme d'affichage lors de la suppression d'un mail #1362
 
 ## 5.1.2 - 2025-07-23
 
