@@ -2,9 +2,9 @@
 
 namespace S2lowLegacy\Class;
 
-class NatureType
+class CorrespondanceNatureType
 {
-    const CORRESPONDANCE = [
+    public const CORRESPONDANCE = [
           '1' => '99_DE',
           '2' => '99_AR',
           '3' => '99_AI',
