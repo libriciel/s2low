@@ -39,6 +39,7 @@ class S2lowTestListener implements \PHPUnit\Framework\TestListener
 
     public function startTestSuite(\PHPUnit\Framework\TestSuite $suite): void
     {
+        gc_collect_cycles();
         new Kernel('test', false);
         $postgreSQLControler = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
             ->get(PostgreSQLController::class);
