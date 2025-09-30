@@ -66,7 +66,7 @@ if (isset($fname) && mb_strlen($fname) > 0) {
     $filter[] = "users.name ILIKE '%" . addslashes($fname) . "%'";
 }
 
-if ( $fcertStatus !== null ) {
+if ($fcertStatus !== null) {
     if ($fcertStatus === '1') {
         $filter[] = "users.cert_not_after <= NOW()";
     } elseif ($fcertStatus === '0') {

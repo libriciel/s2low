@@ -64,7 +64,7 @@ class User extends DataObject
                                self::ARCH => 'Archiviste'
                                );
 
-    public const CERT_STATUS= [
+    public const CERT_STATUS = [
         'Valide',
         'Expiré'
     ];
