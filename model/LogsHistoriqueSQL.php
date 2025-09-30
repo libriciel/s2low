@@ -96,32 +96,4 @@ class LogsHistoriqueSQL extends SQL
             fputcsv($file_handle, $result);
         }
     }
-
-
-    /**
-     * @param $date
-     * @param $severity
-     * @param $module
-     * @param $issuer
-     * @param $user_id
-     * @param $visibility
-     * @param $message
-     * @param $timestamp
-     * @return int
-     * FOR TESTING PURPOSE ONLY !!!
-     */
-    public function addLog($id, $date, $severity, $module, $issuer, $user_id, $visibility, $message, $timestamp): int
-    {
-        $sql = "SELECT authority_id,authority_group_id FROM users WHERE id=?";
-        $line = $this->queryOne($sql, $user_id);
-        if ($line) {
-            $authority_id = $line['authority_id'];
-            $authority_group_id = $line['authority_group_id'];
-        } else {
-            $authority_id = false;
-            $authority_group_id = false;
-        }
-        $sql = "INSERT INTO logs_historique(id,date,severity,module,issuer,user_id,visibility,message,timestamp,authority_id,authority_group_id) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-        return $this->queryOne($sql, $id, $date, $severity, $module, $issuer, $user_id, $visibility, $message, $timestamp, $authority_id, $authority_group_id);
-    }
 }
