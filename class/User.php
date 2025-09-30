@@ -63,6 +63,12 @@ class User extends DataObject
                                self::USER => 'Utilisateur',
                                self::ARCH => 'Archiviste'
                                );
+
+    public const CERT_STATUS= [
+        'Valide',
+        'Expiré'
+    ];
+
     protected $permsTypes = array(
                                 "NONE" => "Aucune",
                                 "RO" => "Visualisation",
