@@ -6,6 +6,7 @@
 
 - Correction d'une exception survenant parfois lors de la suppression d'un fichier via helios-menage car le fichier n'existait deja plus. #1403
 - Correction d'un bug survenant parfois lors de la recuperation d'un fichier dans le cloud causant une exception critique. #1384
+- Correction d'un bug empêchant de télécharger les PES en erreur lorsqu'ils étaient trop volumineux.
 
 ## 5.1.4 - 2025-09-17
 
