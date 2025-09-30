@@ -18,7 +18,6 @@ class Log extends DataObject
     protected $user_id;
     protected $visibility;
     protected $message;
-    protected $timestamp;
 
     protected $dbFields = array( "date" => array( "descr" => "Date", "type" => "isDate", "mandatory" => true),
                          "module" => array( "descr" => "Module", "type" => "isString", "mandatory" => false),
@@ -27,10 +26,8 @@ class Log extends DataObject
                          "user_id" => array( "descr" => "Identifiant de l'utilisateur", "type" => "isInt", "mandatory" => false),
                          "visibility" => array( "descr" => "Visibilité", "type" => "isString", "mandatory" => false),
                          "message" => array( "descr" => "Message", "type" => "isString", "mandatory" => true),
-                         "timestamp" => array( "descr" => "Horodatage", "type" => "isString", "mandatory" => false),
                             "authority_id" => array("descr" => "Authority","type" => "isInt","mandatory" => false),
-                            "authority_group_id" => array("descr" => "Authority group","type" => "isInt","mandatory" => false),
-                            "message_horodate" => array("descr" => "Message horodate","type" => "isString","mandatory" => false),
+                            "authority_group_id" => array("descr" => "Authority group","type" => "isInt","mandatory" => false)
                          );
 
     protected $severities = array( 0 => "DEBUG",
@@ -176,24 +173,5 @@ class Log extends DataObject
         }
 
         return false;
-    }
-
-
-  /**********************/
-  /* Méthodes statiques */
-  /**********************/
-
-  /**
-   * \brief Méthode d'obtention d'une liste d'entrées de journal
-   * \param $cond (optionnel) chaîne Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
-   * \return Tableau des entrées de journal
-  */
-    public function getLogEntriesList($cond = "")
-    {
-        if (! $this->pagerInit('logs.id, logs.date, logs.module, logs.severity, logs.issuer, logs.user_id, logs.message, logs.timestamp', 'logs LEFT JOIN users ON logs.user_id=users.id LEFT JOIN authorities ON users.authority_id=authorities.id', $cond)) {
-            return false;
-        }
-
-        return $this->data;
     }
 }
