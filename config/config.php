@@ -136,20 +136,6 @@ if (!defined('DEFAULT_ITEMS_PER_PAGE')) {
         define('DEFAULT_ITEMS_PER_PAGE', 10);
 }
 
-// Emplacement certificat/clef privée pour l'horodatage des logs
-if (!defined('TIMESTAMPING_CERT')) {
-        define('TIMESTAMPING_CERT', '/etc/s2low/ssl/s2low_timestamp_cert.pem');
-}
-
-if (!defined('TIMESTAMPING_PRIV_KEY')) {
-        define('TIMESTAMPING_PRIV_KEY', '/etc/s2low/ssl/s2low_timestamp_priv_key.pem');
-}
-
-if (!defined('TIMESTAMPING_PRIV_KEY_PASS')) {
-        define('TIMESTAMPING_PRIV_KEY_PASS', '/etc/s2low/ssl/s2low_timestamp_priv_key.pass');
-}
-
-//Constante pour l'horodatage
 //Chemin vers openssl version > 1.0.0a
 if (!defined("OPENSSL_PATH")) {
         define("OPENSSL_PATH", "/usr/bin/openssl");
