@@ -67,7 +67,14 @@ if (isset($fname) && mb_strlen($fname) > 0) {
     $filter[] = "users.name ILIKE '%" . addslashes($fname) . "%'";
 }
 
-$filter[] = "users.status=$fstatus";
+if (isset($fstatus)) {
+    if ($fstatus !== "") {
+        $filter[] = "users.status=$fstatus";
+    }
+} else { // comportement par default, on affiche les utilisateurs activés
+    $fstatus = 1;
+    $filter[] = "users.status=$fstatus";
+}
 
 if ($fcertStatus !== null) {
     if ($fcertStatus === '1') {
