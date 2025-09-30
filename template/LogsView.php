@@ -121,7 +121,6 @@ use S2lowLegacy\Class\DatePicker;
                     <th id="module" class="data">Module</th>
                     <th id="user" class="data">Utilisateur</th>
                     <th id="message" class="data">Message</th>
-                    <th id="timestamp" class="data">Horodatage</th>
                 </tr>
             </thead>
             <tbody>
@@ -148,18 +147,6 @@ use S2lowLegacy\Class\DatePicker;
 
                     <td class="long_field" headers="message">
                         <?php echo nl2br(get_hecho($logEntry['message'])) ?>
-                    </td>
-                    <td headers="timestamp">
-                            <a href="<?php
-                            echo Helpers::getLink('/common/logs_get_timestamp.php?id=' . $logEntry['id']);
-                            ?>"
-                               title="Télécharger une archive contenant l'entrée de journal n°<?php
-                                echo $logEntry['id'] ?> et sa signature"
-                               class="icon">
-                                <img src="<?php echo Helpers::getLink('/custom/images/timestamping_icon.png'); ?>"
-                                     alt="timestamp"
-                                />
-                            </a>
                     </td>
                 </tr>
             <?php endforeach; ?>
