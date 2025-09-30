@@ -97,28 +97,6 @@ class LogsHistoriqueSQL extends SQL
         }
     }
 
-    public function getLogOlderThanNbDaysWithTimestamp(int $nb_days, int $limit = 0): SQLQuery
-    {
-        $date = date("Y-m-d", strtotime("today -{$nb_days}days"));
-        $sql = "SELECT id,date,timestamp FROM logs_historique WHERE date<? ";
-        if ($limit) {
-            $sql .= " LIMIT $limit";
-        }
-        $this->getSQLQuery()->prepareAndExecute($sql, $date);
-        return $this->getSQLQuery();
-    }
-
-    public function getInfo(int $log_id): array
-    {
-        $sql = "SELECT * FROM logs_historique WHERE id=?";
-        return $this->queryOne($sql, $log_id);
-    }
-
-    public function deleteTimestamp(int $log_id): void
-    {
-        $sql = "UPDATE logs_historique SET timestamp='' WHERE id=?";
-        $this->query($sql, $log_id);
-    }
 
     /**
      * @param $date

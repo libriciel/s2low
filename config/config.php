@@ -677,13 +677,6 @@ if (! defined("HELIOS_RETENTION_RETOURS_NB_JOURS")) {
     define("HELIOS_RETENTION_RETOURS_NB_JOURS", 3650000);
 }
 
-if (! defined("OLD_TIMESTAMP_TOKEN_DIRECTORY")) {
-    define("OLD_TIMESTAMP_TOKEN_DIRECTORY", "/data/timestamp-token/");
-}
-
-if (! defined("TIMESTAMP_TOKEN_RETENTION_NB_DAYS")) {
-    define("TIMESTAMP_TOKEN_RETENTION_NB_DAYS", 31 * 25);
-}
 
 
 
