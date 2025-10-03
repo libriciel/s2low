@@ -2,9 +2,12 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use phpseclib3\Exception\FileNotFoundException;
+use S2low\Exceptions\TransactionNotFoundException;
+use S2low\Services\FileDataProvider;
 use S2lowLegacy\Lib\SQL;
 
-class ActesEnvelopeSQL extends SQL
+class ActesEnvelopeSQL extends SQL implements FileDataProvider
 {
     public function getInfo($id)
     {
@@ -120,5 +123,35 @@ class ActesEnvelopeSQL extends SQL
     {
         $sql = "SELECT is_in_cloud FROM actes_envelopes WHERE id=?";
         return $this->queryOne($sql, $object_id);
+    }
+
+    /**
+     * @Throws TransactionNotFoundException
+     * @Throws FileNotFoundException
+     */
+    public function getRelativePath(string $transactionId): string
+    {
+        $transaction = $this->queryOne("SELECT id, file_path FROM actes_envelopes WHERE id=?", $transactionId);
+
+        if ($transaction === false) {
+            throw new TransactionNotFoundException('Aucune enveloppe Acte ne correspond à l\'identifiant : [' . $transactionId . '].');
+        }
+
+        if (empty($transaction['file_path'])) {
+            throw new FileNotFoundException('Aucun fichier acte enveloppe n\'est present pour l\'acte_enveloppe : [' . $transactionId . '].');
+        }
+
+        return $transaction['file_path'];
+    }
+
+    public function getCloudId(string $transactionId): string
+    {
+        $transaction = $this->queryOne("SELECT id, file_path, siren FROM actes_envelopes WHERE id=?", $transactionId);
+
+        if ($transaction === false) {
+            throw new TransactionNotFoundException('Aucune enveloppe Acte ne correspond à l\'identifiant : [' . $transactionId . '].');
+        }
+
+        return $transaction['siren'] . '/' . basename($transaction['file_path']);
     }
 }
