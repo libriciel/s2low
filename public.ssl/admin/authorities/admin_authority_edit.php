@@ -374,6 +374,8 @@ if ($me->isGroupAdminOrSuper()) {
     $html .= "<br><div><a href='/admin/users/admin_users.php?authority=$id'>Liste des utilisateurs de la collectivité</a></div>";
 }
 
+$html .= "<br><div><a href='/modules/actes/index.php?authority=$id'>Transactions Actes de la collectivité</a></div>";
+$html .= "<br><div><a href='/modules/helios/index.php?authority=$id'>Transactions Helios de la collectivité</a></div>";
 
 $html .= "</div>\n";
 
