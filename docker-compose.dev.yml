@@ -18,12 +18,31 @@ services:
             POSTGRES_USER_TEST: ${POSTGRES_USER_TEST:-dbusertest}
             POSTGRES_PASSWORD_TEST: ${POSTGRES_PASSWORD_TEST:-dbpasswordtest}
             POSTGRES_DATABASE_TEST: ${POSTGRES_DATABASE_TEST:-s2lowtest}
+            CLOUD_PROVIDER_ENDPOINT: ${CLOUD_PROVIDER_ENDPOINT:-http://local-s3:9000}
+            CLOUD_PROVIDER_KEY: ${CLOUD_PROVIDER_KEY:-admin}
+            CLOUD_PROVIDER_SECRET: ${CLOUD_PROVIDER_SECRET:-password}
 
             XDEBUG_ON: ${XDEBUG_ON:-true}
             XDEBUG_MODE: "coverage"
             APP_ENV: ${APP_ENV:-dev}
             APP_DEBUG: ${APP_DEBUG:-true}
             USE_PROD_NOTIFICATIONS: ${USE_PROD_NOTIFICATIONS:-false}
+        networks:
+            - s3
+
+    local-s3:
+        image: minio/minio:RELEASE.2025-07-23T15-54-02Z-cpuv1
+        ports:
+            - '9000:9000' # acces API
+            - '9001:9001' # console web
+        environment:
+            MINIO_ROOT_USER: 'admin'
+            MINIO_ROOT_PASSWORD: 'password'
+        command: server /data --console-address ":9001"
+        volumes:
+            - minio_data:/data
+        networks:
+            - s3
 
     db:
         environment:
@@ -39,7 +58,6 @@ services:
         ports:
             - "${FTP_PORT:-10021}:21"
             - "${PASV_MIN_PORT:-65000}-${PASV_MAX_PORT:-65004}:${PASV_MIN_PORT:-65000}-${PASV_MAX_PORT:-65004}"
-
 
     db_test:
         restart: unless-stopped
@@ -107,6 +125,9 @@ services:
             - .:/usr/app/
             - /usr/app/node_modules
 
+networks:
+    s3:
 volumes:
     db_datadir_test:
     openstack_datadir:
+    minio_data:
