@@ -2,6 +2,10 @@
 
 ## 6.0.0
 
+### Évolutions
+
+- Ajout des liens "Liste des actes de la collectivité" et "Liste des PES de la collectivité" dans la page de gestion d'une collectivité. #1117
+
 ### Suppression
 
 - Suppression de l'outil de signature intégré #1113
