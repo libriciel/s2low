@@ -28,7 +28,7 @@ class VerifyPemCertificate
 
     public function __construct(
         string $authorized_ca_path,
-        \S2low\Services\ProcessCommand\OpenSSLWrapper $openSSLWrapper
+        OpenSSLWrapper $openSSLWrapper
     ) {
         $this->authorized_ca_path = $authorized_ca_path;
         $this->openSSLWrapper = $openSSLWrapper;
@@ -46,19 +46,23 @@ class VerifyPemCertificate
         if (!is_null($timestamp)) {
             $date->setTimestamp($timestamp);
         }
-        $this->checkForCrlRevocation($certificate_path, $date);
+        $this->checkForCrlRevocation($certificate_path, $timestamp);
         $this->openSSLWrapper->verify($certificate_path, $filteredErrors, $timestamp);
         return true;
     }
 
     /**
      * @param string $file
-     * @param \DateTime $dateTime
+     * @param string|null $timestamp
      * @return void
      * @throws \S2lowLegacy\Class\RecoverableException
      */
-    protected function checkForCrlRevocation(string $file, DateTime $dateTime): void
+    protected function checkForCrlRevocation(string $file, string $timestamp = null): void
     {
+        $dateTime = new DateTime();
+        if (!is_null($timestamp)) {
+            $dateTime->setTimestamp($timestamp);
+        }
         $file_r0_name = $this->openSSLWrapper->extractHash($file);
         $file_r0 = $this->authorized_ca_path . "/$file_r0_name.r0";
         if (file_exists($file_r0)) {

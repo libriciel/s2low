@@ -1,7 +1,9 @@
 <?php
 
+use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
+use S2lowLegacy\Class\VerifyPKCS7SignatureFactory;
 use S2lowLegacy\Lib\PemCertificateFactory;
 
 $file_path = "/Users/eric/Desktop/test/034-123456725-20151201-TESTS132-AU-1-1_1.pdf";
@@ -18,14 +20,6 @@ $actesItems = $dom->children($namespaces["actes"]);
 $signature =  $actesItems->Document->Signature . "\n";
 
 
-$verifyPKCS7Signature = new VerifyPKCS7Signature(
-    "/etc/tedetis/ssl/validca/",
-    new VerifyPemCertificateFactory(),
-    new PemCertificateFactory(),
-    new \S2low\Services\ProcessCommand\OpenSSLWrapper(
-        "/etc/tedetis/ssl/validca/",
-        new \S2low\Services\ProcessCommand\CommandLauncher()
-    )
-);
+$verifyPKCS7Signature = VerifyPKCS7SignatureFactory::create();
 
 $verifyPKCS7Signature->verifySignature($signature, VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS);

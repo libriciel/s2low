@@ -9,6 +9,7 @@ use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
+use S2lowLegacy\Class\VerifyPKCS7SignatureFactory;
 use S2lowLegacy\Lib\PemCertificateFactory;
 
 class VerifyPKCS7SignatureTest extends S2lowTestCase
@@ -22,16 +23,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
      */
     public function testRightFileWithSignature()
     {
-        $verifyPKCS7Signature = new VerifyPKCS7Signature(
-            __DIR__ . '/fixtures/signaturesPKCS7/ac',
-            new VerifyPemCertificateFactory(),
-            new PemCertificateFactory(),
-            new OpenSSLWrapper(
-                __DIR__ . '/fixtures/signaturesPKCS7/ac',
-                new CommandLauncher(),
-                new CheckSnInCRLFactory(new CRLReader())
-            )
-        );
+        $verifyPKCS7Signature = VerifyPKCS7SignatureFactory::create(__DIR__ . '/fixtures/signaturesPKCS7/ac');
 
         static::assertTrue(
             $verifyPKCS7Signature->verifySignature(
@@ -45,16 +37,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
 
     public function testWrongFileWithSignature()
     {
-        $verifyPKCS7Signature = new VerifyPKCS7Signature(
-            __DIR__ . '/fixtures/signaturesPKCS7/ac',
-            new VerifyPemCertificateFactory(),
-            new PemCertificateFactory(),
-            new OpenSSLWrapper(
-                __DIR__ . '/fixtures/signaturesPKCS7/ac',
-                new CommandLauncher(),
-                new CheckSnInCRLFactory(new CRLReader())
-            )
-        );
+        $verifyPKCS7Signature = VerifyPKCS7SignatureFactory::create(__DIR__ . '/fixtures/signaturesPKCS7/ac');
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('La vérification de la signature a échoué');
@@ -68,16 +51,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
 
     public function testRightFileWithWrongAC()
     {
-        $verifyPKCS7Signature = new VerifyPKCS7Signature(
-            __DIR__ . '/',
-            new VerifyPemCertificateFactory(),
-            new PemCertificateFactory(),
-            new OpenSSLWrapper(
-                __DIR__ . '/',
-                new CommandLauncher(),
-                new CheckSnInCRLFactory(new CRLReader())
-            )
-        );
+        $verifyPKCS7Signature = VerifyPKCS7SignatureFactory::create(__DIR__ . '/');
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage(' unable to get local issuer certificate');
@@ -107,16 +81,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
 
     public function testWrongDateIsTakenIntoAccount(DateTime $dateTime, string $message)
     {
-        $verifyPKCS7Signature = new VerifyPKCS7Signature(
-            __DIR__ . '/fixtures/signaturesPKCS7/ac',
-            new VerifyPemCertificateFactory(),
-            new PemCertificateFactory(),
-            new OpenSSLWrapper(
-                __DIR__ . '/fixtures/signaturesPKCS7/ac',
-                new CommandLauncher(),
-                new CheckSnInCRLFactory(new CRLReader())
-            )
-        );
+        $verifyPKCS7Signature = VerifyPKCS7SignatureFactory::create(__DIR__ . '/fixtures/signaturesPKCS7/ac');
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage($message);
@@ -152,16 +117,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
     {
         $baseSignatureDir = __DIR__ . '/fixtures/signaturesPKCS7';
 
-        $verifyPKCS7Signature = new VerifyPKCS7Signature(
-            __DIR__ . '/fixtures/signaturesPKCS7/ac',
-            new VerifyPemCertificateFactory(),
-            new PemCertificateFactory(),
-            new OpenSSLWrapper(
-                __DIR__ . '/fixtures/signaturesPKCS7/ac',
-                new CommandLauncher(),
-                new CheckSnInCRLFactory(new CRLReader())
-            )
-        );
+        $verifyPKCS7Signature = VerifyPKCS7SignatureFactory::create(__DIR__ . '/fixtures/signaturesPKCS7/ac');
 
         static::assertTrue(
             $verifyPKCS7Signature->verifySignature(
@@ -190,16 +146,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
     public function testverifyCertificate()
     {
         $baseSignatureDir = __DIR__ . '/fixtures/signaturesPKCS7';
-        $verificator = new VerifyPKCS7Signature(
-            "$baseSignatureDir/ac/",
-            new VerifyPemCertificateFactory(),
-            new PemCertificateFactory(),
-            new OpenSSLWrapper(
-                "$baseSignatureDir/ac/",
-                new CommandLauncher(),
-                new CheckSnInCRLFactory(new CRLReader())
-            )
-        );
+        $verificator = VerifyPKCS7SignatureFactory::create("$baseSignatureDir/ac/");
 
         $verificator->verifySignature(
             file_get_contents("$baseSignatureDir/test_pdf.pdf.p7s"),
