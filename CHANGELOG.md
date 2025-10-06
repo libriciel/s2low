@@ -5,6 +5,7 @@
 ### Évolutions
 
 - Ajout des liens "Liste des actes de la collectivité" et "Liste des PES de la collectivité" dans la page de gestion d'une collectivité. #1117
+- Ajoute la possibilité de filtrer les utilisateurs par certificat valide ou expiré. #617
 
 ### Suppression
 

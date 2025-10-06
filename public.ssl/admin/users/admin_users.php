@@ -28,6 +28,7 @@ $fauthority = Helpers::getVarFromGet('authority');
 $frole =  Helpers::getVarFromGet('role');
 $fname = Helpers::getVarFromGet('name');
 $fgroup = Helpers::getVarFromGet('group');
+$fcertStatus = Helpers::getVarFromGet('certificat_status');
 $api = Helpers::getVarFromGet('api');
 
 
@@ -63,6 +64,14 @@ if (isset($frole) && mb_strlen($frole) > 0) {
 
 if (isset($fname) && mb_strlen($fname) > 0) {
     $filter[] = "users.name ILIKE '%" . addslashes($fname) . "%'";
+}
+
+if ($fcertStatus !== null) {
+    if ($fcertStatus === '1') {
+        $filter[] = "users.cert_not_after <= NOW()";
+    } elseif ($fcertStatus === '0') {
+        $filter[] = "users.cert_not_after > NOW()";
+    }
 }
 
 $where = '';
@@ -178,6 +187,8 @@ ob_start();?>
                 <div class="col-md-3">
                     <?php echo $doc->getHTMLSelect('group', Group::getGroupsIdName(), $fgroup) ?>
                 </div>
+                <label for="role" class="col-md-3 control-label">Certificat</label>
+                <div class="col-md-3"><?php echo $doc->getHTMLSelect('certificat_status', User::CERT_STATUS, $fcertStatus) ?></div>
             </div>
         <?php endif; ?>
         
