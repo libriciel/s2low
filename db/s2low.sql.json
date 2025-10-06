@@ -1477,12 +1477,6 @@
                 "is_nullable": "YES",
                 "column_default": null
             },
-            "timestamp": {
-                "data_type": "text",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
             "authority_id": {
                 "data_type": "integer",
                 "character_maximum_length": null,
@@ -1491,12 +1485,6 @@
             },
             "authority_group_id": {
                 "data_type": "integer",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
-            "message_horodate": {
-                "data_type": "text",
                 "character_maximum_length": null,
                 "is_nullable": "YES",
                 "column_default": null
@@ -1551,12 +1539,6 @@
                 "is_nullable": "YES",
                 "column_default": null
             },
-            "timestamp": {
-                "data_type": "text",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
-            },
             "authority_id": {
                 "data_type": "integer",
                 "character_maximum_length": null,
@@ -1568,13 +1550,8 @@
                 "character_maximum_length": null,
                 "is_nullable": "YES",
                 "column_default": null
-            },
-            "message_horodate": {
-                "data_type": "text",
-                "character_maximum_length": null,
-                "is_nullable": "YES",
-                "column_default": null
             }
+
         },
         "logs_request": {
             "id": {

@@ -18,7 +18,6 @@ class Log extends DataObject
     protected $user_id;
     protected $visibility;
     protected $message;
-    protected $timestamp;
 
     protected $dbFields = array( "date" => array( "descr" => "Date", "type" => "isDate", "mandatory" => true),
                          "module" => array( "descr" => "Module", "type" => "isString", "mandatory" => false),
@@ -27,10 +26,8 @@ class Log extends DataObject
                          "user_id" => array( "descr" => "Identifiant de l'utilisateur", "type" => "isInt", "mandatory" => false),
                          "visibility" => array( "descr" => "Visibilité", "type" => "isString", "mandatory" => false),
                          "message" => array( "descr" => "Message", "type" => "isString", "mandatory" => true),
-                         "timestamp" => array( "descr" => "Horodatage", "type" => "isString", "mandatory" => false),
                             "authority_id" => array("descr" => "Authority","type" => "isInt","mandatory" => false),
-                            "authority_group_id" => array("descr" => "Authority group","type" => "isInt","mandatory" => false),
-                            "message_horodate" => array("descr" => "Message horodate","type" => "isString","mandatory" => false),
+                            "authority_group_id" => array("descr" => "Authority group","type" => "isInt","mandatory" => false)
                          );
 
     protected $severities = array( 0 => "DEBUG",
@@ -120,34 +117,9 @@ class Log extends DataObject
             return false;
         }
 
-        $message_horodate = $logEntry->generateMessageHorodate();
-
-        if (! $timestamp = $logEntry->genTimestamp($message_horodate)) {
-            return false;
-        }
-
-        $logEntry->set("timestamp", $timestamp);
-        $logEntry->set('message_horodate', $message_horodate);
-
-        if (! $logEntry->save()) {
-            return false;
-        }
-
         return true;
     }
 
-
-    private function genTimestamp($data)
-    {
-        $parapheur = new Parapheur($data);
-        $signature = $parapheur->getSignature();
-
-        if (! $signature) {
-            $this->errorMsg = $parapheur->getLastError();
-            return false;
-        }
-        return $signature;
-    }
 
   /**
    * \brief Méthode qui détermine si un utilisateur a la permission de visualiser l'entrée de journal courante
@@ -201,179 +173,5 @@ class Log extends DataObject
         }
 
         return false;
-    }
-
-  /**
-   * \brief Méthode de génération et d'envoi d'une archive contenant le fichier de l'entrée de log et son horodatage
-   * \return True en cas succès, false sinon
-   */
-    public function sendArchive()
-    {
-        if (isset($this->id) && ! empty($this->id)) {
-            $tmpDir = '/tmp/tedetis_web_export_timestamp';
-
-            for ($i = 0; $i <= 8; $i++) {
-                $tmpDir .= rand(0, 9);
-            }
-
-            if (! @mkdir($tmpDir)) {
-                $this->errorMsg = "Erreur système de fichiers";
-                return false;
-            }
-
-            $logFile = $tmpDir . "/tedetis_journal_" . $this->id . ".log";
-            $timestampFile = $logFile . ".sig";
-
-            if (! $this->writeLogEntryToFile($logFile, $this->retrieveMessageHorodate())) {
-                return false;
-            }
-
-            if (! $this->writeTimestampToFile($timestampFile)) {
-                return false;
-            }
-
-            if (! @chdir($tmpDir)) {
-                $this->errorMsg =  "Erreur système de fichiers";
-                return false;
-            }
-
-          // Génération de l'archive zip
-            $zipFile = "tedetis_journal_" . $this->id . ".zip";
-            $cmd = "/usr/bin/zip -9 " . $zipFile . " " . basename($logFile) . " " . basename($timestampFile);
-
-            exec($cmd, $out, $ret);
-
-            if ($ret != 0) {
-                $return_status = false;
-            } else {
-              // Envoi du fichier
-                header("Content-type: application/zip");
-                header('Content-disposition: attachment; filename="' . $zipFile . '"');
-              // Celles-ci pour IE
-                header("Expires: 0");
-                header("Cache-Control: must-revalidate, post-check=0,pre-check=0");
-                header("Pragma: public");
-
-                if (! @readfile($tmpDir . "/" . $zipFile)) {
-                    $this->errorMsg =  "Erreur d'envoi du fichier archive.";
-                    $return_status = false;
-                } else {
-                    $return_status = true;
-                }
-
-                if (! Helpers::deleteFromFS($zipFile)) {
-                    $this->errorMsg = "Erreur système de fichiers";
-                    return false;
-                }
-            }
-
-          // Suprression des fichiers temporaires
-          // Bien laissé le répertoire à la fin
-            if (! Helpers::deleteFromFS($logFile, $timestampFile, $tmpDir)) {
-                $this->errorMsg =  "Erreur système de fichiers";
-                return false;
-            }
-
-            return $return_status;
-        }
-
-        return false;
-    }
-
-  /**
-   * \brief Méthode d'écriture de l'entrée de journal dans un fichier
-   * \return True en cas de succès, false sinon
-   */
-    public function writeLogEntryToFile($logFile, $data)
-    {
-        if (! file_put_contents($logFile, $data)) {
-            $this->errorMsg = "Erreur système de fichiers.";
-            return false;
-        }
-
-        return true;
-    }
-
-  /**
-   * Méthode d'obtention de l'entrée de log en format concaténé pour horodatage
-   * @return string La chaîne de tous les champs séparés par '**||**'
-   */
-    public function generateMessageHorodate()
-    {
-        $data[] = $this->id;
-        $data[] = date('c', Helpers::getTimestampFromBDDDate($this->date));
-        $data[] = $this->module;
-        $data[] = $this->severity;
-        $data[] = $this->issuer;
-        $data[] = $this->user_id;
-        $data[] = $this->visibility;
-        $data[] = $this->message;
-
-
-        $log = implode("**||**", $data);
-
-        return $log;
-    }
-
-    /**
-     *  Méthode d'obtention de l'entrée de log en format concaténé pour horodatage
-     * @return string La chaîne de tous les champs séparés par '**||**'
-     */
-    public function retrieveMessageHorodate()
-    {
-        if ($this->get('message_horodate')) {
-            return $this->get('message_horodate');
-        }
-        //Ancienne méthode de génération du message horodaté
-        $data[] = $this->id;
-        $data[] = date('Y-m-d H:i:s', Helpers::getTimestampFromBDDDate($this->date));
-        $data[] = $this->module;
-        $data[] = $this->severity;
-        $data[] = $this->issuer;
-        $data[] = $this->user_id;
-        $data[] = $this->visibility;
-        $data[] = $this->message;
-
-
-        $log = implode("**||**", $data);
-
-        return $log;
-    }
-
-
-  /**
-   * \brief Méthode d'écriture de l'horodatage dans un fichier
-   * \return True en cas de succès, false sinon
-   */
-    public function writeTimestampToFile($timestampFile)
-    {
-        if (isset($this->timestamp) && ! empty($this->timestamp)) {
-            if (! file_put_contents($timestampFile, $this->timestamp)) {
-                $this->errorMsg = "Erreur système de fichiers.";
-                return false;
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-  /**********************/
-  /* Méthodes statiques */
-  /**********************/
-
-  /**
-   * \brief Méthode d'obtention d'une liste d'entrées de journal
-   * \param $cond (optionnel) chaîne Chaîne contenant les conditions (SQL) à appliquer à la fin de la requête BDD
-   * \return Tableau des entrées de journal
-  */
-    public function getLogEntriesList($cond = "")
-    {
-        if (! $this->pagerInit('logs.id, logs.date, logs.module, logs.severity, logs.issuer, logs.user_id, logs.message, logs.timestamp', 'logs LEFT JOIN users ON logs.user_id=users.id LEFT JOIN authorities ON users.authority_id=authorities.id', $cond)) {
-            return false;
-        }
-
-        return $this->data;
     }
 }

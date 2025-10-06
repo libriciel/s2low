@@ -34,7 +34,6 @@ class S2lowBootstrap
                 "fullchain.pem",
                 apacheSSLPath: '/etc/apache2/ssl/mailsec',
             );
-            $this->installHorodateur();
             $this->sqlQuery->waitStarting(function ($m) {
                 echo "$m\n";
             });
@@ -162,35 +161,6 @@ class S2lowBootstrap
                 $this->sqlQuery->query($sql2, $all_value);
             }
         }
-    }
-
-    public function installHorodateur()
-    {
-        $key_file = TIMESTAMPING_PRIV_KEY;
-        $cert_file = TIMESTAMPING_CERT;
-
-        if (file_exists($cert_file)) {
-            $this->log("Certificat de l'horodateur déjà présent");
-            return;
-        }
-        $this->log("Création des certificat d'horodatage");
-        $hostname = $this->getHostname();
-
-        $script = __DIR__ . "/certificate/generate-timestamp-certificate.sh $hostname $key_file $cert_file 2>&1";
-
-        exec("$script ", $output, $return_var);
-        $this->log(implode("\n", $output));
-        if ($return_var != 0) {
-            throw new Exception("Impossible de générer le certificat du timestamp !");
-        }
-
-        file_put_contents(TIMESTAMPING_PRIV_KEY_PASS, "");
-
-        $username = 'www-data';
-        chown($key_file, $username);
-        chown($cert_file, $username);
-
-        $this->log("Certificat d'horodatage créé");
     }
 
     private function log($message)

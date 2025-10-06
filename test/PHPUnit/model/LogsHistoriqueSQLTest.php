@@ -24,8 +24,7 @@ class LogsHistoriqueSQLTest extends S2lowTestCase
             "TdT",
             1,
             'SADM',
-            'message test 1',
-            false
+            'message test 1'
         );
         $logsSQL->addLog(
             $today,
@@ -34,8 +33,7 @@ class LogsHistoriqueSQLTest extends S2lowTestCase
             "TdT",
             1,
             'SADM',
-            'message test 2',
-            false
+            'message test 2'
         );
 
         $this->logsHistoriqueSQL = new LogsHistoriqueSQL($this->getSQLQuery());

@@ -99,8 +99,7 @@ class LogsSQLTest extends S2lowTestCase
             "TdT",
             1,
             'SADM',
-            'message test 1',
-            false
+            'message test 1'
         );
         $min_date = $this->logsSQL->getMinDate();
         $this->assertNotNull($min_date);

@@ -10,6 +10,7 @@
 ### Suppression
 
 - Suppression de l'outil de signature intégré #1113
+- Suppression des jetons d'horodatage #1118
 
 ## 5.1.4 - 2025-09-17
 

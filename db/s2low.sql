@@ -328,10 +328,8 @@ CREATE TABLE logs (
     user_id integer,
     visibility character varying(5),
     message text,
-    timestamp text,
     authority_id integer,
-    authority_group_id integer,
-    message_horodate text
+    authority_group_id integer
 );
 CREATE TABLE logs_historique (
     id integer NOT NULL,
@@ -342,10 +340,8 @@ CREATE TABLE logs_historique (
     user_id integer,
     visibility character varying(5),
     message text,
-    timestamp text,
     authority_id integer,
-    authority_group_id integer,
-    message_horodate text
+    authority_group_id integer
 );
 CREATE TABLE logs_request (
     id integer DEFAULT nextval('logs_request_id_seq'::regclass) NOT NULL,
