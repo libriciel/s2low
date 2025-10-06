@@ -683,11 +683,6 @@ if (! defined("ACTES_RETENTION_FICHIERS_NB_JOURS")) {
     define("ACTES_RETENTION_FICHIERS_NB_JOURS", 3650000);
 }
 
-# Macro permettant de définir le nombre de jours de rétention des PES_ALLER
-# lors de l'utilisation du script purge-transactions.php
-if (! defined("HELIOS_RETENTION_FICHIERS_NB_JOURS")) {
-    define("HELIOS_RETENTION_FICHIERS_NB_JOURS", 3650000);
-}
 
 # Macro permettant de définir le nombre de jours de rétention des PES_RETOUR
 # lors de l'utilisation du script purge-transactions.php
