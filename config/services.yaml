@@ -33,6 +33,14 @@ parameters:
   app.use_legacy_bordereau_model: '%env(bool:default:app.use_legacy_bordereau_model.default:USE_LEGACY_BORDEREAU_MODEL)%'
   app.use_prod_notifications: '%env(bool:default:app.use_prod_notifications.default:USE_PROD_NOTIFICATIONS)%'
   app.workspace_directory: '%env(default:app.workspace_directory.default:WORKSPACE_DIRECTORY)%'
+  app.cloud.parameters.endpoint: '%env(string:CLOUD_PROVIDER_ENDPOINT)%'
+  app.cloud.parameters.credential.key: '%env(string:CLOUD_PROVIDER_KEY)%'
+  app.cloud.parameters.credential.secret: '%env(string:CLOUD_PROVIDER_SECRET)%'
+  app.cloud_bucket.acte_enveloppe: '%env(string:CLOUD_BUCKET_ACTE_ENVELOPPE)%'
+  app.cloud_bucket.pes_aller: '%env(string:CLOUD_BUCKET_PES_ALLER)%'
+  app.cloud_bucket.pes_acquit: '%env(string:CLOUD_BUCKET_PES_ACQUIT)%'
+  app.cloud_bucket.pes_retour: '%env(string:CLOUD_BUCKET_PES_RETOUR)%'
+  app.cloud_bucket.mailsec: '%env(string:CLOUD_BUCKET_MAIL_SEC)%'
 
   # Valeurs par default de parametres
   app.actes_appli_quadrigramme.default: 'TACT'
@@ -92,6 +100,7 @@ parameters:
   app.website_ssl: 'https://s2low.docker.libriciel.fr/'
   app.workspace_directory.default: '/data/tdt-workspace/'
   app.xmlsec_path: '/usr/bin/xmlsec1'
+
 services:
   _defaults:
     autowire: true
@@ -629,6 +638,116 @@ services:
   S2lowLegacy\Lib\OpenStackContainerStore:
     public: true
     factory: ['@S2low\Factory\OpenStackContainerStoreFactory', "create"]
+
+  ## Stockage Enveloppe Acte
+  app.cloudFileStorage.acte_enveloppe:
+    class: S2low\Infrastructure\Storage\Cloud\S3FileStorage
+    arguments:
+      $bucket: '%app.cloud_bucket.acte_enveloppe%'
+
+  app.localFileResolver.acte_enveloppe:
+    class: S2low\Services\LocalFileResolver
+    arguments:
+      $fileDataProvider: '@S2lowLegacy\Class\actes\ActesEnvelopeSQL'
+      $localPathPrefix: '%app.actes.files_upload_root%'
+
+  app.store.file.acte_enveloppe:
+    class: S2low\Services\CloudFileStorage
+    arguments:
+      $cloudFileStorage: '@app.cloudFileStorage.acte_enveloppe'
+      $localFileResolver: '@app.localFileResolver.acte_enveloppe'
+      $fileDataProvider: '@S2lowLegacy\Class\actes\ActesEnvelopeSQL'
+  ################
+
+  ## Stockage Pes Aller
+  app.cloudFileStorage.pes_aller:
+    class: S2low\Infrastructure\Storage\Cloud\S3FileStorage
+    arguments:
+      $bucket: '%app.cloud_bucket.pes_aller%'
+
+  app.localFileResolver.pes_aller:
+    class: S2low\Services\LocalFileResolver
+    arguments:
+      $fileDataProvider: '@S2lowLegacy\Model\HeliosTransactionsSQL'
+      $localPathPrefix: '%app.helios_files_upload_root%'
+
+  app.store.file.pes_aller:
+    class: S2low\Services\CloudFileStorage
+    arguments:
+      $cloudFileStorage: '@app.cloudFileStorage.pes_aller'
+      $localFileResolver: '@app.localFileResolver.pes_aller'
+      $fileDataProvider: '@S2lowLegacy\Model\HeliosTransactionsSQL'
+  ####################
+
+  ## Stockage Pes Retour
+  app.cloudFileStorage.pes_retour:
+    class: S2low\Infrastructure\Storage\Cloud\S3FileStorage
+    arguments:
+      $bucket: '%app.cloud_bucket.pes_retour%'
+
+  app.localFileResolver.pes_retour:
+    class: S2low\Services\LocalFileResolver
+    arguments:
+      $fileDataProvider: '@S2lowLegacy\Model\HeliosRetourSQL'
+      $localPathPrefix: '%app.helios_responses_root%'
+
+  app.store.file.pes_retour:
+    class: S2low\Services\CloudFileStorage
+    arguments:
+      $cloudFileStorage: '@app.cloudFileStorage.pes_retour'
+      $localFileResolver: '@app.localFileResolver.pes_retour'
+      $fileDataProvider: '@S2lowLegacy\Model\HeliosRetourSQL'
+  #####################
+
+  ## Stockage Pes Acquit
+  app.cloudFileStorage.pes_acquit:
+    class: S2low\Infrastructure\Storage\Cloud\S3FileStorage
+    arguments:
+      $bucket: '%app.cloud_bucket.pes_acquit%'
+
+  app.localFileResolver.pes_acquit:
+    class: S2low\Services\LocalFileResolver
+    arguments:
+      $fileDataProvider: '@S2low\Services\Helios\PesAcquitFileDataProvider'
+      $localPathPrefix: '%app.helios_responses_root%'
+
+  app.store.file.pes_acquit:
+    class: S2low\Services\CloudFileStorage
+    arguments:
+      $cloudFileStorage: '@app.cloudFileStorage.pes_acquit'
+      $localFileResolver: '@app.localFileResolver.pes_acquit'
+      $fileDataProvider: '@S2low\Services\Helios\PesAcquitFileDataProvider'
+  #####################
+
+  ## Stockage Mail Securise
+  app.cloudFileStorage.mailsec:
+    class: S2low\Infrastructure\Storage\Cloud\S3FileStorage
+    arguments:
+      $bucket: '%app.cloud_bucket.mailsec%'
+
+  app.localFileResolver.mailsec:
+    class: S2low\Services\LocalFileResolver
+    arguments:
+      $fileDataProvider: '@S2lowLegacy\Class\mailsec\MailTransactionSQL'
+      $localPathPrefix: '%app.mail_file_upload_root%'
+
+  app.store.file.mailsec:
+    class: S2low\Services\CloudFileStorage
+    arguments:
+      $cloudFileStorage: '@app.cloudFileStorage.mailsec'
+      $localFileResolver: '@app.localFileResolver.mailsec'
+      $fileDataProvider: '@S2lowLegacy\Class\mailsec\MailTransactionSQL'
+  #####################
+
+  Aws\S3\S3ClientInterface:
+    public: true
+    factory: ['@S2low\Factory\S3ClientFactory', "create"]
+
+  S2low\Factory\S3ClientFactory:
+    arguments:
+      $endpoint: '%app.cloud.parameters.endpoint%'
+      $key: 'admin'
+      $secret: 'password'
 
   S2lowLegacy\Class\actes\ActesCloudStorable:
     public: true

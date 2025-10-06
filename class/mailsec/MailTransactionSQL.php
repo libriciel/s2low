@@ -2,9 +2,12 @@
 
 namespace S2lowLegacy\Class\mailsec;
 
+use phpseclib3\Exception\FileNotFoundException;
+use S2low\Exceptions\TransactionNotFoundException;
+use S2low\Services\FileDataProvider;
 use S2lowLegacy\Lib\SQL;
 
-class MailTransactionSQL extends SQL
+class MailTransactionSQL extends SQL implements FileDataProvider
 {
     public function getTransactionIdToSendInCloud()
     {
@@ -72,5 +75,38 @@ class MailTransactionSQL extends SQL
     {
         $sql = "SELECT is_in_cloud FROM mail_transaction WHERE id=?";
         return ! $this->queryOne($sql, $object_id);
+    }
+
+    public function getRelativePath(string $transactionId): string
+    {
+        $transaction = $this->queryOne("SELECT id, fn_download FROM mail_transaction WHERE id=?", $transactionId);
+
+        if ($transaction === false) {
+            throw new TransactionNotFoundException('Aucune transaction Mail ne correspond à l\'identifiant : [' . $transactionId . '].');
+        }
+
+        return $transaction['fn_download'] . '/mail.zip';
+    }
+
+    public function getCloudId(string $transactionId): string
+    {
+        $transaction = $this->queryOne(
+            "SELECT 
+                        mt.id, 
+                        mt.fn_download, 
+                        a.siren
+                    FROM mail_transaction mt
+                    INNER JOIN users u ON u.id = mt.user_id
+                    INNER JOIN authorities a ON a.id = u.authority_id
+                    WHERE mt.id = ?;
+                   ",
+            $transactionId
+        );
+
+        if ($transaction === false) {
+            throw new TransactionNotFoundException('Aucune transaction Mail ne correspond à l\'identifiant : [' . $transactionId . '].');
+        }
+
+        return $transaction['siren'] . '/' . $transaction['fn_download'];
     }
 }

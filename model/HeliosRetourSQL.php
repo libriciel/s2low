@@ -2,9 +2,12 @@
 
 namespace S2lowLegacy\Model;
 
+use phpseclib3\Exception\FileNotFoundException;
+use S2low\Exceptions\TransactionNotFoundException;
+use S2low\Services\FileDataProvider;
 use S2lowLegacy\Lib\SQL;
 
-class HeliosRetourSQL extends SQL
+class HeliosRetourSQL extends SQL implements FileDataProvider
 {
     public const STATUS_NON_LU = 0;
     public const STATUS_LU = 1;
@@ -100,5 +103,27 @@ class HeliosRetourSQL extends SQL
     {
         $sql = "SELECT is_in_cloud FROM helios_retour WHERE id=?";
         return $this->queryOne($sql, $object_id);
+    }
+
+    public function getRelativePath(string $transactionId): string
+    {
+        $heliosTransaction = $this->getInfo($transactionId);
+
+        if ($heliosTransaction === false) {
+            throw new TransactionNotFoundException('Aucune transaction Helios ne corresponds à l\'identifiant : [' . $transactionId . ']');
+        }
+
+        return $heliosTransaction['filename'];
+    }
+
+    public function getCloudId(string $transactionId): string
+    {
+        $heliosTransaction = $this->getInfo($transactionId);
+
+        if ($heliosTransaction === false) {
+            throw new TransactionNotFoundException('Aucune transaction Helios ne corresponds à l\'identifiant : [' . $transactionId . ']');
+        }
+
+        return $heliosTransaction['siren'] . '/' . $heliosTransaction['filename'];
     }
 }

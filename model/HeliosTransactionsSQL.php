@@ -2,10 +2,12 @@
 
 namespace S2lowLegacy\Model;
 
+use phpseclib3\Exception\FileNotFoundException;
+use S2low\Services\FileDataProvider;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Lib\SQL;
 
-class HeliosTransactionsSQL extends SQL
+class HeliosTransactionsSQL extends SQL implements FileDataProvider
 {
     public const ERREUR = -1;
     public const ANNULE = 0;
@@ -759,5 +761,27 @@ AND authorities.helios_use_passtrans = ?
         }
         $sql .= " ORDER BY helios_transactions.id DESC OFFSET $offset LIMIT $limit";
         return $this->query($sql, $data);
+    }
+
+    public function getRelativePath(string $transactionId): string
+    {
+        $acquitFileName = $this->queryOne("SELECT sha1 FROM helios_transactions WHERE id=?", $transactionId);
+
+        if ($acquitFileName === false) {
+            throw new FileNotFoundException('Aucun pes aller associé a la transaction ' . $transactionId);
+        }
+
+        return $acquitFileName;
+    }
+
+    public function getCloudId(string $transactionId): string
+    {
+        $transaction = $this->queryOne("SELECT sha1, siren FROM helios_transactions WHERE id=?", $transactionId);
+
+        if ($transaction === false) {
+            throw new FileNotFoundException('Aucun pes aller associé a la transaction ' . $transactionId);
+        }
+
+        return $transaction['siren'] . '/' . basename($transaction['sha1']);
     }
 }
