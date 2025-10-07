@@ -28,6 +28,7 @@ $fauthority = Helpers::getVarFromGet('authority');
 $frole =  Helpers::getVarFromGet('role');
 $fname = Helpers::getVarFromGet('name');
 $fgroup = Helpers::getVarFromGet('group');
+$fstatus = Helpers::getVarFromGet('status') ?? 1;
 $fcertStatus = Helpers::getVarFromGet('certificat_status');
 $api = Helpers::getVarFromGet('api');
 
@@ -64,6 +65,15 @@ if (isset($frole) && mb_strlen($frole) > 0) {
 
 if (isset($fname) && mb_strlen($fname) > 0) {
     $filter[] = "users.name ILIKE '%" . addslashes($fname) . "%'";
+}
+
+if (isset($fstatus)) {
+    if ($fstatus !== "") {
+        $filter[] = "users.status=$fstatus";
+    }
+} else { // comportement par default, on affiche les utilisateurs activés
+    $fstatus = 1;
+    $filter[] = "users.status=$fstatus";
 }
 
 if ($fcertStatus !== null) {
@@ -178,6 +188,8 @@ ob_start();?>
                         <?php endforeach; ?>
                     </select>
                 </div>
+                <label for="role" class="col-md-3 control-label">L'utilisateur est</label>
+                <div class="col-md-3"><?php echo $doc->getHTMLSelect('status', User::STATUS, $fstatus) ?></div>
             </div>
         <?php endif;?>
     
