@@ -98,7 +98,7 @@ class OpenSSLWrapper
         # Au niveau de la date et de la chaine de certification, on va se reposer sur
         # la fonction précédente
         return $this->commandLauncher->launchFromString(
-            "openssl smime -in $signature_file -inform PEM -verify -noverify -content $file_path -CApath {$this->authorized_ca_path}",
+            "openssl smime -in $signature_file -inform PEM -verify -noverify -content $file_path",
             new FileContentCorrespondsToSignatureChecker()
         );
     }
