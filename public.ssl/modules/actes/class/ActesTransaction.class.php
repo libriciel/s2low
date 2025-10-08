@@ -896,7 +896,6 @@ class ActesTransaction extends DataObject
                             new VerifyPemCertificateFactory(),
                             new PemCertificateFactory(),
                             new OpenSSLWrapper(
-                                RGS_VALIDCA_PATH,
                                 new CommandLauncher()
                             )
                         );

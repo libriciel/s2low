@@ -25,7 +25,8 @@ class VerifyPadesSignature
 
     /**
      * @param $signature
-     * @throws Exception
+     * @return \S2lowLegacy\Lib\PemCertificate
+     * @throws \Exception
      */
     public function validateSignatureWithoutCertificateChecking($signature): PemCertificate
     {
@@ -52,13 +53,14 @@ class VerifyPadesSignature
     }
 
     /**
-     * @param $signature
+     * @param $certificateContent
+     * @param $signatureTimestamp
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     private function validateCertificateFomSignature($certificateContent, $signatureTimestamp)
     {
-        $certificate_path = sys_get_temp_dir() . "/s2low_valid_certifcate_" . time() . mt_rand(0, mt_getrandmax());
+        $certificate_path = sys_get_temp_dir() . '/s2low_valid_certifcate_' . time() . mt_rand(0, mt_getrandmax());
         file_put_contents($certificate_path, $certificateContent);
         try {
             $this->verifyPemCertificate->checkCertificateWithOpenSSL(

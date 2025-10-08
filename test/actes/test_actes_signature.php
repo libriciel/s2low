@@ -23,7 +23,6 @@ $verifyPKCS7Signature = new VerifyPKCS7Signature(
     new VerifyPemCertificateFactory(),
     new PemCertificateFactory(),
     new \S2low\Services\ProcessCommand\OpenSSLWrapper(
-        "/etc/tedetis/ssl/validca/",
         new \S2low\Services\ProcessCommand\CommandLauncher()
     )
 );
