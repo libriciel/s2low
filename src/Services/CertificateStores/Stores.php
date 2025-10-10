@@ -17,19 +17,19 @@ class Stores
     ) {
         $this->stores = $stores;
     }
-    public function get()
+    public function getDefaultStorePath(): string
     {
         $extendedStoreType = Type::EXTENDED;
         if ($this->only_use_validcargs) {
             $extendedStoreType = Type::RGS;
         }
-        return $this->getStore($extendedStoreType);
+        return $this->getStorePath($extendedStoreType);
     }
 
     /**
      * @throws \S2low\Exceptions\CertificateStoreNotFoundException
      */
-    private function getStore(Type $type): string
+    public function getStorePath(Type $type): string
     {
         foreach ($this->stores as $store) {
             if ($store->getType() === $type) {

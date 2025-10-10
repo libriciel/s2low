@@ -1,5 +1,7 @@
 <?php
 
+use S2low\Services\CertificateStores\Stores;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\PKCS12;
@@ -9,6 +11,8 @@ use S2lowLegacy\Lib\XadesSignatureParser;
 
 require_once(__DIR__ . "/../../init/init.php");
 \S2lowLegacy\Class\LegacyObjectsManager::setLegacyObjectInstancier();
+/** @var Stores $certificatesStores */
+$certificatesStores = LegacyObjectsManager::getLegacyObjectInstancier()->get(Stores::class);
 
 if (empty($argv[1])) {
     echo "Usage : {$argv[0]} fichier_xades.xml\n";
@@ -23,10 +27,10 @@ $xadesSignature = new XadesSignature(
     XMLSEC1_PATH,
     new PKCS12(),
     new X509Certificate(),
-    EXTENDED_VALIDCA_PATH,
+    $certificatesStores->getDefaultStorePath(),
     new XadesSignatureParser(),
     new PemCertificateFactory(),
-    (new VerifyPemCertificateFactory())->get(EXTENDED_VALIDCA_PATH)
+    (new VerifyPemCertificateFactory())->get($certificatesStores->getDefaultStorePath())
 );
 
 $verify = true;

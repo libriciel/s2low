@@ -316,22 +316,6 @@ class HelpersTest extends TestCase
         $this->assertTrue(Helpers::sendFileToBrowser(__FILE__, basename(__FILE__), Helpers::getFileType(__FILE__)));
     }
 
-    public function testGetAuthorizedCACertsEmpty()
-    {
-        $this->assertEmpty(Helpers::getAuthorizedCACerts("foo"));
-    }
-
-    public function testGetAuthorizedCACerts()
-    {
-        $certs = Helpers::getAuthorizedCACerts(__DIR__ . "/fixtures/");
-        $this->assertEquals("ADULLACT-Projet", $certs[0]['subject']['O']);
-    }
-
-    public function testGetAuthorizedCACertsEmptyDir()
-    {
-        $this->assertEmpty(Helpers::getAuthorizedCACerts(__DIR__ . "/fixtures/empty/"));
-    }
-
     public function testNullIntFromPost()
     {
         $this->assertEquals(

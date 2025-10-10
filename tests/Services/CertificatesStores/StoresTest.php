@@ -28,7 +28,7 @@ class StoresTest extends TestCase
         );
 
         self::assertSame(
-            $stores->get(),
+            $stores->getDefaultStorePath(),
             $expectedPath
         );
     }
@@ -49,7 +49,7 @@ class StoresTest extends TestCase
         self::expectException(CertificateStoreNotFoundException::class);
         self::expectExceptionMessage($expectedExceptionMessage);
         $stores = new Stores($only_use_validcargs);
-        $stores->get();
+        $stores->getDefaultStorePath();
     }
 
     public function emptyException()

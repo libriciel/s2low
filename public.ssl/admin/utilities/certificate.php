@@ -1,5 +1,7 @@
 <?php
 
+use S2low\Services\CertificateStores\Stores;
+use S2low\Services\CertificateStores\Type;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
@@ -9,8 +11,9 @@ use S2lowLegacy\Lib\SQLQuery;
 
 /** @var Initialisation $initialisation */
 /** @var SQLQuery $sqlQuery */
-[$initialisation, $sqlQuery] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, SQLQuery::class]);
+/** @var Stores $certificatesStores */
+[$initialisation, $sqlQuery, $certificatesStores] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, SQLQuery::class, Stores::class]);
 
 $initData = $initialisation->doInit();
 
@@ -37,9 +40,9 @@ $name = $recuperateur->get('name');
 $name = basename($name);
 
 if ($type == 'rgs') {
-    $file = RGS_VALIDCA_PATH . "/$name";
+    $file = $certificatesStores->getStorePath(Type::RGS) . "/$name";
 } else {
-    $file = EXTENDED_VALIDCA_PATH . "/$name";
+    $file = $certificatesStores->getStorePath(Type::EXTENDED) . "/$name";
 }
 
 if (!file_exists($file)) {

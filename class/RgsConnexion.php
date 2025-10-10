@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class;
 
+use S2low\Services\CertificateStores\Stores;
 use S2lowLegacy\Lib\RgsCertificate;
 
 class RgsConnexion
@@ -11,10 +12,11 @@ class RgsConnexion
     private $rgs_validca_path;
     private $server_global;
 
-    public function __construct()
-    {
+    public function __construct(
+        Stores $stores,
+    ) {
         $this->setOpenSSLPath(OPENSSL_PATH);
-        $this->setRgsValidCaPath(RGS_VALIDCA_PATH);
+        $this->setRgsValidCaPath($stores->getDefaultStorePath());
         $this->setServerGlobal($_SERVER);
     }
 

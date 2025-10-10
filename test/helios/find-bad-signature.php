@@ -1,5 +1,7 @@
 <?php
 
+use S2low\Services\CertificateStores\Stores;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\PKCS12;
@@ -9,7 +11,10 @@ use S2lowLegacy\Lib\XadesSignature;
 use S2lowLegacy\Lib\XadesSignatureParser;
 
 require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+/** @var \S2low\Services\CertificateStores\Stores $certificatesStores */
+$certificatesStores = LegacyObjectsManager::getLegacyObjectInstancier()->get(Stores::class);
+
 
 if (empty($argv[1])) {
     echo "Usage : {$argv[0]} YYYY-mm-dd\n";
@@ -30,10 +35,10 @@ $xadesSignature = new XadesSignature(
     XMLSEC1_PATH,
     new PKCS12(),
     new X509Certificate(),
-    EXTENDED_VALIDCA_PATH,
+    $certificatesStores->getDefaultStorePath(),
     new XadesSignatureParser(),
     new PemCertificateFactory(),
-    (new VerifyPemCertificateFactory())->get(EXTENDED_VALIDCA_PATH)
+    (new VerifyPemCertificateFactory())->get($certificatesStores->getDefaultStorePath())
 );
 
 foreach ($transactions_list as $num_transaction => $transaction_helios) {

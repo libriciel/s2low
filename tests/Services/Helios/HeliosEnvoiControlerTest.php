@@ -7,6 +7,7 @@ namespace S2low\Tests\Services\Helios;
 use Exception;
 use IntegrationTests\S2lowIntegrationTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use S2low\Services\CertificateStores\Stores;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnection;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionBuilder;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionConfiguration;
@@ -582,7 +583,8 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
             static::getContainer()->get(S2lowLogger::class),
             new PesAllerReader(),
             new HeliosNamesGenerator(),
-            new VerifyPemCertificateFactory()
+            new VerifyPemCertificateFactory(),
+            static::getContainer()->get(Stores::class),
         );
     }
 }

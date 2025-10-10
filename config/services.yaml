@@ -788,13 +788,13 @@ services:
       class: S2low\Services\CertificateStores\Store
       arguments:
         $path: '%app.path_to_rgs_valid_ca%'
-        $type: !php/const S2low\Services\CertificateStores\Type::RGS
+        $type: !php/const S2low\Services\CertificateStores\Type::EXTENDED
 
   S2low\Services\CertificateStores\Store\EXTENDED:
       class: S2low\Services\CertificateStores\Store
       arguments:
         $path: '%app.path_to_rgs_valid_cargs%'
-        $type: !php/const S2low\Services\CertificateStores\Type::EXTENDED
+        $type: !php/const S2low\Services\CertificateStores\Type::RGS
 
   S2low\Services\CertificateStores\Stores:
     public: true

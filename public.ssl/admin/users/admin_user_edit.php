@@ -1,5 +1,7 @@
 <?php
 
+use S2low\Services\CertificateStores\Stores;
+use S2low\Services\CertificateStores\Type;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Group;
@@ -17,9 +19,9 @@ use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Model\UserSQL;
 
-list($objectInstancier, $jsonOutput,$sqlQuery, $frontController) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $jsonOutput,$sqlQuery, $frontController, $certificatesStores) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, JSONoutput::class, SQLQuery::class, FrontController::class]
+        [ObjectInstancier::class, JSONoutput::class, SQLQuery::class, FrontController::class, Stores::class]
     );
 
 $html = '';
@@ -319,9 +321,10 @@ ob_start();
     </div>
 
     <?php
-        $rgsCertificate = new RgsCertificate(OPENSSL_PATH, RGS_VALIDCA_PATH);
+        /** @var Stores $certificatesStores */
+        $rgsCertificate = new RgsCertificate(OPENSSL_PATH, $certificatesStores->getDefaultStorePath());
         $is_rgs = $rgsCertificate->isRgsCertificate($him->get('certificate'));
-        $rgsCertificateExtended = new RgsCertificate(OPENSSL_PATH, EXTENDED_VALIDCA_PATH);
+        $rgsCertificateExtended = new RgsCertificate(OPENSSL_PATH, $certificatesStores->getStorePath(Type::EXTENDED));
         $has_sslclient_purpose = $rgsCertificateExtended->hasSSlClientPurpose($him->get('certificate'));
     ?>
     <?php if (! $is_rgs) : ?>

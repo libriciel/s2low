@@ -2,13 +2,18 @@
 
 //Liste des clients qui n'ont pas un certificat RGS
 
+use S2low\Services\CertificateStores\Stores;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Lib\RgsCertificate;
 use S2lowLegacy\Lib\SQLQuery;
 
 require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+/** @var Stores $certificatesStores */
+$certificatesStores = LegacyObjectsManager::getLegacyObjectInstancier()->get(Stores::class);
 
-$rgsCertificate = new RgsCertificate(OPENSSL_PATH, RGS_VALIDCA_PATH);
+/** @var Stores $rgsCertificate */
+$rgsCertificate = new RgsCertificate(OPENSSL_PATH, $certificatesStores->getDefaultStorePath());
 
 $handle = fopen("php://output", "w");
 

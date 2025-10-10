@@ -3,6 +3,7 @@
 namespace S2low\Services\Helios;
 
 use Exception;
+use S2low\Services\CertificateStores\Stores;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\Antivirus;
@@ -45,16 +46,17 @@ class HeliosEnvoiControler
         private readonly S2lowLogger $logger,
         private readonly PesAllerReader $pesAllerReader,
         private readonly HeliosNamesGenerator $namesGenerator,
-        VerifyPemCertificateFactory $verifyPemFactory
+        VerifyPemCertificateFactory $verifyPemFactory,
+        private readonly Stores $stores,
     ) {
         $this->xadesSignature = new XadesSignature(
             XMLSEC1_PATH,
             new PKCS12(),
             new X509Certificate(),
-            EXTENDED_VALIDCA_PATH,
+            $this->stores->getDefaultStorePath(),
             new XadesSignatureParser(),
             new PemCertificateFactory(),
-            $verifyPemFactory->get(EXTENDED_VALIDCA_PATH)
+            $verifyPemFactory->get($this->stores->getDefaultStorePath())
         );
     }
 

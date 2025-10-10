@@ -1,5 +1,7 @@
 <?php
 
+use S2low\Services\CertificateStores\Stores;
+use S2low\Services\CertificateStores\Type;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\Initialisation;
@@ -10,8 +12,9 @@ use S2lowLegacy\Lib\Recuperateur;
 use S2lowLegacy\Lib\SQLQuery;
 
 /** @var Initialisation $initialisation */
-[$initialisation] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, SQLQuery::class]);
+/** @var Stores $certificatesStores */
+[$initialisation, $certificatesStores] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, Stores::class]);
 
 $initData = $initialisation->doInit();
 
@@ -41,9 +44,9 @@ if (! in_array($type, ['extended','rgs'])) {
 
 
 if ($type == 'rgs') {
-    $certificate_list = glob(RGS_VALIDCA_PATH . '/*.pem');
+    $certificate_list = glob($certificatesStores->getStorePath(Type::RGS) . '/*.pem');
 } else {
-    $certificate_list = glob(EXTENDED_VALIDCA_PATH . '/*.pem');
+    $certificate_list = glob($certificatesStores->getStorePath(Type::EXTENDED) . '/*.pem');
 }
 
 $menuHTML = new MenuHTML();

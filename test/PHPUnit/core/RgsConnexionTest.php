@@ -1,6 +1,9 @@
 <?php
 
 use IntegrationTests\S2lowIntegrationTestCase;
+use S2low\Services\CertificateStores\Store;
+use S2low\Services\CertificateStores\Stores;
+use S2low\Services\CertificateStores\Type;
 use S2lowLegacy\Class\RgsConnexion;
 
 class RgsConnexionTest extends S2lowIntegrationTestCase
@@ -27,8 +30,7 @@ class RgsConnexionTest extends S2lowIntegrationTestCase
         $server = [];
 
         $rgsConnexion = new RgsConnexion(
-            self::getContainer()->getParameter('app.openssl_path'),
-            self::getContainer()->getParameter('app.path_to_rgs_valid_ca'),
+            new Stores(true, new Store('/', Type::RGS))
         );
         $rgsConnexion->setServerGlobal($server);
         $this->assertFalse($rgsConnexion->isRgsConnexion());

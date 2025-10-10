@@ -155,31 +155,6 @@ if (!defined("XMLSEC1_PATH")) {
     define("XMLSEC1_PATH", "/usr/bin/xmlsec1");
 }
 
-if (! defined("ONLY_USE_VALIDCARGS")) {
-    define("ONLY_USE_VALIDCARGS", false);
-}
-
-//Emplacement d'un répertoire contenant le "hasher" des autorités de certification RGS
-//voir "man c_rehash" pour le "hasher"
-//Ce répertoire ne doit contenir que des certificats RGS et sert à signer et télétransmettre des flux Actes
-if (! defined("RGS_VALIDCA_PATH")) {
-    $pathToRgsValidca = "/etc/s2low/ssl/validca/";
-    if (ONLY_USE_VALIDCARGS) {
-        $pathToRgsValidca = "/etc/s2low/ssl/validcargs/";
-    }
-    define("RGS_VALIDCA_PATH", $pathToRgsValidca);
-}
-
-//Emplacement des certificats permettant la connexion à la plateforme ainsi que la signature et la télétransmission
-//des flux PES
-if (! defined("EXTENDED_VALIDCA_PATH")) {
-    $pathToRgsValidca = "/etc/s2low/ssl/validca/";
-    if (ONLY_USE_VALIDCARGS) {
-        $pathToRgsValidca = "/etc/s2low/ssl/validcargs/";
-    }
-    define("EXTENDED_VALIDCA_PATH", $pathToRgsValidca);
-}
-
 //Emplacement où se trouve les AC de /etc/ssl/certs et celles du Ministere
 if (! defined("TRUSTSTORE_PATH")) {
     define("TRUSTSTORE_PATH", "/data/certificate/truststore/");

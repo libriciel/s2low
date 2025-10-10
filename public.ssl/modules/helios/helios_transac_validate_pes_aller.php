@@ -1,5 +1,6 @@
 <?php
 
+use S2low\Services\CertificateStores\Stores;
 use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\helios\HeliosPESValidation;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
@@ -22,10 +23,11 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 /** @var HeliosTransactionsSQL $heliosTransactionsSQL */
 /** @var PesAllerRetriever $pesAllerRetriever */
 /** @var string $html */
+/** @var Stores $certificatesStores */
 
-[$initialisation, $droit,$heliosTransactionsSQL ,$pesAllerRetriever] =
+[$initialisation, $droit,$heliosTransactionsSQL ,$pesAllerRetriever, $certificatesStores] =
     LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class,HeliosTransactionsSQL::class,PesAllerRetriever::class]);
+    ->getArray([Initialisation::class, Droit::class,HeliosTransactionsSQL::class,PesAllerRetriever::class, Stores::class],);
 
 $html = '';
 
@@ -65,10 +67,10 @@ $xadesSignature = new XadesSignature(
     XMLSEC1_PATH,
     new PKCS12(),
     new X509Certificate(),
-    EXTENDED_VALIDCA_PATH,
+    $certificatesStores->getDefaultStorePath(),
     new XadesSignatureParser(),
     new PemCertificateFactory(),
-    $verifyPemCertificateFactory->get(EXTENDED_VALIDCA_PATH)
+    $verifyPemCertificateFactory->get($certificatesStores->getDefaultStorePath())
 );
 
 $verify_sign =  true;
