@@ -783,3 +783,23 @@ services:
     public: true
     tags:
       - { name: monolog.processor }
+
+  S2low\Services\CertificateStores\Store\RGS:
+      class: S2low\Services\CertificateStores\Store
+      arguments:
+        $path: '%app.path_to_rgs_valid_ca%'
+        $type: !php/const S2low\Services\CertificateStores\Type::RGS
+
+  S2low\Services\CertificateStores\Store\EXTENDED:
+      class: S2low\Services\CertificateStores\Store
+      arguments:
+        $path: '%app.path_to_rgs_valid_cargs%'
+        $type: !php/const S2low\Services\CertificateStores\Type::EXTENDED
+
+  S2low\Services\CertificateStores\Stores:
+    public: true
+    arguments:
+      $only_use_validcargs: '%app.only_use_validcargs%'
+      $stores:
+        - '@S2low\Services\CertificateStores\Store\RGS'
+        - '@S2low\Services\CertificateStores\Store\EXTENDED'
