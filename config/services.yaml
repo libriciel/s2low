@@ -41,6 +41,7 @@ parameters:
   app.cloud_bucket.pes_acquit: '%env(string:CLOUD_BUCKET_PES_ACQUIT)%'
   app.cloud_bucket.pes_retour: '%env(string:CLOUD_BUCKET_PES_RETOUR)%'
   app.cloud_bucket.mailsec: '%env(string:CLOUD_BUCKET_MAIL_SEC)%'
+  app.cloud_storage_enabled: '%env(bool:OPENSTACK_ENABLE)%'
 
   # Valeurs par default de parametres
   app.actes_appli_quadrigramme.default: 'TACT'
@@ -127,14 +128,14 @@ services:
       $website: '%app.website%'
 
 
-#  rgs_valid_ca_path:
-#    class: string
-#    factory: [ '@S2low\Factory\RgsValidCaPathFactory', 'create' ]
-#    public: false
+  #  rgs_valid_ca_path:
+  #    class: string
+  #    factory: [ '@S2low\Factory\RgsValidCaPathFactory', 'create' ]
+  #    public: false
 
-# ---------------------------------------------------------------------------------------------------------------------
-# Namespace s2low : contient le code développé après le passage en Symfony.
-# ---------------------------------------------------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------------------------------------------------
+  # Namespace s2low : contient le code développé après le passage en Symfony.
+  # ---------------------------------------------------------------------------------------------------------------------
   S2low\:
     resource: '../src/*'
     exclude: '../src/Kernel.php'
@@ -379,9 +380,9 @@ services:
     public: false
 
   S2lowLegacy\Class\InitData:
-     autowire: false
-     autoconfigure: false
-     public: false
+    autowire: false
+    autoconfigure: false
+    public: false
 
   S2lowLegacy\Class\ModuleData:
     autowire: false
@@ -632,104 +633,132 @@ services:
     factory: ['@S2low\Factory\OpenStackContainerStoreFactory', "create"]
 
   ## Stockage Enveloppe Acte
-  app.cloudFileStorage.acte_enveloppe:
-    class: S2low\Infrastructure\Storage\Cloud\S3FileStorage
+  app.clientCloudStorage.acte_enveloppe:
+    class: S2low\Port\CloudClientInterface
+    factory: ['@S2low\Factory\S3FileStorageFactory', 'create']
     arguments:
       $bucket: '%app.cloud_bucket.acte_enveloppe%'
 
   app.localFileResolver.acte_enveloppe:
+    public: true
     class: S2low\Services\LocalFileResolver
     arguments:
       $fileDataProvider: '@S2lowLegacy\Class\actes\ActesEnvelopeSQL'
       $localPathPrefix: '%app.actes.files_upload_root%'
 
   app.store.file.acte_enveloppe:
-    class: S2low\Services\CloudFileStorage
+    public: true
+    class: S2low\Services\CloudFileStorageInterface
+    factory: [ '@S2low\Factory\CloudFileStorageFactory', 'create' ]
     arguments:
-      $cloudFileStorage: '@app.cloudFileStorage.acte_enveloppe'
+      $clientCloudStorage: '@app.clientCloudStorage.acte_enveloppe'
       $localFileResolver: '@app.localFileResolver.acte_enveloppe'
       $fileDataProvider: '@S2lowLegacy\Class\actes\ActesEnvelopeSQL'
   ################
 
   ## Stockage Pes Aller
-  app.cloudFileStorage.pes_aller:
-    class: S2low\Infrastructure\Storage\Cloud\S3FileStorage
+  app.clientCloudStorage.pes_aller:
+    class: S2low\Port\CloudClientInterface
+    factory: ['@S2low\Factory\S3FileStorageFactory', 'create']
     arguments:
       $bucket: '%app.cloud_bucket.pes_aller%'
 
   app.localFileResolver.pes_aller:
+    public: true
     class: S2low\Services\LocalFileResolver
     arguments:
       $fileDataProvider: '@S2lowLegacy\Model\HeliosTransactionsSQL'
       $localPathPrefix: '%app.helios_files_upload_root%'
 
   app.store.file.pes_aller:
-    class: S2low\Services\CloudFileStorage
+    public: true
+    class: S2low\Services\CloudFileStorageInterface
+    factory: [ '@S2low\Factory\CloudFileStorageFactory', 'create' ]
     arguments:
-      $cloudFileStorage: '@app.cloudFileStorage.pes_aller'
+      $clientCloudStorage: '@app.clientCloudStorage.pes_aller'
       $localFileResolver: '@app.localFileResolver.pes_aller'
       $fileDataProvider: '@S2lowLegacy\Model\HeliosTransactionsSQL'
   ####################
 
   ## Stockage Pes Retour
-  app.cloudFileStorage.pes_retour:
-    class: S2low\Infrastructure\Storage\Cloud\S3FileStorage
+  app.clientCloudStorage.pes_retour:
+    class: S2low\Port\CloudClientInterface
+    factory: ['@S2low\Factory\S3FileStorageFactory', 'create']
     arguments:
       $bucket: '%app.cloud_bucket.pes_retour%'
 
   app.localFileResolver.pes_retour:
+    public: true
     class: S2low\Services\LocalFileResolver
     arguments:
       $fileDataProvider: '@S2lowLegacy\Model\HeliosRetourSQL'
       $localPathPrefix: '%app.helios_responses_root%'
 
   app.store.file.pes_retour:
-    class: S2low\Services\CloudFileStorage
+    public: true
+    class: S2low\Services\CloudFileStorageInterface
+    factory: [ '@S2low\Factory\CloudFileStorageFactory', 'create' ]
     arguments:
-      $cloudFileStorage: '@app.cloudFileStorage.pes_retour'
+      $clientCloudStorage: '@app.clientCloudStorage.pes_retour'
       $localFileResolver: '@app.localFileResolver.pes_retour'
       $fileDataProvider: '@S2lowLegacy\Model\HeliosRetourSQL'
   #####################
 
   ## Stockage Pes Acquit
-  app.cloudFileStorage.pes_acquit:
-    class: S2low\Infrastructure\Storage\Cloud\S3FileStorage
+  app.clientCloudStorage.pes_acquit:
+    class: S2low\Port\CloudClientInterface
+    factory: ['@S2low\Factory\S3FileStorageFactory', 'create']
     arguments:
       $bucket: '%app.cloud_bucket.pes_acquit%'
 
   app.localFileResolver.pes_acquit:
+    public: true
     class: S2low\Services\LocalFileResolver
     arguments:
       $fileDataProvider: '@S2low\Services\Helios\PesAcquitFileDataProvider'
       $localPathPrefix: '%app.helios_responses_root%'
 
   app.store.file.pes_acquit:
-    class: S2low\Services\CloudFileStorage
+    public: true
+    class: S2low\Services\CloudFileStorageInterface
+    factory: [ '@S2low\Factory\CloudFileStorageFactory', 'create' ]
     arguments:
-      $cloudFileStorage: '@app.cloudFileStorage.pes_acquit'
+      $clientCloudStorage: '@app.clientCloudStorage.pes_acquit'
       $localFileResolver: '@app.localFileResolver.pes_acquit'
       $fileDataProvider: '@S2low\Services\Helios\PesAcquitFileDataProvider'
   #####################
 
   ## Stockage Mail Securise
-  app.cloudFileStorage.mailsec:
-    class: S2low\Infrastructure\Storage\Cloud\S3FileStorage
+  app.clientCloudStorage.mailsec:
+    class: S2low\Port\CloudClientInterface
+    factory: ['@S2low\Factory\S3FileStorageFactory', 'create']
     arguments:
       $bucket: '%app.cloud_bucket.mailsec%'
 
   app.localFileResolver.mailsec:
+    public: true
     class: S2low\Services\LocalFileResolver
     arguments:
       $fileDataProvider: '@S2lowLegacy\Class\mailsec\MailTransactionSQL'
       $localPathPrefix: '%app.mail_file_upload_root%'
 
   app.store.file.mailsec:
-    class: S2low\Services\CloudFileStorage
+    public: true
+    class: S2low\Services\CloudFileStorageInterface
+    factory: [ '@S2low\Factory\CloudFileStorageFactory', 'create' ]
     arguments:
-      $cloudFileStorage: '@app.cloudFileStorage.mailsec'
+      $clientCloudStorage: '@app.clientCloudStorage.mailsec'
       $localFileResolver: '@app.localFileResolver.mailsec'
       $fileDataProvider: '@S2lowLegacy\Class\mailsec\MailTransactionSQL'
   #####################
+
+  S2low\Factory\CloudFileStorageFactory:
+    arguments:
+      $cloudStorageEnabled: '%app.cloud_storage_enabled%'
+
+  S2low\Factory\S3FileStorageFactory:
+    arguments:
+      $cloudStorageEnabled: '%app.cloud_storage_enabled%'
 
   Aws\S3\S3ClientInterface:
     public: true

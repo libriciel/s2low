@@ -11,21 +11,20 @@ use S2low\Exceptions\CloudDownloadException;
 use S2low\Exceptions\CloudFileUploadException;
 use S2low\Exceptions\TransactionNotFoundException;
 use S2low\Port\CloudClientInterface;
-use S2lowLegacy\Class\CloudStorageException;
 
 /**
  * @description Cette classe doit etre utilisé pour interagir avec le Cloud dans S2low.
  * Elle possède plusieurs identifiants. Chacun paramétré pour un fichier metier different.
  * Par exemple pour une enveloppe Acte. Il faudra autowire BusinessFileRepository tel que :
-       #[Autowire(service: 'app.store.file.acte_enveloppe')]
-       private readonly BusinessFileRepository $storeActeEnveloppe
+#[Autowire(service: 'app.store.file.acte_enveloppe')]
+private readonly CloudFileStorage $storeActeEnveloppe
  *
  * On peut ainsi interagir avec les fichiers dans le cloud sans plus de paramétrage.
  */
-class CloudFileStorage
+class CloudFileStorage implements CloudFileStorageInterface
 {
     public function __construct(
-        private readonly CloudClientInterface $cloudFileStorage,
+        private readonly CloudClientInterface $clientCloudStorage,
         private readonly LocalFileResolver $localFileResolver,
         private readonly FileDataProvider $fileDataProvider,
     ) {
@@ -46,7 +45,7 @@ class CloudFileStorage
         }
 
         try {
-            $this->cloudFileStorage->uploadFile($filePath, $cloudId);
+            $this->clientCloudStorage->uploadFile($filePath, $cloudId);
         } catch (\Throwable $e) {
             throw new CloudFileUploadException($transactionId, $cloudId, $e);
         }
@@ -61,8 +60,12 @@ class CloudFileStorage
         $filePath = $this->localFileResolver->getFullPath($transactionId);
         $cloudId = $this->fileDataProvider->getCloudId($transactionId);
 
+        if (file_exists($filePath)) {
+            return;
+        }
+
         try {
-            $this->cloudFileStorage->downloadFile($filePath, $cloudId);
+            $this->clientCloudStorage->downloadFile($filePath, $cloudId);
         } catch (\Throwable $e) {
             throw new CloudDownloadException($transactionId, $cloudId, $e);
         }
@@ -77,7 +80,7 @@ class CloudFileStorage
         $cloudId = $this->fileDataProvider->getCloudId($transactionId);
 
         try {
-            $this->cloudFileStorage->deleteFile($cloudId);
+            $this->clientCloudStorage->deleteFile($cloudId);
         } catch (\Throwable $e) {
             throw new CloudFileDeletionException($transactionId, $cloudId, $e);
         }
@@ -91,7 +94,7 @@ class CloudFileStorage
         $cloudId = $this->fileDataProvider->getCloudId($transactionId);
 
         try {
-            $fileExists = $this->cloudFileStorage->fileExists($cloudId);
+            $fileExists = $this->clientCloudStorage->fileExists($cloudId);
         } catch (\Throwable $e) {
             throw new CloudException($transactionId, $cloudId, $e);
         }
