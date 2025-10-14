@@ -2,7 +2,7 @@
 
 namespace S2low\Services\CertificateStores;
 
-use S2low\Exceptions\CertificateStoreNotFoundException;
+use S2low\Exceptions\MagasinDeCertificatsAbsentException;
 
 class Stores
 {
@@ -27,7 +27,7 @@ class Stores
     }
 
     /**
-     * @throws \S2low\Exceptions\CertificateStoreNotFoundException
+     * @throws \S2low\Exceptions\MagasinDeCertificatsAbsentException
      */
     public function getStorePath(Type $type): string
     {
@@ -36,6 +36,6 @@ class Stores
                 return $store->getPath();
             }
         }
-        throw new CertificateStoreNotFoundException($type->value . ' Certificate Store not found');
+        throw new MagasinDeCertificatsAbsentException('Magasin de certificats de type ' . $type->value . ' non trouvé');
     }
 }

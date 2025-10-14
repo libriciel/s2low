@@ -3,7 +3,7 @@
 namespace S2low\Tests\Services\CertificatesStores;
 
 use PHPUnit\Framework\TestCase;
-use S2low\Exceptions\CertificateStoreNotFoundException;
+use S2low\Exceptions\MagasinDeCertificatsAbsentException;
 use S2low\Services\CertificateStores\Store;
 use S2low\Services\CertificateStores\Stores;
 use S2low\Services\CertificateStores\Type;
@@ -46,7 +46,7 @@ class StoresTest extends TestCase
      */
     public function testEmpty(bool $only_use_validcargs, string $expectedExceptionMessage): void
     {
-        self::expectException(CertificateStoreNotFoundException::class);
+        self::expectException(MagasinDeCertificatsAbsentException::class);
         self::expectExceptionMessage($expectedExceptionMessage);
         $stores = new Stores($only_use_validcargs);
         $stores->getDefaultStorePath();
@@ -55,8 +55,8 @@ class StoresTest extends TestCase
     public function emptyException()
     {
         return [
-            [true, Type::RGS->name . ' Certificate Store not found'],
-            [false,Type::EXTENDED->name . ' Certificate Store not found']
+            [true, 'Magasin de certificats de type ' . Type::RGS->name . ' non trouvé'],
+            [false,'Magasin de certificats de type ' . Type::EXTENDED->name . ' non trouvé']
         ];
     }
 }
