@@ -322,9 +322,9 @@ ob_start();
 
     <?php
         /** @var Stores $certificatesStores */
-        $rgsCertificate = new RgsCertificate(OPENSSL_PATH, $certificatesStores->getDefaultStorePath());
+        $rgsCertificate = new RgsCertificate($certificatesStores->getDefaultStorePath());
         $is_rgs = $rgsCertificate->isRgsCertificate($him->get('certificate'));
-        $rgsCertificateExtended = new RgsCertificate(OPENSSL_PATH, $certificatesStores->getStorePath(Type::EXTENDED));
+        $rgsCertificateExtended = new RgsCertificate($certificatesStores->getStorePath(Type::EXTENDED));
         $has_sslclient_purpose = $rgsCertificateExtended->hasSSlClientPurpose($him->get('certificate'));
     ?>
     <?php if (! $is_rgs) : ?>

@@ -15,7 +15,7 @@ class RgsCertificateTest extends TestCase
     {
         parent::setUp();
         $validca_path = __DIR__ . "/fixtures/test";
-        $this->rgsCertificate = new RgsCertificate(OPENSSL_PATH, $validca_path);
+        $this->rgsCertificate = new RgsCertificate($validca_path);
     }
 
     public function testIsSslClient()
@@ -72,7 +72,7 @@ class RgsCertificateTest extends TestCase
 
         $ca_path_without_root = __DIR__ . "/../controller/fixtures/validca";
 
-        $rgsCertificateToTest = new RgsCertificate(OPENSSL_PATH, $ca_path_without_root);
+        $rgsCertificateToTest = new RgsCertificate($ca_path_without_root);
         $this->assertFalse($rgsCertificateToTest->isRgsCertificate($x509_pem_certificate, $x509_intermediate_certificate . $x509_ca_certificate));
     }
 
@@ -87,7 +87,7 @@ class RgsCertificateTest extends TestCase
 
         $ca_path_with_root = __DIR__ . "/../core/fixtures/CertAutosignedRoot/CA";
 
-        $rgsCertificateToTest = new RgsCertificate(OPENSSL_PATH, $ca_path_with_root);
+        $rgsCertificateToTest = new RgsCertificate( $ca_path_with_root);
         //$this->assertTrue($rgsCertificateToTest->isRgsCertificate($x509_pem_certificate, $x509_intermediate_certificate . $x509_ca_certificate));
     }*/
 }

@@ -8,14 +8,12 @@ use S2lowLegacy\Lib\RgsCertificate;
 class RgsConnexion
 {
     private $last_message;
-    private $openssl_path;
     private $rgs_validca_path;
     private $server_global;
 
     public function __construct(
         Stores $stores,
     ) {
-        $this->setOpenSSLPath(OPENSSL_PATH);
         $this->setRgsValidCaPath($stores->getDefaultStorePath());
         $this->setServerGlobal($_SERVER);
     }
@@ -30,10 +28,6 @@ class RgsConnexion
             $i++;
         }
         return $clientCertChain;
-    }
-    public function setOpenSSLPath($openssl_path)
-    {
-        $this->openssl_path = $openssl_path;
     }
 
     public function setRgsValidCaPath($rgs_validca_path)
@@ -63,7 +57,7 @@ class RgsConnexion
             return false;
         }
 
-        $rgsCertificate = new RgsCertificate($this->openssl_path, $this->rgs_validca_path);
+        $rgsCertificate = new RgsCertificate($this->rgs_validca_path);
         $result = $rgsCertificate->isRgsCertificate($this->server_global['SSL_CLIENT_CERT'], $this->getClientCertChain());
         if (! $result) {
             $this->last_message = $rgsCertificate->getLastMessage();

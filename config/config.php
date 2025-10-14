@@ -136,11 +136,6 @@ if (!defined('DEFAULT_ITEMS_PER_PAGE')) {
         define('DEFAULT_ITEMS_PER_PAGE', 10);
 }
 
-//Chemin vers openssl version > 1.0.0a
-if (!defined("OPENSSL_PATH")) {
-        define("OPENSSL_PATH", "/usr/bin/openssl");
-}
-
 
 if (!defined('ANTIVIRUS_COMMAND')) {
         define('ANTIVIRUS_COMMAND', '/usr/bin/clamdscan');

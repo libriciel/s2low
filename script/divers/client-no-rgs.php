@@ -12,8 +12,7 @@ $sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::cla
 /** @var Stores $certificatesStores */
 $certificatesStores = LegacyObjectsManager::getLegacyObjectInstancier()->get(Stores::class);
 
-/** @var Stores $rgsCertificate */
-$rgsCertificate = new RgsCertificate(OPENSSL_PATH, $certificatesStores->getDefaultStorePath());
+$rgsCertificate = new RgsCertificate($certificatesStores->getDefaultStorePath());
 
 $handle = fopen("php://output", "w");
 

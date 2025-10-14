@@ -2,21 +2,19 @@
 
 namespace S2lowLegacy\Lib;
 
+use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2lowLegacy\Class\TmpFolder;
 use Exception;
 
 class RgsCertificate
 {
-    private $openssl_path;
     private $validca_path;
     private $last_message;
 
     public function __construct(
-        $openssl_path,
         $rgs_validca_path
     ) {
         $this->validca_path = $rgs_validca_path;
-        $this->openssl_path = $openssl_path;
     }
 
     public function getLastMessage()
@@ -44,10 +42,10 @@ class RgsCertificate
             file_put_contents($tmp_chain, $clientCertChain);
 
 
-            $command = "{$this->openssl_path} verify -verbose -untrusted {$tmp_chain} -CApath {$this->validca_path} {$tmp_cert} 2>&1";
+            $command = OpenSSLWrapper::PATH . " verify -verbose -untrusted {$tmp_chain} -CApath {$this->validca_path} {$tmp_cert} 2>&1";
             // Explication de la commande sur https://stackoverflow.com/a/26520714/1694298
         } else {
-            $command = "{$this->openssl_path} verify -verbose -CApath {$this->validca_path} {$tmp_cert} 2>&1";
+            $command = OpenSSLWrapper::PATH . " verify -verbose -CApath {$this->validca_path} {$tmp_cert} 2>&1";
         }
 
         //Il semble qu'il n'y a pas de fonction php openssl_* qui permettent la vérification d'un certificat
