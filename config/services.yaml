@@ -801,3 +801,12 @@ services:
       $stores:
         - '@S2low\Services\CertificateStores\Store\RGS'
         - '@S2low\Services\CertificateStores\Store\EXTENDED'
+
+  S2low\Services\CertificateStores\StoresFactory:
+    factory: ['@S2low\Services\CertificateStores\Stores', 'getDefaultStorePath']
+
+  S2lowLegacy\Class\RgsConnexion:
+    public: true
+    arguments:
+      $storePath: '@S2low\Services\CertificateStores\StoresFactory'
+

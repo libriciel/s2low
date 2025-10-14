@@ -2,7 +2,7 @@
 
 namespace S2lowLegacy\Class;
 
-use S2low\Services\CertificateStores\Stores;
+use S2low\Services\CertificateStores\Store;
 use S2lowLegacy\Lib\RgsCertificate;
 
 class RgsConnexion
@@ -12,9 +12,9 @@ class RgsConnexion
     private $server_global;
 
     public function __construct(
-        Stores $stores,
+        string $storePath,
     ) {
-        $this->setRgsValidCaPath($stores->getDefaultStorePath());
+        $this->setRgsValidCaPath($storePath);
         $this->setServerGlobal($_SERVER);
     }
 

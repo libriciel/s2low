@@ -29,9 +29,7 @@ class RgsConnexionTest extends S2lowIntegrationTestCase
     {
         $server = [];
 
-        $rgsConnexion = new RgsConnexion(
-            new Stores(true, new Store('/', Type::RGS))
-        );
+        $rgsConnexion = new RgsConnexion('/');
         $rgsConnexion->setServerGlobal($server);
         $this->assertFalse($rgsConnexion->isRgsConnexion());
     }
