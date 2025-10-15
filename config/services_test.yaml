@@ -9,6 +9,7 @@ parameters:
   app.mail.tdt_from_email: 'Tiers de télétransmission <s2low@s2low.docker.libriciel.fr>'
   app.mail.email_admin_technique: 'noreply@libriciel.net'
   app.log.file: '/data/log/s2low.log'
+  app.cloud_storage_enabled: false
 services:
   _defaults:
     autowire: true

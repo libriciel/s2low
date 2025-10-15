@@ -2,8 +2,6 @@
 
 namespace S2low\Services;
 
-use S2low\Services\FileDataProvider;
-
 /**
  * @description Classe permettant d'interagir avec un fichier metier en fonction de son relativePath.
  * Il existe different identifiant de cette classe. Chacun ayant un paramétrage spécifique le liant à un fichier metier spécifique.
@@ -16,11 +14,11 @@ use S2low\Services\FileDataProvider;
  *
  * Ou parametrer l'autowire directement comme ici :
  *
-     app.cloudManager.acte_enveloppe:
-       class: S2low\Services\FileManager\S3FileManager
-       arguments:
-           $businessFilePathProvider: '@S2lowLegacy\Class\actes\ActesEnvelopeSQL'
-   =>        $localFileManager: '@app.localFileManager.acte_enveloppe'      <===
+    app.cloudManager.acte_enveloppe:
+        class: S2low\Services\FileManager\S3FileManager
+        arguments:
+            $businessFilePathProvider: '@S2lowLegacy\Class\actes\ActesEnvelopeSQL'
+=>          $localFileManager: '@app.localFileManager.acte_enveloppe'                   <===
  */
 class LocalFileResolver
 {
@@ -34,6 +32,11 @@ class LocalFileResolver
     {
         $filePath = $this->fileDataProvider->getRelativePath($transactionId);
 
+        return $this->getFullPathFromFilePath($filePath);
+    }
+
+    public function getFullPathFromFilePath(string $filePath): string
+    {
         return preg_replace('#/{2,}#', '/', $this->localPathPrefix . '/' . $filePath);
     }
 }
