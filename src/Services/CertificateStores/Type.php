@@ -6,4 +6,5 @@ enum Type: string
 {
     case RGS = 'RGS';
     case EXTENDED = 'EXTENDED';
+    case DEFAULT = 'DEFAULT';
 }

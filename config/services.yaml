@@ -803,10 +803,35 @@ services:
         - '@S2low\Services\CertificateStores\Store\EXTENDED'
 
   S2low\Services\CertificateStores\StoresFactory:
-    factory: ['@S2low\Services\CertificateStores\Stores', 'getDefaultStorePath']
+    factory: ['@S2low\Services\CertificateStores\Stores', 'getStorePath']
 
   S2lowLegacy\Class\RgsConnexion:
     public: true
     arguments:
       $storePath: '@S2low\Services\CertificateStores\StoresFactory'
 
+  S2lowLegacy\Lib\RgsCertificate:
+    public: true
+    arguments:
+      $validca_path:
+        factory: [ '@S2low\Services\CertificateStores\StoresFactory', 'getStorePath' ]
+        arguments:
+          - !php/const S2low\Services\CertificateStores\Type::DEFAULT
+
+  RgsCertificate.rgs:
+    class: S2lowLegacy\Lib\RgsCertificate
+    public: true
+    arguments:
+      $validca_path:
+        factory: [ '@S2low\Services\CertificateStores\StoresFactory', 'getStorePath' ]
+        arguments:
+          - !php/const S2low\Services\CertificateStores\Type::RGS
+
+  RgsCertificate.extended:
+    class: S2lowLegacy\Lib\RgsCertificate
+    public: true
+    arguments:
+      $validca_path:
+        factory: [ '@S2low\Services\CertificateStores\StoresFactory', 'getStorePath' ]
+        arguments:
+          - !php/const S2low\Services\CertificateStores\Type::EXTENDED

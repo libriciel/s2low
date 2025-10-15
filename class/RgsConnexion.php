@@ -2,7 +2,6 @@
 
 namespace S2lowLegacy\Class;
 
-use S2low\Services\CertificateStores\Store;
 use S2lowLegacy\Lib\RgsCertificate;
 
 class RgsConnexion

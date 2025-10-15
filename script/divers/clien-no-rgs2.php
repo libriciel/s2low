@@ -11,7 +11,7 @@ require_once(__DIR__ . "/../../init/init.php");
 $sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 /** @var Stores $certificatesStores */
 $certificatesStores = LegacyObjectsManager::getLegacyObjectInstancier()->get(Stores::class);
-$rgsCertificate = new RgsCertificate($certificatesStores->getDefaultStorePath());
+$rgsCertificate = new RgsCertificate($certificatesStores->getStorePath());
 
 $handle = fopen("php://output", "w");
 

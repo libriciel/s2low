@@ -17,19 +17,21 @@ class Stores
     ) {
         $this->stores = $stores;
     }
-    public function getDefaultStorePath(): string
+    public function getStorePath($extendedStoreType = Type::DEFAULT): string
     {
-        $extendedStoreType = Type::EXTENDED;
-        if ($this->only_use_validcargs) {
-            $extendedStoreType = Type::RGS;
+        if ($extendedStoreType === Type::DEFAULT) {
+            $extendedStoreType = Type::EXTENDED;
+            if ($this->only_use_validcargs) {
+                $extendedStoreType = Type::RGS;
+            }
         }
-        return $this->getStorePath($extendedStoreType);
+        return $this->getStorePathByGivenType($extendedStoreType);
     }
 
     /**
      * @throws \S2low\Exceptions\MagasinDeCertificatsAbsentException
      */
-    public function getStorePath(Type $type): string
+    private function getStorePathByGivenType(Type $type): string
     {
         foreach ($this->stores as $store) {
             if ($store->getType() === $type) {

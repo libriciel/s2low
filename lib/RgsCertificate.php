@@ -12,9 +12,9 @@ class RgsCertificate
     private $last_message;
 
     public function __construct(
-        $rgs_validca_path
+        string $validca_path
     ) {
-        $this->validca_path = $rgs_validca_path;
+        $this->validca_path = $validca_path;
     }
 
     public function getLastMessage()

@@ -19,9 +19,9 @@ use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Model\UserSQL;
 
-list($objectInstancier, $jsonOutput,$sqlQuery, $frontController, $certificatesStores) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $jsonOutput,$sqlQuery, $frontController, $rgsCertificate, $rgsCertificateExtended) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, JSONoutput::class, SQLQuery::class, FrontController::class, Stores::class]
+        [ObjectInstancier::class, JSONoutput::class, SQLQuery::class, FrontController::class, RgsCertificate::class, 'RgsCertificate.extended'],
     );
 
 $html = '';
@@ -322,9 +322,7 @@ ob_start();
 
     <?php
         /** @var Stores $certificatesStores */
-        $rgsCertificate = new RgsCertificate($certificatesStores->getDefaultStorePath());
         $is_rgs = $rgsCertificate->isRgsCertificate($him->get('certificate'));
-        $rgsCertificateExtended = new RgsCertificate($certificatesStores->getStorePath(Type::EXTENDED));
         $has_sslclient_purpose = $rgsCertificateExtended->hasSSlClientPurpose($him->get('certificate'));
     ?>
     <?php if (! $is_rgs) : ?>

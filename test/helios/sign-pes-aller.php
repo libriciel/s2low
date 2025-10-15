@@ -29,10 +29,10 @@ $xadesSignature = new XadesSignature(
     XMLSEC1_PATH,
     new PKCS12(),
     new X509Certificate(),
-    $certificatesStores->getDefaultStorePath(),
+    $certificatesStores->getStorePath(),
     new XadesSignatureParser(),
     new PemCertificateFactory(),
-    (new VerifyPemCertificateFactory())->get($certificatesStores->getDefaultStorePath())
+    (new VerifyPemCertificateFactory())->get($certificatesStores->getStorePath())
 );
 
 $xadesSignatureProperties = new XadesSignatureProperties();

@@ -67,10 +67,10 @@ $xadesSignature = new XadesSignature(
     XMLSEC1_PATH,
     new PKCS12(),
     new X509Certificate(),
-    $certificatesStores->getDefaultStorePath(),
+    $certificatesStores->getStorePath(),
     new XadesSignatureParser(),
     new PemCertificateFactory(),
-    $verifyPemCertificateFactory->get($certificatesStores->getDefaultStorePath())
+    $verifyPemCertificateFactory->get($certificatesStores->getStorePath())
 );
 
 $verify_sign =  true;

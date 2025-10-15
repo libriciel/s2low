@@ -894,7 +894,7 @@ class ActesTransaction extends DataObject
                 if (isset($actesItems->Document->Signature)) {
                     try {
                         $verifyPKCS7Signature = new VerifyPKCS7Signature(
-                            LegacyObjectsManager::getLegacyObjectInstancier()->get(Stores::class)->getDefaultStorePath(),
+                            LegacyObjectsManager::getLegacyObjectInstancier()->get(Stores::class)->getStorePath(),
                             new VerifyPemCertificateFactory(),
                             new PemCertificateFactory(),
                             new OpenSSLWrapper(

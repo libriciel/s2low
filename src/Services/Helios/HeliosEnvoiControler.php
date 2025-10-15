@@ -53,10 +53,10 @@ class HeliosEnvoiControler
             XMLSEC1_PATH,
             new PKCS12(),
             new X509Certificate(),
-            $this->stores->getDefaultStorePath(),
+            $this->stores->getStorePath(),
             new XadesSignatureParser(),
             new PemCertificateFactory(),
-            $verifyPemFactory->get($this->stores->getDefaultStorePath())
+            $verifyPemFactory->get($this->stores->getStorePath())
         );
     }
 
