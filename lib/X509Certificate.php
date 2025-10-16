@@ -71,8 +71,8 @@ class X509Certificate
         $tmp_file = sys_get_temp_dir() . "/" . uniqid("x509_pem") . mt_rand(0, mt_getrandmax());
         file_put_contents($tmp_file, $cert_content);
 
-        $command = "openssl x509 -in $tmp_file -outform der | openssl $hash_alg -binary | openssl base64";
-        exec($command, $output, $return_var);
+        $command = "openssl x509 -in $tmp_file -outform der 2> /dev/null | openssl $hash_alg -binary | openssl base64";
+        exec($command, $output);
         $certDigest = $output[0];
         unlink($tmp_file);
         return $certDigest;
