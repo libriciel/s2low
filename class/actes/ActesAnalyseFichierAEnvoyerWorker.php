@@ -3,6 +3,8 @@
 namespace S2lowLegacy\Class\actes;
 
 use Error;
+use S2low\Services\CloudFileStorageInterface;
+use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\PadesValid;
 use S2lowLegacy\Class\RecoverableException;
@@ -10,8 +12,8 @@ use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Class\WorkerScript;
 use Exception;
-use Libriciel\LibActes\ArchiveValidator;
 use S2low\Services\PdfValidator;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class ActesAnalyseFichierAEnvoyerWorker implements IWorker
 {
@@ -43,7 +45,11 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
         WorkerScript $workerScript,
         ActesTypePJSQL $actesTypePJSQL,
         PdfValidator $pdfValidator,
-        ArchiveValidatorFactory $archiveValidatorFactory
+        ArchiveValidatorFactory $archiveValidatorFactory,
+        #[Autowire(service: 'app.localFileResolver.acte_enveloppe')]
+        private readonly LocalFileResolver $localFileResolver,
+        #[Autowire(service: 'app.store.file.acte_enveloppe')]
+        private readonly CloudFileStorageInterface $cloudActeStorage,
     ) {
         $this->actes_appli_trigramme = $actes_appli_trigramme;
         $this->actes_appli_quadrigramme = $actes_appli_quadrigramme;
@@ -87,9 +93,10 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
 
         $this->logger->info("[$envelope_libelle] Analyse");
 
-        $archive_path =  $this->actesScriptHelper->getArchivePath($enveloppe_id);
+        $archive_path =  $this->localFileResolver->getFullPath($enveloppe_id);
+        $this->cloudActeStorage->downloadFileFromCloud($enveloppe_id);
 
-        if (!$archive_path) {
+        if (!file_exists($archive_path)) {
             $this->logger->error("[$envelope_libelle] Non trouvée en local ou sur le cloud");
             throw new RecoverableException("[$envelope_libelle] Non trouvée en local ou sur le cloud");
         }

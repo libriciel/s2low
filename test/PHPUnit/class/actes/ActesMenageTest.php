@@ -8,6 +8,7 @@ use Exception;
 use Monolog\Handler\TestHandler;
 use Monolog\Level;
 use Psr\Log\LoggerInterface;
+use S2low\Services\CloudFileStorageInterface;
 use S2lowLegacy\Class\actes\ActesCloudStorable;
 use S2lowLegacy\Class\actes\ActesCloudStorage;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
@@ -72,7 +73,7 @@ class ActesMenageTest extends S2lowTestCase
 
         $transaction_id = $actesEnvelopeSQL->create(113, $filename);
         $actesEnvelopeSQL->setTransactionInCloud($transaction_id);
-        $actesMenage = $this->getActesMenage();
+        $actesMenage = $this->getActesMenage(fileExists: true);
         $actesMenage->grandMenage(self::MIN_DATE, $this->dateTomorrow, 'ok');
         static::assertFalse(file_exists($actes_files_upload_root . "/$filename"));
 
@@ -91,7 +92,7 @@ class ActesMenageTest extends S2lowTestCase
 
         $transaction_id = $actesEnvelopeSQL->create(1, $filename);
         $actesEnvelopeSQL->setTransactionInCloud($transaction_id);
-        $actesMenage = $this->getActesMenage();
+        $actesMenage = $this->getActesMenage(fileExists: false);
 
         $actesMenage->grandMenage(self::MIN_DATE, $this->dateTomorrow, true);
 
@@ -114,7 +115,7 @@ class ActesMenageTest extends S2lowTestCase
 
         $transaction_id = $actesEnvelopeSQL->create(1, $filename);
         $actesEnvelopeSQL->setTransactionInCloud($transaction_id);
-        $actesMenage = $this->getActesMenage();
+        $actesMenage = $this->getActesMenage(fileExists: true);
         $actesMenage->grandMenage(self::MIN_DATE, $this->dateTomorrow, false);
         static::assertTrue(file_exists("$actes_files_upload_root/$filename"));
 
@@ -222,13 +223,16 @@ class ActesMenageTest extends S2lowTestCase
         static::assertFalse($envelope_info['is_in_cloud']);
     }
 
-    private function getActesMenage(): ActesMenage
+    private function getActesMenage(bool $fileExists): ActesMenage
     {
+        $storeActeEnveloppe = self::createMock(CloudFileStorageInterface::class);
+        $storeActeEnveloppe->method('fileExistOnCloud')->willReturn($fileExists);
+
         return new ActesMenage(
             self::getContainer()->getParameter('app.actes.files_upload_root'),
             self::getContainer()->get(ActesEnvelopeSQL::class),
-            self::getContainer()->get(OpenStackSwiftWrapper::class),
-            $this->logger
+            $this->logger,
+            $storeActeEnveloppe,
         );
     }
 

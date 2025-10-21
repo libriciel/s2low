@@ -47,7 +47,9 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
             self::getContainer()->get(WorkerScript::class),
             self::getContainer()->get(ActesTypePJSQL::class),
             self::getContainer()->get(PdfValidator::class),
-            self::getContainer()->get(ArchiveValidatorFactory::class)
+            self::getContainer()->get(ArchiveValidatorFactory::class),
+            self::getContainer()->get('app.localFileResolver.acte_enveloppe'),
+            self::getContainer()->get('app.store.file.acte_enveloppe'),
         );
     }
 
@@ -378,7 +380,9 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
             $this->getObjectInstancier()->get(WorkerScript::class),
             $this->getObjectInstancier()->get(ActesTypePJSQL::class),
             $this->getObjectInstancier()->get(PdfValidator::class),
-            $archiveValidatorFactory
+            $archiveValidatorFactory,
+            self::getContainer()->get('app.localFileResolver.acte_enveloppe'),
+            self::getContainer()->get('app.store.file.acte_enveloppe')
         );
 
         $data = $this->createOneTransaction(__DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");

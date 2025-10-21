@@ -167,6 +167,7 @@ class ActesEnvoiFichierWorkerTest extends S2lowTestCase
             self::getContainer()->get(ActesTransmissionWindowsSQL::class),
             self::getContainer()->get(ActesFileSender::class),
             self::getContainer()->getParameter('app.actes_ministere_acronyme'),
+            self::getContainer()->get('app.localFileResolver.acte_enveloppe'),
         );
     }
 }
