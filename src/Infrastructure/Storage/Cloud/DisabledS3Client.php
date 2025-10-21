@@ -23,6 +23,7 @@ class DisabledS3Client implements CloudClientInterface
 
     public function fileExists(string $cloudId): bool
     {
+        // Disabled
         return false;
     }
 }
