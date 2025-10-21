@@ -31,7 +31,7 @@ echo $sql_user;
 foreach ($sqlQuery->query($sql, $date) as $line) {
     $info = $sqlQuery->queryOne($sql_user, $line['user_id']);
 
-    if (! $rgsCertificate->isRgsCertificate($info['certificate'])) {
+    if (! $rgsCertificate->isRgsCertificate($info['certificate'])->isRgs) {
         unset($info['certificate']);
         fputcsv($handle, $info);
     }

@@ -44,6 +44,9 @@ class RgsConnexion
         return $this->last_message;
     }
 
+    /**
+     * @throws Exception
+     */
     public function isRgsConnexion()
     {
         if (empty($this->server_global['SSL_CLIENT_VERIFY'])) {
@@ -58,9 +61,9 @@ class RgsConnexion
 
         $rgsCertificate = new RgsCertificate($this->rgs_validca_path);
         $result = $rgsCertificate->isRgsCertificate($this->server_global['SSL_CLIENT_CERT'], $this->getClientCertChain());
-        if (! $result) {
-            $this->last_message = $rgsCertificate->getLastMessage();
+        if (! $result->isRgs) {
+            $this->last_message = $result->message;
         }
-        return $result;
+        return $result->isRgs;
     }
 }

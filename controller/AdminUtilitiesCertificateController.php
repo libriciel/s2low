@@ -54,12 +54,12 @@ class AdminUtilitiesCertificateController extends Controller
             $clientCertChain = file_get_contents($files['certificat']['tmp_chaine']);
         }
 
-        $certificate_info['is_rgs'] = $rgsCertificate->isRgsCertificate(file_get_contents($files['certificat']['tmp_name']), $clientCertChain);
+        $certificate_info['is_rgs'] = $rgsCertificate->isRgsCertificate(file_get_contents($files['certificat']['tmp_name']), $clientCertChain)->isRgs;
 
         $rgsCertificate = new RgsCertificate(
             $this->getObjectInstancier()->getParameter('app.path_to_rgs_valid_cargs')
         );
-        $certificate_info['is_extended'] = $rgsCertificate->isRgsCertificate(file_get_contents($files['certificat']['tmp_name']), $clientCertChain);
+        $certificate_info['is_extended'] = $rgsCertificate->isRgsCertificate(file_get_contents($files['certificat']['tmp_name']), $clientCertChain)->isRgs;
 
         $userSQL = $this->getObjectInstancier()->get(UserSQL::class);
         $certificate_info['nb_users'] = $userSQL->getNbUserWithMyCertificate($certificate_info['certificate_info']['certificate_hash']);

@@ -47,7 +47,7 @@ class RgsCertificateTest extends TestCase
     public function testVerify()
     {
         $x509_pem_certificate = file_get_contents(__DIR__ . "/fixtures/test/MyRootCA.pem");
-        $this->assertTrue($this->rgsCertificate->isRgsCertificate($x509_pem_certificate));
+        $this->assertTrue($this->rgsCertificate->isRgsCertificate($x509_pem_certificate)->isRgs);
     }
 
     /**
@@ -56,8 +56,9 @@ class RgsCertificateTest extends TestCase
     public function testVerifyBadCertificat()
     {
         $x509_pem_certificate = file_get_contents(__DIR__ . "/fixtures/clean_pem.pem");
-        $this->assertFalse($this->rgsCertificate->isRgsCertificate($x509_pem_certificate));
-        $this->assertMatchesRegularExpression("#unable to get local issuer certificate#", $this->rgsCertificate->getLastMessage());
+        $certificateAnalysis = $this->rgsCertificate->isRgsCertificate($x509_pem_certificate);
+        $this->assertFalse($certificateAnalysis->isRgs);
+        $this->assertMatchesRegularExpression("#unable to get local issuer certificate#", $certificateAnalysis->message);
     }
 
     /**
@@ -73,7 +74,7 @@ class RgsCertificateTest extends TestCase
         $ca_path_without_root = __DIR__ . "/../controller/fixtures/validca";
 
         $rgsCertificateToTest = new RgsCertificate($ca_path_without_root);
-        $this->assertFalse($rgsCertificateToTest->isRgsCertificate($x509_pem_certificate, $x509_intermediate_certificate . $x509_ca_certificate));
+        $this->assertFalse($rgsCertificateToTest->isRgsCertificate($x509_pem_certificate, $x509_intermediate_certificate . $x509_ca_certificate)->isRgs);
     }
 
     /**

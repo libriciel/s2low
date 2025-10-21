@@ -31,7 +31,7 @@ $sql_helios = "SELECT max(helios_transactions_workflow.date) FROM helios_transac
 
 
 foreach ($sqlQuery->query($sql) as $line) {
-    if (! $rgsCertificate->isRgsCertificate($line['certificate'])) {
+    if (! $rgsCertificate->isRgsCertificate($line['certificate'])->isRgs) {
         unset($line['certificate']);
         $line['last_acte'] = $sqlQuery->queryOne($sql_actes, $line['id']);
         $line['last_helios'] = $sqlQuery->queryOne($sql_helios, $line['id']);

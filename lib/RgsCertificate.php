@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Lib;
 
+use S2low\DTO\CertificateAnalysis;
 use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2lowLegacy\Class\TmpFolder;
 use Exception;
@@ -9,7 +10,6 @@ use Exception;
 class RgsCertificate
 {
     private $validca_path;
-    private $last_message;
 
     public function __construct(
         string $validca_path
@@ -17,19 +17,14 @@ class RgsCertificate
         $this->validca_path = $validca_path;
     }
 
-    public function getLastMessage()
-    {
-        return $this->last_message;
-    }
-
     /**
      * @param string $x509_pem_certificate string contenant le certificat à tester
      * @param string|null $clientCertChain string contenant les certificats intermédiaire et racine
-     * @return bool
-     * @throws Exception
+     * @return \S2low\DTO\CertificateAnalysis
+     * @throws \Exception
      */
 
-    public function isRgsCertificate(string $x509_pem_certificate, string $clientCertChain = null)
+    public function isRgsCertificate(string $x509_pem_certificate, string $clientCertChain = null): CertificateAnalysis
     {
         $tmpFolder = new TmpFolder();
         $tmp_folder = $tmpFolder->create();
@@ -57,13 +52,9 @@ class RgsCertificate
         $output = implode("\n", $output);
 
         if (preg_match("#{$tmp_cert}: OK#", $output)) {
-            $result = true;
-        } else {
-            $result = false;
-            $this->last_message = $output;
+            return new CertificateAnalysis(true);
         }
-
-        return $result;
+        return new CertificateAnalysis(false, $output);
     }
 
     public function hasSSlClientPurpose(string $certificate): bool
