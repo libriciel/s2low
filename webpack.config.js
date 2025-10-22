@@ -1,6 +1,7 @@
 const path = require('path');
 
 module.exports = {
+    mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
     resolve: {
         alias: {
             'load-image': 'blueimp-load-image/js/load-image.js',

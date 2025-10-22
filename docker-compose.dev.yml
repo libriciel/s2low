@@ -105,7 +105,6 @@ services:
         working_dir: /usr/app
         volumes:
             - .:/usr/app/
-            - /usr/app/node_modules
 
 volumes:
     db_datadir_test:
