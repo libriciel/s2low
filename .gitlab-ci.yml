@@ -3,9 +3,6 @@ include:
     ref: publish-container-to-registry@2.0.0
     file: '/jobs/publish-container-to-registry/publish-container-to-registry.yml'
   - project: "libriciel/integration-continue/templates"
-    ref: publish-compose-to-nexus@0.1.4
-    file: '/jobs/publish-compose-to-nexus/publish-compose-to-nexus.yml'
-  - project: "libriciel/integration-continue/templates"
     ref: security-check@1.3.2
     file: '/jobs/security-check/security-check.yml'
   - template: Code-Quality.gitlab-ci.yml
@@ -13,6 +10,11 @@ include:
   - template: Jobs/Secret-Detection.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
   - template: Security/Container-Scanning.gitlab-ci.yml
+  - component: $LIBRICIEL_CATALOG_PATH/software-release/publish-compose@2.2.0
+  - component: $LIBRICIEL_CATALOG_PATH/sbom-manager/build@1.2.0
+    inputs:
+      compose_file: "docker-compose.yml"
+      version_placeholder: "canary"
 
 stages:
     - build
@@ -137,7 +139,14 @@ publish-container-to-registry:
     - sed -i "s/%BUILD_DATE%/$date/" ./manifest.txt
     - sed -i "s/%VERSION%/${CI_COMMIT_REF_NAME}/" ./manifest.txt
 
-publish-compose-to-nexus:
+generate-sbom-compose:
+  needs: [ "publish-container-to-registry"]
+
+package-sbom-compose:
+  needs: [ "generate-sbom-compose" ]
+
+publish-compose:
+  needs: [ "publish-container-to-registry", "package-sbom-compose" ]
   variables:
     INPUT_DIRECTORY: ./
   before_script:
@@ -145,7 +154,6 @@ publish-compose-to-nexus:
     - mkdir docker-resources
     - mv docker-resources-orig/Makefile docker-resources/
     - sed -i "s/canary$/${CI_COMMIT_REF_NAME}/" ./docker-compose.yml
-  needs: [ "publish-container-to-registry" ]
 
 deploy_app:
   stage: staging
