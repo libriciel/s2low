@@ -1,17 +1,16 @@
 <?php
 
 use Monolog\Level;
+use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierRecuController;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
-use S2lowLegacy\Class\actes\ActesRetriever;
 use S2lowLegacy\Class\actes\ActesScriptHelper;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\ActesUpdateClassificationSQL;
 use S2lowLegacy\Class\Database;
 use S2lowLegacy\Class\TmpFolder;
-use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Model\LogsSQL;
 
 class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
@@ -477,14 +476,12 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
 
         $this->assertEquals("2017-07-25", mb_substr($info['decision_date'], 0, 10));
 
-        $actesRetriever = new ActesRetriever(
-            $this->actes_files_upload_root,
-            self::getContainer()->get(OpenStackSwiftWrapper::class),
-            $this->s2lowLogger,
+        $localFileResolver = new LocalFileResolver(
+            self::getContainer()->get(ActesEnvelopeSQL::class),
+            $this->actes_files_upload_root
         );
 
-        $path = $actesRetriever->getPath($enveloppe_info['file_path']);
-
+        $path = $localFileResolver->getFullPath($enveloppe_info['id']);
 
         $pharData = new PharData($path);
         $all_files_in_tar_gz = [];

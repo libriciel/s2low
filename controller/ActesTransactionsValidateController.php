@@ -33,9 +33,9 @@ class ActesTransactionsValidateController extends Controller
 
 
 
-        $actesRetriever = $this->getObjectInstancier()->get(ActesRetriever::class);
-        $archive_path = $actesRetriever->getPath($envelope_info['file_path']);
-
+        $actesRetriever = $this->getObjectInstancier()->get('app.localFileResolver.acte_enveloppe');
+        $archive_path = $actesRetriever->getFullPath($envelope_id);
+        $this->getObjectInstancier()->get('app.store.file.acte_enveloppe')->downloadFileFromCloud($envelope_id);
 
 
         $archive = new \Libriciel\LibActes\ArchiveValidator(

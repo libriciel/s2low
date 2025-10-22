@@ -4,6 +4,8 @@ namespace S2lowLegacy\Class\actes;
 
 /* Archive au sens SEDA et pas au sens Actes ... */
 
+use S2low\Services\CloudFileStorageInterface;
+use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\PastellWrapperFactory;
 use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\S2lowLogger;
@@ -13,6 +15,7 @@ use Exception;
 use S2lowLegacy\Lib\UnrecoverableException;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\PastellPropertiesSQL;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class ActesArchiveControler
 {
@@ -21,8 +24,6 @@ class ActesArchiveControler
     private ActesTransactionsSQL $actesTransactionsSQL;
 
     private AuthoritySQL $authoritySQL;
-
-    private ActesRetriever $actesRetriever;
 
     private PastellPropertiesSQL $pastellPropetiesSQL;
 
@@ -36,7 +37,10 @@ class ActesArchiveControler
      * @throws \S2lowLegacy\Lib\UnrecoverableException
      */
     public function __construct(
-        ActesRetriever $actesRetriever,
+        #[Autowire(service: 'app.localFileResolver.acte_enveloppe')]
+        private readonly LocalFileResolver $acteEnveloppeFileResolver,
+        #[Autowire(service: 'app.store.file.acte_enveloppe')]
+        private readonly CloudFileStorageInterface $cloudFileStorage,
         PastellPropertiesSQL $pastellPropertiesSQL,
         S2lowLogger $logger,
         PastellWrapperFactory $pastellWrapperFactory,
@@ -49,7 +53,6 @@ class ActesArchiveControler
         $this->pastellWrapperFactory = $pastellWrapperFactory;
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->authoritySQL = $authoritySQL;
-        $this->actesRetriever = $actesRetriever;
         $this->pastellPropetiesSQL = $pastellPropertiesSQL;
         $this->logger = $logger;
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
@@ -165,9 +168,11 @@ class ActesArchiveControler
         $transactionsInfo = $this->actesTransactionsSQL->getInfo($transaction_id);
 
         $actesEnvelopeInfo = $this->actesEnvelopeSQL->getInfo($transactionsInfo['envelope_id']);
-        $enveloppe_path = $this->actesRetriever->getPath($actesEnvelopeInfo['file_path']);
+        $enveloppe_path = $this->acteEnveloppeFileResolver->getFullPath($actesEnvelopeInfo['id']);
+        $this->cloudFileStorage->downloadFileFromCloud($actesEnvelopeInfo['id']);
+        $isInCloud = $this->cloudFileStorage->fileExistOnCloud($actesEnvelopeInfo['id']);
 
-        if (! $enveloppe_path) {
+        if (! $isInCloud) {
             throw new FilesNotFoundInCloudException(
                 "Impossible de récupérer l'enveloppe {$actesEnvelopeInfo['file_path']}"
             );
@@ -236,7 +241,9 @@ class ActesArchiveControler
         foreach ($relatedTransaction as $transaction) {
             $actesEnvelopeInfo = $this->actesEnvelopeSQL->getInfo($transaction['envelope_id']);
             $actesFile = $this->actesTransactionsSQL->getAllFile($transaction['id']);
-            $file_to_send = $this->actesRetriever->getPath($actesEnvelopeInfo['file_path']);
+            $file_to_send = $this->acteEnveloppeFileResolver->getFullPath($actesEnvelopeInfo['id']);
+            $this->cloudFileStorage->downloadFileFromCloud($actesEnvelopeInfo['id']);
+
             if ($transaction['related_transaction_id'] == $orig_acte_transaction_id) {
                 //Transaction aller
                 $echange_prefecture_type[] = $transaction['type'] . 'A';

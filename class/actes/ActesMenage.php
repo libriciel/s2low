@@ -4,8 +4,10 @@ namespace S2lowLegacy\Class\actes;
 
 use Exception;
 use Psr\Log\LoggerInterface;
+use S2low\Services\CloudFileStorageInterface;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Lib\SigTermHandler;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ActesMenage
@@ -19,12 +21,12 @@ class ActesMenage
     public function __construct(
         $actes_files_upload_root,
         ActesEnvelopeSQL $actesEnvelopeSQL,
-        OpenStackSwiftWrapper $openStackSwiftWrapper,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        #[Autowire(service: 'app.store.file.acte_enveloppe')]
+        private readonly CloudFileStorageInterface $cloudFileStorage,
     ) {
         $this->actes_files_upload_root = $actes_files_upload_root;
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
-        $this->openStackSwiftWrapper = $openStackSwiftWrapper;
         $this->logger = $logger;
     }
 
@@ -51,10 +53,7 @@ class ActesMenage
                 continue;
             }
             if (
-                $this->openStackSwiftWrapper->fileExistsOnCloud(
-                    ActesCloudStorable::CONTAINER_NAME,
-                    $actes_envelope['file_path']
-                )
+                $this->cloudFileStorage->fileExistOnCloud($actes_envelope['id'])
             ) {
                 $this->logger->info("File {$actes_envelope['file_path']} exists on cloud : deleting on file system");
                 if ($confirm) {

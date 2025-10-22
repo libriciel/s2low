@@ -99,6 +99,8 @@ class ActesNotificationsTest extends S2lowTestCase
     {
 
         return new ActesNotification(
+            self::getContainer()->get('app.localFileResolver.acte_enveloppe'),
+            self::getContainer()->get('app.store.file.acte_enveloppe'),
             self::getContainer()->get(ActesTransactionsSQL::class),
             self::getContainer()->get(ActeTamponne::class),
             self::getContainer()->get(AuthoritySQL::class),
@@ -106,7 +108,6 @@ class ActesNotificationsTest extends S2lowTestCase
             $mailerFactory,
             $this->s2lowLogger,
             self::getContainer()->getParameter('app.actes_appli_trigramme'),
-            self::getContainer()->get(ActesRetriever::class),
             self::getContainer()->get(BordereauPdfGenerator::class),
             self::getContainer()->get(Environment::class),
             self::getContainer()->getParameter('app.use_prod_notifications'),

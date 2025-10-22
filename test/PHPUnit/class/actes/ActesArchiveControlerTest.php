@@ -5,32 +5,21 @@ declare(strict_types=1);
 namespace PHPUnit\class\actes;
 
 use Exception;
-use Monolog\Handler\Handler;
-use Monolog\Handler\TestHandler;
 use Monolog\Level;
 use PastellConfigurationTestTrait;
 use PHPUnit\ActesUtilitiesTestTrait;
-use PHPUnit\Util\Test;
-use Psr\Log\LoggerInterface;
+use S2low\Services\CloudFileStorageInterface;
 use S2lowLegacy\Class\actes\ActesArchiveControler;
 use S2lowLegacy\Class\actes\ActesCloudStorage;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
-use S2lowLegacy\Class\actes\ActesPdf;
-use S2lowLegacy\Class\actes\ActesRetriever;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\ActesTypePJSQL;
 use S2lowLegacy\Class\actes\ActeTamponne;
-use S2lowLegacy\Class\actes\BordereauPdfGenerator;
-use S2lowLegacy\Class\actes\IActesPdf;
-use S2lowLegacy\Class\CloudStorage;
-use S2lowLegacy\Class\PastellWrapperFactory;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\PastellPropertiesSQL;
 use S2lowTestCase;
-use Symfony\Component\HttpKernel\Log\Logger;
 
 class ActesArchiveControlerTest extends S2lowTestCase
 {
@@ -45,7 +34,7 @@ class ActesArchiveControlerTest extends S2lowTestCase
         $this->mockActesTamponne();
 
         $transaction_id = $this->createTransactionEnAttenteEnvoiSAE();
-        $actesArchivesController = $this->createActesArchivesController(self::getContainer()->get(ActesRetriever::class));
+        $actesArchivesController = $this->createActesArchivesController(fileInCloud: true);
         $actesArchivesController->sendArchive($transaction_id);
         self::assertTrue(
             $this->testHandler->hasRecord(
@@ -71,9 +60,9 @@ class ActesArchiveControlerTest extends S2lowTestCase
         );
     }
 
-    private function createActesArchivesController($actesRetriver = null, $pastellWrapperFactory = null): ActesArchiveControler
+    private function createActesArchivesController($pastellWrapperFactory = null, $fileInCloud = false): ActesArchiveControler
     {
-        $actesRetriever = $actesRetriver ?? $this->createActesRetrieverMocked();
+        $localFileResolver = self::getContainer()->get('app.localFileResolver.acte_enveloppe');
         $pastellPropertiesSQL = self::getContainer()->get(PastellPropertiesSQL::class);
         $pastellWrapperFactory = $pastellWrapperFactory ?? $this->mockPastellFactory(0, 'Erreur renvoyé par le mock');
         $authoritySQL = self::getContainer()->get(AuthoritySQL::class);
@@ -81,10 +70,15 @@ class ActesArchiveControlerTest extends S2lowTestCase
         $actesEnvelopeSQL = self::getContainer()->get(ActesEnvelopeSQL::class);
         $actesTypePJSQL = self::getContainer()->get(ActesTypePJSQL::class);
         $cloudStorage = self::getContainer()->get(ActesCloudStorage::class);
-        $bordereauPdfGenerator = self::getContainer()->get(BordereauPdfGenerator::class);
+        $cloudFileStorage = self::createMock(CloudFileStorageInterface::class);
+        $cloudFileStorage
+            ->method('fileExistOnCloud')
+            ->willReturn($fileInCloud);
+
 
         return new ActesArchiveControler(
-            $actesRetriever,
+            $localFileResolver,
+            $cloudFileStorage,
             $pastellPropertiesSQL,
             $this->s2lowLogger,
             $pastellWrapperFactory,
@@ -92,20 +86,8 @@ class ActesArchiveControlerTest extends S2lowTestCase
             $actesTransactionsSQL,
             $actesEnvelopeSQL,
             $actesTypePJSQL,
-            $cloudStorage,
-            $bordereauPdfGenerator,
+            $cloudStorage
         );
-    }
-
-    private function createActesRetrieverMocked(): ActesRetriever
-    {
-        $actesRetriever = $this->getMockBuilder(ActesRetriever::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $actesRetriever->method('getPath')->willReturn(false);
-
-
-        return $actesRetriever;
     }
 
     /**
@@ -115,7 +97,7 @@ class ActesArchiveControlerTest extends S2lowTestCase
     {
         $transaction_id = $this->createTransactionEnAttenteEnvoiSAE();
 
-        $controller = $this->createActesArchivesController(self::getContainer()->get(ActesRetriever::class), $this->mockPastellFactory());
+        $controller = $this->createActesArchivesController($this->mockPastellFactory(), fileInCloud: true);
         $controller->sendArchive($transaction_id);
         $acteTransactionSQL = self::getContainer()->get(ActesTransactionsSQL::class);
         $last_status_info = $acteTransactionSQL->getLastStatusInfo($transaction_id);

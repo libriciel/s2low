@@ -2,8 +2,11 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use Psr\Log\LoggerInterface;
+use S2low\Services\CloudFileStorageInterface;
 use S2lowLegacy\Class\IWorker;
 use Exception;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class ActesStoreEnveloppeWorker implements IWorker
 {
@@ -18,8 +21,13 @@ class ActesStoreEnveloppeWorker implements IWorker
     /**
      * @throws \S2lowLegacy\Lib\UnrecoverableException
      */
-    public function __construct(ActesCloudStorage $actesCloudStorage)
-    {
+    public function __construct(
+        ActesCloudStorage $actesCloudStorage,
+        #[Autowire(service: 'app.store.file.acte_enveloppe')]
+        private readonly CloudFileStorageInterface $cloudStoreActeEnveloppe,
+        private readonly ActesEnvelopeSQL $actesEnvelopeSQL,
+        private readonly LoggerInterface $logger
+    ) {
         $this->cloudStorage = $actesCloudStorage;
     }
 
@@ -40,7 +48,13 @@ class ActesStoreEnveloppeWorker implements IWorker
      */
     public function work($data): void
     {
-        $this->cloudStorage->storeObject($data);
+        $this->logger->info("Preparation de la sauvegarde dans le cloud de l'enveloppe acte : [$data].");
+
+        $this->cloudStoreActeEnveloppe->storeFileOnCloud($data);
+
+        $this->actesEnvelopeSQL->setTransactionInCloud($data);
+
+        $this->logger->info("Enveloppe acte [$data] enregistré avec succès.");
     }
 
     public function getMutexName($data): string

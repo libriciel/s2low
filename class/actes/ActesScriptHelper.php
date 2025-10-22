@@ -9,24 +9,15 @@ class ActesScriptHelper
     private $actesTransactionsSQL;
     private $actesEnvelopeSQL;
     private $actes_appli_trigramme;
-    private $actesRetriever;
 
     public function __construct(
         ActesTransactionsSQL $actesTransactionsSQL,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         $actes_appli_trigramme,
-        ActesRetriever $actesRetriever
     ) {
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
         $this->actes_appli_trigramme = $actes_appli_trigramme;
-        $this->actesRetriever = $actesRetriever;
-    }
-
-    public function getArchivePath($enveloppe_id)
-    {
-        $envelope_info = $this->actesEnvelopeSQL->getInfo($enveloppe_id);
-        return $this->actesRetriever->getPath($envelope_info['file_path']);
     }
 
     public function getMessage($transactions_id, string $message)

@@ -2,6 +2,8 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use S2low\Services\CloudFileStorageInterface;
+use S2low\Services\LocalFileResolver;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Log;
@@ -10,6 +12,7 @@ use S2lowLegacy\Class\TmpFolder;
 use Exception;
 use S2lowLegacy\Lib\SigTermHandler;
 use S2lowLegacy\Model\AuthoritySQL;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Twig\Environment;
 
 class ActesNotification
@@ -25,7 +28,6 @@ class ActesNotification
 
     private string $actes_appli_trigramme;
 
-    private ActesRetriever $actesRetriever;
     /**
      * @var BordereauPdfGenerator
      */
@@ -37,6 +39,10 @@ class ActesNotification
     private bool $useProdNotifications;
 
     public function __construct(
+        #[Autowire(service: 'app.localFileResolver.acte_enveloppe')]
+        private readonly LocalFileResolver $acteEnveloppePathResolver,
+        #[Autowire(service: 'app.store.file.acte_enveloppe')]
+        private readonly CloudFileStorageInterface $cloudActeEnveloppeStorage,
         ActesTransactionsSQL $actesTransactionsSQL,
         ActeTamponne $acteTamponne,
         AuthoritySQL $authoritySQL,
@@ -44,7 +50,6 @@ class ActesNotification
         MailerSymfonyFactory $mailerFactory,
         S2lowLogger $logger,
         string $actes_appli_trigramme,
-        ActesRetriever $actesRetriever,
         BordereauPdfGenerator $bordereauPdfGenerator,
         Environment $twigEnvironment,
         bool $use_prod_notifications
@@ -56,7 +61,6 @@ class ActesNotification
         $this->mailerFactory = $mailerFactory;
         $this->logger = $logger;
         $this->actes_appli_trigramme = $actes_appli_trigramme;
-        $this->actesRetriever = $actesRetriever;
         $this->bordereauPdfGenerator = $bordereauPdfGenerator;
         $this->twig = $twigEnvironment;
         $this->useProdNotifications = $use_prod_notifications;
@@ -115,8 +119,8 @@ class ActesNotification
         $broadcast_emails = $transaction_info['broadcast_emails'] ?? '';
         $brodcastEmail = explode(',', $broadcast_emails);
         $brodcastEmail = array_diff($brodcastEmail, $defaultBroadcastEmail);
-        $archive_path = $this->actesRetriever->getPath($envelope_info['file_path']);
-
+        $archive_path = $this->acteEnveloppePathResolver->getFullPath($envelope_info['id']);
+        $this->cloudActeEnveloppeStorage->downloadFileFromCloud($envelope_info['id']);
         try {
             $fichiers_tamponnees = $this->tamponnerTGZ($archive_path, $transaction_info, $tmp_folder);
         } catch (Exception $e) {

@@ -57,8 +57,8 @@ class ActesAntivirusTest extends S2lowTestCase
         $s2lowLogger = $this->s2lowLogger;
 
         return new ActesAntivirusWorker(
+            self::getContainer()->get('app.localFileResolver.acte_enveloppe'),
             $this->getActesTransactionsSQL(),
-            self::getContainer()->get(ActesRetriever::class),
             self::getContainer()->get(ActesEnvelopeSQL::class),
             self::getContainer()->get(Antivirus::class),
             $s2lowLogger,

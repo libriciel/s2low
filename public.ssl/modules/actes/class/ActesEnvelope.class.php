@@ -1,6 +1,5 @@
 <?php
 
-use S2lowLegacy\Class\actes\ActesRetriever;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\DataObject;
 use S2lowLegacy\Class\Helpers;
@@ -816,15 +815,13 @@ class ActesEnvelope extends DataObject
   /**
    * \brief Méthode qui renvoie le fichier archive .tar.gz au navigateur
    */
-    public function sendFile()
+    public function sendFile(string $enveloppeId)
     {
-        if (! isset($this->file_path)) {
-            return false;
-        }
-
         $objectInstancier = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
-        $actesRetriever = $objectInstancier->get(ActesRetriever::class);
-        $archive_path = $actesRetriever->getPath($this->file_path);
+        $actesRetriever = $objectInstancier->get('app.localFileResolver.acte_enveloppe');
+        $archive_path = $actesRetriever->getFullPath($enveloppeId);
+        $objectInstancier->get('app.store.file.acte_enveloppe')->downloadFileFromCloud($enveloppeId);
+
 
         if (! file_exists($archive_path)) {
             $this->errorMsg = "Le fichier archive n'est pas/plus disponible.";

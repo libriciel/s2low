@@ -4,7 +4,6 @@ use Monolog\Level;
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2lowLegacy\Class\actes\ActesExport;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
-use S2lowLegacy\Class\actes\ActesRetriever;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\ActeTamponne;
@@ -24,10 +23,11 @@ class ActesExportTest extends S2lowTestCase
         $acteTamponne = $this->getMockBuilder(ActeTamponne::class)->disableOriginalConstructor()->getMock();
 
         return new ActesExport(
+            self::getContainer()->get('app.localFileResolver.acte_enveloppe'),
+            self::getContainer()->get('app.store.file.acte_enveloppe'),
             $this->s2lowLogger,
             self::getContainer()->get(AuthoritySQL::class),
             self::getContainer()->get(ActesTransactionsSQL::class),
-            self::getContainer()->get(ActesRetriever::class),
             self::getContainer()->get(ActesIncludedFileSQL::class),
             $acteTamponne,
         );

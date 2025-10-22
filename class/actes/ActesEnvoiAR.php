@@ -2,6 +2,8 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use S2low\Services\CloudFileStorageInterface;
+use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use Exception;
@@ -12,6 +14,7 @@ use Libriciel\LibActes\FichierXML\MessageMetierLettreObservations;
 use Libriciel\LibActes\FichierXML\MessageMetierARLettreObservations;
 use Libriciel\LibActes\ArchiveData;
 use Libriciel\LibActes\Archive;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class ActesEnvoiAR
 {
@@ -21,16 +24,18 @@ class ActesEnvoiAR
     private $actesEnvelopeSerialSQL;
     private $actesFileSender;
     private $actesScriptHelper;
-    private $actesRetriever;
 
     public function __construct(
+        #[Autowire(service: 'app.localFileResolver.acte_enveloppe')]
+        private readonly LocalFileResolver $acteEnveloppeFileResolver,
+        #[Autowire(service: 'app.store.file.acte_enveloppe')]
+        private readonly CloudFileStorageInterface $cloudFileStorage,
         ActesTransactionsSQL $actesTransactionsSQL,
         S2lowLogger $logger,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         ActesEnvelopeSerialSQL $actesEnvelopeSerialSQL,
         ActesFileSender $actesFileSender,
         ActesScriptHelper $actesScriptHelper,
-        ActesRetriever $actesRetriever
     ) {
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->logger = $logger;
@@ -38,7 +43,6 @@ class ActesEnvoiAR
         $this->actesEnvelopeSerialSQL = $actesEnvelopeSerialSQL;
         $this->actesFileSender = $actesFileSender;
         $this->actesScriptHelper = $actesScriptHelper;
-        $this->actesRetriever = $actesRetriever;
     }
 
     /**
@@ -91,7 +95,8 @@ class ActesEnvoiAR
 
         $archive = new Archive();
 
-        $archive_path = $this->actesRetriever->getPath($envelope_info['file_path']);
+        $archive_path = $this->acteEnveloppeFileResolver->getFullPath($envelope_info['id']);
+        $this->cloudFileStorage->downloadFileFromCloud($envelope_info['id']);
 
         $archiveData = $archive->getArchiveDataFromTarball(
             $archive_path,

@@ -115,9 +115,11 @@ class ActesIncludedFile extends DataObject
                 return false;
             }
 
+            $enveloppeId = $this->envelope->get("id");
             $objectInstancier = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
-            $actesRetriever = $objectInstancier->get(ActesRetriever::class);
-            $envelope_path = $actesRetriever->getPath($this->envelope->get("file_path"));
+            $actesRetriever = $objectInstancier->get('app.localFileResolver.acte_enveloppe');
+            $envelope_path = $actesRetriever->getFullPath($enveloppeId);
+            $objectInstancier->get('app.store.file.acte_enveloppe')->downloadFileFromCloud($enveloppeId);
 
             if (!file_exists($envelope_path)) {
                 $this->errorMsg .= "Le fichier archive n'est pas/plus disponible.";

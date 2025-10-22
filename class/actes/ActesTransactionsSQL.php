@@ -530,7 +530,7 @@ WHERE
 
     public function getAllForExport($authority_id, $min_transaction_id = 0, $max_transaction_id = self::MAX_ID)
     {
-        $sql = "SELECT actes_transactions.id, unique_id,file_path,file_size FROM actes_transactions " .
+        $sql = "SELECT actes_transactions.id, unique_id,file_path,file_size, actes_envelopes.id as idEnveloppe FROM actes_transactions " .
             " JOIN actes_envelopes on actes_transactions.envelope_id = actes_envelopes.id " .
             " WHERE actes_transactions.authority_id=? AND actes_transactions.id>=? AND actes_transactions.id<=?";
         return $this->query($sql, $authority_id, $min_transaction_id, $max_transaction_id);

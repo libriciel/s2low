@@ -2,10 +2,12 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\S2lowLogger;
 use Exception;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class ActesEnvoiFichierWorker implements IWorker
 {
@@ -26,7 +28,9 @@ class ActesEnvoiFichierWorker implements IWorker
         ActesScriptHelper $actesScriptHelper,
         ActesTransmissionWindowsSQL $actesTransmissionWindowsSQL,
         ActesFileSender $actesFileSender,
-        $actes_ministere_acronyme
+        $actes_ministere_acronyme,
+        #[Autowire(service: 'app.localFileResolver.acte_enveloppe')]
+        private readonly LocalFileResolver $localFileResolver
     ) {
         $this->logger = $logger;
         $this->actesTransactionsSQL = $actesTransactionsSQL;
@@ -86,7 +90,7 @@ class ActesEnvoiFichierWorker implements IWorker
             return false;
         }
         try {
-            $archive_path =  $this->actesScriptHelper->getArchivePath($enveloppe_id);
+            $archive_path =  $this->localFileResolver->getFullPath($enveloppe_id);
             $this->actesFileSender->send($archive_path);
         } catch (Exception $e) {
             $message = $e->getMessage();

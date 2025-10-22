@@ -2,11 +2,13 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\WorkerScript;
 use Exception;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class ActesAntivirusWorker implements IWorker
 {
@@ -15,7 +17,6 @@ class ActesAntivirusWorker implements IWorker
                                             // que le job reste reserved avant la fin du timeout pour éviter un
                                             // mail d'erreur critique.
     private $actesTransactionSQL;
-    private $actesRetriever;
     private $actesEnvelopeSQL;
 
     private $antivirus;
@@ -25,15 +26,15 @@ class ActesAntivirusWorker implements IWorker
     private $workerScript;
 
     public function __construct(
+        #[Autowire(service: 'app.localFileResolver.acte_enveloppe')]
+        private readonly LocalFileResolver $acteEnveloppeFileResolver,
         ActesTransactionsSQL $actesTransactionSQL,
-        ActesRetriever $actesRetriever,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         Antivirus $antivirus,
         S2lowLogger $s2lowLogger,
         WorkerScript $workerScript
     ) {
         $this->actesTransactionSQL = $actesTransactionSQL;
-        $this->actesRetriever = $actesRetriever;
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
         $this->antivirus = $antivirus;
         $this->logger = $s2lowLogger;
@@ -89,7 +90,7 @@ class ActesAntivirusWorker implements IWorker
 
         $envelope_info = $this->actesEnvelopeSQL->getInfo($transaction_info["envelope_id"]);
 
-        $archive_path = $this->actesRetriever->getPath($envelope_info['file_path']);
+        $archive_path = $this->acteEnveloppeFileResolver->getFullPath($envelope_info['id']);
         if (! $this->antivirus->checkArchiveSanity($archive_path)) {
             $message = $this->antivirus->getLastError();
             $this->logger->notice(

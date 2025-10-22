@@ -2,12 +2,15 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use S2low\Services\CloudFileStorageInterface;
+use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TGZExtractor;
 use S2lowLegacy\Class\TmpFolder;
 use Exception;
 use S2lowLegacy\Lib\UnrecoverableException;
 use S2lowLegacy\Model\AuthoritySQL;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ActesExport
@@ -15,24 +18,25 @@ class ActesExport
     private $s2lowLogger;
     private $authoritySQL;
     private $actesTransactionsSQL;
-    private $actesRetriever;
     private $actesIncludedFileSQL;
     private $actesTamponne;
 
     private $tamponner_fichier = false;
 
     public function __construct(
+        #[Autowire(service: 'app.localFileResolver.acte_enveloppe')]
+        private readonly LocalFileResolver $acteEnveloppeFileResolver,
+        #[Autowire(service: 'app.store.file.acte_enveloppe')]
+        private readonly CloudFileStorageInterface $cloudFileStorage,
         S2lowLogger $s2lowLogger,
         AuthoritySQL $authoritySQL,
         ActesTransactionsSQL $actesTransactionsSQL,
-        ActesRetriever $actesRetriever,
         ActesIncludedFileSQL $actesIncludedFileSQL,
         ActeTamponne $acteTamponne
     ) {
         $this->s2lowLogger = $s2lowLogger;
         $this->authoritySQL = $authoritySQL;
         $this->actesTransactionsSQL = $actesTransactionsSQL;
-        $this->actesRetriever = $actesRetriever;
         $this->actesIncludedFileSQL = $actesIncludedFileSQL;
         $this->actesTamponne = $acteTamponne;
     }
@@ -138,7 +142,11 @@ class ActesExport
         $filesystem = new Filesystem();
         $filesystem->mkdir($directory);
 
-        $actes_path = $this->actesRetriever->getPath($transaction_info['file_path']);
+        $actes_path = $this->acteEnveloppeFileResolver->getFullPathFromFilePath($transaction_info['file_path']);
+
+        if (isset($transaction_info['idEnveloppe'])) {
+            $this->cloudFileStorage->downloadFileFromCloud($transaction_info['idEnveloppe']);
+        }
 
         if (!$actes_path) {
             $this->s2lowLogger->info("{$transaction_info['id']} : fichiers non trouvés, transaction ignorée");
