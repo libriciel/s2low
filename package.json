@@ -31,7 +31,7 @@
     "jquery-ui": "^1.13.2",
     "select2": "^4.1.0-rc.0",
     "style-loader": "^3.3.1",
-    "wepback": "^1.0.0"
+    "webpack": "^5.0.0"
   },
   "devDependencies": {
     "webpack-cli": "^5.1.4"
