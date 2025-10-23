@@ -32,10 +32,6 @@ if ($me->isSuper() || !$module->isActive() || !$me->canEdit($module->get("name")
     Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 
-if ($module->getParam("paper") == "on") {
-    Helpers::returnAndExit(1, "Mode « papier » actif. Accès interdit.", Helpers::getLink("/modules/actes/"));
-}
-
 $myAuthority = new Authority($me->get("authority_id"));
 
 // Recuperation des variables du POST

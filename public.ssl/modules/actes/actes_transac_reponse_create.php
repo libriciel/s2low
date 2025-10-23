@@ -54,10 +54,6 @@ if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->checkDroit($modu
     sortir_atrc("Accès refusé", $api);
 }
 
-if ($module->getParam("paper") == "on") {
-    sortir_atrc("Mode « papier » actif. Accès interdit.", $api);
-}
-
 $myAuthority = new Authority($me->get("authority_id"));
 
 // Recuperation des variables du POST

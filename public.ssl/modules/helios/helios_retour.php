@@ -106,11 +106,8 @@ $doc->openContent();
 
 $html = "<h1>Helios - Dématérialisation de documents financiers</h1>\n";
 
-if ($module->getParam("paper") == "on") {
-    $html .= "<p>Le système est actuellement en mode &nbsp;papier&nbsp;. Dans ce mode il est impossible de créer de nouvelle transaction. Les transferts doivent se faire par les moyens classiques.</p>\n";
-} else {
-    $html .= "<p id=\"back-user-btn\"><a href=\"" . Helpers::getLink("/modules/helios/index.php") . "\" class=\"btn btn-default\" title=\"afficher la liste des transactions\">Retour liste transactions</a></p>\n";
-}
+$html .= "<p id=\"back-user-btn\"><a href=\"" . Helpers::getLink("/modules/helios/index.php") . "\" class=\"btn btn-default\" title=\"afficher la liste des transactions\">Retour liste transactions</a></p>\n";
+
 
 //filtrage aria
 $html .= "<h2 class=\"toggle_title\" onclick=\"javascript:toggle_visibility('filtering_area');\">Filtrage</h2>\n";

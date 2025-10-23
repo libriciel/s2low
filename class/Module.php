@@ -203,28 +203,6 @@ class Module extends DataObject
     }
 
   /**
-   * \brief Méthode renvoyant la valeur d'un paramètre du module
-   * \param $name chaîne : nom du paramètre dont récupérer la valeur
-   * \return La valeur du paramètre ou null si le paramètre n'existe pas
-   */
-    public function getParam($name)
-    {
-        if (! empty($name)) {
-            $sql = "SELECT modules_params.value FROM modules_params WHERE modules_params.name=? AND modules_params.module_id=?";
-
-            $result = $this->db->select($sql, [$name,$this->id]);
-
-            if (! $result->isError() && $result->num_row() == 1) {
-                $row = $result->get_next_row();
-                return $row["value"];
-            }
-        }
-
-        return null;
-    }
-
-
-  /**
    * \brief Méthode qui permet de fixer le paramètre d'un module
    * \param $name : nom du module
    * \param $description : description du module

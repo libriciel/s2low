@@ -573,15 +573,11 @@ if ($me->isSuper()) {
 if ($trans->isType(TypeTransaction::TransmissionActe) && $transStatus == 4  && $me->checkDroit("actes", "TT") && !  $me->isGroupAdminOrSuper()) {
     $actionHtml .= "<div class=\"action\">\n";
     if (!$trans->hasPendingCancelTrans()) {
-        if ($module->getParam("paper") == "on") {
-            $actionHtml .= "<label>Annulation&nbsp;:&nbsp;Mode «&nbsp;papier&nbsp;» actif. Pas d'annulation possible.</label>";
-        } else {
             $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_cancel.php\" onsubmit=\"return confirm('Voulez-vous vraiment annuler cette transaction ?')\" method=\"post\">\n");
             $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Annulation : </label>\n";
             $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
             $actionHtml .= "<input type=\"submit\" value=\"Annuler cette transaction\" class=\"btn btn-danger\" />\n";
             $actionHtml .= "</div></form>\n";
-        }
     } else {
         $actionHtml .= "Une demande d'annulation est en cours pour cet acte.";
     }

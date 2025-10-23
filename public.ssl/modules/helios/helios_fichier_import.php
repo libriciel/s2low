@@ -29,12 +29,6 @@ if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->checkDroit($modu
     exit();
 }
 
-if ($module->getParam("paper") == "on") {
-    $_SESSION["error"] = "Mode &nbsp;papier&nbsp; actif. Accès interdit.";
-    header("Location: " . Helpers::getLink("/modules/helios/index.php"));
-    exit();
-}
-
 
 $rgsConnexion = LegacyObjectsManager::getLegacyObjectInstancier()->get(RgsConnexion::class);
 if (! $rgsConnexion->isRgsConnexion()) {
