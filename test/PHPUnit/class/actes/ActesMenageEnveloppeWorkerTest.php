@@ -14,8 +14,9 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
 {
-    const RELATIVE_FILE_PATH = '000000000/test.tar.gz';
     use ActesUtilitiesTestTrait;
+
+    private const RELATIVE_FILE_PATH = '000000000/test.tar.gz';
 
     /**
      * @return string
