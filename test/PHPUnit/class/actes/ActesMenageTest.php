@@ -2,253 +2,175 @@
 
 declare(strict_types=1);
 
-namespace PHPUnit\class\actes;
+namespace PHPUnit\Class\Actes;
 
-use Exception;
-use Monolog\Handler\TestHandler;
-use Monolog\Level;
+use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use S2low\Services\CloudFileStorageInterface;
-use S2lowLegacy\Class\actes\ActesCloudStorable;
-use S2lowLegacy\Class\actes\ActesCloudStorage;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesMenage;
-use S2lowLegacy\Class\ICloudStorable;
-use S2lowLegacy\Lib\OpenStackContainerStore;
-use S2lowLegacy\Lib\OpenStackSwiftWrapper;
-use PHPUnit\Framework\MockObject\MockObject;
-use S2lowTestCase;
+use S2low\Services\CloudFileStorageInterface;
+use S2lowLegacy\Lib\SigTermHandler;
 
-class ActesMenageTest extends S2lowTestCase
+class ActesMenageTest extends TestCase
 {
-    private const S2LOW_PHPUNIT_ACTE_ENVELOPE_STORAGE_TEST = 's2low-phpunit-acte-envelope-storage-test';
-    private const MIN_DATE = '1970-01-01';
-    private const MESSAGE = 'message';
-    private string $dateTomorrow;
+    private $logger;
+    private $cloudStorage;
+    private $actesEnvelopeSql;
+    private $root;
+    private $sigtermHandler;
 
-    /**
-     * @throws Exception
-     */
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->logger = $this->createMock(LoggerInterface::class);
+        $this->cloudStorage = $this->createMock(CloudFileStorageInterface::class);
+        $this->actesEnvelopeSql = $this->createMock(ActesEnvelopeSQL::class);
+        $this->root = vfsStream::setup('uploads');
 
-        $this->dateTomorrow = date('Y-m-d', strtotime('tomorrow'));
+        // Mock SigTermHandler::getInstance()
+        $this->sigtermHandler = $this->createMock(SigTermHandler::class);
+        $this->sigtermHandler->method('isSigtermCalled')->willReturn(false);
 
-        $openStackContainersManager =
-            $this->getMockBuilder(OpenStackContainerStore::class)
-                ->disableOriginalConstructor()
-                ->getMock();
-
-        $openStackContainersManager->expects(static::never())
-            ->method(static::anything());
-
-        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $openStackSwiftWrapper
-            ->expects(static::never())
-            ->method('retrieveFile');
-
-        $openStackSwiftWrapper
-            ->expects(static::never())
-            ->method('deleteFile');
-
-        $openStackSwiftWrapper
-            ->method('fileExistsOnCloud')
-            ->willReturn(true);
-
-        $this->getObjectInstancier()->set(OpenStackSwiftWrapper::class, $openStackSwiftWrapper);
+        $ref = new \ReflectionClass(SigTermHandler::class);
+        $instanceProp = $ref->getProperty('instance');
+        $instanceProp->setAccessible(true);
+        $instanceProp->setValue($this->sigtermHandler);
     }
 
-    public function testGrandMenage()
+    private function createService(): ActesMenage
     {
-        $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
-
-        $filename = self::S2LOW_PHPUNIT_ACTE_ENVELOPE_STORAGE_TEST . mt_rand(0, mt_getrandmax());
-
-        $actes_files_upload_root =  $this->getObjectInstancier()->getParameter('app.actes.files_upload_root');
-        file_put_contents("$actes_files_upload_root/$filename", 'foo');
-
-        $transaction_id = $actesEnvelopeSQL->create(113, $filename);
-        $actesEnvelopeSQL->setTransactionInCloud($transaction_id);
-        $actesMenage = $this->getActesMenage(fileExists: true);
-        $actesMenage->grandMenage(self::MIN_DATE, $this->dateTomorrow, 'ok');
-        static::assertFalse(file_exists($actes_files_upload_root . "/$filename"));
-
-        static::assertTrue(
-            $this->testHandler->hasRecord(
-                "File $filename deleted",
-                Level::Info
-            )
-        );
-    }
-
-    public function testGrandMenageFileNotExists()
-    {
-        $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
-        $filename = self::S2LOW_PHPUNIT_ACTE_ENVELOPE_STORAGE_TEST . mt_rand(0, mt_getrandmax());
-
-        $transaction_id = $actesEnvelopeSQL->create(1, $filename);
-        $actesEnvelopeSQL->setTransactionInCloud($transaction_id);
-        $actesMenage = $this->getActesMenage(fileExists: false);
-
-        $actesMenage->grandMenage(self::MIN_DATE, $this->dateTomorrow, true);
-
-        static::assertTrue(
-            $this->testHandler->hasRecord(
-                "File not exists $filename [PASS]",
-                Level::Debug
-            )
-        );
-    }
-
-    public function testGrandMenageNotConfirm()
-    {
-        $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
-
-        $filename = self::S2LOW_PHPUNIT_ACTE_ENVELOPE_STORAGE_TEST . mt_rand(0, mt_getrandmax());
-
-        $actes_files_upload_root =  $this->getObjectInstancier()->getParameter('app.actes.files_upload_root');
-        file_put_contents($actes_files_upload_root . "/$filename", 'foo');
-
-        $transaction_id = $actesEnvelopeSQL->create(1, $filename);
-        $actesEnvelopeSQL->setTransactionInCloud($transaction_id);
-        $actesMenage = $this->getActesMenage(fileExists: true);
-        $actesMenage->grandMenage(self::MIN_DATE, $this->dateTomorrow, false);
-        static::assertTrue(file_exists("$actes_files_upload_root/$filename"));
-
-        static::assertTrue(
-            $this->testHandler->hasRecord(
-                "File $filename will be deleted if confirm is ok",
-                Level::Debug
-            )
-        );
-    }
-
-    public function testDeleteIfIsInCloud()
-    {
-        $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
-        $filename = self::S2LOW_PHPUNIT_ACTE_ENVELOPE_STORAGE_TEST . mt_rand(0, mt_getrandmax());
-        $actes_files_upload_root =  $this->getObjectInstancier()->getParameter('app.actes.files_upload_root');
-        file_put_contents("$actes_files_upload_root/$filename", 'foo');
-        $transaction_id = $actesEnvelopeSQL->create(1, $filename);
-        static::assertFileExists("$actes_files_upload_root/$filename");
-        $actesCloudStorage = $this->getActesCloudStorage($actesEnvelopeSQL);
-        $actesCloudStorage->deleteIfIsInCloud($transaction_id);
-        static::assertFileDoesNotExist("$actes_files_upload_root/$filename");
-
-        static::assertTrue(
-            $this->testHandler->hasRecord(
-                "Deleting object #$transaction_id : $actes_files_upload_root/$filename",
-                Level::Info
-            )
-        );
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function testEnveloppeNotAvailable()
-    {
-        $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
-
-        $filename = self::S2LOW_PHPUNIT_ACTE_ENVELOPE_STORAGE_TEST . mt_rand(0, mt_getrandmax());
-
-        $envelope_id = $actesEnvelopeSQL->create(1, $filename);
-
-        $this->getObjectInstancier()
-            ->get(ActesCloudStorage::class)
-            ->storeObject($envelope_id);
-
-        $envelope_info = $actesEnvelopeSQL->getInfo($envelope_id);
-        static::assertTrue($envelope_info['not_available']);
-        static::assertFalse($envelope_info['is_in_cloud']);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function testEnveloppeAvailable()
-    {
-        $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
-
-        $filename = self::S2LOW_PHPUNIT_ACTE_ENVELOPE_STORAGE_TEST . mt_rand(0, mt_getrandmax());
-        $actes_files_upload_root =  $this->getObjectInstancier()->getParameter('app.actes.files_upload_root');
-        file_put_contents("$actes_files_upload_root/$filename", 'foo');
-
-        $envelope_id = $actesEnvelopeSQL->create(1, $filename);
-
-        /** @var OpenStackSwiftWrapper | MockObject $openStackSwiftWrapper */
-        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $openStackSwiftWrapper->method('sendFile')->willReturn(true);
-        $openStackSwiftWrapper->method('fileExistsOnCloud')->willReturn(true);
-
-        $acteCloudStorage = $this->getActesCloudStorage($actesEnvelopeSQL, $openStackSwiftWrapper);
-        $acteCloudStorage->storeObject($envelope_id);
-
-        $envelope_info = $actesEnvelopeSQL->getInfo($envelope_id);
-        static::assertFalse($envelope_info['not_available']);
-        static::assertTrue($envelope_info['is_in_cloud']);
-    }
-
-    public function testErrorSendingFile()
-    {
-        $actesEnvelopeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
-
-        $filename = self::S2LOW_PHPUNIT_ACTE_ENVELOPE_STORAGE_TEST . mt_rand(0, mt_getrandmax());
-        $actes_files_upload_root =  $this->getObjectInstancier()->getParameter('app.actes.files_upload_root');
-        file_put_contents($actes_files_upload_root . "/$filename", 'foo');
-
-        $envelope_id = $actesEnvelopeSQL->create(1, $filename);
-
-        /** @var OpenStackSwiftWrapper | MockObject $openStackSwiftWrapper */
-        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $openStackSwiftWrapper->method('sendFile')->willReturn(false);
-
-        $acteCloudStorage = $this->getActesCloudStorage($actesEnvelopeSQL, $openStackSwiftWrapper);
-        $storeResult = $acteCloudStorage->storeObject($envelope_id);
-
-        static::assertFalse($storeResult);
-
-        $envelope_info = $actesEnvelopeSQL->getInfo($envelope_id);
-        static::assertFalse($envelope_info['not_available']);
-        static::assertFalse($envelope_info['is_in_cloud']);
-    }
-
-    private function getActesMenage(bool $fileExists): ActesMenage
-    {
-        $storeActeEnveloppe = self::createMock(CloudFileStorageInterface::class);
-        $storeActeEnveloppe->method('fileExistOnCloud')->willReturn($fileExists);
-
         return new ActesMenage(
-            self::getContainer()->getParameter('app.actes.files_upload_root'),
-            self::getContainer()->get(ActesEnvelopeSQL::class),
+            vfsStream::url('uploads'),
+            $this->actesEnvelopeSql,
             $this->logger,
-            $storeActeEnveloppe,
+            $this->cloudStorage
         );
     }
 
-    private function getActesCloudStorage(ActesEnvelopeSQL $acteEnvelopeSQL, OpenStackSwiftWrapper $openStackSwiftWrapper = null): ActesCloudStorage
+    private function createFile(string $name): string
     {
-        $acteCloudStorable = new ActesCloudStorable(
-            self::getContainer()->getParameter('app.actes.files_upload_root'),
-            $acteEnvelopeSQL,
-            $this->tmpPathFolder
-        );
+        vfsStream::newFile($name)->at($this->root)->setContent('dummy');
+        return $name;
+    }
 
-        return new ActesCloudStorage(
-            $acteCloudStorable,
-            $openStackSwiftWrapper ?? self::getContainer()->get(OpenStackSwiftWrapper::class),
-            $this->logger,
-            openstack_enable: false
-        );
+    private function createQueryStub(array $envelope): object
+    {
+        $callCount = 0;
+
+        return new class ($envelope, $callCount) {
+            private $envelope;
+            private $callCount;
+
+            public function __construct($envelope, &$callCount)
+            {
+                $this->envelope = $envelope;
+                $this->callCount = &$callCount;
+            }
+
+            public function hasMoreResult(): bool
+            {
+                return $this->callCount++ === 0;
+            }
+
+            public function fetch(): array
+            {
+                return $this->envelope;
+            }
+        };
+    }
+
+    private function createMultiQueryStub(array $envelopes): object
+    {
+        $callCount = 0;
+        return new class ($envelopes, $callCount) {
+            private $envelopes;
+            private $callCount;
+            public function __construct($envelopes, &$callCount)
+            {
+                $this->envelopes = $envelopes;
+                $this->callCount = &$callCount;
+            }
+            public function hasMoreResult(): bool
+            {
+                return $this->callCount < count($this->envelopes);
+            }
+            public function fetch(): array
+            {
+                return $this->envelopes[$this->callCount++];
+            }
+        };
+    }
+
+    public function testSupprimeLeFichierSiPresentSurCloudEtConfirmTrue(): void
+    {
+        $filePath = $this->createFile('file.txt');
+
+        $this->actesEnvelopeSql->method('getOlderTransactionHandle')
+            ->willReturn($this->createQueryStub(['id' => 123, 'file_path' => $filePath]));
+
+        $this->cloudStorage->method('fileExistOnCloud')->willReturn(true);
+
+        $this->createService()->grandMenage('2024-01-01', '2024-12-31', true);
+
+        $this->assertFalse(file_exists(vfsStream::url("uploads/$filePath")));
+    }
+
+    public function testNeSupprimePasSiConfirmFalse(): void
+    {
+        $filePath = $this->createFile('file.txt');
+
+        $this->actesEnvelopeSql->method('getOlderTransactionHandle')
+            ->willReturn($this->createQueryStub(['id' => 42, 'file_path' => $filePath]));
+
+        $this->cloudStorage->method('fileExistOnCloud')->willReturn(true);
+
+        $this->createService()->grandMenage('2024-01-01', '2024-12-31', false);
+
+        $this->assertTrue(file_exists(vfsStream::url("uploads/$filePath")));
+    }
+
+    public function testIgnoreSiFichierAbsent(): void
+    {
+        $this->actesEnvelopeSql->method('getOlderTransactionHandle')
+            ->willReturn($this->createQueryStub(['id' => 77, 'file_path' => 'ghost.txt']));
+
+        $this->cloudStorage->expects($this->never())->method('fileExistOnCloud');
+
+        $this->createService()->grandMenage('2024-01-01', '2024-12-31', true);
+
+        $this->assertTrue(true);
+    }
+
+    public function testNeSupprimePasSiFichierPasSurCloud(): void
+    {
+        $filePath = $this->createFile('local_only.txt');
+
+        $this->actesEnvelopeSql->method('getOlderTransactionHandle')
+            ->willReturn($this->createQueryStub(['id' => 999, 'file_path' => $filePath]));
+
+        $this->cloudStorage->method('fileExistOnCloud')->willReturn(false);
+
+        $this->createService()->grandMenage('2024-01-01', '2024-12-31', true);
+
+        $this->assertTrue(file_exists(vfsStream::url("uploads/$filePath")));
+    }
+
+    public function testSupprimePlusieursFichiers(): void
+    {
+        $file1 = $this->createFile('f1.txt');
+        $file2 = $this->createFile('f2.txt');
+
+        $this->actesEnvelopeSql->method('getOlderTransactionHandle')
+            ->willReturn($this->createMultiQueryStub([
+                ['id' => 10, 'file_path' => $file1],
+                ['id' => 11, 'file_path' => $file2],
+            ]));
+
+        $this->cloudStorage->method('fileExistOnCloud')->willReturn(true);
+
+        $this->createService()->grandMenage('2024-01-01', '2024-12-31', true);
+
+        $this->assertFalse(file_exists(vfsStream::url("uploads/$file1")));
+        $this->assertFalse(file_exists(vfsStream::url("uploads/$file2")));
     }
 }

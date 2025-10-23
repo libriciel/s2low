@@ -22,4 +22,6 @@ interface FileDataProvider
      * @throws TransactionNotFoundException
     */
     public function getCloudId(string $transactionId): string;
+
+    public function getTransactionIdFromFileName(string $filePath): ?string;
 }

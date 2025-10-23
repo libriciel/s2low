@@ -109,4 +109,10 @@ class MailTransactionSQL extends SQL implements FileDataProvider
 
         return $transaction['siren'] . '/' . $transaction['fn_download'];
     }
+
+    public function getTransactionIdFromFileName(string $filePath): string
+    {
+        // TODO: Implement getTransactionIdFromFileName() method.
+        return '';
+    }
 }

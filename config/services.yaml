@@ -659,6 +659,20 @@ services:
     arguments:
       $bucket: '%app.cloud_bucket.acte_enveloppe%'
 
+  app.finder.acte_enveloppe:
+    class: Symfony\Component\Finder\Finder
+    factory: ['@S2low\Services\FinderFactory', 'createActeEnveloppeFinder']
+
+  app.removeFiles.acte_enveloppe:
+    class: S2low\Services\RemoveOldFilesOnDisk
+    arguments:
+      $cloudFileStorage: '@app.store.file.acte_enveloppe'
+      $fileDataProvider: '@S2lowLegacy\Class\actes\ActesEnvelopeSQL'
+      $localFileResolver: '@app.localFileResolver.acte_enveloppe'
+      $finder: '@app.finder.acte_enveloppe'
+      $transactionErrorDirectory: '%app.actes_enveloppe_sans_transaction%'
+      $moveOrphelinsFiles: true
+
   app.localFileResolver.acte_enveloppe:
     public: true
     class: S2low\Services\LocalFileResolver
@@ -682,6 +696,20 @@ services:
     factory: ['@S2low\Factory\S3FileStorageFactory', 'create']
     arguments:
       $bucket: '%app.cloud_bucket.pes_aller%'
+
+  app.finder.pes_aller:
+    class: Symfony\Component\Finder\Finder
+    factory: [ '@S2low\Services\FinderFactory', 'createPesAllerFinder' ]
+
+  app.removeFiles.pes_aller:
+    class: S2low\Services\RemoveOldFilesOnDisk
+    arguments:
+      $cloudFileStorage: '@app.store.file.pes_aller'
+      $fileDataProvider: '@S2lowLegacy\Model\HeliosTransactionsSQL'
+      $localFileResolver: '@app.localFileResolver.pes_aller'
+      $finder: '@app.finder.pes_aller'
+      $transactionErrorDirectory: '%app.helios_repertoire_pes_aller_sans_transaction%'
+      $moveOrphelinsFiles: true
 
   app.localFileResolver.pes_aller:
     public: true
@@ -707,6 +735,20 @@ services:
     arguments:
       $bucket: '%app.cloud_bucket.pes_retour%'
 
+  app.finder.pes_retour:
+    class: Symfony\Component\Finder\Finder
+    factory: [ '@S2low\Services\FinderFactory', 'createPesRetourFinder' ]
+
+  app.removeFiles.pes_retour:
+    class: S2low\Services\RemoveOldFilesOnDisk
+    arguments:
+      $cloudFileStorage: '@app.store.file.pes_retour'
+      $fileDataProvider: '@S2lowLegacy\Model\HeliosRetourSQL'
+      $localFileResolver: '@app.localFileResolver.pes_retour'
+      $finder: '@app.finder.pes_retour'
+      $transactionErrorDirectory: null
+      $moveOrphelinsFiles: false
+
   app.localFileResolver.pes_retour:
     public: true
     class: S2low\Services\LocalFileResolver
@@ -731,6 +773,20 @@ services:
     arguments:
       $bucket: '%app.cloud_bucket.pes_acquit%'
 
+  app.finder.pes_acquit:
+    class: Symfony\Component\Finder\Finder
+    factory: [ '@S2low\Services\FinderFactory', 'createPesAcquitFinder' ]
+
+  app.removeFiles.pes_acquit:
+    class: S2low\Services\RemoveOldFilesOnDisk
+    arguments:
+      $cloudFileStorage: '@app.store.file.pes_acquit'
+      $fileDataProvider: '@S2low\Services\Helios\PesAcquitFileDataProvider'
+      $localFileResolver: '@app.localFileResolver.pes_acquit'
+      $finder: '@app.finder.pes_retour'
+      $transactionErrorDirectory: null
+      $moveOrphelinsFiles: false
+
   app.localFileResolver.pes_acquit:
     public: true
     class: S2low\Services\LocalFileResolver
@@ -754,6 +810,20 @@ services:
     factory: ['@S2low\Factory\S3FileStorageFactory', 'create']
     arguments:
       $bucket: '%app.cloud_bucket.mailsec%'
+
+  app.finder.mailsec:
+    class: Symfony\Component\Finder\Finder
+    factory: [ '@S2low\Services\FinderFactory', 'createMailSecFinder' ]
+
+  app.removeFiles.mailsec:
+    class: S2low\Services\RemoveOldFilesOnDisk
+    arguments:
+      $cloudFileStorage: '@app.store.file.mailsec'
+      $fileDataProvider: '@S2lowLegacy\Class\mailsec\MailTransactionSQL'
+      $localFileResolver: '@app.localFileResolver.mailsec'
+      $finder: '@app.finder.mailsec'
+      $transactionErrorDirectory: '%app.mail_files_without_transac_dir%'
+      $moveOrphelinsFiles: true
 
   app.localFileResolver.mailsec:
     public: true
