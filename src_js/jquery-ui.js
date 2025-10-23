@@ -1,53 +1,25 @@
-//import $ from 'jquery';
-//import jQuery from 'jquery';
+import $ from 'jquery';
+import 'jquery-ui/ui/widget';
+import 'jquery-ui/ui/position';
 
-// log removed - adds an extra dependency
-//log(jQuery.browser)
+import 'jquery-ui/ui/widgets/menu';
+import 'jquery-ui/ui/widgets/autocomplete';
+import 'jquery-ui/ui/widgets/datepicker';
+import 'jquery-ui/ui/widgets/tooltip';
 
-require ('jquery-ui');
-require('jquery-ui/themes/base/core.css');
-require('jquery-ui/themes/base/accordion.css');
+import 'jquery-ui/themes/base/core.css';
+import 'jquery-ui/themes/base/autocomplete.css';
+import 'jquery-ui/themes/base/datepicker.css';
+import 'jquery-ui/themes/base/menu.css';
+import 'jquery-ui/themes/base/tooltip.css';
+import 'jquery-ui/themes/base/theme.css';
 
-require('jquery-ui/themes/base/autocomplete.css');
+// Datepicker FR
+import 'jquery-ui/ui/i18n/datepicker-fr';
+// Timepicker
+import 'jquery-timepicker/jquery.timepicker.css';
+import 'jquery-timepicker/jquery.timepicker.js';
 
-require('jquery-ui/themes/base/button.css');
+window.$ = window.jQuery = $;
 
-
-require('jquery-ui/themes/base/datepicker.css');
-require('jquery-ui/ui/i18n/datepicker-fr');
-$.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
-
-require('jquery-timepicker/jquery.timepicker');
-require('jquery-timepicker/jquery.timepicker.css');
-
-require('jquery-ui/themes/base/dialog.css');
-
-require('jquery-ui/themes/base/draggable.css');
-
-
-require('jquery-ui/themes/base/menu.css');
-
-require('jquery-ui/themes/base/progressbar.css');
-
-require('jquery-ui/themes/base/resizable.css');
-
-require('jquery-ui/themes/base/selectable.css');
-
-require('jquery-ui/themes/base/selectmenu.css');
-
-require('jquery-ui/themes/base/slider.css');
-
-require('jquery-ui/themes/base/sortable.css');
-
-require('jquery-ui/themes/base/spinner.css');
-
-require('jquery-ui/themes/base/tabs.css');
-
-require('jquery-ui/themes/base/tooltip.css');
-
-
-require('jquery-ui/themes/base/theme.css');
-
-window.$ = $;
-//window.jquery = jquery;
-
+$.datepicker.setDefaults($.datepicker.regional['fr']);
