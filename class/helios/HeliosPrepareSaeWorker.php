@@ -2,8 +2,8 @@
 
 namespace S2lowLegacy\Class\helios;
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\IWorker;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 class HeliosPrepareSaeWorker implements IWorker
@@ -18,7 +18,7 @@ class HeliosPrepareSaeWorker implements IWorker
 
     public function __construct(
         HeliosTransactionsSQL $heliosTransactionsSQL,
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         HeliosPrepareEnvoiSAE $heliosPrepareEnvoiSAE
     ) {
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;

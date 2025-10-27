@@ -3,6 +3,7 @@
 namespace S2low\Services\Helios;
 
 use Exception;
+use Psr\Log\LoggerInterface;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\Antivirus;
@@ -10,7 +11,6 @@ use S2lowLegacy\Class\helios\FichierCompteur;
 use S2lowLegacy\Class\helios\HeliosTransmissionWindowsSQL;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\Log;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\HeliosNamesGenerator;
@@ -42,7 +42,7 @@ class HeliosEnvoiControler
         private readonly MailerSymfonyFactory $mailerFactory,
         private readonly DGFiPConnectionsManager $heliosConnectionsConfigurationManager,
         private readonly FichierCompteur $fichierCompteur,
-        private readonly S2lowLogger $logger,
+        private readonly LoggerInterface $logger,
         private readonly PesAllerReader $pesAllerReader,
         private readonly HeliosNamesGenerator $namesGenerator,
         VerifyPemCertificateFactory $verifyPemFactory

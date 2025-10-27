@@ -3,7 +3,7 @@
 use S2lowLegacy\Class\Helpers;
 
 ?>
-    <h1><?php hecho($titre) ?></h1>
+    <h1><?php hecho($this->titre) ?></h1>
 
 <div id="actions-area">
     <h2>Actions</h2>
@@ -19,9 +19,9 @@ use S2lowLegacy\Class\Helpers;
             <div class="col-md-3">
                 <select name="type" class="form-control">
                     <option value="">Choisissez</option>
-                    <?php foreach ($authority_types as $authority_type_libelle_info) : ?>
+                    <?php foreach ($this->authority_types as $authority_type_libelle_info) : ?>
                         <option
-                            <?php echo $ftype == $authority_type_libelle_info['id'] ? "selected='selected'" : '' ?>
+                            <?php echo $this->ftype == $authority_type_libelle_info['id'] ? "selected='selected'" : '' ?>
                             value="<?php echo($authority_type_libelle_info['id']) ?>"
                         >
                             <?php
@@ -41,19 +41,19 @@ use S2lowLegacy\Class\Helpers;
                         name="name"
                         size="20"
                         maxlength="25"
-                        value="<?php hecho($fname) ?>"
+                        value="<?php hecho($this->fname) ?>"
                 />
             </div>
         </div>
             <div class="form-group">
-                <?php if ($groupe_list) : ?>
+                <?php if ($this->groupe_list) : ?>
                 <label for="group" class="col-md-3 control-label">Groupe</label>
                 <div class="col-md-3">
                     <select name="group" class="form-control">
                         <option value="">Choisissez</option>
-                        <?php foreach ($groupe_list as $groupe_info) : ?>
+                        <?php foreach ($this->groupe_list as $groupe_info) : ?>
                             <option
-                                <?php echo $fgroup == $groupe_info['id'] ? "selected='selected'" : '' ?>
+                                <?php echo $this->fgroup == $groupe_info['id'] ? "selected='selected'" : '' ?>
                                     value="<?php hecho($groupe_info['id']) ?>"
                             >
                                 <?php hecho($groupe_info['name']) ?>
@@ -72,7 +72,7 @@ use S2lowLegacy\Class\Helpers;
                         name="siret"
                         size="20"
                         maxlength="25"
-                        value="<?php hecho($fsiret) ?>"
+                        value="<?php hecho($this->fsiret) ?>"
                 />
             </div>
             </div>
@@ -87,7 +87,7 @@ use S2lowLegacy\Class\Helpers;
                         name="siren"
                         size="20"
                         maxlength="25"
-                        value="<?php hecho($fsiren) ?>"
+                        value="<?php hecho($this->fsiren) ?>"
                 />
             </div>
         </div>
@@ -114,7 +114,7 @@ use S2lowLegacy\Class\Helpers;
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($authorities as $authority_info) :?>
+        <?php foreach ($this->authorities as $authority_info) :?>
         <tr>
             <td headers="name"><?php hecho($authority_info['name']) ?></td>
             <td headers="group-member"><?php hecho($authority_info['group_name'] ?: 'Aucun') ?></td>

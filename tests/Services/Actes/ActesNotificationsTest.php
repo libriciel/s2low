@@ -10,7 +10,7 @@ use S2lowLegacy\Class\actes\ActesRetriever;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\ActeTamponne;
 use S2lowLegacy\Class\actes\BordereauPdfGenerator;
-use S2lowLegacy\Class\S2lowLogger;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Model\AuthoritySQL;
 use Symfony\Component\Filesystem\Filesystem;

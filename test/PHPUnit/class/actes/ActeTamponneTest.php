@@ -5,7 +5,6 @@ use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\ActeTamponne;
 use S2lowLegacy\Class\PdfStampMessages;
 use S2lowLegacy\Class\PDFStampWrapper;
-use S2lowLegacy\Class\S2lowLogger;
 
 class ActeTamponneTest extends S2lowTestCase
 {

@@ -3,6 +3,7 @@
 namespace S2lowLegacy\Class;
 
 use Pheanstalk\PheanstalkInterface;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Lib\PausingQueueException;
 use S2lowLegacy\Lib\SigTermHandler;
 use S2lowLegacy\Lib\UnrecoverableException;
@@ -20,9 +21,9 @@ class WorkerRunnerWithDataFromBeanstalkd implements WorkerRunner
      */
     private BeanstalkdWrapper $beanstalkdWrapper;
     /**
-     * @var \S2lowLegacy\Class\S2lowLogger
+     * @var LoggerInterface
      */
-    private S2lowLogger $s2lowLogger;
+    private LoggerInterface $s2lowLogger;
     /**
      * @var \S2lowLegacy\Lib\SigTermHandler
      */
@@ -35,7 +36,7 @@ class WorkerRunnerWithDataFromBeanstalkd implements WorkerRunner
     public function __construct(
         IWorker $worker,
         BeanstalkdWrapper $beanstalkdWrapper,
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         SigTermHandler $sigTermHandler,
         RedisMutexWrapper $redisMutexWrapper
     ) {

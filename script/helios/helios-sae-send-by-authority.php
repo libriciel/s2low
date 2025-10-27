@@ -1,15 +1,14 @@
 <?php
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\helios\HeliosEnvoiSAE;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 require_once(__DIR__ . "/../../init/init.php");
 $objectInstancier = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(ObjectInstancier::class);
 
-$s2lowLogger = $objectInstancier->get(S2lowLogger::class);
-$s2lowLogger->enableStdOut();
+$s2lowLogger = $objectInstancier->get(LoggerInterface::class);
 
 $heliosTransactionsSQL = $objectInstancier->get(HeliosTransactionsSQL::class);
 $authority_id = intval($argv[1] ?? 0);

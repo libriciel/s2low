@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace S2low\Services\Helios;
 
 use Exception;
+use Psr\Log\LoggerInterface;
 use S2low\Services\Helios\DGFiPConnection\FTPFileRetrieveException;
 use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker;
 use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\RecoverableException;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\SigTermHandler;
 
@@ -18,12 +18,12 @@ class HeliosReceptionWorker implements IWorker
     public const QUEUE_NAME = 'helios-reception-fichier';
 
     private WorkerScript $workerScript;
-    private S2lowLogger $s2lowLogger;
+    private LoggerInterface $s2lowLogger;
     private FTPHeliosReceiver $ftpFileGetter;
     private bool $usePasstrans;
 
     public function __construct(
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         WorkerScript $workerScript,
         FTPHeliosReceiver $FTPHeliosReceiver,
         bool $usePasstrans = false

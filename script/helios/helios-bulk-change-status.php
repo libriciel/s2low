@@ -1,6 +1,6 @@
 <?php
 
-use S2lowLegacy\Class\S2lowLogger;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
@@ -12,8 +12,7 @@ list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::ge
     );
 
 
-$s2LowLogger = $objectInstancier->get(S2lowLogger::class);
-$s2LowLogger->enableStdOut();
+$s2LowLogger = $objectInstancier->get(LoggerInterface::class);
 
 //TODO : move to HeliosStatusSQL
 function getAllStatus($sqlQuery)

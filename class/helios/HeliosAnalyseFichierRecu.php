@@ -2,9 +2,9 @@
 
 namespace S2lowLegacy\Class\helios;
 
-use S2lowLegacy\Class\S2lowLogger;
 use DOMDocument;
 use Exception;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Lib\SigTermHandler;
 use S2lowLegacy\Model\AuthoritySiretSQL;
 use S2lowLegacy\Model\AuthoritySQL;
@@ -32,7 +32,7 @@ class HeliosAnalyseFichierRecu
         $schema_pes_path,
         $email_admin_technique,
         $tdt_from_email,
-        S2lowLogger $s2lowLogger
+        LoggerInterface $s2lowLogger
     ) {
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
         $this->heliosRetourSQL = $heliosRetourSQL;

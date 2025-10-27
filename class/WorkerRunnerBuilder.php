@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace S2lowLegacy\Class;
 
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 class WorkerRunnerBuilder
 {
     private const MIN_EXECUTION_TIME_IN_SECONDS = 10; //uniquement pour le mode non beanstalked
 
-    private S2lowLogger $s2lowLogger;
+    private LoggerInterface $s2lowLogger;
     private BeanstalkdWrapper $beanstalkdWrapper;
     private RedisMutexWrapper $redisMutexWrapper;
     private SigTermHandlerFactory $sigTermHandlerFactory;
@@ -18,7 +19,7 @@ class WorkerRunnerBuilder
 
     public function __construct(
         BeanstalkdWrapper $beanstalkdWrapper,
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         SigTermHandlerFactory $sigTermHandlerFactory,
         RedisMutexWrapper $redisMutexWrapper,
         WorkerScript $workerScript
@@ -35,8 +36,6 @@ class WorkerRunnerBuilder
         bool $log_enable_stdout = true,
         string $scriptType = WorkerRunnerWithDataFromBeanstalkd::class
     ): WorkerRunner {
-        $this->s2lowLogger->setName($worker->getQueueName() . '-script');
-        $this->s2lowLogger->enableStdOut($log_enable_stdout);
         return $this->script($worker, $scriptType);
     }
 

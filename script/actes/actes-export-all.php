@@ -1,18 +1,14 @@
 <?php
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\actes\ActesExport;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Lib\SQLQuery;
 use Symfony\Component\Filesystem\Filesystem;
 
 require_once __DIR__ . "/../../init/init.php";
 list( $s2lowLogger, $sqlQuery,$actesExport ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([S2lowLogger::class, SQLQuery::class,ActesExport::class]);
-
-$s2lowLogger->enableStdOut();
-$s2lowLogger->setName("actes-export");
-
+    ->getArray([LoggerInterface::class, SQLQuery::class,ActesExport::class]);
 
 if (count($argv) < 3) {
     $s2lowLogger->error(

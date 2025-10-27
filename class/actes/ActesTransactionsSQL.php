@@ -538,7 +538,7 @@ WHERE
 
     public function getNbTransactionGroupBySAEStatusForModeAuto(array $status_list)
     {
-
+        $result = [];
         $module_id = $this->queryOne(
             "SELECT id FROM modules WHERE name=?",
             ModuleSQL::ACTES_MODULE_NAME

@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace S2low\Services\Helios\DGFiPConnection;
 
 use Exception;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use S2low\Services\FilesAndDirectoriesUtils\DirectoryManagerFactory;
-use S2lowLegacy\Class\S2lowLogger;
 use SplFileInfo;
 
 /**
@@ -21,9 +22,9 @@ class DGFiPConnection
     private string $sending_destination;
     private string $response_server_path;
     /**
-     * @var S2lowLogger
+     * @var LoggerInterface
      */
-    private S2lowLogger $logger;
+    private LoggerInterface $logger;
     private string $pAppli;
     /**
      * @var DirectoryManagerFactory
@@ -31,7 +32,7 @@ class DGFiPConnection
     private DirectoryManagerFactory $directoryManagerFactory;
 
     /**
-     * @param S2lowLogger $logger
+     * @param LoggerInterface $logger
      * @param DGFiPConnector $serverProtocolConfiguration
      * @param DirectoryManagerFactory $directoryManagerFactory
      * @param string $response_server_path
@@ -39,7 +40,7 @@ class DGFiPConnection
      * @param string $helios_ftp_p_appli
      */
     public function __construct(
-        S2lowLogger $logger,
+        LoggerInterface $logger,
         DGFiPConnector $serverProtocolConfiguration,
         DirectoryManagerFactory $directoryManagerFactory,
         string $response_server_path,

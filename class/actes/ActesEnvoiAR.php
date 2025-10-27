@@ -2,9 +2,9 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use Psr\Log\LoggerInterface;
 use S2low\Services\CloudFileStorageInterface;
 use S2low\Services\LocalFileResolver;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use Exception;
 use S2lowLegacy\Lib\SigTermHandler;
@@ -31,7 +31,7 @@ class ActesEnvoiAR
         #[Autowire(service: 'app.store.file.acte_enveloppe')]
         private readonly CloudFileStorageInterface $cloudFileStorage,
         ActesTransactionsSQL $actesTransactionsSQL,
-        S2lowLogger $logger,
+        LoggerInterface $logger,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         ActesEnvelopeSerialSQL $actesEnvelopeSerialSQL,
         ActesFileSender $actesFileSender,

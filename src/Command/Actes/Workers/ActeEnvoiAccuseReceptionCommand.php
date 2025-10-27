@@ -2,8 +2,8 @@
 
 namespace S2low\Command\Actes\Workers;
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\actes\ActesEnvoiAR;
-use S2lowLegacy\Class\S2lowLogger;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ActeEnvoiAccuseReceptionCommand extends Command
 {
     public function __construct(
-        private readonly S2lowLogger $logger,
+        private readonly LoggerInterface $logger,
         private readonly ActesEnvoiAR $actesEnvoiAR,
     ) {
         parent::__construct();
@@ -24,9 +24,6 @@ class ActeEnvoiAccuseReceptionCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->logger->setName("actes-envoi-ar");
-        $this->logger->enableStdOut(true);
-
         $start = time();
         $this->logger->info("Debut " . date("Y-m-d H:i:s", $start));
         $min_exec_time = 10;

@@ -6,12 +6,12 @@ namespace S2low\Tests\Services\Helios;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use S2low\Services\FilesAndDirectoriesUtils\DirectoryManagerFactory;
 use S2low\Services\FilesAndDirectoriesUtils\FileNamesHandler;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnection;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectorOnFTP;
 use S2low\Services\Helios\DGFiPConnection\FTPFileRetrieveException;
-use S2lowLegacy\Class\S2lowLogger;
 use SplFileInfo;
 
 /**
@@ -25,7 +25,7 @@ class DGFiPConnectionTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $logger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
+        $logger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
         $this->connector = $this->getMockBuilder(DGFiPConnectorOnFTP::class)->disableOriginalConstructor()->getMock();
         $directoryManagerFactory = new DirectoryManagerFactory(
             new FileNamesHandler()

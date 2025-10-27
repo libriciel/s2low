@@ -5,6 +5,7 @@ namespace S2lowLegacy\Class;
 use Pheanstalk\PheanstalkInterface;
 use Pheanstalk\Pheanstalk;
 use Exception;
+use Psr\Log\LoggerInterface;
 
 class BeanstalkdWrapper
 {
@@ -15,7 +16,7 @@ class BeanstalkdWrapper
 
     private $logger;
 
-    public function __construct($beanstalkd_server, $beanstalkd_port, S2lowLogger $s2lowLogger)
+    public function __construct($beanstalkd_server, $beanstalkd_port, LoggerInterface $s2lowLogger)
     {
         $this->beanstalkd_server = $beanstalkd_server;
         $this->beanstalkd_port = $beanstalkd_port;

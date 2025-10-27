@@ -6,6 +6,7 @@ namespace S2lowLegacy\Class;
 
 use Pheanstalk\Exception\ServerException;
 use Pheanstalk\Pheanstalk;
+use Psr\Log\LoggerInterface;
 
 /**
  * WorkerRunner qui va
@@ -25,7 +26,7 @@ class JobFetcherFromSelfUpdatedBeanstalkd implements JobFetchingStrategy
         $this->queue = $beanstalkdWrapper->getQueue($queueName);
     }
 
-    public function getAllData(IWorker $worker, S2lowLogger $s2lowLogger): iterable
+    public function getAllData(IWorker $worker, LoggerInterface $s2lowLogger): iterable
     {
         while (true) {
             $job = $this->queue->reserve(0);
@@ -38,7 +39,7 @@ class JobFetcherFromSelfUpdatedBeanstalkd implements JobFetchingStrategy
         }
     }
 
-    public function init(IWorker $worker, S2lowLogger $s2lowLogger): void
+    public function init(IWorker $worker, LoggerInterface $s2lowLogger): void
     {
         try {
             $this->queue->peekReady($worker->getQueueName());
