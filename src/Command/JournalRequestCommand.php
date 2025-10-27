@@ -2,9 +2,9 @@
 
 namespace S2low\Command;
 
+use Psr\Log\LoggerInterface;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\Helpers;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Lib\SigTermHandler;
 use S2lowLegacy\Model\LogsHistoriqueSQL;
 use S2lowLegacy\Model\LogsRequestData;
@@ -31,9 +31,9 @@ class JournalRequestCommand extends Command
      */
     private MailerSymfonyFactory $mailerSymfonyFactory;
     /**
-     * @var \S2lowLegacy\Class\S2lowLogger
+     * @var LoggerInterface
      */
-    private S2lowLogger $logger;
+    private LoggerInterface $logger;
     /**
      * @var \S2lowLegacy\Model\UserSQL
      */
@@ -43,7 +43,7 @@ class JournalRequestCommand extends Command
         LogsHistoriqueSQL $logsHistoriqueSQL,
         LogsRequestSQL $logsRequestSQL,
         UserSQL $userSQL,
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         MailerSymfonyFactory $mailerSymfonyFactory
     ) {
         $this->logsHistoriqueSQL = $logsHistoriqueSQL;

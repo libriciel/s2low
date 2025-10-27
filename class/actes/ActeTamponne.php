@@ -2,9 +2,9 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\PDFStampData;
 use S2lowLegacy\Class\PDFStampWrapper;
-use S2lowLegacy\Class\S2lowLogger;
 use Exception;
 
 class ActeTamponne
@@ -15,13 +15,13 @@ class ActeTamponne
     /** @var  PDFStampWrapper */
     private $pdfStampWrapper;
 
-    /** @var S2lowLogger */
+    /** @var LoggerInterface */
     private $logger;
 
     public function __construct(
         ActesTransactionsSQL $actesTransactionsSQL,
         PDFStampWrapper $pdfStampWrapper,
-        S2lowLogger $logger
+        LoggerInterface $logger
     ) {
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->pdfStampWrapper = $pdfStampWrapper;

@@ -117,12 +117,12 @@ class UserSQLTest extends S2lowTestCase
         );
     }
 
-    public function testFixFingerPrint()
+    public function testFixFingerPrint(): void
     {
         $this->getSQLQuery()->query("UPDATE users SET certificate_hash=?", "");
         $this->userSQL->fixCerticateFingerprint(new X509Certificate());
-        $this->assertEquals(
-            "O6kgdA2cFY5A5ctAmFWRumLZBMY=",
+        $this->assertSame(
+            'O6kgdA2cFY5A5ctAmFWRumLZBMY=',
             $this->getSQLQuery()->queryOne("SELECT certificate_hash FROM users WHERE id=?", 3)
         );
     }

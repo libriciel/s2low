@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class;
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Lib\ObjectInstancier;
 use Pheanstalk\PheanstalkInterface;
 
@@ -12,7 +13,7 @@ class WorkerScript
 
     public function __construct(
         private readonly BeanstalkdWrapper $beanstalkdWrapper,
-        private S2lowLogger $s2lowLogger,
+        private LoggerInterface $s2lowLogger,
         private readonly ObjectInstancier $objectInstancier,
     ) {
     }
@@ -53,8 +54,6 @@ class WorkerScript
 
     public function rebuildQueue(IWorker $IWorker)
     {
-        $this->s2lowLogger->setName($IWorker->getQueueName() . "-rebuild-queue");
-
         $this->beanstalkdWrapper->emptyQueue($IWorker->getQueueName());
         $this->s2lowLogger->info("Reconstruction de la file " . $IWorker->getQueueName());
         foreach ($IWorker->getAllId() as $id) {
@@ -73,10 +72,5 @@ class WorkerScript
             $delay = PheanstalkInterface::DEFAULT_TTR;
         }
         return $delay;
-    }
-
-    public function setLogger(S2lowLogger $s2lowLogger)
-    {
-        $this->s2lowLogger = $s2lowLogger;
     }
 }

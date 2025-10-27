@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Process;
 
 class ShellCommand
@@ -13,7 +14,7 @@ class ShellCommand
     private $last_error;
 
     public function __construct(
-        S2lowLogger $s2lowLogger
+        LoggerInterface $s2lowLogger
     ) {
         $this->s2lowLogger = $s2lowLogger;
     }

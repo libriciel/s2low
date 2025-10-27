@@ -3,17 +3,13 @@
 use S2lowLegacy\Class\CurlWrapper;
 use S2lowLegacy\Class\CurlWrapperFactory;
 use S2lowLegacy\Class\PastellWrapper;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Model\PastellProperties;
 
-class PastellWrapperTest extends PHPUnit_Framework_TestCase
+class PastellWrapperTest extends S2lowTestCase
 {
     private function getS2lowLogger()
     {
-        $testHandler = new Monolog\Handler\TestHandler();
-        $logger = new \Monolog\Logger('phpunit');
-        $logger->pushHandler($testHandler);
-        return new S2lowLogger($logger);
+        return $this->logger;
     }
 
     /**

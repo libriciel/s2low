@@ -17,7 +17,7 @@ use Libriciel\LibActes\FichierXML\MessageMetierLettreObservations;
 use Libriciel\LibActes\FichierXML\MessageMetierReponseClassificationSansChangement;
 use Libriciel\LibActes\FichierXML\MessageMetierRetourClassification;
 use Libriciel\LibActes\Utils\XSDValidationException;
-use S2lowLegacy\Class\S2lowLogger;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\SigTermHandler;
 use UnexpectedValueException;
@@ -36,7 +36,7 @@ class ActesAnalyseFichierRecuController
     private $actes_ministere_acronyme;
 
     public function __construct(
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         $actes_response_tmp_local_path,
         $actes_response_error_path,
         ActesTransactionsSQL $actesTransactionsSQL,

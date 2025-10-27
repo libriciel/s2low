@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace S2lowLegacy\Class;
 
+use Psr\Log\LoggerInterface;
+
 class JobFetcherFromDB implements JobFetchingStrategy
 {
-    public function getAllData(IWorker $worker, S2lowLogger $s2lowLogger): iterable
+    public function getAllData(IWorker $worker, LoggerInterface $s2lowLogger): iterable
     {
         $id_list = $worker->getAllId();
         $s2lowLogger->info(count($id_list) . ' travaux trouvées');
@@ -15,7 +17,7 @@ class JobFetcherFromDB implements JobFetchingStrategy
         }
     }
 
-    public function init(IWorker $worker, S2lowLogger $s2lowLogger): void
+    public function init(IWorker $worker, LoggerInterface $s2lowLogger): void
     {
     }
 }

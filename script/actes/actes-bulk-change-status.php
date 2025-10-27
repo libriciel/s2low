@@ -1,17 +1,15 @@
 <?php
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Lib\SQLQuery;
 
 require_once(__DIR__ . "/../../init/init.php");
 list($s2LowLogger,$actesStatusSQL,$actesTransactions,$sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [S2lowLogger::class, ActesStatusSQL::class,ActesTransactionsSQL::class,SQLQuery::class]
+        [LoggerInterface::class, ActesStatusSQL::class,ActesTransactionsSQL::class,SQLQuery::class]
     );
-
-$s2LowLogger->enableStdOut();
 
 $actesStatus = $actesStatusSQL->getAllStatus();
 

@@ -183,12 +183,9 @@ class MailController
      */
     protected function executeAnnuaire()
     {
-        $email = Helpers:: getVarFromPost("email");
-
-
-        $description = Helpers:: getVarFromPost("description");
-
-        $id = Helpers:: getVarFromPost("id");
+        $email = Helpers::getVarFromPost("email");
+        $description = Helpers::getVarFromPost("description");
+        $id = Helpers::getVarFromPost("id");
 
         if ($email != null) {
             if (!is_valid_email($email)) {
@@ -202,11 +199,11 @@ class MailController
                 $annuaire->save(false);
             }
         }
-        $idArray = Helpers:: getVarFromPost("checkbox_id");
+        $idArray = Helpers::getVarFromPost("checkbox_id");
 
         try {
-            $groupe_id = Helpers:: getIntFromPost("groupe_id", true);
-            $old_groupe_id = Helpers:: getIntFromPost("old_groupe_id", true);
+            $groupe_id = Helpers::getIntFromPost("groupe_id", true);
+            $old_groupe_id = Helpers::getIntFromPost("old_groupe_id", true);
         } catch (Exception $exception) {
             $this->lastError = $exception->getMessage();
             return false;
@@ -240,7 +237,7 @@ class MailController
             $groupe_id = $old_groupe_id;
         } else {
             try {
-                $groupe_id = Helpers:: getIntFromGet("groupe_id", true);
+                $groupe_id = Helpers::getIntFromGet("groupe_id", true);
             } catch (Exception $e) {
                 echo $e->getMessage();
                 return false;

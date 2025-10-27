@@ -4,6 +4,7 @@ use malkusch\lock\mutex\PHPRedisMutex;
 use Monolog\Level;
 use Pheanstalk\PheanstalkInterface;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\BeanstalkdWrapper;
 use S2lowLegacy\Class\IWorker;
@@ -55,7 +56,7 @@ class WorkerScriptTest extends S2lowTestCase
     {
         return new WorkerScript(
             self::getContainer()->get(BeanstalkdWrapper::class),
-            $this->s2lowLogger,
+            $this->logger,
             self::getContainer()->get(ObjectInstancier::class),
         );
     }

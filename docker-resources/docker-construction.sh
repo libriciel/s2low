@@ -21,7 +21,8 @@ cp ./docker-resources/supervisord.conf /etc/supervisor/
 # Crond configuration
 for CRONFILE in ./docker-resources/cron.d/*
 do
-  sed -e "s/%USERNAME%/${USERNAME}/g" $CRONFILE > "/etc/cron.d/$(basename $CRONFILE)"
+  sed -e "s/%USERNAME%/${USERNAME}/g" $CRONFILE > "/tmp/$(basename $CRONFILE)"
+  mv "/tmp/$(basename $CRONFILE)" "/etc/cron.d/$(basename $CRONFILE)"
 done
 chmod 0644 /etc/cron.d/*
 

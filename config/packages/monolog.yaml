@@ -2,11 +2,32 @@ monolog:
   channels:
     - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
   handlers:
-    file_log:
+    main:
+      type: fingers_crossed
+      action_level: error
+      handler: nested
+      excluded_http_codes: [ 404, 405 ]
+      buffer_size: 50 # How many messages should be saved? Prevent memory leaks
+    nested:
       type: stream
-      path: '%app.log.file%'
-      channels: [ "!deprecation" ]
+      path: php://stderr
+      level: debug
+      formatter: monolog.formatter.json
+    groupe-log:
+      type: stream
       level: info
+      formatter: monolog.formatter.line
+      path: '%app.log.file%'
+    stdout:
+      type: stream
+      path: php://stdout
+      process_psr_3_messages: false
+      formatter: monolog.formatter.line
+      channels: [ "!event", "!doctrine" ]
+    deprecation:
+      type: stream
+      channels: [ deprecation ]
+      path: php://stderr
     critical_mailer:
       type: fingers_crossed
       action_level: critical
@@ -15,39 +36,9 @@ monolog:
       type: symfony_mailer
       from_email: '%app.mail.tdt_from_email%'
       to_email: '%app.mail.email_admin_technique%'
-      subject: '[%%datetime%%] %%channel%%.%%level_name%%: %%message%% %%context%% { "pid" : %%extra.pid%% }'
-      level: critical
+      subject: '[%%datetime%%] %%extra.service_name%%.%%level_name%%: %%message%% %%context%% { "pid" : %%extra.pid%% }'
+      level: error
       formatter: monolog.formatter.html
-
-when@prod:
-  monolog:
-    handlers:
-      main:
-        type: fingers_crossed
-        action_level: error
-        handler: nested
-        excluded_http_codes: [ 404, 405 ]
-        buffer_size: 50 # How many messages should be saved? Prevent memory leaks
-      nested:
-        type: stream
-        path: php://stderr
-        level: debug
-        formatter: monolog.formatter.json
-      console:
-        type: console
-        process_psr_3_messages: false
-        channels: [ "!event", "!doctrine" ]
-      deprecation:
-        type: stream
-        channels: [ deprecation ]
-        path: php://stderr
-when@dev:
-  monolog:
-    handlers:
-      console:
-        type: console
-        process_psr_3_messages: false
-        channels: [ "!event", "!doctrine", "!console" ]
 
 when@test:
   monolog:
@@ -55,10 +46,28 @@ when@test:
       main:
         type: fingers_crossed
         action_level: error
-        handler: nested
-        excluded_http_codes: [ 404, 405 ]
-        channels: [ "!event" ]
+        handler: test_all
+        excluded_http_codes: [404, 405]
+        channels: ["!event"]
+      test_all:
+        type: test
+        level: debug
+      test_deprecations:
+        type: test
+        channels: [deprecation]
+        level: debug
       nested:
         type: stream
-        path: "%kernel.logs_dir%/%kernel.environment%.log"
-        level: debug
+        path: /dev/null
+      stdout:
+        type: stream
+        path: /dev/null
+      deprecation:
+        type: stream
+        path: /dev/null
+      critical_mailer:
+        type: stream
+        path: /dev/null
+      symfony_mailer:
+        type: stream
+        path: /dev/null

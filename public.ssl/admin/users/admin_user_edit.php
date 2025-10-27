@@ -17,9 +17,9 @@ use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Model\UserSQL;
 
-list($objectInstancier, $jsonOutput,$sqlQuery, $frontController) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $jsonOutput,$sqlQuery, $frontController,$pathToValidCa) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, JSONoutput::class, SQLQuery::class, FrontController::class]
+        [ObjectInstancier::class, JSONoutput::class, SQLQuery::class, FrontController::class,'app.path_to_rgs_valid_ca']
     );
 
 $html = '';
@@ -321,7 +321,7 @@ ob_start();
     <?php
         $rgsCertificate = new RgsCertificate(OPENSSL_PATH, RGS_VALIDCA_PATH);
         $is_rgs = $rgsCertificate->isRgsCertificate($him->get('certificate'));
-        $rgsCertificateExtended = new RgsCertificate(OPENSSL_PATH, EXTENDED_VALIDCA_PATH);
+        $rgsCertificateExtended = new RgsCertificate(OPENSSL_PATH, $pathToValidCa);
         $has_sslclient_purpose = $rgsCertificateExtended->hasSSlClientPurpose($him->get('certificate'));
     ?>
     <?php if (! $is_rgs) : ?>

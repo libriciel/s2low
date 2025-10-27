@@ -2,7 +2,7 @@
 
 namespace S2lowLegacy\Lib;
 
-use S2lowLegacy\Class\S2lowLogger;
+use Psr\Log\LoggerInterface;
 
 class ScriptSleeping
 {
@@ -12,7 +12,7 @@ class ScriptSleeping
     private $logger;
     private $script_name;
 
-    public function __construct(S2lowLogger $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }

@@ -2,10 +2,10 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use Psr\Log\LoggerInterface;
 use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\RecoverableException;
-use S2lowLegacy\Class\S2lowLogger;
 use Exception;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
@@ -22,7 +22,7 @@ class ActesEnvoiFichierWorker implements IWorker
     private $actes_ministere_acronyme;
 
     public function __construct(
-        S2lowLogger $logger,
+        LoggerInterface $logger,
         ActesTransactionsSQL $actesTransactionsSQL,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         ActesScriptHelper $actesScriptHelper,

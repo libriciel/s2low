@@ -1,8 +1,18 @@
  <h1> Mail - Système de mail sécurisé</h1>
 
  <?php
+
+ /**
+  * @var string $etat
+  * @var string $sujet
+  * @var string|null $SendDateFrom
+  * @var string|null $SendDateTo
+  * @var MailTransaction $MailTransactions
+  */
+
  use S2lowLegacy\Class\DatePicker;
  use S2lowLegacy\Class\Helpers;
+ use S2lowLegacy\Mail\MailTransaction;
 
  if (isset($_SESSION['last_message'])) : ?>
      <div class="alert alert-success" >

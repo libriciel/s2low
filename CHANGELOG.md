@@ -13,11 +13,20 @@
 - Suppression de l'outil de signature intégré #1113
 - Suppression des jetons d'horodatage #1118
 
+## 5.1.5 - 2025-10-27
+
+### Corrections
+
+- Correction d'une exception survenant parfois lors de la suppression d'un fichier via helios-menage car le fichier n'existait deja plus. #1403
+- Correction d'un bug survenant parfois lors de la recuperation d'un fichier dans le cloud causant une exception critique. #1384
+- Correction d'un bug empêchant de télécharger les PES en erreur lorsqu'ils étaient trop volumineux.
+
 ## 5.1.4 - 2025-09-17
 
 ### Corrections
 
 - Le logrotate ne se lançait pas dans le container
+- Correction de la vérification des certificats sur admin_user_edit et des archives actes #1367
 
 ## 5.1.3 - 2025-09-04
 
@@ -30,6 +39,9 @@
 - Correction d’un problème d'affichage lors de la suppression d'un mail #1362
 - Augmentation du TTR de `ActesAntivirusWorker` pour éviter des messages d'erreur #1393
 - Permettre la vérification des CRL pour les marchés publics de nature Contrats, conventions et avenants #1382
+- Retire les espaces present dans le champ Helios FTP dans l'interface d'administration Helios. #1344
+- Correction de l'acces à actes_classification_fetch.php #1373
+- Corrige un probleme d'affichage lors de la suppression d'un mail #1362
 
 ### Suppressions
 

@@ -1,8 +1,5 @@
 <?php
 
-/** @var array $info_list */
-/** @var array $status_list */
-
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
 
 ?>
@@ -17,20 +14,20 @@ use S2lowLegacy\Class\helios\HeliosStatusSQL;
 
     <tr>
         <th scope="col">Collectivités</th>
-        <?php foreach ($status_list as $status_id) : ?>
+        <?php foreach ($this->status_list as $status_id) : ?>
             <th scope="col">
                 <?php hecho(HeliosStatusSQL::getStatusLibelle($status_id));?>
             </th>
         <?php endforeach; ?>
     </tr>
-    <?php foreach ($info_list as $authority_id => $authority_info) :?>
+    <?php foreach ($this->info_list as $authority_id => $authority_info) :?>
     <tr>
         <th scope="col">
             <a href="/admin/authorities/admin_authority_sae_statistiques.php?id=<?php echo $authority_id?>">
                 <?php hecho($authority_info['name']) ?>
             </a>
         </th>
-        <?php foreach ($status_list as $status_id) : ?>
+        <?php foreach ($this->status_list as $status_id) : ?>
             <td>
                 <span class="label label-<?php
                 echo ($authority_info['status'][$status_id] ?? 0) ? 'danger' : 'success'

@@ -15,7 +15,7 @@ use S2low\Services\Helios\DGFiPConnection\FTPConnection;
 use S2low\Services\Helios\DGFiPConnection\Protocols\FtpConnectionWrapper;
 use S2low\Services\Helios\DGFiPConnection\Protocols\FtpServiceWrapper;
 use S2low\Services\Helios\DGFiPConnection\Protocols\SftpServiceWrapper;
-use S2lowLegacy\Class\S2lowLogger;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowTestCase;
 
@@ -73,7 +73,7 @@ class FTPServiceTest extends S2lowTestCase
         return ( new DGFiPConnectionBuilder(
             $this->ftpServiceWrapperMock,
             $this->sftpServiceWrapperMock,
-            $this->getObjectInstancier()->get(S2lowLogger::class),
+            $this->getObjectInstancier()->get(LoggerInterface::class),
             $this->getObjectInstancier()->get(DirectoryManagerFactory::class)
         ) )->get(
             $configuration

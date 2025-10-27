@@ -33,6 +33,8 @@ parameters:
   app.use_legacy_bordereau_model: '%env(bool:default:app.use_legacy_bordereau_model.default:USE_LEGACY_BORDEREAU_MODEL)%'
   app.use_prod_notifications: '%env(bool:default:app.use_prod_notifications.default:USE_PROD_NOTIFICATIONS)%'
   app.workspace_directory: '%env(default:app.workspace_directory.default:WORKSPACE_DIRECTORY)%'
+  app.service_name: '%env(default:app.service_name.default:SERVICE_NAME)%'
+  app.log_path: '%env(default:app.log_path.default:LOG_PATH)%'
   app.cloud.parameters.endpoint: '%env(string:CLOUD_PROVIDER_ENDPOINT)%'
   app.cloud.parameters.credential.key: '%env(string:CLOUD_PROVIDER_KEY)%'
   app.cloud.parameters.credential.secret: '%env(string:CLOUD_PROVIDER_SECRET)%'
@@ -56,7 +58,7 @@ parameters:
   app.convert_api_logins_from_iso.default: false
   app.helios_use_passtrans_as_default.default: false
   app.image_for_stamp.default: '%kernel.project_dir%/public.ssl/custom/images/s2low-stamp.png'
-  app.log.file.default: '/data/log/s2low.log'
+  app.log.file.default: '%app.log_path%s2low.log'
   app.mail.dsn.default: 'smtp://maildev:1025?verify_peer=0'
   app.mail.message.default: 'Vous avez reçu un courrier recommandé par S2LOW'
   app.mail.secure_description.default: 'ne-pas-repondre'
@@ -69,6 +71,8 @@ parameters:
   app.redis_server.default: 'redis'
   app.use_legacy_bordereau_model.default: true
   app.use_prod_notifications.default: false
+  app.service_name.default: 'app'
+  app.log_path.default: '/data/log/'
   app.cloud_bucket.acte_enveloppe.default: 'domainacte'
   app.cloud_bucket.pes_aller.default: 'domainpesaller'
   app.cloud_bucket.pes_acquit.default: 'domainpesacquit'
@@ -133,6 +137,12 @@ services:
       $use_prod_notifications: '%app.use_prod_notifications%'
       $website: '%app.website%'
 
+  monolog.formatter.line:
+    class: Monolog\Formatter\LineFormatter
+    arguments:
+      - "[%%datetime%%] %%extra.service_name%%.%%level_name%%: %%message%% %%context%% {\"pid\":%%extra.pid%%}\n"
+      - "c"
+      - 'true'
 
 #  rgs_valid_ca_path:
 #    class: string
@@ -145,6 +155,10 @@ services:
   S2low\:
     resource: '../src/*'
     exclude: '../src/Kernel.php'
+
+  Psr\Log\LoggerInterface:
+    alias: 'logger'
+    public: true
 
   S2lowLegacy\Boot\S2lowBootstrap:
     class: 'S2lowLegacy\Boot\S2lowBootstrap'
@@ -813,6 +827,11 @@ services:
   S2lowLegacy\Class\Database:
     public: true
     shared: false
+
+  S2low\Logger\ServiceNameProcessor:
+    public: true
+    tags:
+      - { name: monolog.processor.service_name }
 
   S2low\Logger\MailerProcessor:
     public: true

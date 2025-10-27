@@ -6,9 +6,9 @@ namespace S2low\Tests\Services\Helios;
 
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnection;
 use S2low\Services\Helios\FTPHeliosReceiver;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowTestCase;
 
 /**
@@ -21,8 +21,8 @@ class FTPHeliosReceiverTest extends S2lowTestCase
      */
     public function testRetrieveEmptyRemoteDir()
     {
-        /** @var  S2lowLogger | MockObject $s2lowLogger */
-        $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
+        /** @var  LoggerInterface | MockObject $s2lowLogger */
+        $s2lowLogger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
 
         $ftpHeliosConnection = $this->getMockBuilder(DGFiPConnection::class)
             ->disableOriginalConstructor()
@@ -54,8 +54,8 @@ class FTPHeliosReceiverTest extends S2lowTestCase
      */
     public function testRetrieveADirectoryWithOneFile()
     {
-        /** @var  S2lowLogger | MockObject $s2lowLogger */
-        $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
+        /** @var  LoggerInterface | MockObject $s2lowLogger */
+        $s2lowLogger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
 
         $heliosConnection = $this->getMockBuilder(DGFiPConnection::class)
             ->disableOriginalConstructor()
@@ -90,8 +90,8 @@ class FTPHeliosReceiverTest extends S2lowTestCase
      */
     public function testRetrieveNonEmptyOnePesAller()
     {
-        /** @var  S2lowLogger | MockObject $s2lowLogger */
-        $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
+        /** @var  LoggerInterface | MockObject $s2lowLogger */
+        $s2lowLogger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
         $s2lowLogger->expects(static::once())
             ->method('info')
             ->with('PESALR2_File : PES ALLER ignoré');
@@ -130,8 +130,8 @@ class FTPHeliosReceiverTest extends S2lowTestCase
      */
     public function testRetrieveNonEmptyOnePError()
     {
-        /** @var  S2lowLogger | MockObject $s2lowLogger */
-        $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
+        /** @var  LoggerInterface | MockObject $s2lowLogger */
+        $s2lowLogger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
         $s2lowLogger->expects(static::once())
             ->method('info')
             ->with('File récupéré : ECHEC Une très bonne raison');
@@ -175,8 +175,8 @@ class FTPHeliosReceiverTest extends S2lowTestCase
      */
     public function testRetrieveMultipleFiles()
     {
-        /** @var  S2lowLogger | MockObject $s2lowLogger */
-        $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
+        /** @var  LoggerInterface | MockObject $s2lowLogger */
+        $s2lowLogger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
 
         /** @var DGFiPConnection | MockObject $heliosConnection */
         $heliosConnection = $this->getMockBuilder(DGFiPConnection::class)
@@ -212,8 +212,8 @@ class FTPHeliosReceiverTest extends S2lowTestCase
      */
     public function testRetrieveFileNamesWhilePESAreDropped()
     {
-        /** @var  S2lowLogger | MockObject $s2lowLogger */
-        $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
+        /** @var  LoggerInterface | MockObject $s2lowLogger */
+        $s2lowLogger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
 
         /** @var DGFiPConnection | MockObject $heliosConnection */
         $heliosConnection = $this->getMockBuilder(DGFiPConnection::class)
@@ -247,8 +247,8 @@ class FTPHeliosReceiverTest extends S2lowTestCase
      */
     public function testExceptionOnOneFile()
     {
-        /** @var  S2lowLogger | MockObject $s2lowLogger */
-        $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
+        /** @var  LoggerInterface | MockObject $s2lowLogger */
+        $s2lowLogger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
 
         $heliosConnection = $this->getMockBuilder(DGFiPConnection::class)
             ->disableOriginalConstructor()
@@ -277,8 +277,8 @@ class FTPHeliosReceiverTest extends S2lowTestCase
      */
     public function testRetrieveOneFile()
     {
-        /** @var  S2lowLogger | MockObject $s2lowLogger */
-        $s2lowLogger = $this->getMockBuilder(S2lowLogger::class)->disableOriginalConstructor()->getMock();
+        /** @var  LoggerInterface | MockObject $s2lowLogger */
+        $s2lowLogger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
 
         $heliosConnection = $this->getMockBuilder(DGFiPConnection::class)
             ->disableOriginalConstructor()

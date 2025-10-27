@@ -26,7 +26,7 @@ function get_hecho($message, $quot_style = ENT_QUOTES, $encoding = 'utf-8'): str
 
 if (defined('TESTING_ENVIRONNEMENT') && TESTING_ENVIRONNEMENT) {
 
-    function exit_wrapper($status = '')
+    function exit_wrapper($status = ''): never
     {
         $message = 'exit() called';
         if ($status) {

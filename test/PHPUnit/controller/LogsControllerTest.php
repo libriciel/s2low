@@ -23,7 +23,7 @@ class LogsControllerTest extends S2lowIntegrationTestCase
         $logsController = self::getContainer()->get(LogsController::class);
         $logsController->viewAction();
         $h1_title_expected = "Journal d'évènements du groupe «&nbsp;Groupe de test&nbsp;»";
-        $this->assertEquals($h1_title_expected, $logsController->getViewParameter('h1_title'));
+        $this->assertEquals($h1_title_expected, $logsController->h1_title);
     }
 
     public function testTitleAdminCol()
@@ -35,7 +35,7 @@ class LogsControllerTest extends S2lowIntegrationTestCase
         $logsController = self::getContainer()->get(LogsController::class);
         $logsController->viewAction();
         $h1_title_expected = "Journal d'évènements de la collectivité «&nbsp;Saint-Andre de Corcy&nbsp;»";
-        $this->assertEquals($h1_title_expected, $logsController->getViewParameter('h1_title'));
+        $this->assertEquals($h1_title_expected, $logsController->h1_title);
     }
 
     public function testUser()
@@ -44,6 +44,6 @@ class LogsControllerTest extends S2lowIntegrationTestCase
         $logsController = self::getContainer()->get(LogsController::class);
         $logsController->viewAction();
         $h1_title_expected = "Journal d'évènements";
-        $this->assertEquals($h1_title_expected, $logsController->getViewParameter('h1_title'));
+        $this->assertEquals($h1_title_expected, $logsController->h1_title);
     }
 }

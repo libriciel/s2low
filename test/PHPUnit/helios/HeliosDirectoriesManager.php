@@ -1,6 +1,5 @@
 <?php
 
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Model\AuthoritySiretSQL;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosRetourSQL;

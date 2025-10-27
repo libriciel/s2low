@@ -2,12 +2,12 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use Psr\Log\LoggerInterface;
 use S2low\Services\CloudFileStorageInterface;
 use S2low\Services\LocalFileResolver;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Log;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TmpFolder;
 use Exception;
 use S2lowLegacy\Lib\SigTermHandler;
@@ -24,7 +24,7 @@ class ActesNotification
 
     private MailerSymfonyFactory $mailerFactory;
 
-    private S2lowLogger $logger;
+    private LoggerInterface $logger;
 
     private string $actes_appli_trigramme;
 
@@ -48,7 +48,7 @@ class ActesNotification
         AuthoritySQL $authoritySQL,
         ActesEnvelopeSQL $actesEnveloppeSQL,
         MailerSymfonyFactory $mailerFactory,
-        S2lowLogger $logger,
+        LoggerInterface $logger,
         string $actes_appli_trigramme,
         BordereauPdfGenerator $bordereauPdfGenerator,
         Environment $twigEnvironment,

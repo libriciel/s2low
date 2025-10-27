@@ -2,9 +2,9 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use Psr\Log\LoggerInterface;
 use S2low\Services\CloudFileStorageInterface;
 use S2low\Services\LocalFileResolver;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\TGZExtractor;
 use S2lowLegacy\Class\TmpFolder;
 use Exception;
@@ -28,7 +28,7 @@ class ActesExport
         private readonly LocalFileResolver $acteEnveloppeFileResolver,
         #[Autowire(service: 'app.store.file.acte_enveloppe')]
         private readonly CloudFileStorageInterface $cloudFileStorage,
-        S2lowLogger $s2lowLogger,
+        LoggerInterface $s2lowLogger,
         AuthoritySQL $authoritySQL,
         ActesTransactionsSQL $actesTransactionsSQL,
         ActesIncludedFileSQL $actesIncludedFileSQL,

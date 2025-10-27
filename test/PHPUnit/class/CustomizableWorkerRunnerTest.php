@@ -18,7 +18,6 @@ use S2lowLegacy\Class\CustomizableWorkerRunner;
 use S2lowLegacy\Class\BeanstalkdWrapper;
 use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\RedisMutexWrapper;
-use S2lowLegacy\Class\S2lowLogger;
 use S2lowLegacy\Class\JobFetcherFromSelfUpdatedBeanstalkd;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Class\WorkerScriptException;
@@ -68,7 +67,7 @@ class CustomizableWorkerRunnerTest extends TestCase
 
         $this->workerRunner = new CustomizableWorkerRunner(
             $this->heliosReceptionWorker,
-            new S2lowLogger($logger),
+            $logger,
             $sigTermHandler,
             0,
             new JobFetcherFromSelfUpdatedBeanstalkd(
