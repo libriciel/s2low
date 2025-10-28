@@ -13,9 +13,7 @@ use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Lib\PemCertificateFactory;
-use S2lowLegacy\Lib\PKCS12;
 use S2lowLegacy\Lib\Recuperateur;
-use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Lib\XadesSignature;
 use S2lowLegacy\Lib\XadesSignatureParser;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
@@ -72,8 +70,6 @@ $verifyPemCertificateFactory = new VerifyPemCertificateFactory();
 
 $xadesSignature = new XadesSignature(
     XMLSEC1_PATH,
-    new PKCS12(),
-    new X509Certificate(),
     EXTENDED_VALIDCA_PATH,
     new XadesSignatureParser(),
     new PemCertificateFactory(),

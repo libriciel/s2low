@@ -6,201 +6,31 @@ namespace S2lowLegacy\Lib;
 use S2lowLegacy\Class\VerifyPemCertificate;
 use DateTime;
 use DateTimeZone;
-use DOMDocument;
-use DOMElement;
-use DOMNode;
 use Exception;
 
 class XadesSignature
 {
     public const NS_DS_URI = "http://www.w3.org/2000/09/xmldsig#";
-    public const NS_XAD_URI = "http://uri.etsi.org/01903/v1.1.1#";
-
-    //const HASH_ALG = "sha256";
-    private const HASH_ALG = "sha1";
 
     private $xmlsec1_path;
-    private $pkcs12;
-    private $x509Certificate;
     private $validca_path;
 
     private $last_output;
-    /** @var XadesSignatureParser  */
-    private $xadesSignatureParser;
-    /**
-     * @var PemCertificateFactory
-     */
-    private $pemCertificateFactory;
-    /**
-     * @var VerifyPemCertificate
-     */
-    private $verifyPemCertificate;
 
     public function __construct(
         $xmlsec1_path,
-        PKCS12 $pkcs12,
-        X509Certificate $x509Certificate,
         $validca_path,
-        XadesSignatureParser $xadesSignatureParser,
-        PemCertificateFactory $pemCertificateFactory,
-        VerifyPemCertificate $verifyPemCertificate
+        private readonly XadesSignatureParser $xadesSignatureParser,
+        private readonly PemCertificateFactory $pemCertificateFactory,
+        private readonly VerifyPemCertificate $verifyPemCertificate,
     ) {
         $this->xmlsec1_path = $xmlsec1_path;
-        $this->pkcs12 = $pkcs12;
-        $this->x509Certificate = $x509Certificate;
         $this->validca_path = $validca_path;
-        $this->xadesSignatureParser = $xadesSignatureParser;
-        $this->pemCertificateFactory = $pemCertificateFactory;
-        $this->verifyPemCertificate = $verifyPemCertificate;
     }
 
     public function getLastOutput()
     {
         return $this->last_output;
-    }
-
-    /**
-     * @throws XadesSignatureNoIDException
-     * @throws XadesSignatureHasSignatureException
-     * @throws Exception
-     */
-    public function sign($xml_file_to_sign, $p12_certificate_path, $p12_password, $xml_file_signed, XadesSignatureProperties $xadesSignatureProperties)
-    {
-        //throw new Exception("La signature technique n'est plus implémenté dans s2low");
-        $certificate_info = $this->getCertificateInfo($p12_certificate_path, $p12_password);
-
-        $domDocument = $this->loadDomDocument($xml_file_to_sign);
-        $document_id = $this->getDocumentId($domDocument);
-
-        if ($this->hasSignature($domDocument)) {
-            //Limitation de cette classe : on ne fait pas de signature multiple enveloppé...
-            throw new XadesSignatureHasSignatureException("Le fichier à signer a déjà une signature");
-        }
-
-        $signatureTemplate = $this->getXMLSignatureTemplate($document_id, $certificate_info, $xadesSignatureProperties);
-
-
-        $signatureTemplateDOM = dom_import_simplexml($signatureTemplate);
-
-        $node = $domDocument->importNode($signatureTemplateDOM, true);
-        $domDocument->documentElement->appendChild($node);
-
-        $tmp_file = sys_get_temp_dir() . "/" . uniqid("xmlsigtmp");
-        $domDocument->save($tmp_file);
-
-        $rootNodeName = $this->getLocalName($domDocument);
-
-        $signature_node_id = $this->getSignatureNodeId($document_id);
-
-        $xpath = "//*[namespace-uri()='http://www.w3.org/2000/09/xmldsig#'][local-name()='Signature'][@Id='{$signature_node_id}']";
-
-        $command = "{$this->xmlsec1_path} --sign --node-xpath \"$xpath\" --id-attr:Id $rootNodeName --output $xml_file_signed --pkcs12 $p12_certificate_path --pwd $p12_password $tmp_file 2>&1";
-
-        exec($command, $output, $return_var);
-
-        unlink($tmp_file);
-        if ($return_var != 0) {
-            throw new Exception("Erreur ($return_var) lors de la signature technique : " . implode("\n", $output));
-        }
-    }
-
-    private function getCertificateInfo($p12_certificate_path, $p12_password)
-    {
-        $x509_pem_content = $this->pkcs12->getX509CertificateContent($p12_certificate_path, $p12_password);
-        $certInfo['serialNumber'] = $this->x509Certificate->getInfo($x509_pem_content)['serialNumber'];
-        $certInfo['issuerName'] = $this->x509Certificate->getIssuerDN($x509_pem_content, true);
-        $certInfo['certDigest'] = $this->x509Certificate->getBase64Hash($x509_pem_content, self::HASH_ALG);
-        return $certInfo;
-    }
-
-    private function loadDomDocument($xml_file_path)
-    {
-        libxml_use_internal_errors(true);
-
-        $domDocument = new DOMDocument();
-        $result = $domDocument->load($xml_file_path, LIBXML_PARSEHUGE);
-        if (! $result) {
-            $errors = libxml_get_errors();
-            throw new Exception($errors[0]->message);
-        }
-        return $domDocument;
-    }
-
-    private function getDocumentId(DOMDocument $domDocument)
-    {
-        if (! $domDocument->documentElement->attributes->getNamedItem('Id')) {
-            throw new XadesSignatureNoIDException("Le document XML ne contient pas d'Id");
-        }
-        return $domDocument->documentElement->attributes->getNamedItem('Id')->nodeValue;
-    }
-
-    private function hasSignature(DomDocument $domDocument)
-    {
-        $nodes = $domDocument->documentElement->childNodes;
-        foreach ($nodes as $node) {
-            /** @var $node DomNode */
-            if ($node->nodeType != XML_ELEMENT_NODE) {
-                continue;
-            }
-            /** @var $node DomElement */
-            if (mb_strtolower($node->localName) == 'signature' && $node->namespaceURI == self::NS_DS_URI) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private function getXMLSignatureTemplate($document_id, $certificate_info, XadesSignatureProperties $xadesSignatureProperties)
-    {
-        if (self::HASH_ALG == 'sha1') {
-            $template_file = __DIR__ . "/xades-template-sha1.xml";
-        } else {
-            $template_file = __DIR__ . "/xades-template.xml";
-        }
-
-        $signatureTemplate =  simplexml_load_file($template_file);
-        $signature_id = $this->getSignatureNodeId($document_id);
-        $signed_properties_id = "{$signature_id}_SP";
-
-        $signatureTemplate->attributes()->Id = $signature_id;
-
-        $signature_element  = $signatureTemplate->children(self::NS_DS_URI);
-        $signature_element->SignedInfo->Reference[0]->attributes()->URI = "#$document_id";
-        $signature_element->SignedInfo->Reference[1]->attributes()->URI = "#{$signed_properties_id}";
-
-        $xad_qualifying_properties = $signature_element->Object->children(self::NS_XAD_URI)->QualifyingProperties;
-        $xad_qualifying_properties->attributes()->Target = "#{$signature_id}";
-        $xad_qualifying_properties->SignedProperties->attributes()->Id = "$signed_properties_id";
-
-        $signedSignatureProperties = $xad_qualifying_properties->SignedProperties->SignedSignatureProperties;
-
-        $signedSignatureProperties->SigningTime = gmdate('Y-m-d\TH:i:s\Z');
-
-
-
-        $issuer_serial_child = $signedSignatureProperties->SigningCertificate->Cert->IssuerSerial->children(self::NS_DS_URI);
-
-        $issuer_serial_child->X509IssuerName = $certificate_info['issuerName'];
-        $issuer_serial_child->X509SerialNumber = $certificate_info['serialNumber'];
-        $cert_digest_child = $signedSignatureProperties->SigningCertificate->Cert->CertDigest->children(self::NS_XAD_URI);
-        $cert_digest_child->DigestValue = $certificate_info['certDigest'];
-
-        $signedSignatureProperties->SignatureProductionPlace->City = $xadesSignatureProperties->city;
-        $signedSignatureProperties->SignatureProductionPlace->PostalCode = $xadesSignatureProperties->postalCode;
-        $signedSignatureProperties->SignatureProductionPlace->CountryName = $xadesSignatureProperties->countryName;
-        $signedSignatureProperties->SignerRole->ClaimedRoles->ClaimedRole = $xadesSignatureProperties->claimedRole;
-
-        return $signatureTemplate;
-    }
-
-    private function getSignatureNodeId($document_id)
-    {
-        return "{$document_id}_SIG";
-    }
-
-    private function getLocalName(DomDocument $domDocument)
-    {
-        return $domDocument->documentElement->localName;
     }
 
     public function isSigned($xml_file)
@@ -258,7 +88,7 @@ class XadesSignature
                     [
                         3,  //X509_V_ERR_UNABLE_TO_GET_CRL
                         11,  //X509_V_ERR_CRL_NOT_YET_VALID
-                        12  //X509_V_ERR_CRL_HAS_EXPIRED
+                        12,  //X509_V_ERR_CRL_HAS_EXPIRED
                     ],
                     $timeStamp
                 );
@@ -272,8 +102,12 @@ class XadesSignature
         }
     }
 
-    private function verifyIntern($xml_file_signed, $signature_node_name, $signature_node_id, DateTime $verificationTime = null): bool
-    {
+    private function verifyIntern(
+        $xml_file_signed,
+        $signature_node_name,
+        $signature_node_id,
+        DateTime $verificationTime = null
+    ): bool {
         $xpath = "//*[namespace-uri()='http://www.w3.org/2000/09/xmldsig#'][local-name()='Signature'][@Id='{$signature_node_id}']";
         $verificationTimeParameter = "";
 

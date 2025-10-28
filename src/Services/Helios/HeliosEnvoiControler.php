@@ -17,8 +17,6 @@ use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\HeliosNamesGenerator;
 use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\PesAllerReader;
-use S2lowLegacy\Lib\PKCS12;
-use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Lib\XadesSignature;
 use S2lowLegacy\Lib\XadesSignatureParser;
 use S2lowLegacy\Model\AuthoritySiretSQL;
@@ -54,8 +52,6 @@ class HeliosEnvoiControler
     ) {
         $this->xadesSignature = new XadesSignature(
             XMLSEC1_PATH,
-            new PKCS12(),
-            new X509Certificate(),
             EXTENDED_VALIDCA_PATH,
             new XadesSignatureParser(),
             new PemCertificateFactory(),

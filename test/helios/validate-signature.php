@@ -2,8 +2,6 @@
 
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Lib\PemCertificateFactory;
-use S2lowLegacy\Lib\PKCS12;
-use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Lib\XadesSignature;
 use S2lowLegacy\Lib\XadesSignatureParser;
 
@@ -21,8 +19,6 @@ echo "Analyse du fichier : $xml_file\n";
 
 $xadesSignature = new XadesSignature(
     XMLSEC1_PATH,
-    new PKCS12(),
-    new X509Certificate(),
     EXTENDED_VALIDCA_PATH,
     new XadesSignatureParser(),
     new PemCertificateFactory(),
