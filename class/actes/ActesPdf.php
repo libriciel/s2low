@@ -212,7 +212,7 @@ class ActesPdf implements IActesPdf
      * @param array $a
      * @param array $titles
      */
-    public function setUpTable(ExtendPdf $pdf, array $w, array $a, array $titles = null): void
+    public function setUpTable(ExtendPdf $pdf, array $w, array $a, ?array $titles = null): void
     {
         $taillePolice = self::TAILLE_POLICE_TABLEAU;
 

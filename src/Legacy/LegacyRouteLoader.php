@@ -19,7 +19,7 @@ class LegacyRouteLoader extends Loader
         string $project_dir,
         string $relative_legacy_ssl_path,
         LegacyClassLoader $classLoader,
-        string $env = null
+        ?string $env = null,
     ) {
         $this->legacy_ssl_path = $this->trimPathToAccomodateVFS("$project_dir/$relative_legacy_ssl_path");
         $this->classLoader = $classLoader;
@@ -47,7 +47,7 @@ class LegacyRouteLoader extends Loader
     /**
      * @inheritDoc
      */
-    public function load(mixed $resource, string $type = null): RouteCollection
+    public function load(mixed $resource, ?string $type = null): RouteCollection
     {
         $phpFilesForStandardRoutes = $this->findLegacyRoutes($this->legacy_ssl_path);
 
@@ -82,7 +82,7 @@ class LegacyRouteLoader extends Loader
     /**
      * @inheritDoc
      */
-    public function supports(mixed $resource, string $type = null): bool
+    public function supports(mixed $resource, ?string $type = null): bool
     {
         return 'legacyroute' === $type;
     }

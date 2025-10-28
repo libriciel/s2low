@@ -22,8 +22,8 @@ class CloudStorageTest extends S2lowTestCase
 {
     private function getMailIncludedFilesCloudStorable(
         string $file_path_on_disk,
-        string $getDirectoryForFilesWithoutTransaction = null,
-        string $getPathRelativeToUploadDir = null
+        ?string $getDirectoryForFilesWithoutTransaction = null,
+        ?string $getPathRelativeToUploadDir = null,
     ): MailIncludedFilesCloudStorable | MockObject {
         $this->setOpenStackSwiftWrapper(false, false);
         $iCloudStorable = $this->getMockBuilder(MailIncludedFilesCloudStorable::class)
@@ -47,10 +47,11 @@ class CloudStorageTest extends S2lowTestCase
 
         return $iCloudStorable;
     }
+
     private function getICloudStorable(
         string $file_path_on_disk,
         string $file_path_on_cloud = 'test42',
-        Finder $finder = null
+        ?Finder $finder = null,
     ): ICloudStorable |MockObject {
         $iCloudStorable = $this->getMockBuilder(ICloudStorable::class)
             ->disableOriginalConstructor()

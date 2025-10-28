@@ -232,8 +232,10 @@ class ActesMenageTest extends S2lowTestCase
         );
     }
 
-    private function getActesCloudStorage(ActesEnvelopeSQL $acteEnvelopeSQL, OpenStackSwiftWrapper $openStackSwiftWrapper = null): ActesCloudStorage
-    {
+    private function getActesCloudStorage(
+        ActesEnvelopeSQL $acteEnvelopeSQL,
+        ?OpenStackSwiftWrapper $openStackSwiftWrapper = null,
+    ): ActesCloudStorage {
         $acteCloudStorable = new ActesCloudStorable(
             self::getContainer()->getParameter('app.actes.files_upload_root'),
             $acteEnvelopeSQL,

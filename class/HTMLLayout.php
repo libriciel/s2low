@@ -110,7 +110,7 @@ class HTMLLayout extends Layout
      * \param $user objet (optionnel) : objet représentant l'utilisateur en cours pour personnalisation du menu
      * \param $displayInline booléen (optionnel) : spécifie si le HTML doit être affiché (true) ou ajouté au corps du document (false, par défaut)
      */
-    public function buildMenu(User $user = null, $displayInline = false)
+    public function buildMenu(?User $user = null, $displayInline = false)
     {
 
         $sqlQuery = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(SQLQuery::class);
