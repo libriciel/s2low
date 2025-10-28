@@ -39,4 +39,10 @@ class PesAcquitFileDataProvider implements FileDataProvider
 
         return $heliosTransaction['siren'] . '/' . $heliosTransaction['acquit_filename'];
     }
+
+    public function getTransactionIdFromFileName(string $filePath): string
+    {
+        // TODO: Implement getTransactionIdFromFileName() method.
+        return '';
+    }
 }

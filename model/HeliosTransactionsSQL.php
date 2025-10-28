@@ -784,4 +784,10 @@ AND authorities.helios_use_passtrans = ?
 
         return $transaction['siren'] . '/' . basename($transaction['sha1']);
     }
+
+    public function getTransactionIdFromFileName(string $filePath): string
+    {
+        // TODO: Implement getTransactionIdFromFileName() method.
+        return '';
+    }
 }

@@ -154,4 +154,16 @@ class ActesEnvelopeSQL extends SQL implements FileDataProvider
 
         return $transaction['siren'] . '/' . basename($transaction['file_path']);
     }
+
+    public function getTransactionIdFromFileName(string $filePath): ?string
+    {
+        $fileName = basename($filePath);
+        $transactionId = $this->queryOne("SELECT id FROM actes_envelopes WHERE file_path LIKE ?", '%' . $fileName . '%');
+
+        if ($transactionId === false) {
+            $transactionId = null;
+        }
+
+        return $transactionId;
+    }
 }

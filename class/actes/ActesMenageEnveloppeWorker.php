@@ -2,8 +2,11 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use Psr\Log\LoggerInterface;
+use S2low\Services\RemoveOldFilesOnDisk;
 use S2lowLegacy\Class\IWorker;
 use Exception;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class ActesMenageEnveloppeWorker implements IWorker
 {
@@ -12,9 +15,11 @@ class ActesMenageEnveloppeWorker implements IWorker
     private int $nb_days_in_disk;
     private ActesCloudStorage $actesCloudStorage;
 
-    public function __construct(ActesCloudStorage $actesCloudStorage)
-    {
-        $this->actesCloudStorage = $actesCloudStorage;
+    public function __construct(
+        private readonly LoggerInterface $logger,
+        #[Autowire(service: 'app.removeFiles.acte_enveloppe')]
+        private readonly RemoveOldFilesOnDisk $removeOldFilesOnDisk,
+    ) {
         $this->setNbDayInDisk(self::NB_DAYS_IN_DISK);
     }
 
@@ -46,7 +51,11 @@ class ActesMenageEnveloppeWorker implements IWorker
      */
     public function work($data): void
     {
-        $this->actesCloudStorage->deleteFilesOnDisk($this->nb_days_in_disk, true);
+        try {
+            $this->removeOldFilesOnDisk->execute($this->nb_days_in_disk);
+        } catch (\Throwable $e) {
+            $this->logger->error($e->getMessage());
+        }
     }
 
     public function getMutexName($data): string

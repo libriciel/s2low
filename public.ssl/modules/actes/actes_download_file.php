@@ -90,7 +90,7 @@ if ($mode == "file") {
     $entity = $env;
 }
 
-if (! $entity->sendfile()) {
+if (! $entity->sendfile($envId)) {
     $_SESSION["error"] = "Erreur d'envoi du fichier : " . $entity->getErrorMsg();
     header("Location: " . WEBSITE_SSL);
     exit();
