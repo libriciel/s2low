@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace S2low\Tests;
 
 use S2lowLegacy\Lib\SQLQuery;
@@ -9,13 +11,14 @@ use S2lowLegacy\Mail\MailTransaction;
 class MailPeerTest extends \S2lowTestCase
 {
     private MailTransaction $mailTransaction;
-    public function setUp(): void
+
+    protected function setUp(): void
     {
         parent::setUp();
         $this->mailTransaction = self::getContainer()->get(MailTransaction::class);
     }
 
-    public function testDeleteMailTransaction()
+    public function testDeleteMailTransaction(): void
     {
         $idCreatedMail = $this->createDumbMail();
 
@@ -36,15 +39,17 @@ class MailPeerTest extends \S2lowTestCase
         return $this->getMailIdFromUniqueMessage($_POST['message']);
     }
 
-
     private function mailIsDeleted($idCreatedMail): bool
     {
         $this->mailTransaction->setId($idCreatedMail);
         return $this->mailTransaction->init() === false;
     }
 
-    private function getMailIdFromUniqueMessage($uniqueMessage)
+    private function getMailIdFromUniqueMessage(string $uniqueMessage): int
     {
-        return self::getContainer()->get(SQLQuery::class)->query("SELECT id from mail_transaction WHERE message = '${uniqueMessage}'")[0]['id'];
+        $message = self::getContainer()
+            ->get(SQLQuery::class)
+            ->query('SELECT id from mail_transaction WHERE message = ?;', [$uniqueMessage]);
+        return $message[0]['id'];
     }
 }
