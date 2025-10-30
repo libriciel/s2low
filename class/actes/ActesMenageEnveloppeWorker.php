@@ -3,7 +3,7 @@
 namespace S2lowLegacy\Class\actes;
 
 use Psr\Log\LoggerInterface;
-use S2low\Services\RemoveOldFilesOnDisk;
+use S2low\Services\RemoveStoredFilesOnDisk;
 use S2lowLegacy\Class\IWorker;
 use Exception;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -18,7 +18,7 @@ class ActesMenageEnveloppeWorker implements IWorker
     public function __construct(
         private readonly LoggerInterface $logger,
         #[Autowire(service: 'app.removeFiles.acte_enveloppe')]
-        private readonly RemoveOldFilesOnDisk $removeOldFilesOnDisk,
+        private readonly RemoveStoredFilesOnDisk $removeOldFilesOnDisk,
     ) {
         $this->setNbDayInDisk(self::NB_DAYS_IN_DISK);
     }
@@ -52,7 +52,7 @@ class ActesMenageEnveloppeWorker implements IWorker
     public function work($data): void
     {
         try {
-            $this->removeOldFilesOnDisk->execute($this->nb_days_in_disk);
+            $this->removeOldFilesOnDisk->findAndRemoveLocalFilesAlreadyCloudSaved($this->nb_days_in_disk);
         } catch (\Throwable $e) {
             $this->logger->error($e->getMessage());
         }

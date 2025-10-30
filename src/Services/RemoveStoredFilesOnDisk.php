@@ -9,7 +9,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
-class RemoveOldFilesOnDisk
+class RemoveStoredFilesOnDisk
 {
     private const MAX_FILES_AGE = 15;
 
@@ -20,14 +20,15 @@ class RemoveOldFilesOnDisk
         private readonly FileDataProvider $fileDataProvider,
         private readonly LocalFileResolver $localFileResolver,
         private readonly Finder $finder,
+        private readonly string $localPathPrefix,
         private readonly ?string $transactionErrorDirectory,
         private readonly bool $moveOrphelinsFiles
     ) {
     }
 
-    public function execute(int $maxFilesAge = self::MAX_FILES_AGE): void
+    public function findAndRemoveLocalFilesAlreadyCloudSaved(int $maxFilesAge = self::MAX_FILES_AGE): void
     {
-        $transactionsIds = $this->getTransactionsIdsAndMoveOrphelinsFilesToErrorFolder($maxFilesAge);
+        $transactionsIds = $this->getTransactionsIdsOfFilesFoundAndMoveOrphelinsFiles($maxFilesAge);
         $this->logger->debug(
             sprintf("Transactions pour lesquelles ont doit faire le menage : %s.", json_encode($transactionsIds)),
         );
@@ -36,24 +37,11 @@ class RemoveOldFilesOnDisk
             $this->logger->debug(
                 sprintf("Prise en charge de la transaction %s", $transactionId)
             );
-            if ($this->cloudFileStorage->fileExistOnCloud($transactionId)) {
-                try {
-                    $this->deleteTransactionFileOnDisk($transactionId);
-                    $this->logger->info(
-                        sprintf('Suppression du fichier de la transaction %s.', $transactionId)
-                    );
-                } catch (FileDeletionException $exception) {
-                    $this->logger->error($exception->getMessage());
-                }
-            } else {
-                $this->logger->debug(
-                    sprintf('Le fichier de la transaction %s n\'est pas present dans le cloud. Abandon du traitement.', $transactionId)
-                );
-            }
+            $this->deleteFileIfSavedOnCloud($transactionId);
         }
     }
 
-    private function getTransactionsIdsAndMoveOrphelinsFilesToErrorFolder(int $maxFilesAge): array
+    private function getTransactionsIdsOfFilesFoundAndMoveOrphelinsFiles(int $maxFilesAge): array
     {
 //        $sigtermHandler = SigTermHandler::getInstance();
 
@@ -63,6 +51,10 @@ class RemoveOldFilesOnDisk
             $transactionId = $this->fileDataProvider->getTransactionIdFromFileName($file->getFilename());
 
             if ($this->fileIsYoungerThan($file, $maxFilesAge)) {
+                $this->logger->debug(
+                    sprintf('le fichier %s est trop recent pour etre supprimé', basename($file))
+                );
+
                 continue;
             }
 
@@ -88,6 +80,31 @@ class RemoveOldFilesOnDisk
         }
 
         return $transactionsIds;
+    }
+
+    /**
+     * @param mixed $transactionId
+     * @return void
+     */
+    public function deleteFileIfSavedOnCloud(string $transactionId): void
+    {
+        if ($this->cloudFileStorage->fileExistOnCloud($transactionId)) {
+            try {
+                $this->deleteTransactionFileOnDisk($transactionId);
+                $this->logger->info(
+                    sprintf('Suppression du fichier de la transaction %s.', $transactionId)
+                );
+            } catch (FileDeletionException $exception) {
+                $this->logger->error($exception->getMessage());
+            }
+        } else {
+            $this->logger->debug(
+                sprintf(
+                    'Le fichier de la transaction %s n\'est pas present dans le cloud. Abandon du traitement.',
+                    $transactionId
+                )
+            );
+        }
     }
 
     private function fileIsYoungerThan(SplFileInfo $file, int $maxFilesAge): bool
@@ -141,16 +158,20 @@ class RemoveOldFilesOnDisk
             );
         } catch (\Throwable $exception) {
             throw new FileDeletionException($exception->getMessage(), $exception);
-        } finally {
-            $this->deleteDirectoryIfEmpty($path);
         }
+
+        $this->deleteDirectoryIfEmpty($path);
     }
 
     private function deleteDirectoryIfEmpty(string $path): void
     {
         $dirName = dirname($path);
-        if (count(scandir($dirName)) == 2) {
-            rmdir($dirName);
+        $dirIsNotWorkDir = basename($dirName) !== basename($this->localPathPrefix);
+
+        if ($dirIsNotWorkDir) {
+            if (count(scandir($dirName)) == 2) {
+                rmdir($dirName);
+            }
         }
     }
 }

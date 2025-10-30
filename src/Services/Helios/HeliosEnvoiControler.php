@@ -4,12 +4,13 @@ namespace S2low\Services\Helios;
 
 use Exception;
 use Psr\Log\LoggerInterface;
+use S2low\Services\CloudFileStorageInterface;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager;
+use S2low\Services\LocalFileResolver;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\helios\FichierCompteur;
 use S2lowLegacy\Class\helios\HeliosTransmissionWindowsSQL;
-use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\WorkerScript;
@@ -24,6 +25,7 @@ use S2lowLegacy\Model\AuthoritySiretSQL;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use SimpleXMLElement;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use ZipArchive;
 
 class HeliosEnvoiControler
@@ -36,7 +38,10 @@ class HeliosEnvoiControler
         private readonly HeliosTransactionsSQL $heliosTransactionsSQL,
         private readonly AuthoritySQL $authoritySQL,
         private readonly HeliosTransmissionWindowsSQL $heliosTransmissionWindowsSQL,
-        private readonly PesAllerRetriever $pesAllerRetriever,
+        #[Autowire(service: 'app.localFileResolver.pes_aller')]
+        private readonly LocalFileResolver $pesAllerResolver,
+        #[Autowire(service: 'app.store.file.pes_aller')]
+        private readonly CloudFileStorageInterface $cloudPesAllerStorage,
         private readonly Antivirus $antivirus,
         private readonly WorkerScript $workerScript,
         private readonly MailerSymfonyFactory $mailerFactory,
@@ -72,9 +77,10 @@ class HeliosEnvoiControler
         libxml_use_internal_errors(true);
         $transactionInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
 
-        $file_path = $this->pesAllerRetriever->getPath($transactionInfo['sha1']);
+        $file_path = $this->pesAllerResolver->getFullPath($transaction_id);
+        $this->cloudPesAllerStorage->downloadFileFromCloud($transaction_id);
 
-        if (!$file_path) {
+        if (!file_exists($file_path)) {
             $message = "Transaction $transaction_id : fichier non trouvé en local ou sur le cloud";
             $this->updateStatus($transaction_id, HeliosTransactionsSQL::ERREUR, $message, $transactionInfo['user_id']);
             return;
@@ -251,7 +257,8 @@ class HeliosEnvoiControler
         $this->heliosTransactionsSQL->setCompleteName($transaction_id, $completeName);
         $this->logger->info("Nom du fichier à envoyer : $completeName");
 
-        $file_path = $this->pesAllerRetriever->getPath($transactionInfo['sha1']);
+        $file_path = $this->pesAllerResolver->getFullPath($transaction_id);
+        $this->cloudPesAllerStorage->downloadFileFromCloud($transaction_id);
 
         $file_path_with_complete_name = $file_sending_repository . '/' . $completeName;
         if (! copy($file_path, $file_path_with_complete_name)) {

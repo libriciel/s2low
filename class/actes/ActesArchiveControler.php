@@ -7,6 +7,7 @@ namespace S2lowLegacy\Class\actes;
 use Psr\Log\LoggerInterface;
 use S2low\Services\CloudFileStorageInterface;
 use S2low\Services\LocalFileResolver;
+use S2low\Services\RemoveStoredFilesOnDisk;
 use S2lowLegacy\Class\PastellWrapperFactory;
 use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\TGZExtractor;
@@ -31,7 +32,6 @@ class ActesArchiveControler
 
     private ActesEnvelopeSQL $actesEnvelopeSQL;
     private ActesTypePJSQL $actesTypePJSQL;
-    private ActesCloudStorage $actesEnvelopeCloudStorage;
 
     /**
      * @throws \S2lowLegacy\Lib\UnrecoverableException
@@ -48,7 +48,8 @@ class ActesArchiveControler
         ActesTransactionsSQL $actesTransactionsSQL,
         ActesEnvelopeSQL $actesEnvelopeSQL,
         ActesTypePJSQL $actesTypePJSQL,
-        ActesCloudStorage $cloudStorage,
+        #[Autowire(service: 'app.removeFiles.acte_enveloppe')]
+        private readonly RemoveStoredFilesOnDisk $removeActeEnveloppeOnDisk,
     ) {
         $this->pastellWrapperFactory = $pastellWrapperFactory;
         $this->actesTransactionsSQL = $actesTransactionsSQL;
@@ -57,7 +58,6 @@ class ActesArchiveControler
         $this->logger = $logger;
         $this->actesEnvelopeSQL = $actesEnvelopeSQL;
         $this->actesTypePJSQL = $actesTypePJSQL;
-        $this->actesEnvelopeCloudStorage = $cloudStorage;
     }
 
     /**
@@ -144,7 +144,7 @@ class ActesArchiveControler
             $this->logger->info("La transaction $transaction_id a été envoyé sur le SAE (id_d pastell : $id_d)");
 
             $actesEnvelopeInfo = $this->actesEnvelopeSQL->getInfo($transactionsInfo['envelope_id']);
-            $this->actesEnvelopeCloudStorage->deleteIfIsInCloud($actesEnvelopeInfo['id']);
+            $this->removeActeEnveloppeOnDisk->findAndRemoveLocalFilesAlreadyCloudSaved($actesEnvelopeInfo['id']);
         } finally {
             $tmpFolder->delete($tmp_folder);
         }

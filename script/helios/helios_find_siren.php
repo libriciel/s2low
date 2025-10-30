@@ -2,15 +2,22 @@
 
 declare(strict_types=1);
 
+use S2low\Services\CloudFileStorageInterface;
+use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 
 require_once(__DIR__ . '/../../init/init.php');
-list($objectInstancier, $sqlQuery) = LegacyObjectsManager::getLegacyObjectInstancier()
+
+/** @var LocalFileResolver $localPesAllerResolver */
+/** @var CloudFileStorageInterface $cloudStorePesAller */
+/** @var ObjectInstancier $objectInstancier */
+/** @var SQLQuery $sqlQuery */
+[$objectInstancier, $sqlQuery, $localPesAllerResolver, $cloudStorePesAller] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, SQLQuery::class]
+        [ObjectInstancier::class, SQLQuery::class, 'app.localFileResolver.pes_aller', 'app.store.file.pes_aller']
     );
 
 libxml_use_internal_errors(true);
@@ -37,7 +44,8 @@ $pesAllerRetriever = $objectInstancier->get(PesAllerRetriever::class);
 foreach ($transactions_list as $transaction_info) {
     try {
         $line = "{$transaction_info['id']};{$transaction_info['authority_id']};";
-        $filename = $pesAllerRetriever->getPath($transaction_info['sha1']);
+        $filename = $localPesAllerResolver->getFullPathFromFilePath($transaction_info['id']);
+        $cloudStorePesAller->downloadFileFromCloud($transaction_info['id']);
 
         if (!file_exists($filename)) {
             throw new Exception('file not found');
