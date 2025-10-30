@@ -9,7 +9,7 @@ trait HeliosUtilitiesTestTrait
     private function getTransactionCreationSQL($authority_id = 1, $date = null): int
     {
         if (is_null($date)) {
-            $sql = "INSERT INTO helios_transactions(user_id,authority_id,last_status_id,filename,sha1,file_size) VALUES (?,?,?,?,?,?) returning ID;";
+            $sql = "INSERT INTO helios_transactions(user_id,authority_id,last_status_id,filename,sha1, acquit_filename, file_size) VALUES (?,?,?,?,?, ?,?) returning ID;";
 
             return $this->getSQLQuery()->queryOne(
                 $sql,
@@ -18,6 +18,7 @@ trait HeliosUtilitiesTestTrait
                 4,
                 "toto.txt",
                 "ab3321d34d3fb32b52332befa534c9854fff677b",
+                "acquit_file.xml",
                 12345678
             );
         }

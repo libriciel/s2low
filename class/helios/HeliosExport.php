@@ -23,11 +23,14 @@ class HeliosExport
         LoggerInterface $s2lowLogger,
         AuthoritySQL $authoritySQL,
         HeliosTransactionsSQL $heliosTransactionsSQL,
-        private PESAcquitCloudStorage $pesAcquitCloudStorage,
         #[Autowire(service: 'app.localFileResolver.pes_aller')]
         private readonly LocalFileResolver $pesAllerResolver,
         #[Autowire(service: 'app.store.file.pes_aller')]
-        private readonly CloudFileStorageInterface $cloudPesAllerStorage
+        private readonly CloudFileStorageInterface $cloudPesAllerStorage,
+        #[Autowire(service: 'app.localFileResolver.pes_acquit')]
+        private readonly LocalFileResolver $pesAcquitResolver,
+        #[Autowire(service: 'app.store.file.pes_acquit')]
+        private readonly CloudFileStorageInterface $cloudPesAcquitStorage
     ) {
         $this->s2lowLogger = $s2lowLogger;
         $this->authoritySQL = $authoritySQL;
@@ -133,7 +136,9 @@ class HeliosExport
         $this->s2lowLogger->debug("[COPIE OK] $pes_aller_path -> $pes_aller_destination");
 
         if ($transaction_info['acquit_filename']) {
-            $pes_acquit_path = $this->pesAcquitCloudStorage->getPath($transaction_info['id']);
+            $this->cloudPesAcquitStorage->downloadFileFromCloud($transaction_info['id']);
+            $pes_acquit_path = $this->pesAcquitResolver->getFullPath($transaction_info['id']);
+
             $pes_acquit_destintation = $output_directory . "/$directory_name/{$transaction_info['acquit_filename']}";
             $filesystem->copy($pes_acquit_path, $pes_acquit_destintation);
             $this->s2lowLogger->debug("[COPIE OK] $pes_acquit_path -> $pes_acquit_destintation");
