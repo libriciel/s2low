@@ -52,8 +52,6 @@ class ActesStoreEnveloppeWorker implements IWorker
 
         $this->cloudStoreActeEnveloppe->storeFileOnCloud($data);
 
-        $this->actesEnvelopeSQL->setTransactionInCloud($data);
-
         $this->logger->info("Enveloppe acte [$data] enregistré avec succès.");
     }
 

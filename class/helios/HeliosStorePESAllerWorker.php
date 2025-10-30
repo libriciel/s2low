@@ -22,7 +22,7 @@ class HeliosStorePESAllerWorker implements IWorker
      */
     public function __construct(
         #[Autowire(service: 'app.store.file.pes_aller')]
-        private readonly CloudFileStorageInterface $cloudStoreActeEnveloppe,
+        private readonly CloudFileStorageInterface $cloudStorePesAller,
         private readonly PESAllerCloudStorage $PESAllerCloudStorage,
         private readonly HeliosTransactionsSQL $repository,
         private readonly LoggerInterface $logger
@@ -46,13 +46,11 @@ class HeliosStorePESAllerWorker implements IWorker
      */
     public function work($data): void
     {
-        $this->logger->debug("Preparation de la sauvegarde dans le cloud de l'enveloppe acte : [$data].");
+        $this->logger->debug("Preparation de la sauvegarde dans le cloud du PesAller : [$data].");
 
-        $this->cloudStoreActeEnveloppe->storeFileOnCloud($data);
+        $this->cloudStorePesAller->storeFileOnCloud($data);
 
-        $this->repository->setTransactionInCloud($data, true);
-
-        $this->logger->info("Pes Aller [$data] enregistré avec succès.");
+        $this->logger->info("PesAller [$data] enregistré avec succès.");
     }
 
     public function getMutexName($data): string

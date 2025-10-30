@@ -1,0 +1,2 @@
+parameters:
+  app.pes_acquit_pattern: 'ACQUIT*.xml'

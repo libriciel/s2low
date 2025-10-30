@@ -166,4 +166,9 @@ class ActesEnvelopeSQL extends SQL implements FileDataProvider
 
         return $transactionId;
     }
+
+    public function setTransactionIsInCloud(string $transactionId): void
+    {
+        $this->setTransactionInCloud($transactionId);
+    }
 }

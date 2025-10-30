@@ -132,4 +132,9 @@ class HeliosRetourSQL extends SQL implements FileDataProvider
         // TODO: Implement getTransactionIdFromFileName() method.
         return '';
     }
+
+    public function setTransactionIsInCloud(string $transactionId): void
+    {
+        $this->setTransactionIsInCloud($transactionId);
+    }
 }
