@@ -241,8 +241,8 @@ class HeliosEnvoiSAETest extends S2lowTestCase
     }
 
     private function createHeliosEnvoiSae(
-        PastellWrapperFactory $mockPastellFactory = null,
-        OpenStackSwiftWrapper $openStackSwiftWrapper = null
+        ?PastellWrapperFactory $mockPastellFactory = null,
+        ?OpenStackSwiftWrapper $openStackSwiftWrapper = null,
     ): HeliosEnvoiSAE {
         $pesAllerRetriever = $this->getPesAllerRetriever($openStackSwiftWrapper);
         $pastellWrapperFactory = $mockPastellFactory ?? $this->mockPastellFactory('dsf', "", true, true);
@@ -270,7 +270,7 @@ class HeliosEnvoiSAETest extends S2lowTestCase
         );
     }
 
-    private function getPesAllerRetriever(OpenStackSwiftWrapper $openStackSwiftWrapper = null): PesAllerRetriever
+    private function getPesAllerRetriever(?OpenStackSwiftWrapper $openStackSwiftWrapper = null): PesAllerRetriever
     {
         return new PesAllerRetriever(
             $this->tmpPathFolder,

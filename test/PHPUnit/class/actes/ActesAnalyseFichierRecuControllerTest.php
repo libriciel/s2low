@@ -56,8 +56,8 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
     }
 
     private function createActesAnalyseFichierRecuController(
-        string $actesResponseTmpLocalPath = null,
-        string $actesResponseErrorPath = null
+        ?string $actesResponseTmpLocalPath = null,
+        ?string $actesResponseErrorPath = null,
     ): ActesAnalyseFichierRecuController {
         $actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
         $actesScriptHelper = self::getContainer()->get(ActesScriptHelper::class);
