@@ -2,17 +2,20 @@
 
 use Monolog\Level;
 use org\bovigo\vfs\vfsStream;
+use S2low\Services\CloudFileStorageInterface;
+use S2low\Services\LocalFileResolver;
+use S2low\Services\RemoveStoredFilesOnDisk;
 use S2lowLegacy\Class\helios\HeliosEnvoiSAE;
 use S2lowLegacy\Class\helios\HeliosPrepareEnvoiSAE;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Class\helios\PESAllerCloudStorable;
 use S2lowLegacy\Class\helios\PESAllerCloudStorage;
-use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\PastellWrapperFactory;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use S2lowLegacy\Model\PastellPropertiesSQL;
+use Symfony\Component\Filesystem\Filesystem;
 
 class HeliosEnvoiSAETest extends S2lowTestCase
 {
@@ -20,7 +23,6 @@ class HeliosEnvoiSAETest extends S2lowTestCase
     use PastellConfigurationTestTrait;
 
     private OpenStackSwiftWrapper $openStackSwiftWrapper;
-    private HeliosEnvoiSAE $heliosEnvoiSAE;
 
     /**
      * @throws Exception
@@ -28,7 +30,7 @@ class HeliosEnvoiSAETest extends S2lowTestCase
     public function testSend()
     {
         $mockedPastellFactory = $this->mockPastellFactory();
-        $heliosEnvoiSAE = $this->createHeliosEnvoiSae($mockedPastellFactory);
+        $heliosEnvoiSAE = $this->createHeliosEnvoiSae($mockedPastellFactory, true);
         $transaction_id = $this->setTransactionEnAttente();
 
         $this->assertFileExists($this->tmpPathFolder);
@@ -64,8 +66,8 @@ class HeliosEnvoiSAETest extends S2lowTestCase
             )
         );
         $this->assertTrue(
-            $this->testHandler->hasRecordThatMatches(
-                "/Deleting object #$transaction_id/",
+            $this->testHandler->hasRecordThatContains(
+                "Suppression du fichier de la transaction $transaction_id",
                 Level::Info
             )
         );
@@ -92,14 +94,11 @@ class HeliosEnvoiSAETest extends S2lowTestCase
      */
     public function testSendWithCloudError()
     {
-        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $openStackSwiftWrapper->method("fileExistsOnCloud")->willReturn(true);
-        $openStackSwiftWrapper->method("retrieveFile")->willReturn('');
-
-        $heliosEnvoiSae = $this->createHeliosEnvoiSae(openStackSwiftWrapper: $openStackSwiftWrapper);
+        $heliosEnvoiSae = $this->createHeliosEnvoiSae(fileInCloud: true);
         $transaction_id = $this->setTransactionEnAttente();
+
+        $fs = new Filesystem();
+        $fs->remove($this->pesAllerPath);
 
         static::assertFalse(
             $heliosEnvoiSae->sendArchive($transaction_id)
@@ -188,10 +187,11 @@ class HeliosEnvoiSAETest extends S2lowTestCase
      */
     public function testErreurEnvoiSAE()
     {
+        $heliosEnvoiSAE = $this->createHeliosEnvoiSae(null, true);
         $transaction_id = $this->setTransactionEnAttente();
 
         $this->assertFalse(
-            $this->heliosEnvoiSAE->sendArchive($transaction_id)
+            $heliosEnvoiSAE->sendArchive($transaction_id)
         );
 
         $this->assertTrue(
@@ -208,8 +208,9 @@ class HeliosEnvoiSAETest extends S2lowTestCase
     public function testErreurEnvoiSAEPuisErreurSuppression()
     {
         $transaction_id = $this->setTransactionEnAttente();
+        $heliosEnvoiSAE = $this->createHeliosEnvoiSae();
         $this->assertFalse(
-            $this->heliosEnvoiSAE->sendArchive($transaction_id)
+            $heliosEnvoiSAE->sendArchive($transaction_id)
         );
 
         $this->testHandler->hasRecordThatContains(
@@ -222,29 +223,25 @@ class HeliosEnvoiSAETest extends S2lowTestCase
     {
         parent::setUp();
         $this->secondTmpPathFolder = vfsStream::url('test2');
-        $pesAllerPath = $this->tmpPathFolder . "/ab3321d34d3fb32b52332befa534c9854fff677b";
-        file_put_contents($pesAllerPath, "<test></test>");
-
-        $this->openStackSwiftWrapper = $this->getOpenStackSwiftWrapperMocked($pesAllerPath);
-        $this->heliosEnvoiSAE = $this->createHeliosEnvoiSae();
+        $this->pesAllerPath = $this->tmpPathFolder . "/ab3321d34d3fb32b52332befa534c9854fff677b";
+        file_put_contents($this->pesAllerPath, "<test></test>");
+        $this->openStackSwiftWrapper = $this->getOpenStackSwiftWrapperMocked();
     }
 
-    private function getOpenStackSwiftWrapperMocked($pesAllerPath): OpenStackSwiftWrapper
+    private function getOpenStackSwiftWrapperMocked(): OpenStackSwiftWrapper
     {
         $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
             ->disableOriginalConstructor()
             ->getMock();
         $openStackSwiftWrapper->method("fileExistsOnCloud")->willReturn(true);
-        $openStackSwiftWrapper->method("retrieveFile")->willReturn($pesAllerPath);
 
         return $openStackSwiftWrapper;
     }
 
     private function createHeliosEnvoiSae(
         PastellWrapperFactory $mockPastellFactory = null,
-        OpenStackSwiftWrapper $openStackSwiftWrapper = null
+        bool $fileInCloud = false,
     ): HeliosEnvoiSAE {
-        $pesAllerRetriever = $this->getPesAllerRetriever($openStackSwiftWrapper);
         $pastellWrapperFactory = $mockPastellFactory ?? $this->mockPastellFactory('dsf', "", true, true);
         $pastellPropertiesSQL = $this->getContainer()->get(PastellPropertiesSQL::class);
         $pesAllerCloudStorable = new PesAllerCloudStorable(
@@ -259,8 +256,20 @@ class HeliosEnvoiSAETest extends S2lowTestCase
             openstack_enable: false
         );
 
+        $storePesAllerOnCloud = self::createMock(CloudFileStorageInterface::class);
+        $storePesAllerOnCloud
+            ->method('fileExistOnCloud')
+            ->willReturn($fileInCloud);
+
+        $removeStoredPesallerOnCloud = $this->getRemoveStoredfilesOnDisk($storePesAllerOnCloud);
+
+        $localPesAllerResolver = self::createMock(LocalFileResolver::class);
+        $localPesAllerResolver->method('getFullPath')->willReturn($this->pesAllerPath);
+
         return new HeliosEnvoiSAE(
-            $pesAllerRetriever,
+            $localPesAllerResolver,
+            $storePesAllerOnCloud,
+            $removeStoredPesallerOnCloud,
             $pastellWrapperFactory,
             $this->logger,
             self::getContainer()->get(AuthoritySQL::class),
@@ -270,17 +279,23 @@ class HeliosEnvoiSAETest extends S2lowTestCase
         );
     }
 
-    private function getPesAllerRetriever(OpenStackSwiftWrapper $openStackSwiftWrapper = null): PesAllerRetriever
-    {
-        return new PesAllerRetriever(
-            $this->tmpPathFolder,
-            $openStackSwiftWrapper ?? $this->openStackSwiftWrapper,
-            $this->s2lowLogger,
-        );
-    }
-
     public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
     {
         return self::getContainer()->get(HeliosTransactionsSQL::class);
+    }
+
+    private function getRemoveStoredfilesOnDisk(CloudFileStorageInterface $cloudFileStorage): RemoveStoredFilesOnDisk
+    {
+        return new RemoveStoredFilesOnDisk(
+            $this->logger,
+            (new Filesystem()),
+            $cloudFileStorage,
+            self::getContainer()->get(HeliosTransactionsSQL::class),
+            self::getContainer()->get('app.localFileResolver.pes_aller'),
+            self::getContainer()->get('app.finder.pes_aller'),
+            self::getContainer()->getParameter('app.helios_files_upload_root'),
+            self::getContainer()->getParameter('app.helios_repertoire_pes_aller_sans_transaction'),
+            true
+        );
     }
 }

@@ -3,7 +3,7 @@
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Services\CloudFileStorageInterface;
 use S2low\Services\LocalFileResolver;
-use S2low\Services\RemoveOldFilesOnDisk;
+use S2low\Services\RemoveStoredFilesOnDisk;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesMenageEnveloppeWorker;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
@@ -128,7 +128,7 @@ class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
         $this->assertDirectoryExists(dirname($actes_path));
     }
 
-    private function createRemoveActeEnveloppe(bool $fileExistsOnCloud, string $prefix): RemoveOldFilesOnDisk
+    private function createRemoveActeEnveloppe(bool $fileExistsOnCloud, string $prefix): RemoveStoredFilesOnDisk
     {
         $cloudFileStorage = self::getMockBuilder(CloudFileStorageInterface::class)->disableOriginalConstructor()->getMock();
         $cloudFileStorage->method('fileExistOnCloud')->willReturn($fileExistsOnCloud);
@@ -138,13 +138,14 @@ class ActesMenageEnveloppeWorkerTest extends S2lowTestCase
             $prefix
         );
 
-        return new RemoveOldFilesOnDisk(
+        return new RemoveStoredFilesOnDisk(
             $this->logger,
             self::getContainer()->get(Filesystem::class),
             $cloudFileStorage,
             self::getContainer()->get(ActesEnvelopeSQL::class),
             $localFileResolver,
             self::getContainer()->get('app.finder.acte_enveloppe'),
+            self::getContainer()->getParameter('app.helios_files_upload_root'),
             self::getContainer()->getParameter('app.actes_enveloppe_sans_transaction'),
             true
         );

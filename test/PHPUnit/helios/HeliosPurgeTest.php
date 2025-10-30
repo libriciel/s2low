@@ -4,15 +4,15 @@ namespace PHPUnit\helios;
 
 use HeliosDirectoriesManager;
 use IntegrationTests\S2lowIntegrationTestCase;
-use PHPUnit\Exception;
 use Psr\Log\LoggerInterface;
 use S2low\Enum\UserRole;
+use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu;
 use S2lowLegacy\Class\helios\HeliosFilesFactory;
 use S2lowLegacy\Class\helios\HeliosPurge;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
-use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Controller\HeliosController;
+use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
@@ -34,7 +34,17 @@ class HeliosPurgeTest extends S2lowIntegrationTestCase
         $this->heliosUtils = new HeliosDirectoriesManager();
         $this->heliosUtils->createDirectories();
 
-        $this->heliosController = self::getContainer()->get(HeliosController::class);
+        $this->localFileResolver = new LocalFileResolver(
+            self::getContainer()->get(HeliosTransactionsSQL::class),
+            $this->heliosUtils->helios_files_upload_root
+        );
+
+        $this->heliosController = new HeliosController(
+            $this->localFileResolver,
+            self::getContainer()->get('app.store.file.pes_aller'),
+            self::getContainer()->get(ObjectInstancier::class),
+        );
+
         $this->heliosFilesFactory = new HeliosFilesFactory(
             $this->heliosTransactionSQL,
             $this->heliosUtils->helios_files_upload_root,

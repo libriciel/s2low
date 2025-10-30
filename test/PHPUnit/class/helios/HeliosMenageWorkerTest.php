@@ -7,13 +7,16 @@ namespace PHPUnit\class\helios;
 use Exception;
 use HeliosUtilitiesTestTrait;
 use Monolog\Level;
+use S2low\Services\CloudFileStorageInterface;
+use S2low\Services\LocalFileResolver;
+use S2low\Services\RemoveStoredFilesOnDisk;
 use S2lowLegacy\Class\helios\HeliosMenageWorker;
-use S2lowLegacy\Class\helios\PESAllerCloudStorable;
-use S2lowLegacy\Class\helios\PESAllerCloudStorage;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use S2lowTestCase;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 
 class HeliosMenageWorkerTest extends S2lowTestCase
 {
@@ -39,12 +42,7 @@ class HeliosMenageWorkerTest extends S2lowTestCase
         $this->tmpFolder = new TmpFolder();
         $this->helios_files_upload_root = $this->tmpFolder->create();
         $this->repertoirePesAllerSansTransaction = $this->tmpFolder->create();
-        $this->swift = $this->getMockBuilder(OpenStackSwiftWrapper::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->worker = $this->getHeliosMenageWorker();
-
+        $this->testPesAllerPrefix = $this->helios_files_upload_root;
         $this->transactionsSQL = self::getContainer()->get(HeliosTransactionsSQL::class);
     }
 
@@ -61,21 +59,24 @@ class HeliosMenageWorkerTest extends S2lowTestCase
 
     public function testGetAllId(): void
     {
-        static::assertSame([1], $this->worker->getAllId());
+        $worker = $this->getHeliosMenageWorker(true);
+
+        static::assertSame([1], $worker->getAllId());
     }
 
     /**
      * @throws \Exception
      */
-    public function testWorkRecentylCreated(): void
+    public function testWorkRecentlyCreated(): void
     {
         $pes_aller_path = $this->createPesAller();
-        $this->swift->expects(self::never())->method('fileExistsOnCloud');
-        $this->worker->work(1);
+        $worker = $this->getHeliosMenageWorker(true);
+        $this->createTransaction();
+        $worker->work(1);
         static::assertFileExists($pes_aller_path);
         self::assertTrue(
             $this->testHandler->hasRecord(
-                'File ab3321d34d3fb32b52332befa534c9854fff677b too young to die : not deleted',
+                'le fichier ab3321d34d3fb32b52332befa534c9854fff677b est trop recent pour etre supprimé',
                 Level::Debug
             )
         );
@@ -84,11 +85,11 @@ class HeliosMenageWorkerTest extends S2lowTestCase
     /**
      * @throws \Exception
      */
-    public function testWorkWithoutTransactionId(): void
+    public function testMoveOrphelinFiles(): void
     {
         $pes_aller_path = $this->createPesAller(true);
-        $this->swift->expects(self::atLeastOnce())->method('fileExistsOnCloud')->willReturn(false);
-        $this->worker->work(1);
+        $worker = $this->getHeliosMenageWorker(false);
+        $worker->work(1);
         static::assertFileDoesNotExist($pes_aller_path);
         static::assertFileExists(
             $this->repertoirePesAllerSansTransaction . '/ab3321d34d3fb32b52332befa534c9854fff677b'
@@ -96,14 +97,14 @@ class HeliosMenageWorkerTest extends S2lowTestCase
 
         self::assertTrue(
             $this->testHandler->hasRecord(
-                'File ' . $pes_aller_path . ' not existing on cloud : not deleted',
-                Level::Info
+                'Déplacement du fichier ' . basename($pes_aller_path),
+                Level::Debug
             )
         );
         self::assertTrue(
             $this->testHandler->hasRecord(
-                "Unable to find object id for the file $pes_aller_path",
-                Level::Notice
+                "Pas de transaction associé au fichier " . basename($pes_aller_path),
+                Level::Debug
             )
         );
     }
@@ -114,8 +115,9 @@ class HeliosMenageWorkerTest extends S2lowTestCase
     public function testWorkExistsInCloud(): void
     {
         $pes_aller_path = $this->createPesAller(true);
-        $this->swift->expects(self::atLeastOnce())->method('fileExistsOnCloud')->willReturn(true);
-        $this->worker->work(1);
+        $worker = $this->getHeliosMenageWorker(true);
+        $this->createTransaction();
+        $worker->work(1);
         static::assertFileDoesNotExist($pes_aller_path);
         static::assertFileDoesNotExist(
             $this->repertoirePesAllerSansTransaction . '/ab3321d34d3fb32b52332befa534c9854fff677b'
@@ -123,7 +125,7 @@ class HeliosMenageWorkerTest extends S2lowTestCase
 
         self::assertTrue(
             $this->testHandler->hasRecord(
-                "Deleting file : $pes_aller_path",
+                "Le fichier $pes_aller_path est supprimé",
                 Level::Info
             )
         );
@@ -135,49 +137,56 @@ class HeliosMenageWorkerTest extends S2lowTestCase
     public function testWorkWithTransaction(): void
     {
         $pes_aller_path = $this->createPesAller(true);
-        $this->swift->expects(self::atLeastOnce())->method('fileExistsOnCloud')->willReturn(false);
         $transaction_id = $this->createTransaction();
         $this->transactionsSQL->setTransactionInCloud($transaction_id, true);
         $this->transactionsSQL->setTransactionAvailable($transaction_id, false);
-        $this->worker->work(1);
+        $worker = $this->getHeliosMenageWorker(false);
+        $worker->work(1);
         static::assertFileExists($pes_aller_path);
         static::assertFileDoesNotExist(
             $this->repertoirePesAllerSansTransaction . '/ab3321d34d3fb32b52332befa534c9854fff677b'
         );
-        static::assertFalse($this->transactionsSQL->isTransactionInCloud($transaction_id));
-        static::assertTrue($this->transactionsSQL->isTransactionAvailable($transaction_id));
     }
 
-    private function createPesAller(bool $createOldFile = false): string
+    private function createPesAller(bool $createOldFile = false, int $mtime = 20): string
     {
-        $pes_aller_path = $this->helios_files_upload_root . '/ab3321d34d3fb32b52332befa534c9854fff677b';
+        $pes_aller_path = $this->testPesAllerPrefix . '/ab3321d34d3fb32b52332befa534c9854fff677b';
         file_put_contents($pes_aller_path, '<test></test>');
         if ($createOldFile) {
-            touch($pes_aller_path, 0);
+            $timestamp = strtotime("-" . $mtime . " days");
+
+            touch($pes_aller_path, $timestamp);
         }
         return $pes_aller_path;
     }
 
-    private function getHeliosMenageWorker(): HeliosMenageWorker
+    private function getHeliosMenageWorker(bool $fileExistsOnCloud): HeliosMenageWorker
     {
-        return new HeliosMenageWorker(
-            $this->getPesAllerCloudStorage()
-        );
-    }
-
-    private function getPesAllerCloudStorage(): PESAllerCloudStorage
-    {
-        $pesAllerCloudStorable = new PesAllerCloudStorable(
-            $this->helios_files_upload_root,
+        $localPesAllerResolver = new LocalFileResolver(
             self::getContainer()->get(HeliosTransactionsSQL::class),
+            $this->testPesAllerPrefix,
+        );
+        $storePesAller = self::createMock(CloudFileStorageInterface::class);
+        $storePesAller->method('fileExistOnCloud')->willReturn($fileExistsOnCloud);
+
+        $finder = new Finder();
+        $finder->in($this->testPesAllerPrefix);
+
+        $removePesAller = new RemoveStoredFilesOnDisk(
+            $this->logger,
+            self::getContainer()->get(Filesystem::class),
+            $storePesAller,
+            self::getContainer()->get(HeliosTransactionsSQL::class),
+            $localPesAllerResolver,
+            $finder,
+            $this->testPesAllerPrefix,
             $this->repertoirePesAllerSansTransaction,
+            true
         );
 
-        return new PesAllerCloudStorage(
-            $pesAllerCloudStorable,
-            $this->swift,
+        return new HeliosMenageWorker(
             $this->logger,
-            openstack_enable: false
+            $removePesAller
         );
     }
 }
