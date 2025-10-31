@@ -2,10 +2,11 @@
 
 namespace S2lowLegacy\Class\mailsec;
 
-use S2lowLegacy\Class\CloudStorageException;
+use Psr\Log\LoggerInterface;
+use S2low\Services\CloudFileStorageInterface;
 use S2lowLegacy\Class\IWorker;
-use S2lowLegacy\Lib\PausingQueueException;
 use S2lowLegacy\Lib\UnrecoverableException;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class MailsecStoreFilesWorker implements IWorker
 {
@@ -17,7 +18,10 @@ class MailsecStoreFilesWorker implements IWorker
     }
 
     public function __construct(
-        private MailIncludedFilesCloudStorage $mailIncludedFilesCloudStorage
+        private readonly MailIncludedFilesCloudStorage $mailIncludedFilesCloudStorage,
+        #[Autowire(service: 'app.store.file.mailsec')]
+        private readonly CloudFileStorageInterface $storeMailSec,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -35,15 +39,13 @@ class MailsecStoreFilesWorker implements IWorker
         return $this->mailIncludedFilesCloudStorage->getAllObjectIdToStore();
     }
 
-    /**
-     * @param $data
-     * @return void
-     * @throws CloudStorageException | PausingQueueException | UnrecoverableException
-     */
-
-    public function work($data)
+    public function work($data): void
     {
-        $this->mailIncludedFilesCloudStorage->storeObject($data);
+        $this->logger->debug("Preparation de la sauvegarde dans le cloud de le mailSec : [$data].");
+
+        $this->storeMailSec->storeFileOnCloud($data);
+
+        $this->logger->info("MailSec [$data] enregistré avec succès.");
     }
 
     public function getMutexName($data): string

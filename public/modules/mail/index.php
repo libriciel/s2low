@@ -2,7 +2,6 @@
 
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\LegacyObjectsManager;
-use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
 use S2lowLegacy\Mail\MailLayout;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 use S2lowLegacy\Mail\MailMessageEmis;
@@ -55,12 +54,14 @@ $doc = new MailLayout('xhtml_mail.tpl.php');
 $doc->setTitle(WEBSITE_TITLE);
 
 $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
-/** @var MailIncludedFilesCloudStorage $cloudStorage */
-$cloudStorage  = $objectInstancier->get(MailIncludedFilesCloudStorage::class);
+$localMailSecResolver  = $objectInstancier->get('app.localFileResolver.mailsec');
+$cloudStoreMailSec  = $objectInstancier->get('app.store.file.mailsec');
 
 if ($fndownload) {
     try {
-        $mailzip_filepath = $cloudStorage->getPath($mailTransaction->getId());
+        $cloudStoreMailSec->downloadFileFromCloud($mailTransaction->getId());
+        $mailzip_filepath = $localMailSecResolver->getFullPath($mailTransaction->getId());
+
         $filesize = filesize($mailzip_filepath);
     } catch (Exception $e) {
         $filesize = 'Fichier non disponible';

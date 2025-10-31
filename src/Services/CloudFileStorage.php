@@ -11,6 +11,7 @@ use S2low\Exceptions\CloudDownloadException;
 use S2low\Exceptions\CloudFileUploadException;
 use S2low\Exceptions\TransactionNotFoundException;
 use S2low\Port\CloudClientInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @description Cette classe doit etre utilisé pour interagir avec le Cloud dans S2low.
@@ -27,6 +28,7 @@ class CloudFileStorage implements CloudFileStorageInterface
         private readonly CloudClientInterface $clientCloudStorage,
         private readonly LocalFileResolver $localFileResolver,
         private readonly FileDataProvider $fileDataProvider,
+        private readonly Filesystem $filesystem,
     ) {
     }
 
@@ -65,6 +67,9 @@ class CloudFileStorage implements CloudFileStorageInterface
         if (file_exists($filePath)) {
             return;
         }
+
+        $dirName = dirname($filePath);
+        $this->filesystem->mkdir($dirName);
 
         try {
             $this->clientCloudStorage->downloadFile($filePath, $cloudId);

@@ -48,7 +48,7 @@ class RemoveStoredFilesOnDisk
         $transactionsIds = [];
 
         foreach ($this->finder as $file) {
-            $transactionId = $this->fileDataProvider->getTransactionIdFromFileName($file->getFilename());
+            $transactionId = $this->fileDataProvider->getTransactionIdFromFileName($file);
 
             if ($this->fileIsYoungerThan($file, $maxFilesAge)) {
                 $this->logger->debug(

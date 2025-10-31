@@ -112,12 +112,20 @@ class MailTransactionSQL extends SQL implements FileDataProvider
 
     public function getTransactionIdFromFileName(string $filePath): string
     {
-        // TODO: Implement getTransactionIdFromFileName() method.
-        return '';
+        $dirPath = dirname($filePath);
+
+        $fnDownload = basename($dirPath);
+        $transactionId = $this->queryOne("SELECT id FROM mail_transaction WHERE fn_download LIKE ?", '%' . $fnDownload . '%');
+
+        if ($transactionId === false) {
+            $transactionId = null;
+        }
+
+        return $transactionId;
     }
 
     public function setTransactionIsInCloud(string $transactionId): void
     {
-        // TODO: Implement setTransactionIsInCloud() method.
+        $this->setInCloud($transactionId);
     }
 }

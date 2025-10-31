@@ -25,7 +25,6 @@ class ActesStoreEnveloppeWorker implements IWorker
         ActesCloudStorage $actesCloudStorage,
         #[Autowire(service: 'app.store.file.acte_enveloppe')]
         private readonly CloudFileStorageInterface $cloudStoreActeEnveloppe,
-        private readonly ActesEnvelopeSQL $actesEnvelopeSQL,
         private readonly LoggerInterface $logger
     ) {
         $this->cloudStorage = $actesCloudStorage;

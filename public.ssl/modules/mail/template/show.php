@@ -115,9 +115,11 @@
         //C'est super dégeulasse...
         /** @var MailIncludedFilesCloudStorage $cloudStorage */
         $objectInstancier = ObjectInstancierFactory::getObjetInstancier();
-        $cloudStorage  = $objectInstancier->get(MailIncludedFilesCloudStorage::class);
-        $mailzip_filepath = $cloudStorage->getPath($mailTransaction->getId());
+        $localMailSecResolver  = $objectInstancier->get('app.localFileResolver.mailsec');
+        $cloudStoreMailSec  = $objectInstancier->get('app.store.file.mailsec');
 
+        $cloudStoreMailSec->downloadFileFromCloud($mailTransaction->getId());
+        $mailzip_filepath = $localMailSecResolver->getFullPath($mailTransaction->getId());
 
         ?>
             <h2 id ="pj_desc">Pièces jointes&nbsp;:</h2>
