@@ -24,8 +24,7 @@ class MailsecDownloadController extends Controller
         private readonly LocalFileResolver $localMailSecResolver,
         #[Autowire(service: 'app.store.file.mailsec')]
         private readonly CloudFileStorageInterface $cloudStoreMailSec,
-    )
-    {
+    ) {
         parent::__construct($objectInstancier);
     }
 

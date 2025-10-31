@@ -790,7 +790,7 @@ AND authorities.helios_use_passtrans = ?
         $fileName = basename($filePath);
         $transactionId = $this->queryOne("SELECT id FROM helios_transactions WHERE sha1 LIKE ?", '%' . $fileName . '%');
 
-        if ($transactionId === false) {
+        if (!$transactionId) {
             $transactionId = null;
         }
 
