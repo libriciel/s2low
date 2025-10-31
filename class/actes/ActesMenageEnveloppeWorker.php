@@ -18,7 +18,7 @@ class ActesMenageEnveloppeWorker implements IWorker
     public function __construct(
         private readonly LoggerInterface $logger,
         #[Autowire(service: 'app.removeFiles.acte_enveloppe')]
-        private readonly RemoveStoredFilesOnDisk $removeOldFilesOnDisk,
+        private readonly RemoveStoredFilesOnDisk $removeStoredFilesOnDisk,
     ) {
         $this->setNbDayInDisk(self::NB_DAYS_IN_DISK);
     }
@@ -52,7 +52,7 @@ class ActesMenageEnveloppeWorker implements IWorker
     public function work($data): void
     {
         try {
-            $this->removeOldFilesOnDisk->findAndRemoveLocalFilesAlreadyCloudSaved($this->nb_days_in_disk);
+            $this->removeStoredFilesOnDisk->findAndRemoveLocalFilesAlreadyCloudSaved($this->nb_days_in_disk);
         } catch (\Throwable $e) {
             $this->logger->error($e->getMessage());
         }
