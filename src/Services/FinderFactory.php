@@ -12,6 +12,7 @@ class FinderFactory
         private readonly string $helios_responses_root,
         private readonly string $mail_files_upload_root,
         private readonly string $pesAcquitFilePattern,
+        private readonly string $pesRetourFilePattern,
         //        private readonly string $mail_files_without_transac_dir
     ) {
     }
@@ -33,7 +34,7 @@ class FinderFactory
     public function createPesRetourFinder(): Finder
     {
         $finder = new Finder();
-        $finder->in($this->helios_responses_root)->name("PES2R*.xml");
+        $finder->in($this->helios_responses_root)->name($this->pesRetourFilePattern);
         return $finder;
     }
 

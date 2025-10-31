@@ -35,12 +35,10 @@ class HeliosStorePESAllerWorkerTest extends S2lowTestCase
         $storageMock->expects(static::once())->method('storeFileOnCloud')->with(6587);
 
         $pesAllerCloudStorage = self::createMock(PESAllerCloudStorage::class);
-        $heliosTransaction = self::createMock(HeliosTransactionsSQL::class);
 
         $heliosStorePESAllerWorker = new HeliosStorePESAllerWorker(
             $storageMock,
             $pesAllerCloudStorage,
-            $heliosTransaction,
             $this->logger
         );
 

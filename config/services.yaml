@@ -114,6 +114,7 @@ parameters:
   app.workspace_directory.default: '/data/tdt-workspace/'
   app.xmlsec_path: '/usr/bin/xmlsec1'
   app.pes_acquit_pattern: '*ACK*.xml'
+  app.pes_retour_pattern: 'PES2R*.xml'
 
 services:
   _defaults:
@@ -143,6 +144,7 @@ services:
       $website: '%app.website%'
       $heliosFilesUploadTmp: '%app.helios_files_upload_tmp%'
       $pesAcquitFilePattern: '%app.pes_acquit_pattern%'
+      $pesRetourFilePattern: '%app.pes_retour_pattern%'
 
   monolog.formatter.line:
     class: Monolog\Formatter\LineFormatter

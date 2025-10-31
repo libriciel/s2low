@@ -1,2 +1,3 @@
 parameters:
   app.pes_acquit_pattern: 'ACQUIT*.xml'
+  app.pes_retour_pattern: 'HELIOS_SIMU_RETOUR*.xml'
