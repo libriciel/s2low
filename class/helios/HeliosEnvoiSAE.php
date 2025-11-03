@@ -3,6 +3,9 @@
 namespace S2lowLegacy\Class\helios;
 
 use Psr\Log\LoggerInterface;
+use S2low\Services\CloudFileStorageInterface;
+use S2low\Services\LocalFileResolver;
+use S2low\Services\RemoveStoredFilesOnDisk;
 use S2lowLegacy\Class\actes\FilesNotFoundInCloudException;
 use S2lowLegacy\Class\PastellWrapperFactory;
 use Exception;
@@ -11,18 +14,23 @@ use S2lowLegacy\Lib\UnrecoverableException;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use S2lowLegacy\Model\PastellPropertiesSQL;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class HeliosEnvoiSAE
 {
     private $heliosTransactionsSQL;
     private $pastellWrapperFactory;
-    private $pesAllerRetriever;
     private $logger;
     private $authoritySQL;
     private $pastellPropertiesSQL;
 
     public function __construct(
-        PesAllerRetriever $pesAllerRetriever,
+        #[Autowire(service: 'app.localFileResolver.pes_aller')]
+        private readonly LocalFileResolver $pesAllerResolver,
+        #[Autowire(service: 'app.store.file.pes_aller')]
+        private readonly CloudFileStorageInterface $cloudPesAllerStorage,
+        #[Autowire(service: 'app.removeFiles.pes_aller')]
+        private readonly RemoveStoredFilesOnDisk $removePesAllerOnDisk,
         PastellWrapperFactory $pastellWrapperFactory,
         LoggerInterface $logger,
         AuthoritySQL $authoritySQL,
@@ -33,7 +41,6 @@ class HeliosEnvoiSAE
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
         $this->authoritySQL = $authoritySQL;
         $this->pastellWrapperFactory = $pastellWrapperFactory;
-        $this->pesAllerRetriever = $pesAllerRetriever;
         $this->logger = $logger;
         $this->pastellPropertiesSQL = $pastellPropertiesSQL;
     }
@@ -91,26 +98,29 @@ class HeliosEnvoiSAE
      */
     public function sendArchiveThrow(int $transaction_id): bool
     {
-            $this->logger->info("Début du traitement de la transaction $transaction_id");
-            $transactionsInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
+        $this->logger->info("Début du traitement de la transaction $transaction_id");
+        $transactionsInfo = $this->heliosTransactionsSQL->getInfo($transaction_id);
 
-            $this->authoritySQL->verifHasPastell($transactionsInfo[HeliosTransactionsSQL::AUTHORITY_ID]);
+        $this->authoritySQL->verifHasPastell($transactionsInfo[HeliosTransactionsSQL::AUTHORITY_ID]);
 
-            $this->logger->info("Début de la récupération des fichiers de la transaction $transaction_id");
-            $pes_aller_filepath = $this->pesAllerRetriever->getPath($transactionsInfo['sha1']);
+        $this->logger->info("Début de la récupération des fichiers de la transaction $transaction_id");
+        $pes_aller_filepath = $this->pesAllerResolver->getFullPath($transaction_id);
+        $this->cloudPesAllerStorage->downloadFileFromCloud($transaction_id);
 
-        if (! $pes_aller_filepath) {
+        if (!file_exists($pes_aller_filepath)) {
             throw new FilesNotFoundInCloudException("Impossible de récupérer le PES ALLER {$transactionsInfo['sha1']}");
         }
 
-            $pes_acquit_filepath = $this->pesAllerCloudStorage->getPath($transaction_id);
+        $pes_acquit_filepath = $this->pesAllerCloudStorage->getPath($transaction_id);
 
-            $pastellProperties = $this->pastellPropertiesSQL->getPastellProperties($transactionsInfo[HeliosTransactionsSQL::AUTHORITY_ID]);
-            $this->logger->info("Début du transfert vers $pastellProperties->url de la transaction $transaction_id");
+        $pastellProperties = $this->pastellPropertiesSQL->getPastellProperties(
+            $transactionsInfo[HeliosTransactionsSQL::AUTHORITY_ID]
+        );
+        $this->logger->info("Début du transfert vers $pastellProperties->url de la transaction $transaction_id");
 
-            $pastell = $this->pastellWrapperFactory->getNewInstance($pastellProperties);
+        $pastell = $this->pastellWrapperFactory->getNewInstance($pastellProperties);
 
-            $id_d = $pastell->createHelios($transactionsInfo);
+        $id_d = $pastell->createHelios($transactionsInfo);
 
         if (!$id_d) {
             throw new UnrecoverableException($pastell->getLastError());
@@ -138,13 +148,14 @@ class HeliosEnvoiSAE
             try {
                 $pastell->delete($id_d);
             } catch (Exception $exception2) {
-                $message .= " et erreur lors de la suppression de $id_d\[" . get_class($exception2) . '] ' . $exception2->getMessage();
+                $message .= " et erreur lors de la suppression de $id_d\[" . get_class(
+                    $exception2
+                ) . '] ' . $exception2->getMessage();
             }
             throw new Exception($message);
         }
 
-        $this->pesAllerCloudStorage->deleteIfIsInCloud($transaction_id);
-
+        $this->removePesAllerOnDisk->deleteFileIfSavedOnCloud($transaction_id);
 
         return true;
     }

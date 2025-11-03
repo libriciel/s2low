@@ -4,7 +4,8 @@ namespace Services;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use S2low\Services\RemoveOldFilesOnDisk;
+use S2low\Services\RemoveStoredFilesOnDisk;
+use S2lowLegacy\Class\TmpFolder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -31,7 +32,7 @@ class RemoveOldFilesOnDiskTest extends TestCase
         $this->fileDataProvider = $this->createMock(FileDataProvider::class);
         $this->localFileResolver = $this->createMock(LocalFileResolver::class);
         $this->finder = new Finder();
-
+        $this->pesAllerPrefix = (new TmpFolder())->create();
         $this->tempDir = sys_get_temp_dir() . '/remove_old_files_test_' . uniqid();
         mkdir($this->tempDir, 0777, true);
     }
@@ -71,19 +72,20 @@ class RemoveOldFilesOnDiskTest extends TestCase
             ->with('transaction123')
             ->willReturn($filePath);
 
-        $service = new RemoveOldFilesOnDisk(
+        $service = new RemoveStoredFilesOnDisk(
             $this->logger,
             $this->filesystem,
             $this->cloudStorage,
             $this->fileDataProvider,
             $this->localFileResolver,
             $this->finder,
+            $this->pesAllerPrefix,
             $this->tempDir,
             false
         );
 
         // Act
-        $service->execute(15);
+        $service->findAndRemoveLocalFilesAlreadyCloudSaved(15);
 
         // Assert
         $this->assertFileDoesNotExist($filePath, 'Le fichier doit être supprimé.');
@@ -103,19 +105,20 @@ class RemoveOldFilesOnDiskTest extends TestCase
             ->method('getTransactionIdFromFileName')
             ->willReturn(null);
 
-        $service = new RemoveOldFilesOnDisk(
+        $service = new RemoveStoredFilesOnDisk(
             $this->logger,
             $this->filesystem,
             $this->cloudStorage,
             $this->fileDataProvider,
             $this->localFileResolver,
             $finder,
+            $this->pesAllerPrefix,
             $this->tempDir,
             true
         );
 
         // Act
-        $service->execute(15);
+        $service->findAndRemoveLocalFilesAlreadyCloudSaved(15);
 
         // Assert
         $movedFilePath = $this->tempDir . '/orphan.txt';
@@ -136,19 +139,20 @@ class RemoveOldFilesOnDiskTest extends TestCase
             ->method('getTransactionIdFromFileName')
             ->willReturn('young123');
 
-        $service = new RemoveOldFilesOnDisk(
+        $service = new RemoveStoredFilesOnDisk(
             $this->logger,
             $this->filesystem,
             $this->cloudStorage,
             $this->fileDataProvider,
             $this->localFileResolver,
             $finder,
+            $this->pesAllerPrefix,
             $this->tempDir,
             false
         );
 
         // Act
-        $service->execute(15);
+        $service->findAndRemoveLocalFilesAlreadyCloudSaved(15);
 
         // Assert
         $this->assertFileExists($filePath, 'Les fichiers récents ne doivent pas être supprimés.');

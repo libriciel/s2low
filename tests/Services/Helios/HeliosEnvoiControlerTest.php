@@ -13,19 +13,19 @@ use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionConfiguration;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionMode;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager;
 use S2low\Services\Helios\HeliosEnvoiControler;
+use S2low\Services\LocalFileResolver;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\helios\FichierCompteur;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Class\helios\HeliosTransmissionWindowsSQL;
-use S2lowLegacy\Class\helios\PesAllerRetriever;
 use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Controller\HeliosController;
 use S2lowLegacy\Lib\HeliosNamesGenerator;
-use S2lowLegacy\Lib\OpenStackSwiftWrapper;
+use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\PesAllerReader;
 use S2lowLegacy\Model\AuthoritySiretSQL;
 use S2lowLegacy\Model\AuthoritySQL;
@@ -67,7 +67,8 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
         fwrite($counterFile, '000');
 
         mkdir($this->testStreamUrl . '/helios');
-        $this->heliosController = self::getContainer()->get(HeliosController::class);
+        $this->testHeliosPrefix = $this->testStreamUrl . '/helios';
+        $this->heliosController = $this->createHeliosController();
         $this->envoiControler = $this->getHeliosEnvoiController();
     }
 
@@ -109,8 +110,9 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
     private function getImportFile($filename): mixed
     {
         $pes_aller = $this->projectDir . "/test/PHPUnit/helios/fixtures/$filename";
-        $pesAllerPourTest = $this->testStreamUrl . '/helios/' . sha1_file($pes_aller);
-        copy($pes_aller, $pesAllerPourTest);
+        $sha1 = sha1_file($pes_aller);
+
+        copy($pes_aller, $this->getLocalFileResolver()->getFullPathFromFilePath($sha1));
         return $this->heliosController->importFile(13, $pes_aller, 'pes_aller.xml');
     }
 
@@ -538,18 +540,13 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
 
     private function getHeliosEnvoiController()
     {
-        $pesAllerRetriever = new PesAllerRetriever(
-            $this->testStreamUrl . '/helios/',
-            self::getContainer()->get(OpenStackSwiftWrapper::class),
-            self::getContainer()->get(LoggerInterface::class)
-        );
-
         return new HeliosEnvoiControler(
             static::getContainer()->get(AuthoritySiretSQL::class),
             static::getContainer()->get(HeliosTransactionsSQL::class),
             static::getContainer()->get(AuthoritySQL::class),
             static::getContainer()->get(HeliosTransmissionWindowsSQL::class),
-            $pesAllerRetriever,
+            $this->getLocalFileResolver(),
+            static::getContainer()->get('app.store.file.pes_aller'),
             static::getContainer()->get(Antivirus::class),
             $this->workerScript,
             static::getContainer()->get(MailerSymfonyFactory::class),
@@ -583,6 +580,23 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
             new PesAllerReader(),
             new HeliosNamesGenerator(),
             new VerifyPemCertificateFactory()
+        );
+    }
+
+    private function getLocalFileResolver(): LocalFileResolver
+    {
+        return new LocalFileResolver(
+            self::getContainer()->get(HeliosTransactionsSQL::class),
+            $this->testHeliosPrefix
+        );
+    }
+
+    private function createHeliosController(): HeliosController
+    {
+        return new HeliosController(
+            $this->getLocalFileResolver(),
+            self::getContainer()->get('app.store.file.pes_aller'),
+            self::getContainer()->get(ObjectInstancier::class)
         );
     }
 }

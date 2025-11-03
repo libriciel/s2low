@@ -4,9 +4,10 @@ namespace S2lowLegacy\Controller;
 
 use DOMDocument;
 use Exception;
+use S2low\Services\CloudFileStorageInterface;
 use S2low\Services\Helios\HeliosAnalyseFichierAEnvoyerWorker;
+use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\helios\HeliosStorePESAllerWorker;
-use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
@@ -20,6 +21,7 @@ use S2lowLegacy\Model\HeliosRetourSQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use S2lowLegacy\Model\ModuleSQL;
 use S2lowLegacy\Model\UserSQL;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class HeliosController extends Controller
 {
@@ -27,18 +29,15 @@ class HeliosController extends Controller
 
     private $helios_max_upload_size;
 
-    public function __construct(ObjectInstancier $objectInstancier)
-    {
+    public function __construct(
+        #[Autowire(service: 'app.localFileResolver.pes_aller')]
+        private readonly LocalFileResolver $pesAllerResolver,
+        #[Autowire(service: 'app.store.file.pes_aller')]
+        private readonly CloudFileStorageInterface $cloudPesAllerStorage,
+        ObjectInstancier $objectInstancier
+    ) {
         parent::__construct($objectInstancier);
         $this->setHeliosMaxUploadSize(HELIOS_MAX_UPLOAD_SIZE);
-    }
-
-    /**
-     * @return PesAllerRetriever
-     */
-    private function getPesAllerRetriever()
-    {
-        return $this->getObjectInstancier()->get(PesAllerRetriever::class);
     }
 
     public function setHeliosMaxUploadSize($helios_max_upload_size)
@@ -121,7 +120,8 @@ class HeliosController extends Controller
             throw new Exception("doublon détecté. Ce fichier a déjà été posté.");
         }
 
-        $pes_aller_destination = $this->getPesAllerRetriever()->getPathForNonExistingFile($SHA1);
+        $pes_aller_destination = $this->pesAllerResolver->getFullPathFromFilePath($SHA1);
+
         try {
             $pes_aller_original_name = $_FILES['enveloppe']['name'];
             if (!move_uploaded_file_wrapper($_FILES['enveloppe']['tmp_name'], $pes_aller_destination)) {
@@ -238,7 +238,10 @@ class HeliosController extends Controller
         $id_list = $heliosTransactionSQL->getAllId($min_id);
         foreach ($id_list as $transaction_id) {
             $info = $heliosTransactionSQL->getInfo($transaction_id);
-            $pes_aller_path = $this->getPesAllerRetriever()->getPath($info['sha1']);
+
+            $pes_aller_path = $this->pesAllerResolver->getFullPath($info['id']);
+            $this->cloudPesAllerStorage->downloadFileFromCloud($transaction_id);
+
             if (! file_exists($pes_aller_path)) {
                 echo "Transaction $transaction_id : le fichier PES ALLER n'est pas disponible\n";
                 continue;

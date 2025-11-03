@@ -2,8 +2,11 @@
 
 namespace S2lowLegacy\Class\helios;
 
+use Psr\Log\LoggerInterface;
+use S2low\Services\RemoveStoredFilesOnDisk;
 use S2lowLegacy\Class\IWorker;
 use Exception;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class HeliosMenagePesAcquitWorker implements IWorker
 {
@@ -11,7 +14,9 @@ class HeliosMenagePesAcquitWorker implements IWorker
     private const NB_DAYS_IN_DISK = 15;
 
     public function __construct(
-        private PESAcquitCloudStorage $pesAcquitCloudStorage
+        private readonly LoggerInterface $logger,
+        #[Autowire(service: 'app.removeFiles.pes_acquit')]
+        private readonly RemoveStoredFilesOnDisk $removeOldFilesOnDisk,
     ) {
     }
 
@@ -36,9 +41,13 @@ class HeliosMenagePesAcquitWorker implements IWorker
      * @return void
      * @throws Exception
      */
-    public function work($data)
+    public function work($data): void
     {
-        $this->pesAcquitCloudStorage->deleteFilesOnDisk(self::NB_DAYS_IN_DISK, true);
+        try {
+            $this->removeOldFilesOnDisk->findAndRemoveLocalFilesAlreadyCloudSaved();
+        } catch (\Throwable $e) {
+            $this->logger->error($e->getMessage());
+        }
     }
 
     public function getMutexName($data): string

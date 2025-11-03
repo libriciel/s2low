@@ -1,5 +1,8 @@
 <?php
 
+use S2low\Services\CloudFileStorage;
+use S2low\Services\CloudFileStorageInterface;
+use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\helios\HeliosPESValidation;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
@@ -20,12 +23,13 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 /** @var Initialisation $initialisation */
 /** @var Droit $droit */
 /** @var HeliosTransactionsSQL $heliosTransactionsSQL */
-/** @var PesAllerRetriever $pesAllerRetriever */
+/** @var LocalFileResolver $localPesAllerResolver */
+/** @var CloudFileStorageInterface $cloudStorePesAller */
 /** @var string $html */
 
-[$initialisation, $droit,$heliosTransactionsSQL ,$pesAllerRetriever] =
+[$initialisation, $droit,$heliosTransactionsSQL, $localPesAllerResolver, $cloudStorePesAller] =
     LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class,HeliosTransactionsSQL::class,PesAllerRetriever::class]);
+    ->getArray([Initialisation::class, Droit::class,HeliosTransactionsSQL::class,'app.localFileResolver.pes_aller', 'app.store.file.pes_aller']);
 
 $html = '';
 
@@ -51,9 +55,14 @@ $transaction_id = $recuperateur->getInt('id');
 
 $info = $heliosTransactionsSQL->getInfo($transaction_id);
 
-$filename = $pesAllerRetriever->getPath($info['sha1']);
+$filename = $localPesAllerResolver->getFullPath($transaction_id);
+$cloudStorePesAller->downloadFileFromCloud($transaction_id);
 
-$pes_content = file_get_contents($filename);
+if (file_exists($filename)) { // logique permettant de concerver la meme erreur apres refacto S3.
+    $pes_content = file_get_contents($filename);
+} else {
+    $pes_content = file_get_contents(false);
+}
 
 $heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);
 

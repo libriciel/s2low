@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace PHPUnit\class\helios;
 
-use Exception;
 use HeliosUtilitiesTestTrait;
+use S2low\Services\CloudFileStorageInterface;
 use S2lowLegacy\Class\helios\HeliosStorePESAllerWorker;
 use S2lowLegacy\Class\helios\PESAllerCloudStorage;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
@@ -27,17 +27,22 @@ class HeliosStorePESAllerWorkerTest extends S2lowTestCase
         static::assertEquals([$transaction_id], $heliosStorePESAllerWorker->getAllId());
     }
 
-    /**
-     * @throws Exception
-     */
     public function testWork()
     {
-        $storageMock = $this->getMockBuilder(PESAllerCloudStorage::class)
+        $storageMock = $this->getMockBuilder(CloudFileStorageInterface::class)
             ->disableOriginalConstructor()->getMock();
 
-        $storageMock->expects(static::once())->method('storeObject')->with(6587);
+        $storageMock->expects(static::once())->method('storeFileOnCloud')->with(6587);
 
-        $heliosStorePESAllerWorker = new HeliosStorePESAllerWorker($storageMock);
+        $pesAllerCloudStorage = self::createMock(PESAllerCloudStorage::class);
+        $heliosTransaction = self::createMock(HeliosTransactionsSQL::class);
+
+        $heliosStorePESAllerWorker = new HeliosStorePESAllerWorker(
+            $storageMock,
+            $pesAllerCloudStorage,
+            $heliosTransaction,
+            $this->logger
+        );
 
         $heliosStorePESAllerWorker->work(6587);
     }

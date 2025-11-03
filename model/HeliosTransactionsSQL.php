@@ -776,7 +776,7 @@ AND authorities.helios_use_passtrans = ?
 
     public function getCloudId(string $transactionId): string
     {
-        $transaction = $this->queryOne("SELECT sha1, siren FROM helios_transactions WHERE id=?", $transactionId);
+        $transaction = $this->queryOne("SELECT sha1, siren FROM helios_transactions WHERE id=?", (int) $transactionId);
 
         if ($transaction === false) {
             throw new FileNotFoundException('Aucun pes aller associé a la transaction ' . $transactionId);
@@ -785,9 +785,15 @@ AND authorities.helios_use_passtrans = ?
         return $transaction['siren'] . '/' . basename($transaction['sha1']);
     }
 
-    public function getTransactionIdFromFileName(string $filePath): string
+    public function getTransactionIdFromFileName(string $filePath): ?string
     {
-        // TODO: Implement getTransactionIdFromFileName() method.
-        return '';
+        $fileName = basename($filePath);
+        $transactionId = $this->queryOne("SELECT id FROM helios_transactions WHERE sha1 LIKE ?", '%' . $fileName . '%');
+
+        if ($transactionId === false) {
+            $transactionId = null;
+        }
+
+        return $transactionId;
     }
 }

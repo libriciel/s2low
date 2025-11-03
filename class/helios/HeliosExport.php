@@ -3,11 +3,14 @@
 namespace S2lowLegacy\Class\helios;
 
 use Psr\Log\LoggerInterface;
+use S2low\Services\CloudFileStorageInterface;
+use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use Exception;
 use S2lowLegacy\Lib\UnrecoverableException;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
 
 class HeliosExport
@@ -15,22 +18,20 @@ class HeliosExport
     private $s2lowLogger;
     private $authoritySQL;
     private $heliosTransactionsSQL;
-    private $pesAllerRetriever;
-    private $helios_responses_root;
 
     public function __construct(
         LoggerInterface $s2lowLogger,
         AuthoritySQL $authoritySQL,
         HeliosTransactionsSQL $heliosTransactionsSQL,
-        PesAllerRetriever $pesAllerRetriever,
-        $helios_responses_root,
-        private PESAcquitCloudStorage $pesAcquitCloudStorage
+        private PESAcquitCloudStorage $pesAcquitCloudStorage,
+        #[Autowire(service: 'app.localFileResolver.pes_aller')]
+        private readonly LocalFileResolver $pesAllerResolver,
+        #[Autowire(service: 'app.store.file.pes_aller')]
+        private readonly CloudFileStorageInterface $cloudPesAllerStorage
     ) {
         $this->s2lowLogger = $s2lowLogger;
         $this->authoritySQL = $authoritySQL;
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
-        $this->pesAllerRetriever = $pesAllerRetriever;
-        $this->helios_responses_root = $helios_responses_root;
     }
 
     /**
@@ -125,7 +126,8 @@ class HeliosExport
         $filesystem = new Filesystem();
         $filesystem->mkdir($output_directory . "/" . $directory_name);
 
-        $pes_aller_path = $this->pesAllerRetriever->getPath($transaction_info['sha1']);
+        $pes_aller_path = $this->pesAllerResolver->getFullPath($transaction_info['id']);
+        $this->cloudPesAllerStorage->downloadFileFromCloud($transaction_info['id']);
         $pes_aller_destination = $output_directory . "/$directory_name/{$transaction_info['filename']}";
         $filesystem->copy($pes_aller_path, $pes_aller_destination);
         $this->s2lowLogger->debug("[COPIE OK] $pes_aller_path -> $pes_aller_destination");

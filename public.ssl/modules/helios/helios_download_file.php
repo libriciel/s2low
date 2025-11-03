@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 // Configuration
+use S2low\Services\CloudFileStorageInterface;
+use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
@@ -13,8 +15,10 @@ use S2lowLegacy\Class\ModulePermission;
 use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
 
-/** @var PesAllerRetriever $pesAllerRetriever */
-$pesAllerRetriever = LegacyObjectsManager::getLegacyObjectInstancier()->get(PesAllerRetriever::class);
+/** @var CloudFileStorageInterface $storePesAllerService */
+/** @var LocalFileResolver $localPesAllerResolver */
+$storePesAllerService = LegacyObjectsManager::getLegacyObjectInstancier()->get('app.store.file.pes_aller');
+$localPesAllerResolver = LegacyObjectsManager::getLegacyObjectInstancier()->get('app.localFileResolver.pes_aller');
 
 // Instanciation du module courant
 $module = new Module();
@@ -81,7 +85,8 @@ $owner = new User($ownerId);
 $owner->init();
 
 try {
-    $filepath = $pesAllerRetriever->getPath($sha1);
+    $storePesAllerService->downloadFileFromCloud($transaction_id);
+    $filepath = $localPesAllerResolver->getFullPath($transaction_id);
 } catch (Exception $e) {
     $_SESSION['error'] = 'Erreur lors de la récupération du fichier : ' . $e->getMessage();
     header('Location: ' . Helpers::getLink("/modules/helios/helios_transac_show.php?id=$transaction_id"));

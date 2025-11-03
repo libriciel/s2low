@@ -2,8 +2,12 @@
 
 namespace S2lowLegacy\Class\helios;
 
+use Psr\Log\LoggerInterface;
+use S2low\Services\CloudFileStorageInterface;
 use S2lowLegacy\Class\IWorker;
 use Exception;
+use S2lowLegacy\Model\HeliosTransactionsSQL;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class HeliosStorePESAllerWorker implements IWorker
 {
@@ -17,7 +21,11 @@ class HeliosStorePESAllerWorker implements IWorker
     /**
      */
     public function __construct(
-        private readonly PESAllerCloudStorage $PESAllerCloudStorage
+        #[Autowire(service: 'app.store.file.pes_aller')]
+        private readonly CloudFileStorageInterface $cloudStoreActeEnveloppe,
+        private readonly PESAllerCloudStorage $PESAllerCloudStorage,
+        private readonly HeliosTransactionsSQL $repository,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -38,7 +46,13 @@ class HeliosStorePESAllerWorker implements IWorker
      */
     public function work($data): void
     {
-        $this->PESAllerCloudStorage->storeObject($data);
+        $this->logger->debug("Preparation de la sauvegarde dans le cloud de l'enveloppe acte : [$data].");
+
+        $this->cloudStoreActeEnveloppe->storeFileOnCloud($data);
+
+        $this->repository->setTransactionInCloud($data, true);
+
+        $this->logger->info("Pes Aller [$data] enregistré avec succès.");
     }
 
     public function getMutexName($data): string

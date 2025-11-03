@@ -48,7 +48,7 @@ class ActesStoreEnveloppeWorker implements IWorker
      */
     public function work($data): void
     {
-        $this->logger->info("Preparation de la sauvegarde dans le cloud de l'enveloppe acte : [$data].");
+        $this->logger->debug("Preparation de la sauvegarde dans le cloud de l'enveloppe acte : [$data].");
 
         $this->cloudStoreActeEnveloppe->storeFileOnCloud($data);
 

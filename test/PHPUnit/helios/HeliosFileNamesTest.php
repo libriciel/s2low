@@ -5,12 +5,11 @@ namespace PHPUnit\helios;
 use HeliosDirectoriesManager;
 use IntegrationTests\S2lowIntegrationTestCase;
 use S2low\Enum\UserRole;
+use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu;
 use S2lowLegacy\Class\helios\HeliosFilesFactory;
-use S2lowLegacy\Class\helios\PesAllerRetriever;
-use Psr\Log\LoggerInterface;
 use S2lowLegacy\Controller\HeliosController;
-use S2lowLegacy\Lib\OpenStackSwiftWrapper;
+use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 class HeliosFileNamesTest extends S2lowIntegrationTestCase
@@ -34,17 +33,26 @@ class HeliosFileNamesTest extends S2lowIntegrationTestCase
 
         $this->setUserWithRole(UserRole::Utilisateur);
 
-        $this->heliosController = self::getContainer()->get(HeliosController::class);
+        $this->tmpDirectory = sys_get_temp_dir() . "/" . uniqid("phpunit");
+        mkdir($this->tmpDirectory);
+
         $this->heliosFilesFactory = new HeliosFilesFactory(
             $this->heliosTransactionSQL,
             $this->heliosDirectoriesManager->helios_files_upload_root,
             $this->heliosDirectoriesManager->helios_response_root,
         );
 
-        $this->heliosAnalyseFichierRecu = self::getContainer()->get(HeliosAnalyseFichierRecu::class);
+        $this->localFileResolver = new LocalFileResolver(
+            self::getContainer()->get(HeliosTransactionsSQL::class),
+            $this->heliosDirectoriesManager->helios_files_upload_root
+        );
 
-        $this->tmpDirectory = sys_get_temp_dir() . "/" . uniqid("phpunit");
-        mkdir($this->tmpDirectory);
+        $this->heliosController = new HeliosController(
+            $this->localFileResolver,
+            self::getContainer()->get('app.store.file.pes_aller'),
+            self::getContainer()->get(ObjectInstancier::class),
+        );
+        $this->heliosAnalyseFichierRecu = self::getContainer()->get(HeliosAnalyseFichierRecu::class);
     }
 
     public function tearDown(): void
@@ -70,15 +78,6 @@ class HeliosFileNamesTest extends S2lowIntegrationTestCase
             'size' => filesize($tmp_file),
             'error' => UPLOAD_ERR_OK
         );
-
-        $pesAllerRetriever = new PesAllerRetriever(
-            $this->heliosDirectoriesManager->helios_files_upload_root,
-            self::getContainer()->get(OpenStackSwiftWrapper::class),
-            self::getContainer()->get(LoggerInterface::class)
-        );
-
-        self::getContainer()->set(PesAllerRetriever::class, $pesAllerRetriever);
-
         $id_transaction = $this->heliosController->import(13);
         // Les informations sont ajoutées par le cron HeliosAnalyseFichierRecu
         $info_from_pes_aller['nom_fic'] = "03f432a4f6d35110bf309fb525eb61f7";

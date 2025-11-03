@@ -73,7 +73,7 @@ class ActesArchiveControlerTest extends S2lowTestCase
         $actesTransactionsSQL = self::getContainer()->get(ActesTransactionsSQL::class);
         $actesEnvelopeSQL = self::getContainer()->get(ActesEnvelopeSQL::class);
         $actesTypePJSQL = self::getContainer()->get(ActesTypePJSQL::class);
-        $cloudStorage = self::getContainer()->get(ActesCloudStorage::class);
+        $removeActeEnveloppeService = self::getContainer()->get('app.removeFiles.acte_enveloppe');
         $cloudFileStorage = self::createMock(CloudFileStorageInterface::class);
         $cloudFileStorage
             ->method('fileExistOnCloud')
@@ -90,7 +90,7 @@ class ActesArchiveControlerTest extends S2lowTestCase
             $actesTransactionsSQL,
             $actesEnvelopeSQL,
             $actesTypePJSQL,
-            $cloudStorage
+            $removeActeEnveloppeService
         );
     }
 
