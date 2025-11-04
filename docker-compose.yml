@@ -173,6 +173,7 @@ services:
             - ${WORKSPACE_VOLUME:-app_workspace}:/data/tdt-workspace
             - ${LOG_PATH:-app_logs}:/data/log/
             - ${SERVER_SSL_CERTIFICAT:-app_certificate}:/etc/apache2/ssl/
+            - ${TIMESTAMP_CERTIFICAT_PATH:-app_certificate_timestamp}:/etc/s2low/ssl/
             - ${GENERAL_TRUST_STORE:-general_trust_store}:/data/certificate/truststore/
             - ${ACME_DATADIR:-${LETSENCRYPT_DATADIR:-letsencrypt_datadir}}:/etc/letsencrypt
         tmpfs:
@@ -237,6 +238,7 @@ volumes:
     db_datadir:
     app_workspace:
     app_certificate:
+    app_certificate_timestamp:
     app_session:
     letsencrypt_datadir:
     app_logs:
