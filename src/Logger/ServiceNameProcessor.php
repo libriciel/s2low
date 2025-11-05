@@ -38,7 +38,7 @@ class ServiceNameProcessor implements ProcessorInterface
     private function getLegacyScriptName(): string
     {
         $res = 'service-name-undefined';
-        if (isset ($_SERVER['argv'][0])) {
+        if (isset($_SERVER['argv'][0])) {
             $res = substr(basename($_SERVER['argv'][0]), 0, -4);
         }
 
