@@ -27,16 +27,21 @@ class HeliosEnvoiSAE
     public function __construct(
         #[Autowire(service: 'app.localFileResolver.pes_aller')]
         private readonly LocalFileResolver $pesAllerResolver,
+        #[Autowire(service: 'app.localFileResolver.pes_acquit')]
+        private readonly LocalFileResolver $pesAcquitResolver,
         #[Autowire(service: 'app.store.file.pes_aller')]
         private readonly CloudFileStorageInterface $cloudPesAllerStorage,
+        #[Autowire(service: 'app.store.file.pes_acquit')]
+        private readonly CloudFileStorageInterface $cloudPesAcquitStorage,
         #[Autowire(service: 'app.removeFiles.pes_aller')]
         private readonly RemoveStoredFilesOnDisk $removePesAllerOnDisk,
+        #[Autowire(service: 'app.removeFiles.pes_acquit')]
+        private readonly RemoveStoredFilesOnDisk $removePesAcquitOnDisk,
         PastellWrapperFactory $pastellWrapperFactory,
         LoggerInterface $logger,
         AuthoritySQL $authoritySQL,
         HeliosTransactionsSQL $heliosTransactionsSQL,
         PastellPropertiesSQL $pastellPropertiesSQL,
-        private readonly PESAllerCloudStorage $pesAllerCloudStorage
     ) {
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
         $this->authoritySQL = $authoritySQL;
@@ -111,7 +116,8 @@ class HeliosEnvoiSAE
             throw new FilesNotFoundInCloudException("Impossible de récupérer le PES ALLER {$transactionsInfo['sha1']}");
         }
 
-        $pes_acquit_filepath = $this->pesAllerCloudStorage->getPath($transaction_id);
+        $this->cloudPesAcquitStorage->downloadFileFromCloud($transaction_id);
+        $pes_acquit_filepath = $this->pesAcquitResolver->getFullPath($transaction_id);
 
         $pastellProperties = $this->pastellPropertiesSQL->getPastellProperties(
             $transactionsInfo[HeliosTransactionsSQL::AUTHORITY_ID]
@@ -156,6 +162,7 @@ class HeliosEnvoiSAE
         }
 
         $this->removePesAllerOnDisk->deleteFileIfSavedOnCloud($transaction_id);
+        $this->removePesAcquitOnDisk->deleteFileIfSavedOnCloud($transaction_id);
 
         return true;
     }

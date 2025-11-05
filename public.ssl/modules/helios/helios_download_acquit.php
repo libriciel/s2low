@@ -1,15 +1,22 @@
 <?php
 
 // Configuration
+use S2low\Services\CloudFileStorageInterface;
+use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\helios\PESAcquitCloudStorage;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\ModulePermission;
 use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
 
+/** @var CloudFileStorageInterface $storePesAllerService */
+/** @var LocalFileResolver $localPesAllerResolver */
+$storePesAllerService = LegacyObjectsManager::getLegacyObjectInstancier()->get('app.store.file.pes_acquit');
+$localPesAllerResolver = LegacyObjectsManager::getLegacyObjectInstancier()->get('app.localFileResolver.pes_acquit');
 $pesAcquitCloudStorage = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(PESAcquitCloudStorage::class);
 
 // Instanciation du module courant
@@ -90,7 +97,9 @@ $owner = new User($ownerId);
 $owner->init();
 
 try {
-    $path = $pesAcquitCloudStorage->getPath($transaction_id);
+    $storePesAllerService->downloadFileFromCloud($transaction_id);
+    $filepath = $localPesAllerResolver->getFullPath($transaction_id);
+    $filename = basename($filepath);
 } catch (Exception $e) {
     $_SESSION["error"] = "Erreur d'envoi du fichier " . $filename . " : " . $e->getMessage();
     header_wrapper("Location: " . Helpers::getLink("/modules/helios/index.php"));

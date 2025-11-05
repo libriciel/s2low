@@ -49,6 +49,8 @@ class CloudFileStorage implements CloudFileStorageInterface
         } catch (\Throwable $e) {
             throw new CloudFileUploadException($transactionId, $cloudId, $e);
         }
+
+        $this->fileDataProvider->setTransactionIsInCloud($transactionId);
     }
 
     /**

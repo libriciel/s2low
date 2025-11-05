@@ -67,13 +67,15 @@ if (!$transaction['status']) {
 $transaction['resultat'] = "OK";
 
 $objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier();
-$cloudStorage = $objectInstancier->get(PESAcquitCloudStorage::class);
+$storePesAcquit = $objectInstancier->get('app.store.file.pes_acquit');
+$pesAcquitResolver = $objectInstancier->get('app.localFileResolver.pes_acquit');
 
-$PESAcquitPath = $cloudStorage->getPath($transaction['id']);
+$storePesAcquit->downloadFileFromCloud($transaction['id']);
+$PESAcquitExist = file_exists($pesAcquitResolver->getFullPath($transaction['id']));
 $transactionStatus = HeliosStatus::from($transaction['status']);
 
 $transactionStatus = ApiHeliosStatusResolver::getStatus(
-    $PESAcquitPath,
+    $PESAcquitExist,
     $transactionStatus
 );
 

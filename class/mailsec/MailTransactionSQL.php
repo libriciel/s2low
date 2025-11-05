@@ -115,4 +115,9 @@ class MailTransactionSQL extends SQL implements FileDataProvider
         // TODO: Implement getTransactionIdFromFileName() method.
         return '';
     }
+
+    public function setTransactionIsInCloud(string $transactionId): void
+    {
+        // TODO: Implement setTransactionIsInCloud() method.
+    }
 }

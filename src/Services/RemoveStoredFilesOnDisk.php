@@ -76,7 +76,9 @@ class RemoveStoredFilesOnDisk
                 sprintf("Le fichier est associé à la transaction %s", $transactionId)
             );
 
-            $transactionsIds[] = $transactionId;
+            if ($transactionId !== null) {
+                $transactionsIds[] = $transactionId;
+            }
         }
 
         return $transactionsIds;

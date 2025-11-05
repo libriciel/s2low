@@ -244,17 +244,6 @@ class HeliosEnvoiSAETest extends S2lowTestCase
     ): HeliosEnvoiSAE {
         $pastellWrapperFactory = $mockPastellFactory ?? $this->mockPastellFactory('dsf', "", true, true);
         $pastellPropertiesSQL = $this->getContainer()->get(PastellPropertiesSQL::class);
-        $pesAllerCloudStorable = new PesAllerCloudStorable(
-            $this->tmpPathFolder,
-            self::getContainer()->get(HeliosTransactionsSQL::class),
-            $this->secondTmpPathFolder,
-        );
-        $pesAllerCloudStorage = new PesAllerCloudStorage(
-            $pesAllerCloudStorable,
-            $openStackSwiftWrapper ?? $this->openStackSwiftWrapper,
-            $this->logger,
-            openstack_enable: false
-        );
 
         $storePesAllerOnCloud = self::createMock(CloudFileStorageInterface::class);
         $storePesAllerOnCloud
@@ -266,16 +255,22 @@ class HeliosEnvoiSAETest extends S2lowTestCase
         $localPesAllerResolver = self::createMock(LocalFileResolver::class);
         $localPesAllerResolver->method('getFullPath')->willReturn($this->pesAllerPath);
 
+        $localPesAcquitResolver = self::getContainer()->get('app.localFileResolver.pes_acquit');
+        $storePesAcquitOnCloud = self::getContainer()->get('app.store.file.pes_acquit');
+        $removeStoredPesacquitOnCloud = self::getContainer()->get('app.removeFiles.pes_acquit');
+
         return new HeliosEnvoiSAE(
             $localPesAllerResolver,
+            $localPesAcquitResolver,
             $storePesAllerOnCloud,
+            $storePesAcquitOnCloud,
             $removeStoredPesallerOnCloud,
+            $removeStoredPesacquitOnCloud,
             $pastellWrapperFactory,
             $this->logger,
             self::getContainer()->get(AuthoritySQL::class),
             $this->getHeliosTransactionsSQL(),
             $pastellPropertiesSQL,
-            $pesAllerCloudStorage
         );
     }
 

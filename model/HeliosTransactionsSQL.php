@@ -51,7 +51,7 @@ class HeliosTransactionsSQL extends SQL implements FileDataProvider
     public function getInfo($id)
     {
         $sql = "SELECT * FROM helios_transactions WHERE id=?";
-        return $this->queryOne($sql, $id);
+        return $this->queryOne($sql, (int) $id);
     }
 
     public function updateStatus($transaction_id, $status_id, $message)
@@ -795,5 +795,10 @@ AND authorities.helios_use_passtrans = ?
         }
 
         return $transactionId;
+    }
+
+    public function setTransactionIsInCloud(string $transactionId): void
+    {
+        $this->setTransactionInCloud($transactionId);
     }
 }

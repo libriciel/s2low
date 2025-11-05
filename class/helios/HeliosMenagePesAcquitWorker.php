@@ -44,7 +44,7 @@ class HeliosMenagePesAcquitWorker implements IWorker
     public function work($data): void
     {
         try {
-            $this->removeOldFilesOnDisk->findAndRemoveLocalFilesAlreadyCloudSaved();
+            $this->removeOldFilesOnDisk->findAndRemoveLocalFilesAlreadyCloudSaved(self::NB_DAYS_IN_DISK);
         } catch (\Throwable $e) {
             $this->logger->error($e->getMessage());
         }

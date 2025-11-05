@@ -24,4 +24,6 @@ interface FileDataProvider
     public function getCloudId(string $transactionId): string;
 
     public function getTransactionIdFromFileName(string $filePath): ?string;
+
+    public function setTransactionIsInCloud(string $transactionId): void;
 }

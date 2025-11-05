@@ -2,10 +2,10 @@
 
 namespace S2lowLegacy\Class\helios;
 
-use S2lowLegacy\Class\CloudStorageException;
+use Psr\Log\LoggerInterface;
+use S2low\Services\CloudFileStorageInterface;
 use S2lowLegacy\Class\IWorker;
-use S2lowLegacy\Lib\PausingQueueException;
-use S2lowLegacy\Lib\UnrecoverableException;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class HeliosStorePESAcquitWorker implements IWorker
 {
@@ -17,7 +17,10 @@ class HeliosStorePESAcquitWorker implements IWorker
     }
 
     public function __construct(
-        private PESAcquitCloudStorage $PESAcquitCloudStorage
+        #[Autowire(service: 'app.store.file.pes_acquit')]
+        private readonly CloudFileStorageInterface $cloudStorePesAcquit,
+        private readonly PESAcquitCloudStorage $PESAcquitCloudStorage,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -34,17 +37,13 @@ class HeliosStorePESAcquitWorker implements IWorker
         return $this->PESAcquitCloudStorage->getAllObjectIdToStore();
     }
 
-    /**
-     * @param $data
-     * @return void
-     * @throws CloudStorageException
-     * @throws PausingQueueException
-     * @throws UnrecoverableException
-     */
-
-    public function work($data)
+    public function work($data): void
     {
-        $this->PESAcquitCloudStorage->storeObject($data);
+        $this->logger->debug("Preparation de la sauvegarde dans le cloud du PesAcquit : [$data].");
+
+        $this->cloudStorePesAcquit->storeFileOnCloud($data);
+
+        $this->logger->info("PesAcquit [$data] enregistré avec succès.");
     }
 
     public function getMutexName($data): string

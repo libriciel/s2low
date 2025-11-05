@@ -1,3 +1,6 @@
+when@dev:
+  imports:
+    - { resource: 'parameters_dev.yaml' }
 parameters:
   # Parametres a definir obligatoirement
   app.database_host: '%env(POSTGRES_HOST)%'
@@ -110,6 +113,7 @@ parameters:
   app.website_ssl: 'https://s2low.docker.libriciel.fr/'
   app.workspace_directory.default: '/data/tdt-workspace/'
   app.xmlsec_path: '/usr/bin/xmlsec1'
+  app.pes_acquit_pattern: '*ACK*.xml'
 
 services:
   _defaults:
@@ -138,6 +142,7 @@ services:
       $use_prod_notifications: '%app.use_prod_notifications%'
       $website: '%app.website%'
       $heliosFilesUploadTmp: '%app.helios_files_upload_tmp%'
+      $pesAcquitFilePattern: '%app.pes_acquit_pattern%'
 
   monolog.formatter.line:
     class: Monolog\Formatter\LineFormatter
@@ -789,7 +794,7 @@ services:
       $fileDataProvider: '@S2low\Services\Helios\PesAcquitFileDataProvider'
       $localFileResolver: '@app.localFileResolver.pes_acquit'
       $localPathPrefix: '%app.helios_responses_root%'
-      $finder: '@app.finder.pes_retour'
+      $finder: '@app.finder.pes_acquit'
       $transactionErrorDirectory: null
       $moveOrphelinsFiles: false
 
