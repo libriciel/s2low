@@ -170,7 +170,8 @@ class CloudStorage
             if ($sigtermHandler->isSigtermCalled()) {
                 break;
             }
-            if (!file_exists($file->getRealPath())) {
+            $fileDontExist = $file->getRealPath() === false;
+            if ($fileDontExist) {
                 $this->logger->debug(sprintf("Le fichier present ici : %s est introuvable.", $file->getRealPath()));
                 continue;
             }
