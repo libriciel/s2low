@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace S2lowLegacy\Class;
 
 use Psr\Log\LoggerInterface;
+use S2low\Exceptions\ConnectionFailedException;
 use S2lowLegacy\Lib\PausingQueueException;
 use S2lowLegacy\Lib\SigTermHandler;
 use Throwable;
@@ -41,6 +42,8 @@ class CustomizableWorkerRunner implements WorkerRunner
             $this->jobFetchingStrategies->init($this->worker, $this->s2lowLogger);
             $this->checkAll();
             $workerhasRunSuccessfully = true;
+        } catch (ConnectionFailedException $e) {
+            $this->s2lowLogger->error($e->getMessage());
         } catch (WorkerScriptException $e) {
             $this->s2lowLogger->notice($e->getMessage());
             $workerhasRunSuccessfully = true;

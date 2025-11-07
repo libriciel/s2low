@@ -4,6 +4,7 @@ namespace S2low\Services\Helios\DGFiPConnection;
 
 use phpseclib3\Net\SFTP;
 use RuntimeException;
+use S2low\Exceptions\ConnectionFailedException;
 use S2low\Services\Helios\DGFiPConnection\Protocols\SftpServiceWrapper;
 
 /**
@@ -59,14 +60,16 @@ class SFTPConnection
 
     /**
      * @return void
-     * @throws \Exception
+     * @throws ConnectionFailedException
      */
-    public function connect(): void // TODO : add timeout ?
+    public function connect(): void
     {
-        $this->connection = $this->sftpServiceWrapper->connect($this->host, $this->port);
-        $this->sftpServiceWrapper->login($this->connection, $this->login, $this->password);
-        //$this->connection = $this->sftpServiceWrapper->connect($this->host, $this->port);
-        //$this->sftp = $this->sftpServiceWrapper->login($this->connection, $this->login, $this->password);
+        try {
+            $this->connection = $this->sftpServiceWrapper->connect($this->host, $this->port);
+            $this->sftpServiceWrapper->login($this->connection, $this->login, $this->password);
+        } catch (\Throwable $e) {
+            throw new ConnectionFailedException($e->getMessage());
+        }
     }
 
     /**

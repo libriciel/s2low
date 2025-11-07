@@ -3,6 +3,7 @@
 namespace S2low\Services\Helios\DGFiPConnection;
 
 use Exception;
+use S2low\Exceptions\ConnectionFailedException;
 
 /**
  *  Implémente une connection vers le serveur DGFiP utilisant le protocole SFTP
@@ -26,6 +27,7 @@ class DGFiPConnectorOnSFTP implements DGFiPConnector
      * Ouvre la connection
      * @return void
      * @throws Exception
+     * @throws ConnectionFailedException
      */
     public function connect(): void
     {

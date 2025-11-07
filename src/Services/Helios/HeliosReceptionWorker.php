@@ -6,12 +6,12 @@ namespace S2low\Services\Helios;
 
 use Exception;
 use Psr\Log\LoggerInterface;
+use S2low\Exceptions\ConnectionFailedException;
 use S2low\Services\Helios\DGFiPConnection\FTPFileRetrieveException;
 use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecuWorker;
 use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\WorkerScript;
-use S2lowLegacy\Lib\SigTermHandler;
 
 class HeliosReceptionWorker implements IWorker
 {
@@ -92,6 +92,9 @@ class HeliosReceptionWorker implements IWorker
         return true;
     }
 
+    /**
+     * @throws ConnectionFailedException
+     */
     public function start(): void
     {
         $this->ftpFileGetter->debutTraitement();
