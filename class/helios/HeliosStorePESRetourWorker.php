@@ -2,10 +2,11 @@
 
 namespace S2lowLegacy\Class\helios;
 
-use S2lowLegacy\Class\CloudStorageException;
+use Psr\Log\LoggerInterface;
+use S2low\Services\CloudFileStorageInterface;
 use S2lowLegacy\Class\IWorker;
-use S2lowLegacy\Lib\PausingQueueException;
 use S2lowLegacy\Lib\UnrecoverableException;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class HeliosStorePESRetourWorker implements IWorker
 {
@@ -17,7 +18,10 @@ class HeliosStorePESRetourWorker implements IWorker
     }
 
     public function __construct(
-        private PESRetourCloudStorage $PESRetourCloudStorage
+        #[Autowire(service: 'app.store.file.pes_retour')]
+        private readonly CloudFileStorageInterface $cloudStorePesAller,
+        private readonly PESRetourCloudStorage $PESRetourCloudStorage,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -35,15 +39,13 @@ class HeliosStorePESRetourWorker implements IWorker
         return $this->PESRetourCloudStorage->getAllObjectIdToStore();
     }
 
-    /**
-     * @param $data
-     * @return void
-     * @throws CloudStorageException | PausingQueueException | UnrecoverableException
-     */
-
-    public function work($data)
+    public function work($data): void
     {
-        $this->PESRetourCloudStorage->storeObject($data);
+        $this->logger->debug("Preparation de la sauvegarde dans le cloud du PesRetour : [$data].");
+
+        $this->cloudStorePesAller->storeFileOnCloud($data);
+
+        $this->logger->info("PesRetour [$data] enregistré avec succès.");
     }
 
     public function getMutexName($data): string

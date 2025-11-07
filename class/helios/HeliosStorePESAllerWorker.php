@@ -6,7 +6,6 @@ use Psr\Log\LoggerInterface;
 use S2low\Services\CloudFileStorageInterface;
 use S2lowLegacy\Class\IWorker;
 use Exception;
-use S2lowLegacy\Model\HeliosTransactionsSQL;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class HeliosStorePESAllerWorker implements IWorker
@@ -24,7 +23,6 @@ class HeliosStorePESAllerWorker implements IWorker
         #[Autowire(service: 'app.store.file.pes_aller')]
         private readonly CloudFileStorageInterface $cloudStorePesAller,
         private readonly PESAllerCloudStorage $PESAllerCloudStorage,
-        private readonly HeliosTransactionsSQL $repository,
         private readonly LoggerInterface $logger
     ) {
     }

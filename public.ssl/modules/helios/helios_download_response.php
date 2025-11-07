@@ -1,6 +1,8 @@
 <?php
 
 // Configuration
+use S2low\Services\CloudFileStorageInterface;
+use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\helios\PESRetourCloudStorage;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Module;
@@ -8,9 +10,11 @@ use S2lowLegacy\Class\User;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosRetourSQL;
 
-list($heliosRetourSQL,$authoritySQL,$pesRetourCloudStorage) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var CloudFileStorageInterface $storePesRetourService */
+/** @var LocalFileResolver $pesAllerPathResolver */
+list($heliosRetourSQL,$authoritySQL,$storePesRetourService, $pesAllerPathResolver) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [HeliosRetourSQL::class, AuthoritySQL::class, PESRetourCloudStorage::class]
+        [HeliosRetourSQL::class, AuthoritySQL::class, 'app.store.file.pes_retour', 'app.localFileResolver.pes_retour']
     );
 
 // Instanciation du module courant
@@ -59,7 +63,8 @@ $entity->init();
 $filename = $entity->get("filename");
 
 try {
-    $filepath = $pesRetourCloudStorage->getPath($retourId);
+    $storePesRetourService->downloadFileFromCloud($retourId);
+    $filepath = $pesAllerPathResolver->getFullPath($retourId);
 } catch (Exception $e) {
     $_SESSION["error"] = "Erreur lors de la r?cup?ration du fichier : " . $e->getMessage();
     header("Location: " . Helpers::getLink("/modules/helios/helios_retour.php"));
