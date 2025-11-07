@@ -52,7 +52,7 @@ class AdminUtilitiesCertificateControllerTest extends S2lowIntegrationTestCase
         }
 
         $result = $environnement->session()->get(AdminUtilitiesCertificateController::SESSION_KEY);
-        $this->assertEquals('/C=FR/ST=23 - Creuse/L=Aubusson/O=Libriciel SCOP/OU=tests unitaires s2low/CN=testUnitaires s2low - tests unitaires s2low/emailAddress=test@libriciel.coop', $result['certificate_info']['name']);
+        $this->assertEquals('/C=FR/ST=02 - Aisne/L=saint-jean-de-vedas/O=libriciel/OU=test s2low/CN=s2low contact - test s2low/emailAddress=contact@example.org', $result['certificate_info']['name']);
         $this->assertEquals(0, $result['nb_users']);
     }
 
