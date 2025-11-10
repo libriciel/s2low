@@ -216,7 +216,7 @@ services:
 
     redis:
         restart: unless-stopped
-        image: hubdocker.libriciel.fr/redis:7.4.6@sha256:d7432711a2a5c99c2e9dd0e006061cd274d7cb7a9e77f07ffe2ea99e21244677
+        image: hubdocker.libriciel.fr/redis:7.4.7@sha256:f3cd89d901f3ee81c80c6544f8ae175213fb97bf077cb555ef5673e1be0f8c68
         volumes:
             - ${REDIS_VOLUME:-redis_datadir}:/data
         command: redis-server --appendonly yes
