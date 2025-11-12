@@ -40,8 +40,15 @@ class PemCertificateFactory
     {
         return new PemCertificate(
             $content,
-            $this->parsePemCertificate($content)
+            $this->parsePemCertificate($content),
+            $this->parsePemCertificate($content)['subject'],
+            $this->parsePemCertificate($content)['issuer'],
         );
+    }
+
+    public function getFromFile(string $filename): PemCertificate
+    {
+        return $this->getFromString(file_get_contents($filename));
     }
 
     /**

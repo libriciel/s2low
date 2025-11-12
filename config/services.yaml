@@ -290,6 +290,12 @@ services:
     exclude:
       - '../lib/OpenStackConfig.php'
 
+  S2lowLegacy\Lib\CertificateBundle:
+    autowire: false
+
+  S2lowLegacy\Lib\CertificateChain:
+    autowire: false
+
   S2lowLegacy\Lib\SigTermHandler:
     public: true
     shared: true
