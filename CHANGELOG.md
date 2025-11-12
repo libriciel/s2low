@@ -4,7 +4,8 @@
 
 ### Corrections
 
-- Correction d'un script permettant la double lecture d'un mail AR Acte sans le prendre en compte une seconde fois.
+- Correction d'un script permettant la double lecture d'un mail AR Acte sans le prendre en compte une seconde fois. #1449
+- Correction d'un bug lors de l'execution du worker helios-menage menant à une exception évitable. #1445
 
 ## 5.1.5 - 2025-10-27
 
