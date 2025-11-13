@@ -378,6 +378,12 @@ class ActesAnalyseFichierRecuController
 
         $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne);
 
+        $acteDejaEuLeStatutAcquitte = $this->actesTransactionsSQL->acteAlreadyHadStatut($transaction_id, ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+        if ($acteDejaEuLeStatutAcquitte) {
+            $this->s2lowLogger->warning(sprintf("Un acquittement à deja été recu pour la transaction : %s. Arret du traitement.", $transaction_id));
+            return;
+        }
+
         $this->actesTransactionsSQL->setUniqueID($transaction_id, $fichierXML->id_actes);
 
         $this->s2lowLogger->info("$fichierXML->id_actes -> transaction_id = $transaction_id");

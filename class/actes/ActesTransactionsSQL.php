@@ -595,4 +595,11 @@ WHERE
         }
         return array_values($result);
     }
+
+    public function acteAlreadyHadStatut(mixed $transactionId, int $status): bool
+    {
+        $sql = 'SELECT id from actes_transactions_workflow where transaction_id=? and status_id=?';
+
+        return $this->queryOne($sql, $transactionId, $status) !== false;
+    }
 }
