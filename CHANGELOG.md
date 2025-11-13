@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.6
+
+### Corrections
+
+- Test maintenant si un AR Acte à deja ete recu pour la transaction en cours de traitement. Pour éviter la double prise en compte d'un AR.
+
 ## 5.1.5 - 2025-10-27
 
 ### Corrections
