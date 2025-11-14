@@ -8,10 +8,12 @@ use S2low\Services\CloudFileStorageInterface;
 use S2low\Services\DisabledCloudFileStorage;
 use S2low\Services\FileDataProvider;
 use S2low\Services\LocalFileResolver;
+use Symfony\Component\Filesystem\Filesystem;
 
 class CloudFileStorageFactory
 {
     public function __construct(
+        private readonly Filesystem $filesystem,
         private readonly bool $cloudStorageEnabled,
     ) {
     }
@@ -26,6 +28,7 @@ class CloudFileStorageFactory
                 $clientCloudStorage,
                 $localFileResolver,
                 $fileDataProvider,
+                $this->filesystem
             );
         } else {
             $fileStorage = new DisabledCloudFileStorage();

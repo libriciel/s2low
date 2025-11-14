@@ -2,8 +2,11 @@
 
 namespace S2lowLegacy\Class\mailsec;
 
+use Psr\Log\LoggerInterface;
+use S2low\Services\RemoveStoredFilesOnDisk;
 use S2lowLegacy\Class\IWorker;
 use Exception;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class MailsecMenageWorker implements IWorker
 {
@@ -11,7 +14,9 @@ class MailsecMenageWorker implements IWorker
     private const NB_DAYS_IN_DISK = 15;
 
     public function __construct(
-        private MailIncludedFilesCloudStorage $mailIncludedFilesCloudStorage
+        private readonly LoggerInterface $logger,
+        #[Autowire(service: 'app.removeFiles.mailsec')]
+        private readonly RemoveStoredFilesOnDisk $removeStoredPesRetourOnDisk,
     ) {
     }
 
@@ -38,7 +43,11 @@ class MailsecMenageWorker implements IWorker
      */
     public function work($data)
     {
-        $this->mailIncludedFilesCloudStorage->deleteFilesOnDisk(self::NB_DAYS_IN_DISK);
+        try {
+            $this->removeStoredPesRetourOnDisk->findAndRemoveLocalFilesAlreadyCloudSaved(self::NB_DAYS_IN_DISK);
+        } catch (\Throwable $e) {
+            $this->logger->error($e->getMessage());
+        }
     }
 
     public function getMutexName($data): string

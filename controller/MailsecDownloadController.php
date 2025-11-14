@@ -3,16 +3,32 @@
 namespace S2lowLegacy\Controller;
 
 use Exception;
+use S2low\Services\CloudFileStorageInterface;
+use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
 use S2lowLegacy\Class\mailsec\MailTransactionSQL;
 use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Lib\UnrecoverableException;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use ZipArchive;
 
 class MailsecDownloadController extends Controller
 {
     public const DEFAULT_ARCHIVE_NAME = 'mail.zip';
+
+    public function __construct(
+        protected readonly ObjectInstancier $objectInstancier,
+        #[Autowire(service: 'app.localFileResolver.mailsec')]
+        private readonly LocalFileResolver $localMailSecResolver,
+        #[Autowire(service: 'app.store.file.mailsec')]
+        private readonly CloudFileStorageInterface $cloudStoreMailSec,
+    ) {
+        parent::__construct($objectInstancier);
+    }
+
+
     /**
      * @return bool
      * @throws RedirectException
@@ -27,20 +43,12 @@ class MailsecDownloadController extends Controller
         $filename = $this->getRecuperateurGet()->get('filename');
         $fn_download = $this->getRecuperateurGet()->get('root');
 
-
-        if (! $this->fileExists($fn_download, $filename)) {
-            $this->redirectToErrorPage();
-        }
-
         $mailTransactionSQL = $this->getObjectInstancier()->get(MailTransactionSQL::class);
         $mail_id = $mailTransactionSQL->getIdFromFnDownload($fn_download);
 
-
-        /** @var MailIncludedFilesCloudStorage $cloudStorage */
-        $cloudStorage  = $this->getObjectInstancier()->get(MailIncludedFilesCloudStorage::class);
-
         try {
-            $filepath = $cloudStorage->getPath($mail_id);
+            $filepath = $this->localMailSecResolver->getFullPath($mail_id);
+            $this->cloudStoreMailSec->downloadFileFromCloud($mail_id);
         } catch (Exception $exception) {
             $this->redirectToErrorPage();
         }

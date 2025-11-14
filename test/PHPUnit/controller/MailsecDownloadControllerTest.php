@@ -1,12 +1,17 @@
 <?php
 
+use S2low\Services\CloudFileStorage;
+use S2low\Services\CloudFileStorageInterface;
+use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable;
 use S2lowLegacy\Class\mailsec\MailTransactionSQL;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Controller\MailsecDownloadController;
 use S2lowLegacy\Lib\Environnement;
+use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Lib\UnrecoverableException;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class MailsecDownloadControllerTest extends S2lowTestCase
 {
@@ -31,7 +36,7 @@ class MailsecDownloadControllerTest extends S2lowTestCase
             "test"
         );
 
-        $mailsecDownloadController = self::getContainer()->get(MailsecDownloadController::class);
+        $mailsecDownloadController = $this->getMailSecController($mail_files_upload_root . "/");
         $mailIncludedFilesCloudStorable = new MailIncludedFilesCloudStorable(
             self::getContainer()->get(MailTransactionSQL::class),
             $mail_files_upload_root,
@@ -65,15 +70,15 @@ class MailsecDownloadControllerTest extends S2lowTestCase
 
         $tmpFolder = new TmpFolder();
         $mail_files_upload_root = $tmpFolder->create();
-        $mail_files_without_transac_dir = $tmpFolder->create();
 
         mkdir($mail_files_upload_root . "/" . $this->fn_download_payload);
         copy(
             __DIR__ . "/fixtures/mailsec/mail.zip",
             $this->getArchivePath($mail_files_upload_root)
         );
+        $mail_files_without_transac_dir = $tmpFolder->create();
 
-        $mailsecDownloadController = self::getContainer()->get(MailsecDownloadController::class);
+        $mailsecDownloadController = $this->getMailSecController($mail_files_upload_root . "/");
         $mailIncludedFilesCloudStorable = new MailIncludedFilesCloudStorable(
             self::getContainer()->get(MailTransactionSQL::class),
             $mail_files_upload_root,
@@ -116,7 +121,7 @@ class MailsecDownloadControllerTest extends S2lowTestCase
             $this->getArchivePath($mail_files_upload_root)
         );
 
-        $mailsecDownloadController = self::getContainer()->get(MailsecDownloadController::class);
+        $mailsecDownloadController = $this->getMailSecController($mail_files_upload_root . "/");
         $mailIncludedFilesCloudStorable = new MailIncludedFilesCloudStorable(
             self::getContainer()->get(MailTransactionSQL::class),
             $mail_files_upload_root,
@@ -153,5 +158,26 @@ class MailsecDownloadControllerTest extends S2lowTestCase
 
         $this->expectException(RedirectException::class);
         $mailsecDownloadController->downloadAction();
+    }
+
+    private function getMailSecController($prefix)
+    {
+        $localMailResolver = new LocalFileResolver(
+            self::getContainer()->get(MailTransactionSQL::class),
+            $prefix
+        );
+
+        $cloudStoreMailSec = new CloudFileStorage(
+            self::getContainer()->get('app.clientCloudStorage.acte_enveloppe'),
+            $localMailResolver,
+            self::getContainer()->get(MailTransactionSQL::class),
+            self::getContainer()->get(Symfony\Component\Filesystem\Filesystem::class),
+        );
+
+        return new MailsecDownloadController(
+            self::getContainer()->get(ObjectInstancier::class),
+            $localMailResolver,
+            $cloudStoreMailSec
+        );
     }
 }

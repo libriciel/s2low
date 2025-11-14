@@ -29,9 +29,17 @@ class RemoveStoredFilesOnDisk
     public function findAndRemoveLocalFilesAlreadyCloudSaved(int $maxFilesAge = self::MAX_FILES_AGE): void
     {
         $transactionsIds = $this->getTransactionsIdsOfFilesFoundAndMoveOrphelinsFiles($maxFilesAge);
-        $this->logger->debug(
-            sprintf("Transactions pour lesquelles ont doit faire le menage : %s.", json_encode($transactionsIds)),
-        );
+
+        if (!$transactionsIds) {
+            $this->logger->debug(
+                "Aucune transaction à traiter."
+            );
+        } else {
+            $this->logger->debug(
+                sprintf("Transactions pour lesquelles ont doit faire le menage : %s.", json_encode($transactionsIds)),
+            );
+        }
+
 
         foreach ($transactionsIds as $transactionId) {
             $this->logger->debug(
@@ -48,7 +56,7 @@ class RemoveStoredFilesOnDisk
         $transactionsIds = [];
 
         foreach ($this->finder as $file) {
-            $transactionId = $this->fileDataProvider->getTransactionIdFromFileName($file->getFilename());
+            $transactionId = $this->fileDataProvider->getTransactionIdFromFileName($file);
 
             if ($this->fileIsYoungerThan($file, $maxFilesAge)) {
                 $this->logger->debug(
@@ -58,7 +66,7 @@ class RemoveStoredFilesOnDisk
                 continue;
             }
 
-            if ($transactionId === null) {
+            if (!$transactionId) {
                 $this->logger->debug(
                     sprintf('Pas de transaction associé au fichier %s', basename($file))
                 );
@@ -68,15 +76,11 @@ class RemoveStoredFilesOnDisk
                         sprintf('Déplacement du fichier %s', basename($file))
                     );
                 }
+            } else {
+                $this->logger->debug(
+                    sprintf("Le fichier est associé à la transaction %s", $transactionId)
+                );
 
-                continue;
-            }
-
-            $this->logger->debug(
-                sprintf("Le fichier est associé à la transaction %s", $transactionId)
-            );
-
-            if ($transactionId !== null) {
                 $transactionsIds[] = $transactionId;
             }
         }
