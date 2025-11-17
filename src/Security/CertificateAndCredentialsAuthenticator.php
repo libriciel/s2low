@@ -178,8 +178,11 @@ class CertificateAndCredentialsAuthenticator extends AbstractAuthenticator
         }
 
         // Rediriger vers la page demandée ou la page d'accueil
-        if ($targetPath = $request->getSession()->get('_security.main.target_path')) {
-            return new RedirectResponse($targetPath);
+        if ($request->hasSession()) {
+            $session = $request->getSession();
+            if ($targetPath = $session->get('_security.main.target_path')) {
+                return new RedirectResponse($targetPath);
+            }
         }
 
         return new RedirectResponse($this->urlGenerator->generate('app_home'));
@@ -190,8 +193,10 @@ class CertificateAndCredentialsAuthenticator extends AbstractAuthenticator
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        // Stocker le message d'erreur en session
-        $request->getSession()->set('_security.last_error', $exception);
+        // Stocker le message d'erreur en session si disponible
+        if ($request->hasSession()) {
+            $request->getSession()->set('_security.last_error', $exception);
+        }
 
         // Rediriger vers la page de login
         return new RedirectResponse($this->urlGenerator->generate('app_login'));

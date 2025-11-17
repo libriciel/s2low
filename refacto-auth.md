@@ -74,3 +74,16 @@ Date de début: 2025-11-17
 - `$this->userSQL->getInfo($userId)` au lieu de `$this->userSQL->getInfo($result['id'])`
 
 **Fichier modifié**: `src/Security/S2lowUserProvider.php` lignes 122-142
+
+### 17/11/2025 - Configuration de la session Symfony
+**Problème**: `BadRequestHttpException: Session has not been set.`
+
+**Cause**: La session n'était pas configurée dans `framework.yaml`, ce qui est requis pour Symfony Security.
+
+**Solution**:
+1. Ajout de la configuration de session dans `config/packages/framework.yaml`
+2. Sécurisation de l'accès à la session dans l'authenticator avec `$request->hasSession()` avant d'utiliser `getSession()`
+
+**Fichiers modifiés**:
+- `config/packages/framework.yaml` - Ajout de la configuration session
+- `src/Security/CertificateAndCredentialsAuthenticator.php` lignes 181-199 - Vérification hasSession() avant accès
