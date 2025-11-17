@@ -18,6 +18,9 @@ security:
             lazy: true
             provider: s2low_user_provider
 
+            # Point d'entrée - où rediriger si non authentifié
+            entry_point: S2low\Security\CertificateAndCredentialsAuthenticator
+
             # Authenticator custom : certificat + credentials
             custom_authenticators:
                 - S2low\Security\CertificateAndCredentialsAuthenticator

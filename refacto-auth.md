@@ -98,3 +98,17 @@ Date de début: 2025-11-17
 - `__unserialize()` : Restaure les données et recrée l'objet legacy User en le rechargeant depuis la base de données
 
 **Fichier modifié**: `src/Entity/User.php` lignes 183-225
+
+### 17/11/2025 - Boucle de redirection infinie
+**Problème**: `ERR_TOO_MANY_REDIRECTS` - Chrome détecte une boucle de redirection infinie
+
+**Cause**: La méthode `supports()` de l'authenticator retournait `true` pour toutes les requêtes, y compris `/login`. Quand l'authentification échouait, elle redirigait vers `/login` qui déclenchait à nouveau l'authentification, créant une boucle infinie.
+
+**Solution**:
+1. Modification de `supports()` pour ne supporter que les POST sur `/login` (soumission du formulaire)
+2. Ajout de `entry_point` dans `security.yaml` pour définir où rediriger les utilisateurs non authentifiés
+3. Implémentation de `AuthenticationEntryPointInterface` avec la méthode `start()` dans l'authenticator
+
+**Fichiers modifiés**:
+- `src/Security/CertificateAndCredentialsAuthenticator.php` lignes 36-41 (supports), lignes 199-207 (start)
+- `config/packages/security.yaml` ligne 22 - Ajout de entry_point

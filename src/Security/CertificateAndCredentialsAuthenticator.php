@@ -16,12 +16,13 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 
 /**
  * Authenticator personnalisé pour S2low
  * Gère l'authentification par certificat SSL + login/password + nonce
  */
-class CertificateAndCredentialsAuthenticator extends AbstractAuthenticator
+class CertificateAndCredentialsAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
     public function __construct(
         private S2lowUserProvider $userProvider,
@@ -35,16 +36,9 @@ class CertificateAndCredentialsAuthenticator extends AbstractAuthenticator
      */
     public function supports(Request $request): ?bool
     {
-        // Cet authenticator gère toutes les requêtes sauf les routes publiques
-        $path = $request->getPathInfo();
-
-        // Ne pas authentifier sur les routes publiques
-        if (str_starts_with($path, '/login') || str_starts_with($path, '/ident')) {
-            // Sauf si c'est une soumission de formulaire
-            return $request->isMethod('POST') && str_starts_with($path, '/login');
-        }
-
-        return true;
+        // Supporte uniquement les soumissions POST sur /login
+        // Pour les autres requêtes, on laisse le firewall gérer avec l'entrée point
+        return $request->isMethod('POST') && str_starts_with($request->getPathInfo(), '/login');
     }
 
     /**
@@ -198,6 +192,16 @@ class CertificateAndCredentialsAuthenticator extends AbstractAuthenticator
             $request->getSession()->set('_security.last_error', $exception);
         }
 
+        // Rediriger vers la page de login
+        return new RedirectResponse($this->urlGenerator->generate('app_login'));
+    }
+
+    /**
+     * Point d'entrée : appelé quand l'utilisateur n'est pas authentifié
+     * et tente d'accéder à une page protégée
+     */
+    public function start(Request $request, ?AuthenticationException $authException = null): Response
+    {
         // Rediriger vers la page de login
         return new RedirectResponse($this->urlGenerator->generate('app_login'));
     }
