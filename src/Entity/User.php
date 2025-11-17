@@ -179,4 +179,47 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->permissions;
     }
+
+    /**
+     * Sérialisation de l'utilisateur pour la session
+     * On ne sérialise que l'ID, pas l'objet legacy qui contient PDO
+     */
+    public function __serialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'email' => $this->email,
+            'login' => $this->login,
+            'password' => $this->password,
+            'role' => $this->role,
+            'certificateHash' => $this->certificateHash,
+            'authorityId' => $this->authorityId,
+            'authorityGroupId' => $this->authorityGroupId,
+            'status' => $this->status,
+            'permissions' => $this->permissions,
+        ];
+    }
+
+    /**
+     * Désérialisation de l'utilisateur depuis la session
+     * On recharge l'objet legacy depuis la base de données
+     */
+    public function __unserialize(array $data): void
+    {
+        $this->id = $data['id'];
+        $this->email = $data['email'];
+        $this->login = $data['login'];
+        $this->password = $data['password'];
+        $this->role = $data['role'];
+        $this->certificateHash = $data['certificateHash'];
+        $this->authorityId = $data['authorityId'];
+        $this->authorityGroupId = $data['authorityGroupId'];
+        $this->status = $data['status'];
+        $this->permissions = $data['permissions'];
+
+        // Recréer l'objet legacy user
+        $legacyUser = new \S2lowLegacy\Class\User($this->id);
+        $legacyUser->init();
+        $this->legacyUser = $legacyUser;
+    }
 }

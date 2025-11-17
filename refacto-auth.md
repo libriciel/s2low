@@ -87,3 +87,14 @@ Date de début: 2025-11-17
 **Fichiers modifiés**:
 - `config/packages/framework.yaml` - Ajout de la configuration session
 - `src/Security/CertificateAndCredentialsAuthenticator.php` lignes 181-199 - Vérification hasSession() avant accès
+
+### 17/11/2025 - Problème de sérialisation PDO
+**Problème**: `Exception: Serialization of 'PDO' is not allowed`
+
+**Cause**: L'entité User contient une référence à l'objet User legacy, qui lui-même contient une connexion PDO. Symfony tente de sérialiser l'utilisateur complet en session, ce qui échoue car PDO ne peut pas être sérialisé.
+
+**Solution**: Implémentation de `__serialize()` et `__unserialize()` dans l'entité User :
+- `__serialize()` : Sérialise uniquement les données primitives (id, email, login, etc.) sans l'objet legacy
+- `__unserialize()` : Restaure les données et recrée l'objet legacy User en le rechargeant depuis la base de données
+
+**Fichier modifié**: `src/Entity/User.php` lignes 183-225
