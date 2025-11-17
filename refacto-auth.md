@@ -112,3 +112,33 @@ Date de début: 2025-11-17
 **Fichiers modifiés**:
 - `src/Security/CertificateAndCredentialsAuthenticator.php` lignes 36-41 (supports), lignes 199-207 (start)
 - `config/packages/security.yaml` ligne 22 - Ajout de entry_point
+
+### 17/11/2025 - Erreur 404 sur /login
+**Problème**: 404 Not Found sur la route `/login`
+
+**Cause**: Le fichier `config/routes/annotations.yaml` utilisait `type: annotation` (ancienne méthode) au lieu de `type: attribute` (méthode moderne avec PHP 8 et les attributs #[Route]).
+
+**Solution**:
+1. Modification de `config/routes/annotations.yaml` : changement de `type: annotation` vers `type: attribute`
+2. Vidage du cache Symfony avec `docker compose exec web php bin/console cache:clear`
+
+**Fichier modifié**: `config/routes/annotations.yaml` lignes 3-4 et 7-8
+
+### 17/11/2025 - Conflit avec login.php legacy
+**Problème**: La page `/login` retourne toujours 404 malgré la route enregistrée
+
+**Cause**: Le fichier `public.ssl/login.php` legacy existe. Apache sert directement ce fichier car les règles de réécriture dans la configuration Apache (ligne 93-95 de s2low-apache-config.conf) stipulent : "si le fichier existe ET que ce n'est pas un .php, ne pas rediriger". Comme `login.php` existe, Apache le sert au lieu de router vers Symfony.
+
+**Solution**: Changement temporaire de la route de `/login` vers `/security/login` pour éviter le conflit avec le fichier legacy :
+- Route du contrôleur : `/security/login`
+- Access control dans security.yaml : `^/security/login`
+- Méthode supports() de l'authenticator : `/security/login`
+
+**Fichiers modifiés**:
+- `src/Controller/SecurityController.php` ligne 24
+- `config/packages/security.yaml` ligne 40
+- `src/Security/CertificateAndCredentialsAuthenticator.php` ligne 41
+
+**Note**: À terme, il faudra soit :
+1. Supprimer le fichier `public.ssl/login.php` legacy une fois la migration terminée
+2. Ajouter une règle de réécriture Apache spécifique pour forcer `/login` vers Symfony

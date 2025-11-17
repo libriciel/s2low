@@ -36,9 +36,9 @@ class CertificateAndCredentialsAuthenticator extends AbstractAuthenticator imple
      */
     public function supports(Request $request): ?bool
     {
-        // Supporte uniquement les soumissions POST sur /login
+        // Supporte uniquement les soumissions POST sur /security/login
         // Pour les autres requêtes, on laisse le firewall gérer avec l'entrée point
-        return $request->isMethod('POST') && str_starts_with($request->getPathInfo(), '/login');
+        return $request->isMethod('POST') && str_starts_with($request->getPathInfo(), '/security/login');
     }
 
     /**

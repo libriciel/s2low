@@ -21,7 +21,7 @@ class SecurityController extends AbstractController
     /**
      * Page de connexion
      */
-    #[Route('/login', name: 'app_login')]
+    #[Route('/security/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // Si l'utilisateur est déjà connecté, rediriger vers la page d'accueil
