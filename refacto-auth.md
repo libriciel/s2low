@@ -60,3 +60,17 @@ Date de début: 2025-11-17
 - La classe User legacy reste fonctionnelle et est wrappée par la nouvelle entité Symfony
 - Le système est compatible avec le code existant via la méthode `getLegacyUser()`
 - Les certificats SSL restent obligatoires (configurés dans Apache)
+
+## Corrections apportées
+
+### 17/11/2025 - Correction de findByLoginOrEmail()
+**Problème**: `ErrorException: Warning: Trying to access array offset on value of type int` à la ligne 137 de S2lowUserProvider.php
+
+**Cause**: La méthode `queryOne()` retourne directement la valeur de l'ID (un entier) quand il n'y a qu'une seule colonne dans le SELECT, et non un tableau.
+
+**Solution**: Modification de `findByLoginOrEmail()` pour traiter correctement le retour de `queryOne()` :
+- `$userId = $this->userSQL->queryOne(...)` au lieu de `$result = ...`
+- `if ($userId !== false)` au lieu de `if ($result)`
+- `$this->userSQL->getInfo($userId)` au lieu de `$this->userSQL->getInfo($result['id'])`
+
+**Fichier modifié**: `src/Security/S2lowUserProvider.php` lignes 122-142

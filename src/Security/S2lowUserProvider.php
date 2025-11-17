@@ -122,19 +122,20 @@ class S2lowUserProvider implements UserProviderInterface
     private function findByLoginOrEmail(string $identifier): ?array
     {
         // Recherche par login
+        // Note: queryOne() retourne directement la valeur de l'ID (int) car une seule colonne
         $sql = "SELECT id FROM users WHERE login = ? AND status = ?";
-        $result = $this->userSQL->queryOne($sql, [$identifier, UserSQL::STATUS_ACTIVE]);
+        $userId = $this->userSQL->queryOne($sql, [$identifier, UserSQL::STATUS_ACTIVE]);
 
-        if ($result) {
-            return $this->userSQL->getInfo($result['id']);
+        if ($userId !== false) {
+            return $this->userSQL->getInfo($userId);
         }
 
         // Recherche par email si pas trouvé par login
         $sql = "SELECT id FROM users WHERE email = ? AND status = ?";
-        $result = $this->userSQL->queryOne($sql, [$identifier, UserSQL::STATUS_ACTIVE]);
+        $userId = $this->userSQL->queryOne($sql, [$identifier, UserSQL::STATUS_ACTIVE]);
 
-        if ($result) {
-            return $this->userSQL->getInfo($result['id']);
+        if ($userId !== false) {
+            return $this->userSQL->getInfo($userId);
         }
 
         return null;
