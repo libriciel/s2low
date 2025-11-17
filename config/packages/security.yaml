@@ -1,0 +1,59 @@
+security:
+    # Encodeur pour mots de passe
+    password_hashers:
+        S2low\Entity\User:
+            algorithm: auto  # Utilise bcrypt/argon2 selon disponibilité
+
+    # Provider personnalisé
+    providers:
+        s2low_user_provider:
+            id: S2low\Security\S2lowUserProvider
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            lazy: true
+            provider: s2low_user_provider
+
+            # Authenticator custom : certificat + credentials
+            custom_authenticators:
+                - S2low\Security\CertificateAndCredentialsAuthenticator
+
+            # Logout
+            logout:
+                path: /logout
+                target: /
+
+            # Remember me
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 0  # Jusqu'à fermeture du navigateur
+
+    # Contrôle d'accès
+    access_control:
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/ident, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: ROLE_USER }
+
+    # Hiérarchie des rôles
+    role_hierarchy:
+        ROLE_ARCH: ROLE_USER
+        ROLE_ADM: ROLE_USER
+        ROLE_GADM: ROLE_ADM
+        ROLE_SADM: ROLE_GADM
+
+when@test:
+    security:
+        password_hashers:
+            # By default, password hashers are resource intensive and take time. This is
+            # important to generate secure password hashes. In tests however, secure hashes
+            # are not important, waste resources and increase test times. The following
+            # reduces the work factor to the lowest possible values.
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4 # Lowest possible value for bcrypt
+                time_cost: 3 # Lowest possible value for argon
+                memory_cost: 10 # Lowest possible value for argon
