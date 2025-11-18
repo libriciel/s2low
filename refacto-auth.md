@@ -59,7 +59,7 @@ Date de début: 2025-11-17
 - Les services sont automatiquement découverts grâce à l'autowiring configuré dans `config/services.yaml`
 - La classe User legacy reste fonctionnelle et est wrappée par la nouvelle entité Symfony
 - Le système est compatible avec le code existant via la méthode `getLegacyUser()`
-- Les certificats SSL restent obligatoires (configurés dans Apache)
+- **Les certificats SSL sont maintenant FACULTATIFS** (configurés dans Apache avec `SSLVerifyClient optional`)
 
 ## Corrections apportées
 
@@ -142,3 +142,29 @@ Date de début: 2025-11-17
 **Note**: À terme, il faudra soit :
 1. Supprimer le fichier `public.ssl/login.php` legacy une fois la migration terminée
 2. Ajouter une règle de réécriture Apache spécifique pour forcer `/login` vers Symfony
+
+### 17/11/2025 - Correction du comportement d'authentification certificat/credentials
+**Problème**: Login/mot de passe demandé systématiquement même avec un certificat unique
+
+**Cause**: Le système actuel ne respectait pas le comportement voulu :
+- Certificat SSL était obligatoire (Apache `SSLVerifyClient require`)
+- Login/mot de passe était toujours demandé, même si un seul utilisateur avait le certificat
+
+**Comportement voulu**:
+1. Certificat SSL FACULTATIF
+2. SI certificat présent ET un seul utilisateur => authentification automatique (pas de login/mdp)
+3. SI certificat présent ET plusieurs utilisateurs => login/mdp requis (cas legacy du double user)
+4. SI pas de certificat => login/mot de passe obligatoire
+
+**Solution**:
+1. Modification Apache : `SSLVerifyClient require` → `SSLVerifyClient optional` dans `docker-resources/apache/site-available/s2low-apache-config.conf` ligne 65
+2. Modification de `CertificateAndCredentialsAuthenticator::supports()` : supporte les requêtes POST sur `/security/login` OU les requêtes avec certificat
+3. Ajout de la méthode `hasCertificate()` pour détecter la présence d'un certificat valide
+4. Refonte complète de `CertificateAndCredentialsAuthenticator::authenticate()` avec 3 cas distincts :
+   - **CAS 1a**: Certificat présent + login/password fournis → authentification certificat + credentials (cas legacy double user)
+   - **CAS 1b**: Certificat présent + pas de credentials → tentative d'authentification par certificat seul (réussit si un seul utilisateur)
+   - **CAS 2**: Pas de certificat → login/password obligatoire (authentification classique par identifiant)
+
+**Fichiers modifiés**:
+- `docker-resources/apache/site-available/s2low-apache-config.conf` ligne 65
+- `src/Security/CertificateAndCredentialsAuthenticator.php` lignes 37-130

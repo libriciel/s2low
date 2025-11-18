@@ -36,9 +36,18 @@ class CertificateAndCredentialsAuthenticator extends AbstractAuthenticator imple
      */
     public function supports(Request $request): ?bool
     {
-        // Supporte uniquement les soumissions POST sur /security/login
-        // Pour les autres requêtes, on laisse le firewall gérer avec l'entrée point
-        return $request->isMethod('POST') && str_starts_with($request->getPathInfo(), '/security/login');
+        // Supporte les soumissions POST sur /security/login ET les requêtes avec certificat
+        return $request->isMethod('POST') && str_starts_with($request->getPathInfo(), '/security/login')
+            || $this->hasCertificate($request);
+    }
+
+    /**
+     * Vérifie si un certificat SSL client est présent
+     */
+    private function hasCertificate(Request $request): bool
+    {
+        $certInfo = $this->httpsConnexion->getCertificateInfo();
+        return $certInfo && isset($certInfo['certificate_hash']) && !empty($certInfo['certificate_hash']);
     }
 
     /**
@@ -53,51 +62,70 @@ class CertificateAndCredentialsAuthenticator extends AbstractAuthenticator imple
 
         // 2. Récupérer infos certificat
         $certInfo = $this->httpsConnexion->getCertificateInfo();
-        if (!$certInfo || !isset($certInfo['certificate_hash'])) {
-            throw new AuthenticationException('Certificat SSL invalide ou manquant');
-        }
+        $hasCertificate = $certInfo && isset($certInfo['certificate_hash']) && !empty($certInfo['certificate_hash']);
 
         // 3. Récupérer credentials
         $credentials = $this->getCredentials($request);
 
-        // 4. Authentifier
-        if ($credentials['login'] && $credentials['password']) {
-            // Authentification avec login/password
+        // CAS 1: Certificat présent
+        if ($hasCertificate) {
+            // Si login/password fournis (cas legacy du double user pour un certificat)
+            if ($credentials['login'] && $credentials['password']) {
+                try {
+                    $user = $this->userProvider->loadUserByCertificateHashAndCredentials(
+                        $certInfo['certificate_hash'],
+                        $credentials['login'],
+                        $credentials['password']
+                    );
+
+                    return new Passport(
+                        new UserBadge($user->getUserIdentifier(), function($userIdentifier) {
+                            return $this->userProvider->loadUserByIdentifier($userIdentifier);
+                        }),
+                        new PasswordCredentials($credentials['password'])
+                    );
+                } catch (\Exception $e) {
+                    throw new AuthenticationException('Login ou mot de passe incorrect');
+                }
+            }
+
+            // Sinon, authentification par certificat seul
             try {
                 $user = $this->userProvider->loadUserByCertificateHashAndCredentials(
                     $certInfo['certificate_hash'],
-                    $credentials['login'],
-                    $credentials['password']
+                    null,
+                    null
                 );
 
-                return new Passport(
+                // Un seul utilisateur trouvé, authentification par certificat seul
+                return new SelfValidatingPassport(
                     new UserBadge($user->getUserIdentifier(), function($userIdentifier) {
                         return $this->userProvider->loadUserByIdentifier($userIdentifier);
-                    }),
-                    new PasswordCredentials($credentials['password'])
+                    })
                 );
             } catch (\Exception $e) {
-                throw new AuthenticationException('Login ou mot de passe incorrect');
+                // Plusieurs utilisateurs partagent ce certificat : afficher formulaire
+                throw new AuthenticationException($e->getMessage());
             }
         }
 
-        // 5. Sans credentials : vérifier si un seul utilisateur a ce certificat
-        try {
-            $user = $this->userProvider->loadUserByCertificateHashAndCredentials(
-                $certInfo['certificate_hash'],
-                null,
-                null
-            );
+        // CAS 2: Pas de certificat => login/password OBLIGATOIRE
+        if (!$credentials['login'] || !$credentials['password']) {
+            throw new AuthenticationException('Login et mot de passe requis');
+        }
 
-            // Un seul utilisateur trouvé, authentification par certificat seul
-            return new SelfValidatingPassport(
+        // Authentification par login/password uniquement
+        try {
+            $user = $this->userProvider->loadUserByIdentifier($credentials['login']);
+
+            return new Passport(
                 new UserBadge($user->getUserIdentifier(), function($userIdentifier) {
                     return $this->userProvider->loadUserByIdentifier($userIdentifier);
-                })
+                }),
+                new PasswordCredentials($credentials['password'])
             );
         } catch (\Exception $e) {
-            // Plusieurs utilisateurs ou aucun : rediriger vers login
-            throw new AuthenticationException($e->getMessage());
+            throw new AuthenticationException('Login ou mot de passe incorrect');
         }
     }
 
