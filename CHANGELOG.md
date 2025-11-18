@@ -12,6 +12,7 @@
 
 - Suppression de l'outil de signature intégré #1113
 - Suppression des jetons d'horodatage #1118
+- Suppression de `XadesSignature::sign()` et XadesSignatureProperties
 
 ## 5.1.5 - 2025-10-27
 

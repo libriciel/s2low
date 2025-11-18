@@ -1,101 +1,33 @@
 <?php
 
-use S2lowLegacy\Class\helios\HeliosPESValidation;
+declare(strict_types=1);
+
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Lib\PemCertificateFactory;
-use S2lowLegacy\Lib\PKCS12;
-use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Lib\XadesSignature;
-use S2lowLegacy\Lib\XadesSignatureHasSignatureException;
-use S2lowLegacy\Lib\XadesSignatureNoIDException;
 use S2lowLegacy\Lib\XadesSignatureParser;
-use S2lowLegacy\Lib\XadesSignatureProperties;
 
-class XadesSignatureTest extends PHPUnit_Framework_TestCase
+class XadesSignatureTest extends TestCase
 {
-    public function testSignFileNotExists()
-    {
-        $tmp_file = sys_get_temp_dir() . "/" . uniqid("phpunit");
-        $this->setExpectedException("Exception", "failed to load external entity");
-        $this->sign($tmp_file);
-    }
-
-    /**
-     * @param $file_to_sign
-     * @return string
-     * @throws XadesSignatureHasSignatureException|\S2lowLegacy\Lib\XadesSignatureNoIDException
-     */
-    private function sign($file_to_sign)
-    {
-        $signed_file = sys_get_temp_dir() . "/" . uniqid("phpunit");
-        $xadesSignature = $this->getXadesSignature();
-        $xadesSignature->sign($file_to_sign, __DIR__ . "/fixtures/robert_petitpoids.p12", "robert_petitpoids", $signed_file, $this->getXadesSignatureProperties());
-        return $signed_file;
-    }
-
-    private function getXadesSignature()
+    private function getXadesSignature(): XadesSignature
     {
         $verifyPemCertificateFactory = new VerifyPemCertificateFactory();
         $xadesSignature = new XadesSignature(
             XMLSEC1_PATH,
-            new PKCS12(),
-            new X509Certificate(),
-            __DIR__ . "/fixtures/validca_for_xades/",
+            __DIR__ . '/fixtures/validca_for_xades/',
             new XadesSignatureParser(),
             new PemCertificateFactory(),
-            $verifyPemCertificateFactory->get(__DIR__ . "/fixtures/validca_for_xades/")
+            $verifyPemCertificateFactory->get(__DIR__ . '/fixtures/validca_for_xades/')
         );
         return $xadesSignature;
     }
 
-    private function getXadesSignatureProperties()
+    public function filesProvider(): Generator
     {
-        $xadesSignatureProperties = new XadesSignatureProperties();
-        $xadesSignatureProperties->city = "Paris";
-        $xadesSignatureProperties->postalCode = "75008";
-        $xadesSignatureProperties->countryName = "France";
-        $xadesSignatureProperties->claimedRole = "Test Tiers de télétransmission";
-        return $xadesSignatureProperties;
-    }
-
-    /**
-     * @param $filename
-     * @throws XadesSignatureHasSignatureException
-     * @dataProvider filesProvider
-     */
-    public function testSign(string $filename, bool $isPes)
-    {
-        $signed_file = $this->sign($filename);
-        $xadesSignatureParser = $this->getMockBuilder(XadesSignatureParser::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $xadesSignatureParser->method("extractXadesSigningTime")
-            ->willReturn(new DateTime("2019-01-01"));
-        $verifyPemCertificateFactory = new VerifyPemCertificateFactory();
-        $xadesSignature = new XadesSignature(
-            XMLSEC1_PATH,
-            new PKCS12(),
-            new X509Certificate(),
-            __DIR__ . "/fixtures/validca_for_xades/",
-            $xadesSignatureParser,
-            new PemCertificateFactory(),
-            $verifyPemCertificateFactory->get(__DIR__ . "/fixtures/validca_for_xades/")
-        );
-        if ($isPes) {
-            $heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);      //Test we the signed file is
-            $validationResult = $heliosPESValidation->validate(file_get_contents($signed_file));
-            $this->assertTrue($validationResult);// still a Pes file
-        }
-        $xadesSignature->verify($signed_file); //Test no exception is thrown
-        $this->assertTrue(true);
-    }
-
-    public function filesProvider()
-    {
-        yield "with minimal file" => [__DIR__ . "/fixtures/test.xml",false];
-        yield "with PES file" => [__DIR__ . "/fixtures/HELIOS_SIMU_ALR2_1444811220_681372666.xml",true];
+        yield "with minimal file" => [__DIR__ . "/fixtures/test.xml", false];
+        yield "with PES file" => [__DIR__ . "/fixtures/HELIOS_SIMU_ALR2_1444811220_681372666.xml", true];
     }
 
     private function verify($file_to_verify)
@@ -105,67 +37,11 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(true); //test no exception is thrown;
     }
 
-    public function testSignWithoutDocumentElementId()
-    {
-        $this->setExpectedException(XadesSignatureNoIDException::class, "Le document XML ne contient pas d'Id");
-        $this->sign(__DIR__ . "/fixtures/test-no-id.xml");
-    }
-
-    public function testBadPassword()
-    {
-        $signed_file = sys_get_temp_dir() . "/" . uniqid("phpunit");
-        $xadesSignature = $this->getXadesSignature();
-        $this->setExpectedException(Exception::class, "Impossible de lire le certificat PKCS#12");
-        $xadesSignature->sign(__DIR__ . "/fixtures/test.xml", __DIR__ . "/fixtures/robert_petitpoids.p12", "bad password", $signed_file, $this->getXadesSignatureProperties());
-    }
-
-    public function testTargetSignature()
-    {
-        $signed_file = $this->sign(__DIR__ . "/fixtures/test.xml");
-        $xml = simplexml_load_file($signed_file);
-        $id = strval($xml->children(XadesSignature::NS_DS_URI)->Signature->attributes()->Id);
-        $targetId = strval($xml->children(XadesSignature::NS_DS_URI)->Signature->Object->children(XadesSignature::NS_XAD_URI)->QualifyingProperties->attributes()["Target"]);
-        $this->assertEquals("#$id", $targetId);
-    }
-
-    /**
-     * @throws XadesSignatureHasSignatureException
-     */
-    public function testOutputFileNotWritable()
-    {
-        $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
-        $xadesSignature = $this->getXadesSignature();
-        $this->setExpectedException("Exception", "Erreur (1) lors de la signature technique");
-        $xadesSignature->sign(
-            __DIR__ . "/fixtures/test.xml",
-            __DIR__ . "/fixtures/robert_petitpoids.p12",
-            "robert_petitpoids",
-            $testStreamUrl . "/signed.xml",
-            $this->getXadesSignatureProperties()
-        )
-        ;
-        $xadesSignature->sign(
-            __DIR__ . "/fixtures/test.xml",
-            __DIR__ . "/../fixtures/timestamp_certificates/s2low_timestamp_cert.pem.p12",
-            "",
-            $testStreamUrl . "/signed.xml",
-            $this->getXadesSignatureProperties()
-        )
-        ;
-    }
-
     public function testVerifyNOCA()
     {
         $xadesSignature = $this->getXadesSignature();
         $xadesSignature->verify(__DIR__ . "/fixtures/HELIOS_SIMU_ALR2_1445334258_694103934.xml");
         $this->assertTrue(true);    //Test no exception is thrown
-    }
-
-    public function testHasSignature()
-    {
-        $this->expectException(XadesSignatureHasSignatureException::class);
-        $signed_file = $this->sign(__DIR__ . "/fixtures/HELIOS_SIMU_ALR2_1445334258_694103934.xml");
-        $this->verify($signed_file);
     }
 
     public function testVerifSignatureNotGlobale()
@@ -185,12 +61,13 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase
     {
         $file = __DIR__ . "/fixtures/HELIOS_SIMU_ALR2_1445334258_694103934.xml";
 
-        $result =  "/tmp/result.xml";
+        $result = "/tmp/result.xml";
         $xadesSignature = $this->getXadesSignature();
         $this->assertTrue($xadesSignature->isSigned($file));
         $xadesSignature->deleteSignature($file, $result);
         $this->assertFalse($xadesSignature->isSigned($result));
     }
+
     /** @dataProvider datesProvider */
 
     public function testDateEffect(DateTime $dateTime, bool $expected)
@@ -204,8 +81,6 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase
         $verifyPemCertificateFactory = new VerifyPemCertificateFactory();
         $xadesSignature = new XadesSignature(
             XMLSEC1_PATH,
-            new PKCS12(),
-            new X509Certificate(),
             __DIR__ . "/fixtures/validca_for_xades/",
             $xadesSignatureParser,
             new PemCertificateFactory(),
@@ -228,9 +103,9 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase
     {
         return [
             // Date de vérification                  validité attendue
-            [new DateTime("2012-11-05T11:33:13Z"),false],    // Limite basse du certificat AC_ADULLACT_ROOT_G3
-            [new DateTime("2016-11-07T11:03:01Z"),true],     // Date de la signature
-            [new DateTime("2022-11-05T11:33:15Z"),false]     // Limite haute du certificat AC_ADULLACT_ROOT_G3
+            [new DateTime("2012-11-05T11:33:13Z"), false],    // Limite basse du certificat AC_ADULLACT_ROOT_G3
+            [new DateTime("2016-11-07T11:03:01Z"), true],     // Date de la signature
+            [new DateTime("2022-11-05T11:33:15Z"), false],     // Limite haute du certificat AC_ADULLACT_ROOT_G3
         ];
     }
 
@@ -255,8 +130,6 @@ class XadesSignatureTest extends PHPUnit_Framework_TestCase
 
         $xadesSignature = new XadesSignature(
             XMLSEC1_PATH,
-            new PKCS12(),
-            new X509Certificate(),
             __DIR__ . "/fixtures/validca_for_xades/",
             $xadesSignatureParser,
             new PemCertificateFactory(),
