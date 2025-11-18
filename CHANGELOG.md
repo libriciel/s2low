@@ -4,7 +4,7 @@
 
 ### Corrections
 
-- Test maintenant si un AR Acte à deja ete recu pour la transaction en cours de traitement. Pour éviter la double prise en compte d'un AR.
+- Correction d'un script permettant la double lecture d'un mail AR Acte sans le prendre en compte une seconde fois.
 
 ## 5.1.5 - 2025-10-27
 
