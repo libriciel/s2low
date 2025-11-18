@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.6
+
+### Corrections
+
+- Correction d'un script permettant la double lecture d'un mail AR Acte sans le prendre en compte une seconde fois.
+
 ## 5.1.5 - 2025-10-27
 
 ### Corrections
