@@ -1,6 +1,7 @@
 <?php
 
 use Monolog\Level;
+use S2low\Exceptions\ARActeAlreadyReadException;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierRecuController;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
@@ -536,6 +537,100 @@ class ActesAnalyseFichierRecuControllerTest extends S2lowTestCase
 
         $transaction_info = self::getContainer()->get(ActesTransactionsSQL::class)->getInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_TRANSMIS, $transaction_info['last_status_id']);
+    }
+
+    /**
+     * Test qu'une AR est bien prise en compte
+     * @throws Exception
+     */
+    public function testARActeBienPriseEnCompte(): void
+    {
+        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
+
+        $actesTransactionsSQL = $this->mockGetBySirenAndNumeroInterne($transaction_id);
+
+        $this->copyDirectoryToAnalysePath(self::TEST_ARCHIVE_MISILCL_PATH);
+
+        $actesAnalyseFichierRecuController = $this->createActesAnalyseFichierRecuController();
+        $actesAnalyseFichierRecuController->analyseAll();
+
+        $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+        $this->assertEquals(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, $transaction_info['last_status_id']);
+
+        $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
+        $this->assertEquals(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, $transaction_info['status_id']);
+
+        $this->assertMatchesRegularExpression(
+            "#Reçu par le {$this->actes_ministere_acronyme} le#",
+            $transaction_info['message']
+        );
+
+        // Vérifie que le répertoire a été supprimé
+        $this->assertEquals(array('.', '..'), scandir("{$this->actes_response_tmp_local_path}"));
+    }
+
+    /**
+     * Test que deux AR différentes sont bien prises en compte
+     * @throws Exception
+     */
+    public function testDeuxARDifferentesBienPrisesEnCompte(): void
+    {
+        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
+
+        $actesTransactionsSQL = $this->mockGetBySirenAndNumeroInterne($transaction_id);
+
+        // Première AR
+        $this->copyDirectoryToAnalysePath(self::TEST_ARCHIVE_MISILCL_PATH);
+        $actesAnalyseFichierRecuController = $this->createActesAnalyseFichierRecuController();
+        $actesAnalyseFichierRecuController->analyseAll();
+
+        $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+        $this->assertEquals(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, $transaction_info['last_status_id']);
+
+        // Deuxième AR différente (on modifie la date de réception)
+        $this->copyDirectoryToAnalysePath(self::TEST_ARCHIVE_MISILCL_PATH);
+        $arFilePath = $this->actes_response_tmp_local_path . "/test/034-000000000-20170701-20170721D-AI-1-2_0.xml";
+        $arContent = file_get_contents($arFilePath);
+        $arContentModified = str_replace('DateReception="2017-07-21"', 'DateReception="2017-07-22"', $arContent);
+        file_put_contents($arFilePath, $arContentModified);
+
+        $actesAnalyseFichierRecuController->analyseAll();
+
+        // Vérifie que le statut a bien été mis à jour (la deuxième AR est traitée)
+        $transaction_info = $actesTransactionsSQL->getInfo($transaction_id);
+        $this->assertEquals(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, $transaction_info['last_status_id']);
+
+        // Vérifie qu'il y a bien deux entrées dans le workflow avec le statut acquittement
+        $sql = "SELECT COUNT(*) FROM actes_transactions_workflow WHERE transaction_id = ? AND status_id = ?";
+        $count = $this->getSQLQuery()->queryOne($sql, $transaction_id, ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+        $this->assertEquals(2, $count);
+
+        // Vérifie que le répertoire a été supprimé
+        $this->assertEquals(array('.', '..'), scandir("{$this->actes_response_tmp_local_path}"));
+    }
+
+    /**
+     * Test qu'une AR n'est pas prise en compte si elle a déjà été reçue (même AR)
+     * @throws Exception
+     */
+    public function testARNonPriseEnCompteSiDejaRecue(): void
+    {
+        $transaction_id = $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
+
+        $this->mockGetBySirenAndNumeroInterne($transaction_id);
+
+        // Première AR
+        $this->copyDirectoryToAnalysePath(self::TEST_ARCHIVE_MISILCL_PATH);
+        $actesAnalyseFichierRecuController = $this->createActesAnalyseFichierRecuController();
+        $actesAnalyseFichierRecuController->analyseAll();
+
+        // Deuxième AR identique - on appelle directement analyseOneFile pour capturer l'exception
+        $this->copyDirectoryToAnalysePath(self::TEST_ARCHIVE_MISILCL_PATH);
+
+        $this->expectException(ARActeAlreadyReadException::class);
+        $this->expectExceptionMessage("Un acquittement à deja été recu pour la transaction");
+
+        $actesAnalyseFichierRecuController->analyseOneFile($this->actes_response_tmp_local_path . "/test");
     }
 
     protected function setUp(): void
