@@ -127,7 +127,7 @@ class HeliosRetourSQL extends SQL implements FileDataProvider
         return $heliosTransaction['siren'] . '/' . $heliosTransaction['filename'];
     }
 
-    public function getTransactionIdFromFileName(string $filePath): string
+    public function getTransactionIdFromFileName(string $filePath): ?string
     {
         $fileName = basename($filePath);
         $transactionId = $this->queryOne("SELECT id FROM helios_retour WHERE filename LIKE ?", '%' . $fileName . '%');

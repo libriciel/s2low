@@ -40,9 +40,15 @@ class PesAcquitFileDataProvider implements FileDataProvider
         return $heliosTransaction['siren'] . '/' . $heliosTransaction['acquit_filename'];
     }
 
-    public function getTransactionIdFromFileName(string $filePath): string
+    public function getTransactionIdFromFileName(string $filePath): ?string
     {
-        return (string) $this->heliosTransactionsSQL->getByPesAcquitName(basename($filePath));
+        $transactionId = $this->heliosTransactionsSQL->getByPesAcquitName(basename($filePath));
+
+        if ($transactionId === false) {
+            $transactionId = null;
+        }
+
+        return $transactionId;
     }
 
     public function setTransactionIsInCloud(string $transactionId): void
