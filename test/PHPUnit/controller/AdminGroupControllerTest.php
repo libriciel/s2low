@@ -2,6 +2,7 @@
 
 use IntegrationTests\S2lowIntegrationTestCase;
 use S2low\Enum\UserRole;
+use S2low\Security\LegacyAuthenticationBridge;
 use S2lowLegacy\Class\Authentification;
 use S2lowLegacy\Controller\AdminGroupController;
 use S2lowLegacy\Lib\Environnement;
@@ -75,22 +76,14 @@ class AdminGroupControllerTest extends S2lowIntegrationTestCase
     {
         $this->expectException(Exception::class);
         $this->expectExceptionMessageMatches(
-            "#^Message : Aucune information de certificat trouvée$#"
+            "#^La connexion n'a pas pu être établie$#"
         );
 
-        $environnement = new Environnement(
-            [],
-            [],
-            [],
-            self::getContainer()->get(SessionWrapper::class),
-            [],
-            false,
-        );
+        // Mock du bridge qui retourne non authentifié
+        $authBridge = $this->createMock(LegacyAuthenticationBridge::class);
+        $authBridge->method('isAuthenticated')->willReturn(false);
 
-        $auth = $this->getAuthentication(
-            server: $this->setServerAdullactCertificate(),
-            environnement: $environnement
-        );
+        $auth = $this->getAuthentication($authBridge);
 
         self::getContainer()->set(Authentification::class, $auth);
         $adminGroup = self::getContainer()->get(AdminGroupController::class);
