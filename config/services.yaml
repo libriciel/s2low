@@ -927,3 +927,22 @@ services:
     public: true
     tags:
       - { name: monolog.processor }
+
+  # Security Services
+  S2low\Security\SecurityUserProvider:
+    public: true
+    autowire: true
+
+  S2low\Security\X509Authenticator:
+    public: true
+    autowire: true
+
+  S2low\Security\LegacyAuthenticationBridge:
+    public: true
+    autowire: true
+
+  S2lowLegacy\Class\Authentification:
+    public: true
+    autowire: true
+    arguments:
+      $authBridge: '@S2low\Security\LegacyAuthenticationBridge'
