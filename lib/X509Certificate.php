@@ -143,4 +143,13 @@ class X509Certificate
         openssl_x509_export($resource, $output);
         return $output;
     }
+
+    /**
+     * Convertit un certificat au format DER en format PEM.
+     */
+    public static function der2pem(string $derData): string
+    {
+        $pem = chunk_split(base64_encode($derData), 64, "\n");
+        return "-----BEGIN CERTIFICATE-----\n" . $pem . "-----END CERTIFICATE-----\n";
+    }
 }
