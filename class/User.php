@@ -113,22 +113,11 @@ class User extends DataObject
      * et initialiser les données de l'utilisateur.
      * @throws \Exception
      */
-    public function authenticate(int $authentProcess = Authentification::AUTHENTIFICATION_BY_APACHE)
+    public function authenticate()
     {
     /** @var \S2lowLegacy\Class\Authentification $authenfication */
         $authenfication = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(Authentification::class);
-        $this->id = $authenfication->authenticate($authentProcess);
-
-        // Utile si on veut vérifier qui n'est pas en TLSv1.2
-        /*
-        if (isset($_SERVER['SSL_PROTOCOL']) && $_SERVER['SSL_PROTOCOL'] != 'TLSv1.2' ) {
-            file_put_contents(
-                "/tmp/openssl_version.log",
-                "{$_SERVER['SSL_PROTOCOL']} {$this->id}\n",
-                FILE_APPEND
-            );
-        }
-        */
+        $this->id = $authenfication->authenticate();
 
         $this->is_loggued = true;
         $init = $this->init();
@@ -264,11 +253,6 @@ class User extends DataObject
 
         $x509Certificate = new X509Certificate();
         $this->certificate_hash = $x509Certificate->getBase64Hash($_SERVER['SSL_CLIENT_CERT'], UserSQL::CERTIFICATE_FINGERPRINT_HASH_ALG);
-    }
-
-    public function logout()
-    {
-        unset($_SESSION['id_login']);
     }
 
     public function getCertificateInfo()
