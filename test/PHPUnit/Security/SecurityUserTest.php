@@ -59,8 +59,8 @@ class SecurityUserTest extends TestCase
         $user = new SecurityUser($this->createUserData(['role' => 'USER']));
         $roles = $user->getRoles();
 
+        $this->assertCount(1, $roles);
         $this->assertContains('ROLE_USER', $roles);
-        $this->assertNotContains('ROLE_ADMIN', $roles);
     }
 
     public function testGetRolesForAdmin(): void
@@ -68,9 +68,8 @@ class SecurityUserTest extends TestCase
         $user = new SecurityUser($this->createUserData(['role' => 'ADM']));
         $roles = $user->getRoles();
 
-        $this->assertContains('ROLE_USER', $roles);
-        $this->assertContains('ROLE_ADMIN', $roles);
-        $this->assertNotContains('ROLE_GROUP_ADMIN', $roles);
+        $this->assertCount(1, $roles);
+        $this->assertContains('ROLE_ADM', $roles);
     }
 
     public function testGetRolesForGroupAdmin(): void
@@ -78,10 +77,8 @@ class SecurityUserTest extends TestCase
         $user = new SecurityUser($this->createUserData(['role' => 'GADM']));
         $roles = $user->getRoles();
 
-        $this->assertContains('ROLE_USER', $roles);
-        $this->assertContains('ROLE_ADMIN', $roles);
-        $this->assertContains('ROLE_GROUP_ADMIN', $roles);
-        $this->assertNotContains('ROLE_SUPER_ADMIN', $roles);
+        $this->assertCount(1, $roles);
+        $this->assertContains('ROLE_GADM', $roles);
     }
 
     public function testGetRolesForSuperAdmin(): void
@@ -89,10 +86,8 @@ class SecurityUserTest extends TestCase
         $user = new SecurityUser($this->createUserData(['role' => 'SADM']));
         $roles = $user->getRoles();
 
-        $this->assertContains('ROLE_USER', $roles);
-        $this->assertContains('ROLE_ADMIN', $roles);
-        $this->assertContains('ROLE_GROUP_ADMIN', $roles);
-        $this->assertContains('ROLE_SUPER_ADMIN', $roles);
+        $this->assertCount(1, $roles);
+        $this->assertContains('ROLE_SADM', $roles);
     }
 
     public function testGetRolesForArchivist(): void
@@ -100,9 +95,8 @@ class SecurityUserTest extends TestCase
         $user = new SecurityUser($this->createUserData(['role' => 'ARCH']));
         $roles = $user->getRoles();
 
-        $this->assertContains('ROLE_USER', $roles);
-        $this->assertContains('ROLE_ARCHIVIST', $roles);
-        $this->assertNotContains('ROLE_ADMIN', $roles);
+        $this->assertCount(1, $roles);
+        $this->assertContains('ROLE_ARCH', $roles);
     }
 
     public function testGetLegacyRoleReturnsOriginalRole(): void

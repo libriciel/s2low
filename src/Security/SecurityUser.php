@@ -41,27 +41,8 @@ class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        $roles = ['ROLE_USER'];
-
-        switch ($this->role) {
-            case 'SADM':
-                $roles[] = 'ROLE_SUPER_ADMIN';
-                $roles[] = 'ROLE_GROUP_ADMIN';
-                $roles[] = 'ROLE_ADMIN';
-                break;
-            case 'GADM':
-                $roles[] = 'ROLE_GROUP_ADMIN';
-                $roles[] = 'ROLE_ADMIN';
-                break;
-            case 'ADM':
-                $roles[] = 'ROLE_ADMIN';
-                break;
-            case 'ARCH':
-                $roles[] = 'ROLE_ARCHIVIST';
-                break;
-        }
-
-        return $roles;
+        // Simplement préfixer le rôle legacy avec ROLE_ pour Symfony Security
+        return ['ROLE_' . $this->role];
     }
 
     public function eraseCredentials(): void

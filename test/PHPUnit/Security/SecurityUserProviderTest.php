@@ -2,19 +2,18 @@
 
 namespace Test\PHPUnit\Security;
 
-use PDO;
-use PDOStatement;
 use PHPUnit\Framework\TestCase;
 use S2low\Security\SecurityUser;
 use S2low\Security\SecurityUserProvider;
+use S2lowLegacy\Model\UserSQL;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 
 class SecurityUserProviderTest extends TestCase
 {
-    private function createPdoMock(): PDO
+    private function createUserSQLMock(): UserSQL
     {
-        return $this->createMock(PDO::class);
+        return $this->createMock(UserSQL::class);
     }
 
     private function createUserData(int $id = 1): array
@@ -38,14 +37,10 @@ class SecurityUserProviderTest extends TestCase
     {
         $userData = $this->createUserData(42);
 
-        $stmt = $this->createMock(PDOStatement::class);
-        $stmt->method('execute')->willReturn(true);
-        $stmt->method('fetch')->willReturn($userData);
+        $userSQL = $this->createUserSQLMock();
+        $userSQL->method('queryOne')->willReturn($userData);
 
-        $pdo = $this->createPdoMock();
-        $pdo->method('prepare')->willReturn($stmt);
-
-        $provider = new SecurityUserProvider($pdo);
+        $provider = new SecurityUserProvider($userSQL);
         $user = $provider->loadUserByIdentifier('42');
 
         $this->assertInstanceOf(SecurityUser::class, $user);
@@ -54,14 +49,10 @@ class SecurityUserProviderTest extends TestCase
 
     public function testLoadUserByIdentifierThrowsExceptionWhenNotFound(): void
     {
-        $stmt = $this->createMock(PDOStatement::class);
-        $stmt->method('execute')->willReturn(true);
-        $stmt->method('fetch')->willReturn(false);
+        $userSQL = $this->createUserSQLMock();
+        $userSQL->method('queryOne')->willReturn(false);
 
-        $pdo = $this->createPdoMock();
-        $pdo->method('prepare')->willReturn($stmt);
-
-        $provider = new SecurityUserProvider($pdo);
+        $provider = new SecurityUserProvider($userSQL);
 
         $this->expectException(UserNotFoundException::class);
 
@@ -75,14 +66,10 @@ class SecurityUserProviderTest extends TestCase
             $this->createUserData(2)
         ];
 
-        $stmt = $this->createMock(PDOStatement::class);
-        $stmt->method('execute')->willReturn(true);
-        $stmt->method('fetchAll')->willReturn($usersData);
+        $userSQL = $this->createUserSQLMock();
+        $userSQL->method('query')->willReturn($usersData);
 
-        $pdo = $this->createPdoMock();
-        $pdo->method('prepare')->willReturn($stmt);
-
-        $provider = new SecurityUserProvider($pdo);
+        $provider = new SecurityUserProvider($userSQL);
         $users = $provider->loadUsersByCertificateHash('hash123');
 
         $this->assertCount(2, $users);
@@ -96,14 +83,10 @@ class SecurityUserProviderTest extends TestCase
             $this->createUserData(1)
         ];
 
-        $stmt = $this->createMock(PDOStatement::class);
-        $stmt->method('execute')->willReturn(true);
-        $stmt->method('fetchAll')->willReturn($usersData);
+        $userSQL = $this->createUserSQLMock();
+        $userSQL->method('query')->willReturn($usersData);
 
-        $pdo = $this->createPdoMock();
-        $pdo->method('prepare')->willReturn($stmt);
-
-        $provider = new SecurityUserProvider($pdo);
+        $provider = new SecurityUserProvider($userSQL);
         $users = $provider->loadUsersByCertificateHashAndRgs2('hash123', 'rgs2cert');
 
         $this->assertCount(1, $users);
@@ -116,14 +99,10 @@ class SecurityUserProviderTest extends TestCase
             $this->createUserData(1)
         ];
 
-        $stmt = $this->createMock(PDOStatement::class);
-        $stmt->method('execute')->willReturn(true);
-        $stmt->method('fetchAll')->willReturn($usersData);
+        $userSQL = $this->createUserSQLMock();
+        $userSQL->method('query')->willReturn($usersData);
 
-        $pdo = $this->createPdoMock();
-        $pdo->method('prepare')->willReturn($stmt);
-
-        $provider = new SecurityUserProvider($pdo);
+        $provider = new SecurityUserProvider($userSQL);
         $users = $provider->loadUserByCertificateAndLogin('hash123', 'rgs2cert', 'user1');
 
         $this->assertCount(1, $users);
@@ -134,14 +113,10 @@ class SecurityUserProviderTest extends TestCase
     {
         $userData = $this->createUserData(1);
 
-        $stmt = $this->createMock(PDOStatement::class);
-        $stmt->method('execute')->willReturn(true);
-        $stmt->method('fetch')->willReturn($userData);
+        $userSQL = $this->createUserSQLMock();
+        $userSQL->method('queryOne')->willReturn($userData);
 
-        $pdo = $this->createPdoMock();
-        $pdo->method('prepare')->willReturn($stmt);
-
-        $provider = new SecurityUserProvider($pdo);
+        $provider = new SecurityUserProvider($userSQL);
         $user = $provider->loadUserByCertificateAndAuthority('hash123', 1);
 
         $this->assertInstanceOf(SecurityUser::class, $user);
@@ -150,14 +125,10 @@ class SecurityUserProviderTest extends TestCase
 
     public function testLoadUserByCertificateAndAuthorityReturnsNullWhenNotFound(): void
     {
-        $stmt = $this->createMock(PDOStatement::class);
-        $stmt->method('execute')->willReturn(true);
-        $stmt->method('fetch')->willReturn(false);
+        $userSQL = $this->createUserSQLMock();
+        $userSQL->method('queryOne')->willReturn(false);
 
-        $pdo = $this->createPdoMock();
-        $pdo->method('prepare')->willReturn($stmt);
-
-        $provider = new SecurityUserProvider($pdo);
+        $provider = new SecurityUserProvider($userSQL);
         $user = $provider->loadUserByCertificateAndAuthority('hash123', 999);
 
         $this->assertNull($user);
@@ -167,14 +138,10 @@ class SecurityUserProviderTest extends TestCase
     {
         $userData = $this->createUserData(42);
 
-        $stmt = $this->createMock(PDOStatement::class);
-        $stmt->method('execute')->willReturn(true);
-        $stmt->method('fetch')->willReturn($userData);
+        $userSQL = $this->createUserSQLMock();
+        $userSQL->method('queryOne')->willReturn($userData);
 
-        $pdo = $this->createPdoMock();
-        $pdo->method('prepare')->willReturn($stmt);
-
-        $provider = new SecurityUserProvider($pdo);
+        $provider = new SecurityUserProvider($userSQL);
 
         $existingUser = new SecurityUser($userData);
         $refreshedUser = $provider->refreshUser($existingUser);
@@ -185,8 +152,8 @@ class SecurityUserProviderTest extends TestCase
 
     public function testRefreshUserThrowsExceptionForInvalidUserClass(): void
     {
-        $pdo = $this->createPdoMock();
-        $provider = new SecurityUserProvider($pdo);
+        $userSQL = $this->createUserSQLMock();
+        $provider = new SecurityUserProvider($userSQL);
 
         $invalidUser = $this->createMock(\Symfony\Component\Security\Core\User\UserInterface::class);
 
@@ -197,14 +164,10 @@ class SecurityUserProviderTest extends TestCase
 
     public function testRefreshUserThrowsExceptionWhenUserNotFound(): void
     {
-        $stmt = $this->createMock(PDOStatement::class);
-        $stmt->method('execute')->willReturn(true);
-        $stmt->method('fetch')->willReturn(false);
+        $userSQL = $this->createUserSQLMock();
+        $userSQL->method('queryOne')->willReturn(false);
 
-        $pdo = $this->createPdoMock();
-        $pdo->method('prepare')->willReturn($stmt);
-
-        $provider = new SecurityUserProvider($pdo);
+        $provider = new SecurityUserProvider($userSQL);
 
         $userData = $this->createUserData(999);
         $existingUser = new SecurityUser($userData);
@@ -216,16 +179,16 @@ class SecurityUserProviderTest extends TestCase
 
     public function testSupportsClassReturnsTrueForSecurityUser(): void
     {
-        $pdo = $this->createPdoMock();
-        $provider = new SecurityUserProvider($pdo);
+        $userSQL = $this->createUserSQLMock();
+        $provider = new SecurityUserProvider($userSQL);
 
         $this->assertTrue($provider->supportsClass(SecurityUser::class));
     }
 
     public function testSupportsClassReturnsFalseForOtherClasses(): void
     {
-        $pdo = $this->createPdoMock();
-        $provider = new SecurityUserProvider($pdo);
+        $userSQL = $this->createUserSQLMock();
+        $provider = new SecurityUserProvider($userSQL);
 
         $this->assertFalse($provider->supportsClass(\stdClass::class));
     }
