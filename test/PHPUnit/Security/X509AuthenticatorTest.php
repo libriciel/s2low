@@ -126,7 +126,7 @@ class X509AuthenticatorTest extends TestCase
 
         $passport = $authenticator->authenticate($request);
         $this->assertInstanceOf(\Symfony\Component\Security\Http\Authenticator\Passport\Passport::class, $passport);
-        $this->assertEquals('test@test.com', $passport->getUser()->getUserIdentifier());
+        $this->assertEquals('1', $passport->getUser()->getUserIdentifier());
     }
 
     public function testAuthenticateWithMultipleUsersNoCredentials(): void
@@ -208,7 +208,7 @@ class X509AuthenticatorTest extends TestCase
 
         $passport = $authenticator->authenticate($request);
         $this->assertInstanceOf(\Symfony\Component\Security\Http\Authenticator\Passport\Passport::class, $passport);
-        $this->assertEquals('test1@test.com', $passport->getUser()->getUserIdentifier());
+        $this->assertEquals('1', $passport->getUser()->getUserIdentifier());
     }
 
     public function testOnAuthenticationSuccessRedirectsToHomeOnLoginPost(): void
