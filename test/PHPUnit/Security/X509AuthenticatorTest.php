@@ -4,8 +4,11 @@ namespace Test\PHPUnit\Security;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use S2low\Security\CertificateExtractor;
+use S2low\Security\CredentialsExtractor;
 use S2low\Security\SecurityUser;
 use S2low\Security\SecurityUserProvider;
+use S2low\Security\UserAuthenticationStrategy;
 use S2low\Security\X509Authenticator;
 use S2lowLegacy\Class\PasswordHandler;
 use S2lowLegacy\Lib\X509Certificate;
@@ -19,22 +22,21 @@ use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationExc
 class X509AuthenticatorTest extends TestCase
 {
     private function createAuthenticator(
-        ?SecurityUserProvider $userProvider = null,
-        ?PasswordHandler $passwordHandler = null,
-        ?X509Certificate $x509Certificate = null
+        ?CertificateExtractor $certificateExtractor = null,
+        ?CredentialsExtractor $credentialsExtractor = null,
+        ?UserAuthenticationStrategy $authenticationStrategy = null,
+        ?TokenStorageInterface $tokenStorage = null
     ): X509Authenticator {
-        $userProvider = $userProvider ?? $this->createMock(SecurityUserProvider::class);
-        $passwordHandler = $passwordHandler ?? $this->createMock(PasswordHandler::class);
-        $x509Certificate = $x509Certificate ?? $this->createMock(X509Certificate::class);
-        $nounceSQL = $this->createMock(NounceSQL::class);
+        $certificateExtractor = $certificateExtractor ?? $this->createMock(CertificateExtractor::class);
+        $credentialsExtractor = $credentialsExtractor ?? $this->createMock(CredentialsExtractor::class);
+        $authenticationStrategy = $authenticationStrategy ?? $this->createMock(UserAuthenticationStrategy::class);
         $logger = $this->createMock(LoggerInterface::class);
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage = $tokenStorage ?? $this->createMock(TokenStorageInterface::class);
 
         return new X509Authenticator(
-            $userProvider,
-            $passwordHandler,
-            $x509Certificate,
-            $nounceSQL,
+            $certificateExtractor,
+            $credentialsExtractor,
+            $authenticationStrategy,
             $logger,
             $tokenStorage
         );
@@ -42,7 +44,10 @@ class X509AuthenticatorTest extends TestCase
 
     public function testSupportsReturnsFalseWithoutCertificate(): void
     {
-        $authenticator = $this->createAuthenticator();
+        $certificateExtractor = $this->createMock(CertificateExtractor::class);
+        $certificateExtractor->method('hasValidCertificate')->willReturn(false);
+
+        $authenticator = $this->createAuthenticator(certificateExtractor: $certificateExtractor);
         $request = Request::create('/test');
 
         $this->assertFalse($authenticator->supports($request));
@@ -50,42 +55,35 @@ class X509AuthenticatorTest extends TestCase
 
     public function testSupportsReturnsTrueWithValidCertificate(): void
     {
-        $authenticator = $this->createAuthenticator();
-        $request = Request::create('/test');
-        $request->server->set('SSL_CLIENT_VERIFY', 'SUCCESS');
+        $certificateExtractor = $this->createMock(CertificateExtractor::class);
+        $certificateExtractor->method('hasValidCertificate')->willReturn(true);
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
         $tokenStorage->method('getToken')->willReturn(null);
 
-        // Recréer avec le mock
-        $authenticator = new X509Authenticator(
-            $this->createMock(SecurityUserProvider::class),
-            $this->createMock(PasswordHandler::class),
-            $this->createMock(X509Certificate::class),
-            $this->createMock(NounceSQL::class),
-            $this->createMock(LoggerInterface::class),
-            $tokenStorage
+        $authenticator = $this->createAuthenticator(
+            certificateExtractor: $certificateExtractor,
+            tokenStorage: $tokenStorage
         );
 
+        $request = Request::create('/test');
         $this->assertTrue($authenticator->supports($request));
     }
 
     public function testSupportsReturnsFalseForLoginPageGet(): void
     {
+        $certificateExtractor = $this->createMock(CertificateExtractor::class);
+        $certificateExtractor->method('hasValidCertificate')->willReturn(true);
+
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
         $tokenStorage->method('getToken')->willReturn(null);
 
-        $authenticator = new X509Authenticator(
-            $this->createMock(SecurityUserProvider::class),
-            $this->createMock(PasswordHandler::class),
-            $this->createMock(X509Certificate::class),
-            $this->createMock(NounceSQL::class),
-            $this->createMock(LoggerInterface::class),
-            $tokenStorage
+        $authenticator = $this->createAuthenticator(
+            certificateExtractor: $certificateExtractor,
+            tokenStorage: $tokenStorage
         );
 
         $request = Request::create('/login.php', 'GET');
-        $request->server->set('SSL_CLIENT_VERIFY', 'SUCCESS');
 
         $this->assertFalse($authenticator->supports($request));
     }
@@ -105,76 +103,63 @@ class X509AuthenticatorTest extends TestCase
             'givenname' => 'User'
         ]);
 
-        $userProvider = $this->createMock(SecurityUserProvider::class);
-        $userProvider->method('loadUsersByCertificateHashAndRgs2')
-            ->willReturn([$user]);
-
-        $x509Certificate = $this->createMock(X509Certificate::class);
-        $x509Certificate->method('getInfo')->willReturn([
-            'subject_name' => 'test',
-            'issuer_name' => 'test',
-            'certificate_hash' => 'hash123'
+        $certificateExtractor = $this->createMock(CertificateExtractor::class);
+        $certificateExtractor->method('extract')->willReturn([
+            'ssl_client_verify' => 'SUCCESS',
+            'subject_dn' => 'test',
+            'issuer_dn' => 'test',
+            'certificate_hash' => 'hash123',
+            'ssl_client_cert' => 'cert_content',
+            'certificate_rgs_2_etoiles' => ''
         ]);
 
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $authenticationStrategy = $this->createMock(UserAuthenticationStrategy::class);
+        $authenticationStrategy->method('authenticateByCertificate')
+            ->willReturn($user);
 
-        $authenticator = new X509Authenticator(
-            $userProvider,
-            $this->createMock(PasswordHandler::class),
-            $x509Certificate,
-            $this->createMock(NounceSQL::class),
-            $this->createMock(LoggerInterface::class),
-            $tokenStorage
+        $authenticator = $this->createAuthenticator(
+            certificateExtractor: $certificateExtractor,
+            authenticationStrategy: $authenticationStrategy
         );
 
         $request = Request::create('/test');
-        $request->server->set('SSL_CLIENT_VERIFY', 'SUCCESS');
-        $request->server->set('SSL_CLIENT_CERT', 'cert_content');
 
         $passport = $authenticator->authenticate($request);
-        $this->assertNotNull($passport);
+        $this->assertInstanceOf(\Symfony\Component\Security\Http\Authenticator\Passport\Passport::class, $passport);
+        $this->assertEquals('test@test.com', $passport->getUser()->getUserIdentifier());
     }
 
     public function testAuthenticateWithMultipleUsersNoCredentials(): void
     {
-        $user1 = new SecurityUser([
-            'id' => 1, 'email' => 'test1@test.com', 'login' => 'user1',
-            'password' => 'hash', 'role' => 'USER', 'authority_id' => 1,
-            'status' => 1, 'certificate_hash' => 'hash123',
-            'name' => 'Test1', 'givenname' => 'User'
-        ]);
-        $user2 = new SecurityUser([
-            'id' => 2, 'email' => 'test2@test.com', 'login' => 'user2',
-            'password' => 'hash', 'role' => 'USER', 'authority_id' => 1,
-            'status' => 1, 'certificate_hash' => 'hash123',
-            'name' => 'Test2', 'givenname' => 'User'
+        $certificateExtractor = $this->createMock(CertificateExtractor::class);
+        $certificateExtractor->method('extract')->willReturn([
+            'ssl_client_verify' => 'SUCCESS',
+            'subject_dn' => 'test',
+            'issuer_dn' => 'test',
+            'certificate_hash' => 'hash123',
+            'ssl_client_cert' => 'cert_content',
+            'certificate_rgs_2_etoiles' => ''
         ]);
 
-        $userProvider = $this->createMock(SecurityUserProvider::class);
-        $userProvider->method('loadUsersByCertificateHashAndRgs2')
-            ->willReturn([$user1, $user2]);
-
-        $x509Certificate = $this->createMock(X509Certificate::class);
-        $x509Certificate->method('getInfo')->willReturn([
-            'subject_name' => 'test',
-            'issuer_name' => 'test',
-            'certificate_hash' => 'hash123'
+        $credentialsExtractor = $this->createMock(CredentialsExtractor::class);
+        $credentialsExtractor->method('extract')->willReturn([
+            'login' => null,
+            'password' => null
         ]);
 
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $authenticationStrategy = $this->createMock(UserAuthenticationStrategy::class);
+        $authenticationStrategy->method('authenticateByCertificate')
+            ->willReturn(null); // Multiple users
+        $authenticationStrategy->method('countUsersForCertificate')
+            ->willReturn(2);
 
-        $authenticator = new X509Authenticator(
-            $userProvider,
-            $this->createMock(PasswordHandler::class),
-            $x509Certificate,
-            $this->createMock(NounceSQL::class),
-            $this->createMock(LoggerInterface::class),
-            $tokenStorage
+        $authenticator = $this->createAuthenticator(
+            certificateExtractor: $certificateExtractor,
+            credentialsExtractor: $credentialsExtractor,
+            authenticationStrategy: $authenticationStrategy
         );
 
         $request = Request::create('/test');
-        $request->server->set('SSL_CLIENT_VERIFY', 'SUCCESS');
-        $request->server->set('SSL_CLIENT_CERT', 'cert_content');
 
         $this->expectException(CustomUserMessageAuthenticationException::class);
         $this->expectExceptionMessage('multiple_accounts');
@@ -190,51 +175,40 @@ class X509AuthenticatorTest extends TestCase
             'status' => 1, 'certificate_hash' => 'hash123',
             'name' => 'Test1', 'givenname' => 'User'
         ]);
-        $user2 = new SecurityUser([
-            'id' => 2, 'email' => 'test2@test.com', 'login' => 'user2',
-            'password' => 'hashed_password', 'role' => 'USER', 'authority_id' => 1,
-            'status' => 1, 'certificate_hash' => 'hash123',
-            'name' => 'Test2', 'givenname' => 'User'
+
+        $certificateExtractor = $this->createMock(CertificateExtractor::class);
+        $certificateExtractor->method('extract')->willReturn([
+            'ssl_client_verify' => 'SUCCESS',
+            'subject_dn' => 'test',
+            'issuer_dn' => 'test',
+            'certificate_hash' => 'hash123',
+            'ssl_client_cert' => 'cert_content',
+            'certificate_rgs_2_etoiles' => ''
         ]);
 
-        $userProvider = $this->createMock(SecurityUserProvider::class);
-        $userProvider->method('loadUsersByCertificateHashAndRgs2')
-            ->willReturn([$user1, $user2]);
-        $userProvider->method('loadUserByCertificateAndLogin')
-            ->willReturn([$user1]);
-
-        $passwordHandler = $this->createMock(PasswordHandler::class);
-        $passwordHandler->method('passwordMatchesHash')
-            ->willReturn(true);
-
-        $x509Certificate = $this->createMock(X509Certificate::class);
-        $x509Certificate->method('getInfo')->willReturn([
-            'subject_name' => 'test',
-            'issuer_name' => 'test',
-            'certificate_hash' => 'hash123'
-        ]);
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
-        $authenticator = new X509Authenticator(
-            $userProvider,
-            $passwordHandler,
-            $x509Certificate,
-            $this->createMock(NounceSQL::class),
-            $this->createMock(LoggerInterface::class),
-            $tokenStorage
-        );
-
-        // Simuler un POST avec login/password
-        $request = Request::create('/login.php', 'POST', [
+        $credentialsExtractor = $this->createMock(CredentialsExtractor::class);
+        $credentialsExtractor->method('extract')->willReturn([
             'login' => 'user1',
             'password' => 'password123'
         ]);
-        $request->server->set('SSL_CLIENT_VERIFY', 'SUCCESS');
-        $request->server->set('SSL_CLIENT_CERT', 'cert_content');
+
+        $authenticationStrategy = $this->createMock(UserAuthenticationStrategy::class);
+        $authenticationStrategy->method('authenticateByCertificate')
+            ->willReturn(null); // Multiple users
+        $authenticationStrategy->method('authenticateByCertificateAndCredentials')
+            ->willReturn($user1);
+
+        $authenticator = $this->createAuthenticator(
+            certificateExtractor: $certificateExtractor,
+            credentialsExtractor: $credentialsExtractor,
+            authenticationStrategy: $authenticationStrategy
+        );
+
+        $request = Request::create('/login.php', 'POST');
 
         $passport = $authenticator->authenticate($request);
-        $this->assertNotNull($passport);
+        $this->assertInstanceOf(\Symfony\Component\Security\Http\Authenticator\Passport\Passport::class, $passport);
+        $this->assertEquals('test1@test.com', $passport->getUser()->getUserIdentifier());
     }
 
     public function testOnAuthenticationSuccessRedirectsToHomeOnLoginPost(): void
@@ -290,31 +264,26 @@ class X509AuthenticatorTest extends TestCase
 
     public function testAuthenticateThrowsExceptionWhenNoUsersFound(): void
     {
-        $userProvider = $this->createMock(SecurityUserProvider::class);
-        $userProvider->method('loadUsersByCertificateHashAndRgs2')
-            ->willReturn([]);
-
-        $x509Certificate = $this->createMock(X509Certificate::class);
-        $x509Certificate->method('getInfo')->willReturn([
-            'subject_name' => 'test',
-            'issuer_name' => 'test',
-            'certificate_hash' => 'hash123'
+        $certificateExtractor = $this->createMock(CertificateExtractor::class);
+        $certificateExtractor->method('extract')->willReturn([
+            'ssl_client_verify' => 'SUCCESS',
+            'subject_dn' => 'test',
+            'issuer_dn' => 'test',
+            'certificate_hash' => 'hash123',
+            'ssl_client_cert' => 'cert_content',
+            'certificate_rgs_2_etoiles' => ''
         ]);
 
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $authenticationStrategy = $this->createMock(UserAuthenticationStrategy::class);
+        $authenticationStrategy->method('authenticateByCertificate')
+            ->willThrowException(new CustomUserMessageAuthenticationException("Le certificat n'est pas valide : aucun compte trouvé"));
 
-        $authenticator = new X509Authenticator(
-            $userProvider,
-            $this->createMock(PasswordHandler::class),
-            $x509Certificate,
-            $this->createMock(NounceSQL::class),
-            $this->createMock(LoggerInterface::class),
-            $tokenStorage
+        $authenticator = $this->createAuthenticator(
+            certificateExtractor: $certificateExtractor,
+            authenticationStrategy: $authenticationStrategy
         );
 
         $request = Request::create('/test');
-        $request->server->set('SSL_CLIENT_VERIFY', 'SUCCESS');
-        $request->server->set('SSL_CLIENT_CERT', 'cert_content');
 
         $this->expectException(CustomUserMessageAuthenticationException::class);
         $this->expectExceptionMessage("Le certificat n'est pas valide : aucun compte trouvé");
@@ -324,49 +293,35 @@ class X509AuthenticatorTest extends TestCase
 
     public function testAuthenticateThrowsExceptionForIncorrectLogin(): void
     {
-        $user1 = new SecurityUser([
-            'id' => 1, 'email' => 'test1@test.com', 'login' => 'user1',
-            'password' => 'hash', 'role' => 'USER', 'authority_id' => 1,
-            'status' => 1, 'certificate_hash' => 'hash123',
-            'name' => 'Test1', 'givenname' => 'User'
-        ]);
-        $user2 = new SecurityUser([
-            'id' => 2, 'email' => 'test2@test.com', 'login' => 'user2',
-            'password' => 'hash', 'role' => 'USER', 'authority_id' => 1,
-            'status' => 1, 'certificate_hash' => 'hash123',
-            'name' => 'Test2', 'givenname' => 'User'
+        $certificateExtractor = $this->createMock(CertificateExtractor::class);
+        $certificateExtractor->method('extract')->willReturn([
+            'ssl_client_verify' => 'SUCCESS',
+            'subject_dn' => 'test',
+            'issuer_dn' => 'test',
+            'certificate_hash' => 'hash123',
+            'ssl_client_cert' => 'cert_content',
+            'certificate_rgs_2_etoiles' => ''
         ]);
 
-        $userProvider = $this->createMock(SecurityUserProvider::class);
-        $userProvider->method('loadUsersByCertificateHashAndRgs2')
-            ->willReturn([$user1, $user2]);
-        $userProvider->method('loadUserByCertificateAndLogin')
-            ->willReturn([]);
-
-        $x509Certificate = $this->createMock(X509Certificate::class);
-        $x509Certificate->method('getInfo')->willReturn([
-            'subject_name' => 'test',
-            'issuer_name' => 'test',
-            'certificate_hash' => 'hash123'
-        ]);
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
-        $authenticator = new X509Authenticator(
-            $userProvider,
-            $this->createMock(PasswordHandler::class),
-            $x509Certificate,
-            $this->createMock(NounceSQL::class),
-            $this->createMock(LoggerInterface::class),
-            $tokenStorage
-        );
-
-        $request = Request::create('/login.php', 'POST', [
+        $credentialsExtractor = $this->createMock(CredentialsExtractor::class);
+        $credentialsExtractor->method('extract')->willReturn([
             'login' => 'wronguser',
             'password' => 'password123'
         ]);
-        $request->server->set('SSL_CLIENT_VERIFY', 'SUCCESS');
-        $request->server->set('SSL_CLIENT_CERT', 'cert_content');
+
+        $authenticationStrategy = $this->createMock(UserAuthenticationStrategy::class);
+        $authenticationStrategy->method('authenticateByCertificate')
+            ->willReturn(null); // Multiple users
+        $authenticationStrategy->method('authenticateByCertificateAndCredentials')
+            ->willThrowException(new CustomUserMessageAuthenticationException('login_incorrect'));
+
+        $authenticator = $this->createAuthenticator(
+            certificateExtractor: $certificateExtractor,
+            credentialsExtractor: $credentialsExtractor,
+            authenticationStrategy: $authenticationStrategy
+        );
+
+        $request = Request::create('/login.php', 'POST');
 
         $this->expectException(CustomUserMessageAuthenticationException::class);
         $this->expectExceptionMessage('login_incorrect');
@@ -376,53 +331,35 @@ class X509AuthenticatorTest extends TestCase
 
     public function testAuthenticateThrowsExceptionForIncorrectPassword(): void
     {
-        $user1 = new SecurityUser([
-            'id' => 1, 'email' => 'test1@test.com', 'login' => 'user1',
-            'password' => 'hashed_password', 'role' => 'USER', 'authority_id' => 1,
-            'status' => 1, 'certificate_hash' => 'hash123',
-            'name' => 'Test1', 'givenname' => 'User'
-        ]);
-        $user2 = new SecurityUser([
-            'id' => 2, 'email' => 'test2@test.com', 'login' => 'user2',
-            'password' => 'hashed_password', 'role' => 'USER', 'authority_id' => 1,
-            'status' => 1, 'certificate_hash' => 'hash123',
-            'name' => 'Test2', 'givenname' => 'User'
+        $certificateExtractor = $this->createMock(CertificateExtractor::class);
+        $certificateExtractor->method('extract')->willReturn([
+            'ssl_client_verify' => 'SUCCESS',
+            'subject_dn' => 'test',
+            'issuer_dn' => 'test',
+            'certificate_hash' => 'hash123',
+            'ssl_client_cert' => 'cert_content',
+            'certificate_rgs_2_etoiles' => ''
         ]);
 
-        $userProvider = $this->createMock(SecurityUserProvider::class);
-        $userProvider->method('loadUsersByCertificateHashAndRgs2')
-            ->willReturn([$user1, $user2]);
-        $userProvider->method('loadUserByCertificateAndLogin')
-            ->willReturn([$user1]);
-
-        $passwordHandler = $this->createMock(PasswordHandler::class);
-        $passwordHandler->method('passwordMatchesHash')
-            ->willReturn(false);
-
-        $x509Certificate = $this->createMock(X509Certificate::class);
-        $x509Certificate->method('getInfo')->willReturn([
-            'subject_name' => 'test',
-            'issuer_name' => 'test',
-            'certificate_hash' => 'hash123'
-        ]);
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
-        $authenticator = new X509Authenticator(
-            $userProvider,
-            $passwordHandler,
-            $x509Certificate,
-            $this->createMock(NounceSQL::class),
-            $this->createMock(LoggerInterface::class),
-            $tokenStorage
-        );
-
-        $request = Request::create('/login.php', 'POST', [
+        $credentialsExtractor = $this->createMock(CredentialsExtractor::class);
+        $credentialsExtractor->method('extract')->willReturn([
             'login' => 'user1',
             'password' => 'wrongpassword'
         ]);
-        $request->server->set('SSL_CLIENT_VERIFY', 'SUCCESS');
-        $request->server->set('SSL_CLIENT_CERT', 'cert_content');
+
+        $authenticationStrategy = $this->createMock(UserAuthenticationStrategy::class);
+        $authenticationStrategy->method('authenticateByCertificate')
+            ->willReturn(null); // Multiple users
+        $authenticationStrategy->method('authenticateByCertificateAndCredentials')
+            ->willThrowException(new CustomUserMessageAuthenticationException('password_incorrect'));
+
+        $authenticator = $this->createAuthenticator(
+            certificateExtractor: $certificateExtractor,
+            credentialsExtractor: $credentialsExtractor,
+            authenticationStrategy: $authenticationStrategy
+        );
+
+        $request = Request::create('/login.php', 'POST');
 
         $this->expectException(CustomUserMessageAuthenticationException::class);
         $this->expectExceptionMessage('password_incorrect');
