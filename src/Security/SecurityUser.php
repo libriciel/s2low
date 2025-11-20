@@ -19,6 +19,9 @@ class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
     private string $name;
     private string $givenname;
 
+    /**
+     * @param array<string, mixed> $userData
+     */
     public function __construct(array $userData)
     {
         $this->id = (int) $userData['id'];
