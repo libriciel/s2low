@@ -2,11 +2,101 @@
 
 ## Vue d'ensemble
 
-Le système d'authentification s'appuie sur **Symfony Security** et utilise des **certificats X.509** pour authentifier les utilisateurs. Cette architecture a été refactorisée selon les principes **Clean Code** pour améliorer la maintenabilité et la testabilité.
+L'authentification s'effectue en deux étapes :
+1. **Apache** valide le certificat client X.509 et expose les informations au serveur
+2. **Symfony Security** utilise ces informations pour identifier et authentifier l'utilisateur
 
-## Architecture
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                         FLUX GLOBAL                              │
+└──────────────────────────────────────────────────────────────────┘
 
-L'authentification est structurée autour de 4 composants principaux qui suivent le **principe de responsabilité unique** :
+ Client HTTPS              Apache                 Symfony Security
+    │                        │                           │
+    │   Connexion TLS        │                           │
+    │  + Certificat X.509    │                           │
+    ├───────────────────────>│                           │
+    │                        │                           │
+    │                        │  Validation du certificat │
+    │                        │  (SSLVerifyClient)        │
+    │                        │                           │
+    │                        │  Variables d'environnement│
+    │                        │  SSL_CLIENT_*             │
+    │                        ├──────────────────────────>│
+    │                        │                           │
+    │                        │         Authentification  │
+    │                        │         X509Authenticator │
+    │                        │                           │
+    │     Page authentifiée  │                           │
+    │<───────────────────────┴───────────────────────────┘
+```
+
+---
+
+## Étape 1 : Configuration Apache
+
+### Validation du certificat client (VirtualHost :8443)
+
+Apache est configuré pour exiger un certificat client valide sur le port HTTPS 8443 :
+
+```apache
+SSLEngine on
+SSLVerifyClient require          # Certificat client obligatoire
+SSLVerifyDepth 5                 # Profondeur de vérification
+SSLCACertificatePath /etc/s2low/ssl/validca
+SSLCARevocationPath /etc/s2low/ssl/validca
+SSLCARevocationCheck chain       # Vérification CRL
+SSLOptions +StdEnvVars +OptRenegotiate +ExportCertData +LegacyDNStringFormat
+```
+
+**Résultat** : Apache vérifie que :
+- Le certificat est signé par une CA reconnue (`SSLCACertificatePath`)
+- Le certificat n'est pas révoqué (CRL)
+- La chaîne de certification est valide
+
+### Variables d'environnement exposées
+
+Si la validation réussit, Apache expose les informations via des variables d'environnement PHP :
+
+| Variable               | Description                                   |
+|------------------------|-----------------------------------------------|
+| `SSL_CLIENT_VERIFY`    | Résultat : `SUCCESS` ou autre                 |
+| `SSL_CLIENT_S_DN`      | Subject DN du certificat                      |
+| `SSL_CLIENT_I_DN`      | Issuer DN du certificat                       |
+| `SSL_CLIENT_CERT`      | Certificat complet en PEM                     |
+| `SSL_CLIENT_M_SERIAL`  | Numéro de série (pour calcul du hash)        |
+
+Ces variables sont ensuite lues par Symfony.
+
+---
+
+## Étape 2 : Symfony Security
+
+### Configuration du firewall (`config/packages/security.yaml`)
+
+```yaml
+security:
+    providers:
+        app_user_provider:
+            id: S2low\Security\SecurityUserProvider
+
+    firewalls:
+        main:
+            lazy: true
+            stateless: false
+            provider: app_user_provider
+            custom_authenticators:
+                - S2low\Security\X509Authenticator  # Authenticator principal
+            logout:
+                path: app_logout
+                target: /
+```
+
+**Principe** : Symfony Security utilise un **Custom Authenticator** qui implémente `AuthenticatorInterface`. Cet authenticator analyse les variables `SSL_CLIENT_*` pour identifier l'utilisateur.
+
+### Architecture de l'authenticator
+
+L'authentification est structurée autour de **4 composants** suivant le principe de responsabilité unique :
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -21,175 +111,168 @@ L'authentification est structurée autour de 4 composants principaux qui suivent
                 │    (Extraction des credentials login/password)
                 │
                 └──► UserAuthenticationStrategy
-                     (Stratégies d'authentification des utilisateurs)
+                     (Stratégies d'authentification)
 ```
+
+---
+
+## Flux d'authentification détaillé
+
+### Cycle de vie d'une requête
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│  1. Apache valide le certificat                              │
+│     → SSL_CLIENT_VERIFY = 'SUCCESS'                          │
+└────────────────────────┬─────────────────────────────────────┘
+                         │
+                         ▼
+┌──────────────────────────────────────────────────────────────┐
+│  2. Symfony Security appelle supports()                      │
+│     ├─ Certificat valide?                                    │
+│     ├─ Page GET /login.php? (skip)                           │
+│     └─ User déjà authentifié? (skip sauf POST login)         │
+└────────────────────────┬─────────────────────────────────────┘
+                         │ [OUI]
+                         ▼
+┌──────────────────────────────────────────────────────────────┐
+│  3. authenticate() - Tentatives d'authentification           │
+│                                                              │
+│     A. Nonce (lien temporaire)                               │
+│        └─ Paramètres ?nounce/?login/?hash présents?         │
+│           → Vérification + association certificat            │
+│                                                              │
+│     B. Certificat seul                                       │
+│        └─ Recherche utilisateurs par hash certificat         │
+│           ├─ 1 utilisateur → Authentification immédiate      │
+│           └─ Plusieurs → Nécessite credentials              │
+│                                                              │
+│     C. Certificat + Credentials                              │
+│        └─ Login/password fournis?                            │
+│           → Vérification via PasswordHandler                 │
+└────────────────────────┬─────────────────────────────────────┘
+                         │
+                         ▼
+┌──────────────────────────────────────────────────────────────┐
+│  4. Résultat                                                 │
+│     ✅ Succès → Session créée                                │
+│     ❌ Erreur → Redirection /login.php                       │
+└──────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Composants de l'authenticator
 
 ### 1. X509Authenticator (`src/Security/X509Authenticator.php`)
 
-**Responsabilité** : Orchestrateur principal du processus d'authentification.
+**Rôle** : Orchestrateur principal implémentant `AuthenticatorInterface`.
 
 **Méthodes clés** :
-- `supports(Request)` : Détermine si l'authentificateur doit traiter la requête
-- `authenticate(Request)` : Exécute le processus d'authentification
+- `supports(Request)` : Détermine si la requête doit être authentifiée
+- `authenticate(Request)` : Exécute les stratégies d'authentification
 - `onAuthenticationSuccess()` : Gère les redirections après succès
-- `onAuthenticationFailure()` : Gère les erreurs d'authentification
+- `onAuthenticationFailure()` : Gère les erreurs et redirections
 
 ### 2. CertificateExtractor (`src/Security/CertificateExtractor.php`)
 
-**Responsabilité** : Extraction et validation des informations du certificat X.509.
+**Rôle** : Extraction et validation des informations du certificat X.509.
 
-**Fonctionnalités** :
-- Vérifie la présence d'un certificat valide (`SSL_CLIENT_VERIFY === 'SUCCESS'`)
-- Extrait les informations du certificat (DN, hash, RGS 2★)
-- Gère les certificats RGS 2★ via le header `org-s2low-forward-x509-identification`
+**Vérifications** :
+- `SSL_CLIENT_VERIFY === 'SUCCESS'`
+- Extraction du hash (via `openssl_x509_parse`)
+- Support des certificats RGS 2★ via header `org-s2low-forward-x509-identification`
 
 **Données extraites** :
 ```php
 [
-    'ssl_client_verify' => string,
-    'subject_dn' => string,
-    'issuer_dn' => string,
-    'certificate_hash' => string,
-    'ssl_client_cert' => string,
-    'certificate_rgs_2_etoiles' => string
+    'ssl_client_verify' => 'SUCCESS',
+    'subject_dn' => 'CN=...',
+    'issuer_dn' => 'CN=...',
+    'certificate_hash' => 'A1B2C3...',  // Hash SHA1
+    'ssl_client_cert' => '-----BEGIN CERTIFICATE-----...',
+    'certificate_rgs_2_etoiles' => '...'  // Optionnel
 ]
 ```
 
 ### 3. CredentialsExtractor (`src/Security/CredentialsExtractor.php`)
 
-**Responsabilité** : Extraction des credentials utilisateur (login/password).
+**Rôle** : Extraction des credentials utilisateur (login/password).
 
-**Sources supportées** :
-1. **HTTP Basic Auth** : `PHP_AUTH_USER` / `PHP_AUTH_PW`
-2. **POST data** : Formulaire de login
+**Sources** :
+- HTTP Basic Auth : `PHP_AUTH_USER` / `PHP_AUTH_PW`
+- POST data : Formulaire de login
 
 ### 4. UserAuthenticationStrategy (`src/Security/UserAuthenticationStrategy.php`)
 
-**Responsabilité** : Stratégies d'authentification des utilisateurs.
+**Rôle** : Stratégies d'authentification avec priorité définie.
 
-**3 stratégies disponibles** :
+#### Stratégie A : Authentification par nonce (liens temporaires)
+- URL : `/page?nounce=XXX&login=user&hash=YYY`
+- Vérifie le nonce via `NounceSQL::verify()` et associe certificat + authorityId
 
-#### a) Authentification par Nonce
-```php
-authenticateByNonce($certificateHash, $nonce, $login, $hash)
-```
-- Utilisée pour les liens temporaires sécurisés
-- Vérifie le nonce via `NounceSQL::verify()`
-- Associe certificat + authorityId
-
-#### b) Authentification par Certificat Seul
+#### Stratégie B : Authentification par certificat seul
 ```php
 authenticateByCertificate($certificateHash, $certificateRgs2)
 ```
 - Recherche les utilisateurs associés au certificat
-- ✅ **1 utilisateur trouvé** → Authentification automatique
+- ✅ **1 utilisateur** → Authentification automatique
 - ⚠️ **Plusieurs utilisateurs** → Retourne `null` (credentials requis)
 - ❌ **Aucun utilisateur** → Exception
 
-#### c) Authentification par Certificat + Credentials
+#### Stratégie C : Authentification par certificat + credentials
 ```php
 authenticateByCertificateAndCredentials($certificateHash, $certificateRgs2, $login, $password)
 ```
 - Recherche par certificat + login
-- Vérifie le mot de passe avec `PasswordHandler`
+- Vérifie le mot de passe avec `PasswordHandler::passwordMatchesHash()`
 - ✅ **Match** → Retourne l'utilisateur
-- ❌ **Login incorrect** → Exception `login_incorrect`
-- ❌ **Password incorrect** → Exception `password_incorrect`
+- ❌ **Erreur** → Exception (`login_incorrect` / `password_incorrect`)
 
-## Flux d'Authentification
+---
+
+## Scénarios d'authentification
 
 ### Scénario 1 : Utilisateur unique avec certificat
 
 ```mermaid
 graph LR
-    A[Requête] --> B{Certificat valide?}
-    B -->|Oui| C[Extraire certificat]
-    C --> D[Chercher utilisateurs]
-    D --> E{1 utilisateur?}
-    E -->|Oui| F[✅ Authentification]
+    A[Client avec certificat] --> B[Apache valide]
+    B --> C[Symfony: 1 utilisateur trouvé]
+    C --> D[✅ Authentification automatique]
 ```
 
-### Scénario 2 : Plusieurs utilisateurs (disambiguation)
+**Expérience utilisateur** : Navigation transparente, pas de formulaire de login.
+
+### Scénario 2 : Plusieurs comptes pour un certificat
 
 ```mermaid
 graph LR
-    A[Requête] --> B{Certificat valide?}
-    B -->|Oui| C[Extraire certificat]
-    C --> D[Chercher utilisateurs]
-    D --> E{Plusieurs?}
-    E -->|Oui| F{Credentials fournis?}
-    F -->|Non| G[❌ Redirect /login.php]
-    F -->|Oui| H[Vérifier login/password]
-    H --> I{Match?}
-    I -->|Oui| J[✅ Authentification]
-    I -->|Non| K[❌ Erreur]
+    A[Client avec certificat] --> B[Apache valide]
+    B --> C[Symfony: Plusieurs utilisateurs]
+    C --> D{Credentials fournis?}
+    D -->|Non| E[Redirect /login.php]
+    D -->|Oui| F[Vérification login/password]
+    F --> G{Match?}
+    G -->|Oui| H[✅ Authentification]
+    G -->|Non| I[❌ Erreur]
 ```
 
-### Scénario 3 : Authentification par Nonce
+**Expérience utilisateur** : Redirection vers formulaire pour choisir le compte.
+
+### Scénario 3 : Sans certificat
 
 ```mermaid
 graph LR
-    A[URL avec ?nounce=...] --> B[Vérifier nonce]
-    B --> C{Nonce valide?}
-    C -->|Oui| D[Charger user par certificat + authority]
-    D --> E[✅ Authentification]
-    C -->|Non| F[Continuer authentification normale]
+    A[Client sans certificat] --> B[Apache rejette]
+    B --> C[Erreur SSL]
 ```
 
-## Processus Complet
+**Expérience utilisateur** : Erreur de connexion au niveau du navigateur (avant Symfony).
 
-```
-1. supports()
-   ├─ Certificat valide? ────────────────┐
-   ├─ Page login GET? (skip)             │
-   └─ User déjà authentifié? (skip)      │
-                                          ▼
-2. authenticate()                    [NON] → Passe au prochain authenticator
-   ├─ Extraire certificat            [OUI] ──┐
-   ├─ Tentative 1: Nonce                     │
-   │  └─ Paramètres ?nounce/?login/?hash     │
-   │     └─ Success? → Return Passport       │
-   │                                          ▼
-   ├─ Tentative 2: Certificat seul       [Continuer]
-   │  └─ 1 user trouvé? → Return Passport   │
-   │                                         ▼
-   └─ Tentative 3: Certificat + Credentials [Continuer]
-      ├─ Credentials fournis?
-      │  ├─ NON → Exception "multiple_accounts"
-      │  └─ OUI → Vérifier login/password
-      │           └─ Success? → Return Passport
-      │                       → Exception sinon
+---
 
-3. onAuthenticationSuccess()
-   └─ POST sur /login.php? → Redirect '/'
-      Sinon → null (continue)
-
-4. onAuthenticationFailure()
-   ├─ "multiple_accounts" → Redirect /login.php
-   └─ Autre erreur → Redirect /login.php?error=...
-```
-
-## Cas d'Usage
-
-### 1. Utilisateur avec certificat unique
-- Visite n'importe quelle page avec son certificat
-- Authentification automatique (pas de formulaire)
-
-### 2. Utilisateur avec plusieurs comptes
-- Visite avec son certificat → Redirect vers `/login.php`
-- Saisit login/password dans le formulaire
-- Authentification sur le compte correspondant
-
-### 3. Lien d'invitation temporaire
-- URL : `/page?nounce=XXX&login=user&hash=YYY`
-- Le nonce est vérifié avec l'authorityId
-- Association certificat ↔ compte automatique
-
-### 4. Sans certificat
-- L'authenticator ne traite pas la requête (`supports() = false`)
-- D'autres authenticators peuvent prendre le relais
-
-## Gestion des Erreurs
+## Gestion des erreurs
 
 | Code Erreur          | Signification                          | Redirection                      |
 |----------------------|----------------------------------------|----------------------------------|
@@ -198,24 +281,29 @@ graph LR
 | `password_incorrect` | Mot de passe incorrect                 | `/login.php?error=password_...`  |
 | Aucun compte         | Certificat non enregistré              | Exception                        |
 
-## Points Techniques
+---
+
+## Points techniques
 
 ### Sécurité
-- Les mots de passe sont vérifiés via `PasswordHandler::passwordMatchesHash()`
-- Les certificats RGS 2★ sont décodés depuis Base64
 - Validation stricte : `SSL_CLIENT_VERIFY === 'SUCCESS'`
+- Vérification des mots de passe via `PasswordHandler::passwordMatchesHash()`
+- Certificats RGS 2★ décodés depuis Base64
+- Vérification CRL activée dans Apache
 
 ### Sessions
 - Pas de ré-authentification si user déjà en session (sauf POST login ou environnement test)
-- Token stocké dans `TokenStorageInterface`
+- Token stocké dans `TokenStorageInterface` de Symfony
 
 ### Logging
 - Toutes les tentatives d'authentification sont loguées
 - Cas "multiple accounts" tracés avec le nombre de comptes
 
+---
+
 ## Tests
 
-Les tests unitaires se trouvent dans `test/PHPUnit/Security/X509AuthenticatorTest.php` et couvrent :
+Les tests unitaires se trouvent dans `test/PHPUnit/Security/X509AuthenticatorTest.php` :
 
 - ✅ Supports avec/sans certificat
 - ✅ Page login (GET) non supportée
