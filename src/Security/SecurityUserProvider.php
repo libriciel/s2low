@@ -8,6 +8,9 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * @implements UserProviderInterface<SecurityUser>
+ */
 class SecurityUserProvider implements UserProviderInterface
 {
     private const USER_COLUMNS = 'id, email, login, password, role, authority_id, authority_group_id, status, certificate_hash, name, givenname';
@@ -30,6 +33,9 @@ class SecurityUserProvider implements UserProviderInterface
         return new SecurityUser($userData);
     }
 
+    /**
+     * @return array<SecurityUser>
+     */
     public function loadUsersByCertificateHash(string $certificateHash): array
     {
         $usersData = $this->userSQL->query(
@@ -40,6 +46,9 @@ class SecurityUserProvider implements UserProviderInterface
         return array_map(fn($data) => new SecurityUser($data), $usersData);
     }
 
+    /**
+     * @return array<SecurityUser>
+     */
     public function loadUsersByCertificateHashAndRgs2(string $certificateHash, string $certificateRgs2Etoiles): array
     {
         if (empty($certificateRgs2Etoiles)) {
@@ -59,6 +68,9 @@ class SecurityUserProvider implements UserProviderInterface
         return array_map(fn($data) => new SecurityUser($data), $usersData);
     }
 
+    /**
+     * @return array<SecurityUser>
+     */
     public function loadUserByCertificateAndLogin(
         string $certificateHash,
         string $certificateRgs2Etoiles,
@@ -115,6 +127,9 @@ class SecurityUserProvider implements UserProviderInterface
         return SecurityUser::class === $class || is_subclass_of($class, SecurityUser::class);
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     private function fetchUserById(int $id): ?array
     {
         $result = $this->userSQL->queryOne(
