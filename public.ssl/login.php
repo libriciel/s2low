@@ -6,6 +6,16 @@ use S2lowLegacy\Class\HTMLLayout;
 // L'authentification est gérée par Symfony Security (X509Authenticator)
 // Le formulaire POST vers cette même page, et l'authenticator intercepte le POST
 
+// Si l'utilisateur est déjà connecté, rediriger vers la page d'accueil
+global $kernel;
+if ($kernel) {
+    $authHelper = $kernel->getContainer()->get('S2low\Security\AuthenticationHelper');
+    if ($authHelper->isAuthenticated()) {
+        header('Location: /');
+        exit;
+    }
+}
+
 $doc = new HTMLLayout();
 
 $doc->setTitle(WEBSITE_TITLE);

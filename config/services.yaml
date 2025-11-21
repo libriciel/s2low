@@ -969,3 +969,8 @@ services:
     autowire: true
     arguments:
       $authBridge: '@S2low\Security\LegacyAuthenticationBridge'
+
+  # Helper pour vérifier l'authentification depuis les pages legacy
+  S2low\Security\AuthenticationHelper:
+    public: true
+    autowire: true
