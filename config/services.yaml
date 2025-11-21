@@ -933,7 +933,30 @@ services:
     public: true
     autowire: true
 
+  S2low\Security\PasswordUserProvider:
+    public: true
+    autowire: true
+
+  S2low\Security\FormLoginAuthenticator:
+    public: true
+    autowire: true
+    arguments:
+      $userProvider: '@S2low\Security\PasswordUserProvider'
+      $logger: '@logger'
+
+  S2low\Security\UserAuthenticationStrategy:
+    public: true
+    arguments:
+      $userProvider: '@S2low\Security\SecurityUserProvider'
+      $passwordUserProvider: '@S2low\Security\PasswordUserProvider'
+      $passwordHandler: '@S2lowLegacy\Class\PasswordHandler'
+      $nounceSQL: '@S2lowLegacy\Model\NounceSQL'
+
   S2low\Security\X509Authenticator:
+    public: true
+    autowire: true
+
+  S2low\Security\CustomAuthenticationEntryPoint:
     public: true
     autowire: true
 
@@ -946,3 +969,8 @@ services:
     autowire: true
     arguments:
       $authBridge: '@S2low\Security\LegacyAuthenticationBridge'
+
+  # Helper pour vérifier l'authentification depuis les pages legacy
+  S2low\Security\AuthenticationHelper:
+    public: true
+    autowire: true

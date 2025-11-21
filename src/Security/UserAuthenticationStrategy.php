@@ -2,7 +2,6 @@
 
 namespace S2low\Security;
 
-use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\PasswordHandler;
 use S2lowLegacy\Model\NounceSQL;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
@@ -11,13 +10,14 @@ class UserAuthenticationStrategy
 {
     public function __construct(
         private readonly SecurityUserProvider $userProvider,
+        private readonly PasswordUserProvider $passwordUserProvider,
         private readonly PasswordHandler $passwordHandler,
         private readonly NounceSQL $nounceSQL,
     ) {
     }
 
     public function authenticateByNonce(
-        string $certificateHash,
+        ?string $certificateHash,
         string $nonce,
         string $login,
         string $hash
@@ -26,6 +26,11 @@ class UserAuthenticationStrategy
 
         if (!$authorityId) {
             return null;
+        }
+
+        // Si pas de certificat, chercher par login + authority
+        if (empty($certificateHash)) {
+            return $this->passwordUserProvider->loadUserByLoginAndAuthority($login, $authorityId);
         }
 
         return $this->userProvider->loadUserByCertificateAndAuthority($certificateHash, $authorityId);

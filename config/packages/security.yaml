@@ -1,38 +1,41 @@
 security:
-    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
         S2low\Security\SecurityUser: 'auto'
 
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        app_user_provider:
+        certificate_user_provider:
             id: S2low\Security\SecurityUserProvider
+
+        password_user_provider:
+            id: S2low\Security\PasswordUserProvider
+
+        chain_provider:
+            chain:
+                providers: ['password_user_provider', 'certificate_user_provider']
 
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        # Firewall principal avec authentification X509
-        # L'authenticator gère lui-même quand ignorer les requêtes (GET /login.php)
         main:
             lazy: true
             stateless: false
-            provider: app_user_provider
+            provider: chain_provider
+            entry_point: S2low\Security\CustomAuthenticationEntryPoint
             custom_authenticators:
+                - S2low\Security\FormLoginAuthenticator
                 - S2low\Security\X509Authenticator
             logout:
-                path: app_logout
-                target: /
+                path: /deconnexion
+                target: /connexion
 
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
     access_control:
-        # Pas de restrictions d'accès spécifiques pour l'instant
-        # L'authenticator gère l'authentification
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/connexion, roles: PUBLIC_ACCESS }
+        - { path: ^/login\.php, roles: PUBLIC_ACCESS }
+        - { path: ^/deconnexion, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:
