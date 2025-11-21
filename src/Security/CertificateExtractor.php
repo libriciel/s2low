@@ -5,6 +5,11 @@ namespace S2low\Security;
 use S2lowLegacy\Lib\X509Certificate;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Extraction et validation des informations du certificat X.509.
+ *
+ * @see docs/AUTHENTICATION.md Documentation complète du système d'authentification
+ */
 class CertificateExtractor
 {
     public function __construct(

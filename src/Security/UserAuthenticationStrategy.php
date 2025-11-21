@@ -6,6 +6,11 @@ use S2lowLegacy\Class\PasswordHandler;
 use S2lowLegacy\Model\NounceSQL;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 
+/**
+ * Stratégies d'authentification par certificat X.509.
+ *
+ * @see docs/AUTHENTICATION.md Documentation complète du système d'authentification
+ */
 class UserAuthenticationStrategy
 {
     public function __construct(

@@ -14,6 +14,11 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
+/**
+ * Authenticator pour l'authentification par certificat X.509.
+ *
+ * @see docs/AUTHENTICATION.md Documentation complète du système d'authentification
+ */
 class X509Authenticator extends AbstractAuthenticator
 {
     private CertificateExtractor $certificateExtractor;

@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 /**
  * UserProvider pour l'authentification par login/password
  *
+ * @see docs/AUTHENTICATION.md Documentation complète du système d'authentification
  * @implements UserProviderInterface<SecurityUser>
  */
 class PasswordUserProvider implements UserProviderInterface, PasswordUpgraderInterface

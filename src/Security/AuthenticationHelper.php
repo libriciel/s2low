@@ -6,6 +6,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 /**
  * Helper pour vérifier l'authentification depuis les pages legacy
+ *
+ * @see docs/AUTHENTICATION.md Documentation complète du système d'authentification
  */
 class AuthenticationHelper
 {

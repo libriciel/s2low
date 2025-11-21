@@ -1,3 +1,6 @@
+# Configuration de l'authentification S2LOW (certificat X.509 + login/mot de passe)
+# Documentation complète : docs/AUTHENTICATION.md
+
 security:
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'

@@ -15,6 +15,11 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
+/**
+ * Authenticator pour l'authentification par login/mot de passe.
+ *
+ * @see docs/AUTHENTICATION.md Documentation complète du système d'authentification
+ */
 class FormLoginAuthenticator extends AbstractLoginFormAuthenticator
 {
     public function __construct(

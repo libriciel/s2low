@@ -4,6 +4,11 @@ namespace S2low\Security;
 
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Extraction des credentials utilisateur (login/password).
+ *
+ * @see docs/AUTHENTICATION.md Documentation complète du système d'authentification
+ */
 class CredentialsExtractor
 {
     /**

@@ -9,6 +9,8 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 
 /**
  * Entry point qui redirige vers la page de login appropriée selon le contexte
+ *
+ * @see docs/AUTHENTICATION.md Documentation complète du système d'authentification
  */
 class CustomAuthenticationEntryPoint implements AuthenticationEntryPointInterface
 {

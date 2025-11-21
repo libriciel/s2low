@@ -1,39 +1,70 @@
-# Architecture d'Authentification X.509
+# Architecture d'Authentification S2LOW
 
 ## Vue d'ensemble
 
-L'authentification s'effectue en deux étapes :
-1. **Apache** valide le certificat client X.509 et expose les informations au serveur
-2. **Symfony Security** utilise ces informations pour identifier et authentifier l'utilisateur
+S2LOW supporte **deux modes d'authentification** :
+1. **Authentification par certificat X.509** : Authentification forte via certificat client (Apache + Symfony)
+2. **Authentification par login/mot de passe** : Authentification classique via formulaire web (Symfony)
+
+Ces deux modes coexistent et sont gérés par un **chain provider** qui permet de supporter les deux méthodes simultanément
 
 ```
-┌──────────────────────────────────────────────────────────────────┐
-│                         FLUX GLOBAL                              │
-└──────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         FLUX D'AUTHENTIFICATION                         │
+└─────────────────────────────────────────────────────────────────────────┘
 
- Client HTTPS              Apache                 Symfony Security
-    │                        │                           │
-    │   Connexion TLS        │                           │
-    │  + Certificat X.509    │                           │
-    ├───────────────────────>│                           │
-    │                        │                           │
-    │                        │  Validation du certificat │
-    │                        │  (SSLVerifyClient)        │
-    │                        │                           │
-    │                        │  Variables d'environnement│
-    │                        │  SSL_CLIENT_*             │
-    │                        ├──────────────────────────>│
-    │                        │                           │
-    │                        │         Authentification  │
-    │                        │         X509Authenticator │
-    │                        │                           │
-    │     Page authentifiée  │                           │
-    │<───────────────────────┴───────────────────────────┘
+ Client                    Apache              Symfony Security
+   │                          │                       │
+   │                          │                       │
+   ├─────── Avec certificat ──┼──────────────────────>│
+   │          X.509           │  SSL_CLIENT_*         │ X509Authenticator
+   │                          │  variables            │ (certificat)
+   │                          │                       │
+   │                          │                       │
+   ├─────── Sans certificat ──┼──────────────────────>│
+   │       (ou présence       │                       │ CustomAuthenticationEntryPoint
+   │      sur /connexion)     │                       │ → Redirect /connexion
+   │                          │                       │
+   │                          │                       │ FormLoginAuthenticator
+   │      POST /connexion     │                       │ (login/password)
+   ├──────────────────────────┼──────────────────────>│
+   │    login + password      │                       │
+   │                          │                       │
+   │                          │                       │
+   │    Page authentifiée     │                       │
+   │<─────────────────────────┴───────────────────────┘
 ```
 
 ---
 
-## Étape 1 : Configuration Apache
+## Routes d'authentification
+
+| Route | Méthode | Authentification | Description |
+|-------|---------|------------------|-------------|
+| `/connexion` | GET | Publique | Affiche le formulaire de connexion par login/mot de passe |
+| `/connexion` | POST | Publique | Soumet les credentials (traité par FormLoginAuthenticator) |
+| `/login.php` | GET | Publique | Page de connexion par certificat X.509 (legacy) |
+| `/login.php` | POST | Publique | Authentification par certificat + credentials si nécessaire |
+| `/deconnexion` | GET | Authentifiée | Déconnexion de l'utilisateur |
+
+### Redirections intelligentes
+
+Le système applique des redirections automatiques pour améliorer l'UX :
+
+1. **Utilisateur déjà connecté** → Redirection vers `/`
+   - Sur `/connexion` : `SecurityController::login()` vérifie `$this->getUser()`
+   - Sur `/login.php` : `AuthenticationHelper::isAuthenticated()` vérifie le token
+
+2. **Certificat présent sur /connexion** → Redirection vers `/login.php`
+   - `CertificateExtractor::hasValidCertificate()` détecte le certificat
+   - Priorisation de l'authentification par certificat (plus sécurisée)
+
+3. **Pas de certificat et non authentifié** → Affichage du formulaire
+   - `CustomAuthenticationEntryPoint` redirige vers `/connexion`
+
+---
+
+## Étape 1 : Configuration Apache (Certificat X.509)
 
 ### Validation du certificat client (VirtualHost :8443)
 
@@ -70,48 +101,84 @@ Ces variables sont ensuite lues par Symfony.
 
 ---
 
-## Étape 2 : Symfony Security
+## Étape 2 : Symfony Security (Dual Authentication)
 
 ### Configuration du firewall (`config/packages/security.yaml`)
 
 ```yaml
 security:
+    password_hashers:
+        S2low\Security\SecurityUser: 'auto'
+
     providers:
-        app_user_provider:
+        certificate_user_provider:
             id: S2low\Security\SecurityUserProvider
+
+        password_user_provider:
+            id: S2low\Security\PasswordUserProvider
+
+        chain_provider:
+            chain:
+                providers: ['password_user_provider', 'certificate_user_provider']
 
     firewalls:
         main:
             lazy: true
             stateless: false
-            provider: app_user_provider
+            provider: chain_provider
+            entry_point: S2low\Security\CustomAuthenticationEntryPoint
             custom_authenticators:
-                - S2low\Security\X509Authenticator  # Authenticator principal
+                - S2low\Security\FormLoginAuthenticator  # Login/password
+                - S2low\Security\X509Authenticator       # Certificat X.509
             logout:
-                path: app_logout
-                target: /
+                path: /deconnexion
+                target: /connexion
+
+    access_control:
+        - { path: ^/connexion, roles: PUBLIC_ACCESS }
+        - { path: ^/login\.php, roles: PUBLIC_ACCESS }
+        - { path: ^/deconnexion, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 ```
 
-**Principe** : Symfony Security utilise un **Custom Authenticator** qui implémente `AuthenticatorInterface`. Cet authenticator analyse les variables `SSL_CLIENT_*` pour identifier l'utilisateur.
+**Principe** : Symfony Security utilise **deux Custom Authenticators** et un **chain provider** :
+- `FormLoginAuthenticator` : Gère l'authentification par login/mot de passe
+- `X509Authenticator` : Gère l'authentification par certificat X.509
+- `chain_provider` : Permet aux deux authenticators de coexister
+- `CustomAuthenticationEntryPoint` : Redirige vers `/connexion` si non authentifié
 
-### Architecture de l'authenticator
+### Architecture des authenticators
 
-L'authentification est structurée autour de **4 composants** suivant le principe de responsabilité unique :
+L'authentification est structurée autour de **deux authenticators principaux** :
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      X509Authenticator                          │
-│              (Orchestre le processus d'authentification)        │
-└───────────────┬─────────────────────────────────────────────────┘
-                │
-                ├──► CertificateExtractor
-                │    (Extraction et validation du certificat)
-                │
-                ├──► CredentialsExtractor
-                │    (Extraction des credentials login/password)
-                │
-                └──► UserAuthenticationStrategy
-                     (Stratégies d'authentification)
+┌──────────────────────────────────────────────────────────────────────┐
+│                     Symfony Security Firewall                        │
+│                         (chain_provider)                             │
+└────────────────────────┬─────────────────────────────────────────────┘
+                         │
+           ┌─────────────┴─────────────┐
+           │                           │
+           ▼                           ▼
+┌─────────────────────┐    ┌─────────────────────────┐
+│ FormLoginAuth...    │    │  X509Authenticator      │
+│ (Login/Password)    │    │  (Certificat X.509)     │
+└──────┬──────────────┘    └──────┬──────────────────┘
+       │                          │
+       │                          ├──► CertificateExtractor
+       │                          │    (Validation du certificat)
+       │                          │
+       ▼                          ├──► CredentialsExtractor
+PasswordUserProvider              │    (Extraction login/password)
+(Recherche par login)             │
+                                  └──► UserAuthenticationStrategy
+                                       (Stratégies d'authentification)
+
+                                       ├─► SecurityUserProvider
+                                       │   (Recherche par certificat)
+                                       │
+                                       └─► PasswordUserProvider
+                                           (Recherche par login)
 ```
 
 ---
@@ -162,19 +229,58 @@ L'authentification est structurée autour de **4 composants** suivant le princip
 
 ---
 
-## Composants de l'authenticator
+## Composants des authenticators
 
-### 1. X509Authenticator (`src/Security/X509Authenticator.php`)
+### 1. FormLoginAuthenticator (`src/Security/FormLoginAuthenticator.php`)
 
-**Rôle** : Orchestrateur principal implémentant `AuthenticatorInterface`.
+**Rôle** : Authentification par login/mot de passe via formulaire web.
 
 **Méthodes clés** :
-- `supports(Request)` : Détermine si la requête doit être authentifiée
+- `supports(Request)` : Vérifie que la requête est un POST sur `/connexion`
+- `authenticate(Request)` : Extrait login/password et crée un Passport
+- `onAuthenticationSuccess()` : Redirige vers `/` après succès
+- `onAuthenticationFailure()` : Redirige vers `/connexion` avec erreur en session
+
+**Fonctionnement** :
+1. Capture le POST du formulaire `/connexion`
+2. Extrait `login` et `password` depuis `$request->request`
+3. Utilise `PasswordUserProvider::loadUserByIdentifier()` pour charger l'utilisateur
+4. Symfony vérifie automatiquement le mot de passe via `PasswordCredentials`
+5. En cas de succès, stocke l'utilisateur dans le token de sécurité
+
+**Gestion des erreurs** :
+- Login incorrect → `AuthenticationException` stockée en session
+- Mot de passe incorrect → `AuthenticationException` stockée en session
+- Template affiche l'erreur via `AuthenticationUtils::getLastAuthenticationError()`
+
+### 2. PasswordUserProvider (`src/Security/PasswordUserProvider.php`)
+
+**Rôle** : User provider pour l'authentification par login/mot de passe.
+
+**Méthodes clés** :
+- `loadUserByIdentifier(string $login)` : Charge l'utilisateur par son login
+- `refreshUser(UserInterface $user)` : Recharge l'utilisateur depuis la base
+- `supportsClass(string $class)` : Vérifie la classe `SecurityUser`
+
+**Fonctionnement** :
+1. Recherche l'utilisateur dans la base via `UtilisateurSQL::getUserByLogin($login)`
+2. Crée une instance de `SecurityUser` avec les données de l'utilisateur
+3. Le mot de passe haché est récupéré et vérifié par Symfony automatiquement
+
+### 3. X509Authenticator (`src/Security/X509Authenticator.php`)
+
+**Rôle** : Orchestrateur principal pour l'authentification par certificat X.509.
+
+**Méthodes clés** :
+- `supports(Request)` : Détermine si la requête doit être authentifiée par certificat
+  - Vérifie la présence d'un certificat valide
+  - Ignore `/connexion` et `/connexion/multicompte` (réservés au FormLogin)
+  - Vérifie si l'utilisateur n'est pas déjà authentifié
 - `authenticate(Request)` : Exécute les stratégies d'authentification
 - `onAuthenticationSuccess()` : Gère les redirections après succès
 - `onAuthenticationFailure()` : Gère les erreurs et redirections
 
-### 2. CertificateExtractor (`src/Security/CertificateExtractor.php`)
+### 4. CertificateExtractor (`src/Security/CertificateExtractor.php`)
 
 **Rôle** : Extraction et validation des informations du certificat X.509.
 
@@ -195,15 +301,15 @@ L'authentification est structurée autour de **4 composants** suivant le princip
 ]
 ```
 
-### 3. CredentialsExtractor (`src/Security/CredentialsExtractor.php`)
+### 5. CredentialsExtractor (`src/Security/CredentialsExtractor.php`)
 
-**Rôle** : Extraction des credentials utilisateur (login/password).
+**Rôle** : Extraction des credentials utilisateur (login/password) pour X509Authenticator.
 
 **Sources** :
 - HTTP Basic Auth : `PHP_AUTH_USER` / `PHP_AUTH_PW`
-- POST data : Formulaire de login
+- POST data : Formulaire de login (sur `/login.php`)
 
-### 4. UserAuthenticationStrategy (`src/Security/UserAuthenticationStrategy.php`)
+### 6. UserAuthenticationStrategy (`src/Security/UserAuthenticationStrategy.php`)
 
 **Rôle** : Stratégies d'authentification avec priorité définie.
 
@@ -228,6 +334,34 @@ authenticateByCertificateAndCredentials($certificateHash, $certificateRgs2, $log
 - Vérifie le mot de passe avec `PasswordHandler::passwordMatchesHash()`
 - ✅ **Match** → Retourne l'utilisateur
 - ❌ **Erreur** → Exception (`login_incorrect` / `password_incorrect`)
+
+### 7. CustomAuthenticationEntryPoint (`src/Security/CustomAuthenticationEntryPoint.php`)
+
+**Rôle** : Point d'entrée personnalisé pour rediriger les utilisateurs non authentifiés.
+
+**Fonctionnement** :
+- Appelé automatiquement par Symfony quand un utilisateur non authentifié tente d'accéder à une ressource protégée
+- Redirige vers `/connexion` (page de login par mot de passe)
+- Permet une expérience utilisateur cohérente
+
+### 8. AuthenticationHelper (`src/Security/AuthenticationHelper.php`)
+
+**Rôle** : Helper pour vérifier l'authentification depuis les pages legacy PHP.
+
+**Méthodes** :
+- `isAuthenticated()` : Vérifie si un utilisateur est actuellement authentifié
+- `getUser()` : Récupère l'utilisateur authentifié
+
+**Usage** :
+```php
+// Dans public.ssl/login.php
+global $kernel;
+$authHelper = $kernel->getContainer()->get('S2low\Security\AuthenticationHelper');
+if ($authHelper->isAuthenticated()) {
+    header('Location: /');
+    exit;
+}
+```
 
 ---
 
@@ -260,54 +394,114 @@ graph LR
 
 **Expérience utilisateur** : Redirection vers formulaire pour choisir le compte.
 
-### Scénario 3 : Sans certificat
+### Scénario 3 : Authentification par login/mot de passe
 
 ```mermaid
 graph LR
-    A[Client sans certificat] --> B[Apache rejette]
-    B --> C[Erreur SSL]
+    A[Client sans certificat] --> B[Accès à une page protégée]
+    B --> C[CustomAuthenticationEntryPoint]
+    C --> D[Redirect /connexion]
+    D --> E[Formulaire login/password]
+    E --> F[POST /connexion]
+    F --> G[FormLoginAuthenticator]
+    G --> H{Credentials valides?}
+    H -->|Oui| I[✅ Authentification]
+    H -->|Non| J[❌ Erreur affichée]
 ```
 
-**Expérience utilisateur** : Erreur de connexion au niveau du navigateur (avant Symfony).
+**Expérience utilisateur** : Redirection automatique vers le formulaire de connexion.
+
+### Scénario 4 : Certificat présent sur /connexion
+
+```mermaid
+graph LR
+    A[Client avec certificat] --> B[Accès à /connexion]
+    B --> C[SecurityController::login détecte certificat]
+    C --> D[Redirect /login.php]
+    D --> E[X509Authenticator]
+    E --> F[✅ Authentification par certificat]
+```
+
+**Expérience utilisateur** : Redirection automatique vers l'authentification par certificat (plus sécurisée).
 
 ---
 
 ## Gestion des erreurs
 
+### Erreurs X509Authenticator (Certificat)
+
 | Code Erreur          | Signification                          | Redirection                      |
 |----------------------|----------------------------------------|----------------------------------|
 | `multiple_accounts`  | Plusieurs comptes pour ce certificat   | `/login.php` (formulaire)        |
 | `login_incorrect`    | Login inconnu pour ce certificat       | `/login.php?error=login_...`     |
-| `password_incorrect` | Mot de passe incorrect                 | `/login.php?error=password_...`  |
+| `password_incorrect` | Mot de passe incorrect (certificat)    | `/login.php?error=password_...`  |
 | Aucun compte         | Certificat non enregistré              | Exception                        |
+
+### Erreurs FormLoginAuthenticator (Login/Password)
+
+| Code Erreur            | Signification                          | Redirection                      |
+|------------------------|----------------------------------------|----------------------------------|
+| `invalid_credentials`  | Login ou mot de passe incorrect        | `/connexion` (erreur en session) |
+| `Bad credentials`      | Credentials invalides                  | `/connexion` (erreur en session) |
+
+**Affichage des erreurs** : Les erreurs sont stockées en session et récupérées via `AuthenticationUtils::getLastAuthenticationError()` dans le template Twig.
 
 ---
 
 ## Points techniques
 
 ### Sécurité
-- Validation stricte : `SSL_CLIENT_VERIFY === 'SUCCESS'`
-- Vérification des mots de passe via `PasswordHandler::passwordMatchesHash()`
-- Certificats RGS 2★ décodés depuis Base64
-- Vérification CRL activée dans Apache
+- **Certificat X.509** :
+  - Validation stricte : `SSL_CLIENT_VERIFY === 'SUCCESS'`
+  - Vérification CRL activée dans Apache
+  - Certificats RGS 2★ décodés depuis Base64
+  - Vérification des mots de passe via `PasswordHandler::passwordMatchesHash()`
+- **Login/Password** :
+  - Hachage des mots de passe avec Symfony password hasher
+  - Protection CSRF automatique dans les formulaires Symfony
+  - Stockage sécurisé des erreurs en session
 
 ### Sessions
-- Pas de ré-authentification si user déjà en session (sauf POST login ou environnement test)
 - Token stocké dans `TokenStorageInterface` de Symfony
+- Pas de ré-authentification si user déjà en session
+- X509Authenticator ignore les pages `/connexion` pour éviter les conflits
+- FormLoginAuthenticator ne supporte que les POST sur `/connexion`
 
 ### Logging
-- Toutes les tentatives d'authentification sont loguées
-- Cas "multiple accounts" tracés avec le nombre de comptes
+- Toutes les tentatives d'authentification sont loguées (success et failure)
+- X509Authenticator : Cas "multiple accounts" tracés avec le nombre de comptes
+- FormLoginAuthenticator : Login et IP loggés pour chaque tentative
+
+### Templates Twig
+- **base.html.twig** : Template de base avec Bootstrap 3
+- **layout_with_banner.html.twig** : Layout avec bandeau S2LOW
+- **security/connexion.html.twig** : Page de login par mot de passe
+  - Affichage des erreurs via `AuthenticationUtils`
+  - Formulaire POST vers `/connexion`
+  - Champs : login, password
 
 ---
 
 ## Tests
 
+### Tests X509Authenticator
+
 Les tests unitaires se trouvent dans `test/PHPUnit/Security/X509AuthenticatorTest.php` :
 
 - ✅ Supports avec/sans certificat
 - ✅ Page login (GET) non supportée
+- ✅ Exclusion des pages `/connexion` et `/connexion/multicompte`
 - ✅ Authentification avec 1 utilisateur
 - ✅ Authentification avec plusieurs utilisateurs + credentials
 - ✅ Gestion des erreurs (login/password incorrect)
 - ✅ Redirections de succès/échec
+
+### Tests FormLoginAuthenticator
+
+Les tests pour FormLoginAuthenticator sont à créer :
+
+- ⏳ Supports POST sur `/connexion`
+- ⏳ Ignore GET et autres routes
+- ⏳ Authentification avec credentials valides
+- ⏳ Gestion des erreurs (credentials invalides)
+- ⏳ Redirections après success/failure

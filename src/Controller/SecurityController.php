@@ -9,6 +9,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+/**
+ * Contrôleur gérant les routes d'authentification.
+ *
+ * @see docs/AUTHENTICATION.md Documentation complète du système d'authentification
+ */
 class SecurityController extends AbstractController
 {
     #[Route('/connexion', name: 'app_login', methods: ['GET', 'POST'])]
