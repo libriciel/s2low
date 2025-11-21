@@ -40,17 +40,18 @@ class CertificateExtractor
 
     public function hasValidCertificate(Request $request): bool
     {
-        return $this->isCertificateVerified($request) && $this->hasCertificateContent($request);
-    }
+        $cert = $request->server->get('SSL_CLIENT_CERT');
+        $verify = $request->server->get('SSL_CLIENT_VERIFY');
 
-    private function isCertificateVerified(Request $request): bool
-    {
-        return $request->server->get('SSL_CLIENT_VERIFY') === 'SUCCESS';
-    }
+        if (empty($cert)) {
+            return false;
+        }
 
-    private function hasCertificateContent(Request $request): bool
-    {
-        return $request->server->get('SSL_CLIENT_CERT') !== null;
+        if ($verify !== 'SUCCESS') {
+            return false;
+        }
+
+        return true;
     }
 
     private function extractRgs2Certificate(Request $request): string
