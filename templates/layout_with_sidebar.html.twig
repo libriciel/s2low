@@ -1,0 +1,21 @@
+{% extends 'layout_with_banner.html.twig' %}
+
+{# Layout avec bandeau + menu latéral - Pour les pages applicatives avec menu #}
+
+{% block content_row %}
+    {# Menu latéral gauche #}
+    <div id="menu-area" class="col-md-3">
+        {% block sidebar %}
+            <div class="well sidebar-nav">
+                {% block sidebar_content %}
+                    {# Contenu du menu à définir dans les templates enfants #}
+                {% endblock %}
+            </div>
+        {% endblock %}
+    </div>
+
+    {# Contenu principal #}
+    <div class="col-md-9" role="main">
+        {% block main_content %}{% endblock %}
+    </div>
+{% endblock %}
