@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{# Layout avec bandeau S2LOW - À utiliser pour toutes les pages standards #}
+
+{% block body %}
+    <div id="bandeau_s2low" class="container">
+        <a href="{{ app.request.schemeAndHttpHost }}">
+            <img src="/custom/images/bandeau_s2low.jpg" alt="S2LOW - Système de Sécurisation des échanges Locaux sur Ordinateur et sur le Web" class="img-responsive" />
+        </a>
+    </div>
+
+    {# Contenu principal avec layout Bootstrap #}
+    <div class="container">
+        <div class="row">
+            {% block content_row %}
+                <div class="col-md-12" role="main">
+                    {% block main_content %}{% endblock %}
+                </div>
+            {% endblock %}
+        </div>
+    </div>
+
+    {# Footer #}
+    {% block footer %}
+        <footer class="bs-footer">
+            <div class="container">
+                <p class="text-center text-muted">
+                    S2LOW - Système de Sécurisation des échanges Locaux sur Ordinateur et sur le Web
+                </p>
+            </div>
+        </footer>
+    {% endblock %}
+{% endblock %}

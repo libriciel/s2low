@@ -38,7 +38,18 @@ class X509Authenticator extends AbstractAuthenticator
 
     public function supports(Request $request): ?bool
     {
+        if ($this->hasAuthenticatedUser()) {
+            return false;
+        }
+
         if (!$this->certificateExtractor->hasValidCertificate($request)) {
+            return false;
+        }
+
+        // Ne pas authentifier sur les pages de login par password
+        $path = $request->getPathInfo();
+        if ($path === '/connexion' || $path === '/connexion/multicompte') {
+            $this->logger->info('X509Authenticator: skipping password login page', ['path' => $path]);
             return false;
         }
 

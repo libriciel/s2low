@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion - {{ parent() }}{% endblock %}
+
+{% block body %}
+{# Bandeau S2LOW #}
+<div id="bandeau_s2low" class="container">
+    <a href="{{ app.request.schemeAndHttpHost }}">
+        <img src="/custom/images/bandeau_s2low.jpg" alt="S2LOW" class="img-responsive" />
+    </a>
+</div>
+
+{# Contenu principal #}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2" role="main">
+            <h1>Connexion</h1>
+
+            {% if error %}
+                <div class="alert alert-danger">
+                    {% if error.messageKey == 'invalid_credentials' %}
+                        Login ou mot de passe incorrect.
+                    {% elseif error.messageKey == 'too_many_requests' %}
+                        Trop de tentatives de connexion. Veuillez réessayer dans 15 minutes.
+                    {% elseif error.messageKey starts with 'Trop de tentatives' %}
+                        {{ error.messageKey }}
+                    {% else %}
+                        Erreur d'authentification.
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <h2>Vous devez saisir votre identifiant et votre mot de passe</h2>
+
+            <form action="/connexion" method="post" name="form" class="form-horizontal">
+                <div class="form-group">
+                    <label for="login" class="col-md-4 control-label">Identifiant</label>
+                    <div class="col-md-8">
+                        <input id="login" class="form-control" type="text" name="login"
+                               value="{{ last_username }}" size="30" maxlength="60"
+                               required autofocus />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="col-md-4 control-label">Mot de passe</label>
+                    <div class="col-md-8">
+                        <input id="password" class="form-control" type="password" name="password"
+                               value="" size="30" maxlength="60" required />
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top:40px;">
+                    <div class="col-md-8 col-md-offset-4">
+                        <input type="submit" class="submit_button btn btn-primary btn-lg"
+                               value="Connexion" style="width:100%;" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{# Footer #}
+<footer class="bs-footer">
+    <div class="container">
+        <p class="text-center text-muted">
+            S2LOW - Système de Sécurisation des échanges Locaux sur Ordinateur et sur le Web
+        </p>
+    </div>
+</footer>
+{% endblock %}
