@@ -1,4 +1,5 @@
 <?php
+
 /** @var S2lowLegacy\Class\HTMLLayout $this */
 
 use S2lowLegacy\Model\MessageAdminSQL;
