@@ -11,6 +11,7 @@
 
 ### Suppression
 
+- Suppression de la prise en charge de la soumission des enveloppes ACTE #1104
 - Suppression de l'outil de signature intégré #1113
 - Suppression des jetons d'horodatage #1118
 - Suppression de `XadesSignature::sign()` et XadesSignatureProperties
