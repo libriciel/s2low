@@ -1,4 +1,5 @@
-<?php echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" ?>
+<?php
+/** @var S2lowLegacy\Class\HTMLLayout $this */ echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
     <head>
