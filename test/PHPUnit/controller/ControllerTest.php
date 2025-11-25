@@ -167,7 +167,8 @@ class ControllerTest extends S2lowIntegrationTestCase
     public function testVerifGroupAdminNotAuthorized()
     {
         $this->logAs(3);
-        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->setAuthorityGroupUserAs(2, 3);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe, 3);
 
         // Réobtenir le controller car logAs() a créé un nouveau container
         $this->controller = self::getContainer()->get(Controller::class);
@@ -208,7 +209,8 @@ class ControllerTest extends S2lowIntegrationTestCase
     public function testVerifAdminAdminGroupFailed()
     {
         $this->logAs(3);
-        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->setAuthorityGroupUserAs(2, 3);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe, 3);
 
         // Réobtenir le controller car logAs() a créé un nouveau container
         $this->controller = self::getContainer()->get(Controller::class);
@@ -241,7 +243,8 @@ class ControllerTest extends S2lowIntegrationTestCase
     public function testDisplayErrorAndExitAPI()
     {
         $this->logAs(3);
-        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->setAuthorityGroupUserAs(2, 3);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe, 3);
 
         // Réobtenir l'environnement car logAs() a créé un nouveau container
         $environnement = self::getContainer()->get(Environnement::class);

@@ -88,6 +88,94 @@ class X509AuthenticatorTest extends TestCase
         $this->assertFalse($authenticator->supports($request));
     }
 
+    public function testSupportsReturnsFalseForConnexionPage(): void
+    {
+        $certificateExtractor = $this->createMock(CertificateExtractor::class);
+        $certificateExtractor->method('hasValidCertificate')->willReturn(true);
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage->method('getToken')->willReturn(null);
+
+        $authenticator = $this->createAuthenticator(
+            certificateExtractor: $certificateExtractor,
+            tokenStorage: $tokenStorage
+        );
+
+        $request = Request::create('/connexion', 'GET');
+
+        $this->assertFalse($authenticator->supports($request));
+    }
+
+    public function testSupportsReturnsFalseForConnexionPost(): void
+    {
+        $certificateExtractor = $this->createMock(CertificateExtractor::class);
+        $certificateExtractor->method('hasValidCertificate')->willReturn(true);
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage->method('getToken')->willReturn(null);
+
+        $authenticator = $this->createAuthenticator(
+            certificateExtractor: $certificateExtractor,
+            tokenStorage: $tokenStorage
+        );
+
+        $request = Request::create('/connexion', 'POST');
+
+        $this->assertFalse($authenticator->supports($request));
+    }
+
+    public function testSupportsReturnsFalseForConnexionMulticompte(): void
+    {
+        $certificateExtractor = $this->createMock(CertificateExtractor::class);
+        $certificateExtractor->method('hasValidCertificate')->willReturn(true);
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage->method('getToken')->willReturn(null);
+
+        $authenticator = $this->createAuthenticator(
+            certificateExtractor: $certificateExtractor,
+            tokenStorage: $tokenStorage
+        );
+
+        $request = Request::create('/connexion/multicompte', 'GET');
+
+        $this->assertFalse($authenticator->supports($request));
+    }
+
+    public function testSupportsReturnsFalseWhenAlreadyAuthenticated(): void
+    {
+        $user = new SecurityUser([
+            'id' => 1,
+            'email' => 'test@test.com',
+            'login' => null,
+            'password' => null,
+            'role' => 'USER',
+            'authority_id' => 1,
+            'status' => 1,
+            'certificate_hash' => 'hash123',
+            'name' => 'Test',
+            'givenname' => 'User'
+        ]);
+
+        $certificateExtractor = $this->createMock(CertificateExtractor::class);
+        $certificateExtractor->method('hasValidCertificate')->willReturn(true);
+
+        $token = $this->createMock(TokenInterface::class);
+        $token->method('getUser')->willReturn($user);
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage->method('getToken')->willReturn($token);
+
+        $authenticator = $this->createAuthenticator(
+            certificateExtractor: $certificateExtractor,
+            tokenStorage: $tokenStorage
+        );
+
+        $request = Request::create('/test');
+
+        $this->assertFalse($authenticator->supports($request));
+    }
+
     public function testAuthenticateWithSingleUser(): void
     {
         $user = new SecurityUser([

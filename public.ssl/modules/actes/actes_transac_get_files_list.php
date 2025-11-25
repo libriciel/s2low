@@ -17,7 +17,6 @@ if (! $me->authenticate()) {
     echo "KO\nÉchec de l'authentification";
     exit_wrapper();
 }
-
 if ($me->isGroupAdminOrSuper() || ! $module->isActive() || !$me->canAccess($module->get('name'))) {
     echo "KO\nAccès refusé";
     exit_wrapper();

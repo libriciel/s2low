@@ -169,7 +169,9 @@ class S2lowIntegrationTestCase extends WebTestCase
         // Mettre à jour les factories legacy pour utiliser le container partagé
         // afin que les surcharges réalisées via self::getContainer()->set()
         // soient visibles depuis l'ObjectInstancier utilisé par le code legacy.
-        $sharedContainer = self::getContainer();
+        // IMPORTANT: Utiliser le container du client ($client->getContainer()) et non le container de test (self::getContainer())
+        // car c'est dans le container du client que l'authentification (loginUser) est stockée.
+        $sharedContainer = $client->getContainer();
         $objectInstancier = new ObjectInstancier($sharedContainer);
         LegacyObjectsManager::setObjectInstancier($objectInstancier);
         ObjectInstancierFactory::setObjectInstancier($objectInstancier);
@@ -190,9 +192,14 @@ class S2lowIntegrationTestCase extends WebTestCase
         self::getContainer()->get(SQLQuery::class)->query('UPDATE users SET authority_id = ? WHERE users.id = ?', [$authorityId, $userId]);
     }
 
-    protected function setUserWithRole(UserRole $userRole, int $userId = 13): void
+    protected function setUserWithRole(UserRole $role, int $userId = 13): void
     {
-        self::getContainer()->get(SQLQuery::class)->query('UPDATE users SET role = ? WHERE id = ?', [$userRole->value, $userId]);
+        $this->getSQLQuery()->query(
+            "UPDATE users SET role=? WHERE id=?",
+            $role->value,
+            $userId
+        );
+        $this->authenticateUserInSecurityContext($userId);
     }
 
     protected function setUserWithPermission(ModulePermission $modulePermission): void
@@ -241,13 +248,12 @@ class S2lowIntegrationTestCase extends WebTestCase
         $userProvider = $clientContainer->get(SecurityUserProvider::class);
         $user = $userProvider->loadUserByIdentifier((string) $userId);
 
-        $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
-
-        // Authentifier dans le container du client
-        $clientContainer->get('security.token_storage')->setToken($token);
+        // Authentifier le client avec la méthode standard de Symfony (gère la session)
+        $this->client->loginUser($user, 'main');
 
         // Authentifier également dans le container statique
         // pour les tests qui utilisent self::getContainer()
+        $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
         self::getContainer()->get('security.token_storage')->setToken($token);
     }
 

@@ -86,11 +86,19 @@ if (! $permission->canView($me, $owner)) {
 
 if ($mode == "file") {
     $entity = $zeFile;
+    $shouldPassEnvId = false;
 } else {
     $entity = $env;
+    $shouldPassEnvId = true;
 }
 
-if (! $entity->sendfile($envId)) {
+if ($shouldPassEnvId) {
+    $sendFileResult = $entity->sendFile($envId);
+} else {
+    $sendFileResult = $entity->sendFile();
+}
+
+if (! $sendFileResult) {
     $_SESSION["error"] = "Erreur d'envoi du fichier : " . $entity->getErrorMsg();
     header("Location: " . WEBSITE_SSL);
     exit();

@@ -76,7 +76,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
         $client = $this->client;
         $this->setUserWithRole(UserRole::SuperAdministrateur);
 
-        $crawler = $client->request('GET', 'admin/utilities/certificate_list.php');
+        $crawler = $client->request('GET', '/admin/utilities/certificate_list.php');
         static::assertMatchesRegularExpression(     //L'AC personnel ADULLACT G2 est bien présent'
             '#ac-libriciel-personnel-g2.pem#',
             $crawler->html()
@@ -92,7 +92,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
         $client = $this->client;
         $this->setUserWithRole(UserRole::SuperAdministrateur);
 
-        $crawler = $client->request('GET', 'api/info-connexion.php');
+        $crawler = $client->request('GET', '/api/info-connexion.php');
         static::assertMatchesRegularExpression(     //On a bien le mail de l'user
             '#eric\+user@with-certif.com#',
             $crawler->html()
@@ -108,7 +108,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
         $client = $this->client;
         $this->setUserWithRole(UserRole::SuperAdministrateur);
 
-        $crawler = $client->request('GET', 'api/test-connexion.php');
+        $crawler = $client->request('GET', '/api/test-connexion.php');
         static::assertMatchesRegularExpression(     //On a bien le mail de l'user
             '#OK#',
             $crawler->html()
@@ -122,7 +122,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
     public function testRGS(): void
     {
         $this->logAs(2);
-        $crawler = $this->client->request('GET', 'api/test-rgs.php');
+        $crawler = $this->client->request('GET', '/api/test-rgs.php');
         static::assertMatchesRegularExpression(     //Le certificat n'est pas RGS => KO
             '#KO#',
             $crawler->html()
@@ -139,7 +139,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
         $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
-        $crawler = $client->request('GET', 'admin/ancien_systeme_notif.php');
+        $crawler = $client->request('GET', '/admin/ancien_systeme_notif.php');
         static::assertMatchesRegularExpression(
             '#Bourg-en-Bresse#',        //On trouve bien la coll de test
             $crawler->html()
@@ -155,7 +155,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
         $client = $this->client;
         $this->setUserWithRole(UserRole::SuperAdministrateur);
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
-        $crawler = $client->request('GET', 'admin/index.php');
+        $crawler = $client->request('GET', '/admin/index.php');
         static::assertMatchesRegularExpression(
             '#Console d\'administration#',
             $crawler->html()
@@ -171,7 +171,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
         $client = $this->client;
         $this->setUserWithRole(UserRole::SuperAdministrateur);
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
-        $crawler = $client->request('GET', 'admin/pas-de-sae.php');
+        $crawler = $client->request('GET', '/admin/pas-de-sae.php');
         static::assertMatchesRegularExpression(
             '#Sur cette page, on ne présente que les collectivités qui n\'ont pas de SAE #',
             $crawler->html()
@@ -187,7 +187,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
         $client = $this->client;
         $this->setUserWithRole(UserRole::SuperAdministrateur);
         $_SERVER['QUERY_STRING'] = '';  // Autrement, ça ne fonctionne pas ...
-        $crawler = $client->request('GET', 'admin/stats.php');
+        $crawler = $client->request('GET', '/admin/stats.php');
         static::assertMatchesRegularExpression(
             '#Nombre de transactions#',
             $crawler->html()

@@ -85,7 +85,7 @@ class DownloadFileTest extends S2lowIntegrationTestCase
 
         $response = $this->client->getResponse();
         $content = explode("\n", trim($response->getContent()));
-
+var_dump($response->getContent());
         static::assertNotSame('KO', $content[0]);
         static::assertJson($content[0]);
 

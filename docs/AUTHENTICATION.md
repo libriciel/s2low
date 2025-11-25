@@ -490,18 +490,46 @@ Les tests unitaires se trouvent dans `test/PHPUnit/Security/X509AuthenticatorTes
 
 - ✅ Supports avec/sans certificat
 - ✅ Page login (GET) non supportée
-- ✅ Exclusion des pages `/connexion` et `/connexion/multicompte`
+- ✅ Exclusion des pages `/connexion` (GET et POST) - **Nouveau**
+- ✅ Exclusion de `/connexion/multicompte` - **Nouveau**
+- ✅ Vérification utilisateur déjà authentifié - **Nouveau**
 - ✅ Authentification avec 1 utilisateur
 - ✅ Authentification avec plusieurs utilisateurs + credentials
 - ✅ Gestion des erreurs (login/password incorrect)
 - ✅ Redirections de succès/échec
 
+**Total : 17 tests** (+4 nouveaux tests)
+
 ### Tests FormLoginAuthenticator
 
-Les tests pour FormLoginAuthenticator sont à créer :
+Les tests unitaires se trouvent dans `test/PHPUnit/Security/FormLoginAuthenticatorTest.php` :
 
-- ⏳ Supports POST sur `/connexion`
-- ⏳ Ignore GET et autres routes
-- ⏳ Authentification avec credentials valides
-- ⏳ Gestion des erreurs (credentials invalides)
-- ⏳ Redirections après success/failure
+- ✅ Supports POST sur `/connexion` uniquement - **Nouveau**
+- ✅ Ignore GET sur `/connexion` - **Nouveau**
+- ✅ Ignore autres routes (login.php, etc.) - **Nouveau**
+- ✅ Authentification avec credentials valides - **Nouveau**
+- ✅ Stockage du last_username en session - **Nouveau**
+- ✅ Redirection vers / après succès - **Nouveau**
+- ✅ Redirection vers /connexion après échec - **Nouveau**
+- ✅ getLoginUrl() retourne /connexion - **Nouveau**
+
+**Total : 9 tests** (fichier créé)
+
+### Tests PasswordUserProvider
+
+Les tests unitaires se trouvent dans `test/PHPUnit/Security/PasswordUserProviderTest.php` :
+
+- ✅ loadUserByIdentifier() charge l'utilisateur - **Nouveau**
+- ✅ loadUserByIdentifier() exception si non trouvé - **Nouveau**
+- ✅ refreshUser() recharge depuis la BD - **Nouveau**
+- ✅ refreshUser() exceptions (classe non supportée, user non trouvé) - **Nouveau**
+- ✅ supportsClass() pour SecurityUser - **Nouveau**
+- ✅ upgradePassword() mise à jour mot de passe - **Nouveau**
+
+**Total : 8 tests** (fichier créé)
+
+---
+
+**Tests totaux : 34 tests** (+21 nouveaux tests)
+
+Voir `.claudeMarkdown/TESTS_AUTHENTICATION_UPDATES.md` pour les détails complets.
