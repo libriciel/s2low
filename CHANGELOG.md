@@ -4,6 +4,7 @@
 
 ### Corrections
 
+- Correction permettant maintenant d'assigner une date de publication à un tampon d'acte.
 - Correction d'un script permettant la double lecture d'un mail AR Acte sans le prendre en compte une seconde fois. #1449
 - Correction d'un bug lors de l'execution du worker helios-menage menant à une exception évitable. #1445
 - Remettre l'acquittement lors d'un retour au statut Acquittement reçu #1452
