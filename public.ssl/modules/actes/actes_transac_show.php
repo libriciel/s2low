@@ -282,12 +282,12 @@ if (is_array($files)) {
                 $html .= "&nbsp;&nbsp;";
 
                 $transactionAEteAcquit = in_array(4, array_column($workflow, 'status_id'));
-                    if ($transactionAEteAcquit) {
-                        if ($file["mimetype"] == "application/pdf") {
-                            $date = date("Y-m-d");
+                if ($transactionAEteAcquit) {
+                    if ($file["mimetype"] == "application/pdf") {
+                        $date = date("Y-m-d");
 
-                            ob_start();
-                            ?>
+                        ob_start();
+                        ?>
                         <br/>
 
                         <a
@@ -307,8 +307,8 @@ if (is_array($files)) {
                                 $html .= $twig->render('telechargement_fichier_tamponne.twig');
                                 $datepicker_rendered = true;
                             }
-                        }
                     }
+                }
 
                 $html .= "</dd>";
             }
