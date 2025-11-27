@@ -4,7 +4,8 @@
 
 ### Corrections
 
-- Correction permettant maintenant d'assigner une date de publication à un tampon d'acte.
+- Prise en compte de la variable WEBMASTER qui permet maintenant au lien vers Webmaster de la page d'accueil et du footer de rediriger correctement. #1422
+- Correction permettant maintenant d'assigner une date de publication à un tampon d'acte. #1407
 - Correction d'un script permettant la double lecture d'un mail AR Acte sans le prendre en compte une seconde fois. #1449
 - Correction d'un bug lors de l'execution du worker helios-menage menant à une exception évitable. #1445
 - Remettre l'acquittement lors d'un retour au statut Acquittement reçu #1452

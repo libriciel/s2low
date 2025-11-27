@@ -61,7 +61,7 @@ if (defined("SUPPORT_URL")) {
 } elseif (defined("PHRASE_SUPPORT")) {
     $html .= PHRASE_SUPPORT; //"au gestionnaire de votre plateforme (CDG, ADM, syndicat, Adullact Projet, etc).";
 } else {
-    $html .= " au <a href=\"mailto:" . WEBMASTER . "\">webmaster</a>";
+    $html .= " au <a href=\"" . WEBMASTER . "\">webmaster</a>";
 }
 
 $html .= ".<br />\n";

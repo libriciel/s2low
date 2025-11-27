@@ -142,7 +142,7 @@ class HTMLLayout extends Layout
         $html = "        <footer class=\"bs-footer\">\n            <div class=\"container\">\n";
 
         if (defined("WEBMASTER")) {
-            $html .= "                <a href=\"mailto:" . WEBMASTER . "\" class=\"link-white\">Webmaster</a> - \n";
+            $html .= "                <a href=\"" . WEBMASTER . "\" class=\"link-white\">Webmaster</a> - \n";
         }
 
         if (defined("SUPPORT_URL")) {
