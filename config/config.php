@@ -49,7 +49,7 @@ if (!defined('WEBSITE_MAIL')) {
 }
 
 if (!defined('WEBMASTER')) {
-        define('WEBMASTER', "webmaster@s2low.docker.libriciel.fr");
+        define('WEBMASTER', "mailto:webmaster@s2low.docker.libriciel.fr");
 }
 
 // Adresse du From des emails émis

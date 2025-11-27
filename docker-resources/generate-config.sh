@@ -109,7 +109,7 @@ define("REDIS_PORT",${REDIS_PORT:-6379});
 define('ACTES_ALWAYS_CAN_VALIDATE',${ACTES_ALWAYS_CAN_VALIDATE:-false});
 
 define("USE_LEGACY_BORDEREAU_MODEL",${USE_LEGACY_BORDEREAU_MODEL:-true});
-define('WEBMASTER',"${WEBMASTER:-localhost}");
+define('WEBMASTER',"${WEBMASTER:-mailto:webmaster@s2low.docker.libriciel.fr}");
 
 define("USE_LEGACY_SECURE_MAIL_FIELDS",${USE_LEGACY_SECURE_MAIL_FIELDS:-false});
 define("MAIL_TEDETIS_FROM","${MAIL_TEDETIS_FROM:-s2low@s2low.docker.libriciel.fr}");
