@@ -160,7 +160,7 @@ services:
             SSL_PROTOCOL: ${SSL_PROTOCOL:--all -TLSv1.3 +TLSv1.2}
             SSL_INSECURE_RENEGOTIATION: ${SSL_INSECURE_RENEGOTIATION:-on}
             APACHE_LOG_LEVEL: ${APACHE_LOG_LEVEL:-info}
-
+            WEBMASTER: ${WEBMASTER:-${S2LOW_WEBSITE:-localhost}}
         volumes:
             - ${WORKSPACE_VOLUME:-app_workspace}:/data/tdt-workspace
             - ${LOG_PATH:-app_logs}:/data/log/
