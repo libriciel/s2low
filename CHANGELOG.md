@@ -10,6 +10,10 @@
 - Correction d'un bug lors de l'execution du worker helios-menage menant à une exception évitable. #1445
 - Remettre l'acquittement lors d'un retour au statut Acquittement reçu #1452
 
+### Sécurité
+
+- Suppression d'opérations fichier non nécessaire #1461
+
 ## 5.1.5 - 2025-10-27
 
 ### Corrections
