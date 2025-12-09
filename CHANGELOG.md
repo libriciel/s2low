@@ -1,6 +1,6 @@
 # Changelog
 
-## 5.1.6
+## 5.1.6 - 2025-12-09
 
 ### Corrections
 
