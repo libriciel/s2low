@@ -34,6 +34,7 @@ class CustomizableWorkerRunner implements WorkerRunner
     public function work(): bool
     {
         $start = time();
+        $workerhasRunSuccessfully = false;
 
         $this->s2lowLogger->info('Démarrage en mode supervisord');
 
@@ -58,7 +59,6 @@ class CustomizableWorkerRunner implements WorkerRunner
                 "Erreur lors de l'execution du script : " . $message,
                 [$e->getTraceAsString()]
             );
-            $workerhasRunSuccessfully = false;
         } finally {
             try {
                 $this->worker->end();

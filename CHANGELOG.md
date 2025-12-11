@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.7
+
+### Corrections
+
+- Correction permettant de supprimer certains mails inutiles pour les comptes techniques. #1465
+
 ## 5.1.6 - 2025-12-09
 
 ### Corrections
