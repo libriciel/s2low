@@ -1,5 +1,7 @@
 <?php
 
+/** @var S2lowLegacy\Class\HTMLLayout $this */
+
 use S2lowLegacy\Class\Helpers;
 
 echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" ?>
