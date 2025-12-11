@@ -83,7 +83,6 @@ class Authentification
             if (count($id_list) != 1) {
                 throw new Exception("La connexion n'a pas pu être établie");
             } // @codeCoverageIgnore
-
         } catch (NoPasswordException $e) {
             $redirect = Helpers::getLink("/login.php");
             Helpers::returnAndExit(1, $e->getMessage(), $redirect);
