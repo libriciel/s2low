@@ -3,6 +3,7 @@
 namespace S2lowLegacy\Class;
 
 use Exception;
+use S2low\Exceptions\NoPasswordException;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Model\NounceSQL;
 use S2lowLegacy\Model\UserSQL;
@@ -82,6 +83,10 @@ class Authentification
             if (count($id_list) != 1) {
                 throw new Exception("La connexion n'a pas pu être établie");
             } // @codeCoverageIgnore
+
+        } catch (NoPasswordException $e) {
+            $redirect = Helpers::getLink("/login.php");
+            Helpers::returnAndExit(1, $e->getMessage(), $redirect);
         } catch (Exception $e) {
             $redirect = Helpers::getLink("connexion-status");
             if ($e->getMessage() === "La connexion n'a pas pu être établie") {
@@ -178,6 +183,10 @@ class Authentification
         $ids = [];
 
         foreach ($possibleUsersInDB as $possibleUser) {
+            if (empty($possibleUser['password'])) {
+                throw new NoPasswordException();
+            }
+
             if (
                 $this->passwordHandler->passwordMatchesHash(
                     $connexion_info['password'],
