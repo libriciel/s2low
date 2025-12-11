@@ -2,6 +2,7 @@
 
 namespace S2low\Factory;
 
+use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3ClientInterface;
 use S2low\Infrastructure\Storage\Cloud\DisabledS3Client;
 use S2low\Infrastructure\Storage\Cloud\S3FileStorage;
@@ -19,6 +20,10 @@ class S3FileStorageFactory
         S3ClientInterface $client,
     ): CloudClientInterface {
         if ($this->cloudStorageEnabled) {
+            if ($bucket === null) {
+                throw new \InvalidArgumentException('Le bucket ne peut pas être null quand le stockage cloud est activé.');
+            }
+
             $fileStorage = new S3FileStorage(
                 $bucket,
                 $client
