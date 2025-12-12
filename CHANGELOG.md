@@ -4,7 +4,7 @@
 
 ### Corrections
 
-- Correction permettant de supprimer certains mails inutiles pour les comptes techniques. #1465
+- Correction permettant de supprimer certains mails inutiles pour les comptes techniques. #1465, #1467
 
 ## 5.1.6 - 2025-12-09
 

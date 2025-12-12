@@ -55,7 +55,7 @@ class CustomizableWorkerRunner implements WorkerRunner
             $workerhasRunSuccessfully = true;
         } catch (Throwable $e) {
             $message = $e->getMessage();
-            $this->s2lowLogger->critical(
+            $this->s2lowLogger->error(
                 "Erreur lors de l'execution du script : " . $message,
                 [$e->getTraceAsString()]
             );
