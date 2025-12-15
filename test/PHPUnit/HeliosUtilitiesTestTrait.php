@@ -36,7 +36,7 @@ trait HeliosUtilitiesTestTrait
         );
     }
 
-    protected function createTransaction($authority_id = 1, int $status = null, $date = null): int
+    protected function createTransaction($authority_id = 1, ?int $status = null, $date = null): int
     {
         $transactionId = $this->getTransactionCreationSQL($authority_id, $date);
 

@@ -31,7 +31,7 @@ class RgsCertificate
      * @throws Exception
      */
 
-    public function isRgsCertificate(string $x509_pem_certificate, string $clientCertChain = null)
+    public function isRgsCertificate(string $x509_pem_certificate, ?string $clientCertChain = null)
     {
         $tmpFolder = new TmpFolder();
         $tmp_folder = $tmpFolder->create();

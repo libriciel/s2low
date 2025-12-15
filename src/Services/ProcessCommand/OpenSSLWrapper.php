@@ -25,7 +25,7 @@ class OpenSSLWrapper
     /**
      * @throws RecoverableException
      */
-    public function verify(string $certificate_path, array $nonBlockingErrors, string $timestamp = null): void
+    public function verify(string $certificate_path, array $nonBlockingErrors, ?string $timestamp = null): void
     {
         $verifyCmd = ["openssl","verify","-CApath", $this->authorized_ca_path, $certificate_path];
 

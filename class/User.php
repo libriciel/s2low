@@ -15,7 +15,6 @@ class User extends DataObject
     public const USER = 'USER';
     public const ARCH = 'ARCH';
 
-    protected $login;
     protected $objectName = "users";
     protected $prettyName = "Utilisateur";
 
@@ -24,8 +23,8 @@ class User extends DataObject
     protected $issuer_dn;
     protected $name;
     protected $givenname;
-    protected $telephone;
     protected $role;
+    protected $telephone;
     protected $authority_group_id;
     protected $authority_id;
     protected $status;
@@ -33,10 +32,13 @@ class User extends DataObject
     protected $cert_not_before;
     protected $cert_not_after;
     protected $cert_serial;
+    protected $login;
+    protected $password;
+    protected $certificate_rgs_2_etoiles;
     protected $certificate_hash;
+
     protected $certFilePath;
     protected $certPassphrase;
-    protected $certificate_rgs_2_etoiles;
     protected $dbFields = array( "email" => array( "descr" => "Adresse électronique", "type" => "isEmail", "mandatory" => true),
                          "subject_dn" => array( "descr" => "Dn du certificat", "type" => "isString", "mandatory" => true),
                          "issuer_dn" => array( "descr" => "DN du fournisseur du certificat", "type" => "isString", "mandatory" => true),

@@ -32,7 +32,7 @@ class Authentification
         UserSQL $userSQL,
         PasswordHandler $passwordHandler,
         HttpsConnexion $httpsConnexion,
-        NounceSQL $nounceSQL = null
+        ?NounceSQL $nounceSQL = null,
     ) {
         $this->environnement = $environnement;
         $this->userSQL = $userSQL;

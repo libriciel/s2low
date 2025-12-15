@@ -23,6 +23,7 @@ class HeliosEnvoiSAETest extends S2lowTestCase
     use PastellConfigurationTestTrait;
 
     private OpenStackSwiftWrapper $openStackSwiftWrapper;
+    private HeliosEnvoiSAE $heliosEnvoiSAE;
 
     /**
      * @throws Exception
@@ -239,7 +240,7 @@ class HeliosEnvoiSAETest extends S2lowTestCase
     }
 
     private function createHeliosEnvoiSae(
-        PastellWrapperFactory $mockPastellFactory = null,
+        ?PastellWrapperFactory $mockPastellFactory = null,
         bool $fileInCloud = false,
     ): HeliosEnvoiSAE {
         $pastellWrapperFactory = $mockPastellFactory ?? $this->mockPastellFactory('dsf', "", true, true);

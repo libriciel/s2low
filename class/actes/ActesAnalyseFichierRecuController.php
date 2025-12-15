@@ -4,6 +4,7 @@ namespace S2lowLegacy\Class\actes;
 
 use Exception;
 use finfo;
+use Libriciel\LibActes\ActesXML;
 use Libriciel\LibActes\ArchiveData;
 use Libriciel\LibActes\FichierXML\MessageMetieAnomalieActe;
 use Libriciel\LibActes\FichierXML\MessageMetierARActes;
@@ -18,6 +19,7 @@ use Libriciel\LibActes\FichierXML\MessageMetierReponseClassificationSansChangeme
 use Libriciel\LibActes\FichierXML\MessageMetierRetourClassification;
 use Libriciel\LibActes\Utils\XSDValidationException;
 use Psr\Log\LoggerInterface;
+use S2low\Exceptions\ARActeAlreadyReadException;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Lib\SigTermHandler;
 use UnexpectedValueException;
@@ -109,6 +111,10 @@ class ActesAnalyseFichierRecuController
             $tmpDir = new TmpFolder();
             $this->s2lowLogger->info("Suppression du répertoire $rep_path");
             $tmpDir->delete($rep_path);
+        } catch (ARActeAlreadyReadException $e) {
+            $this->s2lowLogger->notice($e);
+            $this->s2lowLogger->notice("Déplacement du répertoire $file vers {$this->actes_response_error_path}");
+            rename($rep_path, $this->actes_response_error_path . "/" . $file);
         } catch (Exception $e) {
             $this->s2lowLogger->error("Echec du traitement de $rep_path : " . $e->getMessage());
             $this->s2lowLogger->error("Déplacement du répertoire $file vers {$this->actes_response_error_path}");
@@ -370,13 +376,26 @@ class ActesAnalyseFichierRecuController
 
     /**
      * @param MessageMetierARActes $fichierXML
+     * @throws ARActeAlreadyReadException
      * @throws Exception
      */
-    private function traitementARActe(MessageMetierARActes $fichierXML)
+    private function traitementARActe(MessageMetierARActes $fichierXML): void
     {
         $this->s2lowLogger->info("AR Actes trouvé pour l'acte : " . $fichierXML->id_actes);
 
         $transaction_id = $this->getBySirenAndNumeroInterne($fichierXML->siren, $fichierXML->numero_interne);
+
+        $acteDejaEuLeStatutAcquitte = $this->actesTransactionsSQL->acteAlreadyHadStatut($transaction_id, ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+
+        if ($acteDejaEuLeStatutAcquitte) {
+            $savedARXML = $this->actesTransactionsSQL->getStatusInfoWithFluxRetour($transaction_id, ActesStatusSQL::STATUS_ACQUITTEMENT_RECU)['flux_retour'];
+            $currentARXML = file_get_contents($fichierXML->file_path);
+
+            $acquittementDejaRecu = (md5($savedARXML) === md5($currentARXML));
+            if ($acquittementDejaRecu) {
+                throw new ARActeAlreadyReadException($transaction_id);
+            }
+        }
 
         $this->actesTransactionsSQL->setUniqueID($transaction_id, $fichierXML->id_actes);
 

@@ -51,7 +51,7 @@ class PadesValidTest extends S2lowTestCase
     }
 
     private function createPadesValidForValidation(
-        string $exceptionMessage = null
+        ?string $exceptionMessage = null,
     ): PadesValid {
         $returnString = '{"signatures":["une signature"],"signed":true}';
 

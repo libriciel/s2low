@@ -2,25 +2,25 @@
   "name": "s2low/s2low",
   "license": "AGPL-3.0-only",
   "require": {
-    "ext-SimpleXML": "^8.1",
     "ext-curl": "*",
     "ext-dom": "*",
-    "ext-fileinfo": "^8.1.0",
+    "ext-fileinfo": "*",
     "ext-ftp": "*",
     "ext-gd": "*",
     "ext-iconv": "*",
     "ext-imagick": "*",
     "ext-intl": "*",
-    "ext-json": "^8.1",
-    "ext-libxml": "^8.1",
+    "ext-json": "*",
+    "ext-libxml": "*",
     "ext-mbstring": "*",
     "ext-openssl": "*",
-    "ext-pcntl": "^8.1",
+    "ext-pcntl": "*",
     "ext-pdo": "*",
     "ext-pgsql": "*",
-    "ext-redis": "^5.3",
+    "ext-redis": "*",
+    "ext-simplexml": "*",
     "ext-ssh2": "*",
-    "ext-zip": "^1.15",
+    "ext-zip": "*",
     "ext-zlib": "*",
     "aws/aws-sdk-php": "^3.356",
     "egulias/email-validator": "^3.2",
@@ -58,6 +58,7 @@
     "mikey179/vfsstream": "^1.5",
     "phpstan/phpstan": "^2.0",
     "phpunit/phpunit": "^9.5",
+    "rector/rector": "^2.2",
     "squizlabs/php_codesniffer": "^3.9",
     "symfony/browser-kit": "^6.4",
     "symfony/debug-bundle": "^6.4",
@@ -108,5 +109,11 @@
     "classmap": [
       "test/PHPUnit"
     ]
+  },
+  "extra": {
+    "symfony": {
+      "docker": false,
+      "require": "6.4.*"
+    }
   }
 }

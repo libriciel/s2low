@@ -91,7 +91,7 @@ trait ActesUtilitiesTestTrait
         return $transaction_id;
     }
 
-    protected function updateStatus(int $transaction_id, int $status_id, ?string $message, string $date = null): void
+    protected function updateStatus(int $transaction_id, int $status_id, ?string $message, ?string $date = null): void
     {
         $this->getActesTransactionsSQL()->updateStatus($transaction_id, $status_id, $message, '', $date);
     }

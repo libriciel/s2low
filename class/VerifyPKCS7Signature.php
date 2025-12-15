@@ -42,8 +42,8 @@ class VerifyPKCS7Signature
     public function verifySignature(
         string $signature,
         array $filteredErrors = [],
-        string $file_path = null,
-        DateTime $dateTime = null
+        ?string $file_path = null,
+        ?DateTime $dateTime = null,
     ): bool {
         if (is_null($dateTime)) {
             $dateTime = new DateTime();
