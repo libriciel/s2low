@@ -106,8 +106,8 @@ class XadesSignature
         $xml_file_signed,
         $signature_node_name,
         $signature_node_id,
-        ?DateTime $verificationTime = null
-    ,): bool {
+        ?DateTime $verificationTime = null,
+    ): bool {
         $xpath = "//*[namespace-uri()='http://www.w3.org/2000/09/xmldsig#'][local-name()='Signature'][@Id='{$signature_node_id}']";
         $verificationTimeParameter = "";
 

@@ -1,6 +1,7 @@
 <?php
 
 use Monolog\Level;
+use S2low\Exceptions\ARActeAlreadyReadException;
 use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierRecuController;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
