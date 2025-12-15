@@ -610,7 +610,7 @@ if ($transStatus == 17 && $me->checkDroit("actes", "TT")) {
 $actionHtml .= "<div class=\"action\">\n";
 $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Horodatage : </label>\n<a onclick=\"window.open(this.href); return false;\" href=\"" .
     Helpers::getLink(
-        "/common/logs_view.php?module=actes&amp;severity=-1&amp;message=" . $trans->getId() . "\" title=\"Rechercher les logs relatifs à l'acte n°" . $trans->getId()  . " >Rechercher les logs relatifs à l'acte</a>\n"
+        "/common/logs_view.php?module=actes&amp;severity=-1&amp;message=" . $trans->getId() . "\" title=\"Rechercher les logs relatifs à l'acte n°" . $trans->getId()  . " \" >Rechercher les logs relatifs à l'acte</a>\n"
     );
 $actionHtml .= "</div>\n</div>\n";
 
@@ -623,9 +623,10 @@ if ($me->isSuper()) {
 
       $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_set_error.php\" onsubmit=\"return confirm('Cette transaction sera passée en erreur ')\" method=\"post\">\n");
       $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer la transaction en erreur </label>\n";
-      $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-      $actionHtml .= "<input type=\"submit\" value=\"Passer la transaction en erreur\" class=\"btn btn-warning\" />\n";
-      $actionHtml .= "</div></form>\n";
+    $actionHtml .= "<input type=\"text\" placeholder='Message' name=\"message\"  size='23' style='margin-right: 10px;' />\n";
+    $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
+    $actionHtml .= "<input type=\"submit\" value=\"Passer en erreur\" class=\"btn btn-warning\" />\n";
+    $actionHtml .= "</div></form>\n";
 
 
 
