@@ -92,7 +92,7 @@ class ActesClassificationCreation
         }
     }
 
-    public function createEnveloppe(Authority $authority, User $user = null, $force = false)
+    public function createEnveloppe(Authority $authority, ?User $user = null, $force = false)
     {
         $this->authority = $authority;
         $this->user = $user;

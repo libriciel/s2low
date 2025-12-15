@@ -14,6 +14,23 @@
 - Suppression de l'outil de signature intégré #1113
 - Suppression des jetons d'horodatage #1118
 - Suppression de `XadesSignature::sign()` et XadesSignatureProperties
+- Suppression de la possibilité d'envoyer des mails à partir de S2low via l'API et l'interface. #1116
+- Suppression de la possibilité d'enrichir le carnet d'adresse. #1116
+- Il est toujours possible de consulter les mails existants.
+
+## 5.1.6 - 2025-12-09
+
+### Corrections
+
+- Prise en compte de la variable WEBMASTER qui permet maintenant au lien vers Webmaster de la page d'accueil et du footer de rediriger correctement. #1422
+- Correction permettant maintenant d'assigner une date de publication à un tampon d'acte. #1407
+- Correction d'un script permettant la double lecture d'un mail AR Acte sans le prendre en compte une seconde fois. #1449
+- Correction d'un bug lors de l'exécution du worker helios-menage menant à une exception évitable. #1445
+- Remettre l'acquittement lors d'un retour au statut Acquittement reçu #1452
+
+### Sécurité
+
+- Suppression d'opérations fichier non nécessaire #1461
 
 ## 5.1.5 - 2025-10-27
 
@@ -44,12 +61,6 @@
 - Retire les espaces present dans le champ Helios FTP dans l'interface d'administration Helios. #1344
 - Correction de l'acces à actes_classification_fetch.php #1373
 - Corrige un probleme d'affichage lors de la suppression d'un mail #1362
-
-### Suppressions
-
-- Suppression de la possibilité d'envoyer des mails à partir de S2low via l'API et l'interface.
-- Suppression de la possibilité d'enrichir le carnet d'adresse.
-- Il est toujours possible de consulter les mails existants.
 
 ## 5.1.2 - 2025-07-23
 

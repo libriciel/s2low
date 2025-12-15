@@ -18,6 +18,8 @@ class Log extends DataObject
     protected $user_id;
     protected $visibility;
     protected $message;
+    protected $authority_id;
+    protected $authority_group_id;
 
     protected $dbFields = array( "date" => array( "descr" => "Date", "type" => "isDate", "mandatory" => true),
                          "module" => array( "descr" => "Module", "type" => "isString", "mandatory" => false),

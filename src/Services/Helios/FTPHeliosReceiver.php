@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace S2low\Services\Helios;
 
 use Exception;
-use Iterator;
 use Psr\Log\LoggerInterface;
+use S2low\Exceptions\ConnectionFailedException;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnection;
 
 /**
@@ -119,6 +119,9 @@ class FTPHeliosReceiver
         $this->heliosConnection->disconnect();
     }
 
+    /**
+     * @throws ConnectionFailedException
+     */
     public function debutTraitement(): void
     {
         $this->heliosConnection->connect();

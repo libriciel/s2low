@@ -5,6 +5,7 @@ use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 
 require_once(__DIR__ . "/../../init/init.php");
+/** @var ActesTransactionsSQL $actesTransactions */
 list($s2LowLogger,$actesStatutsSQL,$actesTransactions) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [LoggerInterface::class,ActesStatusSQL::class,ActesTransactionsSQL::class]
@@ -70,7 +71,13 @@ if (!$actesTransactions->getInfo($transaction_id)) {
 
 
 if (checkChange($transaction_id, $status_id, $actesTransactions, $actesStatuts)) {
-    $actesTransactions->updateStatus($transaction_id, $status_id, "Modification manuelle du statut");
+    $arActes = '';
+
+    if ($status_id === ActesStatusSQL::STATUS_ACQUITTEMENT_RECU) {
+        $actesTransactionsStatusInfo = $actesTransactions->getStatusInfoWithFluxRetour($transaction_id, 4);
+        $arActes = $actesTransactionsStatusInfo['flux_retour'] ?: '';
+    }
+    $actesTransactions->updateStatus($transaction_id, $status_id, 'Modification manuelle du statut', $arActes);
     $s2LowLogger->info("Modification de la transaction $transaction_id : status $status_id");
 }
 

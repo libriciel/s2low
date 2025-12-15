@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace S2low\Services\Helios\DGFiPConnection;
 
 use Exception;
-use Monolog\Logger;
 use Psr\Log\LoggerInterface;
+use S2low\Exceptions\ConnectionFailedException;
 use S2low\Services\FilesAndDirectoriesUtils\DirectoryManagerFactory;
 use SplFileInfo;
 
@@ -65,6 +65,7 @@ class DGFiPConnection
 
     /**
      * @return void
+     * @throws ConnectionFailedException
      */
     public function connect(): void
     {

@@ -153,7 +153,7 @@ class ActesPdfLegacy implements IActesPdf
      * @param array $columnsWidths
      * @param array $columnsTitles
      */
-    private function setUpTable(ExtendPdf $pdf, array $columnsWidths, array $columnsTitles = null): void
+    private function setUpTable(ExtendPdf $pdf, array $columnsWidths, ?array $columnsTitles = null): void
     {
         $pdf->SetMyWidths($columnsWidths);
         $pdf->SetMyAligns(array('C', 'C', 'C', 'C'));

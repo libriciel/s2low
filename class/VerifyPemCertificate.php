@@ -36,8 +36,11 @@ class VerifyPemCertificate
     /**
      * @throws Exception
      */
-    public function checkCertificateWithOpenSSL($certificate_path, array $filteredErrors = [], string $timestamp = null): bool
-    {
+    public function checkCertificateWithOpenSSL(
+        $certificate_path,
+        array $filteredErrors = [],
+        ?string $timestamp = null,
+    ): bool {
         $this->checkForCrlRevocation($certificate_path);
         $this->openSSLWrapper->verify($certificate_path, $filteredErrors, $timestamp);
         return true;

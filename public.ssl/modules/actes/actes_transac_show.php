@@ -280,15 +280,13 @@ if (is_array($files)) {
                 $html .= $file["posted_filename"] . "<br/><a href=\"" . Helpers::getLink("/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\"> [Télécharger le fichier original]</a>") ;
                 $html .= "&nbsp;&nbsp;";
 
+                $transactionAEteAcquit = in_array(4, array_column($workflow, 'status_id'));
+                if ($transactionAEteAcquit) {
+                    if ($file["mimetype"] == "application/pdf") {
+                        $date = date("Y-m-d");
 
-                //TODO Horrible hack....
-                foreach ($workflow as $stage) {
-                    if ($stage['status_id'] == 4) {
-                        if ($file["mimetype"] == "application/pdf") {
-                            $date = date("Y-m-d");
-
-                            ob_start();
-                            ?>
+                        ob_start();
+                        ?>
                         <br/>
 
                         <a
@@ -302,11 +300,12 @@ if (is_array($files)) {
                             <?php
                             $html .= ob_get_contents();
                             ob_end_clean();
-                            if ($file_num == 1) {
+                            $firstFichierATamponner = ! isset($datepicker_rendered);
+                            if ($firstFichierATamponner) {
                                 # On ajoute le datepicker
                                 $html .= $twig->render('telechargement_fichier_tamponne.twig');
+                                $datepicker_rendered = true;
                             }
-                        }
                     }
                 }
 

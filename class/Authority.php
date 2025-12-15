@@ -20,8 +20,8 @@ class Authority extends DataObject
     protected $email;
     protected $broadcast_email;
     protected $default_broadcast_email;
-    protected $authority_type_id;
     protected $status;
+    protected $authority_type_id;
     protected $address;
     protected $postal_code;
     protected $city;
@@ -29,6 +29,15 @@ class Authority extends DataObject
     protected $district;
     protected $telephone;
     protected $fax;
+    protected $ext_siret;
+    protected $helios_ftp_login;
+    protected $helios_ftp_password;
+    protected $helios_ftp_dest;
+    protected $email_mail_securise;
+    protected $descr_mail_securise;
+    protected $new_notification;
+    protected $sae_wsdl;
+    protected $helios_do_not_verify_nom_fic_unicity;
     protected $helios_use_passtrans;
 
     private $modulesPerms = null;

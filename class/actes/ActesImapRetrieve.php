@@ -118,14 +118,12 @@ class ActesImapRetrieve
         }
 
         foreach ($incomingMail->getAttachments() as $attachment) {
-            $attachment_path = $tmp_dir . "/" . $attachment->name;
+            $attachment_path = $tmp_dir . '/' . $attachment->name;
             $this->logger->info("Sauvegarde de $attachment_path");
 
             if (! copy($attachment->filePath, $attachment_path)) {
                 $this->logger->error("Impossible de sauvegarder le fichier $attachment_path !");
-                continue;
             }
-            $this->transcode($attachment_path);
         }
 
 
@@ -147,19 +145,5 @@ class ActesImapRetrieve
             ActesAnalyseFichierRecuWorker::class,
             basename($tmp_dir)
         );
-    }
-
-    //Je vois vraiment pas pourquoi on doit faire ça
-    //Le simulateur Java est buggé : il envoi des fichiers en UTF-8, mais le cartouche <?xml indique ISO-8859-1
-    //Peut-être que de la même manière la plateforme DGCL envoi la meme chose ?
-    private function transcode($path)
-    {
-        $out = exec("file -b --mime-encoding $path");
-        if (preg_match("#utf-8#", $out)) {
-            $this->logger->info("utf-8 -> iso-8859-1 : $path");
-            $fileout = "/tmp/" . date("YmdHis_" . mt_rand(0, mt_getrandmax()));
-            exec("iconv -f utf-8 -t iso-8859-1 $path > $fileout");
-            exec("mv $fileout $path");
-        }
     }
 }
