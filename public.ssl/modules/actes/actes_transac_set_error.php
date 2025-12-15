@@ -24,11 +24,17 @@ if (! $droit->isSuperAdmin($initData->userInfo)) {
 $recuperateur = new Recuperateur($_POST);
 
 $id = $recuperateur->get('id');
+$userMessage = $recuperateur->get('message');
+
+$message = 'Transaction passée manuellement en erreur';
+if ($userMessage !== false) {
+    $message .= ' - ' . $userMessage;
+}
 
 $actesScriptHelper->updateStatusAndLog(
     [$id],
     ActesStatusSQL::STATUS_EN_ERREUR,
-    'Transaction passée manuellement en erreur'
+    $message
 );
 
 

@@ -251,9 +251,9 @@ if ($me->isSuper()) {
 
     $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/helios/helios_transac_set_error.php") . "\" onsubmit=\"return confirm('Cette transaction sera passée en erreur ')\" method=\"post\">\n";
     $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer la transaction en erreur </label>\n";
+    $actionHtml .= "<input type=\"text\" placeholder=\"Message\" name=\"message\"  size='23' style='margin-right: 10px;'/>";
     $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $id . "\" />\n";
-    $actionHtml .= "<input type=\"submit\" value=\"Passer la transaction en erreur\" class=\"btn btn-warning\" />";
-    $actionHtml .= "&nbsp;&nbsp;Message d'erreur : <input type=\"text\" name=\"message\"  size='30' />\n";
+    $actionHtml .= "<input type=\"submit\" value=\"Passer en erreur\" class=\"btn btn-warning\" />";
     $actionHtml .= "</div></form>\n";
 
     if (in_array($currentStatusId, array(2,3,-1,7))) {
