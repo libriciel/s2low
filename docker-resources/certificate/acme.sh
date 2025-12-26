@@ -47,11 +47,18 @@ request_new_cert() {
   email="$3"
   server="$4"
   key_type="$5"
-  eab_kid="$6"
-  eab_hmac="$7"
-  domains_args="$8"
+  key_size="$6"
+  eab_kid="$7"
+  eab_hmac="$8"
+  domains_args="$9"
 
   echo "Requesting new certificate for $domain..."
+
+  key="--key-type $key_type"
+
+  if [ "$key_type" = "rsa" ]; then
+    key="$key --rsa-key-size $key_size"
+  fi
 
   # Base arguments
   args="certonly \
@@ -59,7 +66,7 @@ request_new_cert() {
     --agree-tos \
     --logs-dir $ACME_LOGS_DIR \
     --work-dir $ACME_WORK_DIR \
-    --key-type $key_type \
+    $key \
     --server $server \
     -m $email \
     $domains_args"
@@ -139,15 +146,20 @@ process_cert() {
     eval server=\$"${prefix}SERVER"
     eval email=\$"${prefix}EMAIL"
     eval domain=\$"${prefix}DOMAIN"
+    if [ -z "$domain" ]; then
+      eval domain=\$"${name}_DOMAIN"
+    fi
     eval additional_domains=\$"${prefix}ADDITIONAL_DOMAINS"
     eval renew_days=\$"${prefix}RENEW_BEFORE_DAYS"
     eval key_type=\$"${prefix}KEY_TYPE"
+    eval key_size=\$"${prefix}KEY_SIZE"
     eval eab_kid=\$"${prefix}EAB_KID"
     eval eab_hmac=\$"${prefix}EAB_HMAC_KEY"
     eval dest_path=\$"${prefix}DEST"
 
     renew_days="${renew_days:-30}"
     key_type="${key_type:-rsa}"
+    key_size="${key_size:-2048}"
     server="${server:-https://acme-staging-v02.api.letsencrypt.org/directory}"
 
     if [ -z "$domain" ]; then
@@ -169,7 +181,7 @@ process_cert() {
       if [ -f "/etc/letsencrypt/live/$domain/fullchain.pem" ]; then
         renew_existing_cert "$domain" || return
       else
-        request_new_cert "$name" "$domain" "$email" "$server" "$key_type" "$eab_kid" "$eab_hmac" "$domains_args" || return
+        request_new_cert "$name" "$domain" "$email" "$server" "$key_type" "$key_size" "$eab_kid" "$eab_hmac" "$domains_args" || return
       fi
     fi
 

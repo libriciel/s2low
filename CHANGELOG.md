@@ -2,6 +2,10 @@
 
 ## 5.1.7
 
+### Évolutions
+
+- Permettre de choisir la taille de la clé RSA lors de la création d'un certificat via ACME #1469
+
 ### Corrections
 
 - Correction permettant de supprimer certains mails inutiles pour les comptes techniques. #1465, #1467
@@ -12,10 +16,11 @@ via login/password dans le cas ou le password n'est pas paramétré. #1466
 
 ### Corrections
 
-- Prise en compte de la variable WEBMASTER qui permet maintenant au lien vers Webmaster de la page d'accueil et du footer de rediriger correctement. #1422
+- Prise en compte de la variable WEBMASTER qui permet maintenant au lien vers Webmaster de la page d'accueil et du
+footer de rediriger correctement. #1422
 - Correction permettant maintenant d'assigner une date de publication à un tampon d'acte. #1407
 - Correction d'un script permettant la double lecture d'un mail AR Acte sans le prendre en compte une seconde fois. #1449
-- Correction d'un bug lors de l'execution du worker helios-menage menant à une exception évitable. #1445
+- Correction d'un bug lors de l'exécution du worker helios-menage menant à une exception évitable. #1445
 - Remettre l'acquittement lors d'un retour au statut Acquittement reçu #1452
 
 ### Sécurité
@@ -26,8 +31,10 @@ via login/password dans le cas ou le password n'est pas paramétré. #1466
 
 ### Corrections
 
-- Correction d'une exception survenant parfois lors de la suppression d'un fichier via helios-menage car le fichier n'existait deja plus. #1403
-- Correction d'un bug survenant parfois lors de la recuperation d'un fichier dans le cloud causant une exception critique. #1384
+- Correction d'une exception survenant parfois lors de la suppression d'un fichier via helios-menage car le fichier
+n'existait deja plus. #1403
+- Correction d'un bug survenant parfois lors de la recuperation d'un fichier dans le cloud causant une exception
+critique. #1384
 - Correction d'un bug empêchant de télécharger les PES en erreur lorsqu'ils étaient trop volumineux.
 
 ## 5.1.4 - 2025-09-17
