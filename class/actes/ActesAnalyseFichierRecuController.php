@@ -391,7 +391,7 @@ class ActesAnalyseFichierRecuController
             $savedARXML = $this->actesTransactionsSQL->getStatusInfoWithFluxRetour($transaction_id, ActesStatusSQL::STATUS_ACQUITTEMENT_RECU)['flux_retour'];
             $currentARXML = file_get_contents($fichierXML->file_path);
 
-            $acquittementDejaRecu = (md5($savedARXML) === md5($currentARXML));
+            $acquittementDejaRecu = ($savedARXML === $currentARXML);
             if ($acquittementDejaRecu) {
                 throw new ARActeAlreadyReadException($transaction_id);
             }
