@@ -5,6 +5,8 @@
 ### Corrections
 
 - Correction permettant de supprimer certains mails inutiles pour les comptes techniques. #1465, #1467
+- Correction permettant d'afficher un message d'erreur plutôt qu'une erreur symfony lors d'une tentative de connexion
+via login/password dans le cas ou le password n'est pas paramétré. #1466
 
 ## 5.1.6 - 2025-12-09
 
