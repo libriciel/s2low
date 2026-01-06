@@ -590,7 +590,7 @@ class Authority extends DataObject
   */
     public static function getDepartmentsList()
     {
-        $sql = "SELECT id, code, name FROM authority_departments";
+        $sql = "SELECT id, code, name FROM authority_departments ORDER BY code";
 
         $db = DatabasePool::getInstance();
 
