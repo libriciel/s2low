@@ -8,6 +8,7 @@
 
 ### Corrections
 
+- Suppression d'appels de fonctions inutiles #1468
 - Correction d'un bug empêchant de télécharger un mailsec quand le nom de fichier n'était pas UTF-8. #1460
 - Correction permettant de supprimer certains mails inutiles pour les comptes techniques. #1465, #1467
 - Correction permettant d'afficher un message d'erreur plutôt qu'une erreur symfony lors d'une tentative de connexion
