@@ -1,6 +1,10 @@
 # Changelog
 
-## 5.1.7
+## 5.1.7 - 2026-01-12
+
+## Ajouts
+
+- Ajout de Saint-Pierre-et-Miquelon #1443
 
 ### Évolutions
 
