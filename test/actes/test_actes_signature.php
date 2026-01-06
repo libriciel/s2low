@@ -1,25 +1,21 @@
 <?php
 
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\VerifyPemCertificate;
-use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
-use S2lowLegacy\Class\VerifyPKCS7SignatureFactory;
-use S2lowLegacy\Lib\PemCertificateFactory;
 
-$file_path = "/Users/eric/Desktop/test/034-123456725-20151201-TESTS132-AU-1-1_1.pdf";
+require_once __DIR__ . '/../../init/init.php';
+$objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier();
 
-$file_manifest_path = "/Users/eric/Desktop/test/034-123456725-20151201-TESTS132-AU-1-1_0.xml";
+$signature = __DIR__ . '/../test/PHPUnit/class/fixtures/signaturesPKCS7/test_pdf.pdf.p7s';
+$file = __DIR__ . '/../test/PHPUnit/class/fixtures/signaturesPKCS7/test_pdf.pdf';
 
-$dom = simplexml_load_file($file_manifest_path);
+/** @var VerifyPKCS7Signature $verifyPKCS7Signature */
+$verifyPKCS7Signature = LegacyObjectsManager::getLegacyObjectInstancier()->get(VerifyPKCS7Signature::class);
 
-$namespaces = $dom->getDocNamespaces();
-// Récupération des éléments dans le namespace "actes"
-$actesItems = $dom->children($namespaces["actes"]);
-
-
-$signature =  $actesItems->Document->Signature . "\n";
-
-
-$verifyPKCS7Signature = VerifyPKCS7SignatureFactory::create();
-
-$verifyPKCS7Signature->verifySignature($signature, VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS);
+$verifyPKCS7Signature->verifySignature(
+    $signature,
+    VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS,
+    $file,
+    new DateTime('01-01-2025')
+);

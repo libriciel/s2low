@@ -505,7 +505,15 @@ services:
     autowire: false
 
   S2lowLegacy\Class\VerifyPKCS7Signature:
-    autowire: false
+    public: true
+    arguments:
+      $authorized_ca_path: "%app.path_to_rgs_valid_cargs%"
+      $openSSLWrapper: "@RGSOpenSSLWrapper"
+
+  RGSOpenSSLWrapper:
+      class: S2low\Services\ProcessCommand\OpenSSLWrapper
+      arguments:
+        $authorized_ca_path: "%app.path_to_rgs_valid_cargs%"
 
   S2lowLegacy\Class\VerifyPemCertificate:
     autowire: false

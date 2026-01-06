@@ -2,15 +2,8 @@
 
 declare(strict_types=1);
 
-use S2low\Services\Certificates\CRLReader;
-use S2low\Services\ProcessCommand\CheckSnInCRLFactory;
-use S2low\Services\ProcessCommand\CommandLauncher;
-use S2low\Services\ProcessCommand\OpenSSLWrapper;
+use PHPUnit\class\VerifyPKCS7SignatureFactory;
 use S2lowLegacy\Class\VerifyPemCertificate;
-use S2lowLegacy\Class\VerifyPemCertificateFactory;
-use S2lowLegacy\Class\VerifyPKCS7Signature;
-use S2lowLegacy\Class\VerifyPKCS7SignatureFactory;
-use S2lowLegacy\Lib\PemCertificateFactory;
 
 class VerifyPKCS7SignatureTest extends S2lowTestCase
 {

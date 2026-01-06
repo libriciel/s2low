@@ -6,7 +6,8 @@ use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\DataObject;
 use S2lowLegacy\Class\Helpers;
-use S2lowLegacy\Class\VerifyPKCS7SignatureFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
+use S2lowLegacy\Class\VerifyPKCS7Signature;
 use S2lowLegacy\Class\XMLHelper;
 
 class ActesTransaction extends DataObject
@@ -887,7 +888,7 @@ class ActesTransaction extends DataObject
 
                 if (isset($actesItems->Document->Signature)) {
                     try {
-                        $verifyPKCS7Signature = VerifyPKCS7SignatureFactory::create();
+                        $verifyPKCS7Signature = LegacyObjectsManager::getLegacyObjectInstancier()->get(VerifyPKCS7Signature::class);
                         $verifyPKCS7Signature->verifySignature(
                             $actesItems->Document->Signature,
                             [],
