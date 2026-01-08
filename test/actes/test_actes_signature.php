@@ -7,15 +7,19 @@ use S2lowLegacy\Class\VerifyPKCS7Signature;
 require_once __DIR__ . '/../../init/init.php';
 $objectInstancier = LegacyObjectsManager::getLegacyObjectInstancier();
 
-$signature = __DIR__ . '/../test/PHPUnit/class/fixtures/signaturesPKCS7/test_pdf.pdf.p7s';
-$file = __DIR__ . '/../test/PHPUnit/class/fixtures/signaturesPKCS7/test_pdf.pdf';
+
+$file = $argv[1];
+$signature = $argv[2];
+$date = isset($argv[3]) ? new DateTime($argv[3]) : new DateTime();
 
 /** @var VerifyPKCS7Signature $verifyPKCS7Signature */
 $verifyPKCS7Signature = LegacyObjectsManager::getLegacyObjectInstancier()->get(VerifyPKCS7Signature::class);
 
-$verifyPKCS7Signature->verifySignature(
-    $signature,
+$valid = $verifyPKCS7Signature->verifySignature(
+    file_get_contents($signature),
     VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS,
     $file,
-    new DateTime('01-01-2025')
+    $date
 );
+
+echo ($valid ? 'Valide' : 'Invalide') . PHP_EOL;
