@@ -1,6 +1,7 @@
 <?php
 
 use App\SQLite;
+use Dotenv\Dotenv;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -20,9 +21,50 @@ function initialiseDb()
     )->execute();
 }
 
-initialiseDb();
+function initialise(): array
+{
+    $res = [];
+    $res['errors'] = [];
 
-SQLite::addTransaction('helios', 123, 'ko', 's3');
+    try {
+        $dotenv = Dotenv::createImmutable(__DIR__. "/..");
+        $dotenv->load();
+    } catch (\Exception $e) {
+        echo $e->getMessage();
+    }
+
+    $env['OLD_S3_ACCESS_KEY'] = $_ENV['OLD_S3_ACCESS_KEY'];
+    $env['OLD_S3_SECRET_KEY'] = $_ENV['OLD_S3_SECRET_KEY'];
+
+    foreach ($env as $key => $value) {
+
+        if ($value === false)
+        {
+            $res['errors'][] = ['key' => $key, 'empty' => true];
+        }
+    }
+
+    foreach ($res['errors'] as $error) {
+        echo("la var d'environnement ".$error['key']." n\'est pas defini.\n");
+    }
+
+    $res['env'] = $env;
+    return $res;
+}
+
+// ------------------------ //
+
+
+$initialise = initialise();
+
+if(!empty($initialise['errors']))
+{
+
+
+    die();
+}
+
+//SQLite::addTransaction('helios', 123, 'ko', 's3');
 
 //S3::getTransaction($bucket, $path);
 //OpenStack::getTransaction($bucket, $path);
@@ -34,6 +76,8 @@ SQLite::addTransaction('helios', 123, 'ko', 's3');
 //S3::addMailSec($localPath, $cloudPath);
 
 
-$res = SQLite::getConnection()->query("select * from transactions")->fetchAll();
+//$res = SQLite::getConnection()->query("select * from transactions")->fetchAll();
+//
+//echo json_encode($res).PHP_EOL;
 
-echo json_encode($res).PHP_EOL;
+//echo getenv('OLD_S3_ACCESS_KEY');
