@@ -14,7 +14,6 @@
 /public/bundles/
 /var/
 /vendor/
-/script/migration/migration-s3/vendor/
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
@@ -26,3 +25,6 @@
 /.phpcs-cache
 /phpcs.xml
 ###< squizlabs/php_codesniffer ###
+
+/script/migration/migration-s3/vendor/
+/script/migration/migration-s3/.env
