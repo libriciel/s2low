@@ -4,50 +4,43 @@ namespace App;
 
 use Aws\Exception\AwsException;
 use Aws\S3\S3Client;
+use Aws\S3\S3ClientInterface;
 
 class OldS3
 {
-    private string $accessKey;
-    private string $secretKey;
-
-    /**
-     * @param string $accessKey
-     * @param string $secretKey
-     */
-    public function __construct(string $accessKey, string $secretKey)
+    private S3ClientInterface $client;
+    public function __construct()
     {
-        $this->accessKey = $accessKey;
-        $this->secretKey = $secretKey;
+        $this->client = new S3Client(args: [
+            'region'  => $_ENV['OLD_S3_REGION'],
+            'version' => 'latest',
+            'endpoint' => $_ENV['OLD_S3_ENDPOINT'],
+            'credentials' => [
+                'key'    => $_ENV['OLD_S3_ACCESS_KEY'],
+                'secret' => $_ENV['OLD_S3_SECRET_KEY'],
+            ],
+        ]);
     }
 
 
     function getFile(string $bucket, string $key): array
     {
-        $s3 = new S3Client([
-            'region'  => 'eu-west-3',
-            'version' => 'latest',
-            'credentials' => [
-                'key'    => $this->accessKey,
-                'secret' => $this->secretKey,
-            ],
-        ]);
-
         try {
             // 1. Test d'existence via les métadonnées (HEAD request)
-            $s3->headObject([
+            $this->client->headObject([
                 'Bucket' => $bucket,
                 'Key'    => $key,
             ]);
 
             // 2. Si on arrive ici, le fichier existe, on le télécharge
-            $result = $s3->getObject([
+            $result = $this->client->getObject([
                 'Bucket' => $bucket,
                 'Key'    => $key,
             ]);
 
             return [
                 'success' => true,
-                'data'    => $result['Body']->getContents(),
+                'path'    => $result['Body']->getContents(),
                 'info'    => "Fichier récupéré avec succès"
             ];
 
