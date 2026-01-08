@@ -1,0 +1,8 @@
+services:
+  app:
+    build: .
+    container_name: php_sqlite_composer
+    volumes:
+      - .:/var/www/html
+    tty: true
+    stdin_open: true
