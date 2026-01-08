@@ -16,9 +16,11 @@ initialiseEnv();
 $oldS3 = new OldS3();
 
 $bucket = 'sladullact-actes2007';
-$key = '';
+$key = '211927207/691BAV2007/SLO-EACT--211927207--20071130-2.tar.gz';
+$localFile = '/var/www/html/data/actes/SLO-EACT--211927207--20071130-2.tar.gz';
 
-$object = $oldS3->getFile($bucket, $key);
+$object = $oldS3->getFile($bucket, $key, $localFile);
 
-echo (PHP_EOL.$object['success']);
-echo (PHP_EOL.$object['info']);
+//$object = $oldS3->test();
+
+echo (PHP_EOL.json_encode($object).PHP_EOL);

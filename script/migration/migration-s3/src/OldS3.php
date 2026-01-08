@@ -15,6 +15,7 @@ class OldS3
             'region'  => $_ENV['OLD_S3_REGION'],
             'version' => 'latest',
             'endpoint' => $_ENV['OLD_S3_ENDPOINT'],
+//            'debug' => true,
             'credentials' => [
                 'key'    => $_ENV['OLD_S3_ACCESS_KEY'],
                 'secret' => $_ENV['OLD_S3_SECRET_KEY'],
@@ -22,8 +23,21 @@ class OldS3
         ]);
     }
 
+    function test()
+    {
+        try {
+            $this->client->listBuckets();
+        } catch (AwsException $e) {
+            return [
+                'success' => false,
+                'error' => 'api_error',
+                'info' => $e->getAwsErrorMessage()
+            ];
+        }
+    }
 
-    function getFile(string $bucket, string $key): array
+
+    function getFile(string $bucket, string $key, string $localPath): array
     {
         try {
             // 1. Test d'existence via les métadonnées (HEAD request)
@@ -36,11 +50,12 @@ class OldS3
             $result = $this->client->getObject([
                 'Bucket' => $bucket,
                 'Key'    => $key,
+                'SaveAs' => $localPath,
             ]);
 
             return [
                 'success' => true,
-                'path'    => $result['Body']->getContents(),
+                'path'    => $localPath,
                 'info'    => "Fichier récupéré avec succès"
             ];
 
