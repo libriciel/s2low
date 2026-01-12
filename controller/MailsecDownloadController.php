@@ -43,6 +43,13 @@ class MailsecDownloadController extends Controller
         $filename = $this->getRecuperateurGet()->get('filename');
         $fn_download = $this->getRecuperateurGet()->get('root');
 
+        if (!mb_check_encoding($filename, 'UTF-8')) {
+            $filename = mb_convert_encoding($filename, 'UTF-8', 'ISO-8859-1');
+        }
+        if (!mb_check_encoding($fn_download, 'UTF-8')) {
+            $fn_download = mb_convert_encoding($fn_download, 'UTF-8', 'ISO-8859-1');
+        }
+
         $mailTransactionSQL = $this->getObjectInstancier()->get(MailTransactionSQL::class);
         $mail_id = $mailTransactionSQL->getIdFromFnDownload($fn_download);
 

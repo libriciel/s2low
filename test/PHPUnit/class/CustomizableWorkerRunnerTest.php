@@ -215,7 +215,7 @@ class CustomizableWorkerRunnerTest extends TestCase
         $this->workerRunner->setMinExecutionTimeInSeconds(1);
         static::assertFalse($this->workerRunner->work());
         static::assertTrue(
-            $this->testHandler->hasCriticalThatContains("Erreur lors de l'execution du script : Un message informatif")
+            $this->testHandler->hasErrorThatContains("Erreur lors de l'execution du script : Un message informatif")
         );
         static::assertTrue(
             $this->testHandler->hasInfoThatMatches('/Arret du script/')

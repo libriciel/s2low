@@ -150,6 +150,54 @@ class MailsecDownloadControllerTest extends S2lowTestCase
     /**
      * @throws RedirectException
      * @throws UnrecoverableException
+     * @throws Exception
+     */
+    public function testDownloadWithLatin1Filename()
+    {
+        $mail_transaction_id = $this->createMailTransaction();
+        $this->addFile($mail_transaction_id, 'fooé.txt');
+
+        $tmpFolder = new TmpFolder();
+        $mail_files_upload_root = $tmpFolder->create();
+        $mail_files_without_transac_dir = $tmpFolder->create();
+
+        mkdir($mail_files_upload_root . "/" . $this->fn_download_payload);
+        copy(
+            __DIR__ . "/fixtures/mailsec/mail.zip",
+            $this->getArchivePath($mail_files_upload_root)
+        );
+
+        $mailsecDownloadController = $this->getMailSecController($mail_files_upload_root . "/");
+        $mailIncludedFilesCloudStorable = new MailIncludedFilesCloudStorable(
+            self::getContainer()->get(MailTransactionSQL::class),
+            $mail_files_upload_root,
+            $mail_files_without_transac_dir
+        );
+        self::getContainer()->set(MailIncludedFilesCloudStorable::class, $mailIncludedFilesCloudStorable);
+
+        // Simulate Latin-1 input
+        $filenameLatin1 = mb_convert_encoding('fooé.txt', 'ISO-8859-1', 'UTF-8');
+        self::getContainer()->get(Environnement::class)->get()->set('filename', $filenameLatin1);
+        self::getContainer()->get(Environnement::class)->get()->set('root', $this->fn_download_payload);
+
+        ob_start();
+        try {
+            $mailsecDownloadController->downloadAction();
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+        $contents = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertStringContainsString(
+            "Ceci est un test avec un é",
+            $contents
+        );
+    }
+
+    /**
+     * @throws RedirectException
+     * @throws UnrecoverableException
      */
     public function testDownloadWhenFileDoesNotExist()
     {
