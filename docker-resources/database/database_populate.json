@@ -861,6 +861,11 @@
             "id": "203",
             "code": "988",
             "name": "Haut commissariat de Nouvelle-Calédonie"
+        },
+        {
+            "id": "204",
+            "code": "975",
+            "name": "Saint-Pierre-et-Miquelon"
         }
     ],
     "authority_districts": [
@@ -2957,6 +2962,12 @@
             "authority_department_id": "203",
             "code": "4",
             "name": "Iles Loyauté"
+        },
+        {
+            "id": "1042",
+            "authority_department_id": "204",
+            "code": "1",
+            "name": "Saint-Pierre-et-Miquelon"
         }
     ],
     "helios_status": [

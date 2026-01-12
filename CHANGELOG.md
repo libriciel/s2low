@@ -18,11 +18,30 @@
 - Suppression de la possibilité d'enrichir le carnet d'adresse. #1116
 - Il est toujours possible de consulter les mails existants.
 
+## 5.1.7 - 2026-01-12
+
+## Ajouts
+
+- Ajout de Saint-Pierre-et-Miquelon #1443
+
+### Évolutions
+
+- Permettre de choisir la taille de la clé RSA lors de la création d'un certificat via ACME #1469
+
+### Corrections
+
+- Suppression d'appels de fonctions inutiles #1468
+- Correction d'un bug empêchant de télécharger un mailsec quand le nom de fichier n'était pas UTF-8. #1460
+- Correction permettant de supprimer certains mails inutiles pour les comptes techniques. #1465, #1467
+- Correction permettant d'afficher un message d'erreur plutôt qu'une erreur symfony lors d'une tentative de connexion
+via login/password dans le cas ou le password n'est pas paramétré. #1466
+
 ## 5.1.6 - 2025-12-09
 
 ### Corrections
 
-- Prise en compte de la variable WEBMASTER qui permet maintenant au lien vers Webmaster de la page d'accueil et du footer de rediriger correctement. #1422
+- Prise en compte de la variable WEBMASTER qui permet maintenant au lien vers Webmaster de la page d'accueil et du
+footer de rediriger correctement. #1422
 - Correction permettant maintenant d'assigner une date de publication à un tampon d'acte. #1407
 - Correction d'un script permettant la double lecture d'un mail AR Acte sans le prendre en compte une seconde fois. #1449
 - Correction d'un bug lors de l'exécution du worker helios-menage menant à une exception évitable. #1445
@@ -36,8 +55,10 @@
 
 ### Corrections
 
-- Correction d'une exception survenant parfois lors de la suppression d'un fichier via helios-menage car le fichier n'existait deja plus. #1403
-- Correction d'un bug survenant parfois lors de la recuperation d'un fichier dans le cloud causant une exception critique. #1384
+- Correction d'une exception survenant parfois lors de la suppression d'un fichier via helios-menage car le fichier
+n'existait deja plus. #1403
+- Correction d'un bug survenant parfois lors de la recuperation d'un fichier dans le cloud causant une exception
+critique. #1384
 - Correction d'un bug empêchant de télécharger les PES en erreur lorsqu'ils étaient trop volumineux.
 
 ## 5.1.4 - 2025-09-17
