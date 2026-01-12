@@ -167,7 +167,7 @@ class MailsecDownloadControllerTest extends S2lowTestCase
             $this->getArchivePath($mail_files_upload_root)
         );
 
-        $mailsecDownloadController = $this->getMailSecController($mail_files_upload_root . "/" );
+        $mailsecDownloadController = $this->getMailSecController($mail_files_upload_root . "/");
         $mailIncludedFilesCloudStorable = new MailIncludedFilesCloudStorable(
             self::getContainer()->get(MailTransactionSQL::class),
             $mail_files_upload_root,
