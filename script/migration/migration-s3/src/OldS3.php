@@ -58,7 +58,6 @@ class OldS3
                 'path'    => $localPath,
                 'info'    => "Fichier récupéré avec succès"
             ];
-
         } catch (AwsException $e) {
             // Le code 404 signifie que le fichier n'existe pas
             if ($e->getStatusCode() === 404) {

@@ -50,6 +50,7 @@ apt-get install -y  --no-install-recommends \
     php-pdo \
     php-intl \
     php-ssh2 \
+    php-sqlite3 \
     file
     #\
     #python-certbot-apache TODO : non dispo, doit-on supprimer ??
@@ -72,4 +73,3 @@ php composer-setup.php --install-dir=/usr/local/bin
 mv /usr/local/bin/composer.phar /usr/local/bin/composer
 
 chmod u+s /usr/sbin/cron
-
