@@ -1,26 +1,67 @@
 <?php
 
-use App\OldS3;
-use App\SQLite;
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use App\MigrationOrchestrator;
+use App\NewS3;
+use App\SourceStorage;
+use App\StateTrackerRepository;
 use Dotenv\Dotenv;
 
-require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/init_functions.php';
+// Initialize Environment
+$dotenv = Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->load();
 
+// Parse CLI Args
+$shortopts = "t:d"; // -t type, -d dry-run
+$longopts  = [
+    "type:",
+    "dry-run",
+    "check"
+];
+$options = getopt($shortopts, $longopts);
 
-// ------------------------ //
+$type = $options['type'] ?? $options['t'] ?? null;
+$isDryRun = isset($options['dry-run']) || isset($options['d']);
 
-initialiseDb();
-initialiseEnv();
+if (!$type && !array_key_exists('check', $options)) {
+    echo "Usage: php script.php --type=<actes|helios|helios_acquit|mail> [--dry-run] [--check]" . PHP_EOL;
+    exit(1);
+}
 
-$oldS3 = new OldS3();
+// Initialize Components
+$source = new SourceStorage($_ENV);
+$newS3 = new NewS3(
+    $_ENV['NEW_S3_ENDPOINT'],
+    $_ENV['NEW_S3_REGION'],
+    $_ENV['NEW_S3_ACCESS_KEY'],
+    $_ENV['NEW_S3_SECRET_KEY']
+);
 
-$bucket = 'sladullact-actes2007';
-$key = '211927207/691BAV2007/SLO-EACT--211927207--20071130-2.tar.gz';
-$localFile = '/var/www/html/data/actes/SLO-EACT--211927207--20071130-2.tar.gz';
+$stateTracker = new StateTrackerRepository();
 
-$object = $oldS3->getFile($bucket, $key, $localFile);
+$orchestrator = new MigrationOrchestrator($source, $newS3, $stateTracker, $isDryRun);
 
-//$object = $oldS3->test();
+if (array_key_exists('check', $options)) {
+    $orchestrator->checkGlobalConnection();
+    exit(0);
+}
 
-echo (PHP_EOL.json_encode($object).PHP_EOL);
+// Run Selected Flow
+switch ($type) {
+    case 'actes':
+        $orchestrator->runActes();
+        break;
+    case 'helios':
+        $orchestrator->runHelios();
+        break;
+    case 'helios_acquit':
+        $orchestrator->runHeliosAcquit();
+        break;
+    case 'mail':
+        $orchestrator->runMail();
+        break;
+    default:
+        echo "Unknown type: $type" . PHP_EOL;
+        exit(1);
+}

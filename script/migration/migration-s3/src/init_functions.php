@@ -35,19 +35,16 @@ function initialiseEnv(): array
     $env['OLD_S3_SECRET_KEY'] = $_ENV['OLD_S3_SECRET_KEY'] ?? false;
 
     foreach ($env as $key => $value) {
-
-        if ($value === false)
-        {
+        if ($value === false) {
             $res['errors'][] = ['key' => $key, 'empty' => true];
         }
     }
 
     foreach ($res['errors'] as $error) {
-        echo("la var d'environnement ".$error['key']." n\'est pas defini.\n");
+        echo("la var d'environnement " . $error['key'] . " n\'est pas defini.\n");
     }
 
-    if(!empty($res['errors']))
-    {
+    if (!empty($res['errors'])) {
         die();
     }
 

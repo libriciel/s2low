@@ -4,57 +4,76 @@ namespace App;
 
 use Aws\Exception\AwsException;
 use Aws\S3\S3Client;
-use Aws\S3\S3ClientInterface;
 
 class NewS3
 {
-    private S3ClientInterface $client;
+    private S3Client $client;
 
-    /**
-     * @param string $accessKey
-     * @param string $secretKey
-     */
-    public function __construct(string $accessKey, string $secretKey)
+    public function __construct(string $endpoint, string $region, string $accessKey, string $secretKey, array $options = [])
     {
-        $this->client = new S3Client([
-            'region'  => 'eu-west-3',
+        $config = [
+            'region'  => $region,
             'version' => 'latest',
+            'endpoint' => $endpoint,
+            'use_path_style_endpoint' => true,
             'credentials' => [
                 'key'    => $accessKey,
                 'secret' => $secretKey,
             ],
-        ]);
+        ];
+
+        if (isset($options['handler'])) {
+            $config['handler'] = $options['handler'];
+        }
+
+        $this->client = new S3Client($config);
     }
 
-    public function uploadToNewS3($bucket, $localPath, $key)
+    public function getBucket(string $type, string $filename): string
     {
-        $body = $this->getBody($localPath);
+        return 'test-bucket';
+    }
+
+    public function upload(string $key, string $sourcePath, string $type): bool
+    {
+        $bucket = $this->getBucket($type, $key);
         try {
-            $result = $this->client->putObject([
-                'Bucket'      => $bucket,
-                'Key'         => $key,
-                'Body'        => $body,
-                // Optionnel : définit le type de fichier (ex: text/plain, application/json)
-                'ContentType' => 'text/plain',
+            $this->client->putObject([
+                'Bucket' => $bucket,
+                'Key'    => $key,
+                'SourceFile' => $sourcePath,
             ]);
-
-            return [
-                'success' => true,
-                'url'     => $result['ObjectURL'],
-                'info'    => "Upload réussi"
-            ];
-
+            return true;
         } catch (AwsException $e) {
-            return [
-                'success' => false,
-                'error'   => $e->getAwsErrorCode(),
-                'info'    => $e->getAwsErrorMessage()
-            ];
+            echo "Error uploading to NewS3: " . $e->getMessage() . PHP_EOL;
+            return false;
         }
     }
 
-    private function getBody($localPath)
+    public function exists(string $key, string $type): bool
     {
+        $bucket = $this->getBucket($type, $key);
+        try {
+            $this->client->headObject([
+               'Bucket' => $bucket,
+               'Key'    => $key,
+            ]);
+            return true;
+        } catch (AwsException $e) {
+            return false;
+        }
+    }
 
+    public function checkConnection(): bool
+    {
+        try {
+            // Since bucket is dynamic, we check if we can list buckets to verify auth/connectivity
+            $this->client->listBuckets();
+             echo "NewS3 Connection OK (ListBuckets successful)." . PHP_EOL;
+             return true;
+        } catch (\Exception $e) {
+            echo "NewS3 Connection Failed: " . $e->getMessage() . PHP_EOL;
+            return false;
+        }
     }
 }
