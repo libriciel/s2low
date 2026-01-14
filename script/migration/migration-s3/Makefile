@@ -4,6 +4,9 @@ build:
 start:
 	docker compose up -d
 
+install:
+	docker exec -it php_sqlite_composer composer install
+
 stop:
 	docker compose down
 
