@@ -160,7 +160,7 @@ class WorkerRunnerBuilderTest extends S2lowTestCase
         $this->assertTrue(
             $this->testHandler->hasRecord(
                 'Erreur lors de l\'execution du script : foo',
-                Level::Critical
+                Level::Error
             )
         );
     }
