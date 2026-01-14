@@ -20,7 +20,7 @@ class CheckSnInCRLCommandOutputTranslator implements ICommandOutputTranslator
     {
         try {
             $crl = $this->crlReader->read($process->getOutput());
-            if ($crl->isRevoked($this->serialNumber, $this->dateTime)) {
+            if ($crl->revokes($this->serialNumber, $this->dateTime)) {
                 return new AnalysedOutput('', ['Certificat révoqué']);
             }
             return new AnalysedOutput('');

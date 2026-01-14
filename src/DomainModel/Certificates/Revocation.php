@@ -12,7 +12,7 @@ class Revocation
     ) {
     }
 
-    public function revokes(string $hash, DateTime $time): bool
+    public function appliesTo(string $hash, DateTime $time): bool
     {
         if ($hash !== $this->hash) {
             return false;

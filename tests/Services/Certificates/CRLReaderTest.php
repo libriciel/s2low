@@ -26,10 +26,10 @@ class CRLReaderTest extends TestCase
     {
         $crl = (new CRLReader())->read($this->readCRL());
         static::assertFalse(
-            $crl->isRevoked('7E7D2D8DFD990C6A', new DateTime('2022-06-20 16:32:17 GMT'))
+            $crl->revokes('7E7D2D8DFD990C6A', new DateTime('2022-06-20 16:32:17 GMT'))
         );
         static::assertTrue(
-            $crl->isRevoked('7E7D2D8DFD990C6A', new DateTime('2022-06-20 16:32:19 GMT'))
+            $crl->revokes('7E7D2D8DFD990C6A', new DateTime('2022-06-20 16:32:19 GMT'))
         );
     }
 

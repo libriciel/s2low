@@ -16,10 +16,10 @@ class CRL
         $this->revocationList = $revocations;
     }
 
-    public function isRevoked(string $hash, DateTime $time): bool
+    public function revokes(string $hash, DateTime $time): bool
     {
         foreach ($this->revocationList as $revocation) {
-            if ($revocation->revokes($hash, $time)) {
+            if ($revocation->appliesTo($hash, $time)) {
                 return true;
             }
         }
