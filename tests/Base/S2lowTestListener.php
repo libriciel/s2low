@@ -53,14 +53,14 @@ class S2lowTestListener implements \PHPUnit\Framework\TestListener
 
     public function startTest(\PHPUnit\Framework\Test $test): void
     {
-        new Kernel('test', false);
-        $sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
-        $sqlQuery->query("SELECT SETVAL('users_id_seq', (SELECT MAX(id)+1 FROM users))");
-        $sqlQuery->query("SELECT SETVAL('authority_siret_id_seq', (SELECT MAX(id)+1 FROM authority_siret))");
-        $sqlQuery->query("SELECT SETVAL('nounce_id_seq', (SELECT MAX(id)+1 FROM nounce))");
-        $sqlQuery->query("SELECT SETVAL('authorities_id_seq', (SELECT MAX(id)+1 FROM authorities))");
-        $sqlQuery->query("SELECT SETVAL('helios_transactions_id_seq', (SELECT MAX(id)+1 FROM helios_transactions))");
-        $sqlQuery->query("SELECT SETVAL('authority_groups_id_seq', (SELECT MAX(id)+1 FROM authority_groups))");
+//        new Kernel('test', false);
+//        $sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+//        $sqlQuery->query("SELECT SETVAL('users_id_seq', (SELECT MAX(id)+1 FROM users))");
+//        $sqlQuery->query("SELECT SETVAL('authority_siret_id_seq', (SELECT MAX(id)+1 FROM authority_siret))");
+//        $sqlQuery->query("SELECT SETVAL('nounce_id_seq', (SELECT MAX(id)+1 FROM nounce))");
+//        $sqlQuery->query("SELECT SETVAL('authorities_id_seq', (SELECT MAX(id)+1 FROM authorities))");
+//        $sqlQuery->query("SELECT SETVAL('helios_transactions_id_seq', (SELECT MAX(id)+1 FROM helios_transactions))");
+//        $sqlQuery->query("SELECT SETVAL('authority_groups_id_seq', (SELECT MAX(id)+1 FROM authority_groups))");
     }
 
     public function endTest(\PHPUnit\Framework\Test $test, float $time): void

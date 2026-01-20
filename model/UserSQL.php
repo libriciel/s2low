@@ -12,10 +12,6 @@ class UserSQL extends SQL
     public const IDENT_METHOD_NONE = 0;
     public const IDENT_METHOD_CERT_ONLY = 1;
     public const IDENT_METHOD_LOGIN = 2 ;
-
-    /** @deprecated 4.0.3 */
-    public const IDENT_METHOD_RGS_2_ETOILES = 3;
-
     public const STATUS_DESACTIVE = 0;
     public const STATUS_ACTIVE = 1;
 
@@ -89,9 +85,6 @@ class UserSQL extends SQL
         if (!$info) {
             return self::IDENT_METHOD_NONE;
         }
-        if ($info['certificate_rgs_2_etoiles']) {
-            return self::IDENT_METHOD_RGS_2_ETOILES;
-        }
 
         $user_id_list = $this->getIdListFromCertificateInfo($info['certificate_hash']);
         if (count($user_id_list) == 1 && ! $info['login']) {
@@ -117,34 +110,13 @@ class UserSQL extends SQL
         return $libelle[$ident_method_id];
     }
 
-    public function saveCertificateRGS2Etoiles($user_id, $pem_certificate_content)
+    public function getIdsAndPasswordsFromConnexionInfo($certificate_hash, $login)
     {
-        $sql = "UPDATE users SET certificate_rgs_2_etoiles=? WHERE id=?";
-        $this->query($sql, $pem_certificate_content, $user_id);
-    }
-
-
-    public function deleteCertificateRGS2Etoiles($user_id)
-    {
-        $this->saveCertificateRGS2Etoiles($user_id, "");
-    }
-
-    //Hack affreux pour prévenir les NULL introduit par le DataObject !
-    public function updateCertificatRGS2EtoilesIfNull($user_id)
-    {
-        $sql = "SELECT * FROM users WHERE id=? AND certificate_rgs_2_etoiles IS NULL";
-        if ($this->queryOne($sql, $user_id)) {
-            $this->saveCertificateRGS2Etoiles($user_id, '');
-        }
-    }
-
-    public function getIdsAndPasswordsFromConnexionInfo($certificate_hash, $certificate_rgs_2_etoile, $login)
-    {
-        $sql = "SELECT id,password FROM users " .
+        $sql = "SELECT id, password FROM users " .
             " WHERE certificate_hash=? " .
-                " AND certificate_rgs_2_etoiles = ?  AND login=?  ORDER BY id ";
+                " AND login=? ORDER BY id";
 
-        $data = array($certificate_hash, $certificate_rgs_2_etoile,$login);
+        $data = array($certificate_hash, $login);
 
         return $this->query($sql, $data);
     }
@@ -156,24 +128,15 @@ class UserSQL extends SQL
         $this->query($sql, $data);
     }
 
-    public function getIdsFromConnexionInfo(string $certificate_hash, string $certificate_rgs_2_etoile): array
+    public function getIdsFromConnexionInfo(string $certificate_hash): array
     {
         $sql = "SELECT id FROM users " .
             " WHERE certificate_hash=? " .
-            " AND certificate_rgs_2_etoiles = ?  ORDER BY id ";
+            " ORDER BY id ";
 
-        $data = array($certificate_hash, $certificate_rgs_2_etoile);
+        $data = array($certificate_hash);
 
         return $this->queryOneCol($sql, $data);
-    }
-
-    public function getListIdFromConnexion($certificate_hash, $certificate_rgs_2_etoile)
-    {
-        $sql = "SELECT id FROM users " .
-            " WHERE certificate_hash = ? " .
-            " AND certificate_rgs_2_etoiles = ? " .
-            " ORDER BY id ";
-        return $this->queryOneCol($sql, $certificate_hash, $certificate_rgs_2_etoile);
     }
 
     public function getGroupeName($user_id)
@@ -182,13 +145,9 @@ class UserSQL extends SQL
         return $this->queryOne($sql, $user_id);
     }
 
-    public function hasDoublon($user_id, $certificat_connexion_info, $login, $certificate_rgs_2_etoiles_clean_content)
+    public function hasDoublon($user_id, $certificat_connexion_info, $login)
     {
-
-        if ($certificate_rgs_2_etoiles_clean_content) {
-            $sql = "SELECT id FROM users WHERE certificate_hash=? AND certificate_rgs_2_etoiles=?";
-            $result = $this->queryOneCol($sql, $certificat_connexion_info['certificate_hash'], $certificate_rgs_2_etoiles_clean_content);
-        } elseif ($login) {
+        if ($login) {
             $sql = "SELECT id FROM users WHERE certificate_hash=? AND login=?";
             $result = $this->queryOneCol($sql, $certificat_connexion_info['certificate_hash'], $login);
         } else {

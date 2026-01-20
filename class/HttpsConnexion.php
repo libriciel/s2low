@@ -61,7 +61,6 @@ class HttpsConnexion
                 'SSL_CLIENT_S_DN' => 'subject_dn',
                 'SSL_CLIENT_I_DN' => 'issuer_dn',
                 'SSL_CLIENT_CERT' => 'ssl_client_cert',
-                'HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION' => 'certificate_rgs_2_etoiles',
                 'TESTING_CERTIFICATE_HASH' => 'certificate_hash'],
             "server"
         );
@@ -78,9 +77,6 @@ class HttpsConnexion
             $result['issuer_dn'] = $info['issuer_name'];
             $result['subject_dn'] = $info['subject_name'];
             $result['certificate_hash'] = $info['certificate_hash'];
-        }
-        if ($result['certificate_rgs_2_etoiles']) {
-            $result['certificate_rgs_2_etoiles'] = $this->der2pem(base64_decode($result['certificate_rgs_2_etoiles']));
         }
         return $result;
     }

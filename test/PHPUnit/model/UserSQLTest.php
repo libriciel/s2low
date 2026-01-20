@@ -55,11 +55,6 @@ class UserSQLTest extends S2lowTestCase
         $this->assertEquals(UserSQL::IDENT_METHOD_NONE, $this->userSQL->getIdentificationMethod(-1));
     }
 
-    public function testGetIdentificationMethodeRGS()
-    {
-        $this->assertEquals(UserSQL::IDENT_METHOD_RGS_2_ETOILES, $this->userSQL->getIdentificationMethod(3));
-    }
-
     public function testGetIdentificationMethodeLogin()
     {
         $this->assertEquals(UserSQL::IDENT_METHOD_LOGIN, $this->userSQL->getIdentificationMethod(4));
@@ -73,37 +68,12 @@ class UserSQLTest extends S2lowTestCase
         );
     }
 
-    public function testSaveCertificateRGS2Etoile()
-    {
-        $this->userSQL->saveCertificateRGS2Etoiles(13, "pem_content");
-        $info = $this->userSQL->getInfo(13);
-        $this->assertEquals("pem_content", $info['certificate_rgs_2_etoiles']);
-        $this->assertEquals(1, $info['nb_user_with_my_certificate']);
-    }
-
-    public function testDeleteCertificateRGS2Etoile()
-    {
-        $this->userSQL->deleteCertificateRGS2Etoiles(4);
-        $info = $this->userSQL->getInfo(4);
-        $this->assertEmpty($info['certificate_rgs_2_etoiles']);
-    }
-
-    public function testUpdateCertificateIfNull()
-    {
-        $sql = "UPDATE users SET certificate_rgs_2_etoiles=NULL WHERE id=?";
-        $this->getSQLQuery()->query($sql, 3);
-        $this->userSQL->updateCertificatRGS2EtoilesIfNull(3);
-        $info = $this->userSQL->getInfo(3);
-        $this->assertEmpty($info['certificate_rgs_2_etoiles']);
-    }
-
     public function testGetIdFromConnexionInfo()
     {
         $this->assertEquals(
             [["id" => 4, "password" => md5('password')]],
             $this->userSQL->getIdsAndPasswordsFromConnexionInfo(
                 'hash_adullact_identification',
-                '',
                 'login'
             )
         );
@@ -113,7 +83,7 @@ class UserSQLTest extends S2lowTestCase
     {
         $this->assertEquals(
             [12, 14],
-            $this->userSQL->getListIdFromConnexion('hash_adullact_arch', '')
+            $this->userSQL->getIdsFromConnexionInfo('hash_adullact_arch', '')
         );
     }
 

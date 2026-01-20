@@ -26,7 +26,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CreateAdminCommand extends Command
 {
     public function __construct(
-        private readonly UserSQL $userSQL,
     ) {
         parent::__construct();
     }
@@ -63,8 +62,6 @@ class CreateAdminCommand extends Command
             return Command::FAILURE;
         }
 
-        $user_id = $him->getId();
-        $this->userSQL->saveCertificateRGS2Etoiles($user_id, "");
         $output->writeln("Utilisateur créé avec succès");
 
         return Command::SUCCESS;

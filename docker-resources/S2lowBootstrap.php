@@ -12,7 +12,6 @@ class S2lowBootstrap
     public function __construct(
         private readonly SQLQuery $sqlQuery,
         private readonly PostgreSQLController $postgreSQLController,
-        private readonly UserSQL $userSQL,
     ) {
     }
 
@@ -121,10 +120,6 @@ class S2lowBootstrap
         if (!$him->save()) {
             throw new \Exception("Erreur lors de l'enregistrement de l'utilisateur : " . $him->getErrorMsg());
         }
-
-        $user_id = $him->getId();
-
-        $this->userSQL->saveCertificateRGS2Etoiles($user_id, "");
 
         $this->log("Utilisateur créé avec succès");
     }
