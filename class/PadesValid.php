@@ -33,20 +33,20 @@ class PadesValid
     }
 
     /**
-     * @param $filepath
-     * @param bool $certificateChecking
+     * @param string $filepath
+     * @param string $certificatePath
      * @return bool
-     * @throws RecoverableException
+     * @throws \S2lowLegacy\Class\RecoverableException
      * @throws \Exception
      */
-    public function validate(string $filepath): bool
+    public function validate(string $filepath, string $certificatePath): bool
     {
         $result = $this->getPadesValidResult($filepath);
         if ($result === false) {
             return false;
         }
         foreach ($result->signatures as $signature) {
-            $this->verifyPadesSignature->validateSignature($signature);
+            $this->verifyPadesSignature->validateSignature($signature, $certificatePath);
         }
         return true;
     }
