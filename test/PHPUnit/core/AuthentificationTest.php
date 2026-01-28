@@ -141,6 +141,24 @@ class AuthentificationTest extends S2lowIntegrationTestCase
     /**
      * @throws Exception
      */
+    public function testAuthenticateWithCert()
+    {
+        $server = $this->setServerAdullactCertificate();
+        $server['SSL_CLIENT_VERIFY'] = 'SUCCESS';
+        $server['SSL_CLIENT_S_DN'] = 'adullact_identification';
+        $server['SSL_CLIENT_I_DN'] = 'adullact_identification';
+        $server['SSL_CLIENT_CERT'] = file_get_contents(__DIR__ . "/../controller/fixtures/user1.pem");
+
+        $authentification = $this->getAuthentication(
+            server: $server,
+        );
+        $this->expectExceptionMessage("Message : Le certificat n'est pas valide");
+        $this->assertEquals(4, $authentification->authenticate());
+    }
+
+    /**
+     * @throws Exception
+     */
     public function testAuthenticateWithBadCert()
     {
         $server = $this->setServerAdullactCertificate();
