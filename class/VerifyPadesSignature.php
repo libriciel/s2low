@@ -10,7 +10,6 @@ use S2lowLegacy\Lib\PemCertificateFactory;
 class VerifyPadesSignature
 {
     public function __construct(
-        private readonly string $rgs_validca_path,
         PemCertificateFactory $pemCertificateFactory,
         private readonly VerifyPemCertificate $verifyPemCertificate
     ) {
@@ -37,12 +36,13 @@ class VerifyPadesSignature
      * @param $signature
      * @throws Exception
      */
-    public function validateSignature($signature): void
+    public function validateSignature($signature, string $certificateStorePath): void
     {
         $pemCertificate = $this->validateSignatureWithoutCertificateChecking($signature);
         $this->validateCertificateFomSignature(
             $pemCertificate->getContent(),
-            $this->getTimestampFromSignature($signature)
+            $this->getTimestampFromSignature($signature),
+            $certificateStorePath
         );
     }
 
@@ -51,14 +51,14 @@ class VerifyPadesSignature
      * @return bool
      * @throws Exception
      */
-    private function validateCertificateFomSignature($certificateContent, $signatureTimestamp)
+    private function validateCertificateFomSignature($certificateContent, $signatureTimestamp, string $certificateStorePath)
     {
         $certificate_path = sys_get_temp_dir() . "/s2low_valid_certifcate_" . time() . mt_rand(0, mt_getrandmax());
         file_put_contents($certificate_path, $certificateContent);
         try {
             $this->verifyPemCertificate->checkCertificateWithOpenSSL(
                 $certificate_path,
-                $this->rgs_validca_path,
+                $certificateStorePath,
                 VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS,
                 $signatureTimestamp
             );

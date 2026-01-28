@@ -103,7 +103,10 @@ class PadesValidTest extends S2lowTestCase
         $padesValid = $this->createPadesValidForExceptions($returnString, $lastHttpCode, $lastError, $lastOutput);
 
         static::assertFalse(
-            $padesValid->validate(__DIR__ . '/fixtures/signature-pades/Courrier.pdf')
+            $padesValid->validate(
+                __DIR__ . '/fixtures/signature-pades/Courrier.pdf',
+                'certificateStorePath'
+            )
         );
     }
 
@@ -129,7 +132,10 @@ class PadesValidTest extends S2lowTestCase
 
         $this->expectException($exceptionClass);
         $this->expectExceptionMessage($exceptionMessage);
-        $padesValid->validate(__DIR__ . '/fixtures/signature-pades/Courrier.pdf');
+        $padesValid->validate(
+            __DIR__ . '/fixtures/signature-pades/Courrier.pdf',
+            'certificateStorePath'
+        );
     }
 
     public function provider(): array
@@ -153,7 +159,10 @@ class PadesValidTest extends S2lowTestCase
         $padesValid = $this->createPadesValidForValidation();
 
         static::assertTrue(
-            $padesValid->validate('/vers/un/fichier')
+            $padesValid->validate(
+                '/vers/un/fichier',
+                'certificateStorePath'
+            )
         );
     }
 
@@ -165,7 +174,10 @@ class PadesValidTest extends S2lowTestCase
         $padesValid = $this->createPadesValidForValidation();
 
         static::assertTrue(
-            $padesValid->validate('/vers/un/fichier')
+            $padesValid->validate(
+                '/vers/un/fichier',
+                'certificateStorePath'
+            )
         );
     }
 
@@ -177,7 +189,10 @@ class PadesValidTest extends S2lowTestCase
         $padesValid = $this->createPadesValidForValidation();
 
         static::assertTrue(
-            $padesValid->validate('/vers/un/fichier')
+            $padesValid->validate(
+                '/vers/un/fichier',
+                'certificateStorePath'
+            )
         );
     }
 
@@ -193,6 +208,9 @@ class PadesValidTest extends S2lowTestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Une Exception');
 
-        $padesValid->validate('/vers/un/fichier');
+        $padesValid->validate(
+            '/vers/un/fichier',
+            'certificateStorePath'
+        );
     }
 }

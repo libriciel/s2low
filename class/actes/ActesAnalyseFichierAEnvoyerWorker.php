@@ -6,6 +6,7 @@ use Error;
 use Psr\Log\LoggerInterface;
 use S2low\Services\CloudFileStorageInterface;
 use S2low\Services\LocalFileResolver;
+use S2low\Services\Validators\PadesValidator;
 use S2lowLegacy\Class\IWorker;
 use S2lowLegacy\Class\PadesValid;
 use S2lowLegacy\Class\RecoverableException;
@@ -25,7 +26,6 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
     private $actesTransactionsSQL;
     private $logger;
     private $actesScriptHelper;
-    private $padesValid;
     private $workerScript;
     private $actesTypePJSQL;
     /** @var \S2low\Services\PdfValidator  */
@@ -41,7 +41,6 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
         $actes_appli_trigramme,
         $actes_appli_quadrigramme,
         ActesScriptHelper $actesScriptHelper,
-        PadesValid $padesValid,
         WorkerScript $workerScript,
         ActesTypePJSQL $actesTypePJSQL,
         PdfValidator $pdfValidator,
@@ -50,13 +49,13 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
         private readonly LocalFileResolver $localFileResolver,
         #[Autowire(service: 'app.store.file.acte_enveloppe')]
         private readonly CloudFileStorageInterface $cloudActeStorage,
+        private readonly PadesValidator $padesValidator
     ) {
         $this->actes_appli_trigramme = $actes_appli_trigramme;
         $this->actes_appli_quadrigramme = $actes_appli_quadrigramme;
         $this->logger = $logger;
         $this->actesTransactionsSQL = $actesTransactionsSQL;
         $this->actesScriptHelper = $actesScriptHelper;
-        $this->padesValid = $padesValid;
         $this->workerScript = $workerScript;
         $this->actesTypePJSQL = $actesTypePJSQL;
         $this->pdfValidator = $pdfValidator;
@@ -195,7 +194,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
 
         $this->pdfValidator->check($filepath);
         try {
-            $this->padesValid->validate($filepath);
+            $this->padesValidator->validate($filepath);
         } catch (RecoverableException $e) {
             throw $e;
         } catch (Exception $e) {

@@ -18,6 +18,7 @@ use stdClass;
 
 class VerifyPadesSignatureTest extends S2lowTestCase
 {
+    public const RGS_VALIDCA_PATH = __DIR__ . '/../lib/fixtures/validca/';
     private MockObject|VerifyPemCertificate $verifyPemCertificateMock;
     private VerifyPadesSignature $verifyPadesSignatureWithMock;
     private VerifyPadesSignature $verifyPadesSignature;
@@ -58,13 +59,11 @@ class VerifyPadesSignatureTest extends S2lowTestCase
             ->willReturn($this->pemCertificateMock);
 
         $this->verifyPadesSignatureWithMock = new VerifyPadesSignature(
-            'pathToValidCA',
             $pemCertificateFactoryMock,
             $this->verifyPemCertificateMock
         );
 
         $this->verifyPadesSignature = new VerifyPadesSignature(
-            __DIR__ . '/../lib/fixtures/validca/',
             new PemCertificateFactory(),
             new VerifyPemCertificate(
                 new OpenSSLWrapper(new CommandLauncher())
@@ -82,7 +81,7 @@ class VerifyPadesSignatureTest extends S2lowTestCase
         )->signatures[0];
 
         $this->expectNotToPerformAssertions();
-        $this->verifyPadesSignature->validateSignature($signature);
+        $this->verifyPadesSignature->validateSignature($signature, self::RGS_VALIDCA_PATH);
     }
 
     /**
@@ -95,7 +94,7 @@ class VerifyPadesSignatureTest extends S2lowTestCase
         )->signatures[0];
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("Au moins une signature n'est pas valide");
-        $this->verifyPadesSignature->validateSignature($signature);
+        $this->verifyPadesSignature->validateSignature($signature, self::RGS_VALIDCA_PATH);
     }
 
     /**
@@ -108,7 +107,7 @@ class VerifyPadesSignatureTest extends S2lowTestCase
         )->signatures[0];
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("Au moins une signature n'est pas valide");
-        $this->verifyPadesSignature->validateSignature($signature);
+        $this->verifyPadesSignature->validateSignature($signature, self::RGS_VALIDCA_PATH);
     }
 
     //Unit tests
@@ -123,7 +122,7 @@ class VerifyPadesSignatureTest extends S2lowTestCase
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage($exceptionMessage);
-        $this->verifyPadesSignatureWithMock->validateSignature($signature);
+        $this->verifyPadesSignatureWithMock->validateSignature($signature, self::RGS_VALIDCA_PATH);
     }
 
     public function missingNecessaryFieldsProvider(): array
@@ -152,7 +151,7 @@ class VerifyPadesSignatureTest extends S2lowTestCase
     public function testCertificateWasValidOnSignature()
     {
         $this->expectNotToPerformAssertions();
-        $this->verifyPadesSignatureWithMock->validateSignature($this->getSignature());
+        $this->verifyPadesSignatureWithMock->validateSignature($this->getSignature(), self::RGS_VALIDCA_PATH);
     }
 
     /**
@@ -167,7 +166,7 @@ class VerifyPadesSignatureTest extends S2lowTestCase
             ->method('checkCertificateIsValidAtDate')
             ->with($date);
 
-        $this->verifyPadesSignatureWithMock->validateSignature($this->getSignature());
+        $this->verifyPadesSignatureWithMock->validateSignature($this->getSignature(), self::RGS_VALIDCA_PATH);
     }
 
     /**
@@ -180,7 +179,7 @@ class VerifyPadesSignatureTest extends S2lowTestCase
             ->willThrowException(new Exception('CkSugdE3ETSh9xhQ'));
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('CkSugdE3ETSh9xhQ');
-        $this->verifyPadesSignatureWithMock->validateSignature($this->getSignature());
+        $this->verifyPadesSignatureWithMock->validateSignature($this->getSignature(), self::RGS_VALIDCA_PATH);
     }
 
     /**
@@ -195,11 +194,11 @@ class VerifyPadesSignatureTest extends S2lowTestCase
                 static::stringContains(
                     '/s2low_valid_certifcate_'
                 ),
-                'pathToValidCA',
+                self::RGS_VALIDCA_PATH,
                 static::equalTo(VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS)
             );
 
-        $this->verifyPadesSignatureWithMock->validateSignature($this->getSignature());
+        $this->verifyPadesSignatureWithMock->validateSignature($this->getSignature(), self::RGS_VALIDCA_PATH);
     }
 
     public function testcheckCertificateWithOpenSSLExceptionGoesThrough()
@@ -210,6 +209,6 @@ class VerifyPadesSignatureTest extends S2lowTestCase
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Exception de test LahgnjCM');
-        $this->verifyPadesSignatureWithMock->validateSignature($this->getSignature());
+        $this->verifyPadesSignatureWithMock->validateSignature($this->getSignature(), self::RGS_VALIDCA_PATH);
     }
 }

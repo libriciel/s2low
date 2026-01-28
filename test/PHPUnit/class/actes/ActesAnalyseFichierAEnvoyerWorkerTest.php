@@ -1,8 +1,10 @@
 <?php
 
+use Libriciel\LibActes\ArchiveValidator;
 use PHPUnit\ActesUtilitiesTestTrait;
 use Psr\Log\LoggerInterface;
 use S2low\Services\PdfValidator;
+use S2low\Services\Validators\PadesValidator;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\actes\ActesScriptHelper;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
@@ -35,7 +37,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
 
     private function getActesAnalysFichierAEnvoyerWorker($padesMock = null): ActesAnalyseFichierAEnvoyerWorker
     {
-        $padesValid = $padesMock ?? self::getContainer()->get(PadesValid::class);
+        $padesValidator = $padesMock ?? self::getContainer()->get(PadesValidator::class);
 
         return new ActesAnalyseFichierAEnvoyerWorker(
             $this->s2lowLogger,
@@ -43,13 +45,13 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
             self::getContainer()->getParameter('app.actes_appli_trigramme'),
             self::getContainer()->getParameter('app.actes_appli_quadrigramme'),
             self::getContainer()->get(ActesScriptHelper::class),
-            $padesValid,
             self::getContainer()->get(WorkerScript::class),
             self::getContainer()->get(ActesTypePJSQL::class),
             self::getContainer()->get(PdfValidator::class),
             self::getContainer()->get(ArchiveValidatorFactory::class),
             self::getContainer()->get('app.localFileResolver.acte_enveloppe'),
             self::getContainer()->get('app.store.file.acte_enveloppe'),
+            $padesValidator
         );
     }
 
@@ -234,7 +236,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
      */
     public function testValidateAllOnePadesFailedRecoverable()
     {
-        $padesMock = $this->getMockBuilder(PadesValid::class)->disableOriginalConstructor()->getMock();
+        $padesMock = $this->getMockBuilder(PadesValidator::class)->disableOriginalConstructor()->getMock();
         $padesMock->method("validate")->willThrowException(new RecoverableException("erreur de test"));
 
         $this->expectException(RecoverableException::class);
@@ -256,7 +258,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
      */
     public function testValidateAllOnePadesFailedNotRecoverable()
     {
-        $padesMock = $this->getMockBuilder(PadesValid::class)->disableOriginalConstructor()->getMock();
+        $padesMock = $this->getMockBuilder(PadesValidator::class)->disableOriginalConstructor()->getMock();
         $padesMock->method("validate")->willThrowException(new Exception("erreur de test"));
 
         $transaction_id = $this->validateAll(__DIR__ . "/../../fixtures/ok/abc-TACT--000000000--20181024-4.tar.gz", padesMock: $padesMock);
@@ -361,7 +363,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
     public function testErrorIsHandled()
     {
         $archiveValidator = $this->getMockBuilder(
-            \Libriciel\LibActes\ArchiveValidator::class
+            ArchiveValidator::class
         )->disableOriginalConstructor()->getMock();
         $archiveValidator->method('validate')->willThrowException(new Error('oupsie'));
 
@@ -376,13 +378,13 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
             $this->getObjectInstancier()->getParameter('app.actes_appli_trigramme'),
             $this->getObjectInstancier()->getParameter('app.actes_appli_quadrigramme'),
             $this->getObjectInstancier()->get(ActesScriptHelper::class),
-            $this->getObjectInstancier()->get(PadesValid::class),
             $this->getObjectInstancier()->get(WorkerScript::class),
             $this->getObjectInstancier()->get(ActesTypePJSQL::class),
             $this->getObjectInstancier()->get(PdfValidator::class),
             $archiveValidatorFactory,
             self::getContainer()->get('app.localFileResolver.acte_enveloppe'),
-            self::getContainer()->get('app.store.file.acte_enveloppe')
+            self::getContainer()->get('app.store.file.acte_enveloppe'),
+            $this->getObjectInstancier()->get(PadesValidator::class),
         );
 
         $data = $this->createOneTransaction(__DIR__ . "/../../fixtures/ok/SLO-EACT--214502494--20170717-5.tar.gz");
