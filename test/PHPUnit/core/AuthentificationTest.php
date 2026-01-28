@@ -147,7 +147,7 @@ class AuthentificationTest extends S2lowIntegrationTestCase
         $server['SSL_CLIENT_VERIFY'] = 'SUCCESS';
         $server['SSL_CLIENT_S_DN'] = 'adullact_identification';
         $server['SSL_CLIENT_I_DN'] = 'adullact_identification';
-        $server['SSL_CLIENT_CERT'] = file_get_contents(__DIR__ . "/../controller/fixtures/user1.pem");
+        $server['SSL_CLIENT_CERT'] = file_get_contents(__DIR__ . "/../controller/fixtures/test-certificat-not-in-db.pem");
 
         $authentification = $this->getAuthentication(
             server: $server,
