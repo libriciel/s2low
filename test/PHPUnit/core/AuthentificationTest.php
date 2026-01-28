@@ -63,7 +63,6 @@ class AuthentificationTest extends S2lowIntegrationTestCase
             'SSL_CLIENT_S_DN' => 'subject_dn',
             'SSL_CLIENT_I_DN' => 'issuer_dn',
             'SSL_CLIENT_CERT' => $certif->getContent(),
-            'HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION' => $certif->getContentStrippedFromBegin()
         ];
         $authentification = $this->getAuthentication(
             server: $server,
@@ -262,7 +261,6 @@ class AuthentificationTest extends S2lowIntegrationTestCase
             'SSL_CLIENT_S_DN' => 'subject_dn',
             'SSL_CLIENT_I_DN' => 'issuer_dn',
             'SSL_CLIENT_CERT' => $certif->getContent(),
-            'HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION' => $certif->getContentStrippedFromBegin()
         ];
         $authentification = $this->getAuthentication(
             server: $server,

@@ -76,7 +76,6 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
 
         $this->client = $this->createClientWithCertificat(
             $certif->getContent(),
-            $certif->getContentStrippedFromBegin(),
             false
         );
 
@@ -107,7 +106,6 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
 
         $this->client = $this->createClientWithCertificat(
             $certif->getContent(),
-            $certif->getContentStrippedFromBegin(),
             false
         );
 

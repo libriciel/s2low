@@ -30,12 +30,12 @@ DELETE FROM users;
 DELETE FROM modules_authorities;
 DELETE FROM authority_siret;
 DELETE FROM nounce;
+DELETE FROM logs;
 DELETE FROM authorities;
 DELETE FROM authority_types;
 DELETE FROM authority_group_siren;
 DELETE FROM authority_groups;
 DELETE FROM modules;
-DELETE FROM logs;
 
 DELETE FROM mail_transaction;
 

@@ -47,14 +47,6 @@ class HttpsConnexion
      */
     public function getCertificateInfo()
     {
-        //http://stackoverflow.com/a/18205049
-        if (function_exists('apache_request_headers')) {    //TODO : tester quand on utilisera les namespace
-            $h = apache_request_headers();
-            if (isset($h['org.s2low.forward-x509-identification'])) {
-                $this->environnement->server()->set('HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION', $h['org.s2low.forward-x509-identification']);
-            }
-        }
-
         $result = $this->getParameterList(
             [
                 'SSL_CLIENT_VERIFY' => 'ssl_client_verify',

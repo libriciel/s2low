@@ -134,23 +134,21 @@ class S2lowIntegrationTestCase extends WebTestCase
 
         return $this->createClientWithCertificat(
             $this->fixtureCertificate->getContent(),
-            $this->fixtureCertificate->getContentStrippedFromBegin()
         );
     }
 
     /**
      * @param string $certificatPem
-     * @param string $certificatSansBegin
+     * @param bool $clientVerifySuccess
      * @return KernelBrowser
      */
-    protected function createClientWithCertificat(string $certificatPem, string $certificatSansBegin, bool $clientVerifySuccess = true): KernelBrowser
+    protected function createClientWithCertificat(string $certificatPem, bool $clientVerifySuccess = true): KernelBrowser
     {
         $this->serverCertificatEnvVar = [
             'SSL_CLIENT_VERIFY' => $clientVerifySuccess ? 'SUCCESS' : null,
             'SSL_CLIENT_S_DN' => 'subject_dn',
             'SSL_CLIENT_I_DN' => 'issuer_dn',
             'SSL_CLIENT_CERT' => $certificatPem,
-            'HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION' => $certificatSansBegin
         ];
         $this->addCertificatToServeurEnvironnement($this->serverCertificatEnvVar);
 
