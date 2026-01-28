@@ -3,7 +3,6 @@
 use S2low\Services\ProcessCommand\CommandLauncher;
 use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2lowLegacy\Class\VerifyPemCertificate;
-use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
 use S2lowLegacy\Lib\PemCertificateFactory;
 
@@ -18,12 +17,8 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
      */
     public function testRightFileWithSignature()
     {
-        $verifyPKCS7Signature = new VerifyPKCS7Signature(
-            __DIR__ . "/fixtures/signaturesPKCS7/ac",
-            new VerifyPemCertificateFactory(),
-            new PemCertificateFactory(),
-            new OpenSSLWrapper(new CommandLauncher())
-        );
+        $authorized_ca_path = __DIR__ . "/fixtures/signaturesPKCS7/ac";
+        $verifyPKCS7Signature = $this->getVerifyPKCS7Signature($authorized_ca_path);
 
         $this->assertTrue(
             $verifyPKCS7Signature->verifySignature(
@@ -37,12 +32,8 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
 
     public function testWrongFileWithSignature()
     {
-        $verifyPKCS7Signature = new VerifyPKCS7Signature(
-            __DIR__ . "/fixtures/signaturesPKCS7/ac",
-            new VerifyPemCertificateFactory(),
-            new PemCertificateFactory(),
-            new OpenSSLWrapper(new CommandLauncher())
-        );
+        $authorized_ca_path = __DIR__ . "/fixtures/signaturesPKCS7/ac";
+        $verifyPKCS7Signature = $this->getVerifyPKCS7Signature($authorized_ca_path);
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("La vérification de la signature a échoué");
@@ -56,12 +47,8 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
 
     public function testRightFileWithWrongAC()
     {
-        $verifyPKCS7Signature = new VerifyPKCS7Signature(
-            __DIR__ . "/",
-            new VerifyPemCertificateFactory(),
-            new PemCertificateFactory(),
-            new OpenSSLWrapper(new CommandLauncher())
-        );
+        $authorized_ca_path = __DIR__ . "/";
+        $verifyPKCS7Signature = $this->getVerifyPKCS7Signature($authorized_ca_path);
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage(" unable to get local issuer certificate");
@@ -91,12 +78,8 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
 
     public function testWrongDateIsTakenIntoAccount(DateTime $dateTime, string $message)
     {
-        $verifyPKCS7Signature = new VerifyPKCS7Signature(
-            __DIR__ . "/fixtures/signaturesPKCS7/ac",
-            new VerifyPemCertificateFactory(),
-            new PemCertificateFactory(),
-            new OpenSSLWrapper(new CommandLauncher())
-        );
+        $authorized_ca_path = __DIR__ . "/fixtures/signaturesPKCS7/ac";
+        $verifyPKCS7Signature = $this->getVerifyPKCS7Signature($authorized_ca_path);
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage($message);
@@ -132,12 +115,8 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
     {
         $baseSignatureDir = __DIR__ . "/fixtures/signaturesPKCS7";
 
-        $verifyPKCS7Signature = new VerifyPKCS7Signature(
-            __DIR__ . "/fixtures/signaturesPKCS7/ac",
-            new VerifyPemCertificateFactory(),
-            new PemCertificateFactory(),
-            new OpenSSLWrapper(new CommandLauncher())
-        );
+        $authorized_ca_path = __DIR__ . "/fixtures/signaturesPKCS7/ac";
+        $verifyPKCS7Signature = $this->getVerifyPKCS7Signature($authorized_ca_path);
 
         $this->assertTrue(
             $verifyPKCS7Signature->verifySignature(
@@ -166,12 +145,8 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
     public function testverifyCertificate()
     {
         $baseSignatureDir = __DIR__ . "/fixtures/signaturesPKCS7";
-        $verificator = new VerifyPKCS7Signature(
-            "$baseSignatureDir/ac/",
-            new VerifyPemCertificateFactory(),
-            new PemCertificateFactory(),
-            new OpenSSLWrapper(new CommandLauncher())
-        );
+        $authorized_ca_path = "$baseSignatureDir/ac/";
+        $verificator = $this->getVerifyPKCS7Signature($authorized_ca_path);
 
         $verificator->verifySignature(
             file_get_contents("$baseSignatureDir/test_pdf.pdf.p7s"),
@@ -180,5 +155,19 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
             new DateTime('01-01-2025')
         );
         $this->addToAssertionCount(1);
+    }
+
+    /**
+     * @param string $authorized_ca_path
+     * @return \S2lowLegacy\Class\VerifyPKCS7Signature
+     */
+    private function getVerifyPKCS7Signature(string $authorized_ca_path): VerifyPKCS7Signature
+    {
+        return new VerifyPKCS7Signature(
+            $authorized_ca_path,
+            new OpenSSLWrapper(new CommandLauncher()),
+            new VerifyPemCertificate(new OpenSSLWrapper(new CommandLauncher())),
+            new PemCertificateFactory()
+        );
     }
 }

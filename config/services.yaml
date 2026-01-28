@@ -504,9 +504,6 @@ services:
   S2lowLegacy\Class\VerifyPKCS7Signature:
     autowire: false
 
-  S2lowLegacy\Class\VerifyPemCertificate:
-    autowire: false
-
   S2lowLegacy\Class\Versionning:
     autowire: false
 

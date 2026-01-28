@@ -19,17 +19,11 @@ class VerifyPemCertificate
         21, # unable to verify the first certificate
     );
     /** @var string */
-    private $authorized_ca_path;
-    /**
-     * @var \S2low\Services\ProcessCommand\OpenSSLWrapper
-     */
     private $openSSLWrapper;
 
     public function __construct(
-        string $authorized_ca_path,
         OpenSSLWrapper $openSSLWrapper
     ) {
-        $this->authorized_ca_path = $authorized_ca_path;
         $this->openSSLWrapper = $openSSLWrapper;
     }
 
@@ -38,23 +32,25 @@ class VerifyPemCertificate
      */
     public function checkCertificateWithOpenSSL(
         $certificate_path,
+        string $authorized_ca_path,
         array $filteredErrors = [],
         ?string $timestamp = null,
     ): bool {
-        $this->checkForCrlRevocation($certificate_path);
-        $this->openSSLWrapper->verify($certificate_path, $this->authorized_ca_path, $filteredErrors, $timestamp);
+        $this->checkForCrlRevocation($certificate_path, $authorized_ca_path);
+        $this->openSSLWrapper->verify($certificate_path, $authorized_ca_path, $filteredErrors, $timestamp);
         return true;
     }
 
     /**
      * @param string $file
+     * @param string $authorized_ca_path
      * @return void
-     * @throws Exception
+     * @throws \S2lowLegacy\Class\RecoverableException
      */
-    protected function checkForCrlRevocation(string $file): void
+    protected function checkForCrlRevocation(string $file, string $authorized_ca_path): void
     {
         $file_r0_name = $this->openSSLWrapper->extractHash($file);
-        $file_r0 = $this->authorized_ca_path . "/$file_r0_name.r0";
+        $file_r0 = $authorized_ca_path . "/$file_r0_name.r0";
         if (file_exists($file_r0)) {
             // 1) extraire le SN du certificat
             $serialNumber = $this->openSSLWrapper->extractCertificateSN($file);

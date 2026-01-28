@@ -21,7 +21,6 @@ use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Class\helios\HeliosTransmissionWindowsSQL;
 use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\TmpFolder;
-use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Controller\HeliosController;
 use S2lowLegacy\Lib\HeliosNamesGenerator;
@@ -589,8 +588,7 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
             new FichierCompteur($this->counterDir . '/counter.txt'),
             static::getContainer()->get(LoggerInterface::class),
             new PesAllerReader(),
-            new HeliosNamesGenerator(),
-            new VerifyPemCertificateFactory()
+            new HeliosNamesGenerator()
         );
     }
 

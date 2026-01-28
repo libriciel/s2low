@@ -8,7 +8,7 @@ use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\DataObject;
 use S2lowLegacy\Class\Helpers;
-use S2lowLegacy\Class\VerifyPemCertificateFactory;
+use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
 use S2lowLegacy\Class\XMLHelper;
 use S2lowLegacy\Lib\PemCertificateFactory;
@@ -893,9 +893,9 @@ class ActesTransaction extends DataObject
                     try {
                         $verifyPKCS7Signature = new VerifyPKCS7Signature(
                             RGS_VALIDCA_PATH,
-                            new VerifyPemCertificateFactory(),
-                            new PemCertificateFactory(),
-                            new OpenSSLWrapper(new CommandLauncher())
+                            new OpenSSLWrapper(new CommandLauncher()),
+                            new VerifyPemCertificate(new OpenSSLWrapper(new CommandLauncher())),
+                            new PemCertificateFactory()
                         );
                         $verifyPKCS7Signature->verifySignature(
                             $actesItems->Document->Signature,
