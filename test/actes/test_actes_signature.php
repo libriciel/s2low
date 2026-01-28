@@ -1,5 +1,8 @@
 <?php
 
+use S2low\Services\ProcessCommand\CommandLauncher;
+use S2low\Services\ProcessCommand\OpenSSLWrapper;
+use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
 use S2lowLegacy\Lib\PemCertificateFactory;
@@ -22,10 +25,7 @@ $verifyPKCS7Signature = new VerifyPKCS7Signature(
     "/etc/tedetis/ssl/validca/",
     new VerifyPemCertificateFactory(),
     new PemCertificateFactory(),
-    new \S2low\Services\ProcessCommand\OpenSSLWrapper(
-        "/etc/tedetis/ssl/validca/",
-        new \S2low\Services\ProcessCommand\CommandLauncher()
-    )
+    new OpenSSLWrapper(new CommandLauncher())
 );
 
 $verifyPKCS7Signature->verifySignature($signature, VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS);
