@@ -8,11 +8,13 @@ use S2low\Services\CloudFileStorageInterface;
 use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager;
 use S2low\Services\LocalFileResolver;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
+use S2low\Services\ProcessCommand\CommandLauncher;
+use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\helios\FichierCompteur;
 use S2lowLegacy\Class\helios\HeliosTransmissionWindowsSQL;
 use S2lowLegacy\Class\Log;
-use S2lowLegacy\Class\VerifyPemCertificateFactory;
+use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\HeliosNamesGenerator;
 use S2lowLegacy\Lib\PemCertificateFactory;
@@ -47,15 +49,14 @@ class HeliosEnvoiControler
         private readonly FichierCompteur $fichierCompteur,
         private readonly LoggerInterface $logger,
         private readonly PesAllerReader $pesAllerReader,
-        private readonly HeliosNamesGenerator $namesGenerator,
-        VerifyPemCertificateFactory $verifyPemFactory
+        private readonly HeliosNamesGenerator $namesGenerator
     ) {
         $this->xadesSignature = new XadesSignature(
             XMLSEC1_PATH,
             EXTENDED_VALIDCA_PATH,
             new XadesSignatureParser(),
             new PemCertificateFactory(),
-            $verifyPemFactory->get(EXTENDED_VALIDCA_PATH)
+            new VerifyPemCertificate(new OpenSSLWrapper(new CommandLauncher()))
         );
     }
 

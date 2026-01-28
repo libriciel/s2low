@@ -3,7 +3,6 @@
 use S2low\Services\ProcessCommand\CommandLauncher;
 use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2lowLegacy\Class\VerifyPemCertificate;
-use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
 use S2lowLegacy\Lib\PemCertificateFactory;
 
@@ -23,9 +22,9 @@ $signature =  $actesItems->Document->Signature . "\n";
 
 $verifyPKCS7Signature = new VerifyPKCS7Signature(
     "/etc/tedetis/ssl/validca/",
-    new VerifyPemCertificateFactory(),
+    new OpenSSLWrapper(new CommandLauncher()),
+    new VerifyPemCertificate(new OpenSSLWrapper(new CommandLauncher())),
     new PemCertificateFactory(),
-    new OpenSSLWrapper(new CommandLauncher())
 );
 
 $verifyPKCS7Signature->verifySignature($signature, VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS);

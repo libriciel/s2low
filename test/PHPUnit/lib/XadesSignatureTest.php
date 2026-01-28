@@ -3,8 +3,9 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
+use S2low\Services\ProcessCommand\CommandLauncher;
+use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2lowLegacy\Class\VerifyPemCertificate;
-use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\XadesSignature;
 use S2lowLegacy\Lib\XadesSignatureParser;
@@ -13,13 +14,12 @@ class XadesSignatureTest extends TestCase
 {
     private function getXadesSignature(): XadesSignature
     {
-        $verifyPemCertificateFactory = new VerifyPemCertificateFactory();
         $xadesSignature = new XadesSignature(
             XMLSEC1_PATH,
             __DIR__ . '/fixtures/validca_for_xades/',
             new XadesSignatureParser(),
             new PemCertificateFactory(),
-            $verifyPemCertificateFactory->get(__DIR__ . '/fixtures/validca_for_xades/')
+            $this->getVerifyPemCertificate()
         );
         return $xadesSignature;
     }
@@ -78,13 +78,12 @@ class XadesSignatureTest extends TestCase
 
         $xadesSignatureParser->method("extractXadesSigningTime")
             ->willReturn($dateTime);
-        $verifyPemCertificateFactory = new VerifyPemCertificateFactory();
         $xadesSignature = new XadesSignature(
             XMLSEC1_PATH,
             __DIR__ . "/fixtures/validca_for_xades/",
             $xadesSignatureParser,
             new PemCertificateFactory(),
-            $verifyPemCertificateFactory->get(__DIR__ . "/fixtures/validca_for_xades/")
+            $this->getVerifyPemCertificate()
         );
 
         $verify = true;
@@ -122,18 +121,12 @@ class XadesSignatureTest extends TestCase
         $verifyPemCertificate->method("checkCertificateWithOpenSSL")
             ->willThrowException(new Exception("Test"));
 
-        $verifyPemCertificateFactory = $this->getMockBuilder(VerifyPemCertificateFactory::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $verifyPemCertificateFactory->method("get")->willReturn($verifyPemCertificate);
-
         $xadesSignature = new XadesSignature(
             XMLSEC1_PATH,
             __DIR__ . "/fixtures/validca_for_xades/",
             $xadesSignatureParser,
             new PemCertificateFactory(),
-            $verifyPemCertificateFactory->get(__DIR__ . "/fixtures/validca_for_xades/")
+            $this->getVerifyPemCertificate()
         );
 
         $filesBeforeVerify = glob('/tmp/s2low_xades_*');
@@ -146,5 +139,13 @@ class XadesSignatureTest extends TestCase
                 $filesBeforeVerify
             );
         }
+    }
+
+    /**
+     * @return \S2lowLegacy\Class\VerifyPemCertificate
+     */
+    private function getVerifyPemCertificate(): VerifyPemCertificate
+    {
+        return new VerifyPemCertificate(new OpenSSLWrapper(new CommandLauncher()));
     }
 }
