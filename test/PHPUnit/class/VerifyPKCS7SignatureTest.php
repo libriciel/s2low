@@ -1,5 +1,7 @@
 <?php
 
+use S2low\Services\ProcessCommand\CommandLauncher;
+use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
@@ -20,10 +22,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
             __DIR__ . "/fixtures/signaturesPKCS7/ac",
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory(),
-            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
-                __DIR__ . "/fixtures/signaturesPKCS7/ac",
-                new \S2low\Services\ProcessCommand\CommandLauncher()
-            )
+            new OpenSSLWrapper(new CommandLauncher())
         );
 
         $this->assertTrue(
@@ -42,10 +41,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
             __DIR__ . "/fixtures/signaturesPKCS7/ac",
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory(),
-            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
-                __DIR__ . "/fixtures/signaturesPKCS7/ac",
-                new \S2low\Services\ProcessCommand\CommandLauncher()
-            )
+            new OpenSSLWrapper(new CommandLauncher())
         );
 
         $this->expectException(Exception::class);
@@ -64,10 +60,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
             __DIR__ . "/",
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory(),
-            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
-                __DIR__ . "/",
-                new \S2low\Services\ProcessCommand\CommandLauncher()
-            )
+            new OpenSSLWrapper(new CommandLauncher())
         );
 
         $this->expectException(Exception::class);
@@ -102,10 +95,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
             __DIR__ . "/fixtures/signaturesPKCS7/ac",
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory(),
-            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
-                __DIR__ . "/fixtures/signaturesPKCS7/ac",
-                new \S2low\Services\ProcessCommand\CommandLauncher()
-            )
+            new OpenSSLWrapper(new CommandLauncher())
         );
 
         $this->expectException(Exception::class);
@@ -146,10 +136,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
             __DIR__ . "/fixtures/signaturesPKCS7/ac",
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory(),
-            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
-                __DIR__ . "/fixtures/signaturesPKCS7/ac",
-                new \S2low\Services\ProcessCommand\CommandLauncher()
-            )
+            new OpenSSLWrapper(new CommandLauncher())
         );
 
         $this->assertTrue(
@@ -183,10 +170,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
             "$baseSignatureDir/ac/",
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory(),
-            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
-                "$baseSignatureDir/ac/",
-                new \S2low\Services\ProcessCommand\CommandLauncher()
-            )
+            new OpenSSLWrapper(new CommandLauncher())
         );
 
         $verificator->verifySignature(

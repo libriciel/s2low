@@ -895,10 +895,7 @@ class ActesTransaction extends DataObject
                             RGS_VALIDCA_PATH,
                             new VerifyPemCertificateFactory(),
                             new PemCertificateFactory(),
-                            new OpenSSLWrapper(
-                                RGS_VALIDCA_PATH,
-                                new CommandLauncher()
-                            )
+                            new OpenSSLWrapper(new CommandLauncher())
                         );
                         $verifyPKCS7Signature->verifySignature(
                             $actesItems->Document->Signature,

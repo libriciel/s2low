@@ -11,7 +11,7 @@ class VerifyPKCS7Signature
 {
     /** @var VerifyPemCertificate  */
     private $verifyPemCertificate;
-    /** @var \PemCertificateFactory */
+
     private $pemCertificateFactory;
     /**
      * @var \S2low\Services\ProcessCommand\OpenSSLWrapper
@@ -28,6 +28,7 @@ class VerifyPKCS7Signature
         $this->verifyPemCertificate = $verifyPemCertificateFactory->get($authorized_ca_path);
         $this->pemCertificateFactory = $pemCertificateFactory;
         $this->openSSLWrapper = $openSSLWrapper;
+        $this->authorized_ca_path = $authorized_ca_path;
     }
 
     /**
@@ -59,7 +60,11 @@ class VerifyPKCS7Signature
                 $dateTime->getTimestamp()
             );
             if ($file_path) {
-                $this->openSSLWrapper->checkFileContentCorrespondsToSignature($signature_file, $file_path);
+                $this->openSSLWrapper->checkFileContentCorrespondsToSignature(
+                    $signature_file,
+                    $this->authorized_ca_path,
+                    $file_path
+                );
             }
         } finally {
             unlink($signature_file);

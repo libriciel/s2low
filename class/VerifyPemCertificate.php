@@ -27,7 +27,7 @@ class VerifyPemCertificate
 
     public function __construct(
         string $authorized_ca_path,
-        \S2low\Services\ProcessCommand\OpenSSLWrapper $openSSLWrapper
+        OpenSSLWrapper $openSSLWrapper
     ) {
         $this->authorized_ca_path = $authorized_ca_path;
         $this->openSSLWrapper = $openSSLWrapper;
@@ -42,7 +42,7 @@ class VerifyPemCertificate
         ?string $timestamp = null,
     ): bool {
         $this->checkForCrlRevocation($certificate_path);
-        $this->openSSLWrapper->verify($certificate_path, $filteredErrors, $timestamp);
+        $this->openSSLWrapper->verify($certificate_path, $this->authorized_ca_path, $filteredErrors, $timestamp);
         return true;
     }
 
