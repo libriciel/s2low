@@ -1,25 +1,17 @@
 <?php
 
-use S2low\Services\CloudFileStorage;
 use S2low\Services\CloudFileStorageInterface;
 use S2low\Services\LocalFileResolver;
-use S2low\Services\ProcessCommand\CommandLauncher;
-use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2low\Services\SimpleXmlUtils\SignedChecker;
+use S2low\Services\Validators\XadesSignatureValidator;
 use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\helios\HeliosPESValidation;
-use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\User;
-use S2lowLegacy\Class\VerifyPemCertificate;
-use S2lowLegacy\Class\VerifyPemCertificateFactory;
-use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\Recuperateur;
-use S2lowLegacy\Lib\XadesSignature;
-use S2lowLegacy\Lib\XadesSignatureParser;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 /** @var Initialisation $initialisation */
@@ -70,18 +62,10 @@ $heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);
 
 $r = $heliosPESValidation->validate($pes_content);
 
-$xadesSignature = new XadesSignature(
-    XMLSEC1_PATH,
-    EXTENDED_VALIDCA_PATH,
-    new XadesSignatureParser(),
-    new PemCertificateFactory(),
-    new VerifyPemCertificate(new OpenSSLWrapper(new CommandLauncher()))
-);
+$xadesSignatureValidator = LegacyObjectsManager::getObject(XadesSignatureValidator::class);
 
 
-$xadesSignatureValidationResult =  $xadesSignature->verifyWithReturn($filename);
-
-$xades_output = $xadesSignature->getLastOutput();
+$xadesSignatureValidationResult =  $xadesSignatureValidator->validate($filename);
 
 $signedChecker = new SignedChecker();
 
@@ -157,7 +141,7 @@ ob_start();
 
 <div>
     <p>
-        <?php echo $xades_output ?>
+        <?php echo $xadesSignatureValidationResult->xades_output?> ?>
     </p>
 
 </div>

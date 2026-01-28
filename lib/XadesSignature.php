@@ -14,19 +14,16 @@ class XadesSignature
     public const NS_DS_URI = "http://www.w3.org/2000/09/xmldsig#";
 
     private $xmlsec1_path;
-    private $validca_path;
 
     private $last_output;
 
     public function __construct(
         $xmlsec1_path,
-        $validca_path,
         private readonly XadesSignatureParser $xadesSignatureParser,
         private readonly PemCertificateFactory $pemCertificateFactory,
         private readonly VerifyPemCertificate $verifyPemCertificate,
     ) {
         $this->xmlsec1_path = $xmlsec1_path;
-        $this->validca_path = $validca_path;
     }
 
     public function getLastOutput()
@@ -34,10 +31,10 @@ class XadesSignature
         return $this->last_output;
     }
 
-    public function verifyWithReturn($xml_file_signed): XadesSignatureValidationResult
+    public function verifyWithReturn(string $xml_file_signed, string $certificateStorePath): XadesSignatureValidationResult
     {
         try {
-            $this->verify($xml_file_signed);
+            $this->verify($xml_file_signed, $certificateStorePath);
             return new XadesSignatureValidationResult(
                 true,
                 $this->getLastOutput()
@@ -54,7 +51,7 @@ class XadesSignature
     /**
      * @throws \Exception
      */
-    public function verify($xml_file_signed): void
+    public function verify(string $xml_file_signed, string $certificateStorePath): void
     {
         $xml = simplexml_load_file($xml_file_signed, "SimpleXMLElement", LIBXML_PARSEHUGE);
 
@@ -89,7 +86,7 @@ class XadesSignature
             try {
                 $this->verifyPemCertificate->checkCertificateWithOpenSSL(
                     $file,
-                    $this->validca_path,
+                    $certificateStorePath,
                     [
                         3,  //X509_V_ERR_UNABLE_TO_GET_CRL
                         11,  //X509_V_ERR_CRL_NOT_YET_VALID
@@ -101,7 +98,7 @@ class XadesSignature
                 unlink($file);
             }
 
-            if (!$this->verifyIntern($xml_file_signed, $signedElementRootName, $id, $signingTime)) {
+            if (!$this->verifyIntern($xml_file_signed, $certificateStorePath, $signedElementRootName, $id, $signingTime)) {
                 throw new Exception("Impossible d'affirmer que la signature correspond au fichier");
             }
         }
@@ -109,6 +106,7 @@ class XadesSignature
 
     private function verifyIntern(
         $xml_file_signed,
+        string $certificateStorePath,
         $signature_node_name,
         $signature_node_id,
         ?DateTime $verificationTime = null,
@@ -123,7 +121,7 @@ class XadesSignature
             $verificationTimeParameter = "--verification-time \"$verificationTimeString\"";
         }
 
-        $command = "export TZ=UTC && export SSL_CERT_DIR={$this->validca_path} && {$this->xmlsec1_path} --verify --node-xpath \"$xpath\" " . $verificationTimeParameter . " --id-attr:Id $signature_node_name $xml_file_signed 2>&1";
+        $command = "export TZ=UTC && export SSL_CERT_DIR={$certificateStorePath} && {$this->xmlsec1_path} --verify --node-xpath \"$xpath\" " . $verificationTimeParameter . " --id-attr:Id $signature_node_name $xml_file_signed 2>&1";
         exec($command, $output, $return_var);
         $this->last_output = implode("\n", $output);
         return $return_var == 0;
