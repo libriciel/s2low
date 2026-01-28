@@ -2,6 +2,7 @@
 
 namespace S2low\Factory;
 
+use Doctrine\DBAL\Connection;
 use PDO;
 
 class PDOFactory
@@ -11,23 +12,16 @@ class PDOFactory
     private array $instances = [];
 
     public function __construct(
-        private readonly string $hostname,
-        private readonly string $name,
-        private readonly string $login,
-        private readonly string $password,
+        private readonly Connection $connection,
     ) {
     }
 
     public function create(): \PDO
     {
-        $dsn = self::DATABASE_TYPE . ":host=" . $this->hostname;
-        if ($this->name) {
-            $dsn .= ";dbname=" . $this->name;
-        }
-        $pdo = new PDO($dsn, $this->login, $this->password);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $pdo->query("SET CLIENT_ENCODING TO '" . self::CLIENT_ENCODING_DEFAULT . "';");
-        $pdo->query("SET standard_conforming_strings = off;");
+        $pdo = $this->connection->getNativeConnection();
+//        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+//        $pdo->query("SET CLIENT_ENCODING TO '" . self::CLIENT_ENCODING_DEFAULT . "';");
+//        $pdo->query("SET standard_conforming_strings = off;");
 
         $this->instances[] = $pdo;
 

@@ -65,3 +65,12 @@ webpack: docker-compose-up ## Compile webpack assets
 	$(DOCKER_COMPOSE) run -it webpack npx webpack --config webpack.config.js
 
 install: composer-install npm-install webpack
+
+new-migration:
+	$(DOCKER_COMPOSE_EXEC) php bin/console doctrine:migrations:generate
+
+migrate:
+	$(DOCKER_COMPOSE_EXEC) php bin/console doctrine:migrations:migrate --no-inte
+
+undo-last-migration:
+	$(DOCKER_COMPOSE_EXEC) php bin/console doctrine:migrations:migrate prev --no-interaction

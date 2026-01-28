@@ -902,11 +902,6 @@ services:
   S2low\Factory\PDOFactory:
     public: true
     shared: true
-    arguments:
-      $hostname:  '%app.database_host%'
-      $name:  '%app.database_name%'
-      $login: '%app.database_login%'
-      $password:  '%app.database_password%'
 
   S2low\Services\MailActesNotifications\MailerSymfony:
     public: true
