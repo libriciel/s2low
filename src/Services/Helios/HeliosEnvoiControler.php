@@ -152,13 +152,12 @@ class HeliosEnvoiControler
         }
 
         if ($this->signedChecker->isSigned($file_path)) {
-            try {
-                $this->xadesSignature->verify($file_path);
-            } catch (Exception $exception) {
+                $xadesSignatureVerificationResult = $this->xadesSignature->verifyWithReturn($file_path);
+            if (!$xadesSignatureVerificationResult->verification_success) {
                 $this->updateStatus(
                     $transaction_id,
                     HeliosTransactionsSQL::ERREUR,
-                    'La signature du fichier est invalide : ' . $exception->getMessage(),
+                    'La signature du fichier est invalide : ' . $xadesSignatureVerificationResult->errorMessage,
                     $transactionInfo['user_id']
                 );
                 return;

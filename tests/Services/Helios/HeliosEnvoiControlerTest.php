@@ -15,6 +15,7 @@ use S2low\Services\Helios\DGFiPConnection\DGFiPConnectionsManager;
 use S2low\Services\Helios\HeliosEnvoiControler;
 use S2low\Services\LocalFileResolver;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
+use S2low\Services\SimpleXmlUtils\SignedChecker;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\helios\FichierCompteur;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
@@ -588,7 +589,8 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
             new FichierCompteur($this->counterDir . '/counter.txt'),
             static::getContainer()->get(LoggerInterface::class),
             new PesAllerReader(),
-            new HeliosNamesGenerator()
+            new HeliosNamesGenerator(),
+            new SignedChecker()
         );
     }
 
