@@ -11,6 +11,7 @@ use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2low\Services\ProcessCommand\CommandLauncher;
 use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2low\Services\SimpleXmlUtils\SignedChecker;
+use S2low\Services\Validators\XadesSignatureValidator;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\helios\FichierCompteur;
 use S2lowLegacy\Class\helios\HeliosTransmissionWindowsSQL;
@@ -52,14 +53,8 @@ class HeliosEnvoiControler
         private readonly PesAllerReader $pesAllerReader,
         private readonly HeliosNamesGenerator $namesGenerator,
         private readonly SignedChecker $signedChecker,
+        private readonly XadesSignatureValidator $xadesSignatureValidator
     ) {
-        $this->xadesSignature = new XadesSignature(
-            XMLSEC1_PATH,
-            EXTENDED_VALIDCA_PATH,
-            new XadesSignatureParser(),
-            new PemCertificateFactory(),
-            new VerifyPemCertificate(new OpenSSLWrapper(new CommandLauncher()))
-        );
     }
 
     public function setDoNotVerifyNomFicUnicity(bool $do_not_verify_nom_fic_unicity): void
@@ -152,7 +147,7 @@ class HeliosEnvoiControler
         }
 
         if ($this->signedChecker->isSigned($file_path)) {
-                $xadesSignatureVerificationResult = $this->xadesSignature->verifyWithReturn($file_path);
+                $xadesSignatureVerificationResult = $this->xadesSignatureValidator->validate($file_path);
             if (!$xadesSignatureVerificationResult->verification_success) {
                 $this->updateStatus(
                     $transaction_id,

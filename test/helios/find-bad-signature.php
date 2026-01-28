@@ -3,6 +3,7 @@
 use S2low\Services\ProcessCommand\CommandLauncher;
 use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2low\Services\SimpleXmlUtils\SignedChecker;
+use S2low\Services\Validators\XadesSignatureValidator;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Lib\PemCertificateFactory;
@@ -13,6 +14,7 @@ use S2lowLegacy\Lib\XadesSignatureParser;
 require_once(__DIR__ . "/../../init/init.php");
 $sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 $signedChecker = LegacyObjectsManager::getLegacyObjectInstancier()->get(SignedChecker::class);
+$xadesSignatureValidator = LegacyObjectsManager::getObject(XadesSignatureValidator::class);
 
 if (empty($argv[1])) {
     echo "Usage : {$argv[0]} YYYY-mm-dd\n";
@@ -29,14 +31,6 @@ echo "Analyse de $nb_transaction fichiers\n";
 
 $error_list = array();
 
-$xadesSignature = new XadesSignature(
-    XMLSEC1_PATH,
-    EXTENDED_VALIDCA_PATH,
-    new XadesSignatureParser(),
-    new PemCertificateFactory(),
-    new VerifyPemCertificate(new OpenSSLWrapper(new CommandLauncher()))
-);
-
 foreach ($transactions_list as $num_transaction => $transaction_helios) {
     echo "Transaction {$transaction_helios['id']} ($num_transaction/$nb_transaction)\n";
     $pes_aller = HELIOS_FILES_UPLOAD_ROOT . "/{$transaction_helios['sha1']}";
@@ -47,7 +41,7 @@ foreach ($transactions_list as $num_transaction => $transaction_helios) {
         continue;
     }
 
-    $xadesSignatureValidationResult = $xadesSignature->verifyWithReturn($pes_aller);
+    $xadesSignatureValidationResult = $xadesSignatureValidator->validate($pes_aller);
 
     echo "Vérification : " . ($xadesSignatureValidationResult->verification_success ? "OK" : "FAIL") . "\n";
 

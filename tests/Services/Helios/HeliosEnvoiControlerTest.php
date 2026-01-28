@@ -16,6 +16,7 @@ use S2low\Services\Helios\HeliosEnvoiControler;
 use S2low\Services\LocalFileResolver;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2low\Services\SimpleXmlUtils\SignedChecker;
+use S2low\Services\Validators\XadesSignatureValidator;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\helios\FichierCompteur;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
@@ -590,7 +591,8 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
             static::getContainer()->get(LoggerInterface::class),
             new PesAllerReader(),
             new HeliosNamesGenerator(),
-            new SignedChecker()
+            new SignedChecker(),
+            static::getContainer()->get(XadesSignatureValidator::class)
         );
     }
 
