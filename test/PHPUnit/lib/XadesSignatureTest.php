@@ -12,6 +12,8 @@ use S2lowLegacy\Lib\XadesSignatureParser;
 
 class XadesSignatureTest extends TestCase
 {
+    public const TEST_FILE = __DIR__ . "/fixtures/HELIOS_SIMU_ALR2_1445334258_694103934.xml";
+
     private function getXadesSignature(): XadesSignature
     {
         $xadesSignature = new XadesSignature(
@@ -40,7 +42,7 @@ class XadesSignatureTest extends TestCase
     public function testVerifyNOCA()
     {
         $xadesSignature = $this->getXadesSignature();
-        $xadesSignature->verify(__DIR__ . "/fixtures/HELIOS_SIMU_ALR2_1445334258_694103934.xml");
+        $xadesSignature->verify(self::TEST_FILE);
         $this->assertTrue(true);    //Test no exception is thrown
     }
 
@@ -55,17 +57,6 @@ class XadesSignatureTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("Impossible d'affirmer que la signature correspond au fichier");
         $xadesSignature->verify(__DIR__ . "/fixtures/signature_bordereau_bad.xml");
-    }
-
-    public function testDeleteSignature()
-    {
-        $file = __DIR__ . "/fixtures/HELIOS_SIMU_ALR2_1445334258_694103934.xml";
-
-        $result = "/tmp/result.xml";
-        $xadesSignature = $this->getXadesSignature();
-        $this->assertTrue($xadesSignature->isSigned($file));
-        $xadesSignature->deleteSignature($file, $result);
-        $this->assertFalse($xadesSignature->isSigned($result));
     }
 
     /** @dataProvider datesProvider */

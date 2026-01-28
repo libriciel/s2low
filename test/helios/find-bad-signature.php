@@ -2,6 +2,8 @@
 
 use S2low\Services\ProcessCommand\CommandLauncher;
 use S2low\Services\ProcessCommand\OpenSSLWrapper;
+use S2low\Services\SimpleXmlUtils\SignedChecker;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\SQLQuery;
@@ -9,7 +11,8 @@ use S2lowLegacy\Lib\XadesSignature;
 use S2lowLegacy\Lib\XadesSignatureParser;
 
 require_once(__DIR__ . "/../../init/init.php");
-$sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$signedChecker = LegacyObjectsManager::getLegacyObjectInstancier()->get(SignedChecker::class);
 
 if (empty($argv[1])) {
     echo "Usage : {$argv[0]} YYYY-mm-dd\n";
@@ -39,7 +42,7 @@ foreach ($transactions_list as $num_transaction => $transaction_helios) {
     $pes_aller = HELIOS_FILES_UPLOAD_ROOT . "/{$transaction_helios['sha1']}";
     echo "Analyse du fichier : $pes_aller\n";
 
-    if (! $xadesSignature->isSigned($pes_aller)) {
+    if (! $signedChecker->isSigned($pes_aller)) {
         echo "Le fichier n'est pas signé\n";
         continue;
     }
