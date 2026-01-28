@@ -18,11 +18,12 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
     public function testRightFileWithSignature()
     {
         $authorized_ca_path = __DIR__ . "/fixtures/signaturesPKCS7/ac";
-        $verifyPKCS7Signature = $this->getVerifyPKCS7Signature($authorized_ca_path);
+        $verifyPKCS7Signature = $this->getVerifyPKCS7Signature();
 
         $this->assertTrue(
             $verifyPKCS7Signature->verifySignature(
                 file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s"),
+                $authorized_ca_path,
                 [],
                 __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
                 new DateTime('01-01-2025')
@@ -33,12 +34,13 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
     public function testWrongFileWithSignature()
     {
         $authorized_ca_path = __DIR__ . "/fixtures/signaturesPKCS7/ac";
-        $verifyPKCS7Signature = $this->getVerifyPKCS7Signature($authorized_ca_path);
+        $verifyPKCS7Signature = $this->getVerifyPKCS7Signature();
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("La vérification de la signature a échoué");
         $verifyPKCS7Signature->verifySignature(
             file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s"),
+            $authorized_ca_path,
             [],
             __DIR__ . "/fixtures/toto.txt",
             new DateTime('01-01-2025')
@@ -48,12 +50,13 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
     public function testRightFileWithWrongAC()
     {
         $authorized_ca_path = __DIR__ . "/";
-        $verifyPKCS7Signature = $this->getVerifyPKCS7Signature($authorized_ca_path);
+        $verifyPKCS7Signature = $this->getVerifyPKCS7Signature();
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage(" unable to get local issuer certificate");
         $verifyPKCS7Signature->verifySignature(
             file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s"),
+            $authorized_ca_path,
             [],
             __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
             new DateTime('01-01-2025')
@@ -79,12 +82,13 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
     public function testWrongDateIsTakenIntoAccount(DateTime $dateTime, string $message)
     {
         $authorized_ca_path = __DIR__ . "/fixtures/signaturesPKCS7/ac";
-        $verifyPKCS7Signature = $this->getVerifyPKCS7Signature($authorized_ca_path);
+        $verifyPKCS7Signature = $this->getVerifyPKCS7Signature();
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage($message);
         $verifyPKCS7Signature->verifySignature(
             file_get_contents(__DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf.p7s"),
+            $authorized_ca_path,
             [],
             __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
             $dateTime
@@ -116,11 +120,12 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
         $baseSignatureDir = __DIR__ . "/fixtures/signaturesPKCS7";
 
         $authorized_ca_path = __DIR__ . "/fixtures/signaturesPKCS7/ac";
-        $verifyPKCS7Signature = $this->getVerifyPKCS7Signature($authorized_ca_path);
+        $verifyPKCS7Signature = $this->getVerifyPKCS7Signature();
 
         $this->assertTrue(
             $verifyPKCS7Signature->verifySignature(
                 file_get_contents("$baseSignatureDir/test_pdf.pdf.p7s"),
+                $authorized_ca_path,
                 [],
                 "$baseSignatureDir/test_pdf.pdf",
                 $dateTime
@@ -146,10 +151,11 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
     {
         $baseSignatureDir = __DIR__ . "/fixtures/signaturesPKCS7";
         $authorized_ca_path = "$baseSignatureDir/ac/";
-        $verificator = $this->getVerifyPKCS7Signature($authorized_ca_path);
+        $verificator = $this->getVerifyPKCS7Signature();
 
         $verificator->verifySignature(
             file_get_contents("$baseSignatureDir/test_pdf.pdf.p7s"),
+            $authorized_ca_path,
             VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS,
             null,
             new DateTime('01-01-2025')
@@ -158,13 +164,11 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
     }
 
     /**
-     * @param string $authorized_ca_path
      * @return \S2lowLegacy\Class\VerifyPKCS7Signature
      */
-    private function getVerifyPKCS7Signature(string $authorized_ca_path): VerifyPKCS7Signature
+    private function getVerifyPKCS7Signature(): VerifyPKCS7Signature
     {
         return new VerifyPKCS7Signature(
-            $authorized_ca_path,
             new OpenSSLWrapper(new CommandLauncher()),
             new VerifyPemCertificate(new OpenSSLWrapper(new CommandLauncher())),
             new PemCertificateFactory()

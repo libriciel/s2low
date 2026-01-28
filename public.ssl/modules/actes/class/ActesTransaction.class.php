@@ -2,12 +2,14 @@
 
 use S2low\Services\ProcessCommand\CommandLauncher;
 use S2low\Services\ProcessCommand\OpenSSLWrapper;
+use S2low\Services\Validators\PKCS7SignatureValidator;
 use S2lowLegacy\Class\actes\ActesClassificationCodesSQL;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\DataObject;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
 use S2lowLegacy\Class\XMLHelper;
@@ -891,16 +893,11 @@ class ActesTransaction extends DataObject
 
                 if (isset($actesItems->Document->Signature)) {
                     try {
-                        $verifyPKCS7Signature = new VerifyPKCS7Signature(
-                            RGS_VALIDCA_PATH,
-                            new OpenSSLWrapper(new CommandLauncher()),
-                            new VerifyPemCertificate(new OpenSSLWrapper(new CommandLauncher())),
-                            new PemCertificateFactory()
-                        );
-                        $verifyPKCS7Signature->verifySignature(
+                        /** @var \S2low\Services\Validators\PKCS7SignatureValidator $PKCS7SignatureValidator */
+                        $PKCS7SignatureValidator = LegacyObjectsManager::getObject(PKCS7SignatureValidator::class);
+                        $PKCS7SignatureValidator->validate(
                             $actesItems->Document->Signature,
-                            [],
-                            $this->rootDir . "/" . $actePath
+                            $this->rootDir . '/' . $actePath
                         );
                     } catch (Exception $e) {
                         $this->errorMsg = $e->getMessage();

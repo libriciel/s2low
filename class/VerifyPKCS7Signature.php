@@ -13,26 +13,26 @@ class VerifyPKCS7Signature
 
 
     public function __construct(
-        string $authorized_ca_path,
         OpenSSLWrapper $openSSLWrapper,
         private readonly VerifyPemCertificate $verifyPemCertificate,
         private readonly PemCertificateFactory $pemCertificateFactory
     ) {
         $this->openSSLWrapper = $openSSLWrapper;
-        $this->authorized_ca_path = $authorized_ca_path;
     }
 
     /**
      * @param string $signature
+     * @param string $certificateStorePath
      * @param array $filteredErrors
      * @param string|null $file_path
      * @param \DateTime|null $dateTime
      * @return bool
-     * @throws Exception
+     * @throws \S2lowLegacy\Class\RecoverableException
      */
 
     public function verifySignature(
         string $signature,
+        string $certificateStorePath,
         array $filteredErrors = [],
         ?string $file_path = null,
         ?DateTime $dateTime = null,
@@ -47,14 +47,14 @@ class VerifyPKCS7Signature
 
             $this->verifyPemCertificate->checkCertificateWithOpenSSL(
                 $certificate_file,
-                $this->authorized_ca_path,
+                $certificateStorePath,
                 $filteredErrors,
                 $dateTime->getTimestamp()
             );
             if ($file_path) {
                 $this->openSSLWrapper->checkFileContentCorrespondsToSignature(
                     $signature_file,
-                    $this->authorized_ca_path,
+                    $certificateStorePath,
                     $file_path
                 );
             }
