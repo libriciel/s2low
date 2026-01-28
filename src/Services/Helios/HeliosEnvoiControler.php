@@ -10,6 +10,7 @@ use S2low\Services\LocalFileResolver;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2low\Services\ProcessCommand\CommandLauncher;
 use S2low\Services\ProcessCommand\OpenSSLWrapper;
+use S2low\Services\SimpleXmlUtils\SignedChecker;
 use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\helios\FichierCompteur;
 use S2lowLegacy\Class\helios\HeliosTransmissionWindowsSQL;
@@ -49,7 +50,8 @@ class HeliosEnvoiControler
         private readonly FichierCompteur $fichierCompteur,
         private readonly LoggerInterface $logger,
         private readonly PesAllerReader $pesAllerReader,
-        private readonly HeliosNamesGenerator $namesGenerator
+        private readonly HeliosNamesGenerator $namesGenerator,
+        private readonly SignedChecker $signedChecker,
     ) {
         $this->xadesSignature = new XadesSignature(
             XMLSEC1_PATH,
@@ -149,7 +151,7 @@ class HeliosEnvoiControler
             return;
         }
 
-        if ($this->xadesSignature->isSigned($file_path)) {
+        if ($this->signedChecker->isSigned($file_path)) {
             try {
                 $this->xadesSignature->verify($file_path);
             } catch (Exception $exception) {

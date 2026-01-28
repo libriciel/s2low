@@ -5,6 +5,7 @@ use S2low\Services\CloudFileStorageInterface;
 use S2low\Services\LocalFileResolver;
 use S2low\Services\ProcessCommand\CommandLauncher;
 use S2low\Services\ProcessCommand\OpenSSLWrapper;
+use S2low\Services\SimpleXmlUtils\SignedChecker;
 use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\helios\HeliosPESValidation;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
@@ -87,7 +88,9 @@ try {
 
 $xades_output = $xadesSignature->getLastOutput();
 
-$is_signed = $xadesSignature->isSigned($filename);
+$signedChecker = new SignedChecker();
+
+$is_signed = $signedChecker->isSigned($filename);
 
 
 $doc = new HTMLLayout();

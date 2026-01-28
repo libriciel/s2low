@@ -33,20 +33,6 @@ class XadesSignature
         return $this->last_output;
     }
 
-    public function isSigned($xml_file)
-    {
-        $xml = simplexml_load_file($xml_file, "SimpleXMLElement", LIBXML_PARSEHUGE);
-
-        $xpath = "//*[namespace-uri()='http://www.w3.org/2000/09/xmldsig#'][local-name()='Signature']";
-
-        $signatureNodeList = $xml->xpath($xpath);
-        if ($signatureNodeList) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     /**
      * @throws \Exception
      */
@@ -123,16 +109,6 @@ class XadesSignature
         exec($command, $output, $return_var);
         $this->last_output = implode("\n", $output);
         return $return_var == 0;
-    }
-
-    public function deleteSignature($xml_file_signed, $xml_file_result)
-    {
-        $xml = simplexml_load_file($xml_file_signed, "SimpleXMLElement", LIBXML_PARSEHUGE);
-        $tab = $xml->children(self::NS_DS_URI);
-        if ($tab) {
-            unset($tab[0]);
-        }
-        $xml->asXML($xml_file_result);
     }
 
     /**
