@@ -3,6 +3,7 @@
 namespace S2lowLegacy\Lib;
 
 //http://users.dcc.uchile.cl/~pcamacho/tutorial/web/xmlsec/xmlsec.html
+use S2low\DTO\XadesSignatureValidationResult;
 use S2lowLegacy\Class\VerifyPemCertificate;
 use DateTime;
 use DateTimeZone;
@@ -31,6 +32,23 @@ class XadesSignature
     public function getLastOutput()
     {
         return $this->last_output;
+    }
+
+    public function verifyWithReturn($xml_file_signed): XadesSignatureValidationResult
+    {
+        try {
+            $this->verify($xml_file_signed);
+            return new XadesSignatureValidationResult(
+                true,
+                $this->getLastOutput()
+            );
+        } catch (Exception $exception) {
+            return new XadesSignatureValidationResult(
+                false,
+                $this->getLastOutput(),
+                $exception->getMessage()
+            );
+        }
     }
 
     /**
@@ -113,7 +131,6 @@ class XadesSignature
 
     /**
      * @param $signatureNode
-     * @param $id
      * @param $xml
      * @return mixed
      * @throws \Exception

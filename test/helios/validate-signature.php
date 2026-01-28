@@ -27,15 +27,10 @@ $xadesSignature = new XadesSignature(
     new VerifyPemCertificate(new OpenSSLWrapper(new CommandLauncher()))
 );
 
-$verify = true;
-try {
-    $xadesSignature->verify($xml_file);
-} catch (Exception $e) {
-    $verify = false;
-}
+$xadesSignatureValidationResult = $xadesSignature->verifyWithReturn($xml_file);
 
-echo "Vérification : " . ($verify ? "OK" : "FAIL") . "\n";
+echo "Vérification : " . ($xadesSignatureValidationResult->verification_success ? "OK" : "FAIL") . "\n";
 
-if (! $verify) {
-    echo $xadesSignature->getLastOutput() . "\n";
+if (! $xadesSignatureValidationResult->verification_success) {
+    echo $xadesSignatureValidationResult->errorMessage . "\n";
 }

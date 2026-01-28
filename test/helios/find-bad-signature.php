@@ -47,18 +47,13 @@ foreach ($transactions_list as $num_transaction => $transaction_helios) {
         continue;
     }
 
-    $verify =  true;
-    try {
-        $xadesSignature->verify($pes_aller);
-    } catch (Exception $exception) {
-        $verify = false;
-    }
+    $xadesSignatureValidationResult = $xadesSignature->verifyWithReturn($pes_aller);
 
-    echo "Vérification : " . ($verify ? "OK" : "FAIL") . "\n";
+    echo "Vérification : " . ($xadesSignatureValidationResult->verification_success ? "OK" : "FAIL") . "\n";
 
-    if (! $verify) {
+    if (! $xadesSignatureValidationResult->verification_success) {
         $error_list[] = $transaction_helios['id'];
-        echo $xadesSignature->getLastOutput() . "\n";
+        echo $xadesSignatureValidationResult->errorMessage . "\n";
     }
 }
 

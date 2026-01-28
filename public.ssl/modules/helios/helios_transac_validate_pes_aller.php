@@ -78,13 +78,8 @@ $xadesSignature = new XadesSignature(
     new VerifyPemCertificate(new OpenSSLWrapper(new CommandLauncher()))
 );
 
-$verify_sign =  true;
-try {
-    $xadesSignature->verify($filename);
-} catch (Exception $exception) {
-    $verify_sign = false;
-    $verify_sign_message = $exception->getMessage();
-}
+
+$xadesSignatureValidationResult =  $xadesSignature->verifyWithReturn($filename);
 
 $xades_output = $xadesSignature->getLastOutput();
 
@@ -154,10 +149,10 @@ ob_start();
 
 <?php if (! $is_signed) : ?>
     <div class="alert alert-warning">Le fichier n'est pas signé !</div>
-<?php elseif ($verify_sign) : ?>
+<?php elseif ($xadesSignatureValidationResult->verification_success) : ?>
     <div class="alert alert-success">La signature du fichier est valide !</div>
 <?php else : ?>
-    <div class="alert alert-danger">La signature du fichier n'est pas valide : <?php echo $verify_sign_message?></div>
+    <div class="alert alert-danger">La signature du fichier n'est pas valide : <?php echo $xadesSignatureValidationResult->errorMessage?></div>
 <?php endif;?>
 
 <div>
