@@ -3,6 +3,7 @@
 use Libriciel\LibActes\ArchiveValidator;
 use PHPUnit\ActesUtilitiesTestTrait;
 use Psr\Log\LoggerInterface;
+use S2low\DTO\PadesValidationResult;
 use S2low\Services\PdfValidator;
 use S2low\Services\Validators\PadesValidator;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
@@ -237,7 +238,16 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
     public function testValidateAllOnePadesFailedRecoverable()
     {
         $padesMock = $this->getMockBuilder(PadesValidator::class)->disableOriginalConstructor()->getMock();
-        $padesMock->method("validate")->willThrowException(new RecoverableException("erreur de test"));
+
+        $padesMock->method("validate")->willReturn(
+            new PadesValidationResult(
+                true,
+                false,
+                true,
+                'erreur de test',
+                ''
+            )
+        );
 
         $this->expectException(RecoverableException::class);
         $this->expectExceptionMessage("erreur de test");
@@ -259,7 +269,16 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
     public function testValidateAllOnePadesFailedNotRecoverable()
     {
         $padesMock = $this->getMockBuilder(PadesValidator::class)->disableOriginalConstructor()->getMock();
-        $padesMock->method("validate")->willThrowException(new Exception("erreur de test"));
+        $padesMock->method("validate")->willReturn(
+            new PadesValidationResult(
+                true,
+                false,
+                false,
+                'erreur de test',
+                '',
+                new Exception("message de l'exception")
+            )
+        );
 
         $transaction_id = $this->validateAll(__DIR__ . "/../../fixtures/ok/abc-TACT--000000000--20181024-4.tar.gz", padesMock: $padesMock);
 
@@ -269,7 +288,7 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
         $transaction_info = $actesTransactionsSQL->getLastTransactionWorkflowInfo($transaction_id);
         $this->assertEquals(ActesStatusSQL::STATUS_EN_ERREUR, $transaction_info['status_id']);
         $this->assertEquals(
-            "Enveloppe invalide : Problème sur 10_DE-002-000000000-20181001-201810241655-CC-1-1_1.pdf : erreur de test",
+            "Enveloppe invalide : Problème sur 10_DE-002-000000000-20181001-201810241655-CC-1-1_1.pdf : message de l'exception",
             $transaction_info['message']
         );
         $logsSQL = $this->getObjectInstancier()->get(LogsSQL::class);
@@ -407,7 +426,15 @@ class ActesAnalyseFichierAEnvoyerWorkerTest extends S2lowTestCase
         $this->tmp_dir = $this->tmpFolder->create();
 
         $padesValid = $this->getMockBuilder(PadesValid::class)->disableOriginalConstructor()->getMock();
-        $padesValid->method("validate")->willReturn(true);
+        $padesValid->method("validate")->willReturn(
+            new PadesValidationResult(
+                true,
+                true,
+                false,
+                '',
+                ''
+            )
+        );
 
         $this->getObjectInstancier()->set(PadesValid::class, $padesValid);
     }

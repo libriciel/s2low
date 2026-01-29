@@ -1,15 +1,9 @@
 <?php
 
-use S2low\Services\ProcessCommand\CommandLauncher;
-use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2low\Services\SimpleXmlUtils\SignedChecker;
 use S2low\Services\Validators\XadesSignatureValidator;
 use S2lowLegacy\Class\LegacyObjectsManager;
-use S2lowLegacy\Class\VerifyPemCertificate;
-use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\SQLQuery;
-use S2lowLegacy\Lib\XadesSignature;
-use S2lowLegacy\Lib\XadesSignatureParser;
 
 require_once(__DIR__ . "/../../init/init.php");
 $sqlQuery = LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);

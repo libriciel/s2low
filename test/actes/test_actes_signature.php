@@ -1,12 +1,7 @@
 <?php
 
-use S2low\Services\ProcessCommand\CommandLauncher;
-use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2low\Services\Validators\PKCS7SignatureValidator;
 use S2lowLegacy\Class\VerifyPemCertificate;
-use S2lowLegacy\Class\VerifyPKCS7Signature;
-use S2lowLegacy\Lib\PemCertificate;
-use S2lowLegacy\Lib\PemCertificateFactory;
 
 $file_path = "/Users/eric/Desktop/test/034-123456725-20151201-TESTS132-AU-1-1_1.pdf";
 

@@ -943,3 +943,29 @@ services:
     autowire: true
     arguments:
       $authBridge: '@S2low\Security\LegacyAuthenticationBridge'
+
+  S2low\Infrastructure\CertificateStores\RGS:
+    class: S2low\Infrastructure\CertificateStores\Store
+    arguments:
+      $path: '%app.path_to_rgs_valid_ca%'
+      $type: !php/const S2low\Infrastructure\CertificateStores\Type::EXTENDED
+
+  S2low\Infrastructure\CertificateStores\EXTENDED:
+    class: S2low\Infrastructure\CertificateStores\Store
+    arguments:
+      $path: '%app.path_to_rgs_valid_cargs%'
+      $type: !php/const S2low\Infrastructure\CertificateStores\Type::RGS
+
+  S2low\Infrastructure\CertificateStores\Stores:
+    public: true
+    arguments:
+      $only_use_validcargs: '%app.only_use_validcargs%'
+      $stores:
+        - '@S2low\Infrastructure\CertificateStores\RGS'
+        - '@S2low\Infrastructure\CertificateStores\EXTENDED'
+
+  S2low\Services\Validators\PadesValidator:
+    public: true
+
+  S2low\Services\Validators\XadesSignatureValidator:
+    public: true

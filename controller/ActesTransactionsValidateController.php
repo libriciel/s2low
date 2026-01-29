@@ -4,6 +4,7 @@ namespace S2lowLegacy\Controller;
 
 use Exception;
 use finfo;
+use S2low\Services\Validators\PadesValidator;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesRetriever;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
@@ -20,6 +21,7 @@ class ActesTransactionsValidateController extends Controller
     protected bool $archive_is_valide;
     protected string $envelope_filename;
     protected int $transaction_id;
+
     /**
      * @throws Exception
      */
@@ -37,7 +39,6 @@ class ActesTransactionsValidateController extends Controller
         $actesEnveloppeSQL = $this->getObjectInstancier()->get(ActesEnvelopeSQL::class);
 
         $envelope_info = $actesEnveloppeSQL->getInfo($envelope_id);
-
 
 
         $actesRetriever = $this->getObjectInstancier()->get('app.localFileResolver.acte_enveloppe');
@@ -71,7 +72,8 @@ class ActesTransactionsValidateController extends Controller
 
         $tgzExtractor->extract($archive_path, '');
 
-        $padesValid = $this->getObjectInstancier()->get(PadesValid::class);
+        /** @var \S2low\Services\Validators\PadesValidator $padesValidator */
+        $padesValidator = $this->getObjectInstancier()->get(PadesValidator::class);
 
         $pades_result = [];
 
@@ -83,18 +85,13 @@ class ActesTransactionsValidateController extends Controller
                 continue;
             }
 
+            $padesValidatorResult = $padesValidator->validate($file_path);
+            $pades_result[$file]['is_signed'] = $padesValidatorResult->isSigned;
+            $pades_result[$file]['message'] = $padesValidatorResult->message;
+            $pades_result[$file]['is_valid'] = $padesValidatorResult->isValid;
+            $pades_is_valide = $pades_is_valide && $padesValidatorResult->isValid;
 
-            try {
-                $pades_result[$file]['is_signed'] = $padesValid->validate($file_path);
-                $pades_result[$file]['message'] = $pades_result[$file]['is_signed'] ? "Signature valide" : "Pas de signature";
-                $pades_result[$file]['is_valid'] = true;
-            } catch (Exception $e) {
-                $pades_result[$file]['is_signed'] = true;
-                $pades_result[$file]['is_valid'] = false;
-                $pades_result[$file]['message'] = "Erreur lors de la validation PADES : " . $e->getMessage();
-                $pades_is_valide = false;
-            }
-            $pades_result[$file]['last_result'] = $padesValid->getLastResult();
+            $pades_result[$file]['last_result'] = $padesValidatorResult->lastResult;
         }
 
         $this->pades_result = $pades_result;

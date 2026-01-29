@@ -47,7 +47,7 @@ class VerifyPemCertificate
      * @return void
      * @throws \S2lowLegacy\Class\RecoverableException
      */
-    protected function checkForCrlRevocation(string $file, string $authorized_ca_path): void
+    private function checkForCrlRevocation(string $file, string $authorized_ca_path): void
     {
         $file_r0_name = $this->openSSLWrapper->extractHash($file);
         $file_r0 = $authorized_ca_path . "/$file_r0_name.r0";

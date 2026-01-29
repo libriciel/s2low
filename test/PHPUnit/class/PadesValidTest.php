@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace PHPUnit\class;
 
 use Exception;
+use S2low\DTO\PadesValidationResult;
+use S2low\Exceptions\PadesValidConnectionException;
 use S2lowLegacy\Class\CurlWrapper;
 use S2lowLegacy\Class\CurlWrapperFactory;
 use S2lowLegacy\Class\PadesValid;
@@ -106,7 +108,7 @@ class PadesValidTest extends S2lowTestCase
             $padesValid->validate(
                 __DIR__ . '/fixtures/signature-pades/Courrier.pdf',
                 'certificateStorePath'
-            )
+            )->isSigned
         );
     }
 
@@ -119,8 +121,10 @@ class PadesValidTest extends S2lowTestCase
         $lastError,
         $lastOutput,
         $lastHttpCode,
-        $exceptionClass,
-        $exceptionMessage
+        $isSigned,
+        $isValid,
+        $connectionError,
+        $message
     ) {
 
         $padesValid = $this->createPadesValidForExceptions(
@@ -130,22 +134,24 @@ class PadesValidTest extends S2lowTestCase
             $lastOutput
         );
 
-        $this->expectException($exceptionClass);
-        $this->expectExceptionMessage($exceptionMessage);
-        $padesValid->validate(
+        $result = $padesValid->validate(
             __DIR__ . '/fixtures/signature-pades/Courrier.pdf',
             'certificateStorePath'
         );
+        self::assertSame($result->isSigned, $isSigned);
+        self::assertSame($result->isValid, $isValid);
+        self::assertSame($result->connectionError, $connectionError);
+        self::assertSame($result->message, $message);
     }
 
     public function provider(): array
     {
         return[
-            ['{"signatures":[],"signed":true}', '', '', '',Exception::class, 'Impossible de determiner si le fichier est signé'],
-            ['{"signatures":[]}', '', '', '',Exception::class, 'Impossible de determiner si le fichier est signé'],
-            ['', 'last error', 'last output', '404',Exception::class, 'last error last output'],
-            ['', 'last error', 'last output', '',RecoverableException::class, 'last error last output'],
-            ['uzye', '', '', '',Exception::class, 'Impossible de décoder le message de pades-valid : '],
+            ['{"signatures":[],"signed":true}', '', '', '',true,false,false, 'Erreur lors de la validation PADES : Impossible de determiner si le fichier est signé'],
+            ['{"signatures":[]}', '', '', '',true,false,false, 'Erreur lors de la validation PADES : Impossible de determiner si le fichier est signé'],
+            ['', 'last error', 'last output', '404',true,false,false, 'Erreur lors de la validation PADES : last error last output'],
+            ['', 'last error', 'last output', '',true,false,true, 'Erreur de connection à pades-valid : last error last output'],
+            ['uzye', '', '', '',true,false,false, 'Erreur lors de la validation PADES : Impossible de décoder le message de pades-valid : '],
 
 
         ];
@@ -162,7 +168,7 @@ class PadesValidTest extends S2lowTestCase
             $padesValid->validate(
                 '/vers/un/fichier',
                 'certificateStorePath'
-            )
+            )->isSigned
         );
     }
 
@@ -177,7 +183,7 @@ class PadesValidTest extends S2lowTestCase
             $padesValid->validate(
                 '/vers/un/fichier',
                 'certificateStorePath'
-            )
+            )->isSigned
         );
     }
 
@@ -192,7 +198,7 @@ class PadesValidTest extends S2lowTestCase
             $padesValid->validate(
                 '/vers/un/fichier',
                 'certificateStorePath'
-            )
+            )->isSigned
         );
     }
 
@@ -205,12 +211,14 @@ class PadesValidTest extends S2lowTestCase
             'Une Exception'
         );
 
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Une Exception');
-
-        $padesValid->validate(
+        $result = $padesValid->validate(
             '/vers/un/fichier',
             'certificateStorePath'
+        );
+
+        self::assertSame(
+            'Une Exception',
+            $result->exception->getMessage()
         );
     }
 }
