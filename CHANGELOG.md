@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.8 - 
+
+### Corrections
+
+- Contrôle de la longueur des champs CodBud, CodCol et IdPost (PES Aller) pour éviter les erreurs de transmission #1476
+
 ## 5.1.7 - 2026-01-12
 
 ## Ajouts

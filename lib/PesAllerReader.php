@@ -23,22 +23,57 @@ class PesAllerReader
             $cod_col = $pes_xml->EnTetePES->CodCol['V'];
         }
 
-        if (! $cod_col) {
-            throw new Exception('La balise EnTetePES/CodCol ou EnTetePES/CodColl n\'est pas présente ou est vide');
-        }
         $id_post = $pes_xml->EnTetePES->IdPost['V'];
-        if (! $id_post) {
-            throw new Exception("La balise EnTetePES/IdPost n'est pas présente ou est vide");
-        }
         $cod_bud = $pes_xml->EnTetePES->CodBud['V'];
-        if (! $cod_bud) {
-            throw new Exception("La balise EnTetePES/CodBud n'est pas présente ou est vide");
-        }
+
+        $expectedLength = 3;
+        $nomBalise = 'EnTetePES/CodCol ou EnTetePES/CodColl';
+        $this->checkStringLength($cod_col, $expectedLength, $nomBalise);
+
+        $expectedLength = 6;
+        $nomBalise = 'EnTetePES/IdPost';
+        $this->checkStringLength($id_post, $expectedLength, $nomBalise);
+
+        $expectedLength = 2;
+        $nomBalise = 'EnTetePES/CodBud';
+        $this->checkStringLength($cod_bud, $expectedLength, $nomBalise);
+
         return new PesAllerData(
             $isPesAcquitRetour,
             $cod_col,
             $id_post,
             $cod_bud
         );
+    }
+
+    /**
+     * @param string $element
+     * @param int $expectedLength
+     * @param string $nomBalise
+     * @return void
+     * @throws \Exception
+     */
+    private function checkStringLength(?string $element, int $expectedLength, string $nomBalise): void
+    {
+        if (! $element) {
+            throw new Exception(
+                sprintf(
+                    'La balise %s n\'est pas présente ou est vide',
+                    $nomBalise
+                ),
+            );
+        }
+
+        $strlenCodCol = strlen($element);
+        if ($strlenCodCol != $expectedLength) {
+            throw new Exception(
+                sprintf(
+                    'Non-conformité PES aller : la balise %s contient %s caractères (%s attendus).',
+                    $nomBalise,
+                    $strlenCodCol,
+                    $expectedLength
+                )
+            );
+        }
     }
 }
