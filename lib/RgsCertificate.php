@@ -67,9 +67,4 @@ class RgsCertificate
 
         return $result;
     }
-
-    public function hasSSlClientPurpose(string $certificate): bool
-    {
-        return openssl_x509_checkpurpose($certificate, X509_PURPOSE_SSL_CLIENT, [$this->validca_path]) === true;
-    }
 }
