@@ -963,3 +963,9 @@ services:
       $stores:
         - '@S2low\Infrastructure\CertificateStores\RGS'
         - '@S2low\Infrastructure\CertificateStores\EXTENDED'
+
+  S2low\Services\Validators\PadesValidator:
+    public: true
+
+  S2low\Services\Validators\XadesSignatureValidator:
+    public: true

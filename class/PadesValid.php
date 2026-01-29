@@ -3,6 +3,8 @@
 namespace S2lowLegacy\Class;
 
 use Exception;
+use S2low\DTO\PadesValidationResult;
+use S2low\Exceptions\PadesValidConnectionException;
 
 class PadesValid
 {
@@ -35,27 +37,57 @@ class PadesValid
     /**
      * @param string $filepath
      * @param string $certificatePath
-     * @return bool
-     * @throws \S2lowLegacy\Class\RecoverableException
+     * @return \S2low\DTO\PadesValidationResult
      * @throws \Exception
      */
-    public function validate(string $filepath, string $certificatePath): bool
+    public function validate(string $filepath, string $certificatePath): PadesValidationResult
     {
-        $result = $this->getPadesValidResult($filepath);
-        if ($result === false) {
-            return false;
+        try {
+            $result = $this->getPadesValidResult($filepath);
+            if ($result === false) {
+                return new PadesValidationResult(
+                    false,
+                    true,
+                    false,
+                    'Pas de signature',
+                    $this->getLastResult()
+                );
+            }
+            foreach ($result->signatures as $signature) {
+                $this->verifyPadesSignature->validateSignature($signature, $certificatePath);
+            }
+            return new PadesValidationResult(
+                true,
+                true,
+                false,
+                'Signature valide',
+                $this->getLastResult()
+            );
+        } catch (PadesValidConnectionException $e) {
+            return new PadesValidationResult(
+                true,
+                false,
+                true,
+                'Erreur de connection à pades-valid : ' . $e->getMessage(),
+                $this->getLastResult()
+            );
+        } catch (Exception $e) {
+            return new PadesValidationResult(
+                true,
+                false,
+                false,
+                'Erreur lors de la validation PADES : ' . $e->getMessage(),
+                $this->getLastResult(),
+                $e
+            );
         }
-        foreach ($result->signatures as $signature) {
-            $this->verifyPadesSignature->validateSignature($signature, $certificatePath);
-        }
-        return true;
     }
 
     /**
      * @param $filepath
      * @return bool|mixed
      * @throws Exception
-     * @throws RecoverableException
+     * @throws \S2low\Exceptions\PadesValidConnectionException
      */
     private function getPadesValidResult($filepath)
     {
@@ -69,7 +101,7 @@ class PadesValid
                 throw new Exception($curlWrapper->getLastError() . " " . $curlWrapper->getLastOutput());
             }
 
-            throw new RecoverableException($curlWrapper->getLastError() . " " . $curlWrapper->getLastOutput());
+            throw new PadesValidConnectionException($curlWrapper->getLastError() . " " . $curlWrapper->getLastOutput());
         }
         $result = json_decode($result);
         if (! $result) {

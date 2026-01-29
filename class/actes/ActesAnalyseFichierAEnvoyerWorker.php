@@ -4,6 +4,7 @@ namespace S2lowLegacy\Class\actes;
 
 use Error;
 use Psr\Log\LoggerInterface;
+use S2low\Exceptions\PadesValidConnectionException;
 use S2low\Services\CloudFileStorageInterface;
 use S2low\Services\LocalFileResolver;
 use S2low\Services\Validators\PadesValidator;
@@ -182,6 +183,7 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
 
     /**
      * @throws RecoverableException
+     * @throws \Exception
      */
     private function validatePADESOneFile($filepath): void
     {
@@ -193,12 +195,19 @@ class ActesAnalyseFichierAEnvoyerWorker implements IWorker
         }
 
         $this->pdfValidator->check($filepath);
-        try {
-            $this->padesValidator->validate($filepath);
-        } catch (RecoverableException $e) {
-            throw $e;
-        } catch (Exception $e) {
-            throw new Exception("Problème sur " . basename($filepath) . " : " . $e->getMessage(), $e->getCode(), $e);
+
+        $result = $this->padesValidator->validate($filepath);
+
+        if ($result->connectionError) {
+            throw new RecoverableException($result->message);
+        }
+        if (!$result->isValid) {
+            $e = $result->exception;
+            throw new Exception(
+                'Problème sur ' . basename($filepath) . ' : ' . $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
         }
     }
 

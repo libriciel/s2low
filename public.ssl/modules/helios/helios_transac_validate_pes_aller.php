@@ -141,7 +141,7 @@ ob_start();
 
 <div>
     <p>
-        <?php echo $xadesSignatureValidationResult->xades_output?> ?>
+        <?php echo $xadesSignatureValidationResult->xades_output ?>
     </p>
 
 </div>

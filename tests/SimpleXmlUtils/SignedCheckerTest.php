@@ -5,7 +5,6 @@ namespace S2low\Tests\SimpleXmlUtils;
 use PHPUnit\Framework\TestCase;
 use S2low\Services\SimpleXmlUtils\SignatureDeleter;
 use S2low\Services\SimpleXmlUtils\SignedChecker;
-use S2lowLegacy\Lib\XadesSignature;
 
 class SignedCheckerTest extends TestCase
 {
