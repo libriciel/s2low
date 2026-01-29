@@ -9,6 +9,11 @@ use S2lowLegacy\Lib\PemCertificateFactory;
 
 class VerifyPadesSignature
 {
+    /**
+     * @var \S2lowLegacy\Lib\PemCertificateFactory
+     */
+    private PemCertificateFactory $pemCertificateFactory;
+
     public function __construct(
         PemCertificateFactory $pemCertificateFactory,
         private readonly VerifyPemCertificate $verifyPemCertificate
