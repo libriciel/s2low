@@ -1,5 +1,7 @@
 <?php
 
+use S2low\Services\OpenSsl\ClientPurpose;
+use S2low\Services\Validators\ClientPurposeValidator;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Group;
@@ -306,10 +308,13 @@ ob_start();
     </div>
 
     <?php
+        /** @var \S2low\Services\Validators\ClientPurposeValidator $clientPurposeValidator */
+        $clientPurposeValidator = LegacyObjectsManager::getObject(ClientPurposeValidator::class);
+
         $rgsCertificate = new RgsCertificate(OPENSSL_PATH, RGS_VALIDCA_PATH);
         $is_rgs = $rgsCertificate->isRgsCertificate($him->get('certificate'));
         $rgsCertificateExtended = new RgsCertificate(OPENSSL_PATH, $pathToValidCa);
-        $has_sslclient_purpose = $rgsCertificateExtended->hasSSlClientPurpose($him->get('certificate'));
+        $has_sslclient_purpose = $clientPurposeValidator->validate($him->get('certificate'));
     ?>
     <?php if (! $is_rgs) : ?>
         <div class="alert alert-warning col-md-9 col-md-offset-1">

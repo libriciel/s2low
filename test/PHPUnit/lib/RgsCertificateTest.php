@@ -5,6 +5,9 @@ use PHPUnit\Framework\TestCase;
 
 class RgsCertificateTest extends TestCase
 {
+    public const CERTIFICATE_1 = __DIR__ . '/fixtures/test/MyClient1.pem';
+    public const CERTIFICATE_WITHOUT_CLIENT_PURPOSE = __DIR__ . '/../fixtures/timestamp_certificates/s2low_timestamp_cert.pem';
+    public const VALIDCA_PATH = __DIR__ . "/fixtures/test";
     /**
      * @var RgsCertificate
      */
@@ -14,31 +17,8 @@ class RgsCertificateTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $validca_path = __DIR__ . "/fixtures/test";
+        $validca_path = self::VALIDCA_PATH;
         $this->rgsCertificate = new RgsCertificate(OPENSSL_PATH, $validca_path);
-    }
-
-    public function testIsSslClient()
-    {
-        $certificateWithSslClientPurpose = file_get_contents(__DIR__ . '/fixtures/test/MyClient1.pem');
-        static::assertTrue($this->rgsCertificate->hasSSlClientPurpose(
-            $certificateWithSslClientPurpose
-        ));
-    }
-
-    public function testIsNotSslClient()
-    {
-        $certificateWithoutSslClientPurpose = file_get_contents(
-            __DIR__ . '/../fixtures/timestamp_certificates/s2low_timestamp_cert.pem'
-        );
-        static::assertFalse($this->rgsCertificate->hasSSlClientPurpose(
-            $certificateWithoutSslClientPurpose
-        ));
-    }
-
-    public function testIsNotEvenCertificate()
-    {
-        static::assertFalse($this->rgsCertificate->hasSSlClientPurpose('Not a certificate'));
     }
 
     /**
