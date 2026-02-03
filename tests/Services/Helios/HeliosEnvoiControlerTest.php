@@ -156,6 +156,17 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
         static::assertEquals("Transaction $id_transaction : Le CodCol est trop long", $last_status_info['message']);
     }
 
+    public function testIdCollTropLong(): void
+    {
+        $this->workerScript->expects(static::never())->method('putJobByQueueName');
+        $id_transaction = $this->validatePesAller('pes_aller_IdColl_trop_long.xml');
+
+        $info_transaction = $this->transactionsSQL->getInfo($id_transaction);
+        static::assertEquals(HeliosTransactionsSQL::ERREUR, $info_transaction['last_status_id']);
+        $last_status_info = $this->transactionsSQL->getLastStatusInfo($id_transaction);
+        static::assertEquals("Transaction $id_transaction : La balise IdCol est trop longue", $last_status_info['message']);
+    }
+
     /**
      * @throws Exception
      */
