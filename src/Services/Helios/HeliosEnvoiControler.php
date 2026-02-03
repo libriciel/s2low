@@ -175,6 +175,13 @@ class HeliosEnvoiControler
         }
 
         $siret = $pes_xml->EnTetePES->IdColl['V'];
+
+        if (strlen($siret) > 14) {
+            $message = "Transaction $transaction_id : La balise IdCol est trop longue";
+            $this->updateStatus($transaction_id, HeliosTransactionsSQL::ERREUR, $message, $transactionInfo['user_id']);
+            return;
+        }
+
         $this->authoritySiretSQL->add($transactionInfo['authority_id'], $siret);
 
         $usePasstransMsg = $authorityInfo['helios_use_passtrans'] ? ' [Passtrans]' : '';
