@@ -5,6 +5,7 @@
 ### Corrections
 
 - Contrôle de la longueur des champs CodBud, CodCol et IdPost (PES Aller) pour éviter les erreurs de transmission #1476
+- Correction de helios-purge-transaction.php #1479
 
 ## 5.1.7 - 2026-01-12
 
