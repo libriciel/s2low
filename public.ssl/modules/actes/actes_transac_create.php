@@ -115,22 +115,39 @@ try {
     Helpers:: returnAndExit(1, $exception->getMessage(), WEBSITE_SSL);
 }
 
+$total_size = 0;
 
 if (isset($_FILES['acte_pdf_file'])) {
     $actePDFFile = Helpers::getFiles('acte_pdf_file', true);
+    $total_size += $actePDFFile['size'];
 } else {
     $actePDFFile = false;
 }
 
 if (isset($_FILES["acte_pdf_file_sign"])) {
     $actePDFFileSign = Helpers::getFiles('acte_pdf_file_sign', true);
+    $total_size += $actePDFFileSign['size'];
 }
 
 if (isset($_FILES["acte_attachments"])) {
     $acteAttachments = Helpers::getFilesFromArray("acte_attachments", true);
+    foreach ($acteAttachments['size'] as $size) {
+        $total_size += $size;
+    }
 }
 if (isset($_FILES["acte_attachments_sign"])) {
     $acteAttachmentsSign = Helpers::getFilesFromArray("acte_attachments_sign", true);
+    foreach ($acteAttachmentsSign['size'] as $size) {
+        $total_size += $size;
+    }
+}
+
+if ($total_size > ACTES_ARCHIVE_MAX_SIZE) {
+    Helpers:: returnAndExit(
+        1,
+        "La taille totale des fichiers est trop importante (max : " . ACTES_ARCHIVE_MAX_SIZE . ")",
+        Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect
+    );
 }
 
 $type_acte = Helpers::getVarFromPost('type_acte', true);
