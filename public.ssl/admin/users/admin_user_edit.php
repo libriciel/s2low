@@ -191,11 +191,6 @@ $userSQL = new UserSQL($sqlQuery);
 $ident_method_id = $userSQL->getIdentificationMethod($him->getId() ?: $new_id);
 $ident_method_libelle = $userSQL->getIdentificationMethodeLibelle($ident_method_id);
 
-$certificate_rgs_2_etoiles = $him->get('certificate_rgs_2_etoiles');
-
-$certificat_rgs_2_etoiles_info = $x509Certificate->getInfo($certificate_rgs_2_etoiles);
-
-
 $doc = new HTMLLayout();
 
 $doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
@@ -262,13 +257,6 @@ ob_start();
 </div>
 <br/><br/>
     <script>
-
-    function resetFormElement(e) {
-        e.wrap('<form>').closest('form').get(0).reset();
-        e.unwrap();
-
-    }
-
     function setFormAuth(){
         $("#login-form").hide();
         $("#rgs2-form").hide();
@@ -276,11 +264,9 @@ ob_start();
             $("#password").val("");
             $("#login").val("");
             $("#password2").val("");
-            resetFormElement($("#certificate_rgs_2_etoiles"));
         }
         if($("#auth_method").val()==2){
             $("#login-form").show();
-            resetFormElement($("#certificate_rgs_2_etoiles"));
         }
         if($("#auth_method").val()==3){
             $("#rgs2-form").show();
@@ -369,22 +355,6 @@ ob_start();
 </div>  
 <?php endforeach;?>
 </div>
-
-<div class="form-group" id='rgs2-form'>
-    <label class="control-label col-md-4">Certificat complémentaire (format PEM) :</label>
-    <div class="col-md-6">
-        <?php if ($certificat_rgs_2_etoiles_info) : ?>
-            <?php hecho($certificat_rgs_2_etoiles_info['name']) ?><br/>
-            Expire le : <?php echo $certificat_rgs_2_etoiles_info['expiration_date'] ?> - 
-            <a href='admin_user_delete_certificat_rgs_2_etoiles.php?id=<?php echo $him->getId()?>'>Supprimer</a>
-            
-            <br/><br/>
-        <?php endif;?>
-        
-        <input type="file" name="certificate_rgs_2_etoiles" id="certificate_rgs_2_etoiles" />
-    </div>
-</div>
-
 
 
 

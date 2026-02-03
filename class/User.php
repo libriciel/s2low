@@ -34,7 +34,6 @@ class User extends DataObject
     protected $cert_serial;
     protected $login;
     protected $password;
-    protected $certificate_rgs_2_etoiles;
     protected $certificate_hash;
 
     protected $certFilePath;
@@ -55,7 +54,6 @@ class User extends DataObject
                          "cert_serial" => array( "descr" => "Numéro de série du certificat", "type" => "isDate", "mandatory" => true),
                         "login" => array("descr" => "login","type" => "isString","mandatory" => false),
                         "password" => array("descr" => "password","type" => "isString","mandatory" => false),
-                        "certificate_rgs_2_etoiles" => array("descr" => "Certificat RGS**","type" => "isString","mandatory" => false),
                         "certificate_hash" => array("descr", "Certificat fingerprint", "type" => "isString", "mandatory" => false)
                          );
     public const ROLES_DESCR = array(

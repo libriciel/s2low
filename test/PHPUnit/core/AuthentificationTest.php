@@ -63,7 +63,6 @@ class AuthentificationTest extends S2lowIntegrationTestCase
             'SSL_CLIENT_S_DN' => 'subject_dn',
             'SSL_CLIENT_I_DN' => 'issuer_dn',
             'SSL_CLIENT_CERT' => $certif->getContent(),
-            'HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION' => $certif->getContentStrippedFromBegin()
         ];
         $authentification = $this->getAuthentication(
             server: $server,
@@ -139,7 +138,6 @@ class AuthentificationTest extends S2lowIntegrationTestCase
         $this->assertEquals(13, $authentification->authenticate());
     }
 
-
     /**
      * @throws Exception
      */
@@ -149,7 +147,7 @@ class AuthentificationTest extends S2lowIntegrationTestCase
         $server['SSL_CLIENT_VERIFY'] = 'SUCCESS';
         $server['SSL_CLIENT_S_DN'] = 'adullact_identification';
         $server['SSL_CLIENT_I_DN'] = 'adullact_identification';
-        $server['SSL_CLIENT_CERT'] = file_get_contents(__DIR__ . "/../controller/fixtures/user1.pem");
+        $server['SSL_CLIENT_CERT'] = file_get_contents(__DIR__ . "/../controller/fixtures/test-certificat-not-in-db.pem");
 
         $authentification = $this->getAuthentication(
             server: $server,
@@ -281,7 +279,6 @@ class AuthentificationTest extends S2lowIntegrationTestCase
             'SSL_CLIENT_S_DN' => 'subject_dn',
             'SSL_CLIENT_I_DN' => 'issuer_dn',
             'SSL_CLIENT_CERT' => $certif->getContent(),
-            'HTTP_ORG_S2LOW_FORWARD_X509_IDENTIFICATION' => $certif->getContentStrippedFromBegin()
         ];
         $authentification = $this->getAuthentication(
             server: $server,
@@ -348,7 +345,6 @@ yPThsQ7QoSMwU27XzH1zb+NiD8sHNPgHacK6gSg/ZBj53IMGtElUAw3RRgXbuYnK
 eprALP5oks/IqINKST3K68njxMHj/v/hduEkw0dJxD5J/ga9beBhZ2Soe7XqBuUv
 YNN6Z4fNWGHPgI7R6w==
 -----END CERTIFICATE-----',
-            'certificate_rgs_2_etoiles' => false,
             'login' => false,
             'password' => false,
             'certificate_hash' => 'ieQoLUcitdU9iZIJLPoIdp8TcUY=',

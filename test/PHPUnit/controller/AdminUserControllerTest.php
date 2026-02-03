@@ -39,7 +39,6 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         copy(__DIR__ . "/fixtures/user_test.pem", $certificate_file);
 
         $_FILES['certificate'] = array('name' => 'user_test.pem','tmp_name' => $certificate_file,'size' => filesize($certificate_file));
-        $_FILES['certificate_rgs_2_etoiles'] = array('name' => 'user1.pem','tmp_name' => $certificate_file,'size' => filesize($certificate_file));
 
         self::getContainer()->get(Environnement::class)->post()->set('authority_id', 1);
         self::getContainer()->get(Environnement::class)->post()->set('email', 'eric@sigmalis.com');
@@ -77,7 +76,6 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
 
         $this->client = $this->createClientWithCertificat(
             $certif->getContent(),
-            $certif->getContentStrippedFromBegin(),
             false
         );
 
@@ -108,7 +106,6 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
 
         $this->client = $this->createClientWithCertificat(
             $certif->getContent(),
-            $certif->getContentStrippedFromBegin(),
             false
         );
 
@@ -296,15 +293,6 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         $this->assertEquals('ADM', $user_info['role']);
     }
 
-    public function testNotGoodRGSEtoile()
-    {
-        $this->setDataOk();
-        file_put_contents($this->testStreamUrl . "/rogue.pem", "bad certificate");
-        $_FILES['certificate_rgs_2_etoiles']['tmp_name'] = $this->testStreamUrl . "/rogue.pem";
-        $this->expectExceptionMessage(" Impossible de lire le certificat");
-        $this->adminUserController->doEditAction();
-    }
-
     public function testSameInfo()
     {
         $this->setDataOk();
@@ -402,7 +390,6 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
 
         $results4 = $userSQL->getIdsAndPasswordsFromConnexionInfo(
             $certificate_hash,
-            $certificate_content,
             "login"
         );
 

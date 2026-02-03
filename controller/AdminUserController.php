@@ -96,10 +96,8 @@ class AdminUserController extends Controller
 
         if ($user_info) {
             $certificat_connexion_info = $x509Certificate->getInfo($user_info['certificate']);
-            $certificate_rgs_2_etoiles_clean_content = $user_info['certificate_rgs_2_etoiles'];
         } else {
             $certificat_connexion_info = false;
-            $certificate_rgs_2_etoiles_clean_content = false;
         }
 
 
@@ -113,20 +111,11 @@ class AdminUserController extends Controller
             throw new Exception("Le certificat utilisateur est obligatoire");
         }
 
-        $certificate_rgs_2_etoiles = $this->getFromFile('certificate_rgs_2_etoiles');
-        if ($certificate_rgs_2_etoiles) {
-            $certificate_rgs_2_etoiles_clean_content = $x509Certificate->pemClean($certificate_rgs_2_etoiles);
-        }
-
-        if ($auth_method != UserSQL::IDENT_METHOD_RGS_2_ETOILES) {
-            $certificate_rgs_2_etoiles_clean_content = false;
-        }
-
         if ($auth_method == UserSQL::IDENT_METHOD_CERT_ONLY) { // Normalement, login devrait être vide ...
             $login = '';                                       // On s'en assure pour éviter un doublon
         }
 
-        if ($this->userSQL->hasDoublon($user_id, $certificat_connexion_info, $login, $certificate_rgs_2_etoiles_clean_content)) {
+        if ($this->userSQL->hasDoublon($user_id, $certificat_connexion_info, $login)) {
             throw new Exception("Un utilisateur avec les mêmes informations de connexion et d'identification existe dans la base S2low");
         }
 
@@ -196,8 +185,6 @@ class AdminUserController extends Controller
         Helpers::putInSession("password2", $password2);
 
         $certificate = $_FILES['certificate'] ?? [];
-
-        $certificate_rgs_2_etoiles = $_FILES['certificate_rgs_2_etoiles'] ?? [];
 
         $me = new User();
 
@@ -356,25 +343,6 @@ class AdminUserController extends Controller
 
         $userSQL = new UserSQL($this->getSQLQuery());
 
-        if ($auth_method != UserSQL::IDENT_METHOD_RGS_2_ETOILES) {
-            $userSQL->deleteCertificateRGS2Etoiles($him->getId());
-        }
-
-        if (is_array($certificate_rgs_2_etoiles) && count($certificate_rgs_2_etoiles) > 0 && is_uploaded_file_wrapper($certificate_rgs_2_etoiles["tmp_name"])) {
-            $certificate_rgs_2_etoiles_content = file_get_contents($certificate_rgs_2_etoiles["tmp_name"]);
-
-            $x509Certificate = new X509Certificate();
-            try {
-                $certificate_rgs_2_etoiles_content = $x509Certificate->pemClean($certificate_rgs_2_etoiles_content);
-                $userSQL->saveCertificateRGS2Etoiles($him->getId(), $certificate_rgs_2_etoiles_content);
-            } catch (Exception $e) {
-                $msg .= "\nLe certificat rgs_2_etoile n'est pas au bon format\n";
-            }
-        } else {
-            $userSQL->updateCertificatRGS2EtoilesIfNull($him->getId());
-        }
-
-
         if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
             $msg .= "\nErreur de journalisation.";
         }
@@ -477,9 +445,6 @@ class AdminUserController extends Controller
             $him->set('certFilePath', $certificate_filepath);
             if (! $him->save()) {
                 $this->redirect("/admin/users/admin_user_list.php?user_id=$user_id", $him->getErrorMsg());
-            }
-            if (! $him->get('certificate_rgs_2_etoiles')) {
-                $userSQL->deleteCertificateRGS2Etoiles($user_info['id']);
             }
         }
 

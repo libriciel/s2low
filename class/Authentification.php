@@ -109,7 +109,7 @@ class Authentification
             Helpers::returnAndExit(1, "La connexion n'a pas pu être établie", Helpers::getLink("connexion-status"));
         } // @codeCoverageIgnore
 
-        $list_id = $this->userSQL->getListIdFromConnexion($connexion_info['certificate_hash'], $connexion_info['certificate_rgs_2_etoiles']);
+        $list_id = $this->userSQL->getIdsFromConnexionInfo($connexion_info['certificate_hash']);
 
         if (! in_array($user_id, $list_id)) {
             Helpers::returnAndExit(1, "La connexion n'a pas pu être établie", Helpers::getLink("/login.php"));
@@ -176,7 +176,6 @@ class Authentification
     {
         $possibleUsersInDB = $this->userSQL->getIdsAndPasswordsFromConnexionInfo(
             $connexion_info['certificate_hash'],
-            $connexion_info['certificate_rgs_2_etoiles'],
             $connexion_info['login']
         );
         $ids = [];
@@ -208,7 +207,6 @@ class Authentification
     {
         return $this->userSQL->getIdsFromConnexionInfo(
             $connexion_info['certificate_hash'],
-            $connexion_info['certificate_rgs_2_etoiles']
         );
     }
 }

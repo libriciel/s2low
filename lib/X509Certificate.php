@@ -131,16 +131,4 @@ class X509Certificate
         }
         return implode(", ", $issuerName);
     }
-
-    /**
-     * @param $not_clean_pem
-     * @return mixed
-     * @throws Exception
-     */
-    public function pemClean($not_clean_pem)
-    {
-        $resource = $this->readCertContent($not_clean_pem);
-        openssl_x509_export($resource, $output);
-        return $output;
-    }
 }

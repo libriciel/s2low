@@ -22,21 +22,6 @@ class X509CertificateTest extends S2lowTestCase
         parent::tearDown();
     }
 
-
-    public function testPemCleaning()
-    {
-        $not_clean_pem = file_get_contents(__DIR__ . "/fixtures/pem_with_text.pem");
-        $clean_pem = $this->x509Certificate->pemClean($not_clean_pem);
-        $this->assertEquals(file_get_contents(__DIR__ . "/fixtures/clean_pem.pem"), $clean_pem);
-    }
-
-
-    public function testPemCleaningBadData()
-    {
-        $this->setExpectedException("Exception", "Impossible de lire le certificat");
-        $this->x509Certificate->pemClean("not a pem file");
-    }
-
     public function testRetrieveClientInfo()
     {
         $_SERVER['SSL_CLIENT_VERIFY'] = false;
