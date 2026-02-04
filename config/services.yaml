@@ -7,6 +7,7 @@ parameters:
   app.database_login: '%env(POSTGRES_USER)%'
   app.database_name: '%env(POSTGRES_DB)%'
   app.database_password: '%env(POSTGRES_PASSWORD)%'
+  app.database_url: 'postgresql://%app.database_login%:%app.database_password%@%app.database_host%:5432/%app.database_name%?serverVersion=14&charset=utf8'
   app.helios_sending_destination: '%env(HELIOS_SENDING_DESTINATION)%'
 
   # Parametres avec des valeurs par default
