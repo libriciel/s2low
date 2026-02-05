@@ -14,7 +14,7 @@ if (isset($_SESSION['last_annuaire'])) {
     $tabAlreadyExists = $annuaire->getTabAlreadyExist();
     $tabOK = $annuaire->getTabOK();
 
-unset($_SESSION['last_annuaire']);
+    unset($_SESSION['last_annuaire']);
 } else {
     $annuaire = null;
     $tabOK = [];
