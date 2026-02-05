@@ -12,7 +12,8 @@
   "stabilityDays": 2,
   "rangeStrategy": "update-lockfile",
   "lockFileMaintenance": {
-    "enabled": true
+    "enabled": true,
+    "schedule": ["at any time"]
   },
   "vulnerabilityAlerts": {
     "enabled": true,
