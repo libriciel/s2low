@@ -43,25 +43,32 @@ $stateTracker = new StateTrackerRepository();
 $orchestrator = new MigrationOrchestrator($source, $newS3, $stateTracker, $isDryRun);
 
 if (array_key_exists('check', $options)) {
-    $orchestrator->checkGlobalConnection();
+//    $orchestrator->checkGlobalConnection();
+    var_dump(
+        $source->test(
+            'sl-adullact-actes-2019',
+            '212105340/002DU03122019/SLO-EACT--212105340--20191210-2.tar.gz',
+            'acte/SLO-EACT--212105340--20191210-2.tar.gz'
+        )
+    );
     exit(0);
 }
 
-// Run Selected Flow
-switch ($type) {
-    case 'actes':
-        $orchestrator->runActes();
-        break;
-    case 'helios':
-        $orchestrator->runHelios();
-        break;
-    case 'helios_acquit':
-        $orchestrator->runHeliosAcquit();
-        break;
-    case 'mail':
-        $orchestrator->runMail();
-        break;
-    default:
-        echo "Unknown type: $type" . PHP_EOL;
-        exit(1);
-}
+//// Run Selected Flow
+//switch ($type) {
+//    case 'actes':
+//        $orchestrator->runActes();
+//        break;
+//    case 'helios':
+//        $orchestrator->runHelios();
+//        break;
+//    case 'helios_acquit':
+//        $orchestrator->runHeliosAcquit();
+//        break;
+//    case 'mail':
+//        $orchestrator->runMail();
+//        break;
+//    default:
+//        echo "Unknown type: $type" . PHP_EOL;
+//        exit(1);
+//}

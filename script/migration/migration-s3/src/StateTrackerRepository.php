@@ -4,6 +4,9 @@ namespace App;
 
 use PDO;
 
+/**
+ * @description Cette classe sert a enregistrer l'etat d'avancement des transaction et a pouvoir reprendre ou on en ete en cas d'interruption de l'execution
+ */
 class StateTrackerRepository implements StateTrackerInterface
 {
     private ?PDO $connexion = null;

@@ -172,12 +172,12 @@ class MigrationOrchestrator
             $hasError = true;
         }
 
-        // Postgres
+        // Postgres S2low
         try {
             \App\PostgresDB::getConnection();
-            echo "PostgreSQL Connection OK." . PHP_EOL;
+            echo "DB_S2low Connection OK." . PHP_EOL;
         } catch (\Exception $e) {
-            echo "PostgreSQL Connection Failed: " . $e->getMessage() . PHP_EOL;
+            echo "DB_S2low Connection Failed: " . $e->getMessage() . PHP_EOL;
             $hasError = true;
         }
 

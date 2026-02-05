@@ -3,11 +3,10 @@
 namespace App;
 
 use Aws\Exception\AwsException;
-use Aws\S3\S3Client;
 
 class SourceStorage
 {
-    private S3Client $oldS3Client;
+    private OldS3 $oldS3Client;
     private $openStackContainer = null;
 
     public function __construct(array $config)
@@ -19,7 +18,7 @@ class SourceStorage
         }
     }
 
-    protected function createOldS3Client(array $config): S3Client
+    protected function createOldS3Client(array $config): OldS3
     {
         $s3Config = [
             'region'  => $config['OLD_S3_REGION'],
@@ -36,7 +35,7 @@ class SourceStorage
             $s3Config['handler'] = $config['handler'];
         }
 
-        return new S3Client($s3Config);
+        return new OldS3($s3Config);
     }
 
     protected function createOpenStackContainer(array $config)
@@ -139,10 +138,10 @@ class SourceStorage
     public function checkConnection(): bool
     {
         $ok = true;
-
         // Check OldS3
         try {
-            $this->oldS3Client->listBuckets();
+//            $this->oldS3Client->listBuckets();
+
             echo "OldS3 Connection OK (ListBuckets successful)." . PHP_EOL;
         } catch (\Exception $e) {
              echo "OldS3 Connection Failed: " . $e->getMessage() . PHP_EOL;
@@ -161,5 +160,10 @@ class SourceStorage
         }
 
         return $ok;
+    }
+
+    public function test($bucket, $key, $localPath)
+    {
+        return $this->oldS3Client->getFile($bucket, $key, $localPath);
     }
 }
