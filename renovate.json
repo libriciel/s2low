@@ -10,7 +10,7 @@
   "prHourlyLimit": 5,
   "dependencyDashboard": true,
   "stabilityDays": 2,
-  "rangeStrategy": "update-lockfile",
+  "rangeStrategy": "auto",
   "lockFileMaintenance": {
     "enabled": true,
     "schedule": ["at any time"]
