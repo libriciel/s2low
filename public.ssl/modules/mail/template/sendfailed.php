@@ -1,4 +1,7 @@
- <h1> Mail - Système de mail sécurisé</h1>
+<?php
+/** @var string $returnMsg */
+?>
+<h1> Mail - Système de mail sécurisé</h1>
 
     <h2>Actions</h2>
     <div id="actions_area"> 

@@ -252,7 +252,9 @@ foreach ($transacs as $trans) {
 }
 
 $workerScript->putJobByClassName(ActesStoreEnveloppeWorker::class, $env->getId());
-$workerScript->putJobByClassName(ActesAntivirusWorker::class, $trans->getId());
+if (isset($trans)) {
+    $workerScript->putJobByClassName(ActesAntivirusWorker::class, $trans->getId());
+}
 
 
 Helpers::returnAndExit(0, $msg, Helpers::getLink("/modules/actes/index.php"), $apiMsg);
