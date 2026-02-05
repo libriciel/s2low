@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\PostgresDB;
+use ConnexionS2lowDBFactory;
 use PDO;
 
 abstract class AbstractRepository
@@ -11,6 +11,6 @@ abstract class AbstractRepository
 
     public function __construct()
     {
-        $this->pdo = PostgresDB::getConnection();
+        $this->pdo = ConnexionS2lowDBFactory::getConnection();
     }
 }

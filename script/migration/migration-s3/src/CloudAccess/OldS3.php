@@ -1,9 +1,7 @@
 <?php
 
-namespace App;
+namespace App\CloudAccess;
 
-use Aws\Exception\AwsException;
-use Aws\Result;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Aws\S3\S3ClientInterface;
@@ -11,80 +9,23 @@ use Aws\S3\S3ClientInterface;
 class OldS3
 {
     private S3ClientInterface $client;
-    public function __construct(array $config)
+    public function __construct(
+        string $endpoint,
+        string $region,
+        string $accessKey,
+        string $secretKey,
+    )
     {
         $this->client = new S3Client(args: [
-            'region'  => $_ENV['OLD_S3_REGION'],
+            'region'  => $region,
             'version' => 'latest',
-            'endpoint' => $_ENV['OLD_S3_ENDPOINT'],
+            'endpoint' => $endpoint,
             'credentials' => [
-                'key'    => $_ENV['OLD_S3_ACCESS_KEY'],
-                'secret' => $_ENV['OLD_S3_SECRET_KEY'],
+                'key'    => $accessKey,
+                'secret' => $secretKey,
             ],
         ]);
     }
-
-    public function test($bucket, $key, bool $autoRestore = false)
-    {
-        try {
-            // 1. Récupérer les métadonnées de l'objet
-            $meta = $this->client->headObject([
-                'Bucket' => $bucket,
-                'Key'    => $key,
-            ]);
-
-            $storageClass = $meta['StorageClass'] ?? 'STANDARD';
-            $restoreStatus = $meta['Restore'] ?? '';
-
-            // Initialisation de la réponse par défaut
-            $result = [
-                'bucket' => $bucket,
-                'key' => $key,
-                'current_status' => 'autre'
-            ];
-
-            // 2. Vérifier si l'objet est archivé (GLACIER ou DEEP_ARCHIVE)
-            $isArchived = in_array($storageClass, ['GLACIER', 'DEEP_ARCHIVE', 'GLACIER_IR']);
-
-            if ($isArchived) {
-                // Vérifier si une restauration est en cours ou terminée
-                // Format typique de 'Restore': ongoing-request="true" ou ongoing-request="false", expiry-date="..."
-                if (empty($restoreStatus)) {
-                    $result['current_status'] = 'frozen';
-                    return $result;
-                }
-
-                if (str_contains($restoreStatus, 'ongoing-request="true"')) {
-                    $result['current_status'] = 'en attente de restoration';
-                    return $result;
-                }
-
-                // Si ongoing-request="false", l'objet est temporairement disponible
-            }
-
-            // 3. Téléchargement si disponible (Standard ou Restauré)
-            $object = $this->client->getObject([
-                'Bucket' => $bucket,
-                'Key'    => $key,
-            ]);
-
-            // Vous pouvez traiter le corps ici (ex: $object['Body']->getContents())
-            $result['current_status'] = 'telechargé';
-            $result['content'] = $object['Body']; // Optionnel selon votre besoin
-
-            return $result;
-
-        } catch (S3Exception $e) {
-            return [
-                'bucket' => $bucket,
-                'key' => $key,
-                'current_status' => 'erreur: ' . $e->getAwsErrorMessage()
-            ];
-        }
-
-        return $resp;
-    }
-
 
     function getFile(string $bucket, string $key, string $localPath, bool $autoRestore = false): array
     {
@@ -156,10 +97,5 @@ class OldS3
                 'current_status' => 'erreur: ' . $e->getAwsErrorMessage()
             ];
         }
-    }
-
-    private function isFrozen(Result $headObject)
-    {
-        return $headObject->get('x-amz-restore'); //['x-amz-storage-class'] === 'GLACIER';
     }
 }

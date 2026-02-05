@@ -2,24 +2,24 @@
 
 namespace App;
 
+use App\CloudAccess\NewS3;
+use App\CloudAccess\OldS3;
+use App\DatabaseAccess\S2lowDB;
+use App\DatabaseAccess\SelfDB;
 use App\Repository\ActesRepository;
 use App\Repository\HeliosRepository;
 use App\Repository\MailSecRepository;
-use Exception;
 
 class MigrationOrchestrator
 {
-    private SourceStorage $source;
-    private NewS3 $newS3;
-    private StateTrackerInterface $stateTracker;
-    private bool $dryRun;
+    public function __construct(
+        private readonly NewS3 $newS3,
+        private readonly OldS3 $oldS3,
+        private readonly SelfDB $selfDBConnection,
+        private readonly S2lowDB $s2lowDBConnexion,
+        bool $dryRun = false
+    ) {
 
-    public function __construct($source, $newS3, StateTrackerInterface $stateTracker, bool $dryRun = false)
-    {
-        $this->source = $source;
-        $this->newS3 = $newS3;
-        $this->stateTracker = $stateTracker;
-        $this->dryRun = $dryRun;
     }
 
     public function runActes(): void
@@ -158,28 +158,10 @@ class MigrationOrchestrator
         echo "Finished $type migration." . PHP_EOL;
     }
 
-    public function checkGlobalConnection(): void
+    public function checkCloudConnections(): void
     {
         echo "Checking Connections..." . PHP_EOL;
         $hasError = false;
-
-        // DB Local (SQLite via StateTrackerRepository)
-        try {
-            (new \App\StateTrackerRepository())->getConnection();
-            echo "Local DB Connection OK." . PHP_EOL;
-        } catch (\Exception $e) {
-            echo "Local DB Connection Failed: " . $e->getMessage() . PHP_EOL;
-            $hasError = true;
-        }
-
-        // Postgres S2low
-        try {
-            \App\PostgresDB::getConnection();
-            echo "DB_S2low Connection OK." . PHP_EOL;
-        } catch (\Exception $e) {
-            echo "DB_S2low Connection Failed: " . $e->getMessage() . PHP_EOL;
-            $hasError = true;
-        }
 
         // Sources (OldS3 + OpenStack)
         if (!$this->source->checkConnection()) {

@@ -3,7 +3,7 @@
 namespace Tests;
 
 use App\MigrationOrchestrator;
-use App\NewS3;
+use NewS3;
 use App\Repository\ActesRepository;
 use App\SourceStorage;
 use App\StateTrackerInterface;

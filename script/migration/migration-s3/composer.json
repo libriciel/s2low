@@ -19,7 +19,11 @@
   },
   "autoload": {
     "psr-4": {
-      "App\\": "src/"
+      "App\\": "src/",
+      "App\\Cloud\\": "src/CloudAccess/",
+      "App\\Database\\": "src/DatabaseAccess/",
+      "App\\Factory\\": "src/Factory",
+      "App\\Repository\\": "src/Repository"
     }
   },
   "autoload-dev": {
