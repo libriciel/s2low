@@ -2,7 +2,10 @@
 
 namespace App\DatabaseAccess;
 
+use App\DTO\MigrationItem;
+use App\Enum\Status;
 use PDO;
+use PDOException;
 
 class SelfDB
 {
@@ -16,9 +19,9 @@ class SelfDB
         return $this->connexion;
     }
 
-    public function getLastProcessedId(string $type): int
+    public function getLastIdAtTypeAndStatus(string $type, Status $status): int
     {
-        $stmt = $this->connexion->prepare("SELECT MAX(s2low_id) as last_id FROM migration_status WHERE type = ? AND status = 'done'");
+        $stmt = $this->connexion->prepare("SELECT MAX(s2low_id) as last_id FROM transactions WHERE type = ? AND status = '" . $status->value . "'");
         $stmt->execute([$type]);
         $result = $stmt->fetch();
         return $result['last_id'] ?? 0;
@@ -36,5 +39,23 @@ class SelfDB
         $sql = "INSERT INTO migration_status (type, s2low_id, status) VALUES (?, ?, 'done') 
                 ON CONFLICT(type, s2low_id) DO UPDATE SET status = 'done', created_at = CURRENT_TIMESTAMP";
         $this->connexion->prepare($sql)->execute([$type, $s2lowId]);
+    }
+
+    public function create(MigrationItem $transaction): void
+    {
+        $sql = "INSERT INTO transactions (s2low_id, type, siren, key, status) VALUES (?, ?, ?, ?, ?)";
+
+        try {
+            $this->connexion->prepare($sql)->execute([
+                $transaction->id,
+                $transaction->type,
+                $transaction->siren,
+                $transaction->key,
+                Status::HANDLE->value
+            ]);
+        } catch (PDOException $e) {
+            echo 'error during transaction creation: ' . $e->getMessage();
+            echo ';;'.json_encode($transaction).'!!';
+        }
     }
 }

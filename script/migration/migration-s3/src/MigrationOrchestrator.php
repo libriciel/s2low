@@ -8,13 +8,13 @@ use App\DatabaseAccess\S2lowDB;
 use App\DatabaseAccess\SelfDB;
 use App\DTO\MigrationItem;
 use App\Migration\ActesSource;
-use App\Migration\HeliosAcquitSource;
-use App\Migration\HeliosSource;
 use App\Migration\MailSource;
 use App\Migration\MigrationSourceInterface;
+use App\Migration\PesAcquitSource;
+use App\Migration\PesSource;
 use App\Repository\ActesRepository;
-use App\Repository\HeliosRepository;
 use App\Repository\MailSecRepository;
+use App\Repository\PesRepository;
 
 class MigrationOrchestrator
 {
@@ -34,12 +34,12 @@ class MigrationOrchestrator
 
     public function runHelios(): void
     {
-        $this->process(new HeliosSource(new HeliosRepository()));
+        $this->process(new PesSource(new PesRepository()));
     }
 
     public function runHeliosAcquit(): void
     {
-        $this->process(new HeliosAcquitSource(new HeliosRepository()));
+        $this->process(new PesAcquitSource(new PesRepository()));
     }
 
     public function runMail(): void
@@ -68,15 +68,15 @@ class MigrationOrchestrator
 
     private function process(MigrationSourceInterface $source): void
     {
-        $type = $source->getIdentifier();
-        $lastId = $this->selfDBConnection->getLastProcessedId($type);
-        echo "Starting $type migration from ID $lastId..." . PHP_EOL;
-
-        foreach ($source->getItems($lastId) as $item) {
-            $this->processItem($type, $item);
-        }
-
-        echo "Finished $type migration." . PHP_EOL;
+//        $type = $source->getIdentifier();
+//        $lastId = $this->selfDBConnection->getLastProcessedId($type);
+//        echo "Starting $type migration from ID $lastId..." . PHP_EOL;
+//
+//        foreach ($source->getItems($lastId) as $item) {
+//            $this->processItem($type, $item);
+//        }
+//
+//        echo "Finished $type migration." . PHP_EOL;
     }
 
     private function processItem(string $type, MigrationItem $item): void

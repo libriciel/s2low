@@ -3,6 +3,7 @@
 namespace App\Migration;
 
 use App\DTO\MigrationItem;
+use App\Enum\Type;
 use App\Repository\MailSecRepository;
 use Generator;
 
@@ -15,7 +16,7 @@ class MailSource implements MigrationSourceInterface
 
     public function getIdentifier(): string
     {
-        return 'mail';
+        return Type::MAIL->value;
     }
 
     public function getItems(int $lastProcessedId): Generator
@@ -30,7 +31,7 @@ class MailSource implements MigrationSourceInterface
                 yield new MigrationItem(
                     id: $item['id'],
                     key: $item['siren'] . '/' . $item['fn_download'] . '/mail.zip',
-                    type: 'MAIL',
+                    type: $this->getIdentifier(),
                     siren: $item['siren']
                 );
                 $lastProcessedId = $item['id'];

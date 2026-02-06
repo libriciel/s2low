@@ -5,7 +5,15 @@ use App\Factory\ConnexionS2lowDBFactory;
 use App\Factory\ConnexionSelfDBFactory;
 use App\Factory\NewS3ClientFactory;
 use App\Factory\OldS3ClientFactory;
+use App\Migration\ActesSource;
+use App\Migration\PesAcquitSource;
+use App\Migration\PesSource;
 use App\MigrationOrchestrator;
+use App\Repository\ActesRepository;
+use App\Repository\MailSecRepository;
+use App\Repository\PesAcquitRepository;
+use App\Repository\PesRepository;
+use App\Repository\TransactionSaver;
 use Dotenv\Dotenv;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -80,8 +88,50 @@ $orchestrator = new MigrationOrchestrator(
 
 $orchestrator->checkCloudConnections();
 
-$transactionRepository = new TransactionRepository();
-$transactionRepository->importAll();
+$actesRepository = new ActesRepository($S2lowDBConnexion);
+$pesRepository = new PesRepository($S2lowDBConnexion);
+$pesAcquitRepository = new PesAcquitRepository($S2lowDBConnexion);
+$mailRepository = new MailSecRepository($S2lowDBConnexion);
+
+
+
+$migrationActe = new ActesSource(
+    $actesRepository,
+);
+$migrationPes = new PesSource(
+    $pesRepository,
+);
+$migrationPesAcquit = new PesAcquitSource(
+    $pesAcquitRepository,
+);
+$migrationMail = new ActesSource(
+    $actesRepository,
+);
+
+
+
+$acteSaver = new TransactionSaver(
+    $migrationActe,
+    $selfDBConnexion
+);
+$pesSaver = new TransactionSaver(
+    $migrationPes,
+    $selfDBConnexion
+);
+$pesAcquitSaver = new TransactionSaver(
+    $migrationPesAcquit,
+    $selfDBConnexion
+);
+$mailSaver = new TransactionSaver(
+    $migrationMail,
+    $selfDBConnexion
+);
+
+$acteSaver->run();
+$pesSaver->run();
+$pesAcquitSaver->run();
+$mailSaver->run();
+
 //    var_dump(
 //        $source->test(
 //            'sl-adullact-actes-2019',

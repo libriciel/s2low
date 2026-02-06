@@ -3,25 +3,27 @@
 namespace App\Migration;
 
 use App\DTO\MigrationItem;
-use App\Repository\HeliosRepository;
+use App\Enum\Type;
+use App\Repository\PesRepository;
+use App\Repository\TransactionSaver;
 use Generator;
 
-class HeliosSource implements MigrationSourceInterface
+class PesSource implements MigrationSourceInterface
 {
     public function __construct(
-        private readonly HeliosRepository $repository
+        private readonly PesRepository $repository
     ) {
     }
 
     public function getIdentifier(): string
     {
-        return 'helios';
+        return Type::PES_ALLER->value;
     }
 
     public function getItems(int $lastProcessedId): Generator
     {
         while (true) {
-            $batch = $this->repository->getBatch($lastProcessedId, 100);
+            $batch = $this->repository->getBatch($lastProcessedId, TransactionSaver::LIMIT);
             if (empty($batch)) {
                 break;
             }
@@ -30,7 +32,7 @@ class HeliosSource implements MigrationSourceInterface
                 yield new MigrationItem(
                     id: $item['id'],
                     key: $item['siren'] . '/' . $item['sha1'],
-                    type: 'PES',
+                    type: $this->getIdentifier(),
                     siren: $item['siren']
                 );
                 $lastProcessedId = $item['id'];

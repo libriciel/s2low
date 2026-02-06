@@ -3,12 +3,13 @@
 namespace App\Migration;
 
 use App\DTO\MigrationItem;
+use App\Enum\Type;
 use App\Repository\ActesRepository;
+use App\Repository\TransactionSaver;
 use Generator;
 
 class ActesSource implements MigrationSourceInterface
 {
-    const LIMIT = 1;
     public function __construct(
         private readonly ActesRepository $repository
     ) {
@@ -16,13 +17,13 @@ class ActesSource implements MigrationSourceInterface
 
     public function getIdentifier(): string
     {
-        return 'actes';
+        return Type::ACTE->value;
     }
 
     public function getItems(int $lastProcessedId): Generator
     {
         while (true) {
-            $batch = $this->repository->getBatch($lastProcessedId, self::LIMIT);
+            $batch = $this->repository->getBatch($lastProcessedId, TransactionSaver::LIMIT);
             if (empty($batch)) {
                 break;
             }
@@ -31,7 +32,7 @@ class ActesSource implements MigrationSourceInterface
                 yield new MigrationItem(
                     id: $item['id'],
                     key: $item['file_path'],
-                    type: 'ACTE',
+                    type: $this->getIdentifier(),
                     siren: $item['siren']
                 );
                 $lastProcessedId = $item['id'];

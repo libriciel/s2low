@@ -3,6 +3,8 @@
 namespace App\Factory;
 
 use App\DatabaseAccess\SelfDB;
+use App\Enum\Status;
+use App\Enum\Type;
 use PDO;
 
 class ConnexionSelfDBFactory
@@ -23,12 +25,12 @@ class ConnexionSelfDBFactory
                 "CREATE TABLE IF NOT EXISTS transactions (
                 id SERIAL PRIMARY KEY,
                 s2low_id INTEGER NOT NULL,
-                type TEXT NOT NULL CHECK(type IN ('ACTE', 'PES_ALLER', 'PES_ACQUIT', 'MAIL')),
-                bucket TEXT NOT NULL,
+                type TEXT NOT NULL CHECK(type IN ('" . Type::ACTE->value . "', '" . Type::PES_ALLER->value . "', '" . Type::PES_ACQUIT->value . "', '" . Type::MAIL->value . "')),
+                bucket TEXT,
+                siren TEXT NOT NULL,
                 key TEXT NOT NULL,
-                status TEXT NOT NULL CHECK(status IN ('HANDLE', 'ASK', 'DOWNLOADED', 'COMPLETED', 'ERROR')),
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                UNIQUE(s2low_id))
+                status TEXT NOT NULL CHECK(status IN ('" . Status::HANDLE->value . "', '" . Status::ASK->value . "', '" . Status::DOWNLOADED->value . "', '" . Status::COMPLETED->value . "', '" . Status::ERROR->value . "')),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
                 ");
         } catch (\PDOException $e) {
             throw new \Exception("Erreur SQLite : " . $e->getMessage());

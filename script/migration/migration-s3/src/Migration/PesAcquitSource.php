@@ -3,25 +3,27 @@
 namespace App\Migration;
 
 use App\DTO\MigrationItem;
-use App\Repository\HeliosRepository;
+use App\Enum\Type;
+use App\Repository\PesAcquitRepository;
+use App\Repository\TransactionSaver;
 use Generator;
 
-class HeliosAcquitSource implements MigrationSourceInterface
+class PesAcquitSource implements MigrationSourceInterface
 {
     public function __construct(
-        private readonly HeliosRepository $repository
+        private readonly PesAcquitRepository $repository
     ) {
     }
 
     public function getIdentifier(): string
     {
-        return 'helios_acquit';
+        return Type::PES_ACQUIT->value;
     }
 
     public function getItems(int $lastProcessedId): Generator
     {
         while (true) {
-            $batch = $this->repository->getAcquitBatch($lastProcessedId, 100);
+            $batch = $this->repository->getBatch($lastProcessedId, TransactionSaver::LIMIT);
             if (empty($batch)) {
                 break;
             }
@@ -30,7 +32,7 @@ class HeliosAcquitSource implements MigrationSourceInterface
                 yield new MigrationItem(
                     id: $item['id'],
                     key: $item['siren'] . '/' . $item['acquit_filename'],
-                    type: 'PES_ACQUIT',
+                    type: $this->getIdentifier(),
                     siren: $item['siren']
                 );
                 $lastProcessedId = $item['id'];
