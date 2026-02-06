@@ -5,7 +5,7 @@ namespace App\Migration;
 use App\DTO\MigrationItem;
 use App\Enum\Type;
 use App\Repository\PesRepository;
-use App\Repository\TransactionSaver;
+use App\Service\TransactionSaver;
 use Generator;
 
 class PesSource implements MigrationSourceInterface

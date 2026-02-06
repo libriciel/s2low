@@ -14,7 +14,8 @@ use App\Repository\ActesRepository;
 use App\Repository\MailSecRepository;
 use App\Repository\PesAcquitRepository;
 use App\Repository\PesRepository;
-use App\Repository\TransactionSaver;
+use App\Service\TransactionSaver;
+use App\Service\UnfreezeFile;
 use Dotenv\Dotenv;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -89,57 +90,64 @@ $orchestrator = new MigrationOrchestrator(
 
 $orchestrator->checkCloudConnections();
 
-$actesRepository = new ActesRepository($S2lowDBConnexion);
-$pesRepository = new PesRepository($S2lowDBConnexion);
-$pesAcquitRepository = new PesAcquitRepository($S2lowDBConnexion);
-$mailRepository = new MailSecRepository($S2lowDBConnexion);
+//HANDLE
+    $actesRepository = new ActesRepository($S2lowDBConnexion);
+    $pesRepository = new PesRepository($S2lowDBConnexion);
+    $pesAcquitRepository = new PesAcquitRepository($S2lowDBConnexion);
+    $mailRepository = new MailSecRepository($S2lowDBConnexion);
 
 
 
-$migrationActe = new ActesSource(
-    $actesRepository,
-);
-$migrationPes = new PesSource(
-    $pesRepository,
-);
-$migrationPesAcquit = new PesAcquitSource(
-    $pesAcquitRepository,
-);
-$migrationMail = new MailSource(
-    $mailRepository,
-);
+    $migrationActe = new ActesSource(
+        $actesRepository,
+    );
+    $migrationPes = new PesSource(
+        $pesRepository,
+    );
+    $migrationPesAcquit = new PesAcquitSource(
+        $pesAcquitRepository,
+    );
+    $migrationMail = new MailSource(
+        $mailRepository,
+    );
 
 
 
-$acteSaver = new TransactionSaver(
-    $migrationActe,
-    $selfDBConnexion
-);
-$pesSaver = new TransactionSaver(
-    $migrationPes,
-    $selfDBConnexion
-);
-$pesAcquitSaver = new TransactionSaver(
-    $migrationPesAcquit,
-    $selfDBConnexion
-);
-$mailSaver = new TransactionSaver(
-    $migrationMail,
-    $selfDBConnexion
-);
+    $acteSaver = new TransactionSaver(
+        $migrationActe,
+        $selfDBConnexion
+    );
+    $pesSaver = new TransactionSaver(
+        $migrationPes,
+        $selfDBConnexion
+    );
+    $pesAcquitSaver = new TransactionSaver(
+        $migrationPesAcquit,
+        $selfDBConnexion
+    );
+    $mailSaver = new TransactionSaver(
+        $migrationMail,
+        $selfDBConnexion
+    );
 
-$acteSaver->run();
-$pesSaver->run();
-$pesAcquitSaver->run();
-$mailSaver->run();
+    $acteSaver->run();
+    $pesSaver->run();
+    $pesAcquitSaver->run();
+    $mailSaver->run();
+//////////////
+//// UNFREEZE / CHECK EXIST
 
-//    var_dump(
-//        $source->test(
-//            'sl-adullact-actes-2019',
-//            '212105340/002DU03122019/SLO-EACT--212105340--20191210-2.tar.gz',
-//            'acte/SLO-EACT--212105340--20191210-2.tar.gz'
-//        )
-//    );
+$unfreezeActe = new UnfreezeFile();
+$unfreezeActe->run();
+
+///////////
+//// DOWNLOAD / SET ERROR
+
+
+///////////
+
+
+
 
 
 // Run Selected Flow

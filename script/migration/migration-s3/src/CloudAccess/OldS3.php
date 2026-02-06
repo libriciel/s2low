@@ -111,4 +111,14 @@ class OldS3
             return false;
         }
     }
+
+    public function unfreeze()
+    {
+
+    }
+
+    public function getInfo(?\App\DTO\MigrationItem $transaction)
+    {
+
+    }
 }

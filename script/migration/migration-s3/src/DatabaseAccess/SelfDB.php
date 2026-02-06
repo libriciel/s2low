@@ -59,4 +59,14 @@ class SelfDB
             echo ';;'.json_encode($transaction).'!!';
         }
     }
+
+    public function setUnfreeze(?MigrationItem $transaction)
+    {
+        
+    }
+
+    public function updateToError(?MigrationItem $transaction, string $getMessage)
+    {
+
+    }
 }

@@ -5,7 +5,7 @@ namespace App\Migration;
 use App\DTO\MigrationItem;
 use App\Enum\Type;
 use App\Repository\PesAcquitRepository;
-use App\Repository\TransactionSaver;
+use App\Service\TransactionSaver;
 use Generator;
 
 class PesAcquitSource implements MigrationSourceInterface

@@ -14,4 +14,6 @@ interface MigrationSourceInterface
      * @return Generator<MigrationItem>
      */
     public function getItems(int $lastProcessedId): Generator;
+
+    public function getHandledTransactions(): Generator;
 }
