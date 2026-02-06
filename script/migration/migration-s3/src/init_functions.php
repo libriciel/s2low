@@ -3,22 +3,6 @@
 use App\SQLite;
 use Dotenv\Dotenv;
 
-function initialiseDb()
-{
-    $connexion = SQLite::getConnection();
-    $connexion->query(
-        "CREATE TABLE IF NOT EXISTS transactions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    identifiant_s2low INTEGER,
-    type_transaction TEXT NOT NULL,
-    etat TEXT NOT NULL CHECK (etat IN ('ok', 'ko')),
-    commentaire TEXT,
-    source TEXT NOT NULL CHECK (source IN ('s3', 'openstack')),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);"
-    )->execute();
-}
-
 function initialiseEnv(): array
 {
     $res = [];

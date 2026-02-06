@@ -6,3 +6,18 @@ services:
       - .:/var/www/html
     tty: true
     stdin_open: true
+  db:
+    image: postgres:16-alpine
+    container_name: postgres_migration
+    restart: always
+    environment:
+      POSTGRES_USER: user_admin
+      POSTGRES_PASSWORD: password_robuste
+      POSTGRES_DB: s2low_migration
+    ports:
+      - "15433:5432"
+    volumes:
+      - migration_db:/var/lib/postgresql/data
+
+volumes:
+  migration_db:

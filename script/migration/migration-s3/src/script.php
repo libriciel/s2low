@@ -47,7 +47,13 @@ $oldS3 = OldS3ClientFactory::getClient(
 );
 
 try {
-    $selfDBConnexion = ConnexionSelfDBFactory::getConnection('');
+    $selfDBConnexion = ConnexionSelfDBFactory::getConnection(
+        $_ENV['SELF_DB_HOST'],
+        $_ENV['SELF_DB_DB'],
+        $_ENV['SELF_DB_USER'],
+        $_ENV['SELF_DB_PASSWORD'],
+        $_ENV['SELF_DB_PORT']
+    );
     echo 'SelfDB Connection OK' . PHP_EOL;
 
 } catch (Exception $e) {
@@ -74,6 +80,8 @@ $orchestrator = new MigrationOrchestrator(
 
 $orchestrator->checkCloudConnections();
 
+$transactionRepository = new TransactionRepository();
+$transactionRepository->importAll();
 //    var_dump(
 //        $source->test(
 //            'sl-adullact-actes-2019',
@@ -98,6 +106,6 @@ switch ($type) {
         $orchestrator->runMail();
         break;
     default:
-        echo "Unknown type: $type" . PHP_EOL;
+        echo "Aucun type selectionné" . PHP_EOL;
         exit(1);
 }

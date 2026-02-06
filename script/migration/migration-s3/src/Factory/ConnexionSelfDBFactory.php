@@ -7,32 +7,30 @@ use PDO;
 
 class ConnexionSelfDBFactory
 {
-    public static function getConnection($databaseFile): SelfDB
+    public static function getConnection($host, $db, $user, $pass, $port): SelfDB
     {
-        $dbFile = $databaseFile ?? (__DIR__ . '/../migration_db.sqlite');
-
         try {
-            $dsn = "sqlite:" . $dbFile;
+            $dsn = "pgsql:host=$host;port=$port;dbname=$db;";
 
             $options = [
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             ];
 
-            $connexion = new PDO($dsn, null, null, $options);
+            $connexion = new PDO($dsn, $user, $pass, $options);
 
             $connexion->exec(
-                "CREATE TABLE IF NOT EXISTS migration_status (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    type TEXT NOT NULL,
-                    s2low_id INTEGER NOT NULL,
-                    status TEXT NOT NULL,
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    UNIQUE(type, s2low_id)
-                );"
-            );
+                "CREATE TABLE IF NOT EXISTS transactions (
+                id SERIAL PRIMARY KEY,
+                s2low_id INTEGER NOT NULL,
+                type TEXT NOT NULL CHECK(type IN ('ACTE', 'PES_ALLER', 'PES_ACQUIT', 'MAIL')),
+                bucket TEXT NOT NULL,
+                key TEXT NOT NULL,
+                status TEXT NOT NULL CHECK(status IN ('HANDLE', 'ASK', 'DOWNLOADED', 'COMPLETED', 'ERROR')),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(s2low_id))
+                ");
         } catch (\PDOException $e) {
-            // If not in CLI or if we want to bubble up
             throw new \Exception("Erreur SQLite : " . $e->getMessage());
         }
 

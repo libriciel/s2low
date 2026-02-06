@@ -19,7 +19,7 @@ class MailSecRepository extends AbstractRepository
                 JOIN authorities a ON a.id = u.authority_id
                 WHERE mt.id > ? AND mt.is_in_cloud = FALSE AND mt.not_available = FALSE AND mt.fn_download IS NOT NULL
                 ORDER BY mt.id ASC LIMIT ?";
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = $this->connexion->getPDO()->prepare($sql);
         $stmt->execute([$lastId, $limit]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

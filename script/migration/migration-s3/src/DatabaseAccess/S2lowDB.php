@@ -10,4 +10,9 @@ class S2lowDB
         private readonly PDO $connexion
     ) {
     }
+
+    public function getPDO(): PDO
+    {
+        return $this->connexion;
+    }
 }

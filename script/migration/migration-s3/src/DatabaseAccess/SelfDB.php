@@ -11,6 +11,10 @@ class SelfDB
     ) {
     }
 
+    public function getPDO(): PDO
+    {
+        return $this->connexion;
+    }
 
     public function getLastProcessedId(string $type): int
     {

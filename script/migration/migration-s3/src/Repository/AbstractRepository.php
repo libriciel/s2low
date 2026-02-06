@@ -2,15 +2,12 @@
 
 namespace App\Repository;
 
-use ConnexionS2lowDBFactory;
-use PDO;
+use App\DatabaseAccess\S2lowDB;
 
 abstract class AbstractRepository
 {
-    protected PDO $pdo;
-
-    public function __construct()
-    {
-        $this->pdo = ConnexionS2lowDBFactory::getConnection();
+    public function __construct(
+        protected S2lowDB $connexion
+    ) {
     }
 }
