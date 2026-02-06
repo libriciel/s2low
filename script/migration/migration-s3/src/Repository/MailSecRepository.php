@@ -13,14 +13,15 @@ class MailSecRepository extends AbstractRepository
      */
     public function getBatch(int $lastId, int $limit): array
     {
-        $sql = "SELECT mt.id, mt.fn_download, a.siren 
+        $sql = "SELECT mt.id, mt.fn_download, mt.date_envoi, a.siren 
                 FROM mail_transaction mt
                 JOIN users u ON u.id = mt.user_id
                 JOIN authorities a ON a.id = u.authority_id
-                WHERE mt.id > ? AND mt.is_in_cloud = FALSE AND mt.not_available = FALSE AND mt.fn_download IS NOT NULL
+                WHERE mt.id > ? AND mt.is_in_cloud = FALSE AND mt.not_available = FALSE
                 ORDER BY mt.id ASC LIMIT ?";
         $stmt = $this->connexion->getPDO()->prepare($sql);
         $stmt->execute([$lastId, $limit]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+//                WHERE mt.id > ? AND mt.is_in_cloud = FALSE AND mt.not_available = FALSE AND mt.fn_download IS NOT NULL
     }
 }

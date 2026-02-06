@@ -6,6 +6,7 @@ use App\Factory\ConnexionSelfDBFactory;
 use App\Factory\NewS3ClientFactory;
 use App\Factory\OldS3ClientFactory;
 use App\Migration\ActesSource;
+use App\Migration\MailSource;
 use App\Migration\PesAcquitSource;
 use App\Migration\PesSource;
 use App\MigrationOrchestrator;
@@ -104,8 +105,8 @@ $migrationPes = new PesSource(
 $migrationPesAcquit = new PesAcquitSource(
     $pesAcquitRepository,
 );
-$migrationMail = new ActesSource(
-    $actesRepository,
+$migrationMail = new MailSource(
+    $mailRepository,
 );
 
 

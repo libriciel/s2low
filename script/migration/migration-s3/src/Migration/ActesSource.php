@@ -33,6 +33,7 @@ class ActesSource implements MigrationSourceInterface
                     id: $item['id'],
                     key: $item['file_path'],
                     type: $this->getIdentifier(),
+                    date: $item['submission_date'],
                     siren: $item['siren']
                 );
                 $lastProcessedId = $item['id'];

@@ -26,7 +26,7 @@ class ConnexionSelfDBFactory
                 id SERIAL PRIMARY KEY,
                 s2low_id INTEGER NOT NULL,
                 type TEXT NOT NULL CHECK(type IN ('" . Type::ACTE->value . "', '" . Type::PES_ALLER->value . "', '" . Type::PES_ACQUIT->value . "', '" . Type::MAIL->value . "')),
-                bucket TEXT,
+                date TIMESTAMP NOT NULL,
                 siren TEXT NOT NULL,
                 key TEXT NOT NULL,
                 status TEXT NOT NULL CHECK(status IN ('" . Status::HANDLE->value . "', '" . Status::ASK->value . "', '" . Status::DOWNLOADED->value . "', '" . Status::COMPLETED->value . "', '" . Status::ERROR->value . "')),

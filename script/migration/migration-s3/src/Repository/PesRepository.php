@@ -13,7 +13,7 @@ class PesRepository extends AbstractRepository
      */
     public function getBatch(int $lastId, int $limit): array
     {
-        $sql = "SELECT id, sha1, filename, siren FROM helios_transactions 
+        $sql = "SELECT id, sha1, filename, siren, submission_date FROM helios_transactions 
                 WHERE id > ? AND is_in_cloud = FALSE AND not_available = FALSE 
                 ORDER BY id ASC LIMIT ?";
         $stmt = $this->connexion->getPDO()->prepare($sql);

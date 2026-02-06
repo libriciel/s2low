@@ -33,6 +33,7 @@ class PesAcquitSource implements MigrationSourceInterface
                     id: $item['id'],
                     key: $item['siren'] . '/' . $item['acquit_filename'],
                     type: $this->getIdentifier(),
+                    date: $item['submission_date'],
                     siren: $item['siren']
                 );
                 $lastProcessedId = $item['id'];

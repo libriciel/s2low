@@ -8,6 +8,7 @@ class MigrationItem
         readonly public int $id,
         readonly public string $key,
         readonly public string $type,
+        readonly public string $date,
         readonly public string $siren
     ) {
     }

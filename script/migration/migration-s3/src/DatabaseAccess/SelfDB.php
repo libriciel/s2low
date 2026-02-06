@@ -43,7 +43,7 @@ class SelfDB
 
     public function create(MigrationItem $transaction): void
     {
-        $sql = "INSERT INTO transactions (s2low_id, type, siren, key, status) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO transactions (s2low_id, type, siren, key, date, status) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
             $this->connexion->prepare($sql)->execute([
@@ -51,6 +51,7 @@ class SelfDB
                 $transaction->type,
                 $transaction->siren,
                 $transaction->key,
+                $transaction->date,
                 Status::HANDLE->value
             ]);
         } catch (PDOException $e) {

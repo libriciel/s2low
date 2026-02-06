@@ -13,7 +13,7 @@ class ActesRepository extends AbstractRepository
      */
     public function getBatch(int $lastId, int $limit): array
     {
-        $sql = "SELECT id, file_path, siren FROM actes_envelopes 
+        $sql = "SELECT id, file_path, siren, submission_date FROM actes_envelopes 
                 WHERE id > ? AND is_in_cloud = FALSE AND not_available = FALSE 
                 ORDER BY id ASC LIMIT ?";
         $stmt = $this->connexion->getPDO()->prepare($sql);
