@@ -5,7 +5,6 @@ use App\Factory\ConnexionS2lowDBFactory;
 use App\Factory\ConnexionSelfDBFactory;
 use App\Factory\NewS3ClientFactory;
 use App\Factory\OldS3ClientFactory;
-use App\MigrationOrchestrator;
 use Dotenv\Dotenv;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -20,15 +19,15 @@ $shortopts = "t:d"; // -t type, -d dry-run
 $longopts  = [
     "type:",
     "dry-run",
-    "check"
+    "force"
 ];
 $options = getopt($shortopts, $longopts);
 
 $type = $options['type'] ?? $options['t'] ?? null;
 $isDryRun = isset($options['dry-run']) || isset($options['d']);
 
-if (!$type && !array_key_exists('check', $options)) {
-    echo "Usage: php script.php --type=<actes|helios|helios_acquit|mail> [--dry-run] [--check]" . PHP_EOL;
+if (!$type && !array_key_exists('force', $options)) {
+    echo "Usage: php script.php --type=<actes|helios|helios_acquit|mail> [--dry-run]" . PHP_EOL;
     exit(1);
 }
 
@@ -48,15 +47,19 @@ $oldS3 = OldS3ClientFactory::getClient(
 
 try {
     $selfDBConnexion = ConnexionSelfDBFactory::getConnection('');
+    echo 'SelfDB Connection OK' . PHP_EOL;
+
 } catch (Exception $e) {
-    echo 'erreur lors de la connexion a la SelfDB: ' . $e->getMessage();
+    echo 'SelfDB Connection KO: ' . $e->getMessage();
     die();
 }
 
 try {
     $S2lowDBConnexion = ConnexionS2lowDBFactory::getConnection($_ENV);
+    echo 'S2lowDB Connection OK' . PHP_EOL;
+
 } catch (Exception $e) {
-    echo 'erreur lors de la connexion à la S2lowDB: ' . $e->getMessage();
+    echo 'S2lowDB Connection KO: ' . $e->getMessage();
     die();
 }
 
@@ -68,11 +71,7 @@ $orchestrator = new MigrationOrchestrator(
     $isDryRun
 );
 
-if (array_key_exists('check', $options)) {
-    $orchestrator->checkCloudConnections();
-
-    exit(0);
-}
+$orchestrator->checkCloudConnections();
 
 //    var_dump(
 //        $source->test(
@@ -83,7 +82,7 @@ if (array_key_exists('check', $options)) {
 //    );
 
 
-//// Run Selected Flow
+// Run Selected Flow
 switch ($type) {
     case 'actes':
         $orchestrator->runActes();

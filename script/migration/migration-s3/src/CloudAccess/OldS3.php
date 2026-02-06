@@ -98,4 +98,17 @@ class OldS3
             ];
         }
     }
+
+    public function checkConnection(): bool
+    {
+        try {
+            // Since bucket is dynamic, we check if we can list buckets to verify auth/connectivity
+            $this->client->headObject(['Bucket' => 'sl-adullact-actes-2019', 'Key' => '212105340/002DU03122019/SLO-EACT--212105340--20191210-2.tar.gz']);
+            echo "OldS3 Connection OK (headObject successful)." . PHP_EOL;
+            return true;
+        } catch (\Exception $e) {
+            echo "OldS3 Connection Failed: " . $e->getMessage() . PHP_EOL;
+            return false;
+        }
+    }
 }

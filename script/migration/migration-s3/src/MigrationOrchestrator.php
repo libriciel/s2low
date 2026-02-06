@@ -91,87 +91,75 @@ class MigrationOrchestrator
 
     private function processBatch(string $type, array $batch, callable $mapItem): void
     {
-        foreach ($batch as $data) {
-            if ($this->stateTracker->isProcessed($type, $data['id'])) {
-                continue;
-            }
-
-            $mapped = $mapItem($data);
-            $key = $mapped['key'];
-            $id = $mapped['id'];
-
-            echo "[$type] Processing ID $id (Source Key: $key)... ";
-
-            if ($this->dryRun) {
-                // Pass $type to exists
-                $sourceExists = $this->source->exists($key, $type);
-                if ($sourceExists) {
-                    echo "[DRY RUN] Found in $sourceExists. Would download and upload to NewS3." . PHP_EOL;
-                    // Pass $type to exists
-                    if ($this->newS3->exists($key, $type)) {
-                         echo "[DRY RUN] WARNING: Already exists in NewS3." . PHP_EOL;
-                    }
-                } else {
-                    echo "[DRY RUN] NOT FOUND in any source." . PHP_EOL;
-                }
-                continue;
-            }
-
-            $tempPath = sys_get_temp_dir() . '/s2low_migration_' . uniqid();
-
-            // Pass $type to downloadFile
-            if (!$this->source->downloadFile($key, true, $tempPath, $type)) {
-                echo "FAILED to download from Source." . PHP_EOL;
-                continue;
-            }
-
-            // Pass $type to upload
-            if ($this->newS3->upload($key, $tempPath, $type)) {
-                $this->stateTracker->markAsDone($type, $id);
-                echo "DONE." . PHP_EOL;
-            } else {
-                echo "FAILED to upload to NewS3." . PHP_EOL;
-            }
-
-            if (file_exists($tempPath)) {
-                unlink($tempPath);
-            }
-        }
+//        foreach ($batch as $data) {
+//            if ($this->stateTracker->isProcessed($type, $data['id'])) {
+//                continue;
+//            }
+//
+//            $mapped = $mapItem($data);
+//            $key = $mapped['key'];
+//            $id = $mapped['id'];
+//
+//            echo "[$type] Processing ID $id (Source Key: $key)... ";
+//
+//            if ($this->dryRun) {
+//                // In OldS3.php, checkConnection uses headObject.
+//                // We'll assume successful check if no exception is thrown or use a simulated check.
+//                echo "[DRY RUN] Would check existence, download and upload to NewS3." . PHP_EOL;
+//                if ($this->newS3->exists($key, $type)) {
+//                     echo "[DRY RUN] WARNING: Already exists in NewS3." . PHP_EOL;
+//                }
+//                continue;
+//            }
+//
+//            $tempPath = sys_get_temp_dir() . '/s2low_migration_' . uniqid();
+//
+//            $result = $this->oldS3->getFile('source-bucket', $key, $tempPath, true);
+//
+//            if ($result['current_status'] === 'telechargé') {
+//                if ($this->newS3->upload($key, $tempPath, $type)) {
+//                    $this->selfDBConnection->markAsDone($type, $id);
+//                    echo "DONE." . PHP_EOL;
+//                } else {
+//                    echo "FAILED to upload to NewS3." . PHP_EOL;
+//                }
+//            } else {
+//                echo "Status: " . $result['current_status'] . PHP_EOL;
+//            }
+//
+//            if (file_exists($tempPath)) {
+//                unlink($tempPath);
+//            }
+//        }
     }
 
     private function processFlow(string $type, $repository, callable $mapItem, string $batchMethod = 'getBatch'): void
     {
-        $lastId = $this->stateTracker->getLastProcessedId($type);
-        echo "Starting $type migration from ID $lastId..." . PHP_EOL;
-
-        while (true) {
-            $batch = $repository->$batchMethod($lastId, 100);
-            if (empty($batch)) {
-                break;
-            }
-
-            $this->processBatch($type, $batch, $mapItem);
-
-            $lastItem = end($batch);
-            $lastId = $lastItem['id'];
-        }
-        echo "Finished $type migration." . PHP_EOL;
+//        $lastId = $this->selfDBConnection->getLastProcessedId($type);
+//        echo "Starting $type migration from ID $lastId..." . PHP_EOL;
+//
+//        while (true) {
+//            $batch = $repository->$batchMethod($lastId, 100);
+//            if (empty($batch)) {
+//                break;
+//            }
+//
+//            $this->processBatch($type, $batch, $mapItem);
+//
+//            $lastItem = end($batch);
+//            $lastId = $lastItem['id'];
+//        }
+//        echo "Finished $type migration." . PHP_EOL;
     }
 
     public function checkCloudConnections(): void
     {
-        echo "Checking Connections..." . PHP_EOL;
         $hasError = false;
-
-        // Sources (OldS3 + OpenStack)
-        if (!$this->source->checkConnection()) {
-            // Error already printed by SourceStorage::checkConnection
+        if (!$this->oldS3->checkConnection()) {
             $hasError = true;
         }
 
-        // Destination (NewS3)
         if (!$this->newS3->checkConnection()) {
-             // Error already printed by NewS3::checkConnection
             $hasError = true;
         }
 
