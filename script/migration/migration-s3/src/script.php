@@ -5,6 +5,7 @@ use App\Factory\ConnexionS2lowDBFactory;
 use App\Factory\ConnexionSelfDBFactory;
 use App\Factory\NewS3ClientFactory;
 use App\Factory\OldS3ClientFactory;
+use App\MigrationOrchestrator;
 use Dotenv\Dotenv;
 
 require_once __DIR__ . '/../vendor/autoload.php';
