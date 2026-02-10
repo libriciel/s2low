@@ -153,7 +153,7 @@ class ActesApiControllerTest extends S2lowIntegrationTestCase
      * @throws \Exception
      */
     public function testListActesWithType(
-        int $type,
+        string $type,
         int $status,
         string $string
     ): void {
@@ -174,11 +174,11 @@ class ActesApiControllerTest extends S2lowIntegrationTestCase
     {
         // Une transaction est crée avec le type 1 (99_DE)
         yield [
-            1, ActesStatusSQL::STATUS_TRANSMIS,
+            '99_DE', ActesStatusSQL::STATUS_TRANSMIS,
             $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
         //Il n'y a aucune transaction de type 2 (99_AR)
         yield [
-            2, ActesStatusSQL::STATUS_TRANSMIS,
+            '99_AR', ActesStatusSQL::STATUS_TRANSMIS,
             $this->emptyResponse(ActesStatusSQL::STATUS_TRANSMIS)];
     }
 
