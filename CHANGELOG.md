@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.9
+
+### Corrections
+
+- Corrige la possibilité de télécharger des fichiers pdf supérieur à la taille authorisé. #1480
+
 ## 5.1.8 - 2026-02-09
 
 ### Corrections
