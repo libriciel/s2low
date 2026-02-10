@@ -83,6 +83,7 @@ $myAuthority = new Authority($me->get("authority_id"));
 $nature_code = Helpers:: getVarFromPost("nature_code", true);
 $en_attente = Helpers:: getVarFromPost("en_attente", true);
 
+$classif1 = $classif2 = $classif3 = $classif4 = $classif5 = null;
 for ($i = 1; $i <= 5; $i++) {
     ${"classif" . $i} = Helpers:: getIntFromPost("classif" . $i, true, true);
 }
@@ -154,6 +155,8 @@ $extraRedirect = "";
 
 // Détermination si traitement par lot ou pas
 $batchMode = false;
+$zeBatch = null;
+$zeBatchFile = null;
 if (isset($batchFileId) && is_numeric($batchFileId)) {
     $zeBatchFile = new ActesBatchFile($batchFileId);
     if ($zeBatchFile->init()) {
@@ -326,6 +329,7 @@ if (isset($actePDFFile) || $batchMode) {
     } else {
         // Ajout de la signature si présente
         $signFile = null;
+        $readFile = false;
         if ($batchMode) {
             $sign = $zeBatchFile->get("signature");
             if (!empty($sign)) {

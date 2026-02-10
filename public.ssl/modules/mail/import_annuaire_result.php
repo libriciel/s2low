@@ -15,6 +15,11 @@ if (isset($_SESSION['last_annuaire'])) {
     $tabOK = $annuaire->getTabOK();
 
     unset($_SESSION['last_annuaire']);
+} else {
+    $annuaire = null;
+    $tabOK = [];
+    $tabAlreadyExists = [];
+    $tabError = [];
 }
 
 $doc = new MailLayout();

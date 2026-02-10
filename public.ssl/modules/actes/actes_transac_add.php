@@ -51,6 +51,8 @@ $myAuthority = new Authority($me->get("authority_id"));
 
 // Parametres pour le traitement par lot
 $batchFileId = Helpers :: getVarFromGet("batchfile");
+$zeBatch = null;
+$zeBatchFile = null;
 
 // Détermination si traitement par lot ou pas
 $batchMode = false;
