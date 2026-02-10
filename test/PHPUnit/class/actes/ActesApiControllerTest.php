@@ -44,7 +44,7 @@ class ActesApiControllerTest extends S2lowIntegrationTestCase
     {
         $this->setUserWithRole(UserRole::Utilisateur);
         $this->expectOutputString(
-            $this->emptyResponse(0) // Le status 0 correspond à la valeur par défaut de getInt()
+            $this->emptyResponse(0)
         );
         $this->getActesAPIController()->listActesAction();
     }
@@ -146,6 +146,40 @@ class ActesApiControllerTest extends S2lowIntegrationTestCase
         // Si max_date est antérieure à min_date, la liste est vide ...
         yield ['2017-08-02','2017-07-02' , ActesStatusSQL::STATUS_POSTE,
             $this->emptyResponse(ActesStatusSQL::STATUS_POSTE)];
+    }
+
+    /**
+     * @dataProvider typeProvider
+     * @throws \Exception
+     */
+    public function testListActesWithType(
+        int $type,
+        int $status,
+        string $string
+    ): void {
+        $id = $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
+        $this->updateStatus($id, ActesStatusSQL::STATUS_TRANSMIS, 'message', '2017-08-01');
+        $this->setUserWithRole(UserRole::Utilisateur);
+        $this->getEnvironment()->get()->set('status_id', $status);
+        $this->getEnvironment()->get()->set('type_acte', $type);
+        $this->getActesAPIController()->listActesAction();
+
+        static::assertStringContainsString(
+            $string,
+            $this->getActualOutputForAssertion()
+        );
+    }
+
+    public function typeProvider(): iterable
+    {
+        // Une transaction est crée avec le type 1 (99_DE)
+        yield [
+            1, ActesStatusSQL::STATUS_TRANSMIS,
+            $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
+        //Il n'y a aucune transaction de type 2 (99_AR)
+        yield [
+            2, ActesStatusSQL::STATUS_TRANSMIS,
+            $this->emptyResponse(ActesStatusSQL::STATUS_TRANSMIS)];
     }
 
 
