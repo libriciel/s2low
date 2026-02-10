@@ -197,7 +197,6 @@ class ActesApiControllerTest extends S2lowIntegrationTestCase
         );
     }
 
-
     public function testActionAfter()
     {
         $this->setUserWithRole(UserRole::Utilisateur);
