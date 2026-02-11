@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use RuntimeException;
 use S2low\Exceptions\BadNatureCodeException;
 
 enum NaturesActes: int
@@ -13,26 +14,39 @@ enum NaturesActes: int
     case BF = 5;    // Documents budgétaires et financiers
     case AU = 6;    // Autres
 
-    public static function getFromString(?string $code): self
+    public static function getFromString(string $code): self
     {
+        if (!in_array($code, self::getPossiblesNatures(), true)) {
+            throw new BadNatureCodeException(
+                sprintf(
+                    'Code invalide : valeur parmi %s attendue, %s fourni',
+                    self::getPossiblesNaturesAsString(),
+                    $code
+                )
+            );
+        }
+
         // Extract the suffix after "_"
-        $parts = explode('_', $code);
-        if (count($parts) !== 2) {
-            throw new BadNatureCodeException("Invalid code format: $code");
-        }
+        [,$suffixe_nature] = explode('_', $code, 2);
 
-        if ($parts[0] !== '99') {
-            throw new BadNatureCodeException("Invalid code format: $code");
+        foreach (self::cases() as $case) {
+            if ($case->name === $suffixe_nature) {
+                return $case;
+            }
         }
+        throw new RuntimeException("Impossible de traiter le code $code");
+    }
 
-        return match ($parts[1]) {
-            'DE' => self::DE,
-            'AR' => self::AR,
-            'AI' => self::AI,
-            'CC' => self::CC,
-            'BF' => self::BF,
-            'AU' => self::AU,
-            default => throw new BadNatureCodeException("Unknown code suffix: {$parts[1]}"),
-        };
+    private static function getPossiblesNatures(): array
+    {
+        return array_map(
+            fn ($case) => '99_' . $case->name,
+            self::cases()
+        );
+    }
+
+    private static function getPossiblesNaturesAsString(): string
+    {
+        return implode(', ', self::getPossiblesNatures());
     }
 }

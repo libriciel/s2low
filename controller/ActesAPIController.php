@@ -65,9 +65,13 @@ class ActesAPIController extends Controller
         $authority_id = intval($this->me->get('authority_id'));
 
         try {
-            $typeActe = is_null($type_acte_string) ? null : NaturesActes::getFromString($type_acte_string)->value;
+            $typeActe = null;
+            if ($type_acte_string !== null) {
+                $typeActe = NaturesActes::getFromString($type_acte_string)->value;
+            }
         } catch (BadNatureCodeException $e) {
             echo json_encode(legacy_encode_array(['error' => $e->getMessage()]));
+            return false;
         }
         $transactions_list = $this->getActesTransactionsSQL()->getListByStatusAndAuthority(
             $status_id,
