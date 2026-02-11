@@ -77,51 +77,6 @@ $html .= " </tr>\n";
 $html .= "</table>\n";
 $html .= "</div>\n";
 
-//! On récupère la liste des paramètres du modules dans le tableau module_params
-$module_params = $zeModule->getModuleParams();
- $tr_style = "alternate1";
-if (count($module_params) > 0) {
-  //! Le module a un ou plusieurs paramètres, on affiche la table des paramètres
-
-
-    $html .= "<h2>Modification/Suppression des param&egrave;tres</h2>\n";
-    $html .= "<div class=\"data_table\">\n";
-    $html .= "<table class=\"data\">\n";
-    $html .= "<tr>\n";
-    $html .= "  <th class=\"data\">Suppression</th>\n";
-    $html .= "  <th class=\"data\">Nom du param&egrave;tre</th>\n";
-    $html .= "  <th class=\"data\">Valeur du param&egrave;tre</th>\n";
-    $html .= "  <th class=\"data\">Description du param&egrave;tre</th>\n";
-    $html .= "</tr>\n";
-
-    foreach ($module_params as $param) {
-        $html .= "<tr class=\"" . $tr_style . "\">\n";
-        $html .= "  <td class=\"td-input\"><input type=\"hidden\" name=\"param_id[]\" value=\"" . $param["id"] . "\"/><input type=\"checkbox\" name=\"param_to_suppr[]\" value=\"" . $param["id"] . "\" /></td>";
-        $html .= "  <td class=\"td-input\"><input type=\"text\" name=\"param_name[]\" value=\"" . get_hecho($param["name"]) . "\" /></td>\n";
-        $html .= "  <td class=\"td-input\"><input type=\"text\" size=\"15\" maxlength=\"70\" name=\"param_value[]\" value=\"" . get_hecho($param["value"]) . "\" /></td>\n";
-        $html .= "  <td class=\"td-input\"><input type=\"text\" size=\"40\" maxlength=\"70\" name=\"param_description[]\" value=\"" . get_hecho($param["description"]) . "\" /></td>\n";
-        $html .= "</tr>\n";
-        $tr_style = ($tr_style == "alternate1") ? "alternate2" : "alternate1";
-    }
-    $html .= "</table>\n";
-    $html .= "</div>\n";
-}
-
-$html .= "<h2>Ajout d'un param&egrave;tre</h2>\n";
-$html .= "<div class=\"data_table\">\n";
-$html .= "<table class=\"data\">\n";
-$html .= "<tr>\n";
-$html .= "  <th class=\"data\">Nom du param&egrave;tre</th>\n";
-$html .= "  <th class=\"data\">Valeur du param&egrave;tre</th>\n";
-$html .= "  <th class=\"data\">Description du param&egrave;tre</th>\n";
-$html .= "</tr>\n";
-$html .= "<tr class=\"" . $tr_style . "\">\n";
-$html .= "  <td class=\"td-input\"><input type=\"text\" name=\"new_param_name\" /></td>\n";
-$html .= "  <td class=\"td-input\"><input size=\"15\" maxlength=\"70\" type=\"text\" name=\"new_param_value\" /></td>\n";
-$html .= "  <td class=\"td-input\"><input size=\"40\" maxlength=\"70\" type=\"text\" name=\"new_param_description\" /></td>\n";
-$html .= "</tr>\n";
-$html .= "</table>\n";
-$html .= "</div>\n";
 $html .= "<br />\n";
 $html .= "<center><input type=\"submit\" class=\"submit_button\" value=\"";
 $html .= "Valider les modifications";
