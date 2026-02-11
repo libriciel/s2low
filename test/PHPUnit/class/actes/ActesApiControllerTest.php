@@ -182,6 +182,21 @@ class ActesApiControllerTest extends S2lowIntegrationTestCase
             $this->emptyResponse(ActesStatusSQL::STATUS_TRANSMIS)];
     }
 
+    public function testListActesWithWrongType(): void
+    {
+        $id = $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
+        $this->updateStatus($id, ActesStatusSQL::STATUS_TRANSMIS, 'message', '2017-08-01');
+        $this->setUserWithRole(UserRole::Utilisateur);
+        $this->getEnvironment()->get()->set('status_id', ActesStatusSQL::STATUS_TRANSMIS);
+        $this->getEnvironment()->get()->set('type_acte', '99_OUPS');
+        $this->getActesAPIController()->listActesAction();
+
+        static::assertStringContainsString(
+            '{"error":"Code invalide : valeur parmi 99_DE, 99_AR, 99_AI, 99_CC, 99_BF, 99_AU attendue, 99_OUPS fourni"}',
+            $this->getActualOutputForAssertion()
+        );
+    }
+
 
     public function testActionAfter()
     {
