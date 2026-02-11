@@ -22,10 +22,6 @@ if ($me->isGroupAdminOrSuper() || ! $module->isActive() || ! $me->checkDroit($mo
     Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 
-if ($module->getParam("paper") == "on") {
-    Helpers::returnAndExit(1, "Mode « papier » actif. Accès interdit.", Helpers::getLink("/modules/actes/"));
-}
-
 $myAuthority = new Authority($me->get("authority_id"));
 
 

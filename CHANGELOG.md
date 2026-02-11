@@ -17,6 +17,7 @@
 - Suppression de la possibilité d'envoyer des mails à partir de S2low via l'API et l'interface. #1116
 - Suppression de la possibilité d'enrichir le carnet d'adresse. #1116
 - Il est toujours possible de consulter les mails existants.
+- Suppression des paramètres de module et du mode papier #1426
 
 ## 5.1.7 - 2026-01-12
 

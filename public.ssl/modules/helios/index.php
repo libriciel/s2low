@@ -247,14 +247,7 @@ ob_start();
     <?php endif; ?>
 
     <?php if (!$me->isSuper() && $me->canEdit($module->get('name'))) : ?>
-        <?php if ($module->getParam('paper') == 'on') : ?>
-            <p>Le système est actuellement en mode &nbsp;papier&nbsp;.
-                Dans ce mode il est impossible de créer de nouvelle transaction.
-                Les transferts doivent se faire par les moyens classiques (non dématérialisé).
-            </p>
-        <?php else :  ?>
-            <a class="btn btn-primary" href="<?php echo Helpers::getLink('/modules/helios/helios_fichier_import.php'); ?>" >Importer un fichier</a>
-        <?php endif; ?>
+        <a class="btn btn-primary" href="<?php echo Helpers::getLink('/modules/helios/helios_fichier_import.php'); ?>" >Importer un fichier</a>
     <?php endif; ?>
     <a class="btn btn-primary" href="<?php echo Helpers::getLink('/modules/helios/helios_retour.php'); ?>" title="afficher la liste des réponses reçues">Réponse d'Hélios</a>
 </div>

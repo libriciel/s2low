@@ -39,13 +39,6 @@ if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->checkDroit($modu
     exit();
 }
 
-if ($module->getParam("paper") == "on") {
-    $_SESSION["error"] = "Mode «&nbsp;papier&nbsp;» actif. Accès interdit.";
-    header("Location: " . Helpers::getLink("/modules/actes/"));
-    exit();
-}
-
-
 // Collectivité de l'utilisateur courant
 $myAuthority = new Authority($me->get("authority_id"));
 

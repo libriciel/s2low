@@ -29,8 +29,6 @@ class Module extends DataObject
                          "status" => array( "descr" => "État", "type" => "isInt", "mandatory" => true)
                          );
 
-    private array|null|false $moduleParams = null;
-
   /**
    * \brief Constructeur d'un module
    * \param id integer : Numéro d'identifiant d'un module existant avec lequel initialiser l'objet
@@ -102,26 +100,6 @@ class Module extends DataObject
             return false;
         }
 
-      //! Traitement des paramètres du module
-        $sql = "DELETE FROM modules_params WHERE module_id=?";
-
-        if (! $this->db->exec($sql, [$this->id])) {
-            $this->errorMsg = "Erreur lors de la réinitialisation des paramètres du module.";
-            $this->db->rollback();
-            return false;
-        }
-
-        if (!is_null($this->moduleParams) && count($this->moduleParams) > 0) {
-            reset($this->moduleParams);
-            foreach ($this->moduleParams as $param) {
-                $sql = "INSERT INTO modules_params (module_id, name, value, description) VALUES(?, '" . addslashes($param["name"]) . "','" . addslashes($param["value"]) . "','" . addslashes($param["description"]) . "')";
-                if (! $this->db->exec($sql, [$this->id])) {
-                    $this->errorMsg = "Erreur lors de la sauvegarde des paramètres du module.";
-                    $this->db->rollback();
-                    return false;
-                }
-            }
-        }
         return true;
     }
 
@@ -144,14 +122,6 @@ class Module extends DataObject
         }
         if (! $this->db->begin()) {
             $this->errorMsg = "Erreur lors de l'initialisation de la transaction.";
-            return false;
-        }
-
-        $sql = "DELETE FROM modules_params WHERE module_id=?";
-
-        if (! $this->db->exec($sql, [$id])) {
-            $this->errorMsg = "Erreur lors de la suppression des associations avec les modules.";
-            $this->db->rollback();
             return false;
         }
 
@@ -183,56 +153,6 @@ class Module extends DataObject
         }
 
         return true;
-    }
-
-  /**
-   * \brief Méthode renvoyant les paramètres du module
-   * \return Un tableau contenant les paramètres pour le module courant
-   */
-    public function getModuleParams()
-    {
-        $sql = "SELECT modules_params.id, modules_params.name, modules_params.value, modules_params.description FROM modules_params WHERE modules_params.module_id=?";
-
-        $result = $this->db->select($sql, [$this->id]);
-
-        if (! $result->isError()) {
-            return $result->get_all_rows();
-        }
-
-        return array();
-    }
-
-  /**
-   * \brief Méthode renvoyant la valeur d'un paramètre du module
-   * \param $name chaîne : nom du paramètre dont récupérer la valeur
-   * \return La valeur du paramètre ou null si le paramètre n'existe pas
-   */
-    public function getParam($name)
-    {
-        if (! empty($name)) {
-            $sql = "SELECT modules_params.value FROM modules_params WHERE modules_params.name=? AND modules_params.module_id=?";
-
-            $result = $this->db->select($sql, [$name,$this->id]);
-
-            if (! $result->isError() && $result->num_row() == 1) {
-                $row = $result->get_next_row();
-                return $row["value"];
-            }
-        }
-
-        return null;
-    }
-
-
-  /**
-   * \brief Méthode qui permet de fixer le paramètre d'un module
-   * \param $name : nom du module
-   * \param $description : description du module
-   * \param $value : valeur du module
-   */
-    public function setModuleParams($name, $description, $value)
-    {
-        $this->moduleParams[] = array("name" => $name,"description" => $description,"value" => $value);
     }
 
   /**********************/

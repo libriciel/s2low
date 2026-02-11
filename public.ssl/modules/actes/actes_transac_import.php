@@ -33,12 +33,6 @@ if ($me->isGroupAdminOrSuper() || ! $module->isActive() || !$me->checkDroit($mod
     exit();
 }
 
-if ($module->getParam("paper") == "on") {
-    $_SESSION["error"] = "Mode «&nbsp;papier&nbsp;» actif. Accès interdit.";
-    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
-    exit();
-}
-
 $rgsConnexion = LegacyObjectsManager::getLegacyObjectInstancier()->get(RgsConnexion::class);
 if (! $rgsConnexion->isRgsConnexion()) {
     $_SESSION["error"] = "Importer une enveloppe : votre certificat n'est pas conforme au RGS, vous ne pouvez pas télétransmettre !";

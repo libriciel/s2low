@@ -61,10 +61,6 @@ if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->checkDroit($modu
     Helpers:: returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 
-if ($module->getParam("paper") == "on") {
-    Helpers:: returnAndExit(1, "Mode « papier » actif. Accès interdit.", Helpers::getLink("/modules/actes/"));
-}
-
 $rgsConnexion = LegacyObjectsManager::getLegacyObjectInstancier()->get(RgsConnexion::class);
 if (!$rgsConnexion->isRgsConnexion()) {
     Helpers:: returnAndExit(
