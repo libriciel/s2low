@@ -39,18 +39,6 @@ if (! $me->isSuper()) {
 $id = Helpers::getVarFromPost("id");
 $status = Helpers::getVarFromPost("status");
 
-//! On récupère des informations sur les parametres du module sous forme de tableaux
-$param_id = Helpers::getVarFromPost("param_id");
-$param_name = Helpers::getVarFromPost("param_name");
-$param_description = Helpers::getVarFromPost("param_description");
-$param_value = Helpers::getVarFromPost("param_value");
-$param_to_suppr = Helpers::getVarFromPost("param_to_suppr");
-
-//! On recupere les informations concernant le paramètre du module a ajouter
-$new_param_name = Helpers::getVarFromPost("new_param_name");
-$new_param_value = Helpers::getVarFromPost("new_param_value");
-$new_param_description = Helpers::getVarFromPost("new_param_description");
-
 $modules = new Module();
 
 if (isset($id) && ! empty($id)) {
@@ -63,22 +51,6 @@ if (isset($id) && ! empty($id)) {
 }
 
 $modules->set("status", $status);
-
-if (is_array($param_id) && count($param_id) > 0) {
-    foreach ($param_id as $key => $value_id) {
-        if (is_array($param_to_suppr)) {
-            if (! in_array($value_id, $param_to_suppr)) {
-                $modules->setModuleParams($param_name[$key], $param_description[$key], $param_value[$key]);
-            }
-        } else {
-            $modules->setModuleParams($param_name[$key], $param_description[$key], $param_value[$key]);
-        }
-    }
-}
-
-if (mb_strlen($new_param_name) > 0 && mb_strlen($new_param_description) > 0 && mb_strlen($new_param_value) > 0) {
-    $modules->setModuleParams($new_param_name, $new_param_description, $new_param_value);
-}
 
 if (! $modules->save()) {
     $msg = "Erreur lors de l'enregistrement du module :\n" . $modules->getErrorMsg();

@@ -29,8 +29,6 @@ class Module extends DataObject
                          "status" => array( "descr" => "État", "type" => "isInt", "mandatory" => true)
                          );
 
-    private array|null|false $moduleParams = null;
-
   /**
    * \brief Constructeur d'un module
    * \param id integer : Numéro d'identifiant d'un module existant avec lequel initialiser l'objet
@@ -155,17 +153,6 @@ class Module extends DataObject
         }
 
         return true;
-    }
-
-  /**
-   * \brief Méthode qui permet de fixer le paramètre d'un module
-   * \param $name : nom du module
-   * \param $description : description du module
-   * \param $value : valeur du module
-   */
-    public function setModuleParams($name, $description, $value)
-    {
-        $this->moduleParams[] = array("name" => $name,"description" => $description,"value" => $value);
     }
 
   /**********************/
