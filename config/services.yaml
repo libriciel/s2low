@@ -35,6 +35,7 @@ parameters:
   app.workspace_directory: '%env(default:app.workspace_directory.default:WORKSPACE_DIRECTORY)%'
   app.service_name: '%env(default:app.service_name.default:SERVICE_NAME)%'
   app.log_path: '%env(default:app.log_path.default:LOG_PATH)%'
+  app.helios_retention_fichiers_nb_jours: '%env(default:app.helios_retention_fichiers_nb_jours.default:HELIOS_RETENTION_FICHIERS_NB_JOURS)%'
 
   # Valeurs par default de parametres
   app.actes_appli_quadrigramme.default: 'TACT'
@@ -64,6 +65,7 @@ parameters:
   app.use_prod_notifications.default: false
   app.service_name.default: 'app'
   app.log_path.default: '/data/log/'
+  app.helios_retention_fichiers_nb_jours.default: 3650000
 
   # Variables Globale
   app.actes.files_upload_root: '%app.workspace_directory%actes/uploads'
@@ -420,9 +422,9 @@ services:
     public: false
 
   S2lowLegacy\Class\helios\HeliosSAEDateManager:
-    autowire: false
-    autoconfigure: false
     public: true
+    arguments:
+      $helios_retention_fichiers_nb_jours: "%app.helios_retention_fichiers_nb_jours%"
 
   S2lowLegacy\Class\helios\PESAllerCloudStorable:
     public: true
