@@ -2,10 +2,11 @@
 
 namespace S2lowLegacy\Controller;
 
-use S2low\Exceptions\BadNatureCodeException;
+use S2low\Exceptions\BadTypeTransactionCode;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\NaturesActes;
+use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Model\AuthoritySQL;
 
 class ActesAPIController extends Controller
@@ -57,7 +58,7 @@ class ActesAPIController extends Controller
         $status_id = $this->getRecuperateurGet()->getInt('status_id');
         $offset = $this->getRecuperateurGet()->getInt('offset');
         $limit = $this->getRecuperateurGet()->getInt('limit', 100);
-        $type_acte_string = $this->getRecuperateurGet()->get('type_acte', null);
+        $typeActe = $this->getRecuperateurGet()->getInt('type_acte', null);
 
         $min_submission_date = $this->getRecuperateurGet()->getDate('min_date');
         $max_submission_date = $this->getRecuperateurGet()->getDate('max_date');
@@ -65,11 +66,10 @@ class ActesAPIController extends Controller
         $authority_id = intval($this->me->get('authority_id'));
 
         try {
-            $typeActe = null;
-            if ($type_acte_string !== null) {
-                $typeActe = NaturesActes::getFromString($type_acte_string)->value;
+            if (!is_null($typeActe)) {
+                TypeTransaction::checkCode($typeActe);
             }
-        } catch (BadNatureCodeException $e) {
+        } catch (BadTypeTransactionCode $e) {
             echo json_encode(legacy_encode_array(['error' => $e->getMessage()]));
             return false;
         }

@@ -9,6 +9,7 @@ use IntegrationTests\S2lowIntegrationTestCase;
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Controller\ActesAPIController;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Lib\Environnement;
@@ -153,7 +154,7 @@ class ActesApiControllerTest extends S2lowIntegrationTestCase
      * @throws \Exception
      */
     public function testListActesWithType(
-        string $type,
+        int $type,
         int $status,
         string $string
     ): void {
@@ -172,13 +173,13 @@ class ActesApiControllerTest extends S2lowIntegrationTestCase
 
     public function typeProvider(): iterable
     {
-        // Une transaction est crée avec le type 1 (99_DE)
+        // Une transaction est crée avec le type TransmissionActes
         yield [
-            '99_DE', ActesStatusSQL::STATUS_TRANSMIS,
+            TypeTransaction::TransmissionActe->value, ActesStatusSQL::STATUS_TRANSMIS,
             $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
-        //Il n'y a aucune transaction de type 2 (99_AR)
+        //Il n'y a aucune transaction de type Annulation
         yield [
-            '99_AR', ActesStatusSQL::STATUS_TRANSMIS,
+            TypeTransaction::Annulation->value, ActesStatusSQL::STATUS_TRANSMIS,
             $this->emptyResponse(ActesStatusSQL::STATUS_TRANSMIS)];
     }
 
@@ -188,11 +189,11 @@ class ActesApiControllerTest extends S2lowIntegrationTestCase
         $this->updateStatus($id, ActesStatusSQL::STATUS_TRANSMIS, 'message', '2017-08-01');
         $this->setUserWithRole(UserRole::Utilisateur);
         $this->getEnvironment()->get()->set('status_id', ActesStatusSQL::STATUS_TRANSMIS);
-        $this->getEnvironment()->get()->set('type_acte', '99_OUPS');
+        $this->getEnvironment()->get()->set('type_acte', 99);
         $this->getActesAPIController()->listActesAction();
 
         static::assertStringContainsString(
-            '{"error":"Code invalide : valeur parmi 99_DE, 99_AR, 99_AI, 99_CC, 99_BF, 99_AU attendue, 99_OUPS fourni"}',
+            '{"error":"Code 99 invalide, les valeurs possibles sont : ',
             $this->getActualOutputForAssertion()
         );
     }
