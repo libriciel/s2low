@@ -314,6 +314,7 @@ class HeliosEnvoiControler
             }
 
             if (!preg_match('/VHPCE[1-7]1/', $authorityInfo['helios_ftp_dest'])) {
+                $this->logger->error("Transaction $transaction_id non envoyée (destination {$authorityInfo['helios_ftp_dest']}) ");
                 unlink($file_path_with_complete_name);
                 return;
             }

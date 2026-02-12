@@ -515,7 +515,6 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
         $this->envoiControler->sendOneTransaction($id_transaction, true);
         ob_end_clean();
         $info_transaction = $this->transactionsSQL->getInfo($id_transaction);
-        var_dump($this->transactionsSQL->getLastStatusInfo($id_transaction));
         static::assertEquals(HeliosTransactionsSQL::TRANSMIS, $info_transaction['last_status_id']);
         $last_status_info = $this->transactionsSQL->getLastStatusInfo($id_transaction);
         static::assertEquals(
