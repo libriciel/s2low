@@ -312,6 +312,12 @@ class HeliosEnvoiControler
                 unlink($file_path_with_complete_name);
                 return;
             }
+
+            if (!preg_match('/VHPCE[1-7]1/', $authorityInfo['helios_ftp_dest'])) {
+                unlink($file_path_with_complete_name);
+                return;
+            }
+
             $this->heliosConnectionsConfigurationManager
                 ->get($usePasstrans)->sendFileOnUniqueConnection($authorityInfo['helios_ftp_dest'], $p_msg, $file_to_send);
         } catch (Exception $e) {

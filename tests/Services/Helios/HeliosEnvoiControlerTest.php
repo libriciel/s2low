@@ -433,6 +433,7 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
     public function testSendOneTransactionBonneFilePasstrans()
     {
         $id_transaction = $this->createPesAllerToSend('pes_aller_ok.xml');
+        $this->authoritySQL->query('UPDATE authorities SET helios_ftp_dest = \'VHPCE11\' WHERE id =1');
 
         $dgfipConnection = $this->getMockBuilder(DGFiPConnection::class)
             ->disableOriginalConstructor()->getMock();
@@ -453,7 +454,7 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
             )->willReturn($dgfipConnection);
         $dgfipConnection->expects(static::once())->method('sendFileOnUniqueConnection')
             ->with(
-                'helios_ftp_dest',
+                'VHPCE11',
                 'PES#123#034000#12',
                 '/data/tdt-workspace/helios/sending-tmp//PESALR2_123456789_' . date('ymd') . '_001.xml'
             );
@@ -483,6 +484,7 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
         $id_transaction = $this->createPesAllerToSend('pes_aller_ok.xml');
 
         $this->authoritySQL->query('UPDATE authorities SET helios_use_passtrans = true WHERE id =1');
+        $this->authoritySQL->query('UPDATE authorities SET helios_ftp_dest = \'VHPCE11\' WHERE id =1');
 
         $dgfipConnection = $this->getMockBuilder(DGFiPConnection::class)
             ->disableOriginalConstructor()->getMock();
@@ -505,7 +507,7 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
         $dgfipConnection->expects(static::once())
             ->method('sendFileOnUniqueConnection')
             ->with(
-                'helios_ftp_dest',
+                'VHPCE11',
                 'PES#123#034000#12',
                 '/data/tdt-workspace/helios/sending-tmp//PESALR2_123456789_' . date('ymd') . '_001.xml'
             );
@@ -513,12 +515,42 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
         $this->envoiControler->sendOneTransaction($id_transaction, true);
         ob_end_clean();
         $info_transaction = $this->transactionsSQL->getInfo($id_transaction);
+        var_dump($this->transactionsSQL->getLastStatusInfo($id_transaction));
         static::assertEquals(HeliosTransactionsSQL::TRANSMIS, $info_transaction['last_status_id']);
         $last_status_info = $this->transactionsSQL->getLastStatusInfo($id_transaction);
         static::assertEquals(
             "Transaction $id_transaction transmise au serveur. [Passtrans]",
             $last_status_info['message']
         );
+    }
+
+    /**
+     * Quand on envoie une transaction d'une autorité Passtrans sur la file passtrans, elle est
+     * correctement envoyée :
+     * 1/ les paramètres du serveur sont corrects (passtrans_server, etc)
+     * 2/ sendFileOnUniqueConnection est bien appelé avec un nommage correct
+     * 3/ le passage à transmis se fait bien
+     * @return void
+     * @throws Exception
+     */
+    public function testSendOneTransactionBonneFilePasstrans2FTPFILTRE()
+    {
+        $id_transaction = $this->createPesAllerToSend('pes_aller_ok.xml');
+
+        $this->authoritySQL->query('UPDATE authorities SET helios_use_passtrans = true WHERE id =1');
+        $this->authoritySQL->query('UPDATE authorities SET helios_ftp_dest = \'MHPCE11\' WHERE id =1');
+
+        $dgfipConnection = $this->getMockBuilder(DGFiPConnection::class)
+            ->disableOriginalConstructor()->getMock();
+
+        $this->connectBuilder->expects(static::never())->method('get');
+        $dgfipConnection->expects(static::never())
+            ->method('sendFileOnUniqueConnection');
+        ob_start();
+        $this->envoiControler->sendOneTransaction($id_transaction, true);
+        ob_end_clean();
+        $info_transaction = $this->transactionsSQL->getInfo($id_transaction);
+        static::assertEquals(HeliosTransactionsSQL::ATTENTE, $info_transaction['last_status_id']);
     }
 
     /**
@@ -532,6 +564,8 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
      */
     public function testSendOnePesAcquitRetour()
     {
+        $this->authoritySQL->query('UPDATE authorities SET helios_ftp_dest = \'VHPCE11\' WHERE id =1');
+
         $id_transaction = $this->createPesAllerToSend('PES_ACQUIT_RETOUR.xml');
         $this->envoiControler->sendOneTransaction($id_transaction, false);
 
