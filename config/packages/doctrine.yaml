@@ -1,5 +1,0 @@
-doctrine:
-  dbal:
-    driver: 'pdo_pgsql'
-    server_version: '14'
-    url: '%app.database_url%'

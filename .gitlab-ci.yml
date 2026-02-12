@@ -32,7 +32,6 @@ variables:
     POSTGRES_DB: s2lowdb
     POSTGRES_USER: s2lowuser
     POSTGRES_PASSWORD: s2lowpassword
-    DATABASE_URL: "postgresql://s2lowuser:s2lowpassword@postgres:5432/s2lowdb?serverVersion=14&charset=utf8"
     PRODUCT: s2low
 
 build:
@@ -95,7 +94,6 @@ unit_test:
         POSTGRES_DATABASE_TEST: s2lowdb
         POSTGRES_HOST_TEST: postgres
         POSTGRES_HOST: postgres
-        DATABASE_URL: "postgresql://s2lowuser:s2lowpassword@postgres:5432/s2lowdb?serverVersion=14&charset=utf8"
         S2LOW_WEBSITE: "localhost"
         COMPOSER_PROCESS_TIMEOUT: 9000
         DONT_RETRIEVE_VALIDCA: "true"
