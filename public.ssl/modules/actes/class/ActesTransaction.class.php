@@ -1233,20 +1233,21 @@ class ActesTransaction extends DataObject
     public static function getTransactionFromUniqueId($unique_id)
     {
         $db = DatabasePool::getInstance();
-        $sql = "SELECT id FROM actes_transactions WHERE unique_id=? AND type='1'";
+        $sql = "SELECT id FROM actes_transactions WHERE unique_id=" .
+            $db->getPdo()->quote($unique_id) . " AND type='1'";
 
-        $result = $db->exec($sql, $unique_id);
+        $result = $db->select($sql);
 
         if (!$result->isError() && $result->num_row() == 1) {
             $row = $result->get_next_row();
             return $row["id"];
         }
 
-        //On a pas trouvé, on va essayer dans les messages métier.
+      //On a pas trouvé, on va essayer dans les messages métier.
         $sql = "SELECT * FROM actes_included_files " .
-            " WHERE filename=?";
+            " WHERE filename=" . $db->getPdo()->quote($unique_id."_0.xml");
 
-        $result = $db->exec($sql, $unique_id . "_0.xml");
+        $result = $db->select($sql);
 
         if (!$result->isError() && $result->num_row() == 1) {
             $row = $result->get_next_row();
