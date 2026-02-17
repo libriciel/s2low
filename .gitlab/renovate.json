@@ -1,0 +1,45 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "assignees": ["project_25_bot_7b3ca4887e2797fc60846fd1099a8070"],
+  "extends": ["config:recommended"],
+  "labels": ["deps", "renovate"],
+  "branchPrefix": "renovate-",
+  "rangeStrategy": "update-lockfile",
+  "separateMajorMinor": true,
+  "major": {
+    "enabled": false
+  },
+  "constraintsFiltering": "strict",
+  "constraints": {
+    "php": "~8.1.0"
+  },
+  "packageRules": [
+    {
+      "matchManagers": ["composer"],
+      "ignoreDeps": ["php"],
+      "groupName": "composer dependencies"
+    },
+    {
+      "matchManagers": ["npm"],
+      "groupName": "npm dependencies"
+    },
+    {
+      "matchManagers": ["dockerfile"],
+      "matchPackageNames": [
+        "ubuntu"
+      ],
+      "enabled": false
+    },
+    {
+      "matchManagers": ["docker-compose"],
+      "matchPackageNames": [
+        "registry.libriciel.fr/public/plateforme/s2low"
+      ],
+      "enabled": false
+    },
+    {
+      "matchManagers": ["dockerfile", "docker-compose"],
+      "pinDigests": true
+    }
+  ]
+}
