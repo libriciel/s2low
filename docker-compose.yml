@@ -3,7 +3,7 @@ name: s2low
 services:
     web:
         restart: unless-stopped
-        image: registry.libriciel.fr:443/public/plateforme/s2low:canary@sha256:cb78418ab5f43c1f8bda0c726f37721fb309ded2efd86fdd5df373726be7b6e5
+        image: registry.libriciel.fr:443/public/plateforme/s2low:canary
         networks:
           - openstack
           - dgcl
@@ -218,7 +218,7 @@ services:
 
     redis:
         restart: unless-stopped
-        image: hubdocker.libriciel.fr/redis:7.4.7@sha256:f3cd89d901f3ee81c80c6544f8ae175213fb97bf077cb555ef5673e1be0f8c68
+        image: hubdocker.libriciel.fr/redis:8.6.0-alpine3.23@sha256:fd83658b0e40e2164617d262f13c02ca9ee9e1e6b276fd2fa06617e09bd5c780
         volumes:
             - ${REDIS_VOLUME:-redis_datadir}:/data
         command: redis-server --appendonly yes

@@ -10,12 +10,12 @@ include:
   - template: Jobs/Secret-Detection.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
   - template: Security/Container-Scanning.gitlab-ci.yml
+  - component: $LIBRICIEL_CATALOG_PATH/renovate-runner/runner@1.4.0
   - component: $LIBRICIEL_CATALOG_PATH/software-release/publish-compose@2.2.0
   - component: $LIBRICIEL_CATALOG_PATH/sbom-manager/build@1.2.0
     inputs:
       compose_file: "docker-compose.yml"
       version_placeholder: "canary"
-  - component: $LIBRICIEL_CATALOG_PATH/renovate-runner/runner@1.2.1
 
 stages:
     - .pre
