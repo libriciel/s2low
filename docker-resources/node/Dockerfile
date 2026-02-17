@@ -1,3 +1,3 @@
-FROM hubdocker.libriciel.fr/node:24-alpine3.22@sha256:f36fed0b2129a8492535e2853c64fbdbd2d29dc1219ee3217023ca48aebd3787
+FROM hubdocker.libriciel.fr/node:24-alpine3.22@sha256:d28696cabe6a72c5addbb608b344818e5a158d849174abd4b1ae85ab48536280
 
 RUN npm config set cache var/.npm --global
