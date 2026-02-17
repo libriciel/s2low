@@ -3,7 +3,7 @@ name: s2low
 services:
     web:
         restart: unless-stopped
-        image: registry.libriciel.fr:443/public/plateforme/s2low:canary
+        image: registry.libriciel.fr/public/plateforme/s2low:canary
         networks:
           - openstack
           - dgcl
