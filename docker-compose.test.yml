@@ -6,7 +6,7 @@ services:
 
   db:
     restart: unless-stopped
-    image: registry.libriciel.fr/public/outils/postgres:14.5
+    image: registry.libriciel.fr/public/outils/postgres:14.5@sha256:a0c6930be56082d2b6f747630ab6e5799c566c7ec45c49033e8b647ca2e50bee
     networks:
       - services
     environment:
