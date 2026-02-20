@@ -1245,7 +1245,7 @@ class ActesTransaction extends DataObject
 
       //On a pas trouvé, on va essayer dans les messages métier.
         $sql = "SELECT * FROM actes_included_files " .
-            " WHERE filename=" . $db->getPdo()->quote($unique_id."_0.xml");
+            " WHERE filename=" . $db->getPdo()->quote($unique_id . "_0.xml");
 
         $result = $db->select($sql);
 
