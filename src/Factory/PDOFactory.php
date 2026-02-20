@@ -27,7 +27,6 @@ class PDOFactory
         $pdo = new PDO($dsn, $this->login, $this->password);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->query("SET CLIENT_ENCODING TO '" . self::CLIENT_ENCODING_DEFAULT . "';");
-//        $pdo->query("SET standard_conforming_strings = off;");
 
         $this->instances[] = $pdo;
 
