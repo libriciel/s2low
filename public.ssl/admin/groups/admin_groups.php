@@ -6,9 +6,9 @@ use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\JSONoutput;
 
-list($jsonOutput) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($jsonOutput, $pdo) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [JSONoutput::class]
+        [JSONoutput::class, PDO::class]
     );
 $html = '';
 $me = new User();
@@ -32,7 +32,7 @@ $group = new Group();
 
 $filter = array();
 if (isset($fname) && mb_strlen($fname) > 0) {
-    $filter[] = "authority_groups.name ILIKE '%" . addslashes($fname) . "%'";
+    $filter[] = "authority_groups.name ILIKE " . $pdo->quote("%" . $fname . "%");
 }
 
 $where = "";

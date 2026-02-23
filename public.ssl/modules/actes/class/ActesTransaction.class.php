@@ -1232,11 +1232,9 @@ class ActesTransaction extends DataObject
    */
     public static function getTransactionFromUniqueId($unique_id)
     {
-
-        $sql = "SELECT id FROM actes_transactions WHERE unique_id='" .
-         addslashes($unique_id) . "' AND type='1'";
-
-        $db = DatabasePool :: getInstance();
+        $db = DatabasePool::getInstance();
+        $sql = "SELECT id FROM actes_transactions WHERE unique_id=" .
+            $db->getPdo()->quote($unique_id) . " AND type='1'";
 
         $result = $db->select($sql);
 
@@ -1247,8 +1245,7 @@ class ActesTransaction extends DataObject
 
       //On a pas trouvé, on va essayer dans les messages métier.
         $sql = "SELECT * FROM actes_included_files " .
-            " WHERE filename='" . addslashes($unique_id) .
-            "_0.xml' ";
+            " WHERE filename=" . $db->getPdo()->quote($unique_id . "_0.xml");
 
         $result = $db->select($sql);
 
@@ -1510,16 +1507,23 @@ class ActesTransaction extends DataObject
                     $file['code_pj'] = "";
                 }
 
-                $code_pj = addslashes($file['code_pj']);
-                $sql = "INSERT INTO actes_included_files (envelope_id, transaction_id, filename, posted_filename, filetype, filesize, signature,sha1,code_pj) VALUES("
-                . $this->envelope_id . ", " .
-                 $this->id . ", '" .
-                 basename($file["name"]) . "', '" .
-                 addslashes(isset($file["posted_filename"]) ? $file["posted_filename"] : "") .
-                   "', '" . $file["mimetype"] . "', " . $file["size"] . ", '" . (isset($file["sign"]) ? $file["sign"] : "") . "',
-        		   '{$file['sha1']}','$code_pj')";
+                $sql = "INSERT INTO actes_included_files (envelope_id, transaction_id, filename, posted_filename, filetype, filesize, signature,sha1,code_pj) VALUES(?,?,?,?,?,?,?,?,?)";
 
-                if (!$this->db->exec($sql)) {
+                $postedFilename = $file["posted_filename"] ?? "";
+                $signature = $file["sign"] ?? "";
+                $params = [
+                    $this->envelope_id,
+                    $this->id,
+                    basename($file["name"]),
+                    $postedFilename,
+                    $file["mimetype"],
+                    $file["size"],
+                    $signature,
+                    $file['sha1'],
+                    $file['code_pj']
+                ];
+
+                if (!$this->db->exec($sql, $params)) {
                     $this->errorMsg = "Erreur lors de la journalisation des fichiers contenus dans l'archive.";
                     $this->db->rollback();
                     return false;
@@ -1544,12 +1548,16 @@ class ActesTransaction extends DataObject
    */
     public function setNewStatus($new_status_id, $message)
     {
-      //TODO vérifier que le status est pas déjà positionné
-
         $date = date("Y-m-d H:i:s");
-        $sql = "INSERT INTO actes_transactions_workflow (transaction_id, status_id, date, message) VALUES(" . $this->id . ", " . $new_status_id . ", '" . $date . "', '" . addslashes($message) . "')";
+        $sql = "INSERT INTO actes_transactions_workflow (transaction_id, status_id, date, message) VALUES(?,?,?,?)";
+        $params = [
+            $this->id,
+            $new_status_id,
+            $date,
+            $message
+        ];
 
-        if (!$this->db->exec($sql)) {
+        if (!$this->db->exec($sql, $params)) {
             $this->errorMsg = "Erreur lors de la définition de l'état initial de la transaction.";
             return false;
         }

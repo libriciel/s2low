@@ -114,8 +114,15 @@ class Module extends DataObject
         if (!is_null($this->moduleParams) && count($this->moduleParams) > 0) {
             reset($this->moduleParams);
             foreach ($this->moduleParams as $param) {
-                $sql = "INSERT INTO modules_params (module_id, name, value, description) VALUES(?, '" . addslashes($param["name"]) . "','" . addslashes($param["value"]) . "','" . addslashes($param["description"]) . "')";
-                if (! $this->db->exec($sql, [$this->id])) {
+                $sql = "INSERT INTO modules_params (module_id, name, value, description) VALUES(?, ?, ?, ?)";
+                $params = [
+                    $this->id,
+                    $param["name"],
+                    $param["value"],
+                    $param["description"]
+                ];
+
+                if (! $this->db->exec($sql, $params)) {
                     $this->errorMsg = "Erreur lors de la sauvegarde des paramètres du module.";
                     $this->db->rollback();
                     return false;
