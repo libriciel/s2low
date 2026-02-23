@@ -11,7 +11,6 @@
 
 ### Suppression
 
-- Suppression de la prise en charge de la soumission des enveloppes ACTE #1104
 - Suppression de l'outil de signature intégré #1113
 - Suppression des jetons d'horodatage #1118
 - Suppression de `XadesSignature::sign()` et XadesSignatureProperties
@@ -19,6 +18,10 @@
 - Suppression de la possibilité d'enrichir le carnet d'adresse. #1116
 - Il est toujours possible de consulter les mails existants.
 - Suppression des paramètres de module et du mode papier #1426
+
+### Dépréciation
+
+- Dépréciation de la soumission des enveloppes ACTE #1104
 
 ## 5.1.7 - 2026-01-12
 

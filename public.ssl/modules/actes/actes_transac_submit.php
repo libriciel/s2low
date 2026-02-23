@@ -16,10 +16,16 @@ use S2lowLegacy\Class\WorkerScript;
 [$workerScript, $actesClassificationCodesSQL] = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([WorkerScript::class, \S2lowLegacy\Class\actes\ActesClassificationCodesSQL::class]);
 
-if (! \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->getParameter('app.enveloppe_soumission_enabled')) {
-    http_response_code(410);
-    echo "Cette fonctionnalité est déprécié. Vous devez à present passer par '/modules/actes/actes_transac_create.php' pour créer un acte.";
-    exit;
+if (
+    !\S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->getParameter(
+        'app.envelope_submission_enabled'
+    )
+) {
+    Helpers::returnAndExit(
+        1,
+        "Cette fonctionnalité est déprécié. Vous devez désormais utiliser : '/modules/actes/actes_transac_create.php' pour créer un acte.",
+        WEBSITE_SSL
+    );
 }
 
 // Instanciation du module courant
