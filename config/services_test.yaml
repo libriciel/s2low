@@ -18,6 +18,7 @@ parameters:
   app.cloud_bucket.pes_acquit: ''
   app.cloud_bucket.pes_retour: ''
   app.cloud_bucket.mailsec: ''
+  app.envelope_submission_enabled: true
 services:
   _defaults:
     autowire: true
