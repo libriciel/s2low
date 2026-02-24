@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace IntegrationTests\EndpointActeAPI;
 
 use IntegrationTests\S2lowIntegrationTestCase;
@@ -7,7 +9,6 @@ use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Lib\ObjectInstancierFactory;
 
 class GetDocumentOfTransactionTest extends S2lowIntegrationTestCase
 {
@@ -28,18 +29,18 @@ class GetDocumentOfTransactionTest extends S2lowIntegrationTestCase
         return $this->actesTransactionsSQL;
     }
 
-    protected function transactionTypeProvider()
+    protected function transactionTypeProvider(): iterable
     {
         return [
-            [self::TRANSMISSION_D_ACTE, "('Content-type: text/plain','1','')", "actes_download_file.php"],
-            [self::DEMANDE_PIECE_COMPLEMENTAIRES, "actes_download_file.php", "%String not int header%"],
+            [self::TRANSMISSION_D_ACTE, "('Content-type: text/plain','1','0')", 'actes_download_file.php'],
+            [self::DEMANDE_PIECE_COMPLEMENTAIRES, 'actes_download_file.php', '%String not int header%'],
         ];
     }
 
     /**
      * @dataProvider transactionTypeProvider
      */
-    public function testShouldGetDocument($transactionType, $strInHeader, $strNotInHeader): void
+    public function testShouldGetDocument(int $transactionType, string $strInHeader, string $strNotInHeader): void
     {
         $transactionId = $this->createTransactionOfType(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, $transactionType);
 

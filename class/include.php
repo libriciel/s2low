@@ -35,7 +35,7 @@ if (defined('TESTING_ENVIRONNEMENT') && TESTING_ENVIRONNEMENT) {
         throw new Exception($message);
     }
 
-    function header_wrapper($string, $replace = true, $http_response_code = null): void
+    function header_wrapper($string, bool $replace = true, int $http_response_code = 0): void
     {
         echo "header('$string','$replace','$http_response_code') called\n";
     }
@@ -57,7 +57,7 @@ if (defined('TESTING_ENVIRONNEMENT') && TESTING_ENVIRONNEMENT) {
         exit($status);
     }
 
-    function header_wrapper($string, $replace = true, $http_response_code = null): void
+    function header_wrapper($string, bool $replace = true, int $http_response_code = 0): void
     {
         header($string, $replace, $http_response_code);
     }
