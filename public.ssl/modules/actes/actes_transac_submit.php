@@ -16,6 +16,18 @@ use S2lowLegacy\Class\WorkerScript;
 [$workerScript, $actesClassificationCodesSQL] = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray([WorkerScript::class, \S2lowLegacy\Class\actes\ActesClassificationCodesSQL::class]);
 
+if (
+    !\S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->getParameter(
+        'app.envelope_submission_enabled'
+    )
+) {
+    Helpers::returnAndExit(
+        1,
+        "Cette fonctionnalité est déprécié. Vous devez désormais utiliser : '/modules/actes/actes_transac_create.php' pour créer un acte.",
+        WEBSITE_SSL
+    );
+}
+
 // Instanciation du module courant
 $module = new Module();
 if (!$module->initByName("actes")) {

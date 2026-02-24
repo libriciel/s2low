@@ -39,6 +39,7 @@ parameters:
   app.workspace_directory: '%env(default:app.workspace_directory.default:WORKSPACE_DIRECTORY)%'
   app.service_name: '%env(default:app.service_name.default:SERVICE_NAME)%'
   app.log_path: '%env(default:app.log_path.default:LOG_PATH)%'
+  app.envelope_submission_enabled: '%env(bool:default:app.envelope_submission_enabled.default:ENVELOPE_SUBMISSION_ENABLED)%'
   app.cloud.parameters.endpoint: '%env(string:CLOUD_PROVIDER_ENDPOINT)%'
   app.cloud.parameters.credential.key: '%env(string:CLOUD_PROVIDER_KEY)%'
   app.cloud.parameters.credential.secret: '%env(string:CLOUD_PROVIDER_SECRET)%'
@@ -48,6 +49,7 @@ parameters:
   app.cloud_bucket.pes_retour: '%env(string:CLOUD_BUCKET_PES_RETOUR)%'
   app.cloud_bucket.mailsec: '%env(string:CLOUD_BUCKET_MAIL_SEC)%'
   app.cloud_storage_enabled: '%env(bool:OPENSTACK_ENABLE)%'
+
 
   # Valeurs par default de parametres
   app.actes_appli_quadrigramme.default: 'TACT'
@@ -83,6 +85,7 @@ parameters:
   app.cloud_bucket.pes_retour.default: 'domainpesretour'
   app.cloud_bucket.mailsec.default: 'domainmailsec'
   app.cloud_storage_enabled.default: false
+  app.envelope_submission_enabled.default: false
 
   # Variables Globale
   app.actes.files_upload_root: '%app.workspace_directory%actes/uploads'

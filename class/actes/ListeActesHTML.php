@@ -4,6 +4,7 @@ namespace S2lowLegacy\Class\actes;
 
 use S2lowLegacy\Class\DatePicker;
 use S2lowLegacy\Class\Helpers;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Lib\FancyDate;
 
 /**
@@ -138,12 +139,15 @@ class ListeActesHTML
      */
     public function displayForm(): void
     {
+        $envelopeSubmissionEnabled = LegacyObjectsManager::getLegacyObjectInstancier()->getParameter('app.envelope_submission_enabled');
         ?>
         <?php if ($this->actionBox) : ?>
         <div id="actions_area">
             <h2>Actions</h2>
             <a href="<?php echo  Helpers::getLink('/modules/actes/actes_transac_add.php');?>" class="btn btn-primary">Créer une transaction</a>
-            <a href="<?php echo  Helpers::getLink('/modules/actes/actes_transac_import.php');?>" class="btn btn-primary">Importer une enveloppe</a>
+            <?php if ($envelopeSubmissionEnabled) : ?>
+                <a href="<?php echo  Helpers::getLink('/modules/actes/actes_transac_import.php');?>" class="btn btn-primary">Importer une enveloppe</a>
+            <?php endif; ?>
             <a href="<?php echo  Helpers::getLink('/modules/actes/actes_batch_handle.php');?>" class="btn btn-primary">Traitement par lots</a>
         </div>
         <?php endif;?>
