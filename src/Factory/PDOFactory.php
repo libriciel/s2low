@@ -21,7 +21,7 @@ class PDOFactory
 
         return $nativeConnection;
     }
-    
+
     public function closeAll(): void
     {
         $this->connection->close();
