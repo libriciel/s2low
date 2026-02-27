@@ -34,7 +34,7 @@ class MonitoringActesTransmis extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('cron:monitoring-actes-transmis-4h')

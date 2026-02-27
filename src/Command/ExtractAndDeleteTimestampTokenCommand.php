@@ -27,7 +27,7 @@ class ExtractAndDeleteTimestampTokenCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $old_timestamp_token_directory = $this->logTimestampTokenGarbage->getOldTimestampTokenDirectory();
         $timestamp_token_retention_nb_days = $this->logTimestampTokenGarbage->getTimestampTokenRetentionNbDays();

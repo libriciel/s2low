@@ -32,7 +32,7 @@ class MonitoringHeliosTransmis extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('helios:monitoring-helios-transmis-4h')

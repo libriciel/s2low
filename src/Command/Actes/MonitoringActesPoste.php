@@ -33,7 +33,7 @@ class MonitoringActesPoste extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('cron:monitoring-actes-postes-sup30min')
