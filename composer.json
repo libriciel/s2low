@@ -30,7 +30,7 @@
     "erusev/parsedown": "^1.7",
     "ezyang/htmlpurifier": "^4.14",
     "libriciel/tdt-lib-actes": "^2.0.3",
-    "malkusch/lock": "^2.1",
+    "malkusch/lock": "^3.1",
     "masterminds/html5": "^2.7",
     "monolog/monolog": "^3.5",
     "mtdowling/supervisor-event": "^1.0",

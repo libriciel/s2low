@@ -1,6 +1,7 @@
 <?php
 
-use malkusch\lock\mutex\PHPRedisMutex;
+use Malkusch\Lock\Mutex\Mutex;
+use malkusch\lock\mutex\RedisMutex;
 use Monolog\Level;
 use Pheanstalk\Job;
 use Pheanstalk\Pheanstalk;
@@ -34,7 +35,7 @@ class WorkerRunnerBuilderTest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $mutexMock = $this->getMockBuilder(PHPRedisMutex::class)
+        $mutexMock = $this->getMockBuilder(Mutex::class)
             ->disableOriginalConstructor()
             ->getMock();
 
