@@ -15,11 +15,10 @@ class RedisMutexWrapper
     public function __construct(
         private readonly string $redis_server,
         private readonly int $redis_port
-    )
-    {
+    ) {
     }
 
-    public function getMutex(string $mutex_name, int $timeout = self::DEFAULT_TIMEOUT) : Mutex
+    public function getMutex(string $mutex_name, int $timeout = self::DEFAULT_TIMEOUT): Mutex
     {
         $redis = $this->getRedisInstance();
         return new RedisMutex(
@@ -29,7 +28,7 @@ class RedisMutexWrapper
         );
     }
 
-    private function getRedisInstance() : Redis
+    private function getRedisInstance(): Redis
     {
         if (is_null($this->redisInstance)) {
             $this->redisInstance = new Redis();
