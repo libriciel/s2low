@@ -42,7 +42,7 @@ class Parapheur
 
     public function setKeyPaswordFromFile($passwordFile)
     {
-        $this->keyPassword = `/bin/cat $passwordFile `;
+        $this->keyPassword = shell_exec("/bin/cat $passwordFile");
     }
 
     public function getLastError()
