@@ -4,6 +4,7 @@
 
 ### Corrections
 
+- Correction d'un bug bloquant la télétransmission manuelle des transactions Helios postées. #1491
 - Corrige la possibilité de télécharger des fichiers pdf supérieur à la taille authorisé. #1480
 - Permettre aux scripts de migration de la BDD de fonctionner après un DROP de column #1415
 
