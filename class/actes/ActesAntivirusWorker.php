@@ -11,7 +11,7 @@ use Exception;
 class ActesAntivirusWorker implements IWorker
 {
     public const QUEUE_NAME = 'actes-antivirus';
-    public const PHEANSTALK_TTR = 60  * 2;  // Le timeout du process de clamdscan est à 60, on se laisse de la marge pour
+    public const PHEANSTALK_TTR = 60  * 5;  // Le timeout du process de clamdscan est à 240, on se laisse de la marge pour
                                             // que le job reste reserved avant la fin du timeout pour éviter un
                                             // mail d'erreur critique.
     private $actesTransactionSQL;
@@ -90,7 +90,7 @@ class ActesAntivirusWorker implements IWorker
         $envelope_info = $this->actesEnvelopeSQL->getInfo($transaction_info["envelope_id"]);
 
         $archive_path = $this->actesRetriever->getPath($envelope_info['file_path']);
-        if (! $this->antivirus->checkArchiveSanity($archive_path)) {
+        if (! $this->antivirus->checkArchiveSanity($archive_path, 240)) {
             $message = $this->antivirus->getLastError();
             $this->logger->notice(
                 "Un virus a été trouvé pour la transaction $transaction_id",

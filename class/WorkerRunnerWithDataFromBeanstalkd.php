@@ -88,7 +88,10 @@ class WorkerRunnerWithDataFromBeanstalkd implements WorkerRunner
             $data = 'undefined';
             try {
                 $data = $job->getData();
-                $this->s2lowLogger->info('Travail en cours', [$data]);
+                $stats = $queue->statsJob($job);
+                $ttr = $stats['ttr'] ?? null;
+                $age = $stats['age'] ?? null;
+                $this->s2lowLogger->info('Travail en cours', ['data' => $data, 'ttr' => $ttr,'age' => $age]);
 
                 $mutex = $this->redisMutexWrapper->getMutex($this->worker->getMutexName($data));
                 $workerToUse = $this->worker;

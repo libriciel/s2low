@@ -19,9 +19,15 @@ class ShellCommand
         $this->s2lowLogger = $s2lowLogger;
     }
 
-    public function exec(array $command)
+    public function exec(array $command, float $timeout = 60)
     {
-        $process = new Process($command);
+        $process = new Process(
+            $command,
+            null,
+            null,
+            null,
+            $timeout
+        );
         $command_line = $process->getCommandLine();
         $this->s2lowLogger->debug("Execution de la commande : $command_line");
 
