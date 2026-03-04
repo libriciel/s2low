@@ -9,11 +9,13 @@ namespace S2low\Services\Helios\DGFiPConnection;
  */
 interface DGFiPConnector
 {
+    public function chdir(string $remote_path);
+
     /**
-     * Retourne les fichiers disponibles sur un répertoire du serveur
-     * @param string $remote_path Chemin du répertoire distant
+     * Retourne les fichiers disponibles sur le répertoire courant
+     * @return array
      */
-    public function getFileNames(string $remote_path): array;
+    public function getFileNames(): array;
 
     /**
      * @throws \Exception

@@ -125,5 +125,6 @@ class FTPHeliosReceiver
     public function debutTraitement(): void
     {
         $this->heliosConnection->connect();
+        $this->heliosConnection->moveToReponsePath();
     }
 }
