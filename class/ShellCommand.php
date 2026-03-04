@@ -21,13 +21,9 @@ class ShellCommand
 
     public function exec(array $command, float $timeout = 60)
     {
-        $process = new Process(
-            $command,
-            null,
-            null,
-            null,
-            $timeout
-        );
+        $process = new Process($command);
+        $process->setTimeout($timeout);
+
         $command_line = $process->getCommandLine();
         $this->s2lowLogger->debug("Execution de la commande : $command_line");
 
