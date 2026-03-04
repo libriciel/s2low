@@ -3,14 +3,9 @@
 namespace S2low\Factory;
 
 use Doctrine\DBAL\Connection;
-use PDO;
 
 class PDOFactory
 {
-    private const DATABASE_TYPE = "pgsql";
-    private const CLIENT_ENCODING_DEFAULT = "UTF-8";
-    private array $instances = [];
-
     public function __construct(
         private readonly Connection $connection,
     ) {
@@ -18,20 +13,17 @@ class PDOFactory
 
     public function create(): \PDO
     {
-        $pdo = $this->connection->getNativeConnection();
-//        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-//        $pdo->query("SET CLIENT_ENCODING TO '" . self::CLIENT_ENCODING_DEFAULT . "';");
-//        $pdo->query("SET standard_conforming_strings = off;");
+        $nativeConnection = $this->connection->getNativeConnection();
 
-        $this->instances[] = $pdo;
+        if (!$nativeConnection instanceof \PDO) {
+            throw new \LogicException('Le driver DBAL configuré ne renvoie pas une instance de PDO.');
+        }
 
-        return $pdo;
+        return $nativeConnection;
     }
 
     public function closeAll(): void
     {
-        foreach ($this->instances as &$pdo) {
-            $pdo = null;
-        }
+        $this->connection->close();
     }
 }
