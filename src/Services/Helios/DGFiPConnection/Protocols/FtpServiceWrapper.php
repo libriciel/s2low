@@ -131,4 +131,8 @@ class FtpServiceWrapper
     {
         return ftp_put($ftp->getConnection(), $remoteFile, $localFile, $mode);
     }
+    public function pwd(FtpConnectionWrapper $ftp): string
+    {
+        return ftp_pwd($ftp->getConnection());
+    }
 }

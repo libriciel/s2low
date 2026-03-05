@@ -17,10 +17,7 @@ class FTPHeliosReceiver
     private string $localPath;
 
     private LoggerInterface $s2lowLogger;
-    /**
-     * @var \S2low\Services\Helios\DGFiPConnection\DGFiPConnection|null
-     */
-    private ?DGFiPConnection $heliosConnection;
+    private DGFiPConnection $heliosConnection;
     private string $tmp_path;
     private string $helios_responses_error_path;
 
@@ -91,11 +88,10 @@ class FTPHeliosReceiver
     }
 
     /**
-     * @param $file
+     * @param string $file
      * @throws \S2low\Services\Helios\DGFiPConnection\FTPFileRetrieveException
-     * @throws Exception
      */
-    public function recupOneFile($file): void
+    public function recupOneFile(string $file): void
     {
         try {
             $this->heliosConnection->retrieveFile(
@@ -105,10 +101,24 @@ class FTPHeliosReceiver
                 $this->tmp_path
             );
         } catch (Exception $exception) {
-            $this->s2lowLogger->info("$file récupéré : ECHEC " . $exception->getMessage());
+            $currentDirectory = null;
+
+            try {
+                $currentDirectory = $this->heliosConnection->pwd();
+            } catch (\Throwable) {
+                // ignore: connection may already be broken
+            }
+            $this->s2lowLogger->error(
+                'Téléchargement échoué ',
+                [
+                    'file' => $file,
+                    'remote_directory' => $currentDirectory,
+                    'exception' => $exception
+                ]
+            );
             throw $exception;
         }
-        $this->s2lowLogger->info("$file récupéré : SUCCES") ;
+        $this->s2lowLogger->info("Téléchargement réussi", ['file' => $file]) ;
     }
 
     /**

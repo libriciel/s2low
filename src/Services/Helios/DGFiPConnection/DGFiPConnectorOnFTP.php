@@ -3,6 +3,7 @@
 namespace S2low\Services\Helios\DGFiPConnection;
 
 use Exception;
+use phpseclib3\Net\SFTP;
 
 /**
  *  Implémentation d'une connection vers le serveur DGFiP utilisant le protocole FTP ou FTPS
@@ -215,5 +216,18 @@ class DGFiPConnectorOnFTP implements DGFiPConnector
         if (!$this->getConnection()->chdir($remote_path)) {
             throw new Exception("Impossible d'aller sur le répertoire distant $remote_path");
         }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function putwd(): string
+    {
+        return $this->getConnection()->putwd();
+    }
+
+    public function pwd(): string
+    {
+        return $this->getConnection()->putwd();
     }
 }

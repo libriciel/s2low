@@ -132,4 +132,9 @@ class SFTPConnection
     {
         return $this->sftpServiceWrapper->chdir($this->getConnection(), $remote_path);
     }
+
+    public function putwd()
+    {
+        return $this->sftpServiceWrapper->putwd($this->getConnection());
+    }
 }

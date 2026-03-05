@@ -206,4 +206,9 @@ class DGFiPConnection
         $this->logger->info("Remote_path : $this->response_server_path");
         $this->serverProtocol->chdir($this->response_server_path);
     }
+
+    public function pwd()
+    {
+        return $this->serverProtocol->pwd();
+    }
 }

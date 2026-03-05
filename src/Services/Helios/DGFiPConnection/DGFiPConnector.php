@@ -63,4 +63,6 @@ interface DGFiPConnector
      * @return string
      */
     public function getURL(): string;
+
+    public function pwd(): string;
 }
