@@ -133,8 +133,15 @@ class FTPHeliosReceiverTest extends S2lowTestCase
         /** @var  LoggerInterface | MockObject $s2lowLogger */
         $s2lowLogger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
         $s2lowLogger->expects(static::once())
-            ->method('info')
-            ->with('File récupéré : ECHEC Une très bonne raison');
+            ->method('error')
+            ->with(
+                'Téléchargement échoué',
+                [
+                    'file' => 'File',
+                    'remote_directory' => 'remote_directory',
+                    'exception' => new Exception('Une très bonne raison')
+                                ]
+            );
 
         /** @var DGFiPConnection | MockObject $heliosConnection */
         $heliosConnection = $this->getMockBuilder(DGFiPConnection::class)
@@ -148,6 +155,10 @@ class FTPHeliosReceiverTest extends S2lowTestCase
         $heliosConnection->expects(static::once())
             ->method('retrieveFile')
             ->willThrowException(new Exception('Une très bonne raison'));
+
+        $heliosConnection->expects(static::once())
+            ->method('pwd')
+            ->willReturn('remote_directory');
 
         $receiver = new FTPHeliosReceiver(
             $s2lowLogger,

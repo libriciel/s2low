@@ -109,7 +109,7 @@ class FTPHeliosReceiver
                 // ignore: connection may already be broken
             }
             $this->s2lowLogger->error(
-                'Téléchargement échoué ',
+                'Téléchargement échoué',
                 [
                     'file' => $file,
                     'remote_directory' => $currentDirectory,
