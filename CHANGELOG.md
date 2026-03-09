@@ -1,13 +1,14 @@
 # Changelog
 
-## 5.1.9
+## 5.1.9 - 2026-03-09
 
 ### Corrections
 
 - Correction d'un bug bloquant la télétransmission manuelle des transactions Helios postées. #1491
-- Corrige la possibilité de télécharger des fichiers pdf supérieur à la taille authorisé. #1480
+- Le calcul de la taille des fichiers d'un acte n'était pas correct lors de l'envoi par API #1480
 - Permettre aux scripts de migration de la BDD de fonctionner après un DROP de column #1415
 - Augmenter le timeout de l'antivirus actes #1489
+- Correction de helios-purge-transaction #1417
 
 ## 5.1.8 - 2026-02-09
 
@@ -57,7 +58,6 @@ n'existait deja plus. #1403
 - Correction d'un bug survenant parfois lors de la recuperation d'un fichier dans le cloud causant une exception
 critique. #1384
 - Correction d'un bug empêchant de télécharger les PES en erreur lorsqu'ils étaient trop volumineux.
-- Correction de helios-purge-transaction #1417
 
 ## 5.1.4 - 2025-09-17
 
