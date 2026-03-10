@@ -9,6 +9,7 @@ use IntegrationTests\S2lowIntegrationTestCase;
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
+use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Controller\ActesAPIController;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Lib\Environnement;
@@ -44,7 +45,7 @@ class ActesApiControllerTest extends S2lowIntegrationTestCase
     {
         $this->setUserWithRole(UserRole::Utilisateur);
         $this->expectOutputString(
-            $this->emptyResponse(0) // Le status 0 correspond à la valeur par défaut de getInt()
+            $this->emptyResponse(0)
         );
         $this->getActesAPIController()->listActesAction();
     }
@@ -148,6 +149,54 @@ class ActesApiControllerTest extends S2lowIntegrationTestCase
             $this->emptyResponse(ActesStatusSQL::STATUS_POSTE)];
     }
 
+    /**
+     * @dataProvider typeProvider
+     * @throws \Exception
+     */
+    public function testListActesWithType(
+        int $type,
+        int $status,
+        string $string
+    ): void {
+        $id = $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
+        $this->updateStatus($id, ActesStatusSQL::STATUS_TRANSMIS, 'message', '2017-08-01');
+        $this->setUserWithRole(UserRole::Utilisateur);
+        $this->getEnvironment()->get()->set('status_id', $status);
+        $this->getEnvironment()->get()->set('type_acte', $type);
+        $this->getActesAPIController()->listActesAction();
+
+        static::assertStringContainsString(
+            $string,
+            $this->getActualOutputForAssertion()
+        );
+    }
+
+    public function typeProvider(): iterable
+    {
+        // Une transaction est crée avec le type TransmissionActes
+        yield [
+            TypeTransaction::TransmissionActe->value, ActesStatusSQL::STATUS_TRANSMIS,
+            $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
+        //Il n'y a aucune transaction de type Annulation
+        yield [
+            TypeTransaction::Annulation->value, ActesStatusSQL::STATUS_TRANSMIS,
+            $this->emptyResponse(ActesStatusSQL::STATUS_TRANSMIS)];
+    }
+
+    public function testListActesWithWrongType(): void
+    {
+        $id = $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
+        $this->updateStatus($id, ActesStatusSQL::STATUS_TRANSMIS, 'message', '2017-08-01');
+        $this->setUserWithRole(UserRole::Utilisateur);
+        $this->getEnvironment()->get()->set('status_id', ActesStatusSQL::STATUS_TRANSMIS);
+        $this->getEnvironment()->get()->set('type_acte', 99);
+        $this->getActesAPIController()->listActesAction();
+
+        static::assertStringContainsString(
+            '{"error":"Code 99 invalide, les valeurs possibles sont : ',
+            $this->getActualOutputForAssertion()
+        );
+    }
 
     public function testActionAfter()
     {

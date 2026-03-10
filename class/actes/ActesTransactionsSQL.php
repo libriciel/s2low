@@ -412,30 +412,37 @@ WHERE
         $limit,
         ?string $min_submission_date = null,
         ?string $max_submission_date = null,
+        ?int $type_acte = null
     ): array | false {
         $offset = intval($offset);
         $limit = intval($limit);
         $authority_id = intval($authority_id);
         $status_id = intval($status_id);
 
-        $sql = "SELECT actes_transactions.id,subject,number,date(decision_date),nature_descr,classification,type FROM actes_transactions ";
+        $sql = "SELECT actes_transactions.id,subject,number,date(decision_date),nature_descr,classification,type FROM actes_transactions";
         if ($min_submission_date !== null || $max_submission_date !== null) {
-            $sql .= "JOIN actes_transactions_workflow ON transaction_id=actes_transactions.id";
+            $sql .= " JOIN actes_transactions_workflow ON transaction_id=actes_transactions.id";
         }
             $sql .= " WHERE last_status_id=? AND authority_id = ?";
         $data = [$status_id, $authority_id];
         if ($min_submission_date !== null) {
-            $sql .= " AND date >= ? ";
+            $sql .= " AND date >= ?";
             $data[] = $min_submission_date;
         }
         if ($max_submission_date !== null) {
-            $sql .= " AND date <= ? ";
+            $sql .= " AND date <= ?";
             $data[] = $max_submission_date;
         }
         if ($min_submission_date !== null || $max_submission_date !== null) {
-            $sql .= "AND status_id = ?";
+            $sql .= " AND status_id = ?";
             $data[] = $status_id;
         }
+        if ($type_acte !== null) {
+            $sql .= " AND type = ?";
+            $data[] = $type_acte;
+        }
+
+
         $sql .= " ORDER BY actes_transactions.id DESC OFFSET $offset LIMIT $limit";
         return $this->query($sql, $data);
     }

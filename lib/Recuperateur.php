@@ -23,7 +23,11 @@ class Recuperateur
 
     public function getInt($name, $default = 0)
     {
-        return $this->doSomethingOnValueOrArray('intval', $this->get($name, $default));
+        $rawValue = $this->get($name, $default);
+        if ($rawValue === $default) {
+            return $rawValue;
+        }
+        return $this->doSomethingOnValueOrArray('intval', $rawValue);
     }
 
     public function getDate(string $name): ?string
