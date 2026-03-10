@@ -39,6 +39,8 @@ $date_affichage = Helpers::getVarFromGet("date_affichage");
 $myAuthority = new Authority($me->get("authority_id"));
 
 $mode = "env";
+$zeFile = null;
+$env = null;
 
 if (isset($fileId) && is_numeric($fileId)) {
     $mode = "file";

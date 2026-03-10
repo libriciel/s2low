@@ -45,7 +45,7 @@ class ChangeMailDomainCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('admin:change-mail-domain-name-for-a-group')

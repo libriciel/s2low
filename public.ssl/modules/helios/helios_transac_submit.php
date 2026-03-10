@@ -44,7 +44,7 @@ if (empty($id)) {
 
 
 $currentStatusId = HeliosTransactionWorkflow::getCurrentStatusId($id);
-if (! $currentStatusId != 14) {
+if ($currentStatusId != 14) {
     $_SESSION["error"] = "\nLa transaction n'est pas dans le bon état";
     header("Location: " . Helpers::getLink("/modules/helios/helios_transac_show.php?id=") . $id);
     exit();

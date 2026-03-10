@@ -33,7 +33,7 @@ class MonitoringHeliosAttente extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('helios:monitoring-helios-attente-sup20min')

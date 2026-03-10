@@ -101,20 +101,6 @@ class Database
         return 1;
     }
 
-    public function quote($valeur, $notnull = false)
-    {
-        if ($valeur != "") {
-              $valeur = str_replace("\r\n", "\n", $valeur);
-              return "'" . addslashes($valeur) . "'";
-        } else {
-            if ($notnull) {
-                return "''";
-            } else {
-                return 'NULL';
-            }
-        }
-    }
-
     /**
      * @param $sql
      * @return array

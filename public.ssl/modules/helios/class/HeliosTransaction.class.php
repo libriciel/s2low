@@ -29,7 +29,20 @@ class HeliosTransaction extends DataObject
 
     protected $id;
     protected $user_id;
+    protected $authority_id;
     protected $filename;
+    protected $file_size;
+    protected $submission_date;
+    protected $sha1;
+    protected $siren;
+    protected $acquit_filename;
+    protected $archive_url;
+    protected $last_status_id;
+    protected $xml_nomfic;
+    protected $xml_cod_col;
+    protected $xml_cod_bud;
+    protected $xml_id_post;
+    protected $sae_transfer_identifier;
 
     public $allStatus = array ();
 
@@ -48,87 +61,85 @@ class HeliosTransaction extends DataObject
 
     protected $destDir;
 
-    protected $dbFields = array (
-      //"id" => array( "descr" => "Identifiant de la transaction", "type" => "isInt", "mandatory" => true),
-    "user_id" => array (
-      "descr" => "Identifiant de l'utilisateur qui a créé la transaction",
-      "type" => "isString",
-      "mandatory" => true
-    ),
-        "authority_id" => array (
-                "descr" => "Identifiant de la collectivité",
-                "type" => "isString",
-                "mandatory" => true
-        ),
-    "filename" => array (
-      "descr" => "Nom du fichier posté",
-      "type" => "isString",
-      "mandatory" => true
-    ),
-
-
-    "file_size" => array(
-        "descr" => "taille du fichier posté",
-        "type" => "isInt",
-        "mandatory" => true
-    ),
-    "submission_date" => array(
-        "descr" => "date de la postulation",
-        "type" => "isDate",
-        "mandatory" => true
-    ),
-    "sha1" => array(
-        "descr" => "le code sha1 calculer par le contenu du fichier",
-        "type" => "isString",
-        "mandatory" => true
-    ),
-    "siren" => array(
-        "descr" => "siren de son propre collectivite",
-        "type" => "isString",
-        "mandatory" => true
-    ),
-    "acquit_filename" => array(
-        "descr" => "Nom du fichier d'acquittement",
-        "type" => "isString",
-        "mandatory" => false
-    ),
-    "archive_url" => array(
-        "descr" => "",
-        "type" => "isString",
-        "mandatory" => false
-    ),
-    "last_status_id" => array(
+    protected $dbFields = [
+        //"id" => array( "descr" => "Identifiant de la transaction", "type" => "isInt", "mandatory" => true),
+        "user_id" => [
+            "descr" => "Identifiant de l'utilisateur qui a créé la transaction",
+            "type" => "isString",
+            "mandatory" => true,
+        ],
+        "authority_id" => [
+            "descr" => "Identifiant de la collectivité",
+            "type" => "isString",
+            "mandatory" => true,
+        ],
+        "filename" => [
+            "descr" => "Nom du fichier posté",
+            "type" => "isString",
+            "mandatory" => true,
+        ],
+        "file_size" => [
+            "descr" => "taille du fichier posté",
+            "type" => "isInt",
+            "mandatory" => true,
+        ],
+        "submission_date" => [
+            "descr" => "date de la postulation",
+            "type" => "isDate",
+            "mandatory" => true,
+        ],
+        "sha1" => [
+            "descr" => "le code sha1 calculer par le contenu du fichier",
+            "type" => "isString",
+            "mandatory" => true,
+        ],
+        "siren" => [
+            "descr" => "siren de son propre collectivite",
+            "type" => "isString",
+            "mandatory" => true,
+        ],
+        "acquit_filename" => [
+            "descr" => "Nom du fichier d'acquittement",
+            "type" => "isString",
+            "mandatory" => false,
+        ],
+        "archive_url" => [
+            "descr" => "",
+            "type" => "isString",
+            "mandatory" => false,
+        ],
+        "last_status_id" => [
             "descr" => "",
             "type" => "isInt",
-            "mandatory" => false
-    ),
-      "xml_nomfic" => array(
-        "descr" => "",
-          "type" => "isString",
-          "mandatory" => false,
-      ),
-      "xml_cod_col" => array(
-        "descr" => "",
-          "type" => "isString",
-          "mandatory" => false,
-      ),
-      "xml_cod_bud" => array(
-          "descr" => "",
-          "type" => "isString",
-          "mandatory" => false,
-      ),
-      "xml_id_post" => array(
-          "descr" => "",
-          "type" => "isString",
-          "mandatory" => false,
-      ),
-      "sae_transfer_identifier" => array(
-          "descr" => "",
-          "type" => "isString",
-          "maxlength" => 256,
-          "mandatory" => false
-      ),
-    );
+            "mandatory" => false,
+        ],
+        "xml_nomfic" => [
+            "descr" => "",
+            "type" => "isString",
+            "mandatory" => false,
+        ],
+        "xml_cod_col" => [
+            "descr" => "",
+            "type" => "isString",
+            "mandatory" => false,
+        ],
+        "xml_cod_bud" => [
+            "descr" => "",
+            "type" => "isString",
+            "mandatory" => false,
+        ],
+        "xml_id_post" => [
+            "descr" => "",
+            "type" => "isString",
+            "mandatory" => false,
+        ],
+        "sae_transfer_identifier" => [
+            "descr" => "",
+            "type" => "isString",
+            "maxlength" => 256,
+            "mandatory" => false,
+        ],
+    ];
 
   /**
    * \brief Constructeur d'une transaction

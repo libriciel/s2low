@@ -32,6 +32,7 @@ if (! $me->isAdmin()) {
     Helpers::exitOrDisplayError($api, "Accès refusé", WEBSITE_SSL);
 }
 
+$id = null;
 try {
     $id = Helpers::getIntFromPost("id", true);
 } catch (Exception $exception) {

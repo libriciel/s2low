@@ -63,24 +63,6 @@ class DatabaseTest extends S2lowTestCase
         $this->assertEquals("eric@sigmalis.com", $result);
     }
 
-    public function testQuote()
-    {
-        $quote = $this->database->quote("'toto'\\a \\'");
-        $this->assertEquals("'\'toto\'\\\\a \\\\\''", $quote);
-    }
-
-    public function testQuoteNotNull()
-    {
-        $quote = $this->database->quote("", true);
-        $this->assertEquals("''", $quote);
-    }
-
-    public function testQuoteNull()
-    {
-        $quote = $this->database->quote("", false);
-        $this->assertEquals("NULL", $quote);
-    }
-
     /**
      * @throws Exception
      */

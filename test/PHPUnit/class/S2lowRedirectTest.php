@@ -1,17 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
+use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Class\S2lowRedirect;
 use S2lowLegacy\Lib\SessionWrapper;
 
-class S2lowRedirectTest extends PHPUnit_Framework_TestCase
+class S2lowRedirectTest extends TestCase
 {
-    public function testRedirect()
+    public function testRedirect(): void
     {
-        $session = array();
-        $s2lowRedirect = new S2lowRedirect("https://s2Low/", "http://s2Low/", new SessionWrapper($session));
-        $this->setExpectedException("Exception", "exit() called");
-        $this->expectOutputString("header('Location: https://s2Low/toto','1','') called\n");
-        $s2lowRedirect->redirect("/toto", "mon message");
-        $this->assertEquals("mon messsage", $session[S2lowRedirect::SESSION_MESSAGE_KEY]);
+        $session = [];
+        $s2lowRedirect = new S2lowRedirect('https://s2Low/', 'http://s2Low/', new SessionWrapper($session));
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('exit() called');
+        $this->expectOutputString("header('Location: https://s2Low/toto','1','0') called\n");
+        $s2lowRedirect->redirect('/toto', 'mon message');
     }
 }
