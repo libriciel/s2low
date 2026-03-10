@@ -6,29 +6,30 @@ use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
+use S2lowLegacy\Class\UserContext;
 
 /** @var Initialisation $initialisation */
 /** @var ActesStatistiques $actesStatistiques */
 /** @var Droit $droit */
-[$initialisation,$actesStatistiques,$droit ] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class,ActesStatistiques::class, Droit::class]);
+/** @var UserContext $userContext */
+[$initialisation,$actesStatistiques,$droit, $userContext ] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,ActesStatistiques::class, Droit::class, UserContext::class]);
 
-$initData = $initialisation->doInit();
-$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+$moduleData = $initialisation->initModule($userContext, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
 
 $title = 'Statistiques de transmission des enveloppes ';
-if ($droit->isSuperAdmin($initData->userInfo)) {
+if ($droit->isSuperAdmin($userContext->userInfo)) {
     $title .= " pour l'ensemble des collectivités";
-} elseif ($droit->isGroupAdmin($initData->userInfo)) {
-    $title .= 'pour le groupe ' . $initData->groupeInfo['name'];
-    $actesStatistiques->setGroup($initData->userInfo['authority_group_id']);
-} elseif ($droit->isAuthorityAdmin($initData->userInfo)) {
-    $title .= ' pour la collectivité ' . $initData->authorityInfo['name'];
-    $actesStatistiques->setAuthority($initData->userInfo['authority_id']);
+} elseif ($droit->isGroupAdmin($userContext->userInfo)) {
+    $title .= 'pour le groupe ' . $userContext->groupeInfo['name'];
+    $actesStatistiques->setGroup($userContext->userInfo['authority_group_id']);
+} elseif ($droit->isAuthorityAdmin($userContext->userInfo)) {
+    $title .= ' pour la collectivité ' . $userContext->authorityInfo['name'];
+    $actesStatistiques->setAuthority($userContext->userInfo['authority_id']);
 } else {
-    $title .= " pour l'utilisateur " . $initData->userInfo['pretty_name'];
-    $actesStatistiques->setUser($initData->connexion->getId());
+    $title .= " pour l'utilisateur " . $userContext->userInfo['pretty_name'];
+    $actesStatistiques->setUser($userContext->connexion->getId());
 }
 
 $statInfo = $actesStatistiques->getInfo();
@@ -46,7 +47,7 @@ $doc = new HTMLLayout();
 $doc->setTitle('Statistiques - ACTES - S²low');
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($userContext->userInfo, $moduleData->modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 

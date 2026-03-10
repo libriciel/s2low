@@ -15,51 +15,30 @@ use S2lowLegacy\Class\ModulePermission;
 use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Class\WorkerScript;
 
 /** @var WorkerScript $workerScript */
 /** @var ActesScriptHelper $actesScriptHelper */
 /** @var ActesTransactionsSQL $actesTransactionsSQL */
 /** @var Initialisation $initialisation */
+/** @var UserContext $userContext */
 list(
     $workerScript,
     $actesScriptHelper,
     $actesTransactionsSQL,
-    $initialisation
+    $initialisation,
+    $userContext
     ) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [WorkerScript::class, ActesScriptHelper::class, ActesTransactionsSQL::class, Initialisation::class]
+        [WorkerScript::class, ActesScriptHelper::class, ActesTransactionsSQL::class, Initialisation::class, UserContext::class]
     );
 
-$initData = $initialisation->doInit();
-$initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+$initialisation->initModule($userContext, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
 $actionHtml = '';
 
-// Instanciation du module courant
-$module = new Module();
-if (!$module->initByName('actes')) {
-    $_SESSION['error'] = "Erreur d'initialisation du module";
-    header('Location: ' . WEBSITE_SSL);
-    exit();
-}
-
 $connexion = new Connexion();
-
-$me = new User();
-
-if (!$me->authenticate()) {
-    $_SESSION['error'] = "Échec de l'authentification";
-    header('Location: ' . Helpers::getLink('connexion-status'));
-    exit();
-}
-
-
-if (!$module->isActive() || !$me->checkDroit($module->get('name'), 'TT')) {
-    $_SESSION['error'] = 'Accès refusé';
-    header('Location: ' . WEBSITE_SSL);
-    exit();
-}
 
 $rgsConnexion = LegacyObjectsManager::getLegacyObjectInstancier()->get(RgsConnexion::class);
 if (! $rgsConnexion->isRgsConnexion()) {
@@ -94,13 +73,13 @@ $owner->init();
 $serviceUser = new ServiceUser(DatabasePool::getInstance());
 $permission = new ModulePermission($serviceUser, 'actes');
 
-if (! $permission->canView($me, $owner)) {
+if (! $permission->canView($userContext->me, $owner)) {
     $_SESSION['error'] = 'Accès refusé';
     header('Location: ' . Helpers::getLink('/modules/actes/index.php'));
     exit();
 }
 
-$msg = "La transaction a été postée par l'agent télétransmetteur {$me->getPrettyName()}";
+$msg = "La transaction a été postée par l'agent télétransmetteur {$userContext->me->getPrettyName()}";
 
 
 $info = $actesTransactionsSQL->getInfo($id);

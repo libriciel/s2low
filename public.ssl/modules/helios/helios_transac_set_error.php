@@ -4,20 +4,21 @@ use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Lib\Recuperateur;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 /** @var Initialisation $initialisation */
 /** @var Droit $droit */
 /** @var HeliosTransactionsSQL $heliosTransactionSQL*/
-[$initialisation, $droit, $heliosTransactionSQL] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class, HeliosTransactionsSQL::class]);
+/** @var UserContext $userContext */
+[$initialisation, $droit, $heliosTransactionSQL, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, Droit::class, HeliosTransactionsSQL::class, UserContext::class]);
 
-$initData = $initialisation->doInit();
-$initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
+$initialisation->initModule($userContext, Initialisation::MODULENAMEHELIOS);
 
 
-if (! $droit->isSuperAdmin($initData->userInfo)) {
+if (! $droit->isSuperAdmin($userContext->userInfo)) {
     header('Location: index.php');
     exit;
 }
@@ -36,7 +37,7 @@ Log::newEntry(
     'USER',
     'helios',
     false,
-    $initData->userInfo['id']
+    $userContext->userInfo['id']
 );
 
 

@@ -6,17 +6,18 @@ use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\PagerHTML;
+use S2lowLegacy\Class\UserContext;
 
 /** @var Initialisation $initialisation */
 /** @var ActesResponsesError $actesResponsesError */
+/** @var UserContext $userContext */
 
-[$initialisation,$actesResponsesError] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class,ActesResponsesError::class]);
+[$initialisation,$actesResponsesError, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,ActesResponsesError::class, UserContext::class]);
 
-$initData = $initialisation->doInit();
-$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+$moduleData = $initialisation->initModule($userContext, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
-if ($initData->userInfo['role'] != 'SADM') {
+if ($userContext->userInfo['role'] != 'SADM') {
     $_SESSION['error'] = 'Super admin only !';
     header('Location: ' . WEBSITE);
     exit();
@@ -37,7 +38,7 @@ $doc->setTitle("Console d'administration");
 $doc->openContainer();
 
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($userContext->userInfo, $moduleData->modulesInfo));
 
 $doc->closeSideBar();
 

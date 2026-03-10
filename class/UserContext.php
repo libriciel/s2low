@@ -2,7 +2,7 @@
 
 namespace S2lowLegacy\Class;
 
-class InitData
+class UserContext
 {
     public function __construct(
         public readonly Connexion $connexion,

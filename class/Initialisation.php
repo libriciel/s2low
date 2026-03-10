@@ -31,7 +31,7 @@ class Initialisation
     /**
      * @throws \Exception
      */
-    public function doInit(): InitData
+    public function doInit(): UserContext
     {
         $connexion = new Connexion();
         $me = null;
@@ -55,7 +55,7 @@ class Initialisation
             $groupeInfo = $this->groupSQL->getInfo($authorityInfo['authority_group_id']);
         }
 
-        return new InitData(
+        return new UserContext(
             $connexion,
             $me,
             $userInfo,
@@ -64,7 +64,7 @@ class Initialisation
         );
     }
 
-    public function initModule(InitData $initData, string $module_name, array $droit_specific = []): ModuleData
+    public function initModule(UserContext $initData, string $module_name, array $droit_specific = []): ModuleData
     {
         $moduleInfo = $this->moduleSQL->getInfoByName($module_name);
         $droitModuleInfo = $this->moduleSQL->getInfoModuleAuthority(

@@ -11,6 +11,7 @@ use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\Recuperateur;
@@ -24,17 +25,17 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 /** @var LocalFileResolver $localPesAllerResolver */
 /** @var CloudFileStorageInterface $cloudStorePesAller */
 /** @var string $html */
+/** @var UserContext $userContext */
 
-[$initialisation, $droit,$heliosTransactionsSQL, $localPesAllerResolver, $cloudStorePesAller] =
+[$initialisation, $droit,$heliosTransactionsSQL, $localPesAllerResolver, $cloudStorePesAller, $userContext] =
     LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class,HeliosTransactionsSQL::class,'app.localFileResolver.pes_aller', 'app.store.file.pes_aller']);
+    ->getArray([Initialisation::class, Droit::class,HeliosTransactionsSQL::class,'app.localFileResolver.pes_aller', 'app.store.file.pes_aller', UserContext::class]);
 
 $html = '';
 
-$initData = $initialisation->doInit();
-$initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
+$initialisation->initModule($userContext, Initialisation::MODULENAMEHELIOS);
 
-if (! $droit->isSuperAdmin($initData->userInfo)) {
+if (! $droit->isSuperAdmin($userContext->userInfo)) {
     header('Location: index.php');
     exit;
 }

@@ -7,6 +7,7 @@ use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\Recuperateur;
 
@@ -14,14 +15,14 @@ use S2lowLegacy\Lib\Recuperateur;
 /** @var Droit $droit */
 /** @var ActesTransactionsSQL $actesTransactionSQL */
 /** @var WorkerScript $workerScript */
+/** @var UserContext $userContext */
 
-[$initialisation,$droit,$actesTransactionSQL,$workerScript] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class,ActesTransactionsSQL::class,WorkerScript::class]);
+[$initialisation,$droit,$actesTransactionSQL,$workerScript, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, Droit::class,ActesTransactionsSQL::class,WorkerScript::class, UserContext::class]);
 
-$initData = $initialisation->doInit();
-$initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+$initialisation->initModule($userContext, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
-if (! $droit->isSuperAdmin($initData->userInfo)) {
+if (! $droit->isSuperAdmin($userContext->userInfo)) {
     header("Location: index.php");
     exit;
 }

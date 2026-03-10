@@ -11,6 +11,7 @@ use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\PagerHTML;
 use S2lowLegacy\Class\ServiceUser;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Lib\FancyDate;
 use S2lowLegacy\Lib\Recuperateur;
 use S2lowLegacy\Model\AuthoritySQL;
@@ -19,12 +20,12 @@ use S2lowLegacy\Model\AuthoritySQL;
 /** @var Droit $droit */
 /** @var TransactionSQL $transactionSQL */
 /** @var \S2lowLegacy\Model\AuthoritySQL $authoritySQL */
+/** @var \S2lowLegacy\Class\UserContext $userContext */
 
-[$initialisation, $droit,  $transactionSQL,$authoritySQL] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class, TransactionSQL::class, AuthoritySQL::class]);
+[$initialisation, $droit,  $transactionSQL,$authoritySQL, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, Droit::class, TransactionSQL::class, AuthoritySQL::class, UserContext::class]);
 
-$initData = $initialisation->doInit();
-$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+$moduleData = $initialisation->initModule($userContext, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
 $recuperateur = new Recuperateur($_GET);
 
@@ -58,14 +59,14 @@ if ($ftype != '0' && empty($ftype)) {
     $ftype = '1';
 }
 
-if ($droit->isSuperAdmin($initData->userInfo)) {
+if ($droit->isSuperAdmin($userContext->userInfo)) {
     $transactionSQL->setAuthority($authority_filtre);
-} elseif ($droit->isAdmin($initData->userInfo)) {
-    $transactionSQL->setAuthority($initData->userInfo['authority_id']);
+} elseif ($droit->isAdmin($userContext->userInfo)) {
+    $transactionSQL->setAuthority($userContext->userInfo['authority_id']);
 } else {
     $serviceUser = new ServiceUser(DatabasePool::getInstance());
-    $collegues = $serviceUser->getMesCollegues($initData->connexion->getId());
-    $collegue[] = $initData->connexion->getId();
+    $collegues = $serviceUser->getMesCollegues($userContext->connexion->getId());
+    $collegue[] = $userContext->connexion->getId();
     foreach ($collegues as $info) {
         $collegue[] =  $info['id_user'];
     }
@@ -87,7 +88,7 @@ $transactionSQL->setPageNumber($page_number, $taille_page);
 
 $envelopes = $transactionSQL->getAll();
 
-if ($droit->isSuperAdmin($initData->userInfo)) {
+if ($droit->isSuperAdmin($userContext->userInfo)) {
     $nb_transactions = ($page_number + 10) * $taille_page;
 } else {
     $nb_transactions = $transactionSQL->getNbTransaction();
@@ -108,9 +109,9 @@ $pagerHTML  = new PagerHTML();
 $fancyDate = new FancyDate();
 $listeActesHTML = new ListeActesHTML();
 
-if ($droit->isSuperAdmin($initData->userInfo)) {
+if ($droit->isSuperAdmin($userContext->userInfo)) {
     $listeActesHTML->addCollectivite($authoritySQL->getAll(), $authority_filtre);
-} elseif (! $droit->isGroupAdmin($initData->userInfo) && ($moduleData->permUser == 'RW' || $moduleData->permUser == 'CS')) {
+} elseif (! $droit->isGroupAdmin($userContext->userInfo) && ($moduleData->permUser == 'RW' || $moduleData->permUser == 'CS')) {
         $listeActesHTML->addActionBox();
 }
 
@@ -131,7 +132,7 @@ $doc->addJavascript('/javascript/tedetis.js');
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($userContext->userInfo, $moduleData->modulesInfo));
 $doc->addBody($pagerHTML->getHTML($page_number, $nb_transactions, $taille_page));
 $doc->closeSideBar();
 $doc->openContent();

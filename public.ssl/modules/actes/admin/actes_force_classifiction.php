@@ -5,15 +5,17 @@ use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Lib\Recuperateur;
 
 /** @var Initialisation $initialisation */
 $initialisation = LegacyObjectsManager::getLegacyObjectInstancier()->get(Initialisation::class);
+/** @var UserContext $userContext */
+$userContext = LegacyObjectsManager::getLegacyObjectInstancier()->get(UserContext::class);
 
-$initData = $initialisation->doInit();
-$initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+$initialisation->initModule($userContext, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
-if ($initData->userInfo['role'] != 'SADM') {
+if ($userContext->userInfo['role'] != 'SADM') {
     $_SESSION['error'] = 'Super admin only !';
     header('Location: ' . WEBSITE);
     exit();

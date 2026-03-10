@@ -4,26 +4,18 @@ use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Lib\Recuperateur;
 use S2lowLegacy\Lib\SQLQuery;
 
 /** @var Initialisation $initialisation */
 /** @var SQLQuery $sqlQuery */
-[$initialisation, $sqlQuery] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, SQLQuery::class]);
+/** @var \S2lowLegacy\Class\UserContext $userContext */
+[$initialisation, $sqlQuery, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, SQLQuery::class, UserContext::class]);
 
-$initData = $initialisation->doInit();
 
-
-$me = new User();
-
-if (!$me->authenticate()) {
-    $_SESSION['error'] = "Échec de l'authentification";
-    header('Location: ' . Helpers::getLink('connexion-status'));
-    exit();
-}
-
-if (!$me->isSuper()) {
+if (!$userContext->me->isSuper()) {
     $_SESSION['error'] = 'Accès refusé';
     header('Location: ' . WEBSITE_SSL);
     exit();

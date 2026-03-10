@@ -13,6 +13,7 @@ use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\PagerHTML;
 use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Lib\Recuperateur;
 use S2lowLegacy\Model\AuthoritySQL;
 
@@ -20,12 +21,12 @@ use S2lowLegacy\Model\AuthoritySQL;
 /** @var Droit $droit */
 /** @var HeliosTransactionsListe $heliosTransactionsListe */
 /** @var AuthoritySQL $authoritySQL */
+/** @var UserContext $userContext */
 
-[$initialisation, $droit,$heliosTransactionsListe,$authoritySQL] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class, HeliosTransactionsListe::class,AuthoritySQL::class]);
+[$initialisation, $droit,$heliosTransactionsListe,$authoritySQL, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, Droit::class, HeliosTransactionsListe::class,AuthoritySQL::class, UserContext::class]);
 
-$initData = $initialisation->doInit();
-$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
+$moduleData = $initialisation->initModule($userContext, Initialisation::MODULENAMEHELIOS);
 
 $recuperateur = new Recuperateur($_GET);
 
@@ -54,22 +55,22 @@ $fnomFic = $recuperateur->get('nomFic');
 
 
 
-if ($droit->isSuperAdmin($initData->userInfo)) {
+if ($droit->isSuperAdmin($userContext->userInfo)) {
     $heliosTransactionsListe->setAuthority($fauthority);
-} elseif ($droit->isGroupAdmin($initData->userInfo) && $fauthority) {
+} elseif ($droit->isGroupAdmin($userContext->userInfo) && $fauthority) {
     $authorityFiltreInfo = $authoritySQL->getInfo($fauthority);
 
-    if ($droit->hasDroit($initData->userInfo, $authorityFiltreInfo)) {
+    if ($droit->hasDroit($userContext->userInfo, $authorityFiltreInfo)) {
         $heliosTransactionsListe->setAuthority($fauthority);
     } else {
-        $heliosTransactionsListe->setAuthority($initData->userInfo['authority_id']);
+        $heliosTransactionsListe->setAuthority($userContext->userInfo['authority_id']);
     }
-} elseif ($droit->isAdmin($initData->userInfo)) {
-    $heliosTransactionsListe->setAuthority($initData->userInfo['authority_id']);
+} elseif ($droit->isAdmin($userContext->userInfo)) {
+    $heliosTransactionsListe->setAuthority($userContext->userInfo['authority_id']);
 } else {
     $serviceUser = new ServiceUser(DatabasePool::getInstance());
-    $collegues = $serviceUser->getMesCollegues($initData->connexion->getId());
-    $collegue[] = $initData->connexion->getId();
+    $collegues = $serviceUser->getMesCollegues($userContext->connexion->getId());
+    $collegue[] = $userContext->connexion->getId();
     foreach ($collegues as $info) {
         $collegue[] =  $info['id_user'];
     }
@@ -118,7 +119,7 @@ if (!$module->isActive() || !$me->canAccess($module->get('name'))) {
 }
 
 
-$helios_configured = $initData->authorityInfo['helios_ftp_dest'];
+$helios_configured = $userContext->authorityInfo['helios_ftp_dest'];
 
 
 $envelopes = $heliosTransactionsListe->getAll();
@@ -208,7 +209,7 @@ $doc->setTitle('Tedetis : module helios');
 $doc->openContainer();
 
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($userContext->userInfo, $moduleData->modulesInfo));
 $doc->addBody($pagerHTML->getHTML($page_number, $nb_transactions, $taille_page));
 
 $doc->closeSideBar();

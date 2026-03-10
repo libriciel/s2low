@@ -3,17 +3,18 @@
 use S2lowLegacy\Class\actes\ActesResponsesError;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Lib\Recuperateur;
 
 /** @var Initialisation $initialisation */
 /** @var \S2lowLegacy\Class\actes\ActesResponsesError $actesResponsesError */
-[$initialisation, $actesResponsesError] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, ActesResponsesError::class]);
+/** @var UserContext $userContext */
+[$initialisation, $actesResponsesError, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, ActesResponsesError::class, UserContext::class]);
 
-$initData = $initialisation->doInit();
-$initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+$initialisation->initModule($userContext, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
-if ($initData->userInfo['role'] != 'SADM') {
+if ($userContext->userInfo['role'] != 'SADM') {
     $_SESSION['error'] = 'Super admin only !';
     header('Location: ' . WEBSITE);
     exit();

@@ -5,19 +5,20 @@ use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Lib\Recuperateur;
 
 /** @var Initialisation $initialisation */
 /** @var Droit $droit */
 /** @var ActesScriptHelper $actesScriptHelper */
+/** @var UserContext $userContext */
 
-[$initialisation,$droit ,$actesScriptHelper] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class,ActesScriptHelper::class]);
+[$initialisation,$droit ,$actesScriptHelper, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, Droit::class,ActesScriptHelper::class, UserContext::class]);
 
-$initData = $initialisation->doInit();
-$initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+$initialisation->initModule($userContext, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
-if (! $droit->isSuperAdmin($initData->userInfo)) {
+if (! $droit->isSuperAdmin($userContext->userInfo)) {
     header('Location: index.php');
     exit;
 }

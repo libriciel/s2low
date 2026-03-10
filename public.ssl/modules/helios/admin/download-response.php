@@ -3,16 +3,18 @@
 use S2lowLegacy\Class\helios\HeliosResponsesError;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Lib\Recuperateur;
 
 /** @var Initialisation $initialisation */
+/** @var UserContext $userContext */
 
 $initialisation = LegacyObjectsManager::getLegacyObjectInstancier()->get(Initialisation::class);
+$userContext = LegacyObjectsManager::getLegacyObjectInstancier()->get(UserContext::class);
 
-$initData = $initialisation->doInit();
-$initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
+$initialisation->initModule($userContext, Initialisation::MODULENAMEHELIOS);
 
-if ($initData->userInfo['role'] != 'SADM') {
+if ($userContext->userInfo['role'] != 'SADM') {
     $_SESSION['error'] = 'Super admin only !';
     header('Location: ' . WEBSITE);
     exit();

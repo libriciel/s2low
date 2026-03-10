@@ -15,6 +15,7 @@ use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\ModulePermission;
 use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Controller\ActesSAEController;
 use S2lowLegacy\Lib\ObjectInstancierFactory;
 use S2lowLegacy\Lib\SQLQuery;
@@ -26,40 +27,18 @@ use Twig\Loader\FilesystemLoader;
 /** @var ActesTypePJSQL $actesTypePJSQL */
 /** @var SQLQuery $sqlQuery */
 /** @var ActesSAEController $actesSAEController */
-list($initialisation,$actesTypePJSQL, $sqlQuery,$actesSAEController) = LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var UserContext $userContext */
+list($initialisation,$actesTypePJSQL, $sqlQuery,$actesSAEController, $userContext) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [Initialisation::class, ActesTypePJSQL::class, SQLQuery::class, ActesSAEController::class]
+        [Initialisation::class, ActesTypePJSQL::class, SQLQuery::class, ActesSAEController::class, UserContext::class]
     );
 
-$initData = $initialisation->doInit();
-$initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+$moduleData = $initialisation->initModule($userContext, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
 $loader = new FilesystemLoader(__DIR__ . '/../../../templates');
 $twig = new Environment($loader);
 
 $actionHtml = '';
-
-// Instanciation du module courant
-$module = new Module();
-if (!$module->initByName('actes')) {
-    $_SESSION['error'] = "Erreur d'initialisation du module";
-    header_wrapper('Location: ' . WEBSITE_SSL);
-    exit_wrapper();
-}
-
-$me = new User();
-
-if (!$me->authenticate()) {
-    $_SESSION['error'] = "Échec de l'authentification";
-    header('Location: ' . Helpers::getLink('connexion-status'));
-    exit_wrapper();
-}
-
-if (!$module->isActive() || !$me->canAccess($module->get('name'))) {
-    $_SESSION['error'] = 'Accès refusé';
-    header('Location: ' . WEBSITE_SSL);
-    exit_wrapper();
-}
 
 $id = intval(Helpers :: getVarFromGet('id'));
 if (empty($id)) {
@@ -86,13 +65,13 @@ $owner->init();
 $serviceUser = new ServiceUser(DatabasePool::getInstance());
 $permission = new ModulePermission($serviceUser, 'actes');
 
-if (! $permission->canView($me, $owner)) {
+if (! $permission->canView($userContext->me, $owner)) {
     $_SESSION['error'] = 'Accès refusé';
     header('Location: ' . Helpers::getLink('/modules/actes/index.php'));
     exit_wrapper();
 }
 
-$myAuthority = new Authority($me->get('authority_id'));
+$myAuthority = new Authority($userContext->me->get('authority_id'));
 $transNatures = ActesTransaction :: getTransactionNaturesIdDescr();
 
 $status_list = ActesTransaction :: getStatusList();
@@ -116,7 +95,7 @@ $doc->setTitle("Tedetis : visualisation d'une transaction");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($me);
+$doc->buildMenu($userContext->me);
 $doc->closeSideBar();
 $doc->openContent();
 
@@ -130,7 +109,7 @@ if ($trans->get("type_reponse")) {
     $html .= $doc->getHTMLArrayline('Type de réponse', ActesTransaction::getTypeReponse($trans->get("type"), $trans->get("type_reponse")));
 }
 
-if ($me->isSuper()) {
+if ($userContext->me->isSuper()) {
     $link_authority = Helpers::getLink("admin/authorities/admin_authority_edit.php?id={$authority_info['id']}");
     $authority_td = "<a href='$link_authority'>" . get_hecho($authority_info['name']) . "</a>";
 
@@ -343,7 +322,7 @@ if (is_array($files)) {
 
 $html .= ($archiveDeleted) ? $archiveName : "Archive transmise : <a href=\"" . Helpers::getLink("/modules/actes/actes_download_file.php?env=" . $trans->get("envelope_id") . "\" title=\"Télécharger l'archive .tar.gz\">" . $archiveName . "</a>");
 
-if ($me->isSuper()) {
+if ($userContext->me->isSuper()) {
     $link = Helpers::getLink("/modules/actes/actes_transac_validate.php?transaction_id=$id");
     $html .= "<br/><a href='$link'>Validation de l'archive</a>";
 }
@@ -364,7 +343,7 @@ if (count($workflow) > 0) {
     $html .= " </tr>\n";
     $html .= " </thead>\n";
     $html .= " <tbody>\n";
-    $create_pdf_html = "&nbsp;<a href=\"actes_create_pdf.php?trans_id=" . $id . "&user_id=" . $me->getId() . "\">";
+    $create_pdf_html = "&nbsp;<a href=\"actes_create_pdf.php?trans_id=" . $id . "&user_id=" . $userContext->me->getId() . "\">";
     $create_pdf_html .= "<br/>[Télécharger]</a>";
 
     $create_pdf_html .= "<br/><a href='actes_transac_get_ARActe.php?id=$id'>[Afficher l'ARActe]</a> ";
@@ -422,7 +401,7 @@ if (count($courrier) != 0) {
 }
 
 
-if (!$me->isSuper() && $me->checkDroit($module->get("name"), 'CS') &&  $permission->canWrite($me, $owner)) {
+if (!$userContext->me->isSuper() && $userContext->me->checkDroit($moduleData->moduleInfo['name'], 'CS') &&  $permission->canWrite($userContext->me, $owner)) {
     $actionHtml = "";
 
 
@@ -432,7 +411,7 @@ if (!$me->isSuper() && $me->checkDroit($module->get("name"), 'CS') &&  $permissi
       // adresses emails de diffusion
 
 
-        $org = new Authority($me->get("authority_id"));
+        $org = new Authority($userContext->me->get("authority_id"));
         $defaultbroadcast_email = $org->get("default_broadcast_email");
         if ($defaultbroadcast_email != null) {
             $defaultbroadcast_email = explode(",", $defaultbroadcast_email);
@@ -473,7 +452,7 @@ if (!$me->isSuper() && $me->checkDroit($module->get("name"), 'CS') &&  $permissi
 if (!$trans->hasPendingCancelTrans()) {
     // Boutons de cloture de la transaction
     // Affichés quand la transaction a été acquittée par le MIAT
-    if ($trans->isType(TypeTransaction::TransmissionActe) && $transStatus == 4 && !  $me->isGroupAdminOrSuper()) {
+    if ($trans->isType(TypeTransaction::TransmissionActe) && $transStatus == 4 && !  $userContext->me->isGroupAdminOrSuper()) {
         if ($trans->canValidate()) {
             $actionHtml .= "<div class=\"action\">\n";
             $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ? Cette action est non réversible et est sous votre entière responsabilité.' . "');\" method=\"post\">\n");
@@ -531,7 +510,7 @@ if (!$trans->hasPendingCancelTrans()) {
 }//fin if qui verifie qu'il n'y a pas d'annulation en cours
 
 
-if ($me->isSuper() && $transStatus == ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE) {
+if ($userContext->me->isSuper() && $transStatus == ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE) {
     $actionHtml .= "<div class=\"action\">\n";
     $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_force_send_sae.php\" method=\"post\">\n");
     $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Versement SEDA : </label>\n";
@@ -541,7 +520,7 @@ if ($me->isSuper() && $transStatus == ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISS
     $actionHtml .= "</div>\n";
 }
 
-if ($me->isSuper() && $transStatus == ActesStatusSQL::STATUS_ENVOYE_AU_SAE) {
+if ($userContext->me->isSuper() && $transStatus == ActesStatusSQL::STATUS_ENVOYE_AU_SAE) {
     $actionHtml .= "<div class=\"action\">\n";
     $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_verif_sae.php\" method=\"post\" >\n");
     $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Versement SEDA : </label>\n";
@@ -551,7 +530,7 @@ if ($me->isSuper() && $transStatus == ActesStatusSQL::STATUS_ENVOYE_AU_SAE) {
     $actionHtml .= "</div>\n";
 }
 
-if ($me->isSuper()) {
+if ($userContext->me->isSuper()) {
     $status_cible_list = $actesSAEController->getActionPossible($transStatus);
     foreach ($status_cible_list as $new_status_id) {
         $libelle_status = ActesStatusSQL::getStatusLibelle($new_status_id);
@@ -570,7 +549,7 @@ if ($me->isSuper()) {
 // Bouton d'annulation en fonction du type et de l'état
 // Doit être une transaction de transmission d'acte
 // et être dans l'état Acquittement reçu
-if ($trans->isType(TypeTransaction::TransmissionActe) && $transStatus == 4  && $me->checkDroit("actes", "TT") && !  $me->isGroupAdminOrSuper()) {
+if ($trans->isType(TypeTransaction::TransmissionActe) && $transStatus == 4  && $userContext->me->checkDroit('actes', 'TT') && !  $userContext->me->isGroupAdminOrSuper()) {
     $actionHtml .= "<div class=\"action\">\n";
     if (!$trans->hasPendingCancelTrans()) {
             $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_cancel.php\" onsubmit=\"return confirm('Voulez-vous vraiment annuler cette transaction ?')\" method=\"post\">\n");
@@ -586,7 +565,7 @@ if ($trans->isType(TypeTransaction::TransmissionActe) && $transStatus == 4  && $
 
 // Boutons de réponse à un courrier
 
-if (in_array($transStatus, [7,8,21]) && !$trans->isType(TypeTransaction::DefereAuTribunalAdministratif)  && $me->checkDroit('actes', 'CS')) {
+if (in_array($transStatus, [7,8,21]) && !$trans->isType(TypeTransaction::DefereAuTribunalAdministratif)  && $userContext->me->checkDroit('actes', 'CS')) {
       $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_repondre.php\" method=\"post\">\n");
       $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Répondre : </label>\n";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
@@ -594,7 +573,7 @@ if (in_array($transStatus, [7,8,21]) && !$trans->isType(TypeTransaction::DefereA
       $actionHtml .= "</div></form>\n";
 }
 
-if ($transStatus == 17 && $me->checkDroit("actes", "TT")) {
+if ($transStatus == 17 && $userContext->me->checkDroit("actes", "TT")) {
       $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_post_confirm.php\" method=\"post\">\n");
       $actionHtml .= "<p>Valider &nbsp;:&nbsp;";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
@@ -609,7 +588,7 @@ $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-labe
     );
 $actionHtml .= "</div>\n</div>\n";
 
-if ($me->isSuper()) {
+if ($userContext->me->isSuper()) {
        $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_delete.php\" onsubmit=\"return confirm('Cette transaction sera éradiquée DEFINITIVEMENT de la base sans espoir de retour?')\" method=\"post\">\n");
       $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Effacer de la base de donnée (TRES DANGEREUX) : </label>\n";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
@@ -625,7 +604,7 @@ if ($me->isSuper()) {
 
 
 
-    if (in_array($transStatus, [3,-1])  && $trans->isType(TypeTransaction::TransmissionActe)  && $me->checkDroit("actes", "CS")) {
+    if (in_array($transStatus, [3,-1])  && $trans->isType(TypeTransaction::TransmissionActe)  && $userContext->me->checkDroit("actes", "CS")) {
         $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_rolback_attente.php\" onsubmit=\"return confirm('Êtes-vous certain de vouloir faire cela ? ')\" method=\"post\">\n");
         $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer à En attente de transmission </label>\n";
         $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";

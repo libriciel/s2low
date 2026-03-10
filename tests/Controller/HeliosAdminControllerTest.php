@@ -11,7 +11,7 @@ use S2low\Controller\HeliosAdminController;
 use S2low\Services\MailActesNotifications\MailerSymfony;
 use S2low\Services\MailActesNotifications\MailerSymfonyFactory;
 use S2lowLegacy\Class\Connexion;
-use S2lowLegacy\Class\InitData;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\HeliosNamesGenerator;
@@ -32,7 +32,7 @@ class HeliosAdminControllerTest extends TestCase
         $this->mailerSymfony = $this->getMockBuilder(MailerSymfony::class)->disableOriginalConstructor()->getMock();
         $mailerSymfonyFactoryMock->method('getInstance')->willReturn($this->mailerSymfony);
 
-        $initData = new InitData(
+        $userContext = new UserContext(
             $this->getMockBuilder(Connexion::class)->disableOriginalConstructor()->getMock(),
             $this->getMockBuilder(User::class)->disableOriginalConstructor()->getMock(),
             ['role' => 'SADM','email' => 'em@a.il'],
@@ -41,14 +41,14 @@ class HeliosAdminControllerTest extends TestCase
         );
 
         $initialisationMock = $this->getMockBuilder(Initialisation::class)->disableOriginalConstructor()->getMock();
-        $initialisationMock->method('doInit')->willReturn($initData);
 
         $this->heliosAdminController = new HeliosAdminController(
             $this->heliosTransactionsSQLMock,
             $mailerSymfonyFactoryMock,
             'pAppli',
             $initialisationMock,
-            new HeliosNamesGenerator()
+            new HeliosNamesGenerator(),
+            $userContext
         );
     }
 

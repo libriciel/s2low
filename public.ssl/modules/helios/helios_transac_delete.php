@@ -4,20 +4,21 @@ use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Lib\Recuperateur;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 /** @var Initialisation $initialisation */
 /** @var Droit $droit */
 /** @var \S2lowLegacy\Class\actes\TransactionSQL $transactionSQL */
+/** @var UserContext $userContext */
 
-[$initialisation,$droit,$transactionSQL] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class,HeliosTransactionsSQL::class]);
+[$initialisation,$droit,$transactionSQL, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, Droit::class,HeliosTransactionsSQL::class, UserContext::class]);
 
-$initData = $initialisation->doInit();
-$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
+$moduleData = $initialisation->initModule($userContext, Initialisation::MODULENAMEHELIOS);
 
-if (! $droit->isSuperAdmin($initData->userInfo)) {
+if (! $droit->isSuperAdmin($userContext->userInfo)) {
     header('Location: index.php');
     exit;
 }
@@ -38,7 +39,7 @@ if (
         'USER',
         $moduleData->module_name,
         null,
-        $initData->userInfo['id']
+        $userContext->userInfo['id']
     )
 ) {
     $msg .= "\nErreur de journalisation.";

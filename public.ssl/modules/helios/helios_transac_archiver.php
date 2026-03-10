@@ -4,20 +4,21 @@ use S2lowLegacy\Class\helios\HeliosPrepareEnvoiSAE;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Lib\Recuperateur;
 
 /** @var Initialisation $initialisation */
+/** @var UserContext $userContext */
 
-[$initialisation,$heliosArchiveControler] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class,HeliosPrepareEnvoiSAE::class]);
+[$initialisation,$heliosArchiveControler, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,HeliosPrepareEnvoiSAE::class, UserContext::class]);
 
-$initData = $initialisation->doInit();
-$initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
+$initialisation->initModule($userContext, Initialisation::MODULENAMEHELIOS);
 
 $recuperateur = new Recuperateur($_POST);
 $id = $recuperateur->getInt('id');
 
-$id_d = $heliosArchiveControler->setArchiveEnAttenteEnvoiSEA($initData->connexion->getId(), $id);
+$id_d = $heliosArchiveControler->setArchiveEnAttenteEnvoiSEA($userContext->connexion->getId(), $id);
 
 if (! $id_d) {
     $_SESSION['error'] = 'Erreur: ' . $heliosArchiveControler->getLastError();
@@ -38,7 +39,7 @@ if (
         'USER',
         'helios',
         false,
-        $initData->connexion->getId()
+        $userContext->connexion->getId()
     )
 ) {
     $_SESSION['error'] .= "\nErreur de journalisation.\n";

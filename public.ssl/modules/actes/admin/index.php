@@ -7,17 +7,18 @@ use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\S2lowRedirect;
+use S2lowLegacy\Class\UserContext;
 
 /** @var Initialisation $initialisation */
 /** @var Droit $droit */
 /** @var S2lowRedirect $s2lowRedirect */
-[$initialisation,$droit,$s2lowRedirect] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class,S2lowRedirect::class]);
+/** @var UserContext $userContext */
+[$initialisation,$droit,$s2lowRedirect, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, Droit::class,S2lowRedirect::class,UserContext::class]);
 
-$initData = $initialisation->doInit();
-$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
+$moduleData = $initialisation->initModule($userContext, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
-if (! $droit->isSuperAdmin($initData->userInfo)) {
+if (! $droit->isSuperAdmin($userContext->userInfo)) {
     $s2lowRedirect->redirect('/', 'Accès refusé');
 }
 
@@ -30,7 +31,7 @@ $doc->setTitle('Utilitaires module ACTES');
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($userContext->userInfo, $moduleData->modulesInfo));
 $doc->closeSideBar();
 $doc->openContent();
 

@@ -6,18 +6,19 @@ use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\PagerHTML;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Lib\SQLQuery;
 
 /** @var Initialisation $initialisation */
 /** @var SQLQuery $sqlQuery */
+/** @var \S2lowLegacy\Class\UserContext $userContext */
 
-[$initialisation,$sqlQuery] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class,SQLQuery::class]);
+[$initialisation,$sqlQuery, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,SQLQuery::class, UserContext::class]);
 
-$initData = $initialisation->doInit();
-$moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
+$moduleData = $initialisation->initModule($userContext, Initialisation::MODULENAMEHELIOS);
 
-if ($initData->userInfo['role'] != 'SADM') {
+if ($userContext->userInfo['role'] != 'SADM') {
     $_SESSION['error'] = 'Super admin only !';
     header('Location: ' . Helpers::getLink('connexion-status'));
     exit();
@@ -67,7 +68,7 @@ $doc->setTitle("Console d'administration");
 $doc->openContainer();
 
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($initData->userInfo, $moduleData->modulesInfo));
+$doc->addBody($menuHTML->getMenuContent($userContext->userInfo, $moduleData->modulesInfo));
 $doc->closeSideBar();
 
 

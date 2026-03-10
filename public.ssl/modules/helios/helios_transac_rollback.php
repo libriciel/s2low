@@ -4,6 +4,7 @@ use S2low\Services\Helios\HeliosAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\Recuperateur;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
@@ -12,14 +13,14 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 /** @var \S2lowLegacy\Class\Droit $droit */
 /** @var HeliosTransactionsSQL $transactionSQL */
 /** @var WorkerScript $workerScript */
+/** @var UserContext $userContext */
 
-[$initialisation,$droit,$transactionSQL,$workerScript] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class,Droit::class,HeliosTransactionsSQL::class,WorkerScript::class]);
+[$initialisation,$droit,$transactionSQL,$workerScript, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,Droit::class,HeliosTransactionsSQL::class,WorkerScript::class, UserContext::class]);
 
-$initData = $initialisation->doInit();
-$initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
+$initialisation->initModule($userContext, Initialisation::MODULENAMEHELIOS);
 
-if (! $droit->isSuperAdmin($initData->userInfo)) {
+if (! $droit->isSuperAdmin($userContext->userInfo)) {
     $_SESSION['error'] = "Réservé au super admin";
     header('Location: index.php');
     exit_wrapper();

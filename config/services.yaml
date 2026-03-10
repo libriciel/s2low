@@ -926,3 +926,7 @@ services:
     public: true
     tags:
       - { name: monolog.processor }
+
+  S2lowLegacy\Class\UserContext:
+    public: true
+    factory: ['@S2low\Services\UserContextProvider','require']

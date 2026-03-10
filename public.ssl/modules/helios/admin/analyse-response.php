@@ -4,6 +4,7 @@ use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu;
 use S2lowLegacy\Class\helios\HeliosResponsesError;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Lib\Recuperateur;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\AuthoritySiretSQL;
@@ -14,14 +15,14 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 /** @var Initialisation $initialisation */
 /** @var SQLQuery $sqlQuery */
 /** @var HeliosAnalyseFichierRecu $heliosAnalyseFichierRecu */
+/** @var \S2lowLegacy\Class\UserContext $userContext */
 
-[$initialisation,$sqlQuery,$heliosAnalyseFichierRecu] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, SQLQuery::class,HeliosAnalyseFichierRecu::class]);
+[$initialisation,$sqlQuery,$heliosAnalyseFichierRecu, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, SQLQuery::class,HeliosAnalyseFichierRecu::class, UserContext::class],);
 
-$initData = $initialisation->doInit();
-$initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
+$initialisation->initModule($userContext, Initialisation::MODULENAMEHELIOS);
 
-if ($initData->userInfo['role'] != 'SADM') {
+if ($userContext->userInfo['role'] != 'SADM') {
     $_SESSION['error'] = 'Super admin only !';
     header('Location: ' . WEBSITE);
     exit();

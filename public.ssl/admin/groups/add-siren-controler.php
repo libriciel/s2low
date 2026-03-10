@@ -4,6 +4,7 @@ use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Initialisation;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Lib\Recuperateur;
 use S2lowLegacy\Lib\SirenFactory;
 use S2lowLegacy\Lib\SQLQuery;
@@ -14,12 +15,10 @@ use S2lowLegacy\Model\GroupSQL;
 /** @var Initialisation $initialisation */
 /** @var SQLQuery $sqlQuery */
 /** @var Droit $droit */
-[$sirenFactory,$initialisation,$sqlQuery, $droit ] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([SirenFactory::class,Initialisation::class, SQLQuery::class, Droit::class]);
+[$sirenFactory,$initialisation,$sqlQuery, $droit, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([SirenFactory::class,Initialisation::class, SQLQuery::class, Droit::class, UserContext::class]);
 
-$initData = $initialisation->doInit();
-
-if (! $droit->isSuperAdmin($initData->userInfo)) {
+if (! $droit->isSuperAdmin($userContext->userInfo)) {
     header('Location: index.php');
     exit;
 }

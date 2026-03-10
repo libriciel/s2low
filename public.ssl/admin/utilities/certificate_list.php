@@ -6,25 +6,16 @@ use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Lib\Recuperateur;
 use S2lowLegacy\Lib\SQLQuery;
 
 /** @var Initialisation $initialisation */
-[$initialisation] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, SQLQuery::class]);
+/** @var UserContext $userContext */
+[$initialisation, $userContext ] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, UserContext::class]);
 
-$initData = $initialisation->doInit();
-
-
-$me = new User();
-
-if (! $me->authenticate()) {
-    $_SESSION['error'] = "Échec de l'authentification";
-    header('Location: ' . Helpers::getLink('connexion-status'));
-    exit();
-}
-
-if (! $me->isSuper()) {
+if (! $userContext->me->isSuper()) {
     $_SESSION['error'] = 'Accès refusé';
     header('Location: ' . WEBSITE_SSL);
     exit();
@@ -53,7 +44,7 @@ $doc->setTitle('Liste des certificats - S²low');
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($initData->userInfo, []));
+$doc->addBody($menuHTML->getMenuContent($userContext->userInfo, []));
 $doc->closeSideBar();
 $doc->openContent();
 
