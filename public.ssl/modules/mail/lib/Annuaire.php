@@ -98,7 +98,7 @@ class Annuaire
     {
         $tabMail = array();
 
-        $begin = $this->bd->quote("$begin%");
+        $begin = $this->bd->getPdo()->quote("$begin%");
 
         $sql = "SELECT name FROM mail_groupe WHERE name ILIKE $begin AND authority_id=" . $this->authority_id . " ORDER BY name";
         $result = $this->bd->select($sql);

@@ -55,7 +55,10 @@ class PesAllerTest extends TestCase
             [__DIR__ . '/fixtures/test.xml', 'La balise EnTetePES n\'est pas présente ou est vide'],
             [__DIR__ . '/fixtures/HELIOS_SIMU_ALR2_NoCodBud.xml','La balise EnTetePES/CodBud n\'est pas présente ou est vide' ],
             [__DIR__ . '/fixtures/HELIOS_SIMU_ALR2_NoCodColl.xml', 'La balise EnTetePES/CodCol ou EnTetePES/CodColl n\'est pas présente ou est vide'],
-            [__DIR__ . '/fixtures/HELIOS_SIMU_ALR2_NoIdPost.xml', 'La balise EnTetePES/IdPost n\'est pas présente ou est vide']
+            [__DIR__ . '/fixtures/HELIOS_SIMU_ALR2_NoIdPost.xml', 'La balise EnTetePES/IdPost n\'est pas présente ou est vide'],
+            [__DIR__ . '/fixtures/PES_ALLER_MauvaisCodBud.xml', 'Non-conformité PES aller : la balise EnTetePES/CodBud contient 3 caractères (2 attendus).'],
+            [__DIR__ . '/fixtures/PES_ALLER_MauvaisCodCol.xml', 'Non-conformité PES aller : la balise EnTetePES/CodCol ou EnTetePES/CodColl contient 4 caractères (3 attendus).'],
+            [__DIR__ . '/fixtures/PES_ALLER_MauvaisIdPost.xml', 'Non-conformité PES aller : la balise EnTetePES/IdPost contient 7 caractères (6 attendus).'],
         ];
     }
 }

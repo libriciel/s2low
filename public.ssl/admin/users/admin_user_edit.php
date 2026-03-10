@@ -182,6 +182,7 @@ $roles_type_list = User::ROLES_DESCR;
 
 $serviceUser = new ServiceUser(DatabasePool::getInstance());
 $services_list = $serviceUser->getServiceUser($him->get('authority_id'));
+$userService_list = [];
 if ($him->getId()) {
     $userService_list = $serviceUser->getServiceFromUser($him->getId());
 }

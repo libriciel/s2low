@@ -8,7 +8,7 @@ class PostgreSQLSchemaInfo extends SQL
     {
         $result['sequence'] = $this->getSequence();
         $result['table'] = $this->getTable();
-        $result['constraint'] = $this->getConstraints($result['table']);
+        $result['constraint'] = $this->getConstraints();
         $result['index'] = $this->getIndex($result['constraint']);
         return $result;
     }
@@ -19,7 +19,7 @@ class PostgreSQLSchemaInfo extends SQL
         return $this->queryOneCol($sql);
     }
 
-    private function getTable()
+    private function getTable(): array
     {
         $result = array();
         $sql = "SELECT 
@@ -42,7 +42,7 @@ class PostgreSQLSchemaInfo extends SQL
         return $result;
     }
 
-    private function getIndex(array $constraint)
+    private function getIndex(array $constraint): array
     {
         $sql = "SELECT tablename,indexname,indexdef FROM pg_indexes WHERE schemaname='public'";
         $result = array();
@@ -57,8 +57,41 @@ class PostgreSQLSchemaInfo extends SQL
         return $result;
     }
 
-    private function getConstraints(array $table)
+    private function getTableColumnsByAttnum(string $tableName): array
     {
+        $sql = "
+        SELECT attnum, attname
+        FROM pg_attribute
+        JOIN pg_class ON pg_class.oid = pg_attribute.attrelid
+        JOIN pg_namespace ON pg_namespace.oid = pg_class.relnamespace
+        WHERE pg_namespace.nspname = 'public'
+          AND pg_class.relname = :table
+          AND attnum > 0
+          AND NOT attisdropped
+        ORDER BY attnum
+    ";
+
+        $columns = [];
+        foreach ($this->query($sql, ['table' => $tableName]) as $row) {
+            $columns[(int)$row['attnum']] = $row['attname'];
+        }
+
+        return $columns;
+    }
+
+    private function getConstraints(): array
+    {
+
+        /**
+         * pg_constraint fields:
+         * conname     = constraint name
+         * contype     = type (p=PK, u=UNIQUE, f=FK, c=CHECK, x=EXCLUDE)
+         * conrelname  = table owning the constraint
+         * conkey      = constrained columns (attnum[])
+         * confrelname = referenced table (FK only)
+         * confkey     = referenced columns (attnum[])
+         */
+
         $sql = "SELECT 
 						pg_constraint.conname,
 						pg_constraint.contype,
@@ -75,24 +108,39 @@ class PostgreSQLSchemaInfo extends SQL
 
         $result = array();
         foreach ($this->query($sql) as $line) {
-            $line['conkey'] = $this->convertConkeyToConkeyname($line['conkey'], $table, $line['conrelname']);
-            $line['confkey'] = $this->convertConkeyToConkeyname($line['confkey'], $table, $line['confrelname']);
+            // conkey is always defined
+            $line['conkey'] = $this->convertConkeyToConkeyname($line['conkey'], $line['conrelname']);
+
+            // confkey only exists for foreign keys
+            if ($line['contype'] === 'f') {
+                $line['confkey'] = $this->convertConkeyToConkeyname(
+                    $line['confkey'],
+                    $line['confrelname']
+                );
+            } else {
+                $line['confkey'] = [];
+            }
+
             $result[$line['conrelname']][$line['conname']] = $line;
         }
         return $result;
     }
 
-    private function convertConkeyToConkeyname($json_encoded_conkey, array $table, $table_name)
+    private function convertConkeyToConkeyname($json_encoded_conkey, string $table_name): array
     {
-        $conkeyname = array();
-        $conkey_array = json_decode($json_encoded_conkey ?? '[]');  //Quickfix passage en 8.0
+        $conkey_array = json_decode($json_encoded_conkey ?? '[]', true);
         if (! is_array($conkey_array)) {
             return array();
         }
-        foreach ($conkey_array as $conkey) {
-            $col_name = array_keys($table[$table_name])[$conkey - 1];
-            $conkeyname[] = $col_name;
+        $columnsByAttnum = $this->getTableColumnsByAttnum($table_name);
+
+        $conkeyname = [];
+        foreach ($conkey_array as $attnum) {
+            if (isset($columnsByAttnum[$attnum])) {
+                $conkeyname[] = $columnsByAttnum[$attnum];
+            }
         }
+
         return $conkeyname;
     }
 }

@@ -114,13 +114,13 @@ class MailController
                 $cond .= " and status='" . $etat_string . "'";
             }
             if ($sujet) {
-                $cond .= " and objet ILIKE '%" . addslashes($sujet) . "%'";
+                $cond .= " and objet ILIKE " . $db->getPDO()->quote('%' . $sujet . '%');
             }
             if ($SendDateFrom) {
-                $cond .= " and date_envoi >='" . addslashes($SendDateFrom) . "'";
+                $cond .= " and date_envoi >=" . $db->getPDO()->quote($SendDateFrom);
             }
             if ($SendDateTo) {
-                $cond .= " and date_envoi <='" . addslashes($SendDateTo) . "'";
+                $cond .= " and date_envoi <=" . $db->getPDO()->quote($SendDateTo);
             }
 
 

@@ -32,7 +32,7 @@ class MonitoringHeliosPoste extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('helios:monitoring-helios-poste-sup20min')

@@ -18,7 +18,9 @@ class ActesFiles
         if (! $dir_to_delete) {
             return false;
         }
-        `rm -rf $dir_to_delete`;
+        //FIXME : wtf ?
+        // add path traversal check and use symfony filesystem instead of shell command
+        shell_exec("rm -rf $dir_to_delete");
         return true;
     }
 }

@@ -556,9 +556,9 @@ class User extends DataObject
         if (isset($this->perms)) {
             reset($this->perms);
             foreach ($this->perms as $perm) {
-                $sql = "INSERT INTO users_perms (module_id, user_id, perm) VALUES(" . addslashes($perm["module_id"]) . ", " . $this->id . ", '" . addslashes($perm["perm"]) . "')";
+                $sql = "INSERT INTO users_perms (module_id, user_id, perm) VALUES(?, ?, ?)";
 
-                if (! $this->db->exec($sql)) {
+                if (! $this->db->exec($sql, [$perm["module_id"], $this->id, $perm["perm"]])) {
                       $this->errorMsg = "Erreur lors de la sauvegarde des permissions de l'utilisateur.";
                       $this->db->rollback();
                       return false;

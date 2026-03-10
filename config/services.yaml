@@ -39,6 +39,7 @@ parameters:
   app.workspace_directory: '%env(default:app.workspace_directory.default:WORKSPACE_DIRECTORY)%'
   app.service_name: '%env(default:app.service_name.default:SERVICE_NAME)%'
   app.log_path: '%env(default:app.log_path.default:LOG_PATH)%'
+  app.helios_retention_fichiers_nb_jours: '%env(default:app.helios_retention_fichiers_nb_jours.default:HELIOS_RETENTION_FICHIERS_NB_JOURS)%'
   app.envelope_submission_enabled: '%env(bool:default:app.envelope_submission_enabled.default:ENVELOPE_SUBMISSION_ENABLED)%'
   app.cloud.parameters.endpoint: '%env(string:CLOUD_PROVIDER_ENDPOINT)%'
   app.cloud.parameters.credential.key: '%env(string:CLOUD_PROVIDER_KEY)%'
@@ -79,6 +80,7 @@ parameters:
   app.use_prod_notifications.default: false
   app.service_name.default: 'app'
   app.log_path.default: '/data/log/'
+  app.helios_retention_fichiers_nb_jours.default: 3650000
   app.cloud_bucket.acte_enveloppe.default: 'domainacte'
   app.cloud_bucket.pes_aller.default: 'domainpesaller'
   app.cloud_bucket.pes_acquit.default: 'domainpesacquit'
@@ -434,9 +436,9 @@ services:
     public: false
 
   S2lowLegacy\Class\helios\HeliosSAEDateManager:
-    autowire: false
-    autoconfigure: false
     public: true
+    arguments:
+      $helios_retention_fichiers_nb_jours: "%app.helios_retention_fichiers_nb_jours%"
 
   S2lowLegacy\Class\helios\PESAllerCloudStorable:
     public: true

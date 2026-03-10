@@ -5,6 +5,9 @@ use S2lowLegacy\Class\HTMLLayout;
 
 include("init-services.php");
 
+/** @var S2lowLegacy\Class\User $me */
+/** @var S2lowLegacy\Class\ServiceUser $serviceUser */
+
 $authority_id = null;
 
 $authorities = $me->getAllPossibleAuthority();

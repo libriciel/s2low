@@ -4,6 +4,7 @@
 use S2lowLegacy\Class\DatePicker;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
@@ -14,6 +15,7 @@ if (!$module->initByName("helios")) {
     exit();
 }
 
+$pdo = LegacyObjectsManager::getLegacyObjectInstancier()->get(PDO::class);
 $me = new User();
 
 if (!$me->authenticate()) {
@@ -65,14 +67,14 @@ if (!$me->isGroupAdminOrSuper()) { // Le super utilisateur voit les reponses de 
 }
 // On ajoute les filtres relatifs aux dates
 if (isset($fmin_submission_date) && !empty($fmin_submission_date)) {
-    $filter[] = "date >= '" . addslashes($fmin_submission_date) . "'";
+    $filter[] = "date >= " . $pdo->quote($fmin_submission_date);
 }
 if (isset($fmax_submission_date) && !empty($fmax_submission_date)) {
-    $filter[] = "date <= '" . addslashes($fmax_submission_date) . "'";
+    $filter[] = "date <= " . $pdo->quote($fmax_submission_date);
 }
 //on ajoute filtre sur nom fichier
 if (isset($fnum) && !empty($fnum)) {
-    $filter[] = "filename LIKE '%" . addslashes($fnum) . "%'";
+    $filter[] = "filename LIKE " . $pdo->quote('%' . $fnum . '%');
 }
 
 $where = "";

@@ -27,7 +27,7 @@ class Antivirus
      * @return bool
      * @throws Exception
      */
-    public function checkArchiveSanity($path)
+    public function checkArchiveSanity($path, float $timeout = 60)
     {
         $tmpFolder = new TmpFolder();
 
@@ -37,7 +37,7 @@ class Antivirus
         $this->filesystem->copy($path, $new_file);
         $this->filesystem->chmod($new_file, 0644);
 
-        $ret = $this->shellCommand->exec([$this->antivirus_command,$new_file]);
+        $ret = $this->shellCommand->exec([$this->antivirus_command,$new_file], $timeout);
         $output = $this->shellCommand->getLastOutput();
 
         $tmpFolder->delete($tmp_dir);

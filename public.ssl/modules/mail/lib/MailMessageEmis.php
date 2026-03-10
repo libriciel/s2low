@@ -49,12 +49,10 @@ class MailMessageEmis extends DataObject
         $now = date("Y-m-d H:i:s");
         $this->id = md5($email . $type_envois . $now);
         $this->ack = 0;
-        $sql = "INSERT INTO mail_message_emis (id, mail_transaction_id, email, type_envoi, ack) VALUES";
-        $sql .= "('" . $this->id . "', '" . $mail_transaction_id . "', " . $this->db->quote(
-            $email
-        ) . ", '" . $type_envois . "', '0')";
+        $sql = "INSERT INTO mail_message_emis (id, mail_transaction_id, email, type_envoi, ack) VALUES (?,?,?,?,?)";
+        $params = [$this->id, $mail_transaction_id, $email, $type_envois, strval($this->ack)];
 
-        return $this->db->exec($sql);
+        return $this->db->exec($sql, $params);
     }
 
 

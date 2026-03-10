@@ -27,8 +27,6 @@ define('CONVERT_API_LOGINS_FROM_ISO', ${CONVERT_API_LOGINS_FROM_ISO:-false});
 
 define('ONLY_USE_VALIDCARGS', ${ONLY_USE_VALIDCARGS:-false});
 
-define("HELIOS_RETENTION_FICHIERS_NB_JOURS","${HELIOS_RETENTION_FICHIERS_NB_JOURS:-3650000}");
-
 define("MAILER_DSN","${MAILER_DSN:-smtp://maildev:1025?verify_peer=0}");
 define("TDT_FROM_EMAIL","${TDT_FROM_EMAIL:-Tiers de télétransmission <s2low@s2low.docker.libriciel.fr>}");
 

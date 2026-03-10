@@ -23,6 +23,22 @@
 
 - Dépréciation de la soumission des enveloppes ACTE #1104
 
+## 5.1.9 - 2026-03-09
+
+### Corrections
+
+- Correction d'un bug bloquant la télétransmission manuelle des transactions Helios postées. #1491
+- Le calcul de la taille des fichiers d'un acte n'était pas correct lors de l'envoi par API #1480
+- Permettre aux scripts de migration de la BDD de fonctionner après un DROP de column #1415
+- Augmenter le timeout de l'antivirus actes #1489
+- Correction de helios-purge-transaction #1417
+
+## 5.1.8 - 2026-02-09
+
+### Corrections
+
+- Contrôle de la longueur des champs CodBud, CodCol et IdPost (PES Aller) pour éviter les erreurs de transmission #1476
+
 ## 5.1.7 - 2026-01-12
 
 ## Ajouts

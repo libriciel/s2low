@@ -77,6 +77,7 @@ $myAuthority = new Authority($me->get("authority_id"));
 $nature_code = Helpers:: getVarFromPost("nature_code", true);
 $en_attente = Helpers:: getVarFromPost("en_attente", true);
 
+$classif1 = $classif2 = $classif3 = $classif4 = $classif5 = null;
 for ($i = 1; $i <= 5; $i++) {
     ${"classif" . $i} = Helpers:: getIntFromPost("classif" . $i, true, true);
 }
@@ -108,22 +109,39 @@ try {
     Helpers:: returnAndExit(1, $exception->getMessage(), WEBSITE_SSL);
 }
 
+$total_size = 0;
 
 if (isset($_FILES['acte_pdf_file'])) {
     $actePDFFile = Helpers::getFiles('acte_pdf_file', true);
+    $total_size += $actePDFFile['size'];
 } else {
     $actePDFFile = false;
 }
 
 if (isset($_FILES["acte_pdf_file_sign"])) {
     $actePDFFileSign = Helpers::getFiles('acte_pdf_file_sign', true);
+    $total_size += $actePDFFileSign['size'];
 }
 
 if (isset($_FILES["acte_attachments"])) {
     $acteAttachments = Helpers::getFilesFromArray("acte_attachments", true);
+    foreach ($acteAttachments['size'] as $size) {
+        $total_size += $size;
+    }
 }
 if (isset($_FILES["acte_attachments_sign"])) {
     $acteAttachmentsSign = Helpers::getFilesFromArray("acte_attachments_sign", true);
+    foreach ($acteAttachmentsSign['size'] as $size) {
+        $total_size += $size;
+    }
+}
+
+if ($total_size > ACTES_ARCHIVE_MAX_SIZE) {
+    Helpers:: returnAndExit(
+        1,
+        "La taille totale des fichiers est trop importante (max : " . ACTES_ARCHIVE_MAX_SIZE . ")",
+        Helpers::getLink("/modules/actes/actes_transac_add.php") . $extraRedirect
+    );
 }
 
 $type_acte = Helpers::getVarFromPost('type_acte', true);
@@ -148,6 +166,8 @@ $extraRedirect = "";
 
 // Détermination si traitement par lot ou pas
 $batchMode = false;
+$zeBatch = null;
+$zeBatchFile = null;
 if (isset($batchFileId) && is_numeric($batchFileId)) {
     $zeBatchFile = new ActesBatchFile($batchFileId);
     if ($zeBatchFile->init()) {
@@ -320,6 +340,7 @@ if (isset($actePDFFile) || $batchMode) {
     } else {
         // Ajout de la signature si présente
         $signFile = null;
+        $readFile = false;
         if ($batchMode) {
             $sign = $zeBatchFile->get("signature");
             if (!empty($sign)) {

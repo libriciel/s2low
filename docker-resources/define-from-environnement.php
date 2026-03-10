@@ -10,7 +10,7 @@ if (! file_exists("/etc/s2low/DockerSettings.php")) {
     echo "DockerSettings n'existe pas : crÃ©ation Ã  partir des variables d'environnement\n";
     $script = __DIR__ . "/generate-config.sh";
 
-    `/bin/bash $script > /tmp/DockerSettings.php`;
+    shell_exec("/bin/bash $script > /tmp/DockerSettings.php");
 
     require_once "/tmp/DockerSettings.php";
 
