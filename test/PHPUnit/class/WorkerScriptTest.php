@@ -1,18 +1,13 @@
 <?php
 
-use malkusch\lock\mutex\PHPRedisMutex;
 use Monolog\Level;
 use Pheanstalk\PheanstalkInterface;
 use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\actes\ActesAnalyseFichierAEnvoyerWorker;
 use S2lowLegacy\Class\BeanstalkdWrapper;
 use S2lowLegacy\Class\IWorker;
-use S2lowLegacy\Class\RedisMutexWrapper;
-use S2lowLegacy\Class\SigTermHandlerFactory;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\ObjectInstancier;
-use S2lowLegacy\Lib\SigTermHandler;
 
 class WorkerScriptTest extends S2lowTestCase
 {

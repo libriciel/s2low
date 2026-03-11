@@ -2,40 +2,35 @@
 
 namespace S2lowLegacy\Class;
 
-use malkusch\lock\mutex\PHPRedisMutex;
+use Malkusch\Lock\Mutex\Mutex;
+use Malkusch\Lock\Mutex\RedisMutex;
 use Redis;
 
 class RedisMutexWrapper
 {
     /** @var int on mets 2* le TTR de la réponse beanstalked */
     private const DEFAULT_TIMEOUT = 60 * 5;
+    private ?Redis $redisInstance = null;
 
-    private $redis_server;
-    private $redis_port;
-
-    private $redisInstance;
-
-    public function __construct($redis_server, $redis_port)
-    {
-        $this->redis_server = $redis_server;
-        $this->redis_port = $redis_port;
+    public function __construct(
+        private readonly string $redis_server,
+        private readonly int $redis_port
+    ) {
     }
 
-    public function getMutex($mutex_name, $timeout = self::DEFAULT_TIMEOUT)
+    public function getMutex(string $mutex_name, int $timeout = self::DEFAULT_TIMEOUT): Mutex
     {
         $redis = $this->getRedisInstance();
-        return new PHPRedisMutex([$redis], $mutex_name, $timeout);
+        return new RedisMutex(
+            $redis,
+            $mutex_name,
+            $timeout
+        );
     }
 
-    public function isMutexInUsed($mutex_name)
+    private function getRedisInstance(): Redis
     {
-        $redis = $this->getRedisInstance();
-        return (bool)$redis->get(sprintf('lock_%s', $mutex_name));
-    }
-
-    private function getRedisInstance()
-    {
-        if (! $this->redisInstance) {
+        if (is_null($this->redisInstance)) {
             $this->redisInstance = new Redis();
             $this->redisInstance->connect($this->redis_server, $this->redis_port);
         }

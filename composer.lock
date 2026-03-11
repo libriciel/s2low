@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6cf44d4bf519f4c1512bfc600fe53db0",
+    "content-hash": "6bfc66a06f094bfa67fc9850e5ba9c49",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -2192,47 +2192,50 @@
         },
         {
             "name": "malkusch/lock",
-            "version": "2.3.0",
+            "version": "3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-lock/lock.git",
-                "reference": "66ccdccbb3b9a2cabdeba077f6aa1759dd3fbcd2"
+                "reference": "3e64b5e1b8283b781ed95f29bd83f84389f743e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-lock/lock/zipball/66ccdccbb3b9a2cabdeba077f6aa1759dd3fbcd2",
-                "reference": "66ccdccbb3b9a2cabdeba077f6aa1759dd3fbcd2",
+                "url": "https://api.github.com/repos/php-lock/lock/zipball/3e64b5e1b8283b781ed95f29bd83f84389f743e7",
+                "reference": "3e64b5e1b8283b781ed95f29bd83f84389f743e7",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4 <8.4",
-                "psr/log": "^1.0 || ^2.0 || ^3.0"
+                "php": ">=7.4 <8.6",
+                "psr/log": "^1.0 || ^2.0 || ^3.0",
+                "symfony/polyfill-php80": "^1.28"
             },
             "require-dev": {
-                "eloquent/liberator": "^2.0 || ^3.0",
                 "ergebnis/composer-normalize": "^2.13",
                 "ergebnis/phpunit-slow-test-detector": "^2.9",
+                "ext-igbinary": "*",
+                "ext-lzf": "*",
                 "ext-memcached": "*",
                 "ext-pcntl": "*",
                 "ext-pdo": "*",
                 "ext-pdo_mysql": "*",
                 "ext-pdo_sqlite": "*",
+                "ext-redis": "*",
                 "ext-sysvsem": "*",
                 "friendsofphp/php-cs-fixer": "^3.0",
                 "mikey179/vfsstream": "^1.6.11",
-                "php-mock/php-mock-phpunit": "^2.1",
+                "php-mock/php-mock-phpunit": "^2.12",
                 "phpstan/extension-installer": "^1.1",
                 "phpstan/phpstan": "^2.0",
                 "phpstan/phpstan-deprecation-rules": "^2.0",
                 "phpstan/phpstan-strict-rules": "^2.0",
                 "phpunit/phpunit": "^9.5.25 || ^10.0 || ^11.0",
-                "predis/predis": "^1.1.8",
+                "predis/predis": "^1.1.8 || ^2.0",
                 "spatie/async": "^1.5"
             },
             "suggest": {
                 "ext-igbinary": "To use this library with PHP Redis igbinary serializer enabled.",
                 "ext-lzf": "To use this library with PHP Redis lzf compression enabled.",
-                "ext-pnctl": "Enables locking with flock without busy waiting in CLI scripts.",
+                "ext-pcntl": "Enables locking with flock without busy waiting in CLI scripts.",
                 "ext-redis": "To use this library with the PHP Redis extension.",
                 "ext-sysvsem": "Enables locking using semaphores.",
                 "predis/predis": "To use this library with predis."
@@ -2240,7 +2243,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "malkusch\\lock\\": "src/"
+                    "Malkusch\\Lock\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2266,11 +2269,10 @@
             "homepage": "https://github.com/malkusch/lock",
             "keywords": [
                 "advisory-locks",
-                "cas",
                 "flock",
                 "lock",
                 "locking",
-                "memcache",
+                "memcached",
                 "mutex",
                 "mysql",
                 "postgresql",
@@ -2280,9 +2282,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-lock/lock/issues",
-                "source": "https://github.com/php-lock/lock/tree/2.3.0"
+                "source": "https://github.com/php-lock/lock/tree/3.1.1"
             },
-            "time": "2024-12-05T22:54:07+00:00"
+            "time": "2026-02-19T23:04:23+00:00"
         },
         {
             "name": "marc-mabe/php-enum",
