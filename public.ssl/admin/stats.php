@@ -3,6 +3,7 @@
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -15,9 +16,10 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 /** @var ActesTransactionsSQL $actesTransactionsSQL */
 /** @var HeliosTransactionsSQL $heliosTransactionsSQL */
 /** @var UserContext $userContext */
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
 
-[$initialisation,$actesTransactionsSQL,$heliosTransactionsSQL, $userContext ] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class,ActesTransactionsSQL::class,HeliosTransactionsSQL::class, UserContext::class]);
+[$initialisation,$actesTransactionsSQL,$heliosTransactionsSQL, $userContext, $htmlLayoutFactory ] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,ActesTransactionsSQL::class,HeliosTransactionsSQL::class, UserContext::class, HTMLLayoutFactory::class]);
 
 $moduleData = $initialisation->initModule($userContext, Initialisation::MODULENAMEHELIOS);
 
@@ -37,18 +39,16 @@ $nb_transactions_helios_list = $heliosTransactionsSQL->getNbTransactionByMonth()
 
 $fancyDate = new FancyDate();
 
-
-$menuHTML = new MenuHTML();
 $pagerHTML  = new PagerHTML();
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->setTitle("Console d'administration");
 
 $doc->openContainer();
 
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userContext->userInfo, $moduleData->modulesInfo));
+$doc->buildMenu();
 $doc->closeSideBar();
 
 

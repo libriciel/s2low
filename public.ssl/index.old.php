@@ -4,11 +4,15 @@ use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Group;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Model\MessageAdminSQL;
 
 /** @var MessageAdminSQL $messageAdminSQL */
-$messageAdminSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(MessageAdminSQL::class);
+$messageAdminSQL = LegacyObjectsManager::getLegacyObjectInstancier()->get(MessageAdminSQL::class);
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
+$htmlLayoutFactory = LegacyObjectsManager::getLegacyObjectInstancier()->get(HTMLLayoutFactory::class);
 
 $me = new User();
 if (!$me->authenticate()) {
@@ -18,7 +22,7 @@ if (!$me->authenticate()) {
 }
 $messageAdmin = $messageAdminSQL->getPublishedMessage();
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $myAuthority = new Authority($me->get("authority_id"));
 
@@ -26,7 +30,7 @@ $doc->setTitle(WEBSITE_TITLE);
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($me);
+$doc->buildMenu();
 $doc->closeSideBar();
 $doc->openContent();
 

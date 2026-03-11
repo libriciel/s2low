@@ -6,6 +6,7 @@ use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\helios\HeliosTransactionsListe;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -22,9 +23,10 @@ use S2lowLegacy\Model\AuthoritySQL;
 /** @var HeliosTransactionsListe $heliosTransactionsListe */
 /** @var AuthoritySQL $authoritySQL */
 /** @var UserContext $userContext */
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
 
-[$initialisation, $droit,$heliosTransactionsListe,$authoritySQL, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class, HeliosTransactionsListe::class,AuthoritySQL::class, UserContext::class]);
+[$initialisation, $droit,$heliosTransactionsListe,$authoritySQL, $userContext, $htmlLayoutFactory] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, Droit::class, HeliosTransactionsListe::class,AuthoritySQL::class, UserContext::class, HTMLLayoutFactory::class]);
 
 $moduleData = $initialisation->initModule($userContext, Initialisation::MODULENAMEHELIOS);
 
@@ -196,10 +198,9 @@ function afficheWarning(){
 EOJS;
 
 
-$menuHTML = new MenuHTML();
 $pagerHTML  = new PagerHTML();
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 $doc->addHeader($js);
 
 $doc->addHeader("<script src=\"" . Helpers::getLink('/jsmodules/jquery.js') . "\" type=\"text/javascript\"></script>\n");
@@ -209,7 +210,7 @@ $doc->setTitle('Tedetis : module helios');
 $doc->openContainer();
 
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userContext->userInfo, $moduleData->modulesInfo));
+$doc->buildMenu();
 $doc->addBody($pagerHTML->getHTML($page_number, $nb_transactions, $taille_page));
 
 $doc->closeSideBar();

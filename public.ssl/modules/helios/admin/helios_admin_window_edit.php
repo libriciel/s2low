@@ -18,9 +18,13 @@
 use S2lowLegacy\Class\DatePicker;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
+
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
+$htmlLayoutFactory = LegacyObjectsManager::getObject(HTMLLayoutFactory::class);
 
 $html = '';
 
@@ -63,7 +67,7 @@ if (isset($id) && ! empty($id)) {
     }
 }
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jquery.js") . '"></script>');
 $doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jqueryui.js") . '"></script>');
@@ -73,7 +77,7 @@ $doc->setTitle("Gestion des fenêtres module HELIOS");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($me);
+$doc->buildMenu();
 $doc->closeSideBar();
 $doc->openContent();
 

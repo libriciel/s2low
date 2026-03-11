@@ -2,8 +2,13 @@
 
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
+
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
+$htmlLayoutFactory = LegacyObjectsManager::getObject(HTMLLayoutFactory::class);
 
 $html = '';
 
@@ -29,7 +34,7 @@ if (! $me->isSuper() || ! $module->isActive() || ! $me->canAccess($module->get("
     exit();
 }
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 $win = new ActesTransmissionWindow();
 $windows = $win->getWindowsList();
 
@@ -37,7 +42,7 @@ $doc->setTitle("Gestion des fenêtres module ACTES");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($me);
+$doc->buildMenu();
 $doc->buildPager($win);
 $doc->closeSideBar();
 $doc->openContent();

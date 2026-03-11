@@ -3,10 +3,14 @@
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Class\User;
+
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
+$htmlLayoutFactory = LegacyObjectsManager::getObject(HTMLLayoutFactory::class);
 
 $module = new Module();
 if (!$module->initByName("helios")) {
@@ -40,7 +44,7 @@ if (! $rgsConnexion->isRgsConnexion()) {
 
 $myAuthority = new Authority($me->get("authority_id"));
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $js = <<<EOJS
 <script type="text/javascript">
@@ -61,7 +65,7 @@ $doc->setTitle("Tedetis : Helios - Import d'une enveloppe");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($me);
+$doc->buildMenu();
 $doc->closeSideBar();
 $doc->openContent();
 

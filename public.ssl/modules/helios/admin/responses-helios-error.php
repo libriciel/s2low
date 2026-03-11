@@ -2,6 +2,7 @@
 
 use S2lowLegacy\Class\helios\HeliosResponsesError;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -13,6 +14,8 @@ use S2lowLegacy\Class\UserContext;
 $initialisation = LegacyObjectsManager::getLegacyObjectInstancier()->get(Initialisation::class);
 /** @var UserContext $userContext */
 $userContext = LegacyObjectsManager::getLegacyObjectInstancier()->get(UserContext::class);
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
+$htmlLayoutFactory = LegacyObjectsManager::getLegacyObjectInstancier()->get(HTMLLayoutFactory::class);
 
 $moduleData = $initialisation->initModule($userContext, Initialisation::MODULENAMEHELIOS);
 
@@ -28,18 +31,16 @@ $nb_responses_error = $heliosResponsesError->getNbError();
 
 $errorFileIterator = $heliosResponsesError->getFilesystemIterator();
 
-
-$menuHTML = new MenuHTML();
 $pagerHTML  = new PagerHTML();
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->setTitle("Console d'administration");
 
 $doc->openContainer();
 
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userContext->userInfo, $moduleData->modulesInfo));
+$doc->buildMenu();
 
 $doc->closeSideBar();
 

@@ -4,15 +4,17 @@ use S2lowLegacy\Class\actes\ActesTypePJSQL;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\DatePicker;
 
-list($actesTypePJSQL) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
+list($actesTypePJSQL, $htmlLayoutFactory) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ActesTypePJSQL::class]
+        [ActesTypePJSQL::class, HTMLLayoutFactory::class]
     );
 
 $html = '';
@@ -73,7 +75,7 @@ $transNatures = ActesTransaction :: getTransactionNaturesIdDescr();
 
 $trans = new ActesTransaction();
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 $doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jquery.js") . "\"></script>");
@@ -187,7 +189,7 @@ $doc->setTitle("Tedetis : Actes - Ajout d'une transaction");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($me);
+$doc->buildMenu();
 if (( ACTES_RESTRICT_CLASSIF_REQUEST_FREQUENCY == false) || (!ActesClassification :: hasTodayRequest($myAuthority->getId()))) {
   // Zone d'information
   // Affichage du lien pour demande de mise à jour classification matières sous-matières

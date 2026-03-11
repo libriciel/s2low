@@ -18,8 +18,12 @@
 // Instanciation du module courant
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
+
+$htmlLayoutFactory = LegacyObjectsManager::getObject(HTMLLayoutFactory::class);
 
 $module = new Module();
 if (! $module->initByName("helios")) {
@@ -48,13 +52,13 @@ if (! $module->isActive() || ! $me->canAccess($module->get("name"))) {
     exit();
 }
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->setTitle("Utilitaires module HELIOS");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($me);
+$doc->buildMenu();
 $doc->closeSideBar();
 $doc->openContent();
 

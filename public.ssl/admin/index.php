@@ -4,6 +4,7 @@ use S2lowLegacy\Class\actes\ActesResponsesError;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\helios\HeliosResponsesError;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -17,17 +18,19 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 /** @var ActesTransactionsSQL $actesTransactionsSQL */
 /** @var ActesResponsesError $actesResponsesError */
 /** @var UserContext $userContext */
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
 
 [
         $initialisation,
     $heliosTransactionsSQL,
     $actesTransactionsSQL,
     $actesResponsesError,
-    $userContext
+    $userContext,
+    $htmlLayoutFactory
 ] = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [Initialisation::class,HeliosTransactionsSQL::class,ActesTransactionsSQL::class,ActesResponsesError::class,
-            UserContext::class]
+            UserContext::class, HTMLLayoutFactory::class]
     );
 
 $moduleData = $initialisation->initModule($userContext, Initialisation::MODULENAMEHELIOS);
@@ -78,16 +81,15 @@ $nb_actes_transmis_4hours_before = $actesTransactionsSQL
     ->getNbByStatusAndDate(3, date('Y-m-d H:i:s', strtotime('-4 hours')));
 
 
-$menuHTML = new MenuHTML();
 $pagerHTML  = new PagerHTML();
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->setTitle("Console d'administration");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userContext->userInfo, $moduleData->modulesInfo));
+$doc->buildMenu();
 $doc->closeSideBar();
 
 

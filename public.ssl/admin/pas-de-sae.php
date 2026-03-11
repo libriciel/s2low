@@ -2,6 +2,7 @@
 
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -12,9 +13,9 @@ use S2lowLegacy\Lib\SQLQuery;
 /** @var Initialisation $initialisation */
 /** @var SQLQuery $sqlQuery */
 /** @var \S2lowLegacy\Class\UserContext $userContext */
-
-[$initialisation,$sqlQuery, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class,SQLQuery::class, UserContext::class]);
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
+[$initialisation,$sqlQuery, $userContext, $htmlLayoutFactory] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,SQLQuery::class, UserContext::class, HTMLLayoutFactory::class]);
 
 $moduleData = $initialisation->initModule($userContext, Initialisation::MODULENAMEHELIOS);
 
@@ -58,17 +59,16 @@ if ($csv) {
     exit;
 }
 
-$menuHTML = new MenuHTML();
 $pagerHTML  = new PagerHTML();
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->setTitle("Console d'administration");
 
 $doc->openContainer();
 
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userContext->userInfo, $moduleData->modulesInfo));
+$doc->buildMenu();
 $doc->closeSideBar();
 
 

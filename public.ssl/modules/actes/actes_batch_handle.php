@@ -3,10 +3,15 @@
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
 $html = '';
+
+/** @var HTMLLayoutFactory $htmlLayoutFactory  */
+$htmlLayoutFactory = LegacyObjectsManager::getObject(HTMLLayoutFactory::class);
 
 // Instanciation du module courant
 $module = new Module();
@@ -36,7 +41,7 @@ $zeBatch = new ActesBatch();
 
 $batchesList = $zeBatch->getBatchesListForUser($me->getId());
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $js = "<script type=\"text/javascript\">\n";
 $js .= "  function redirect_to_create_form(select_form) {\n";
@@ -51,7 +56,7 @@ $doc->setTitle("Tedetis : Traitement par lots module actes");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($me);
+$doc->buildMenu();
 $doc->buildPager($zeBatch);
 $doc->closeSideBar();
 $doc->openContent();

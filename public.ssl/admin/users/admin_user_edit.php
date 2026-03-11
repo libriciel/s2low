@@ -5,6 +5,7 @@ use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Group;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\ServiceUser;
@@ -17,9 +18,10 @@ use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Model\UserSQL;
 
-list($objectInstancier, $jsonOutput,$sqlQuery, $frontController,$pathToValidCa) = LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
+list($objectInstancier, $jsonOutput,$sqlQuery, $frontController,$pathToValidCa,$htmlLayoutFactory) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, JSONoutput::class, SQLQuery::class, FrontController::class,'app.path_to_rgs_valid_ca']
+        [ObjectInstancier::class, JSONoutput::class, SQLQuery::class, FrontController::class,'app.path_to_rgs_valid_ca', HTMLLayoutFactory::class],
     );
 
 $html = '';
@@ -191,7 +193,7 @@ $userSQL = new UserSQL($sqlQuery);
 $ident_method_id = $userSQL->getIdentificationMethod($him->getId() ?: $new_id);
 $ident_method_libelle = $userSQL->getIdentificationMethodeLibelle($ident_method_id);
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 
@@ -204,7 +206,7 @@ $doc->setTitle("$title | Tedetis");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($me);
+$doc->buildMenu();
 $doc->closeSideBar();
 $doc->openContent();
 

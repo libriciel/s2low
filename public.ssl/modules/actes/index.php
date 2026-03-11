@@ -6,6 +6,7 @@ use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -21,9 +22,10 @@ use S2lowLegacy\Model\AuthoritySQL;
 /** @var TransactionSQL $transactionSQL */
 /** @var \S2lowLegacy\Model\AuthoritySQL $authoritySQL */
 /** @var \S2lowLegacy\Class\UserContext $userContext */
+/** @var \S2lowLegacy\Class\HTMLLayoutFactory $htmlLayoutFactory */
 
-[$initialisation, $droit,  $transactionSQL,$authoritySQL, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class, TransactionSQL::class, AuthoritySQL::class, UserContext::class]);
+[$initialisation, $droit,  $transactionSQL,$authoritySQL, $userContext, $htmlLayoutFactory] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, Droit::class, TransactionSQL::class, AuthoritySQL::class, UserContext::class, HTMLLayoutFactory::class]);
 
 $moduleData = $initialisation->initModule($userContext, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
@@ -104,7 +106,6 @@ $status = $transactionSQL->getStatus();
 $status[TransactionSQL::EN_COURS] = 'En cours';
 $status['all'] = 'Tous les états';
 
-$menuHTML = new MenuHTML();
 $pagerHTML  = new PagerHTML();
 $fancyDate = new FancyDate();
 $listeActesHTML = new ListeActesHTML();
@@ -118,7 +119,7 @@ if ($droit->isSuperAdmin($userContext->userInfo)) {
 $listeActesHTML->setCritere($transTypes, $ftype, $transNatures, $fnature, $status, $fstatus, $fnum, $objet);
 $listeActesHTML->setDate($fmin_submission_date, $fmin_ack_date, $fmax_submission_date, $fmax_ack_date, $fancyDate);
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 $doc->setTitle('Liste des transactions - ACTES - S²low');
 $doc->addHeader(
     "<script type=\"text/javascript\" src=\"" . Helpers::getLink('/jsmodules/jquery.js') . "\">" .
@@ -132,7 +133,7 @@ $doc->addJavascript('/javascript/tedetis.js');
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userContext->userInfo, $moduleData->modulesInfo));
+$doc->buildMenu();
 $doc->addBody($pagerHTML->getHTML($page_number, $nb_transactions, $taille_page));
 $doc->closeSideBar();
 $doc->openContent();

@@ -8,6 +8,7 @@ use S2lowLegacy\Class\helios\HeliosPESValidation;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\User;
@@ -26,10 +27,11 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 /** @var CloudFileStorageInterface $cloudStorePesAller */
 /** @var string $html */
 /** @var UserContext $userContext */
+/** @var \S2lowLegacy\Class\HTMLLayoutFactory $htmlLayoutFactory */
 
-[$initialisation, $droit,$heliosTransactionsSQL, $localPesAllerResolver, $cloudStorePesAller, $userContext] =
+[$initialisation, $droit,$heliosTransactionsSQL, $localPesAllerResolver, $cloudStorePesAller, $userContext, $htmlLayoutFactory] =
     LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class,HeliosTransactionsSQL::class,'app.localFileResolver.pes_aller', 'app.store.file.pes_aller', UserContext::class]);
+    ->getArray([Initialisation::class, Droit::class,HeliosTransactionsSQL::class,'app.localFileResolver.pes_aller', 'app.store.file.pes_aller', UserContext::class,HTMLLayoutFactory::class]);
 
 $html = '';
 
@@ -90,14 +92,14 @@ $xades_output = $xadesSignature->getLastOutput();
 $is_signed = $xadesSignature->isSigned($filename);
 
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->setTitle('Helios : visualisation de transactions pour un fichier');
 $doc->addBody("<div class=\"container\"><div class=\"row\">");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($me);
+$doc->buildMenu();
 $doc->closeSideBar();
 $doc->openContent();
 

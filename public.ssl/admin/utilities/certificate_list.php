@@ -2,6 +2,7 @@
 
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -12,8 +13,9 @@ use S2lowLegacy\Lib\SQLQuery;
 
 /** @var Initialisation $initialisation */
 /** @var UserContext $userContext */
-[$initialisation, $userContext ] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, UserContext::class]);
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
+[$initialisation, $userContext, $htmlLayoutFactory ] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, UserContext::class, HTMLLayoutFactory::class]);
 
 if (! $userContext->me->isSuper()) {
     $_SESSION['error'] = 'Accès refusé';
@@ -37,14 +39,13 @@ if ($type == 'rgs') {
     $certificate_list = glob(EXTENDED_VALIDCA_PATH . '/*.pem');
 }
 
-$menuHTML = new MenuHTML();
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 $doc->setTitle('Liste des certificats - S²low');
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userContext->userInfo, []));
+$doc->buildMenu();
 $doc->closeSideBar();
 $doc->openContent();
 

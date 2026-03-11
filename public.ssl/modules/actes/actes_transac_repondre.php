@@ -4,12 +4,15 @@ use S2lowLegacy\Class\actes\ActesTypePJSQL;
 use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
-list($actesTypePJSQL) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var \S2lowLegacy\Class\HTMLLayoutFactory $htmlLayoutFactory */
+list($actesTypePJSQL, $htmlLayoutFactory) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ActesTypePJSQL::class]
+        [ActesTypePJSQL::class, HTMLLayoutFactory::class]
     );
 $html = '';
 $batchMode = false;
@@ -54,7 +57,7 @@ $typeReponse = array(
             3 => "Rejet explicite d'une lettre d'observations")
 );
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 
@@ -177,7 +180,7 @@ $doc->setTitle("Tedetis : Actes - Réponse à un document");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($me);
+$doc->buildMenu();
 
 $html .= "<div  class=\"bs-callout bs-callout-info\">\n";
 

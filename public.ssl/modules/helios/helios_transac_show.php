@@ -6,6 +6,7 @@ use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\ModulePermission;
 use S2lowLegacy\Class\ServiceUser;
@@ -13,9 +14,9 @@ use S2lowLegacy\Class\User;
 use S2lowLegacy\Controller\HeliosSAEController;
 use S2lowLegacy\Model\AuthoritySQL;
 
-list($heliosSAEController, $pesAllerRetriever ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($heliosSAEController, $pesAllerRetriever, $htmlLayoutFactory ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [HeliosSAEController::class, PesAllerRetriever::class]
+        [HeliosSAEController::class, PesAllerRetriever::class, HTMLLayoutFactory::class]
     );
 
 $module = new Module();
@@ -95,14 +96,14 @@ if ($me->isSuper()) {
 }
 
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->setTitle("Helios : visualisation de transactions pour un fichier");
 $doc->addBody("<div class=\"container\"><div class=\"row\">");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($me);
+$doc->buildMenu();
 $doc->closeSideBar();
 $doc->openContent();
 

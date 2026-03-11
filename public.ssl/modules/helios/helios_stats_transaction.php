@@ -1,6 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -11,9 +12,10 @@ use S2lowLegacy\Lib\SQLQuery;
 /** @var Initialisation $initialisation */
 /** @var SQLQuery $sqlQuery */
 /** @var UserContext $userContext */
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
 
-[$initialisation,$sqlQuery, $userContext ] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class,SQLQuery::class, UserContext::class]);
+[$initialisation,$sqlQuery, $userContext, $htmlLayoutFactory ] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,SQLQuery::class, UserContext::class, HTMLLayoutFactory::class]);
 
 $moduleData = $initialisation->initModule($userContext, Initialisation::MODULENAMEHELIOS);
 
@@ -39,17 +41,16 @@ $sql = 'SELECT count(*) FROM helios_transactions WHERE last_status_id=3';
 
 
 
-$menuHTML = new MenuHTML();
 $pagerHTML  = new PagerHTML();
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->setTitle('Tedetis : module helios statistique');
 
 $doc->openContainer();
 
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userContext->userInfo, $moduleData->modulesInfo));
+$doc->buildMenu();
 
 $doc->closeSideBar();
 

@@ -16,8 +16,13 @@
  */
 
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 
-$doc = new HTMLLayout();
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
+$htmlLayoutFactory = LegacyObjectsManager::getObject(HTMLLayoutFactory::class);
+
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->setTitle(WEBSITE_TITLE);
 

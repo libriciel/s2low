@@ -17,8 +17,13 @@
 // Instanciation du module courant
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
+
+/** @var \S2lowLegacy\Class\HTMLLayoutFactory $htmlLayoutFactory */
+$htmlLayoutFactory = LegacyObjectsManager::getObject(HTMLLayoutFactory::class);
 
 $module = new Module();
 if (! $module->initByName("helios")) {
@@ -43,13 +48,13 @@ if (! $me->isSuper() || ! $module->isActive() || ! $me->canAccess($module->get("
 $win = new HeliosTransmissionWindow();
 $windows = $win->getWindowsList();
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->setTitle("Gestion des fenêtres module HELIOS");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($me);
+$doc->buildMenu();
 $doc->buildPager($win);
 $doc->closeSideBar();
 $doc->openContent();

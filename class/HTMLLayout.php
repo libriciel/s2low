@@ -27,8 +27,10 @@ class HTMLLayout extends Layout
     private $errorDisabled;
 
 
-    public function __construct($template = false)
-    {
+    public function __construct(
+        private readonly MenuHTML $menuHTML,
+        $template = false
+    ) {
         if ($template) {
             $this->template = $template;
         } elseif (defined("DEFAULT_HTML_TEMPLATE")) {
@@ -110,19 +112,9 @@ class HTMLLayout extends Layout
      * \param $user objet (optionnel) : objet représentant l'utilisateur en cours pour personnalisation du menu
      * \param $displayInline booléen (optionnel) : spécifie si le HTML doit être affiché (true) ou ajouté au corps du document (false, par défaut)
      */
-    public function buildMenu(?User $user = null, $displayInline = false)
+    public function buildMenu($displayInline = false)
     {
-
-        $sqlQuery = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(SQLQuery::class);
-
-        $userSQL = new UserSQL($sqlQuery);
-        $userInfo = $userSQL->getInfo($user->getId());
-        $moduleSQL = new ModuleSQL($sqlQuery);
-
-        $modulesInfo = $moduleSQL->getModulesForUser($userInfo);
-
-        $menuHTML = new MenuHTML();
-        $html =  $menuHTML->getMenuContent($userInfo, $modulesInfo);
+        $html =  $this->menuHTML->getMenuContent();
 
         if ($displayInline) {
             echo $html;

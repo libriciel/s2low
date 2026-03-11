@@ -6,6 +6,7 @@ use S2lowLegacy\Class\AvailableSirensByGroup;
 use S2lowLegacy\Class\Group;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\ObjectInstancier;
@@ -13,9 +14,10 @@ use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 use S2lowLegacy\Model\AuthorityTypesSQL;
 use S2lowLegacy\Model\GroupSQL;
 
-list($objectInstancier, $availableSirensByGroup ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
+list($objectInstancier, $availableSirensByGroup, $htmlLayoutFactory ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, AvailableSirensByGroup::class]
+        [ObjectInstancier::class, AvailableSirensByGroup::class, HTMLLayoutFactory::class],
     );
 $html = '';
 $me = new User();
@@ -83,7 +85,7 @@ try {
 
 /****************/
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 
@@ -91,7 +93,7 @@ $doc->setTitle("Tedetis : " . $modStr . " collectivité");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($me);
+$doc->buildMenu();
 $doc->closeSideBar();
 $doc->openContent();
 

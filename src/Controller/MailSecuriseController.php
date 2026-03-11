@@ -7,6 +7,7 @@ use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\MailInit;
 use Exception;
 use MailController;
+use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Mail\MailLayout;
@@ -21,8 +22,10 @@ class MailSecuriseController extends AbstractController
     private User $me;
     private Authority $myAuthority;
 
-    public function __construct(MailLayout $mailLayout)
-    {
+    public function __construct(
+        private readonly MenuHTML $menuHTML,
+        MailLayout $mailLayout
+    ) {
         $this->doc = $mailLayout;
         list($this->module, $this->me, $this->myAuthority) = MailInit::getIdentificationParameters();
     }
@@ -39,7 +42,7 @@ class MailSecuriseController extends AbstractController
 
         $doc = $this->doc;
         if (!$api) {
-            $this->doc = new MailLayout("xhtml_mail_ssl.tpl.php");
+            $this->doc = new MailLayout($this->menuHTML, "xhtml_mail_ssl.tpl.php");
         }
 
         //commencer de distribuer des information.
@@ -61,7 +64,7 @@ class MailSecuriseController extends AbstractController
                         $doc->setTitle(WEBSITE_TITLE);
                         $doc->openContainer();
                         $doc->openSideBar();
-                        $doc->buildMenu($me);
+                        $doc->buildMenu();
 
                         $doc->DisplayHead();
                     }

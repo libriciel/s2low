@@ -3,6 +3,7 @@
 use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -13,8 +14,9 @@ use S2lowLegacy\Class\UserContext;
 /** @var Droit $droit */
 /** @var S2lowRedirect $s2lowRedirect */
 /** @var UserContext $userContext */
-[$initialisation,$droit,$s2lowRedirect, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class,S2lowRedirect::class,UserContext::class]);
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
+[$initialisation,$droit,$s2lowRedirect, $userContext, $htmlLayoutFactory] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, Droit::class,S2lowRedirect::class,UserContext::class,HTMLLayoutFactory::class]);
 
 $moduleData = $initialisation->initModule($userContext, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
 
@@ -23,15 +25,13 @@ if (! $droit->isSuperAdmin($userContext->userInfo)) {
 }
 
 
-$menuHTML = new MenuHTML();
-
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->setTitle('Utilitaires module ACTES');
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userContext->userInfo, $moduleData->modulesInfo));
+$doc->buildMenu();
 $doc->closeSideBar();
 $doc->openContent();
 

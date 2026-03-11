@@ -2,6 +2,7 @@
 
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -12,8 +13,9 @@ use S2lowLegacy\Lib\SQLQuery;
 /** @var Initialisation $initialisation */
 /** @var SQLQuery $sqlQuery */
 /** @var UserContext $userContext */
-[$initialisation, $sqlQuery, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, SQLQuery::class, UserContext::class]);
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
+[$initialisation, $sqlQuery, $userContext, $htmlLayoutFactory] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, SQLQuery::class, UserContext::class, HTMLLayoutFactory::class]);
 
 if (! $userContext->me->isSuper()) {
     $_SESSION['error'] = 'Accès refusé';
@@ -28,14 +30,11 @@ $sql = 'select count(authorities.id) as count,authority_group_id as id,authority
 
 $groups_list = $sqlQuery->query($sql);
 
-
-$menuHTML = new MenuHTML();
-
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 $doc->setTitle('Configuration de la connexion SAE - S²low');
 $doc->openContainer();
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userContext->userInfo, []));
+$doc->buildMenu();
 $doc->closeSideBar();
 $doc->openContent();
 

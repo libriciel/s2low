@@ -4,8 +4,13 @@
 use S2lowLegacy\Class\DatePicker;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
+
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
+$htmlLayoutFactory = LegacyObjectsManager::getObject(HTMLLayoutFactory::class);
 
 $module = new Module();
 if (!$module->initByName("helios")) {
@@ -88,7 +93,7 @@ $etat = array(
 
 $envelops = $HR->getDocumentList($where);
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 $doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jquery.js") . '"></script>');
 $doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jqueryui.js") . '"></script>');
 $doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/select2.js") . '"></script>');
@@ -99,7 +104,7 @@ $doc->setTitle("Module helios : message retour ");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($me);
+$doc->buildMenu();
 $doc->buildPager($HR);
 $doc->closeSideBar();
 $doc->openContent();

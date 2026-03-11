@@ -4,6 +4,7 @@ namespace S2lowLegacy\Controller;
 
 use Exception;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\Environnement;
@@ -219,13 +220,13 @@ class Controller
 
     public function renderDefault()
     {
-        $doc = new HTMLLayout();
+        $doc = $this->objectInstancier->get(HTMLLayoutFactory::class)->createLayout();
         $doc->setTitle($this->getViewParameter('title'));
 
         $doc->openContainer();
         $doc->openSideBar();
         if ($this->me) {
-            $doc->buildMenu($this->me);
+            $doc->buildMenu();
         }
 
         $doc->addBody($this->getViewParameter('side_bar'));

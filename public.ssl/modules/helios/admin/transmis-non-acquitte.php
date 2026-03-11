@@ -1,6 +1,7 @@
 <?php
 
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
@@ -11,8 +12,9 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 /** @var Initialisation $initialisation */
 /** @var HeliosTransactionsSQL $heliosTransactionsSQL */
 /** @var UserContext $userContext */
-[$initialisation,$heliosTransactionsSQL, $userContext] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class,HeliosTransactionsSQL::class, UserContext::class]);
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
+[$initialisation,$heliosTransactionsSQL, $userContext, $htmlLayoutFactory] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,HeliosTransactionsSQL::class, UserContext::class, HTMLLayoutFactory::class]);
 
 $moduleData = $initialisation->initModule($userContext, Initialisation::MODULENAMEHELIOS);
 
@@ -25,18 +27,16 @@ if ($userContext->userInfo['role'] != 'SADM') {
 
 $transactions_list = $heliosTransactionsSQL->getNonAcquitte();
 
-
-$menuHTML = new MenuHTML();
 $pagerHTML  = new PagerHTML();
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->setTitle("Console d'administration");
 
 $doc->openContainer();
 
 $doc->openSideBar();
-$doc->addBody($menuHTML->getMenuContent($userContext->userInfo, $moduleData->modulesInfo));
+$doc->buildMenu();
 
 $doc->closeSideBar();
 

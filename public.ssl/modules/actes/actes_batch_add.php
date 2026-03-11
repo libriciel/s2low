@@ -4,8 +4,12 @@
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
+
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
+$htmlLayoutFactory = \S2lowLegacy\Class\LegacyObjectsManager::getObject(HTMLLayoutFactory::class);
 
 $module = new Module();
 if (!$module->initByName("actes")) {
@@ -30,13 +34,13 @@ if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->canAccess($modul
 
 $myAuthority = new Authority($me->get("authority_id"));
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->setTitle("Tedetis : Traitement par lots module actes");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($me);
+$doc->buildMenu();
 $doc->closeSideBar();
 $doc->openContent();
 

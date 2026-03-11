@@ -3,11 +3,13 @@
 use S2lowLegacy\Class\Group;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\JSONoutput;
 
-list($jsonOutput) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->getArray(
-    [JSONoutput::class]
+list($jsonOutput, $htmlLayoutFactory) = LegacyObjectsManager::getLegacyObjectInstancier()->getArray(
+    [JSONoutput::class, HTMLLayoutFactory::class]
 );
 $html = '';
 $me = new User();
@@ -47,7 +49,7 @@ if (! $me->isSuper()) {
     exit();
 }
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 
@@ -55,7 +57,7 @@ $doc->setTitle("Tedetis : " . $modStr . " groupe de collectivité");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($me);
+$doc->buildMenu();
 $doc->closeSideBar();
 $doc->openContent();
 

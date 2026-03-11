@@ -910,9 +910,6 @@ services:
   S2low\Services\MailActesNotifications\MailerSymfony:
     public: true
 
-  S2lowLegacy\Class\HTMLLayout:
-    public: true
-
   S2lowLegacy\Class\Database:
     public: true
     shared: false
@@ -930,3 +927,18 @@ services:
   S2lowLegacy\Class\UserContext:
     public: true
     factory: ['@S2low\Services\UserContextProvider','require']
+
+  S2lowLegacy\Class\MenuHTML:
+    public: true
+
+  S2lowLegacy\Class\HTMLLayoutFactory:
+    public: true
+    autowire: true
+
+  S2lowLegacy\Mail\MailLayout:
+      public: true
+      factory: ['@S2lowLegacy\Class\HTMLLayoutFactory','createMailLayout']
+
+  S2lowLegacy\Class\HTMLLayout:
+    public: true
+    factory: [ '@S2lowLegacy\Class\HTMLLayoutFactory','createLayout' ]

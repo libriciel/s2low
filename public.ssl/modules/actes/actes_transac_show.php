@@ -9,6 +9,7 @@ use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
@@ -28,9 +29,11 @@ use Twig\Loader\FilesystemLoader;
 /** @var SQLQuery $sqlQuery */
 /** @var ActesSAEController $actesSAEController */
 /** @var UserContext $userContext */
-list($initialisation,$actesTypePJSQL, $sqlQuery,$actesSAEController, $userContext) = LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var \S2lowLegacy\Class\HTMLLayoutFactory $htmlLayoutFactory */
+
+list($initialisation,$actesTypePJSQL, $sqlQuery,$actesSAEController, $userContext, $htmlLayoutFactory) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [Initialisation::class, ActesTypePJSQL::class, SQLQuery::class, ActesSAEController::class, UserContext::class]
+        [Initialisation::class, ActesTypePJSQL::class, SQLQuery::class, ActesSAEController::class, UserContext::class, HTMLLayoutFactory::class]
     );
 
 $moduleData = $initialisation->initModule($userContext, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
@@ -84,7 +87,7 @@ $transStatus = $trans->getCurrentStatus();
 $authoritySQL = ObjectInstancierFactory::getObjetInstancier()->get(AuthoritySQL::class);
 $authority_info = $authoritySQL->getInfo($trans->get('authority_id'));
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 
 $doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink('/jsmodules/jquery.js') . "\"></script>");
@@ -95,7 +98,7 @@ $doc->setTitle("Tedetis : visualisation d'une transaction");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($userContext->me);
+$doc->buildMenu();
 $doc->closeSideBar();
 $doc->openContent();
 

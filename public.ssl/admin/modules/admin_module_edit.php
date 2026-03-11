@@ -2,9 +2,12 @@
 
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
+/** @var \S2lowLegacy\Class\HTMLLayoutFactory $htmlLayoutFactory */
+$htmlLayoutFactory = \S2lowLegacy\Class\LegacyObjectsManager::getObject(HTMLLayoutFactory::class);
 $html = '';
 
 $me = new User();
@@ -39,7 +42,7 @@ if (! $mod) {
     exit();
 }
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->addHeader("<script src=\"/" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 
@@ -47,7 +50,7 @@ $doc->setTitle("Modification d'un module");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($me);
+$doc->buildMenu();
 $doc->closeSideBar();
 $doc->openContent();
 

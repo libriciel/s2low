@@ -3,12 +3,15 @@
 use S2lowLegacy\Class\Group;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
+use S2lowLegacy\Class\HTMLLayoutFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\JSONoutput;
 
-list($jsonOutput) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+/** @var HTMLLayoutFactory $htmlLayoutFactory */
+list($jsonOutput, $htmlLayoutFactory) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [JSONoutput::class]
+        [JSONoutput::class, HTMLLayoutFactory::class],
     );
 $html = '';
 $me = new User();
@@ -50,13 +53,13 @@ if ($api) {
     exit;
 }
 
-$doc = new HTMLLayout();
+$doc = $htmlLayoutFactory->createLayout();
 
 $doc->setTitle("Tedetis : gestion des groupes de collectivités");
 
 $doc->openContainer();
 $doc->openSideBar();
-$doc->buildMenu($me);
+$doc->buildMenu();
 $doc->buildPager($group);
 $doc->closeSideBar();
 $doc->openContent();
