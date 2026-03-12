@@ -14,17 +14,13 @@ class AdminGroupControllerTest extends S2lowIntegrationTestCase
     /** @var  AdminGroupController */
     protected $adminGroupController;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->adminGroupController = self::getContainer()->get(AdminGroupController::class);
-    }
-
     public function testDoEditActionQuote()
     {
         $this->setUserWithRole(UserRole::SuperAdministrateur);
         self::getContainer()->get(Environnement::class)->post()->set('id', 1);
         self::getContainer()->get(Environnement::class)->post()->set('name', "apo'strophe");
+
+        $this->adminGroupController = self::getContainer()->get(AdminGroupController::class);
 
         try {
             $this->adminGroupController->doEditAction();
@@ -39,6 +35,7 @@ class AdminGroupControllerTest extends S2lowIntegrationTestCase
 
     public function testDoEditAction()
     {
+        $this->adminGroupController = self::getContainer()->get(AdminGroupController::class);
         $this->setUserWithRole(UserRole::SuperAdministrateur);
         org\bovigo\vfs\vfsStream::setup('test');
         $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
@@ -93,6 +90,8 @@ class AdminGroupControllerTest extends S2lowIntegrationTestCase
         );
 
         self::getContainer()->set(Authentification::class, $auth);
+
+        $this->adminGroupController = self::getContainer()->get(AdminGroupController::class);
         $adminGroup = self::getContainer()->get(AdminGroupController::class);
         $adminGroup->doEditAction();
     }

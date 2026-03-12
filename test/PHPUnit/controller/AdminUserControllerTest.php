@@ -24,7 +24,6 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         $_POST = array();
         org\bovigo\vfs\vfsStream::setup("test");
         $this->testStreamUrl = org\bovigo\vfs\vfsStream::url("test");
-        $this->adminUserController = self::getContainer()->get(AdminUserController::class);
     }
 
     private function setDataOk()
@@ -50,6 +49,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
     public function testWithoutCertificatesIn_FILE()
     {
         $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $this->setUpAdminController();
         $message = "";
         try {
             $this->adminUserController->doEditAction();
@@ -62,6 +62,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
     public function testDoEdit()
     {
         $this->setDataOk();
+        $this->setUpAdminController();
         $this->adminUserController->doEditAction();
         $this->assertTrue(true);
     }
@@ -83,6 +84,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Message : Aucune information de certificat trouvée');
+        $this->setUpAdminController();
         $this->adminUserController->doEditAction();
     }
 
@@ -90,6 +92,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
     {
         $this->setDataOk();
         self::getContainer()->get(Environnement::class)->post()->set('api', 1);
+        $this->setUpAdminController();
         $this->expectOutputRegex("#Cr\\\u00e9ation de l'utilisateur Eric Pommateau#");
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('exit() called');
@@ -111,9 +114,11 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
 
         self::getContainer()->get(Environnement::class)->post()->set('api', 1);
         $_POST['api'] = 1;
+
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Aucune information de certificat trouvée');
         $this->expectOutputRegex(utf8_decode("#KO\nAucune information de certificat trouvée#"));
+        $this->setUpAdminController();
         $this->adminUserController->doEditAction();
     }
 
@@ -121,6 +126,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
     {
         $this->setDataOk();
         self::getContainer()->get(Environnement::class)->post()->set('id', 42);
+        $this->setUpAdminController();
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Erreur lors de la modification de l\'utilisateur');
         $this->adminUserController->doEditAction();
@@ -130,6 +136,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
     {
         $this->setUserWithRole(UserRole::Utilisateur);
         $this->setOnlyDataOk();
+        $this->setUpAdminController();
         $this->expectException(Exception::class);
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Redirect');
@@ -142,6 +149,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
         $this->setAuthorityGroupUserAs(2);
         $this->setOnlyDataOk();
+        $this->setUpAdminController();
         $this->expectExceptionMessage('La collectivité n\'appartient pas au groupe courant');
         $this->adminUserController->doEditAction();
     }
@@ -151,6 +159,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         $this->setDataOk();
         self::getContainer()->get(Environnement::class)->post()->set('api', 1);
         self::getContainer()->get(Environnement::class)->post()->set('authority_id', '');
+        $this->setUpAdminController();
         $this->expectExceptionMessage("Exit !");
         $this->expectOutputRegex("#authority_id est obligatoire#");
         $this->adminUserController->doEditAction();
@@ -160,6 +169,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
     {
         $this->setUserWithRole(UserRole::AdministrateurCollectivite);
         $this->setOnlyDataOk();
+        $this->setUpAdminController();
         self::getContainer()->get(Environnement::class)->post()->set('id', 3);
         $this->expectExceptionMessage("Accès refusé pour la modification de cet utilisateur");
         $this->adminUserController->doEditAction();
@@ -169,6 +179,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
     {
         $this->setDataOk();
         self::getContainer()->get(Environnement::class)->post()->set('role', 'GADM');
+        $this->setUpAdminController();
         $this->expectExceptionMessage("Vous devez indiquer un groupe pour créer un administrateur de groupe");
         $this->adminUserController->doEditAction();
     }
@@ -180,6 +191,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         self::getContainer()->get(Environnement::class)->post()->set('password', 'Ce6vohya');
         $_POST['password'] = "ku9eiBae";
         $_POST['password2'] = "Ce6vohya";
+        $this->setUpAdminController();
         $this->expectExceptionMessage(" Les mots de passe ne correspondent pas");
         $this->adminUserController->doEditAction();
     }
@@ -192,6 +204,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         self::getContainer()->get(Environnement::class)->post()->set('auth_method', UserSQL::IDENT_METHOD_CERT_ONLY);
         $_POST['password'] = "ku9eiBae";
         $_POST['password2'] = "Ce6vohya";
+        $this->setUpAdminController();
         $this->adminUserController->doEditAction();
         self::expectNotToPerformAssertions();
     }
@@ -200,6 +213,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
     {
         $this->setDataOk();
         $_FILES['certificate']['tmp_name'] = '';
+        $this->setUpAdminController();
         $this->expectExceptionMessage("Le certificat utilisateur est obligatoire");
         $this->adminUserController->doEditAction();
     }
@@ -210,6 +224,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         self::getContainer()->get(Environnement::class)->post()->set('new_id', 1);
 
         $_POST['new_id'] = 8;
+        $this->setUpAdminController();
         $this->expectExceptionMessage("Le login et le mot de passe sont obligatoire pour cloner un certificat");
         $this->adminUserController->doEditAction();
     }
@@ -221,6 +236,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         $_POST['login'] = 'alice';
         $_POST['password'] = 'eey3fo4A';
         $_POST['password2'] = 'eey3fo4A';
+        $this->setUpAdminController();
         $this->adminUserController->doEditAction();
         self::expectNotToPerformAssertions();
     }
@@ -228,6 +244,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
     public function testCloneSameCertificate()
     {
         $this->setDataOk();
+        $this->setUpAdminController();
         $this->adminUserController->doEditAction();
         self::getContainer()->get(Environnement::class)->post()->set('new_id', 1);
         self::getContainer()->get(Environnement::class)->post()->set('login', 'alice');
@@ -248,6 +265,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         self::getContainer()->get(Environnement::class)->post()->set('password', 'eey3fo4A');
         self::getContainer()->get(Environnement::class)->post()->set('password2', 'eey3fo4A');
         self::getContainer()->get(Environnement::class)->post()->set('id', 1);
+        $this->setUpAdminController();
         $this->adminUserController->doEditAction();
         self::expectNotToPerformAssertions();
     }
@@ -257,6 +275,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         $this->setOnlyDataOk();
         $this->setUserWithRole(UserRole::AdministrateurCollectivite);
         self::getContainer()->get(Environnement::class)->post()->set('authority_id', 1);
+        $this->setUpAdminController();
         $this->adminUserController->doEditAction();
         self::expectNotToPerformAssertions();
     }
@@ -267,6 +286,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         $_POST['login'] = 'alice';
         $_POST['password'] = 'eey3fo4A';
         $_POST['password2'] = 'eey3fo4A';
+        $this->setUpAdminController();
         $this->adminUserController->doEditAction();
         self::expectExceptionMessage("Un utilisateur avec les mêmes informations de connexion et d'identification existe dans la base S2low");
         $this->adminUserController->doEditAction();
@@ -277,6 +297,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         $this->setOnlyDataOk();
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
         self::getContainer()->get(Environnement::class)->post()->set('authority_id', 2);
+        $this->setUpAdminController();
         $this->adminUserController->doEditAction();
         self::expectNotToPerformAssertions();
     }
@@ -287,6 +308,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
         self::getContainer()->get(Environnement::class)->post()->set('authority_id', 2);
         self::getContainer()->get(Environnement::class)->post()->set('role', 'SADM');
+        $this->setUpAdminController();
         $user_id = $this->adminUserController->doEditAction();
         $userSQL = self::getContainer()->get(UserSQL::class);
         $user_info = $userSQL->getInfo($user_id);
@@ -296,6 +318,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
     public function testSameInfo()
     {
         $this->setDataOk();
+        $this->setUpAdminController();
         $this->adminUserController->doEditAction();
         $this->expectExceptionMessage("Un utilisateur avec les mêmes informations de connexion et d'identification existe dans la base S2low");
         $this->adminUserController->doEditAction();
@@ -376,6 +399,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         self::getContainer()->get(Environnement::class)->post()->set('password', 'password');
         self::getContainer()->get(Environnement::class)->post()->set('password2', 'password');
 
+        $this->setUpAdminController();
         $this->adminUserController->doEditAction();
 
         $userSQL = self::getContainer()->get(UserSQL::class);
@@ -394,5 +418,13 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         );
 
         $this->assertTrue(password_verify("password", $results4[0]["password"]));
+    }
+
+    /**
+     * @return void
+     */
+    private function setUpAdminController(): void
+    {
+        $this->adminUserController = self::getContainer()->get(AdminUserController::class);
     }
 }

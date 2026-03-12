@@ -7,6 +7,7 @@ use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\HTMLLayoutFactory;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\JSONoutput;
 use S2lowLegacy\Lib\ObjectInstancier;
@@ -31,10 +32,12 @@ class Controller
 
 
     private $files;
+    private UserContext $userContext;
 
     public function __construct(ObjectInstancier $objectInstancier)
     {
         $this->objectInstancier = $objectInstancier;
+        $this->userContext = $objectInstancier->get(UserContext::class);
         $this->viewParameter = array();
     }
 

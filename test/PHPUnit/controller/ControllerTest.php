@@ -20,40 +20,45 @@ class ControllerTest extends S2lowIntegrationTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->controller = self::getContainer()->get(Controller::class);
     }
 
     public function testViewParameter()
     {
+        $this->setUpController();
         $this->controller->foo = 42;
         $this->assertTrue($this->controller->isViewParameter('foo'));
     }
 
     public function testViewParameterFalse()
     {
+        $this->setUpController();
         $this->assertFalse($this->controller->isViewParameter('foo'));
     }
 
     public function testGetViewParameter()
     {
+        $this->setUpController();
         $this->controller->foo = 42;
         $this->assertEquals(42, $this->controller->foo);
     }
 
     public function testGetViewParameterException()
     {
+        $this->setUpController();
         $this->expectExceptionMessage('parameter foo not found');
         $this->controller->foo;
     }
 
     public function testGetAllViewParameter()
     {
+        $this->setUpController();
         $this->controller->foo = 42;
         $this->assertEquals(array('foo' => 42), $this->controller->getAllViewParameter());
     }
 
     public function testRedirect()
     {
+        $this->setUpController();
         $this->expectException(RedirectException::class);
         $this->expectExceptionMessage("Redirect to http://redirect_url with message : error message");
         $this->controller->redirect("http://redirect_url", "error message");
@@ -62,6 +67,7 @@ class ControllerTest extends S2lowIntegrationTestCase
 
     public function testVerifAdmin()
     {
+        $this->setUpController();
         $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->controller->verifAdmin();
         self::expectNotToPerformAssertions();
@@ -72,7 +78,10 @@ class ControllerTest extends S2lowIntegrationTestCase
         $authentication = $this->getAuthentication();
         self::getContainer()->set(Authentification::class, $authentication);
 
+
         $this->expectExceptionMessage("Message : Aucune information de certificat trouvée");
+        //TODO : l'Exception est thrown lors du setUp du Controller ...
+        $this->setUpController();
         $this->controller->verifAdmin();
     }
 
@@ -87,12 +96,15 @@ class ControllerTest extends S2lowIntegrationTestCase
         $authentication = $this->getAuthentication($server);
         self::getContainer()->set(Authentification::class, $authentication);
 
+        $this->setUpController();
+
         $this->expectExceptionMessage("Redirect to");
         $this->controller->verifAdmin();
     }
 
     public function testRenderDefault()
     {
+        $this->setUpController();
         $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->controller->title = "Titre mock";
         $this->controller->template_milieu = __DIR__ . "/../lib/fixtures/MockMockTemplate.php";
@@ -103,6 +115,7 @@ class ControllerTest extends S2lowIntegrationTestCase
 
     public function testRender()
     {
+        $this->setUpController();
         $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->expectOutputString("<h1>Mock Mock Template</h1>");
         $this->controller->render(__DIR__ . "/../lib/fixtures/MockMockTemplate.php");
@@ -110,12 +123,14 @@ class ControllerTest extends S2lowIntegrationTestCase
 
     public function testActionBefore()
     {
+        $this->setUpController();
         $this->controller->_actionBefore("Mock", "mock");
         $this->assertEquals("S2low", $this->controller->title);
     }
 
     public function testActionAfter()
     {
+        $this->setUpController();
         $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->controller->title = "Titre mock";
         $this->controller->template_milieu = __DIR__ . "/../lib/fixtures/MockMockTemplate.php";
@@ -126,21 +141,25 @@ class ControllerTest extends S2lowIntegrationTestCase
 
     public function testGetRecuperateur()
     {
+        $this->setUpController();
         $this->assertInstanceOf(Recuperateur::class, $this->controller->getRecuperateurGet());
     }
 
     public function testGetRecuperateurPost()
     {
+        $this->setUpController();
         $this->assertInstanceOf(Recuperateur::class, $this->controller->getRecuperateurPost());
     }
 
     public function testGetSqlQuery()
     {
+        $this->setUpController();
         $this->assertInstanceOf(SQLQuery::class, $this->controller->getSQLQuery());
     }
 
     public function testRedirectSSL()
     {
+        $this->setUpController();
         $this->expectException(RedirectException::class);
         $this->expectExceptionMessage("/toto/index.php?foo=bar");
         $this->controller->redirectSSL("/toto/index.php", "foo=bar");
@@ -149,6 +168,7 @@ class ControllerTest extends S2lowIntegrationTestCase
     public function testVerifGroupAdmin()
     {
         $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $this->setUpController();
         $this->controller->verifGroupAdmin(2);
         self::expectNotToPerformAssertions();
     }
@@ -156,6 +176,7 @@ class ControllerTest extends S2lowIntegrationTestCase
     public function testVerifGroupAdminSuperAdmin()
     {
         $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $this->setUpController();
         $this->controller->verifGroupAdmin(2);
         self::expectNotToPerformAssertions();
     }
@@ -164,6 +185,7 @@ class ControllerTest extends S2lowIntegrationTestCase
     {
         $this->logAs(3);
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->setUpController();
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("Accès refusé");
         $this->controller->verifGroupAdmin(1);
@@ -171,12 +193,14 @@ class ControllerTest extends S2lowIntegrationTestCase
 
     public function testSetMessage()
     {
+        $this->setUpController();
         $this->controller->setMessage("test");
         self::expectNotToPerformAssertions();
     }
 
     public function testVerifSuperAdmin()
     {
+        $this->setUpController();
         $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->controller->verifSuperAdmin();
         self::expectNotToPerformAssertions();
@@ -185,6 +209,7 @@ class ControllerTest extends S2lowIntegrationTestCase
     public function testVerifSuperAdminFailed()
     {
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->setUpController();
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("Redirect to");
         $this->controller->verifSuperAdmin();
@@ -193,6 +218,7 @@ class ControllerTest extends S2lowIntegrationTestCase
     public function testVerifAdminAdminGroupOK()
     {
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->setUpController();
         $this->controller->verifAdmin(2);
         self::expectNotToPerformAssertions();
     }
@@ -201,14 +227,16 @@ class ControllerTest extends S2lowIntegrationTestCase
     {
         $this->logAs(3);
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->setUpController();
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage("Redirect to");
+        $this->expectExceptionMessage('Redirect to');
         $this->controller->verifAdmin(1);
     }
 
     public function testVerifAdminOK()
     {
         $this->setUserWithRole(UserRole::AdministrateurCollectivite);
+        $this->setUpController();
         $this->controller->verifAdmin(1);
         self::expectNotToPerformAssertions();
     }
@@ -216,6 +244,7 @@ class ControllerTest extends S2lowIntegrationTestCase
     public function testVerifAdminFail()
     {
         $this->setUserWithRole(UserRole::AdministrateurCollectivite);
+        $this->setUpController();
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("Redirect to");
         $this->controller->verifAdmin(2);
@@ -223,6 +252,7 @@ class ControllerTest extends S2lowIntegrationTestCase
 
     public function testGetObjectInstancier()
     {
+        $this->setUpController();
         $this->assertInstanceOf(ObjectInstancier::class, $this->controller->getObjectInstancier());
     }
 
@@ -232,6 +262,9 @@ class ControllerTest extends S2lowIntegrationTestCase
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
         $environnement = self::getContainer()->get(Environnement::class);
         $environnement->post()->set('api', '1');
+
+        $this->setUpController();
+
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("Exit");
         $this->expectOutputRegex("#Acc\\\u00e8s refus\\\u00e9#");
@@ -255,7 +288,16 @@ class ControllerTest extends S2lowIntegrationTestCase
 
     public function testIsApiCall()
     {
+        $this->setUpController();
         self::getContainer()->get(Environnement::class)->get()->set('api', '1');
         $this->assertTrue($this->controller->isApiCall());
+    }
+
+    /**
+     * @return void
+     */
+    private function setUpController(): void
+    {
+        $this->controller = self::getContainer()->get(Controller::class);
     }
 }

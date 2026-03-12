@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class;
 
+use S2lowLegacy\Lib\ObjectInstancierFactory;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Model\UserSQL;
 
