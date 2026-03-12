@@ -149,17 +149,17 @@ class Controller
     public function verifUser()
     {
         $this->me = new User();
-        $this->me->authenticate();
+        $this->userContext->me->authenticate();
     }
 
     public function verifAdmin($authority_id = false)
     {
         $this->verifUser();
 
-        if (!$this->me->isAdmin()) {
+        if (!$this->userContext->me->isAdmin()) {
             $this->displayErrorAndExit("Accès refusé", "");
         } // @codeCoverageIgnore
-        if ($this->me->isSuper()) {
+        if ($this->userContext->me->isSuper()) {
             return;
         }
 
@@ -167,14 +167,14 @@ class Controller
             $authoritySQL = new AuthoritySQL($this->getSQLQuery());
             $info = $authoritySQL->getInfo($authority_id);
 
-            if ($this->me->isGroupAdmin()) {
-                if ($info['authority_group_id'] == $this->me->get("authority_group_id")) {
+            if ($this->userContext->me->isGroupAdmin()) {
+                if ($info['authority_group_id'] == $this->userContext->me->get("authority_group_id")) {
                     return;
                 }
                 $this->displayErrorAndExit("Accès refusé", "");
             } // @codeCoverageIgnore
 
-            if ($info['id'] == $this->me->get('authority_id')) {
+            if ($info['id'] == $this->userContext->me->get('authority_id')) {
                 return;
             }
             $this->displayErrorAndExit("Accès refusé", "");
@@ -184,14 +184,14 @@ class Controller
     public function verifGroupAdmin($authority_id)
     {
         $this->verifAdmin();
-        if ($this->me->isSuper()) {
+        if ($this->userContext->me->isSuper()) {
             return;
         }
 
-        if ($this->me->isGroupAdmin()) {
+        if ($this->userContext->me->isGroupAdmin()) {
             $authoritySQL = new AuthoritySQL($this->getSQLQuery());
             $info = $authoritySQL->getInfo($authority_id);
-            if ($info['authority_group_id'] == $this->me->get("authority_group_id")) {
+            if ($info['authority_group_id'] == $this->userContext->me->get("authority_group_id")) {
                 return;
             }
         }
@@ -207,7 +207,7 @@ class Controller
     public function verifSuperAdmin()
     {
         $this->verifAdmin();
-        if (!$this->me->isSuper()) {
+        if (!$this->userContext->me->isSuper()) {
             $this->redirect(WEBSITE_SSL, 'Accès refusé');
         } // @codeCoverageIgnore
     }
@@ -220,7 +220,7 @@ class Controller
 
         $doc->openContainer();
         $doc->openSideBar();
-        if ($this->me) {
+        if ($this->userContext->me) {
             $doc->buildMenu();
         }
 
@@ -313,7 +313,7 @@ class Controller
 
     public function log($message)
     {
-        Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, $this->me->get("role"), false, $this->me);
+        Log::newEntry(LOG_ISSUER_NAME, $message, 1, false, $this->userContext->me->get("role"), false, $this->userContext->me);
     }
 
     /**
@@ -326,6 +326,6 @@ class Controller
 
     public function getUser(): User
     {
-        return $this->me;
+        return $this->userContext->me;
     }
 }

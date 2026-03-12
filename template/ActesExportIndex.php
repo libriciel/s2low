@@ -20,7 +20,7 @@ $twig = new Environment($loader); ?>
 <div id="filtering-area">
     <h2>Filtrage</h2>
     <form class="form-horizontal" action="actes_export_handler.php">
-        <?php if ($this->me->isGroupAdminOrSuper()) : ?>
+        <?php if ($this->userContext->me->isGroupAdminOrSuper()) : ?>
             <div class="form-group">
                 <label for="authority_id" class="col-md-3 control-label">Collectivité</label>
                 <div class="col-md-3">

@@ -35,7 +35,7 @@ class ActesAPIController extends Controller
 
         $status_id = $this->getRecuperateurGet()->getInt('status_id');
 
-        $authority_id = intval($this->me->get('authority_id'));
+        $authority_id = intval($this->userContext->me->get('authority_id'));
 
         $nb_transactions = $this->getActesTransactionsSQL()->getNbByStatusAndAuthority($status_id, $authority_id);
 
@@ -59,7 +59,7 @@ class ActesAPIController extends Controller
         $min_submission_date = $this->getRecuperateurGet()->getDate('min_date');
         $max_submission_date = $this->getRecuperateurGet()->getDate('max_date');
 
-        $authority_id = intval($this->me->get('authority_id'));
+        $authority_id = intval($this->userContext->me->get('authority_id'));
 
         $transactions_list = $this->getActesTransactionsSQL()->getListByStatusAndAuthority(
             $status_id,
@@ -86,7 +86,7 @@ class ActesAPIController extends Controller
     {
         $this->verifUser();
 
-        $authority_id = intval($this->me->get('authority_id'));
+        $authority_id = intval($this->userContext->me->get('authority_id'));
         $list = $this->getActesTransactionsSQL()->listDocumentPrefectureNonLu($authority_id);
 
         echo json_encode($list);
@@ -96,7 +96,7 @@ class ActesAPIController extends Controller
     public function documentPrefectureMarkAsReadAction(): bool
     {
         $this->verifUser();
-        $authority_id = intval($this->me->get('authority_id'));
+        $authority_id = intval($this->userContext->me->get('authority_id'));
         $transaction_id = $this->getRecuperateurGet()->getInt('transaction_id');
         $this->getActesTransactionsSQL()->markAsRead($authority_id, $transaction_id);
         echo json_encode(['result' => 'ok']);
@@ -106,12 +106,12 @@ class ActesAPIController extends Controller
     public function nbCreatedActesByAuthorityGroupIdAndMonthAction(): bool
     {
         $this->verifAdmin();
-        $authority_id = intval($this->me->get('authority_id'));
+        $authority_id = intval($this->userContext->me->get('authority_id'));
         $authoritySQL = $this->getObjectInstancier()->get(AuthoritySQL::class);
         $authorityInfo = $authoritySQL->getInfo($authority_id);
         $authority_group_id = $authorityInfo['authority_group_id'];
 
-        if ($this->me->isSuper() && $this->getRecuperateurGet()->getInt('authority_group_id')) {
+        if ($this->userContext->me->isSuper() && $this->getRecuperateurGet()->getInt('authority_group_id')) {
             $authority_group_id = $this->getRecuperateurGet()->getInt('authority_group_id');
         }
 

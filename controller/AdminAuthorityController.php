@@ -47,10 +47,10 @@ class AdminAuthorityController extends Controller
         $this->verifAdmin();
 
         $authoritySQL = $this->getObjectInstancier()->get(AuthoritySQL::class);
-        if ($this->me->isSuper()) {
+        if ($this->userContext->me->isSuper()) {
             $authority_group_id = 0;
-        } elseif ($this->me->isGroupAdmin()) {
-            $authority_group_id = $this->me->get('authority_group_id');
+        } elseif ($this->userContext->me->isGroupAdmin()) {
+            $authority_group_id = $this->userContext->me->get('authority_group_id');
         } else {
             $this->redirect(
                 "/admin/authorities/admin_authorities.php",

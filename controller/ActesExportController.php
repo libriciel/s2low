@@ -25,12 +25,12 @@ class ActesExportController extends Controller
         $date_fin = $this->getRecuperateurGet()->get('date_fin');
         $this->authority_id = $this->getRecuperateurGet()->get('authority_id');
 
-        if ($this->me->isSuper()) {
+        if ($this->userContext->me->isSuper()) {
             $this->authority_id_list = $authoritySQL->getAll();
-        } elseif ($this->me->isGroupAdmin()) {
-            $this->authority_id_list = $authoritySQL->getAllGroup($this->me->get('authority_group_id'));
+        } elseif ($this->userContext->me->isGroupAdmin()) {
+            $this->authority_id_list = $authoritySQL->getAllGroup($this->userContext->me->get('authority_group_id'));
         } else {
-            $this->authority_id = $this->me->get('authority_id');
+            $this->authority_id = $this->userContext->me->get('authority_id');
         }
 
         $this->date_debut = $date_debut ?: date("Y-m-d", strtotime("-1 month"));
@@ -55,15 +55,15 @@ class ActesExportController extends Controller
         }
         $authority_group_id = false;
 
-        if ($this->me->isGroupAdmin()) {
+        if ($this->userContext->me->isGroupAdmin()) {
             if ($authority_id) {
                 $this->verifAdmin($authority_id);
             } else {
-                $authority_group_id = $this->me->get('authority_group_id');
+                $authority_group_id = $this->userContext->me->get('authority_group_id');
             }
         }
-        if ($this->me->isAuthorityAdmin()) {
-            $authority_id = $this->me->get('authority_id');
+        if ($this->userContext->me->isAuthorityAdmin()) {
+            $authority_id = $this->userContext->me->get('authority_id');
         }
 
         $result = array();

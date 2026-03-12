@@ -77,9 +77,9 @@ use S2lowLegacy\Class\DatePicker;
                 />
             </div>
         </div>
-        <?php if ($this->me->isAdmin()) : ?>
+        <?php if ($this->userContext->me->isAdmin()) : ?>
             <div class="form-group">
-                <?php   if ($this->me->isGroupAdminOrSuper()) : ?>
+                <?php   if ($this->userContext->me->isGroupAdminOrSuper()) : ?>
                     <label for="collectivity-choice" class="col-md-3 control-label">Collectivité</label>
                     <div class="col-md-3">
                         <select name="authority" class="form-control">

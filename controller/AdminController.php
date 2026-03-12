@@ -193,8 +193,8 @@ class AdminController extends Controller
         $this->taille_page =  $recuperateur->getInt('count', 10);
 
 
-        $user_authority_group_id = $this->me->get('authority_group_id');
-        if ($this->me->isGroupAdmin()) {
+        $user_authority_group_id = $this->userContext->me->get('authority_group_id');
+        if ($this->userContext->me->isGroupAdmin()) {
             $this->fgroup = $user_authority_group_id;
         }
 
@@ -214,9 +214,9 @@ class AdminController extends Controller
 
         $this->setViewParameter('side_bar', $pagerHTML->getHTML($this->page_number, $nb_authorities, $this->taille_page));
 
-        if ($this->me->isGroupAdmin()) {
+        if ($this->userContext->me->isGroupAdmin()) {
             $userSQL = new UserSQL($this->getSQLQuery());
-            $group_name = $userSQL->getGroupeName($this->me->getId());
+            $group_name = $userSQL->getGroupeName($this->userContext->me->getId());
             $this->setViewParameter('titre', "Gestion des collectivités du groupe $group_name");
             $this->groupe_list = [];
         } else {
@@ -256,7 +256,7 @@ class AdminController extends Controller
         $titre = $recuperateur->get('titre');
         $message = $recuperateur->get('message');
         $niveau = $recuperateur->get('niveau');
-        $user_id = $this->me->getId();
+        $user_id = $this->userContext->me->getId();
         $message_id = $this->getMessageAdminSQL()->edit($message_id, $titre, $message, $user_id, $niveau);
         $this->redirect("/admin/message/detail.php?message_id=$message_id");
     }
@@ -269,7 +269,7 @@ class AdminController extends Controller
         $this->verifSuperAdmin();
         $recuperateur = $this->getRecuperateurGet();
         $message_id = $recuperateur->getInt('message_id');
-        $user_id = $this->me->getId();
+        $user_id = $this->userContext->me->getId();
         $this->getMessageAdminSQL()->publier($message_id, $user_id);
         $this->redirect("/admin/message/detail.php?message_id=$message_id");
     }
@@ -282,7 +282,7 @@ class AdminController extends Controller
         $this->verifSuperAdmin();
         $recuperateur = $this->getRecuperateurGet();
         $message_id = $recuperateur->getInt('message_id');
-        $user_id = $this->me->getId();
+        $user_id = $this->userContext->me->getId();
         $this->getMessageAdminSQL()->retirer($message_id, $user_id);
         $this->redirect("/admin/message/detail.php?message_id=$message_id");
     }

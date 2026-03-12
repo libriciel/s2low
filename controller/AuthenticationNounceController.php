@@ -36,7 +36,7 @@ class AuthenticationNounceController extends Controller
             return false;
         }
 
-        $authority_id = $this->me->get('authority_id');
+        $authority_id = $this->userContext->me->get('authority_id');
         $nounce = $this->nounceSQL->create(
             $this->environnement->server()->get('PHP_AUTH_USER'),
             $this->environnement->server()->get('PHP_AUTH_PW'),

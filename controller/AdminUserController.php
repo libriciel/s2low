@@ -130,7 +130,7 @@ class AdminUserController extends Controller
     public function doEditAction()
     {
         $this->verifAdmin();
-        $my_user_id = $this->me->getId();
+        $my_user_id = $this->userContext->me->getId();
 
         $api = $this->getEnvironnement()->post()->get('api');
         /** @var string $id */
@@ -378,7 +378,7 @@ class AdminUserController extends Controller
         if (! is_numeric($user_id)) {
             $this->redirect("/");
         }
-        if (!$this->me->canEditUser($user_id)) {
+        if (!$this->userContext->me->canEditUser($user_id)) {
             $this->redirect("/");
         }
 
@@ -395,7 +395,7 @@ class AdminUserController extends Controller
 
         $this->title = "Utilisateurs partageant le même certificat";
 
-        $this->status_type_list = $this->me->get("statusTypes");
+        $this->status_type_list = $this->userContext->me->get("statusTypes");
         $this->roles_type_list = User::ROLES_DESCR;
     }
 

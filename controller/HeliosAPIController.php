@@ -21,12 +21,12 @@ class HeliosAPIController extends Controller
     public function nbCreatedPesAllerByAuthorityGroupIdAndMonthAction(): bool
     {
         $this->verifAdmin();
-        $authority_id = intval($this->me->get("authority_id"));
+        $authority_id = intval($this->userContext->me->get("authority_id"));
         $authoritySQL = $this->getObjectInstancier()->get(AuthoritySQL::class);
         $authorityInfo = $authoritySQL->getInfo($authority_id);
         $authority_group_id = $authorityInfo['authority_group_id'];
 
-        if ($this->me->isSuper() && $this->getRecuperateurGet()->getInt("authority_group_id")) {
+        if ($this->userContext->me->isSuper() && $this->getRecuperateurGet()->getInt("authority_group_id")) {
             $authority_group_id = $this->getRecuperateurGet()->getInt("authority_group_id");
         }
 

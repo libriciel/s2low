@@ -99,7 +99,7 @@ class HeliosSAEController extends Controller
 
         try {
             $failed = true;
-            if (!$this->me->isAdmin() && !$this->me->isArchivist()) {
+            if (!$this->userContext->me->isAdmin() && !$this->userContext->me->isArchivist()) {
                 throw new FailedControllerActionException('Accès refusé', WEBSITE_SSL);
             }
             $transaction_id = $this->getRecuperateurPost()->getInt('transaction_id');
@@ -114,7 +114,7 @@ class HeliosSAEController extends Controller
 
             $transaction_info = $heliosTransactionSQL->getInfo($transaction_id);
 
-            if ($this->me->isArchivist() && !$this->me->archivistCanAccess($transaction_info)) {
+            if ($this->userContext->me->isArchivist() && !$this->userContext->me->archivistCanAccess($transaction_info)) {
                 throw new FailedControllerActionException('Accès refusé', WEBSITE_SSL);
             }
 
@@ -122,7 +122,7 @@ class HeliosSAEController extends Controller
             if (!$status_info) {
                 throw new FailedControllerActionException("Cette transaction n'existe pas", '/',);
             }
-            if ($this->isActionPossible($status_info['status_id'], $status_id, $this->me->isArchivist())) {
+            if ($this->isActionPossible($status_info['status_id'], $status_id, $this->userContext->me->isArchivist())) {
                 $heliosTransactionSQL->updateStatus(
                     $transaction_id,
                     $status_id,

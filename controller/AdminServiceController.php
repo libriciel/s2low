@@ -24,7 +24,7 @@ class AdminServiceController extends Controller
         if ($authority_id) {
             $this->verifAdmin($authority_id);
         } else {
-            $authority_id = $this->me->get('authority_id');
+            $authority_id = $this->userContext->me->get('authority_id');
         }
 
         $url_redirect = self::ADMIN_SERVICE_URL . "?authority_id=$authority_id";

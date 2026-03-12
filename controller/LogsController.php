@@ -109,7 +109,7 @@ class LogsController extends Controller
             }
 
             $this->fancyDate = new FancyDate();
-            $this->has_pending_logs_request =  $this->getLogsRequestSQL()->hasPendingRequest($this->me->get('id'));
+            $this->has_pending_logs_request =  $this->getLogsRequestSQL()->hasPendingRequest($this->userContext->me->get('id'));
 
             $this->setViewParameter('template_milieu', __DIR__ . "/../template/LogsCreateRequest.php");
             return;
@@ -121,25 +121,25 @@ class LogsController extends Controller
         $visibility = false;
         $authority_id = false;
 
-        if ($this->me->isSuper()) {
+        if ($this->userContext->me->isSuper()) {
             $this->authorities_list = $authoritySQL->getAll();
             $authority_id = $this->fauthority;
-        } elseif ($this->me->isGroupAdmin()) {
+        } elseif ($this->userContext->me->isGroupAdmin()) {
             $groupSQL = new GroupSQL($this->getSQLQuery());
-            $groupe_info = $groupSQL->getInfo($this->me->get("authority_group_id"));
+            $groupe_info = $groupSQL->getInfo($this->userContext->me->get("authority_group_id"));
             $h1_title .= " du groupe «&nbsp;{$groupe_info['name']}&nbsp;»";
-            $this->authorities_list = $authoritySQL->getAllGroup($this->me->get("authority_group_id"));
-            $authority_group_id = $this->me->get("authority_group_id");
+            $this->authorities_list = $authoritySQL->getAllGroup($this->userContext->me->get("authority_group_id"));
+            $authority_group_id = $this->userContext->me->get("authority_group_id");
             $authority_id = $this->fauthority;
             $visibility = array('GADM','ADM','USER');
-        } elseif ($this->me->isAuthorityAdmin()) {
-            $authority_info = $authoritySQL->getInfo($this->me->get('authority_id'));
+        } elseif ($this->userContext->me->isAuthorityAdmin()) {
+            $authority_info = $authoritySQL->getInfo($this->userContext->me->get('authority_id'));
             $h1_title .= " de la collectivité «&nbsp;{$authority_info['name']}&nbsp;»";
             $this->authorities_list = array();
-            $authority_id = $this->me->get('authority_id');
+            $authority_id = $this->userContext->me->get('authority_id');
             $visibility = array('ADM','USER');
         } else {
-            $user_id = $this->me->get('id');
+            $user_id = $this->userContext->me->get('id');
             $visibility = array('USER');
         }
         $this->h1_title = $h1_title;
@@ -148,13 +148,13 @@ class LogsController extends Controller
         $this->userSQL = new UserSQL($this->getSQLQuery());
 
 
-        $this->has_logs_request = $this->getLogsRequestSQL()->hasRequest($this->me->get('id'));
+        $this->has_logs_request = $this->getLogsRequestSQL()->hasRequest($this->userContext->me->get('id'));
 
         $logsSQL = new LogsSQL($this->getSQLQuery());
         $offset = ($this->page_number - 1) * $this->taille_page;
         $this->logs_list = $logsSQL->getList($authority_group_id, $authority_id, $user_id, $this->fuser, $this->fmodule, $this->fseverity, $this->fmessage, $visibility, $offset, $this->taille_page, $this->date_debut, $this->date_fin);
 
-        if ($this->me->isSuper()) {
+        if ($this->userContext->me->isSuper()) {
             $nb_logs = ($this->page_number + 10) * $this->taille_page;
         } else {
             $nb_logs = $logsSQL->getNbLog($authority_group_id, $authority_id, $user_id, $this->fuser, $this->fmodule, $this->fseverity, $this->fmessage, $visibility, $this->date_debut, $this->date_fin);
@@ -177,7 +177,7 @@ class LogsController extends Controller
         $this->verifUser();
 
 
-        if ($this->getLogsRequestSQL()->hasPendingRequest($this->me->get('id'))) {
+        if ($this->getLogsRequestSQL()->hasPendingRequest($this->userContext->me->get('id'))) {
             $this->setErrorMessage("Une requête est déjà en cours.");
             $this->redirect("/common/logs_request_view.php");
         }
@@ -190,16 +190,16 @@ class LogsController extends Controller
 
         $logsRequestData->date_debut = $recuperateur->get("date_debut");
         $logsRequestData->date_fin =  $recuperateur->get("date_fin", date("Y-m-d"));
-        $logsRequestData->user_id_demandeur = $this->me->get('id');
+        $logsRequestData->user_id_demandeur = $this->userContext->me->get('id');
 
 
-        if ($this->me->isSuper()) {
-        } elseif ($this->me->isGroupAdmin()) {
-            $logsRequestData->authority_group_id = $this->me->get('authority_group_id');
-        } elseif ($this->me->isAuthorityAdmin()) {
-            $logsRequestData->authority_id = $this->me->get('authority_id');
+        if ($this->userContext->me->isSuper()) {
+        } elseif ($this->userContext->me->isGroupAdmin()) {
+            $logsRequestData->authority_group_id = $this->userContext->me->get('authority_group_id');
+        } elseif ($this->userContext->me->isAuthorityAdmin()) {
+            $logsRequestData->authority_id = $this->userContext->me->get('authority_id');
         } else {
-            $logsRequestData->user_id = $this->me->get('id');
+            $logsRequestData->user_id = $this->userContext->me->get('id');
         }
 
         $this->getLogsRequestSQL()->newRequest($logsRequestData);
@@ -211,7 +211,7 @@ class LogsController extends Controller
     public function requestViewAction()
     {
         $this->verifUser();
-        $this->logs_request_list = $this->getLogsRequestSQL()->getAllByUser($this->me->get('id'));
+        $this->logs_request_list = $this->getLogsRequestSQL()->getAllByUser($this->userContext->me->get('id'));
         $this->fancyDate = new FancyDate();
     }
 
@@ -220,7 +220,7 @@ class LogsController extends Controller
         $recuperateur = $this->getRecuperateurGet();
         $id = $recuperateur->get('id');
         $this->verifUser();
-        $this->getLogsRequestSQL()->delete($id, $this->me->get('id'));
+        $this->getLogsRequestSQL()->delete($id, $this->userContext->me->get('id'));
         $this->setMessage("La demande a été supprimée");
         $this->redirect("/common/logs_request_view.php");
     }
@@ -232,7 +232,7 @@ class LogsController extends Controller
         $this->verifUser();
 
         $info = $this->getLogsRequestSQL()->getInfo($id);
-        if ($info['user_id_demandeur'] != $this->me->get('id')) {
+        if ($info['user_id_demandeur'] != $this->userContext->me->get('id')) {
             $this->redirect("/common/logs_request_view.php");
         }
 
