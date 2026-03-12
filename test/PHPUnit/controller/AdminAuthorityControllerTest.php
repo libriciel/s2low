@@ -3,6 +3,7 @@
 use IntegrationTests\S2lowIntegrationTestCase;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesConventions;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Controller\AdminAuthorityController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\ObjectInstancier;
@@ -102,6 +103,7 @@ class AdminAuthorityControllerTest extends S2lowIntegrationTestCase
     {
         return new AdminAuthorityController(
             self::getContainer()->get(ObjectInstancier::class),
+            self::getContainer()->get(UserContext::class)
         );
     }
 }

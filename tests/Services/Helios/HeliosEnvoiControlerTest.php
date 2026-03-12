@@ -21,6 +21,7 @@ use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Class\helios\HeliosTransmissionWindowsSQL;
 use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Controller\HeliosController;
@@ -596,7 +597,8 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
         return new HeliosController(
             $this->getLocalFileResolver(),
             self::getContainer()->get('app.store.file.pes_aller'),
-            self::getContainer()->get(ObjectInstancier::class)
+            self::getContainer()->get(ObjectInstancier::class),
+            self::getContainer()->get(UserContext::class)
         );
     }
 }

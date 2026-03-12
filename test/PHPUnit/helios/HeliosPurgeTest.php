@@ -11,6 +11,7 @@ use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu;
 use S2lowLegacy\Class\helios\HeliosFilesFactory;
 use S2lowLegacy\Class\helios\HeliosPurge;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Controller\HeliosController;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
@@ -43,6 +44,7 @@ class HeliosPurgeTest extends S2lowIntegrationTestCase
             $this->localFileResolver,
             self::getContainer()->get('app.store.file.pes_aller'),
             self::getContainer()->get(ObjectInstancier::class),
+            self::getContainer()->get(UserContext::class)
         );
 
         $this->heliosFilesFactory = new HeliosFilesFactory(

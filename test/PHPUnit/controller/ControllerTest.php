@@ -3,6 +3,7 @@
 use IntegrationTests\S2lowIntegrationTestCase;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\Authentification;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Controller\Controller;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\ObjectInstancier;
@@ -282,6 +283,7 @@ class ControllerTest extends S2lowIntegrationTestCase
 
         $controller = new Controller(
             $objectInstancierMocked,
+            self::getContainer()->get(UserContext::class)
         );
         $controller->verifAdmin(1);
     }

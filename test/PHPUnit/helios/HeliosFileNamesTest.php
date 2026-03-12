@@ -8,6 +8,7 @@ use S2low\Enum\UserRole;
 use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu;
 use S2lowLegacy\Class\helios\HeliosFilesFactory;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Controller\HeliosController;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
@@ -51,6 +52,7 @@ class HeliosFileNamesTest extends S2lowIntegrationTestCase
             $this->localFileResolver,
             self::getContainer()->get('app.store.file.pes_aller'),
             self::getContainer()->get(ObjectInstancier::class),
+            self::getContainer()->get(UserContext::class)
         );
         $this->heliosAnalyseFichierRecu = self::getContainer()->get(HeliosAnalyseFichierRecu::class);
     }

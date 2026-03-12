@@ -8,6 +8,7 @@ use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Lib\JSONoutput;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\Recuperateur;
@@ -22,9 +23,9 @@ class AdminUserController extends Controller
      */
     private $userSQL;
 
-    public function __construct(ObjectInstancier $objectInstancier)
+    public function __construct(ObjectInstancier $objectInstancier, UserContext $userContext)
     {
-        parent::__construct($objectInstancier);
+        parent::__construct($objectInstancier, $userContext);
         $this->userSQL = new UserSQL($this->getSQLQuery());
     }
 

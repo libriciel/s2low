@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Controller;
 
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Model\NounceSQL;
@@ -13,10 +14,11 @@ class AuthenticationNounceController extends Controller
 
     public function __construct(
         ObjectInstancier $objectInstancier,
+        UserContext $userContext
     ) {
         $this->nounceSQL = $objectInstancier->get(NounceSQL::class);
         $this->environnement = $objectInstancier->get(Environnement::class);
-        parent::__construct($objectInstancier);
+        parent::__construct($objectInstancier, $userContext);
     }
 
     public function _actionAfter()

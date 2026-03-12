@@ -6,6 +6,7 @@ use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorable;
 use S2lowLegacy\Class\mailsec\MailTransactionSQL;
 use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Controller\MailsecDownloadController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\ObjectInstancier;
@@ -225,7 +226,8 @@ class MailsecDownloadControllerTest extends S2lowTestCase
         return new MailsecDownloadController(
             self::getContainer()->get(ObjectInstancier::class),
             $localMailResolver,
-            $cloudStoreMailSec
+            $cloudStoreMailSec,
+            self::getContainer()->get(UserContext::class)
         );
     }
 }

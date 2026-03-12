@@ -24,20 +24,12 @@ class Controller
     protected $me;
 
     private $viewParameter;
-
-    /**
-     * @var ObjectInstancier
-     */
-    private $objectInstancier;
-
-
     private $files;
-    private UserContext $userContext;
 
-    public function __construct(ObjectInstancier $objectInstancier)
-    {
-        $this->objectInstancier = $objectInstancier;
-        $this->userContext = $objectInstancier->get(UserContext::class);
+    public function __construct(
+        private readonly ObjectInstancier $objectInstancier,
+        protected readonly UserContext $userContext
+    ) {
         $this->viewParameter = array();
     }
 

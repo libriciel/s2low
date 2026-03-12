@@ -6,6 +6,7 @@ use S2low\Enum\UserRole;
 use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\RgsConnexion;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Controller\HeliosController;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
@@ -319,7 +320,8 @@ class HeliosControllerTest extends S2lowIntegrationTestCase
         return new HeliosController(
             $this->getLocalFileResolver(),
             self::getContainer()->get('app.store.file.pes_aller'),
-            self::getContainer()->get(ObjectInstancier::class)
+            self::getContainer()->get(ObjectInstancier::class),
+            self::getContainer()->get(UserContext::class),
         );
     }
 }

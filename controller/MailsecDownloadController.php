@@ -8,6 +8,7 @@ use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\mailsec\MailIncludedFilesCloudStorage;
 use S2lowLegacy\Class\mailsec\MailTransactionSQL;
 use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Lib\UnrecoverableException;
@@ -24,8 +25,9 @@ class MailsecDownloadController extends Controller
         private readonly LocalFileResolver $localMailSecResolver,
         #[Autowire(service: 'app.store.file.mailsec')]
         private readonly CloudFileStorageInterface $cloudStoreMailSec,
+        UserContext $userContext
     ) {
-        parent::__construct($objectInstancier);
+        parent::__construct($objectInstancier, $userContext);
     }
 
 

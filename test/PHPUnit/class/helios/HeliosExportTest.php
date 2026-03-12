@@ -4,6 +4,7 @@ use S2low\Services\CloudFileStorage;
 use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\helios\HeliosExport;
 use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Controller\HeliosController;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
@@ -70,6 +71,7 @@ class HeliosExportTest extends S2lowTestCase
             $localFileResolver,
             $storePesAller,
             self::getContainer()->get(ObjectInstancier::class),
+            self::getContainer()->get(UserContext::class),
         );
     }
 }

@@ -13,6 +13,7 @@ use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Class\User;
+use S2lowLegacy\Class\UserContext;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Model\AuthoritySiretSQL;
@@ -34,9 +35,10 @@ class HeliosController extends Controller
         private readonly LocalFileResolver $pesAllerResolver,
         #[Autowire(service: 'app.store.file.pes_aller')]
         private readonly CloudFileStorageInterface $cloudPesAllerStorage,
-        ObjectInstancier $objectInstancier
+        ObjectInstancier $objectInstancier,
+        UserContext $userContext
     ) {
-        parent::__construct($objectInstancier);
+        parent::__construct($objectInstancier, $userContext);
         $this->setHeliosMaxUploadSize(HELIOS_MAX_UPLOAD_SIZE);
     }
 
