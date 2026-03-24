@@ -45,6 +45,9 @@ class S2lowIntegrationTestCase extends WebTestCase
     protected PemCertificateFactory $pemCertificateFactory;
     protected PemCertificate $fixtureCertificate;
     protected KernelBrowser $client;
+    protected SQLQuery $sqlQuery;
+    protected string $tmpPathFolder;
+    protected string $projectDir;
 
     /**
      * @param int|string $dataName

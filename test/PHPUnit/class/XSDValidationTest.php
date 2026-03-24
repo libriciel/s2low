@@ -20,8 +20,10 @@ class XSDValidationTest extends PHPUnit_Framework_TestCase
     }
 
     //http://stackoverflow.com/questions/29953032/large-number-failing-validation-as-type-xsinteger
-    public function testBigInt()
+    public function testBigInt(): void
     {
-        $this->assertFalse(@ $this->xsdValidation->validate(file_get_contents(__DIR__ . "/fixtures/bigint.xml")));
+        $this->assertTrue(
+            $this->xsdValidation->validate(file_get_contents(__DIR__ . "/fixtures/bigint.xml"))
+        );
     }
 }

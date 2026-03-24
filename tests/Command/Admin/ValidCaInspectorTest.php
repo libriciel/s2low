@@ -20,7 +20,7 @@ class ValidCaInspectorTest extends KernelTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute([
             // pass arguments to the helper
-            'validca_dir' => '/etc/s2low/ssl/validca/',
+            'validca_dir' => '/data/certificates/_validca/validca/',
 
             // prefix the key with two dashes when passing options,
             // e.g: '--some-option' => 'option_value',

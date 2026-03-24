@@ -22,7 +22,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
         $client = $this->client;
         $this->setUserWithRole(UserRole::SuperAdministrateur);
 
-        $_GET = ['name' => 'ac-libriciel-personnel-g2.pem'];// 2/ Le client symfony ne modifie pas la variable _SERVER
+        $_GET = ['name' => 'ac-libriciel-personnel-g2-split1.pem'];// 2/ Le client symfony ne modifie pas la variable _SERVER
         $crawler = $client->request('GET', 'admin/utilities/certificate.php');
         static::assertMatchesRegularExpression(     //Un certificat est bien renvoyé
             '#-----BEGIN CERTIFICATE-----#',
@@ -78,7 +78,7 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
 
         $crawler = $client->request('GET', 'admin/utilities/certificate_list.php');
         static::assertMatchesRegularExpression(     //L'AC personnel ADULLACT G2 est bien présent'
-            '#ac-libriciel-personnel-g2.pem#',
+            '#ac-libriciel-personnel-g2(.*).pem#',
             $crawler->html()
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
