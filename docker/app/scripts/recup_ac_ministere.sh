@@ -8,7 +8,6 @@ then
 	exit 1;
 fi
 
-
 if [[ $1 != /* ]] || [[ $1 != /* ]];
 then
 	echo "Erreur : Les chemins des répertoires doivent être absolus";

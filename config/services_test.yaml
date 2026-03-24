@@ -1,8 +1,8 @@
 parameters:
-  app.database_name: '%env(POSTGRES_DATABASE_TEST)%'
-  app.database_host: '%env(POSTGRES_HOST_TEST)%'
-  app.database_login: '%env(POSTGRES_USER_TEST)%'
-  app.database_password: '%env(POSTGRES_PASSWORD_TEST)%'
+  app.database_host: '%env(DATABASE_HOST_TEST)%'
+  app.database_login: '%env(DATABASE_USER_TEST)%'
+  app.database_password: '%env(DATABASE_PASSWORD_TEST)%'
+  app.database_name: '%env(DATABASE_NAME_TEST)%'
   app.cloud.parameters.endpoint: ''
   app.cloud.parameters.credential.key: ''
   app.cloud.parameters.credential.secret: ''

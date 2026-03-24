@@ -8,9 +8,9 @@ cat <<EOF
 <?php
 
 define("USE_PROD_NOTIFICATIONS",${USE_PROD_NOTIFICATIONS:-false});
-define("WEBSITE","http://${S2LOW_WEBSITE:-s2low.docker.libriciel.fr}${WEB_HTTP_PORT/$WEB_HTTP_PORT/:}${WEB_HTTP_PORT:-}${S2LOW_URL_PATH:-}/");
-define("WEBSITE_SSL","https://${S2LOW_WEBSITE:-s2low.docker.libriciel.fr}${WEB_HTTPS_PORT/$WEB_HTTPS_PORT/:}${WEB_HTTPS_PORT:-}${S2LOW_URL_PATH:-}/");
-define("WEBSITE_MAIL","https://${S2LOW_WEBSITE_MAIL:-mail.s2low.docker.libriciel.fr}${WEB_HTTPS_PORT/$WEB_HTTPS_PORT/:}${WEB_HTTPS_PORT:-}/");
+define("WEBSITE","http://${APP_HOST}${HTTP_PORT/$HTTP_PORT/:}${HTTP_PORT:-}/");
+define("WEBSITE_SSL","https://${APP_HOST}${HTTPS_PORT/$HTTPS_PORT/:}${HTTPS_PORT:-}/");
+define("WEBSITE_MAIL","https://${MAILSEC_HOST}${HTTPS_PORT/$HTTPS_PORT/:}${HTTPS_PORT:-}/");
 define("OPERATEUR_DE_TELETRANSMISSION","${OPERATEUR_DE_TELETRANSMISSION:-Libriciel SCOP}");
 define("IMAGE_FOR_STAMP","${IMAGE_FOR_STAMP:-/var/www/s2low/public.ssl/custom/images/s2low-stamp.png}");
 define('DB_HOST', "${POSTGRES_HOST:-db}");
@@ -114,8 +114,8 @@ define("MAIL_SECURE_DESCRIPTION","${MAIL_SECURE_DESCRIPTION}");
 define("MAIL_MESSAGE","${MAIL_MESSAGE:-Vous avez reçu un courrier recommandé par S2LOW}");
 define("MAIL_TEXT","${MAIL_TEXT:-Bonjour,
 
-Un courrier recommandé avec d’éventuelles pièces jointes vous a été transmis par la plateforme sécurisée de l’ADULLACT. 
-Nous vous proposons de cliquer sur le lien suivant pour accéder au courrier recommandé et confirmer la réception : 
+Un courrier recommandé avec d’éventuelles pièces jointes vous a été transmis par la plateforme sécurisée de l’ADULLACT.
+Nous vous proposons de cliquer sur le lien suivant pour accéder au courrier recommandé et confirmer la réception :
 accés au courrier recommandé.}");
 
 define("HELIOS_USE_PASSTRANS_AS_DEFAULT",${HELIOS_USE_PASSTRANS_AS_DEFAULT:-false});
