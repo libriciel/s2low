@@ -1,2 +1,0 @@
-#reinitialisation du compteur a 0 tous les jours
-0 0 * * * %USERNAME% echo '001' > /data/tdt-workspace/helios/counter.txt
