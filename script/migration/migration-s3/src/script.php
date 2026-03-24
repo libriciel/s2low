@@ -14,8 +14,7 @@ use App\Repository\ActesRepository;
 use App\Repository\MailSecRepository;
 use App\Repository\PesAcquitRepository;
 use App\Repository\PesRepository;
-use App\Service\TransactionSaver;
-use App\Service\UnfreezeFile;
+use App\Service\TransactionImportFromS2low;
 use Dotenv\Dotenv;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -113,19 +112,19 @@ $orchestrator->checkCloudConnections();
 
 
 
-    $acteSaver = new TransactionSaver(
+    $acteSaver = new TransactionImportFromS2low(
         $migrationActe,
         $selfDBConnexion
     );
-    $pesSaver = new TransactionSaver(
+    $pesSaver = new TransactionImportFromS2low(
         $migrationPes,
         $selfDBConnexion
     );
-    $pesAcquitSaver = new TransactionSaver(
+    $pesAcquitSaver = new TransactionImportFromS2low(
         $migrationPesAcquit,
         $selfDBConnexion
     );
-    $mailSaver = new TransactionSaver(
+    $mailSaver = new TransactionImportFromS2low(
         $migrationMail,
         $selfDBConnexion
     );
@@ -134,11 +133,16 @@ $orchestrator->checkCloudConnections();
     $pesSaver->run();
     $pesAcquitSaver->run();
     $mailSaver->run();
+
+
+
 //////////////
+///
+/// A ce stade toutes les transactions sont en DB. IL faut maintenant les recuperer et le sauvegarder sur le nouveau s3
 //// UNFREEZE / CHECK EXIST
 
-$unfreezeActe = new UnfreezeFile();
-$unfreezeActe->run();
+//$unfreezeActe = new UnfreezeFile();
+//$unfreezeActe->run();
 
 ///////////
 //// DOWNLOAD / SET ERROR

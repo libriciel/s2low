@@ -14,6 +14,7 @@ use App\Migration\PesAcquitSource;
 use App\Migration\PesSource;
 use App\Repository\ActesRepository;
 use App\Repository\MailSecRepository;
+use App\Repository\PesAcquitRepository;
 use App\Repository\PesRepository;
 
 class MigrationOrchestrator
@@ -29,22 +30,22 @@ class MigrationOrchestrator
 
     public function runActes(): void
     {
-        $this->process(new ActesSource(new ActesRepository()));
+        $this->process(new ActesSource(new ActesRepository($this->s2lowDBConnexion)));
     }
 
     public function runHelios(): void
     {
-        $this->process(new PesSource(new PesRepository()));
+        $this->process(new PesSource(new PesRepository($this->s2lowDBConnexion)));
     }
 
     public function runHeliosAcquit(): void
     {
-        $this->process(new PesAcquitSource(new PesRepository()));
+        $this->process(new PesAcquitSource(new PesAcquitRepository($this->s2lowDBConnexion)));
     }
 
     public function runMail(): void
     {
-        $this->process(new MailSource(new MailSecRepository()));
+        $this->process(new MailSource(new MailSecRepository($this->s2lowDBConnexion)));
     }
 
     public function checkCloudConnections(): void
@@ -60,7 +61,7 @@ class MigrationOrchestrator
 
         if ($hasError) {
             echo "One or more connections failed." . PHP_EOL;
-            exit(1);
+            throw new \RuntimeException('Une connexion à échoué. Impossible de continuer.');
         }
 
         echo "All systems ready." . PHP_EOL;
@@ -68,15 +69,15 @@ class MigrationOrchestrator
 
     private function process(MigrationSourceInterface $source): void
     {
-//        $type = $source->getIdentifier();
-//        $lastId = $this->selfDBConnection->getLastProcessedId($type);
-//        echo "Starting $type migration from ID $lastId..." . PHP_EOL;
-//
-//        foreach ($source->getItems($lastId) as $item) {
-//            $this->processItem($type, $item);
-//        }
-//
-//        echo "Finished $type migration." . PHP_EOL;
+        $type = $source->getIdentifier();
+        $lastId = $this->selfDBConnection->getLastProcessedId($type);
+        echo "Starting $type migration from ID $lastId..." . PHP_EOL;
+
+        foreach ($source->getItems($lastId) as $item) {
+            $this->processItem($type, $item);
+        }
+
+        echo "Finished $type migration." . PHP_EOL;
     }
 
     private function processItem(string $type, MigrationItem $item): void

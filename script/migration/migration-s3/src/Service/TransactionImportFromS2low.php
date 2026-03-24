@@ -7,7 +7,7 @@ use App\DTO\MigrationItem;
 use App\Enum\Status;
 use App\Migration\MigrationSourceInterface;
 
-class TransactionSaver
+class TransactionImportFromS2low
 {
     const LIMIT = 1;
     public function __construct(

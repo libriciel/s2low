@@ -10,4 +10,6 @@ abstract class AbstractRepository
         protected S2lowDB $connexion
     ) {
     }
+
+    abstract public function getHandledTransactions($lastProcessedId);
 }

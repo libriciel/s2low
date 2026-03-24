@@ -29,7 +29,7 @@ class SelfDB
 
     public function isProcessed(string $type, int $s2lowId): bool
     {
-        $stmt = $this->connexion->prepare("SELECT 1 FROM migration_status WHERE type = ? AND s2low_id = ? AND status = 'done'");
+        $stmt = $this->connexion->prepare("SELECT 1 FROM migration_status WHERE type = ? AND s2low_id = ? AND status = " . Status::COMPLETED->value);
         $stmt->execute([$type, $s2lowId]);
         return (bool)$stmt->fetch();
     }
@@ -60,12 +60,12 @@ class SelfDB
         }
     }
 
-    public function setUnfreeze(?MigrationItem $transaction)
+    public function setUnfreeze(MigrationItem $transaction)
     {
         
     }
 
-    public function updateToError(?MigrationItem $transaction, string $getMessage)
+    public function updateToError(MigrationItem $transaction, string $getMessage)
     {
 
     }

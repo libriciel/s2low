@@ -5,7 +5,7 @@ namespace App\Migration;
 use App\DTO\MigrationItem;
 use App\Enum\Type;
 use App\Repository\PesRepository;
-use App\Service\TransactionSaver;
+use App\Service\TransactionImportFromS2low;
 use Generator;
 
 class PesSource implements MigrationSourceInterface
@@ -23,7 +23,7 @@ class PesSource implements MigrationSourceInterface
     public function getItems(int $lastProcessedId): Generator
     {
         while (true) {
-            $batch = $this->repository->getBatch($lastProcessedId, TransactionSaver::LIMIT);
+            $batch = $this->repository->getBatch($lastProcessedId, TransactionImportFromS2low::LIMIT);
             if (empty($batch)) {
                 break;
             }
@@ -39,5 +39,10 @@ class PesSource implements MigrationSourceInterface
                 $lastProcessedId = $item['id'];
             }
         }
+    }
+
+    public function getHandledTransactions(): Generator
+    {
+        // TODO: Implement getHandledTransactions() method.
     }
 }

@@ -5,7 +5,7 @@ namespace App\Migration;
 use App\DTO\MigrationItem;
 use App\Enum\Type;
 use App\Repository\PesAcquitRepository;
-use App\Service\TransactionSaver;
+use App\Service\TransactionImportFromS2low;
 use Generator;
 
 class PesAcquitSource implements MigrationSourceInterface
@@ -23,7 +23,7 @@ class PesAcquitSource implements MigrationSourceInterface
     public function getItems(int $lastProcessedId): Generator
     {
         while (true) {
-            $batch = $this->repository->getBatch($lastProcessedId, TransactionSaver::LIMIT);
+            $batch = $this->repository->getBatch($lastProcessedId, TransactionImportFromS2low::LIMIT);
             if (empty($batch)) {
                 break;
             }
@@ -39,5 +39,10 @@ class PesAcquitSource implements MigrationSourceInterface
                 $lastProcessedId = $item['id'];
             }
         }
+    }
+
+    public function getHandledTransactions(): Generator
+    {
+        // TODO: Implement getHandledTransactions() method.
     }
 }
