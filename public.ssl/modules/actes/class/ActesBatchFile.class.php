@@ -54,7 +54,7 @@ class ActesBatchFile extends DataObject
 
         if (isset($this->id)) {
             if (! $this->init()) {
-                unset($this->id);
+                $this->id = null;
             }
         }
     }

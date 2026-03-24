@@ -1,19 +1,46 @@
 DOCKER=docker
-PASTELL_PATH=/var/www/pastell
-EXEC_NODE=$(DOCKER) run --rm --volume ${PWD}:$(PASTELL_PATH) -it node:14-slim
-EXEC_COMPOSER=$(DOCKER) run --rm --volume ${PWD}:/app --volume ${HOME}/.composer:/tmp -it composer:2
-DOCKER_COMPOSE=docker compose -f docker-compose.yml -f docker-compose.test.yml -f docker-compose.dev.yml
-DOCKER_COMPOSE_EXEC=$(DOCKER_COMPOSE) exec web
-DOCKER_COMPOSE_UP=$(DOCKER_COMPOSE)  up -d
+DOCKER_COMPOSE=docker compose \
+-f compose.yaml \
+-f compose.dev.yaml \
+$(if $(wildcard compose.override.yaml),-f compose.override.yaml)
 
+IN_CONTAINER := $(shell [ -f /.dockerenv ] && echo 1 || echo 0)
 .DEFAULT_GOAL := help
 .PHONY: help
+
+ifneq ($(IN_CONTAINER),1)
+    DOCKER_COMPOSE_EXEC=$(DOCKER_COMPOSE) exec app
+    DOCKER_COMPOSE_RUN=$(DOCKER_COMPOSE) run --rm --entrypoint /bin/sh app
+    DOCKER_COMPOSE_UP=$(DOCKER_COMPOSE) up -d
+    WEBPACK_RUN=$(DOCKER_COMPOSE) run --rm webpack
+else
+	DOCKER_COMPOSE_EXEC=
+	DOCKER_COMPOSE_RUN=
+	DOCKER_COMPOSE_UP=
+	WEBPACK_RUN=
+endif
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
+env:
+ifeq ($(wildcard .env),)
+	cp .env.dev.example .env
+	sed -i "s/^DATABASE_PASSWORD=.*/DATABASE_PASSWORD=$(shell openssl rand -base64 32 | md5sum | cut -d' ' -f1)/" .env
+	sed -i "s/^DATABASE_PASSWORD_TEST=.*/DATABASE_PASSWORD_TEST=$(shell openssl rand -base64 32 | md5sum | cut -d' ' -f1)/" .env
+	sed -i "s/^APP_SECRET=.*/APP_SECRET=$(shell openssl rand -base64 32 | md5sum | cut -d' ' -f1)/" .env
+endif
+
 composer-install: ## Run composer install
-	$(EXEC_COMPOSER) composer install --ignore-platform-reqs
+	$(DOCKER_COMPOSE_RUN) -c "composer install"
+
+npm-install: ## Run npm install
+	$(WEBPACK_RUN) npm install
+
+webpack: ## Compile webpack assets
+	$(WEBPACK_RUN) npx webpack --config webpack.config.js
+
+install: composer-install npm-install webpack
 
 clean: ## Clear and remove dependencies
 	rm -rf  vendor
@@ -24,6 +51,12 @@ test: phpunit  ## Run all tests (code style, unit test, ...)
 
 docker-compose-up: ## Up all container
 	$(DOCKER_COMPOSE_UP)
+
+phpcs: docker-compose-up ## Check code style through docker-compose
+	$(DOCKER_COMPOSE_EXEC) phpcs
+
+phpcbf: docker-compose-up ## Fix all code style errors
+	$(DOCKER_COMPOSE_EXEC) phpcbf
 
 phpunit: docker-compose-up ## Run unit test through docker-compose
 	$(DOCKER_COMPOSE_EXEC) composer test
@@ -37,11 +70,13 @@ start:  ## Start all services
 stop: ## Stop all services
 	$(DOCKER_COMPOSE) down
 
-build: ## Build the container
+build-app: ## Build app container
+	$(DOCKER_COMPOSE) build app
+
+build-web: ## Build web container
 	$(DOCKER_COMPOSE) build web
 
-build-webpack: ## Build the node container
-	$(DOCKER_COMPOSE) build webpack
+build: build-app build-web ## Build containers
 
 bash: ## Get a bash console from the running "web" docker
 	$(DOCKER_COMPOSE) exec web bash
@@ -51,20 +86,6 @@ run: ## Get a bash console from a fresh container
 
 force-bash: ## Force a bash console without running the entrypoint
 	$(DOCKER_COMPOSE) run --entrypoint bash web
-
-phpcs: docker-compose-up ## Check code style through docker-compose
-	$(DOCKER_COMPOSE_EXEC) phpcs
-
-phpcbf: docker-compose-up ## Fix all code style errors
-	$(DOCKER_COMPOSE_EXEC) phpcbf
-
-npm-install: docker-compose-up ## Install npm modules
-	$(DOCKER_COMPOSE) run -it webpack npm install
-
-webpack: docker-compose-up ## Compile webpack assets
-	$(DOCKER_COMPOSE) run -it webpack npx webpack --config webpack.config.js
-
-install: composer-install npm-install webpack
 
 new-migration:
 	$(DOCKER_COMPOSE_EXEC) php bin/console doctrine:migrations:generate
