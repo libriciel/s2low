@@ -12,10 +12,10 @@ Le script utilise une base de données PostgreSQL locale (appelée `SelfDB`) pou
 ### Diagramme de flux
 
 ```mermaid
-graph TD
+flowchart TD
     S2LOW[(S2low DB)] -- "1. Import" --> HANDLE[Status: HANDLE]
     
-    subgraph "Pipeline de Migration (SelfDB)"
+    subgraph Pipeline ["Pipeline de Migration (SelfDB)"]
         HANDLE -- "2. Resolve" --> BUCKET_FOUND[Status: BUCKET_FOUND]
         HANDLE -- "Fichier non trouvé" --> NOT_FOUND[Status: NOT_FOUND]
         
@@ -25,10 +25,10 @@ graph TD
         DOWNLOADED -- "Erreur" --> ERROR[Status: ERROR / RETRY]
     end
     
-    BUCKET_FOUND -.-> OLD_S3((Old S3 Bucket))
-    DOWNLOADED -.-> DISK[/Local Disk Storage/]
-    COMPLETED -.-> NEW_S3((New S3 Bucket))
-    COMPLETED -.-> DELETE[/Delete Local File/]
+    BUCKET_FOUND -.-> OLD_S3((Old S3))
+    DOWNLOADED -.-> DISK[/Disque Local/]
+    COMPLETED -.-> NEW_S3((New S3))
+    COMPLETED -.-> DELETE[/Suppression fichier local/]
 ```
 
 ## Les États des Transactions
@@ -99,4 +99,4 @@ Cette approche garantit que même si le script s'arrête brutalement (crash du c
 
 - **Logs** : Les logs de sortie standard (stdout) indiquent chaque changement d'état.
 - **Espace Disque** : Monitorer le dossier `/data`. En mode daemon, il ne devrait jamais contenir plus d'un fichier à la fois (sauf pendant le transfert).
-- **Table `migration_s3`** : La colonne `last_error` contient le message d'erreur en cas d'échec d'une étape.
+- **Table `transactions`** : La colonne `last_error` contient le message d'erreur en cas d'échec d'une étape.

@@ -6,7 +6,7 @@ use PDO;
 
 class PesAcquitRepository extends AbstractRepository
 {
-    public function getBatch(int $lastId, int $limit, ?string $minDate = null): array
+    public function getBatch(int $lastId, int $limit, ?string $minDate = null, ?string $maxDate = null): array
     {
         $sql = "SELECT id, acquit_filename, siren, submission_date FROM helios_transactions 
                 WHERE id > ? AND pes_acquit_is_in_cloud = FALSE AND pes_acquit_not_available = FALSE AND acquit_filename IS NOT NULL ";
@@ -15,6 +15,11 @@ class PesAcquitRepository extends AbstractRepository
         if ($minDate) {
             $sql .= "AND submission_date >= ? ";
             $params[] = $minDate;
+        }
+
+        if ($maxDate) {
+            $sql .= "AND submission_date < ? ";
+            $params[] = $maxDate;
         }
 
         $sql .= "ORDER BY id ASC LIMIT ?";

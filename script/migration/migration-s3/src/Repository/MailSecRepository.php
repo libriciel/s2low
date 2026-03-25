@@ -11,7 +11,7 @@ class MailSecRepository extends AbstractRepository
      * @param int $limit
      * @return array Returns array of ['id' => int, 'fn_download' => string, 'siren' => string]
      */
-    public function getBatch(int $lastId, int $limit, ?string $minDate = null): array
+    public function getBatch(int $lastId, int $limit, ?string $minDate = null, ?string $maxDate = null): array
     {
         $sql = "SELECT mt.id, mt.fn_download, mt.date_envoi, a.siren 
                 FROM mail_transaction mt
@@ -23,6 +23,11 @@ class MailSecRepository extends AbstractRepository
         if ($minDate) {
             $sql .= "AND mt.date_envoi >= ? ";
             $params[] = $minDate;
+        }
+
+        if ($maxDate) {
+            $sql .= "AND mt.date_envoi < ? ";
+            $params[] = $maxDate;
         }
 
         $sql .= "ORDER BY mt.id ASC LIMIT ?";

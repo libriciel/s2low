@@ -20,10 +20,10 @@ class ActesSource implements MigrationSourceInterface
         return Type::ACTE->value;
     }
 
-    public function getItems(int $lastProcessedId, ?string $minDate = null): Generator
+    public function getItems(int $lastProcessedId, ?string $minDate = null, ?string $maxDate = null): Generator
     {
         while (true) {
-            $batch = $this->repository->getBatch($lastProcessedId, TransactionImportFromS2low::LIMIT, $minDate);
+            $batch = $this->repository->getBatch($lastProcessedId, TransactionImportFromS2low::LIMIT, $minDate, $maxDate);
             if (empty($batch)) {
                 break;
             }

@@ -21,7 +21,15 @@ class SelfDB
 
     public function getLastIdAtTypeAndStatus(string $type, Status $status): int
     {
-        $stmt = $this->connexion->prepare("SELECT MAX(s2low_id) as last_id FROM transactions WHERE type = ? AND status = '" . $status->value . "'");
+        $stmt = $this->connexion->prepare("SELECT MAX(s2low_id) as last_id FROM transactions WHERE type = ? AND status = ?");
+        $stmt->execute([$type, $status->value]);
+        $result = $stmt->fetch();
+        return $result['last_id'] ?? 0;
+    }
+
+    public function getLastId(string $type): int
+    {
+        $stmt = $this->connexion->prepare("SELECT MAX(s2low_id) as last_id FROM transactions WHERE type = ?");
         $stmt->execute([$type]);
         $result = $stmt->fetch();
         return $result['last_id'] ?? 0;
@@ -117,5 +125,21 @@ class SelfDB
     public function updateToError(MigrationItem $transaction, string $getMessage): void
     {
         $this->updateStatus($transaction, Status::ERROR, $getMessage);
+    }
+
+    public function resetErrors(?array $allowedTypes = null): int
+    {
+        $sql = "UPDATE transactions SET status = ? WHERE status = ?";
+        $params = [Status::HANDLE->value, Status::ERROR->value];
+
+        if ($allowedTypes && count($allowedTypes) > 0) {
+            $placeholders = implode(',', array_fill(0, count($allowedTypes), '?'));
+            $sql .= " AND type IN ({$placeholders})";
+            $params = array_merge($params, $allowedTypes);
+        }
+
+        $stmt = $this->connexion->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->rowCount();
     }
 }

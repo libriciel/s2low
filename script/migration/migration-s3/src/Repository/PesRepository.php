@@ -11,7 +11,7 @@ class PesRepository extends AbstractRepository
      * @param int $limit
      * @return array Returns array of ['id' => int, 'sha1' => string, 'filename' => string, 'siren' => string]
      */
-    public function getBatch(int $lastId, int $limit, ?string $minDate = null): array
+    public function getBatch(int $lastId, int $limit, ?string $minDate = null, ?string $maxDate = null): array
     {
         $sql = "SELECT id, sha1, filename, siren, submission_date FROM helios_transactions 
                 WHERE id > ? AND is_in_cloud = FALSE AND not_available = FALSE ";
@@ -20,6 +20,11 @@ class PesRepository extends AbstractRepository
         if ($minDate) {
             $sql .= "AND submission_date >= ? ";
             $params[] = $minDate;
+        }
+
+        if ($maxDate) {
+            $sql .= "AND submission_date < ? ";
+            $params[] = $maxDate;
         }
 
         $sql .= "ORDER BY id ASC LIMIT ?";

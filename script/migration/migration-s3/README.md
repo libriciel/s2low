@@ -44,7 +44,7 @@ Le script principal est `src/script.php`. Il a été réécrit pour utiliser un 
 
 **Syntaxe :**
 ```bash
-php src/script.php --step=<daemon|import|resolve|download|upload> [--min-date=YYYY-MM-DD] [--type=acte,pes_aller]
+php src/script.php --step=<daemon|import|resolve|download|upload> [--min-date=YYYY-MM-DD] [--max-date=YYYY-MM-DD] [--type=acte,pes_aller]
 ```
 
 **Options (Étape du pipeline) :**
@@ -55,9 +55,11 @@ php src/script.php --step=<daemon|import|resolve|download|upload> [--min-date=YY
 - `--step=upload` : Lance un lot d'envois manuel (`COMPLETED`).
 
 **Options de filtre :**
-- `--min-date` (ou `-m`) : Ne considérer que les transactions après une certaine date (Format `YYYY-MM-DD`).
+- `--min-date` (ou `-m`) : Ne considérer que les transactions après une certaine date inclusive (Format `YYYY-MM-DD`).
+- `--max-date` (ou `-M`) : Ne considérer que les transactions avant une certaine date inclusive (Format `YYYY-MM-DD`).
 - `--type` (ou `-t`) : Ne traiter que certains types de transactions. Valeurs séparées par des virgules.
   - Alias valides : `acte` (ou `actes`), `pes_aller` (ou `pes`), `pes_acquit` (ou `acquit`), `mail`.
+- `--retry-errors` (ou `-r`) : Repasse toutes les transactions en statut `ERROR` au statut `HANDLE` avant d'exécuter l'étape demandée. Pratique pour retester après un problème intermittent (ex: panne S3).
 
 **Exemples :**
 
@@ -71,9 +73,9 @@ php src/script.php --step=<daemon|import|resolve|download|upload> [--min-date=YY
    php src/script.php --step=daemon --type=acte,pes_aller
    ```
 
-3. Importer uniquement les actes depuis janvier 2023 :
+3. Importer uniquement les actes de janvier 2023 :
    ```bash
-   php src/script.php --step=import --type=acte --min-date=2023-01-01
+   php src/script.php --step=import --type=acte --min-date=2023-01-01 --max-date=2023-01-31
    ```
 
 4. Purger les fichiers locaux (upload ce qui est sur le disque) :

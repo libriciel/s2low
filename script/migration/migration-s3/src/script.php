@@ -26,17 +26,34 @@ $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();
 
 // Parse CLI Args
-$shortopts = "s:m:t:"; // -s step, -m min-date, -t type
+$shortopts = "s:m:M:t:r"; // -s step, -m min-date, -M max-date, -t type, -r retry-errors
 $longopts  = [
     "step:",
     "min-date:",
-    "type:"
+    "max-date:",
+    "type:",
+    "retry-errors"
 ];
 $options = getopt($shortopts, $longopts);
 
 $step = $options['step'] ?? $options['s'] ?? 'daemon';
 $minDate = $options['min-date'] ?? $options['m'] ?? null;
+$maxDate = $options['max-date'] ?? $options['M'] ?? null;
 $typeFilter = $options['type'] ?? $options['t'] ?? null;
+$retryErrors = isset($options['retry-errors']) || isset($options['r']);
+
+// Calculate inclusive limit for SQL comparison
+$maxDateLimit = null;
+if ($maxDate) {
+    try {
+        $dt = new DateTime($maxDate);
+        $dt->modify('+1 day');
+        $maxDateLimit = $dt->format('Y-m-d');
+    } catch (Exception $e) {
+        echo "Erreur format date: '$maxDate'. Utilisez YYYY-MM-DD." . PHP_EOL;
+        exit(1);
+    }
+}
 
 // -------------------------------------------------------------------------
 // TYPE FILTER : --type=acte,pes_aller,pes_acquit,mail
@@ -139,13 +156,23 @@ $downloader = new DownloadTransaction($selfDBConnexion, $oldS3);
 $uploader = new UploadTransaction($selfDBConnexion, $newS3);
 
 // -------------------------------------------------------------------------
+// RETRY ERRORS ?
+// -------------------------------------------------------------------------
+if ($retryErrors) {
+    echo "--- Retrying transactions in ERROR status ---" . PHP_EOL;
+    // We pass the type filter to resetErrors if provided
+    $count = $selfDBConnexion->resetErrors($allowedTypes);
+    echo "Done: $count transactions reset to HANDLE." . PHP_EOL;
+}
+
+// -------------------------------------------------------------------------
 // EXECUTION ROUTING
 // -------------------------------------------------------------------------
 
-function runImport(array $savers, ?string $minDate = null) {
+function runImport(array $savers, ?string $minDate = null, ?string $maxDateLimit = null) {
     echo "--- Starting IMPORT Stage ---" . PHP_EOL;
     foreach ($savers as $saver) {
-        $saver->run(null, $minDate);
+        $saver->run(null, $minDate, $maxDateLimit);
     }
     echo "--- Finished IMPORT Stage ---" . PHP_EOL;
 }
@@ -166,7 +193,7 @@ function runUpload(UploadTransaction $uploader) {
 }
 
 
-function runDaemon(\App\DatabaseAccess\SelfDB $db, UploadTransaction $uploader, DownloadTransaction $downloader, BucketResolver $resolver, array $savers, ?string $minDate = null, ?array $allowedTypes = null) {
+function runDaemon(\App\DatabaseAccess\SelfDB $db, UploadTransaction $uploader, DownloadTransaction $downloader, BucketResolver $resolver, array $savers, ?string $minDate = null, ?array $allowedTypes = null, ?string $maxDate = null) {
     echo "Starting Migration Daemon (Single File Workflow)... Press Ctrl+C to stop." . PHP_EOL;
     while (true) {
         // PRIORITE 1 : Uploader les restes (Crash Proof)
@@ -179,7 +206,7 @@ function runDaemon(\App\DatabaseAccess\SelfDB $db, UploadTransaction $uploader, 
         if (processNextResolve($db, $resolver, $allowedTypes)) continue;
 
         // PRIORITE 4 : Si le pipeline est vide, on cherche des nouvelles transactions
-        runImport($savers, $minDate);
+        runImport($savers, $minDate, $maxDate);
         sleep(2);
     }
 }
@@ -219,7 +246,7 @@ function processNextResolve(\App\DatabaseAccess\SelfDB $db, BucketResolver $reso
 
 switch ($step) {
     case 'import':
-        runImport($savers, $minDate);
+        runImport($savers, $minDate, $maxDateLimit);
         break;
     case 'resolve':
         runResolve($resolver);
@@ -231,7 +258,7 @@ switch ($step) {
         runUpload($uploader);
         break;
     case 'daemon':
-        runDaemon($selfDBConnexion, $uploader, $downloader, $resolver, $savers, $minDate, $allowedTypes);
+        runDaemon($selfDBConnexion, $uploader, $downloader, $resolver, $savers, $minDate, $allowedTypes, $maxDateLimit);
         break;
     default:
         echo "Invalid step. Choose: import, resolve, download, upload, or daemon." . PHP_EOL;
