@@ -30,10 +30,14 @@ class ConnexionSelfDBFactory
                 siren TEXT NOT NULL,
                 key TEXT NOT NULL,
                 bucket TEXT,
-                status TEXT NOT NULL CHECK(status IN ('" . Status::HANDLE->value . "', '" . Status::BUCKET_FOUND->value . "', '" . Status::ASK->value . "', '" . Status::DOWNLOADED->value . "', '" . Status::COMPLETED->value . "', '" . Status::ERROR->value . "')),
+                status TEXT NOT NULL CHECK(status IN ('" . Status::HANDLE->value . "', '" . Status::BUCKET_FOUND->value . "', '" . Status::ASK->value . "', '" . Status::RESTORING->value . "', '" . Status::DOWNLOADED->value . "', '" . Status::COMPLETED->value . "', '" . Status::ERROR->value . "')),
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 UNIQUE(type, s2low_id))
                 ");
+
+            // Indexes for 50M+ scale performance
+            $connexion->exec("CREATE INDEX IF NOT EXISTS idx_transactions_status_type ON transactions(status, type)");
+            $connexion->exec("CREATE INDEX IF NOT EXISTS idx_transactions_type_s2low_id ON transactions(type, s2low_id)");
         } catch (\PDOException $e) {
             throw new \Exception("Erreur PostgreSQL : " . $e->getMessage());
         }

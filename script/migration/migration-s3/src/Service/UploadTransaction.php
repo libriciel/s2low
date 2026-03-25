@@ -20,7 +20,9 @@ class UploadTransaction
     {
         $transactionsToUpload = $this->selfDB->getTransactionsByStatus(Status::DOWNLOADED, $limit);
 
-        echo ">>> [UploadTransaction] Found " . count($transactionsToUpload) . " transactions ready to upload." . PHP_EOL;
+        if (empty($transactionsToUpload)) {
+            return;
+        }
 
         foreach ($transactionsToUpload as $transaction) {
             $this->processUpload($transaction);
@@ -29,30 +31,22 @@ class UploadTransaction
 
     public function processUpload(MigrationItem $transaction): void
     {
-        echo "Processing upload for {$transaction->type} ID {$transaction->id} (Key: {$transaction->key})... ";
-
         $localPath = rtrim($this->tempDir, '/') . '/' . basename($transaction->key) . '-' . $transaction->id;
 
         if (!file_exists($localPath)) {
-            echo "FAILED (Local file missing: $localPath)." . PHP_EOL;
+            echo "[UP] {$transaction->type} #{$transaction->id} ERROR: file missing" . PHP_EOL;
             $this->selfDB->updateStatus($transaction, Status::ERROR, "Local downloaded file is missing.");
             return;
         }
 
-        // Le upload vers le nouveau bucket selon le type.
-        // NewS3 semble s'attendre au key, tmpPath et type
         $success = $this->newS3->upload($transaction->key, $localPath, $transaction->type);
 
         if ($success) {
-            echo "UPLOADED." . PHP_EOL;
-            
-            // Marquer dans Self DB comme COMPLETED
+            echo "[UP] {$transaction->type} #{$transaction->id} OK" . PHP_EOL;
             $this->selfDB->updateStatus($transaction, Status::COMPLETED);
-
-            // Supprimer le fichier temporaire
             unlink($localPath);
         } else {
-            echo "UPLOAD FAILED." . PHP_EOL;
+            echo "[UP] {$transaction->type} #{$transaction->id} ERROR: upload failed" . PHP_EOL;
             $this->selfDB->updateStatus($transaction, Status::ERROR, "Failed to upload to New S3");
         }
     }

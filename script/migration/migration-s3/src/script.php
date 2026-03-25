@@ -15,6 +15,7 @@ use App\Repository\PesAcquitRepository;
 use App\Repository\PesRepository;
 use App\Service\BucketResolver;
 use App\Service\DownloadTransaction;
+use App\Service\GlacierRestoreChecker;
 use App\Service\TransactionImportFromS2low;
 use App\Service\UploadTransaction;
 use Dotenv\Dotenv;
@@ -152,7 +153,10 @@ $resolver = new BucketResolver($selfDBConnexion, $oldS3);
 // 3. Download Handler
 $downloader = new DownloadTransaction($selfDBConnexion, $oldS3);
 
-// 4. Upload Handler
+// 4. Restore Handler
+$restoreChecker = new GlacierRestoreChecker($selfDBConnexion, $oldS3);
+
+// 5. Upload Handler
 $uploader = new UploadTransaction($selfDBConnexion, $newS3);
 
 // -------------------------------------------------------------------------
@@ -170,77 +174,74 @@ if ($retryErrors) {
 // -------------------------------------------------------------------------
 
 function runImport(array $savers, ?string $minDate = null, ?string $maxDateLimit = null) {
-    echo "--- Starting IMPORT Stage ---" . PHP_EOL;
     foreach ($savers as $saver) {
         $saver->run(null, $minDate, $maxDateLimit);
     }
-    echo "--- Finished IMPORT Stage ---" . PHP_EOL;
 }
 
 function runResolve(BucketResolver $resolver) {
-    echo "--- Starting RESOLVE Stage (Batch of 10) ---" . PHP_EOL;
     $resolver->run(10);
 }
 
 function runDownload(DownloadTransaction $downloader) {
-    echo "--- Starting DOWNLOAD Stage (Batch of 10) ---" . PHP_EOL;
     $downloader->run(10);
 }
 
 function runUpload(UploadTransaction $uploader) {
-    echo "--- Starting UPLOAD Stage (Batch of 10) ---" . PHP_EOL;
     $uploader->run(10);
 }
 
+function runCheckRestore(GlacierRestoreChecker $restoreChecker, ?array $allowedTypes = null) {
+    $restoreChecker->run(50, $allowedTypes);
+}
 
-function runDaemon(\App\DatabaseAccess\SelfDB $db, UploadTransaction $uploader, DownloadTransaction $downloader, BucketResolver $resolver, array $savers, ?string $minDate = null, ?array $allowedTypes = null, ?string $maxDate = null) {
-    echo "Starting Migration Daemon (Single File Workflow)... Press Ctrl+C to stop." . PHP_EOL;
+
+function runDaemon(\App\DatabaseAccess\SelfDB $db, UploadTransaction $uploader, DownloadTransaction $downloader, BucketResolver $resolver, array $savers, ?string $minDate = null, ?array $allowedTypes = null, ?string $maxDate = null, GlacierRestoreChecker $restoreChecker) {
+    echo "Starting Migration Daemon... Press Ctrl+C to stop." . PHP_EOL;
     while (true) {
-        // PRIORITE 1 : Uploader les restes (Crash Proof)
-        if (processPendingUpload($db, $uploader, $allowedTypes)) continue;
+        $didWork = false;
 
-        // PRIORITE 2 : Télécharger ceux qui ont trouvé leur bucket (HANDLE devenu BUCKET_FOUND)
-        if (processNextDownload($db, $downloader, $allowedTypes)) continue;
+        // PRIORITE 1 : Upload (1 fichier à la fois pour protéger le disque)
+        $pendingUploads = $db->getTransactionsByStatus(\App\Enum\Status::DOWNLOADED, 1, $allowedTypes);
+        if (!empty($pendingUploads)) {
+            $uploader->processUpload($pendingUploads[0]);
+            continue;
+        }
 
-        // PRIORITE 3 : Résoudre le bucket des nouveaux imports
-        if (processNextResolve($db, $resolver, $allowedTypes)) continue;
+        // PRIORITE 2 : Download (1 fichier à la fois pour protéger le disque)
+        $pendingDownloads = $db->getTransactionsByStatus(\App\Enum\Status::BUCKET_FOUND, 1, $allowedTypes);
+        if (!empty($pendingDownloads)) {
+            $downloader->processDownload($pendingDownloads[0]);
+            continue;
+        }
 
-        // PRIORITE 4 : Si le pipeline est vide, on cherche des nouvelles transactions
-        runImport($savers, $minDate, $maxDate);
-        sleep(2);
+        // PRIORITE 2bis : Legacy ASK -> RESTORING (batch de 100)
+        $pendingAsk = $db->getTransactionsByStatus(\App\Enum\Status::ASK, 100, $allowedTypes);
+        if (!empty($pendingAsk)) {
+            foreach ($pendingAsk as $item) {
+                $db->updateStatus($item, \App\Enum\Status::RESTORING);
+            }
+            $didWork = true;
+        }
+
+        // PRIORITE 3 : Resolve en batch (50 d'un coup)
+        $pendingResolves = $db->getTransactionsByStatus(\App\Enum\Status::HANDLE, 50, $allowedTypes);
+        if (!empty($pendingResolves)) {
+            foreach ($pendingResolves as $item) {
+                $resolver->processBucketResolve($item);
+            }
+            $didWork = true;
+        }
+
+        // PRIORITE 4 : Glacier check (batch 50)
+        $restoreChecker->run(50, $allowedTypes);
+
+        // PRIORITE 5 : Import si rien d'autre à faire
+        if (!$didWork) {
+            runImport($savers, $minDate, $maxDate);
+            sleep(2);
+        }
     }
-}
-
-function processPendingUpload(\App\DatabaseAccess\SelfDB $db, UploadTransaction $uploader, ?array $allowedTypes = null): bool {
-    $pendingUploads = $db->getTransactionsByStatus(\App\Enum\Status::DOWNLOADED, 1, $allowedTypes);
-    if (!empty($pendingUploads)) {
-        $uploader->processUpload($pendingUploads[0]);
-        return true; 
-    }
-    return false;
-}
-
-function processNextDownload(\App\DatabaseAccess\SelfDB $db, DownloadTransaction $downloader, ?array $allowedTypes = null): bool {
-    $pendingDownloads = $db->getTransactionsByStatus(\App\Enum\Status::BUCKET_FOUND, 1, $allowedTypes);
-    if (empty($pendingDownloads)) {
-        $pendingDownloads = $db->getTransactionsByStatus(\App\Enum\Status::ASK, 1, $allowedTypes);
-    }
-
-    if (!empty($pendingDownloads)) {
-        $downloader->processDownload($pendingDownloads[0]);
-        return true; 
-    }
-    return false;
-}
-
-function processNextResolve(\App\DatabaseAccess\SelfDB $db, BucketResolver $resolver, ?array $allowedTypes = null): bool {
-    $pendingResolves = $db->getTransactionsByStatus(\App\Enum\Status::HANDLE, 1, $allowedTypes);
-    
-    if (!empty($pendingResolves)) {
-        $resolver->processBucketResolve($pendingResolves[0]);
-        return true;
-    }
-    return false;
 }
 
 
@@ -257,8 +258,11 @@ switch ($step) {
     case 'upload':
         runUpload($uploader);
         break;
+    case 'check-restore':
+        runCheckRestore($restoreChecker, $allowedTypes);
+        break;
     case 'daemon':
-        runDaemon($selfDBConnexion, $uploader, $downloader, $resolver, $savers, $minDate, $allowedTypes, $maxDateLimit);
+        runDaemon($selfDBConnexion, $uploader, $downloader, $resolver, $savers, $minDate, $allowedTypes, $maxDateLimit, $restoreChecker);
         break;
     default:
         echo "Invalid step. Choose: import, resolve, download, upload, or daemon." . PHP_EOL;

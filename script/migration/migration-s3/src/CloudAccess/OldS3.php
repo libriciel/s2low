@@ -24,6 +24,10 @@ class OldS3
                 'key'    => $accessKey,
                 'secret' => $secretKey,
             ],
+            'http'    => [
+                'connect_timeout' => 10,
+                'timeout'         => 3600,
+            ],
         ]);
     }
 
@@ -43,19 +47,21 @@ class OldS3
 
             $storageClass = $meta['StorageClass'] ?? 'STANDARD';
             $restoreHeader = $meta['Restore'] ?? '';
+            $contentLength = $meta['ContentLength'] ?? 0;
 
             $result = [
                 'bucket' => $bucket,
                 'key' => $key,
                 'local_path' => $localPath,
-                'current_status' => 'autre'
+                'current_status' => 'autre',
+                'size' => $contentLength
             ];
 
-            // Vérification des classes d'archives (Glacier ou Deep Archive)
+            // ... (rest of the logic remains same, just adding more logs)
             $isArchived = in_array($storageClass, ['GLACIER', 'DEEP_ARCHIVE']);
 
             if ($isArchived) {
-                // Cas : Objet "gelé" (non restauré)
+                // ... (existing logic)
                 if (empty($restoreHeader)) {
                     if ($autoRestore) {
                         $this->client->restoreObject([
@@ -73,17 +79,13 @@ class OldS3
                     return $result;
                 }
 
-                // Cas : Restauration en cours (ongoing-request="true")
                 if (str_contains($restoreHeader, 'ongoing-request="true"')) {
                     $result['current_status'] = 'en attente de restoration';
                     return $result;
                 }
-
-                // Si ongoing-request="false", l'objet est prêt (disponible temporairement)
             }
 
             // 2. Téléchargement direct vers le chemin local
-            // L'option 'SaveAs' ouvre un flux vers le fichier sans saturer la RAM
             $this->client->getObject([
                 'Bucket' => $bucket,
                 'Key'    => $key,
@@ -95,7 +97,6 @@ class OldS3
             return $result;
 
         } catch (S3Exception $e) {
-            var_dump($e->getMessage());
             return [
                 'bucket' => $bucket,
                 'key' => $key,
