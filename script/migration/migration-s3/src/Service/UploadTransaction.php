@@ -48,9 +48,6 @@ class UploadTransaction
             
             // Marquer dans Self DB comme COMPLETED
             $this->selfDB->updateStatus($transaction, Status::COMPLETED);
-            
-            // Note: on utilise aussi markAsDone pour historiser dans migration_status si désiré.
-            $this->selfDB->markAsDone($transaction->type, $transaction->id);
 
             // Supprimer le fichier temporaire
             unlink($localPath);

@@ -18,9 +18,9 @@ class DownloadTransaction
 
     public function run(int $limit = 50): void
     {
-        // On récupère soit les HANDLE (Jamais touchés), soit les ASK (En attente de restore Glacier)
+        // On récupère soit les BUCKET_FOUND (bucket résolu et testé), soit les ASK (En attente de restore Glacier)
         $transactionsToHandle = array_merge(
-            $this->selfDB->getTransactionsByStatus(Status::HANDLE, $limit),
+            $this->selfDB->getTransactionsByStatus(Status::BUCKET_FOUND, $limit),
             $this->selfDB->getTransactionsByStatus(Status::ASK, $limit)
         );
 
@@ -37,11 +37,8 @@ class DownloadTransaction
 
         $localPath = rtrim($this->tempDir, '/') . '/' . basename($transaction->key) . '-' . $transaction->id;
 
-        // "source-bucket" est un hardcode dans le code existant ou peut être dynamique.
-        // Remarque: Dans OldS3->checkConnection(), le bucket est sl-adullact-actes-2019 par exemple.
-        // On utilise ici une logique simple, idéalement le bucket devrait venir de la conf.
-        // On l'extrait de $_ENV ou d'un fallback.
-        $bucket = $_ENV['OLD_S3_BUCKET_NAME'] ?? 'sl-adullact-actes-2019'; 
+        // Le bucket a été trouvé précédemment par BucketResolver. S'il n'est pas set (cas impossible si process respecté), fail.
+        $bucket = $transaction->bucket ?? $_ENV['OLD_S3_BUCKET_NAME'] ?? 'sl-adullact-actes-2019'; 
 
         $result = $this->oldS3->getFile($bucket, $transaction->key, $localPath, true);
 

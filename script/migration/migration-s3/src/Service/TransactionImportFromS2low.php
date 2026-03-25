@@ -16,10 +16,10 @@ class TransactionImportFromS2low
     ) {
     }
 
-    public function run($lastProcessedId = null): void
+    public function run($lastProcessedId = null, ?string $minDate = null): void
     {
         $lastProcessedId = $lastProcessedId ?? $this->selfDB->getLastIdAtTypeAndStatus($this->source->getIdentifier(), Status::HANDLE);
-        foreach($this->source->getItems($lastProcessedId) as $transaction)
+        foreach($this->source->getItems($lastProcessedId, $minDate) as $transaction)
         {
             /** @var MigrationItem $transaction */
             $this->selfDB->create($transaction);

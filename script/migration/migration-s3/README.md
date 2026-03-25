@@ -40,27 +40,43 @@ make bash
 
 ### Commande de migration
 
-Le script principal est `src/script.php`. Il a été réécrit pour utiliser un flux en **pipeline asynchrone** avec une base SQLite intermédiaire (`SelfDB`), garantissant le transfert de grandes volumétries avec **un seul fichier téléchargé à la fois** pour préserver l'espace disque.
+Le script principal est `src/script.php`. Il a été réécrit pour utiliser un flux en **pipeline asynchrone** avec une base PostgreSQL intermédiaire (`SelfDB`), garantissant le transfert de grandes volumétries avec **un seul fichier téléchargé à la fois** pour préserver l'espace disque.
 
 **Syntaxe :**
 ```bash
-php src/script.php --step=<daemon|import|download|upload>
+php src/script.php --step=<daemon|import|resolve|download|upload> [--min-date=YYYY-MM-DD] [--type=acte,pes_aller]
 ```
 
 **Options (Étape du pipeline) :**
-- `--step=daemon` : (Recommandé) Lance le chef d'orchestre en boucle infinie. Il pilote automatiquement l'importation de nouvelles lignes, le téléchargement (1 transaction) puis son upload immédiat vers le nouveau S3 avant de nettoyer le fichier local. Si le log plante, sa relance nettoie instantanément le fichier laissé.
-- `--step=import` : Peuple manuellement la base de données locale depuis S2Low avec le statut `HANDLE`.
-- `--step=download` : Lance un lot de téléchargements manuel depuis `HANDLE` vers `DOWNLOADED`. 
-- `--step=upload` : Lance un lot d'envois manuel depuis `DOWNLOADED` vers le *New S3*, marque en `COMPLETED` et efface les données.
+- `--step=daemon` : (Recommandé) Lance le chef d'orchestre en boucle infinie (Import -> Resolve -> Download -> Upload).
+- `--step=import` : Peuple manuellement la base de données locale (`HANDLE`).
+- `--step=resolve` : Cherche le bucket source de la transaction (`BUCKET_FOUND`).
+- `--step=download` : Lance un lot de téléchargements manuel (`DOWNLOADED`).
+- `--step=upload` : Lance un lot d'envois manuel (`COMPLETED`).
+
+**Options de filtre :**
+- `--min-date` (ou `-m`) : Ne considérer que les transactions après une certaine date (Format `YYYY-MM-DD`).
+- `--type` (ou `-t`) : Ne traiter que certains types de transactions. Valeurs séparées par des virgules.
+  - Alias valides : `acte` (ou `actes`), `pes_aller` (ou `pes`), `pes_acquit` (ou `acquit`), `mail`.
 
 **Exemples :**
 
-1. Lancer la migration complète, sécurisée et asynchrone (mode "one-by-one") :
+1. Lancer la migration complète (mode daemon) :
    ```bash
    php src/script.php --step=daemon
    ```
 
-2. Effectuer des lancements ciblés pour purger (`upload` va agir sur ce qui est actuellement stocké sur le disque) :
+2. Migrer uniquement les actes et PES aller :
+   ```bash
+   php src/script.php --step=daemon --type=acte,pes_aller
+   ```
+
+3. Importer uniquement les actes depuis janvier 2023 :
+   ```bash
+   php src/script.php --step=import --type=acte --min-date=2023-01-01
+   ```
+
+4. Purger les fichiers locaux (upload ce qui est sur le disque) :
    ```bash
    php src/script.php --step=upload
    ```
@@ -83,3 +99,4 @@ Voici les raccourcis disponibles via `make` :
 | `make stop` | Arrête et supprime le conteneur |
 | `make install` | Lance `composer install` dans le conteneur |
 | `make bash` | Ouvre un shell interactif dans le conteneur |
+| `make test` | Lance les tests unitaires PHPUnit |

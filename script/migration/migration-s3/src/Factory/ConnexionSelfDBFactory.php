@@ -29,11 +29,13 @@ class ConnexionSelfDBFactory
                 date TIMESTAMP NOT NULL,
                 siren TEXT NOT NULL,
                 key TEXT NOT NULL,
-                status TEXT NOT NULL CHECK(status IN ('" . Status::HANDLE->value . "', '" . Status::ASK->value . "', '" . Status::DOWNLOADED->value . "', '" . Status::COMPLETED->value . "', '" . Status::ERROR->value . "')),
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
+                bucket TEXT,
+                status TEXT NOT NULL CHECK(status IN ('" . Status::HANDLE->value . "', '" . Status::BUCKET_FOUND->value . "', '" . Status::ASK->value . "', '" . Status::DOWNLOADED->value . "', '" . Status::COMPLETED->value . "', '" . Status::ERROR->value . "')),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(type, s2low_id))
                 ");
         } catch (\PDOException $e) {
-            throw new \Exception("Erreur SQLite : " . $e->getMessage());
+            throw new \Exception("Erreur PostgreSQL : " . $e->getMessage());
         }
 
         return new SelfDB($connexion);

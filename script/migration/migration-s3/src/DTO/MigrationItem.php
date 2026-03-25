@@ -9,7 +9,8 @@ class MigrationItem
         readonly public string $key,
         readonly public string $type,
         readonly public string $date,
-        readonly public string $siren
+        readonly public string $siren,
+        public ?string $bucket = null
     ) {
     }
 }

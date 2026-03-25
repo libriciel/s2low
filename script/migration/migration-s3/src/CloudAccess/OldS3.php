@@ -27,6 +27,11 @@ class OldS3
         ]);
     }
 
+    public function getS3Client(): S3ClientInterface
+    {
+        return $this->client;
+    }
+
     function getFile(string $bucket, string $key, string $localPath, bool $autoRestore = false): array
     {
         try {
@@ -112,13 +117,43 @@ class OldS3
         }
     }
 
+    public function exists(string $bucket, string $key): bool
+    {
+        try {
+            $this->client->headObject([
+                'Bucket' => $bucket,
+                'Key' => $key
+            ]);
+            return true;
+        } catch (S3Exception $e) {
+            $code = $e->getAwsErrorCode() ?: $e->getStatusCode();
+            // Si c'est un vrai NotFound (404), on renvoie calmement false sans bruit
+            if (in_array($code, ['NotFound', 'NoSuchKey', 'NoSuchBucket', '404', 404])) {
+                return false;
+            }
+            // Sinon, c'est probablement une erreur de droits (403), de réseau, ou autre chose qui crée un faux négatif
+            echo "\n[OldS3->exists] ATTENTION: Erreur inattendue pour {$bucket}/{$key} : " . $e->getMessage() . PHP_EOL;
+            return false;
+        }
+    }
+
     public function unfreeze()
     {
 
     }
 
-    public function getInfo(?\App\DTO\MigrationItem $transaction)
+    public function listBuckets(): array
     {
-
+        try {
+            $result = $this->client->listBuckets();
+            $buckets = [];
+            foreach ($result['Buckets'] as $bucket) {
+                $buckets[] = $bucket['Name'];
+            }
+            return $buckets;
+        } catch (\Exception $e) {
+            echo "Failed to list buckets: " . $e->getMessage() . PHP_EOL;
+            return [];
+        }
     }
 }

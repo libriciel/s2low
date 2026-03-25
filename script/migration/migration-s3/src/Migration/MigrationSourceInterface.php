@@ -11,9 +11,10 @@ interface MigrationSourceInterface
 
     /**
      * @param int $lastProcessedId
+     * @param string|null $minDate
      * @return Generator<MigrationItem>
      */
-    public function getItems(int $lastProcessedId): Generator;
+    public function getItems(int $lastProcessedId, ?string $minDate = null): Generator;
 
     public function getHandledTransactions(): Generator;
 }

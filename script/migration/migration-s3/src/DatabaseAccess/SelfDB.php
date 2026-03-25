@@ -27,23 +27,10 @@ class SelfDB
         return $result['last_id'] ?? 0;
     }
 
-    public function isProcessed(string $type, int $s2lowId): bool
-    {
-        $stmt = $this->connexion->prepare("SELECT 1 FROM migration_status WHERE type = ? AND s2low_id = ? AND status = " . Status::COMPLETED->value);
-        $stmt->execute([$type, $s2lowId]);
-        return (bool)$stmt->fetch();
-    }
-
-    public function markAsDone(string $type, int $s2lowId): void
-    {
-        $sql = "INSERT INTO migration_status (type, s2low_id, status) VALUES (?, ?, 'done') 
-                ON CONFLICT(type, s2low_id) DO UPDATE SET status = 'done', created_at = CURRENT_TIMESTAMP";
-        $this->connexion->prepare($sql)->execute([$type, $s2lowId]);
-    }
-
     public function create(MigrationItem $transaction): void
     {
-        $sql = "INSERT INTO transactions (s2low_id, type, siren, key, date, status) VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO transactions (s2low_id, type, siren, key, date, status) VALUES (?, ?, ?, ?, ?, ?)
+                ON CONFLICT (type, s2low_id) DO NOTHING";
 
         try {
             $this->connexion->prepare($sql)->execute([
@@ -60,10 +47,23 @@ class SelfDB
         }
     }
 
-    public function getTransactionsByStatus(Status $status, int $limit = 100): array
+    public function getTransactionsByStatus(Status $status, int $limit = 100, ?array $allowedTypes = null): array
     {
-        $stmt = $this->connexion->prepare("SELECT s2low_id as id, type, siren, key, date FROM transactions WHERE status = ? LIMIT ?");
-        $stmt->execute([$status->value, $limit]);
+        $params = [$status->value];
+
+        $sql = "SELECT s2low_id as id, type, siren, key, date, bucket FROM transactions WHERE status = ?";
+
+        if ($allowedTypes && count($allowedTypes) > 0) {
+            $placeholders = implode(',', array_fill(0, count($allowedTypes), '?'));
+            $sql .= " AND type IN ({$placeholders})";
+            $params = array_merge($params, $allowedTypes);
+        }
+
+        $sql .= " LIMIT ?";
+        $params[] = $limit;
+
+        $stmt = $this->connexion->prepare($sql);
+        $stmt->execute($params);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $items = [];
@@ -73,7 +73,8 @@ class SelfDB
                 key: $row['key'],
                 type: $row['type'],
                 date: $row['date'],
-                siren: $row['siren']
+                siren: $row['siren'],
+                bucket: $row['bucket'] ?? null
             );
         }
         return $items;
@@ -81,7 +82,7 @@ class SelfDB
 
     public function updateStatus(MigrationItem $transaction, Status $status, ?string $message = null): void
     {
-        // On SQLite, you might want to log the message as well if there's a column for it,
+        // We might want to log the message as well if there's a column for it,
         // but for now we update the status.
         $sql = "UPDATE transactions SET status = ? WHERE s2low_id = ? AND type = ?";
         $this->connexion->prepare($sql)->execute([
@@ -94,6 +95,17 @@ class SelfDB
         if ($message && $status === Status::ERROR) {
             echo "[ERROR] Transaction {$transaction->type}-{$transaction->id}: $message\n";
         }
+    }
+
+    public function updateBucket(MigrationItem $transaction, string $bucket): void
+    {
+        $sql = "UPDATE transactions SET bucket = ? WHERE s2low_id = ? AND type = ?";
+        $this->connexion->prepare($sql)->execute([
+            $bucket,
+            $transaction->id,
+            $transaction->type
+        ]);
+        $transaction->bucket = $bucket;
     }
 
     // Garde ces méthodes pour la rétrocompatibilité avec UnfreezeFile si nécessaire

@@ -12,3 +12,6 @@ stop:
 
 bash:
 	docker exec -it php_sqlite_composer /bin/bash
+
+test:
+	docker exec php_sqlite_composer vendor/bin/phpunit tests/ --testdox
