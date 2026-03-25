@@ -196,7 +196,7 @@ function runCheckRestore(GlacierRestoreChecker $restoreChecker, ?array $allowedT
 }
 
 
-function runDaemon(\App\DatabaseAccess\SelfDB $db, UploadTransaction $uploader, DownloadTransaction $downloader, BucketResolver $resolver, array $savers, ?string $minDate = null, ?array $allowedTypes = null, ?string $maxDate = null, GlacierRestoreChecker $restoreChecker) {
+function runDaemon(\App\DatabaseAccess\SelfDB $db, UploadTransaction $uploader, DownloadTransaction $downloader, BucketResolver $resolver, GlacierRestoreChecker $restoreChecker, array $savers, ?string $minDate = null, ?array $allowedTypes = null, ?string $maxDate = null) {
     echo "Starting Migration Daemon... Press Ctrl+C to stop." . PHP_EOL;
     while (true) {
         $didWork = false;
@@ -262,7 +262,7 @@ switch ($step) {
         runCheckRestore($restoreChecker, $allowedTypes);
         break;
     case 'daemon':
-        runDaemon($selfDBConnexion, $uploader, $downloader, $resolver, $savers, $minDate, $allowedTypes, $maxDateLimit, $restoreChecker);
+        runDaemon($selfDBConnexion, $uploader, $downloader, $resolver, $restoreChecker, $savers, $minDate, $allowedTypes, $maxDateLimit);
         break;
     default:
         echo "Invalid step. Choose: import, resolve, download, upload, or daemon." . PHP_EOL;

@@ -6,6 +6,7 @@ use App\CloudAccess\OldS3;
 use App\DatabaseAccess\SelfDB;
 use App\DTO\MigrationItem;
 use App\Enum\Status;
+use App\Enum\Type;
 
 class BucketResolver
 {
@@ -54,7 +55,12 @@ class BucketResolver
         $year = substr($transaction->date, 0, 4);
 
         return match ($transaction->type) {
-            \App\Enum\Type::ACTE->value => $this->getActesBuckets($year),
+            // ---- ACTES ----
+            // On teste le bucket de l'année métier. 
+            // Si on est en Jan/Feb, on teste aussi N-1.
+            // Si on est en Nov/Dec, on teste aussi N+1.
+            // Puis fallback global sladullact-actes.
+            Type::ACTE->value => $this->getActesBuckets($transaction->date),
             \App\Enum\Type::PES_ALLER->value => $this->getPesAllerBuckets($transaction->key),
             \App\Enum\Type::PES_ACQUIT->value => ['sladullact-helios-pesacquitprefix'],
             \App\Enum\Type::MAIL->value => ['sladullact-mail'],
@@ -62,22 +68,31 @@ class BucketResolver
         };
     }
 
-    private function getActesBuckets(string $year): array
+    /**
+     * Construit la liste optimisée des buckets Actes selon le mois.
+     */
+    private function getActesBuckets(string $date): array
     {
-        $primaryBucket = ($year === '2007') ? 'sl-adullact-actes2007' : "sl-adullact-actes-{$year}";
-        $buckets = [$primaryBucket, 'sladullact-actes'];
+        $year = (int)substr($date, 0, 4);
+        $month = (int)substr($date, 5, 2);
 
-        for ($y = (int)date('Y'); $y >= 2008; $y--) {
-            $b = "sl-adullact-actes-{$y}";
-            if (!in_array($b, $buckets)) {
-                $buckets[] = $b;
-            }
-        }
-        if (!in_array('sl-adullact-actes2007', $buckets)) {
-            $buckets[] = 'sl-adullact-actes2007';
+        $buckets = [$this->getYearlyBucket($year)];
+
+        if ($month <= 2) {
+             $buckets[] = $this->getYearlyBucket($year - 1);
+        } elseif ($month >= 11) {
+             $buckets[] = $this->getYearlyBucket($year + 1);
         }
 
-        return $buckets;
+        $buckets[] = 'sladullact-actes';
+
+        return array_unique($buckets);
+    }
+
+    private function getYearlyBucket(int $year): string
+    {
+        if ($year == 2007) return 'sl-adullact-actes2007';
+        return "sl-adullact-actes-{$year}";
     }
 
     private function getPesAllerBuckets(string $key): array
