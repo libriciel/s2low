@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Factory\ConnexionS2lowDBFactory;
 use App\Factory\ConnexionSelfDBFactory;
 use App\Factory\NewS3ClientFactory;
@@ -9,37 +8,29 @@ use App\Migration\ActesSource;
 use App\Migration\MailSource;
 use App\Migration\PesAcquitSource;
 use App\Migration\PesSource;
-use App\MigrationOrchestrator;
 use App\Repository\ActesRepository;
 use App\Repository\MailSecRepository;
 use App\Repository\PesAcquitRepository;
 use App\Repository\PesRepository;
+use App\Service\DownloadTransaction;
 use App\Service\TransactionImportFromS2low;
+use App\Service\UploadTransaction;
 use Dotenv\Dotenv;
 
 require_once __DIR__ . '/../vendor/autoload.php';
-
 
 // Initialize Environment
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();
 
 // Parse CLI Args
-$shortopts = "t:d"; // -t type, -d dry-run
+$shortopts = "s:"; // -s step (import, download, upload, daemon)
 $longopts  = [
-    "type:",
-    "dry-run",
-    "force"
+    "step:",
 ];
 $options = getopt($shortopts, $longopts);
 
-$type = $options['type'] ?? $options['t'] ?? null;
-$isDryRun = isset($options['dry-run']) || isset($options['d']);
-
-if (!$type && !array_key_exists('force', $options)) {
-    echo "Usage: php script.php --type=<actes|helios|helios_acquit|mail> [--dry-run]" . PHP_EOL;
-    exit(1);
-}
+$step = $options['step'] ?? $options['s'] ?? 'daemon';
 
 $newS3 = NewS3ClientFactory::getClient(
     $_ENV['NEW_S3_ENDPOINT'],
@@ -79,96 +70,108 @@ try {
     die();
 }
 
-$orchestrator = new MigrationOrchestrator(
-    $newS3,
-    $oldS3,
-    $selfDBConnexion,
-    $S2lowDBConnexion,
-    $isDryRun
-);
+// -------------------------------------------------------------------------
+// INITIALIZATION OF PIPELINE SERVICES
+// -------------------------------------------------------------------------
 
-$orchestrator->checkCloudConnections();
+// 1. Import Handlers
+$actesRepository = new ActesRepository($S2lowDBConnexion);
+$pesRepository = new PesRepository($S2lowDBConnexion);
+$pesAcquitRepository = new PesAcquitRepository($S2lowDBConnexion);
+$mailRepository = new MailSecRepository($S2lowDBConnexion);
 
-//HANDLE
-    $actesRepository = new ActesRepository($S2lowDBConnexion);
-    $pesRepository = new PesRepository($S2lowDBConnexion);
-    $pesAcquitRepository = new PesAcquitRepository($S2lowDBConnexion);
-    $mailRepository = new MailSecRepository($S2lowDBConnexion);
+$savers = [
+    new TransactionImportFromS2low(new ActesSource($actesRepository), $selfDBConnexion),
+    new TransactionImportFromS2low(new PesSource($pesRepository), $selfDBConnexion),
+    new TransactionImportFromS2low(new PesAcquitSource($pesAcquitRepository), $selfDBConnexion),
+    new TransactionImportFromS2low(new MailSource($mailRepository), $selfDBConnexion)
+];
 
+// 2. Download Handler
+$downloader = new DownloadTransaction($selfDBConnexion, $oldS3);
 
+// 3. Upload Handler
+$uploader = new UploadTransaction($selfDBConnexion, $newS3);
 
-    $migrationActe = new ActesSource(
-        $actesRepository,
-    );
-    $migrationPes = new PesSource(
-        $pesRepository,
-    );
-    $migrationPesAcquit = new PesAcquitSource(
-        $pesAcquitRepository,
-    );
-    $migrationMail = new MailSource(
-        $mailRepository,
-    );
+// -------------------------------------------------------------------------
+// EXECUTION ROUTING
+// -------------------------------------------------------------------------
 
+function runImport(array $savers) {
+    echo "--- Starting IMPORT Stage ---" . PHP_EOL;
+    foreach ($savers as $saver) {
+        $saver->run();
+    }
+    echo "--- Finished IMPORT Stage ---" . PHP_EOL;
+}
 
+function runDownload(DownloadTransaction $downloader) {
+    echo "--- Starting DOWNLOAD Stage (Batch of 10) ---" . PHP_EOL;
+    $downloader->run(10);
+}
 
-    $acteSaver = new TransactionImportFromS2low(
-        $migrationActe,
-        $selfDBConnexion
-    );
-    $pesSaver = new TransactionImportFromS2low(
-        $migrationPes,
-        $selfDBConnexion
-    );
-    $pesAcquitSaver = new TransactionImportFromS2low(
-        $migrationPesAcquit,
-        $selfDBConnexion
-    );
-    $mailSaver = new TransactionImportFromS2low(
-        $migrationMail,
-        $selfDBConnexion
-    );
-
-    $acteSaver->run();
-    $pesSaver->run();
-    $pesAcquitSaver->run();
-    $mailSaver->run();
+function runUpload(UploadTransaction $uploader) {
+    echo "--- Starting UPLOAD Stage (Batch of 10) ---" . PHP_EOL;
+    $uploader->run(10);
+}
 
 
+function runDaemon(\App\DatabaseAccess\SelfDB $db, UploadTransaction $uploader, DownloadTransaction $downloader, array $savers) {
+    echo "Starting Migration Daemon (Single File Workflow)... Press Ctrl+C to stop." . PHP_EOL;
+    while (true) {
+        if (processPendingUpload($db, $uploader)) {
+            continue;
+        }
 
-//////////////
-///
-/// A ce stade toutes les transactions sont en DB. IL faut maintenant les recuperer et le sauvegarder sur le nouveau s3
-//// UNFREEZE / CHECK EXIST
+        if (processNextDownload($db, $downloader)) {
+            continue;
+        }
 
-//$unfreezeActe = new UnfreezeFile();
-//$unfreezeActe->run();
+        // If nothing left to sync, look for new transactions (import batch) or just sleep if all done.
+        runImport($savers);
+        sleep(2);
+    }
+}
 
-///////////
-//// DOWNLOAD / SET ERROR
+function processPendingUpload(\App\DatabaseAccess\SelfDB $db, UploadTransaction $uploader): bool {
+    // MUST UPLOAD FIRST: If a local file already exists (from an interrupted run), upload it.
+    $pendingUploads = $db->getTransactionsByStatus(\App\Enum\Status::DOWNLOADED, 1);
+    if (!empty($pendingUploads)) {
+        $uploader->processUpload($pendingUploads[0]);
+        return true; 
+    }
+    return false;
+}
+
+function processNextDownload(\App\DatabaseAccess\SelfDB $db, DownloadTransaction $downloader): bool {
+    // FETCH NEXT: We only reach here if 0 files are waiting to be uploaded.
+    $pendingDownloads = $db->getTransactionsByStatus(\App\Enum\Status::HANDLE, 1);
+    if (empty($pendingDownloads)) {
+        $pendingDownloads = $db->getTransactionsByStatus(\App\Enum\Status::ASK, 1);
+    }
+
+    if (!empty($pendingDownloads)) {
+        $downloader->processDownload($pendingDownloads[0]);
+        return true; 
+    }
+    return false;
+}
 
 
-///////////
-
-
-
-
-
-// Run Selected Flow
-switch ($type) {
-    case 'actes':
-        $orchestrator->runActes();
+switch ($step) {
+    case 'import':
+        runImport($savers);
         break;
-    case 'helios':
-        $orchestrator->runHelios();
+    case 'download':
+        runDownload($downloader);
         break;
-    case 'helios_acquit':
-        $orchestrator->runHeliosAcquit();
+    case 'upload':
+        runUpload($uploader);
         break;
-    case 'mail':
-        $orchestrator->runMail();
+    case 'daemon':
+        runDaemon($selfDBConnexion, $uploader, $downloader, $savers);
         break;
     default:
-        echo "Aucun type selectionné" . PHP_EOL;
+        echo "Invalid step. Choose: import, download, upload, or daemon." . PHP_EOL;
         exit(1);
 }

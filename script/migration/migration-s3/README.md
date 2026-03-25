@@ -40,33 +40,29 @@ make bash
 
 ### Commande de migration
 
-Le script principal est `src/script.php`.
+Le script principal est `src/script.php`. Il a été réécrit pour utiliser un flux en **pipeline asynchrone** avec une base SQLite intermédiaire (`SelfDB`), garantissant le transfert de grandes volumétries avec **un seul fichier téléchargé à la fois** pour préserver l'espace disque.
 
 **Syntaxe :**
 ```bash
-php src/script.php --type=<type_flux> [--dry-run] [--check]
+php src/script.php --step=<daemon|import|download|upload>
 ```
 
-**Options :**
-- `--type` : Le type de données à migrer. Valeurs possibles : `actes`, `helios`, `helios_acquit`, `mail`.
-- `--dry-run` : (Optionnel) Lance le script en mode simulation (pas d'écriture réelle/suppression).
-- `--check` : (Optionnel) Vérifie uniquement la connexion aux services (S3, BDD, etc.).
+**Options (Étape du pipeline) :**
+- `--step=daemon` : (Recommandé) Lance le chef d'orchestre en boucle infinie. Il pilote automatiquement l'importation de nouvelles lignes, le téléchargement (1 transaction) puis son upload immédiat vers le nouveau S3 avant de nettoyer le fichier local. Si le log plante, sa relance nettoie instantanément le fichier laissé.
+- `--step=import` : Peuple manuellement la base de données locale depuis S2Low avec le statut `HANDLE`.
+- `--step=download` : Lance un lot de téléchargements manuel depuis `HANDLE` vers `DOWNLOADED`. 
+- `--step=upload` : Lance un lot d'envois manuel depuis `DOWNLOADED` vers le *New S3*, marque en `COMPLETED` et efface les données.
 
 **Exemples :**
 
-1. Vérifier les connexions :
+1. Lancer la migration complète, sécurisée et asynchrone (mode "one-by-one") :
    ```bash
-   php src/script.php --check
+   php src/script.php --step=daemon
    ```
 
-2. Simuler une migration pour le module Actes :
+2. Effectuer des lancements ciblés pour purger (`upload` va agir sur ce qui est actuellement stocké sur le disque) :
    ```bash
-   php src/script.php --type=actes --dry-run
-   ```
-
-3. Lancer réellement la migration pour Helios :
-   ```bash
-   php src/script.php --type=helios
+   php src/script.php --step=upload
    ```
 
 ## Tests

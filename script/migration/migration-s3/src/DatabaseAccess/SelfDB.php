@@ -60,13 +60,50 @@ class SelfDB
         }
     }
 
-    public function setUnfreeze(MigrationItem $transaction)
+    public function getTransactionsByStatus(Status $status, int $limit = 100): array
     {
-        
+        $stmt = $this->connexion->prepare("SELECT s2low_id as id, type, siren, key, date FROM transactions WHERE status = ? LIMIT ?");
+        $stmt->execute([$status->value, $limit]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $items = [];
+        foreach ($rows as $row) {
+            $items[] = new MigrationItem(
+                id: (int)$row['id'],
+                key: $row['key'],
+                type: $row['type'],
+                date: $row['date'],
+                siren: $row['siren']
+            );
+        }
+        return $items;
     }
 
-    public function updateToError(MigrationItem $transaction, string $getMessage)
+    public function updateStatus(MigrationItem $transaction, Status $status, ?string $message = null): void
     {
+        // On SQLite, you might want to log the message as well if there's a column for it,
+        // but for now we update the status.
+        $sql = "UPDATE transactions SET status = ? WHERE s2low_id = ? AND type = ?";
+        $this->connexion->prepare($sql)->execute([
+            $status->value,
+            $transaction->id,
+            $transaction->type
+        ]);
+        
+        // Log error message if needed (we assume a basic implementation without changing schema)
+        if ($message && $status === Status::ERROR) {
+            echo "[ERROR] Transaction {$transaction->type}-{$transaction->id}: $message\n";
+        }
+    }
 
+    // Garde ces méthodes pour la rétrocompatibilité avec UnfreezeFile si nécessaire
+    public function setUnfreeze(MigrationItem $transaction): void
+    {
+        $this->updateStatus($transaction, Status::ASK);
+    }
+
+    public function updateToError(MigrationItem $transaction, string $getMessage): void
+    {
+        $this->updateStatus($transaction, Status::ERROR, $getMessage);
     }
 }
