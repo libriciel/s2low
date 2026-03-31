@@ -7,7 +7,6 @@ use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Lib\ObjectInstancierFactory;
 
 class OrderTransmissionOfMultipleActeToMinisterTest extends S2lowIntegrationTestCase
 {
@@ -46,6 +45,6 @@ class OrderTransmissionOfMultipleActeToMinisterTest extends S2lowIntegrationTest
         ]);
 
         $response = $client->getResponse();
-        static::assertStringContainsString('Location:  index.php', $response->getContent());
+        static::assertStringContainsString('index.php', $response->headers->get('Location'));
     }
 }

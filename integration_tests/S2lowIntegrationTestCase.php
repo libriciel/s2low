@@ -8,21 +8,23 @@ use S2low\Enum\ModulePermission;
 use S2low\Enum\UserRole;
 use S2low\Factory\PDOFactory;
 use S2low\Kernel;
+use S2low\Security\LegacyAuthenticationBridge;
+use S2low\Security\SecurityUser;
+use S2low\Security\SecurityUserProvider;
 use S2lowLegacy\Class\Authentification;
 use S2lowLegacy\Class\Database;
-use S2lowLegacy\Class\HttpsConnexion;
-use S2lowLegacy\Class\PasswordHandler;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\PemCertificate;
 use S2lowLegacy\Lib\PemCertificateFactory;
-use S2lowLegacy\Lib\SessionWrapper;
 use S2lowLegacy\Lib\SQLQuery;
-use S2lowLegacy\Lib\X509Certificate;
-use S2lowLegacy\Model\NounceSQL;
-use S2lowLegacy\Model\UserSQL;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use S2lowLegacy\Lib\ObjectInstancier;
+use S2lowLegacy\Lib\ObjectInstancierFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
+use S2lowLegacy\Class\DatabasePool;
 
 class S2lowIntegrationTestCase extends WebTestCase
 {
@@ -70,7 +72,7 @@ class S2lowIntegrationTestCase extends WebTestCase
      */
     protected function setUp(): void
     {
-        $this->logAs(13);
+        parent::setUp();
 
         $_SESSION = [];
         $_GET = [];
@@ -78,13 +80,17 @@ class S2lowIntegrationTestCase extends WebTestCase
         $_FILES = [];
         $_SERVER['QUERY_STRING'] = '';
 
+        // Authentifier l'utilisateur - cela crée le client et le container
+        $this->logAs(13);
+
+        // IMPORTANT: Initialiser la base de données APRÈS logAs()
+        // mais la BDD doit être prête pour que logAs fonctionne
+        // On initialise donc la BDD dans logAs() lui-même
         $this->sqlQuery = self::getContainer()->get(SQLQuery::class);
-        self::getContainer()->get(PDOFactory::class)->create()->exec(file_get_contents(__DIR__ . '/../test/PHPUnit/s2low-test.sql'));
+
         $this->projectDir = self::getContainer()->getParameter("kernel.project_dir");
         vfsStream::setup('test');
         $this->tmpPathFolder = vfsStream::url('test');
-
-        parent::setUp();
     }
 
     protected function tearDown(): void
@@ -158,6 +164,15 @@ class S2lowIntegrationTestCase extends WebTestCase
             $this->serverCertificatEnvVar
         );
 
+        // Mettre à jour les factories legacy pour utiliser le container partagé
+        // afin que les surcharges réalisées via self::getContainer()->set()
+        // soient visibles depuis l'ObjectInstancier utilisé par le code legacy.
+        $sharedContainer = self::getContainer();
+        $objectInstancier = new ObjectInstancier($sharedContainer);
+        LegacyObjectsManager::setObjectInstancier($objectInstancier);
+        ObjectInstancierFactory::setObjectInstancier($objectInstancier);
+        DatabasePool::setObjectInstancier($objectInstancier);
+
         return $client;
     }
 
@@ -196,6 +211,42 @@ class S2lowIntegrationTestCase extends WebTestCase
         );
 
         $this->client = $this->getAuthenticatedClient();
+
+        // IMPORTANT: Initialiser la BDD APRÈS création du client mais AVANT l'authentification
+        // car authenticateUserInSecurityContext charge l'utilisateur depuis la BDD
+        $pdo = self::getContainer()->get(PDOFactory::class)->create();
+        $pdo->exec(file_get_contents(__DIR__ . '/../test/PHPUnit/s2low-test.sql'));
+
+        // Authentifier l'utilisateur dans le contexte Symfony Security
+        // pour les tests qui n'utilisent pas le client HTTP
+        // Note: doit être appelé après getAuthenticatedClient() car celui-ci crée un nouveau kernel
+        $this->authenticateUserInSecurityContext($userId);
+    }
+
+    /**
+     * Authentifie un utilisateur directement dans le token storage de Symfony.
+     * Utile pour les tests qui créent des contrôleurs directement sans passer par HTTP.
+     *
+     * IMPORTANT: Authentifie dans les deux containers (client et statique) car :
+     * - Le container du client est utilisé pour les requêtes HTTP
+     * - Le container statique (self::getContainer()) est utilisé par les tests
+     *   qui appellent directement les méthodes des controllers
+     */
+    protected function authenticateUserInSecurityContext(int $userId): void
+    {
+        // Charger l'utilisateur depuis le container du client
+        $clientContainer = $this->client->getContainer();
+        $userProvider = $clientContainer->get(SecurityUserProvider::class);
+        $user = $userProvider->loadUserByIdentifier((string) $userId);
+
+        $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
+
+        // Authentifier dans le container du client
+        $clientContainer->get('security.token_storage')->setToken($token);
+
+        // Authentifier également dans le container statique
+        // pour les tests qui utilisent self::getContainer()
+        self::getContainer()->get('security.token_storage')->setToken($token);
     }
 
     protected function logWithoutCertificat(): KernelBrowser
@@ -210,38 +261,18 @@ class S2lowIntegrationTestCase extends WebTestCase
     }
 
     protected function getAuthentication(
-        $server = [],
-        $idLogin = null,
-        $get = [],
-        $certHandler = null,
-        $convertLoginFromIso = false,
-        $post = [],
-        $environnement = null
+        ?LegacyAuthenticationBridge $authBridge = null
     ): Authentification {
-        $session = self::getContainer()->get(SessionWrapper::class);
-        if ($idLogin !== null) {
-            $session->set('id_login', $idLogin);
-        }
-        $environnement = $environnement ?? new Environnement(
-            $get,
-            $post,
-            [],
-            $session,
-            $server,
-            $convertLoginFromIso,
-        );
+        $environnement = self::getContainer()->get(Environnement::class);
 
-        $httpsConnexion = new HttpsConnexion(
-            $environnement,
-            $certHandler ?? self::getContainer()->get(X509Certificate::class),
-        );
+        // Si aucun bridge fourni, utiliser celui du container
+        if ($authBridge === null) {
+            $authBridge = self::getContainer()->get(LegacyAuthenticationBridge::class);
+        }
 
         return new Authentification(
             $environnement,
-            self::getContainer()->get(UserSQL::class),
-            self::getContainer()->get(PasswordHandler::class),
-            $httpsConnexion,
-            self::getContainer()->get(NounceSQL::class),
+            $authBridge
         );
     }
 

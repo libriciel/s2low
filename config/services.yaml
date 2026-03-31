@@ -41,14 +41,14 @@ parameters:
   app.log_path: '%env(default:app.log_path.default:LOG_PATH)%'
   app.helios_retention_fichiers_nb_jours: '%env(default:app.helios_retention_fichiers_nb_jours.default:HELIOS_RETENTION_FICHIERS_NB_JOURS)%'
   app.envelope_submission_enabled: '%env(bool:default:app.envelope_submission_enabled.default:ENVELOPE_SUBMISSION_ENABLED)%'
-  app.cloud.parameters.endpoint: '%env(string:CLOUD_PROVIDER_ENDPOINT)%'
-  app.cloud.parameters.credential.key: '%env(string:CLOUD_PROVIDER_KEY)%'
-  app.cloud.parameters.credential.secret: '%env(string:CLOUD_PROVIDER_SECRET)%'
-  app.cloud_bucket.acte_enveloppe: '%env(string:CLOUD_BUCKET_ACTE_ENVELOPPE)%'
-  app.cloud_bucket.pes_aller: '%env(string:CLOUD_BUCKET_PES_ALLER)%'
-  app.cloud_bucket.pes_acquit: '%env(string:CLOUD_BUCKET_PES_ACQUIT)%'
-  app.cloud_bucket.pes_retour: '%env(string:CLOUD_BUCKET_PES_RETOUR)%'
-  app.cloud_bucket.mailsec: '%env(string:CLOUD_BUCKET_MAIL_SEC)%'
+  app.cloud.parameters.endpoint: '%env(string:default:app.cloud.parameters.endpoint.default:CLOUD_PROVIDER_ENDPOINT)%'
+  app.cloud.parameters.credential.key: '%env(string:default:app.cloud.parameters.credential.key.default:CLOUD_PROVIDER_KEY)%'
+  app.cloud.parameters.credential.secret: '%env(string:default:app.cloud.parameters.credential.secret.default:CLOUD_PROVIDER_SECRET)%'
+  app.cloud_bucket.acte_enveloppe: '%env(default:app.cloud_bucket.acte_enveloppe.default:string:CLOUD_BUCKET_ACTE_ENVELOPPE)%'
+  app.cloud_bucket.pes_aller: '%env(default:app.cloud_bucket.pes_aller.default:string:CLOUD_BUCKET_PES_ALLER)%'
+  app.cloud_bucket.pes_acquit: '%env(default:app.cloud_bucket.pes_acquit.default:string:CLOUD_BUCKET_PES_ACQUIT)%'
+  app.cloud_bucket.pes_retour: '%env(default:app.cloud_bucket.pes_retour.default:string:CLOUD_BUCKET_PES_RETOUR)%'
+  app.cloud_bucket.mailsec: '%env(default:app.cloud_bucket.mailsec.default:string:CLOUD_BUCKET_MAIL_SEC)%'
   app.cloud_storage_enabled: '%env(bool:OPENSTACK_ENABLE)%'
 
 
@@ -80,6 +80,9 @@ parameters:
   app.use_prod_notifications.default: false
   app.service_name.default: 'app'
   app.log_path.default: '/data/log/'
+  app.cloud.parameters.endpoint.default: 'endpoint'
+  app.cloud.parameters.credential.key.default: 'credential-key'
+  app.cloud.parameters.credential.secret.default: 'credential-secret'
   app.helios_retention_fichiers_nb_jours.default: 3650000
   app.cloud_bucket.acte_enveloppe.default: 'domainacte'
   app.cloud_bucket.pes_aller.default: 'domainpesaller'
@@ -928,3 +931,18 @@ services:
     public: true
     tags:
       - { name: monolog.processor }
+
+  # Security Services
+  S2low\Security\SecurityUserProvider:
+    public: true
+    autowire: true
+
+  S2low\Security\LegacyAuthenticationBridge:
+    public: true
+    autowire: true
+
+  S2lowLegacy\Class\Authentification:
+    public: true
+    autowire: true
+    arguments:
+      $authBridge: '@S2low\Security\LegacyAuthenticationBridge'

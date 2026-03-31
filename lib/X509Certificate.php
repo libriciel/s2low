@@ -3,8 +3,8 @@
 namespace S2lowLegacy\Lib;
 
 use Exception;
-use S2lowLegacy\Model\UserSQL;
 use OpenSSLCertificate;
+use S2lowLegacy\Model\UserSQL;
 
 class X509Certificate
 {

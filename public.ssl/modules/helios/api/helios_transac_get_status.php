@@ -2,7 +2,6 @@
 
 use S2low\Enum\HeliosStatus;
 use S2lowLegacy\Class\helios\ApiHeliosStatusResolver;
-use S2lowLegacy\Class\helios\PESAcquitCloudStorage;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;

@@ -7,7 +7,6 @@ use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
-use S2lowLegacy\Lib\ObjectInstancierFactory;
 
 class OrderTransmissionToMinistereTest extends S2lowIntegrationTestCase
 {
@@ -39,13 +38,13 @@ class OrderTransmissionToMinistereTest extends S2lowIntegrationTestCase
         $client = $this->client;
         $this->setUserWithRole(UserRole::Utilisateur);
 
-        $client->request('GET', '/modules/actes/actes_transac_post_confirm_api.php', [
+        $client->request('GET', '/modules/actes/actes_transac_post_confirm_api.php?url_return=' . $urlReturn, [
             'id' => $id,
             'url_return' => $urlReturn,
         ]);
 
         $response = $client->getResponse();
 
-        static::assertStringContainsString('Location:  index.php', $response->getContent());
+        static::assertStringContainsString('index.php', $response->headers->get('Location'));
     }
 }

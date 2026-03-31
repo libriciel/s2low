@@ -2,6 +2,7 @@
 
 use IntegrationTests\S2lowIntegrationTestCase;
 use S2low\Enum\UserRole;
+use S2low\Security\LegacyAuthenticationBridge;
 use S2lowLegacy\Class\Authentification;
 use S2lowLegacy\Controller\Controller;
 use S2lowLegacy\Lib\Environnement;
@@ -69,25 +70,28 @@ class ControllerTest extends S2lowIntegrationTestCase
 
     public function testVerifNotConnected()
     {
-        $authentication = $this->getAuthentication();
+        // Mock du bridge qui retourne non authentifié
+        $authBridge = $this->createMock(LegacyAuthenticationBridge::class);
+        $authBridge->method('isAuthenticated')->willReturn(false);
+
+        $authentication = $this->getAuthentication($authBridge);
         self::getContainer()->set(Authentification::class, $authentication);
 
-        $this->expectExceptionMessage("Message : Aucune information de certificat trouvée");
+        $this->expectExceptionMessage("La connexion n'a pas pu être établie");
         $this->controller->verifAdmin();
     }
 
     public function testVerifNotAdmin()
     {
-        $server = [
-            'SSL_CLIENT_VERIFY' => "SUCCESS",
-            'SSL_CLIENT_S_DN' => "adullact_user",
-            'SSL_CLIENT_I_DN' => "adullact_user",
-            'TESTING_CERTIFICATE_HASH' => "hash_adullact_user",
-        ];
-        $authentication = $this->getAuthentication($server);
-        self::getContainer()->set(Authentification::class, $authentication);
+        // Utiliser un user qui n'est pas admin
+        $this->logAs(3);
+        $this->setUserWithRole(UserRole::Utilisateur, 3);
 
-        $this->expectExceptionMessage("Redirect to");
+        // Réobtenir le controller car logAs() a créé un nouveau container
+        $this->controller = self::getContainer()->get(Controller::class);
+
+        $this->expectException(RedirectException::class);
+        $this->expectExceptionMessage("Accès refusé");
         $this->controller->verifAdmin();
     }
 
@@ -164,6 +168,10 @@ class ControllerTest extends S2lowIntegrationTestCase
     {
         $this->logAs(3);
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
+
+        // Réobtenir le controller car logAs() a créé un nouveau container
+        $this->controller = self::getContainer()->get(Controller::class);
+
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("Accès refusé");
         $this->controller->verifGroupAdmin(1);
@@ -185,7 +193,7 @@ class ControllerTest extends S2lowIntegrationTestCase
     public function testVerifSuperAdminFailed()
     {
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
-        $this->expectException(Exception::class);
+        $this->expectException(RedirectException::class);
         $this->expectExceptionMessage("Redirect to");
         $this->controller->verifSuperAdmin();
     }
@@ -201,7 +209,11 @@ class ControllerTest extends S2lowIntegrationTestCase
     {
         $this->logAs(3);
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
-        $this->expectException(Exception::class);
+
+        // Réobtenir le controller car logAs() a créé un nouveau container
+        $this->controller = self::getContainer()->get(Controller::class);
+
+        $this->expectException(RedirectException::class);
         $this->expectExceptionMessage("Redirect to");
         $this->controller->verifAdmin(1);
     }
@@ -216,7 +228,7 @@ class ControllerTest extends S2lowIntegrationTestCase
     public function testVerifAdminFail()
     {
         $this->setUserWithRole(UserRole::AdministrateurCollectivite);
-        $this->expectException(Exception::class);
+        $this->expectException(RedirectException::class);
         $this->expectExceptionMessage("Redirect to");
         $this->controller->verifAdmin(2);
     }
@@ -230,6 +242,8 @@ class ControllerTest extends S2lowIntegrationTestCase
     {
         $this->logAs(3);
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
+
+        // Réobtenir l'environnement car logAs() a créé un nouveau container
         $environnement = self::getContainer()->get(Environnement::class);
         $environnement->post()->set('api', '1');
         $this->expectException(Exception::class);

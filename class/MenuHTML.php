@@ -38,6 +38,7 @@ class MenuHTML
         $module_admin = array();
         $module_stat = array();
         $module_export = array();
+        $logoutRoute = LegacyObjectsManager::getLegacyObjectInstancier()->get('router')->generate('app_logout');
 
 
         foreach ($modulesInfo as $i => $module) {
@@ -80,7 +81,7 @@ class MenuHTML
                         ?>
                         Rôle <?php  echo $userInfo['role_str'] ?>
             <?php if ($userInfo['nb_user_with_my_certificate'] > 1) : ?>
-            <br/><a href='<?php echo Helpers::getLink("logout.php")?>'>déconnexion</a>
+            <br/><a href='<?php echo $logoutRoute ?>'>déconnexion</a>
             <?php endif;?>
                     </div>
                     <ul class="text-menu nav">
