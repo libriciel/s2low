@@ -19,6 +19,9 @@ class UserSQL extends SQL
 
     public const AUTHORITY_ID = 'authority_id';
 
+    private const USER_COLUMNS = 'id, email, login, password, role, authority_id, authority_group_id, status, certificate_hash, name, givenname';
+
+
     public function getPrettyName($name, $givenname, $login)
     {
         return $name ? "$givenname $name" : $login;
@@ -190,6 +193,37 @@ class UserSQL extends SQL
         return $this->queryOne(
             "UPDATE users SET email=? WHERE id=?",
             $newMail,
+            $id
+        );
+    }
+
+    public function getUserFromCertificatHash(string $certificateHash): array
+    {
+        return $this->query('SELECT ' . self::USER_COLUMNS . ' FROM users WHERE certificate_hash = ? AND status = 1 ORDER BY id', [$certificateHash]);
+    }
+
+    public function getUserByCertificatsAndLogin(string $certificateHash, string $login): array
+    {
+        $userData = $this->queryOne(
+            'SELECT ' . self::USER_COLUMNS . ' FROM users WHERE certificate_hash = ? AND login = ? AND status = 1 ORDER BY id',
+            [$certificateHash, $login]
+        );
+
+        return $userData === false ? [] : $userData;
+    }
+
+    public function getUserByCertificatAndAuthority(string $certificateHash, int $authorityId)
+    {
+        return $this->queryOne(
+            'SELECT ' . self::USER_COLUMNS . ' FROM users WHERE certificate_hash = ? AND authority_id = ? AND status = 1 ORDER BY id LIMIT 1',
+            [$certificateHash, $authorityId]
+        );
+    }
+
+    public function getUserById(int $id)
+    {
+        return $this->queryOne(
+            'SELECT ' . self::USER_COLUMNS . ' FROM users WHERE id = ? AND status = 1',
             $id
         );
     }

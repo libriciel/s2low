@@ -79,10 +79,17 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
             false
         );
 
+        // Authentifier manuellement l'utilisateur dans le TokenStorage
+        // car le certificat invalide empêche l'authentification automatique
+        $this->authenticateUserInSecurityContext(1);
+
+        // Réobtenir le controller car createClientWithCertificat() a créé un nouveau container
+        $this->adminUserController = self::getContainer()->get(AdminUserController::class);
+
         $this->setUserWithRole(UserRole::SuperAdministrateur);
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Message : Aucune information de certificat trouvée');
+        $this->expectExceptionMessage('Le certificat utilisateur est obligatoire');
         $this->adminUserController->doEditAction();
     }
 
@@ -109,11 +116,21 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
             false
         );
 
+        // Authentifier manuellement l'utilisateur dans le TokenStorage
+        // car le certificat invalide empêche l'authentification automatique
+        $this->authenticateUserInSecurityContext(1);
+
+        // Réobtenir le controller car createClientWithCertificat() a créé un nouveau container
+        $this->adminUserController = self::getContainer()->get(AdminUserController::class);
+
+        // Configurer les données minimales pour passer les validations préliminaires
         self::getContainer()->get(Environnement::class)->post()->set('api', 1);
+        self::getContainer()->get(Environnement::class)->post()->set('authority_id', 1);
         $_POST['api'] = 1;
+
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Aucune information de certificat trouvée');
-        $this->expectOutputRegex(utf8_decode("#KO\nAucune information de certificat trouvée#"));
+        $this->expectExceptionMessage('Exit');
+        $this->expectOutputRegex("#Le certificat utilisateur est obligatoire#");
         $this->adminUserController->doEditAction();
     }
 
