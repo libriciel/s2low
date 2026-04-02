@@ -31,7 +31,7 @@ class DownloadTransaction
 
     public function processDownload(MigrationItem $transaction): void
     {
-        $localPath = rtrim($this->tempDir, '/') . '/' . basename($transaction->key) . '-' . $transaction->id;
+        $localPath = rtrim($this->tempDir, '/') . '/' . basename($transaction->oldKey) . '-' . $transaction->id;
 
         $bucket = $transaction->bucket;
         if (!$bucket) {
@@ -40,7 +40,7 @@ class DownloadTransaction
             return;
         }
 
-        $result = $this->oldS3->getFile($bucket, $transaction->key, $localPath, true);
+        $result = $this->oldS3->getFile($bucket, $transaction->oldKey, $localPath, true);
         $statusStr = $result['current_status'] ?? 'inconnu';
         $sizeMB = isset($result['size']) ? round($result['size'] / 1024 / 1024, 2) : '?';
 
@@ -48,7 +48,7 @@ class DownloadTransaction
             echo "[DL] {$transaction->type} #{$transaction->id} OK ({$sizeMB} MB)" . PHP_EOL;
             $this->selfDB->updateStatus($transaction, Status::DOWNLOADED);
         } elseif ($statusStr === 'en attente de restoration') {
-            echo "[DL] {$transaction->type} #{$transaction->id} -> RESTORING (Glacier)" . PHP_EOL;
+            echo "[DL] {$transaction->type->value} #{$transaction->id} -> RESTORING (Glacier)" . PHP_EOL;
             $this->selfDB->updateStatus($transaction, Status::RESTORING);
         } elseif (str_starts_with($statusStr, 'erreur')) {
             echo "[DL] {$transaction->type} #{$transaction->id} ERROR: $statusStr" . PHP_EOL;

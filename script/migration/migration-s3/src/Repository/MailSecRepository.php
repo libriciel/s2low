@@ -13,7 +13,7 @@ class MailSecRepository extends AbstractRepository
      */
     public function getBatch(int $lastId, int $limit, ?string $minDate = null, ?string $maxDate = null): array
     {
-        $sql = "SELECT mt.id, mt.fn_download, mt.date_envoi, a.siren 
+        $sql = "SELECT mt.id, mt.fn_download, mt.date_envoi, a.id as authority_id
                 FROM mail_transaction mt
                 JOIN users u ON u.id = mt.user_id
                 JOIN authorities a ON a.id = u.authority_id

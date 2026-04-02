@@ -4,6 +4,7 @@ namespace App\DatabaseAccess;
 
 use App\DTO\MigrationItem;
 use App\Enum\Status;
+use App\Enum\Type;
 use PDO;
 use PDOException;
 
@@ -27,27 +28,27 @@ class SelfDB
         return $result['last_id'] ?? 0;
     }
 
-    public function getLastId(string $type): int
+    public function getLastId(Type $type): int
     {
         $stmt = $this->connexion->prepare("SELECT MAX(s2low_id) as last_id FROM transactions WHERE type = ?");
-        $stmt->execute([$type]);
+        $stmt->execute([$type->value]);
         $result = $stmt->fetch();
         return $result['last_id'] ?? 0;
     }
 
     public function create(MigrationItem $transaction): void
     {
-        $sql = "INSERT INTO transactions (s2low_id, type, siren, key, date, status) VALUES (?, ?, ?, ?, ?, ?)
+        $sql = "INSERT INTO transactions (s2low_id, type, oldKey, newKey, date, status) VALUES (?, ?, ?, ?, ?, ?)
                 ON CONFLICT (type, s2low_id) DO NOTHING";
 
         try {
             $this->connexion->prepare($sql)->execute([
                 $transaction->id,
-                $transaction->type,
-                $transaction->siren,
-                $transaction->key,
+                $transaction->type->value,
+                $transaction->oldKey,
+                $transaction->newKey,
                 $transaction->date,
-                Status::HANDLE->value
+                $transaction->status->value
             ]);
         } catch (PDOException $e) {
             echo 'error during transaction creation: ' . $e->getMessage();
@@ -59,7 +60,7 @@ class SelfDB
     {
         $params = [$status->value];
 
-        $sql = "SELECT s2low_id as id, type, siren, key, date, bucket FROM transactions WHERE status = ?";
+        $sql = "SELECT s2low_id as id, type, status, newKey, oldKey, date, bucket FROM transactions WHERE status = ?";
 
         if ($allowedTypes && count($allowedTypes) > 0) {
             $placeholders = implode(',', array_fill(0, count($allowedTypes), '?'));
@@ -78,10 +79,11 @@ class SelfDB
         foreach ($rows as $row) {
             $items[] = new MigrationItem(
                 id: (int)$row['id'],
-                key: $row['key'],
-                type: $row['type'],
+                oldKey: $row['oldkey'],
+                newKey: $row['newkey'],
+                type: Type::from($row['type']),
                 date: $row['date'],
-                siren: $row['siren'],
+                status: Status::from($row['status']),
                 bucket: $row['bucket'] ?? null
             );
         }
@@ -96,12 +98,12 @@ class SelfDB
         $this->connexion->prepare($sql)->execute([
             $status->value,
             $transaction->id,
-            $transaction->type
+            $transaction->type->value
         ]);
         
         // Log error message if needed (we assume a basic implementation without changing schema)
         if ($message && $status === Status::ERROR) {
-            echo "[ERROR] Transaction {$transaction->type}-{$transaction->id}: $message\n";
+            echo "[ERROR] Transaction {$transaction->type->value}-{$transaction->id}: $message\n";
         }
     }
 
@@ -111,7 +113,7 @@ class SelfDB
         $this->connexion->prepare($sql)->execute([
             $bucket,
             $transaction->id,
-            $transaction->type
+            $transaction->type->value
         ]);
         $transaction->bucket = $bucket;
     }

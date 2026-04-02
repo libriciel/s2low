@@ -8,7 +8,7 @@ class PesAcquitRepository extends AbstractRepository
 {
     public function getBatch(int $lastId, int $limit, ?string $minDate = null, ?string $maxDate = null): array
     {
-        $sql = "SELECT id, acquit_filename, siren, submission_date FROM helios_transactions 
+        $sql = "SELECT id, acquit_filename, authority_id, submission_date FROM helios_transactions 
                 WHERE id > ? AND pes_acquit_is_in_cloud = FALSE AND pes_acquit_not_available = FALSE AND acquit_filename IS NOT NULL ";
         $params = [$lastId];
 

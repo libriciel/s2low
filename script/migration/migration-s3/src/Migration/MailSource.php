@@ -3,6 +3,7 @@
 namespace App\Migration;
 
 use App\DTO\MigrationItem;
+use App\Enum\Status;
 use App\Enum\Type;
 use App\Repository\MailSecRepository;
 use App\Service\TransactionImportFromS2low;
@@ -15,9 +16,9 @@ class MailSource implements MigrationSourceInterface
     ) {
     }
 
-    public function getIdentifier(): string
+    public function getType(): Type
     {
-        return Type::MAIL->value;
+        return Type::MAIL;
     }
 
     public function getItems(int $lastProcessedId, ?string $minDate = null, ?string $maxDate = null): Generator
@@ -30,10 +31,11 @@ class MailSource implements MigrationSourceInterface
             foreach ($batch as $item) {
                 yield new MigrationItem(
                     id: $item['id'],
-                    oldKey: MAIL_FILES_UPLOAD_ROOT . '/' . $item['fn_download'] . '/mail.zip',
-                    newKey: $item['authority_id'] . '/mail_sec/' . $item['id'] . '/' . $item['fn_download'] . '/mail.zip',
-                    type: $this->getIdentifier(),
+                    oldKey: $item['fn_download'],
+                    newKey: $item['authority_id'] . '/mail_sec/' . $item['id'] . '/' . $item['fn_download'],
+                    type: $this->getType(),
                     date: $item['date_envoi'],
+                    status: $item['fn_download'] ? Status::HANDLE : Status::ERROR_KEY_NULL,
                 );
                 $lastProcessedId = $item['id'];
             }

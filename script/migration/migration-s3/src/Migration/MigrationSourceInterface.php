@@ -3,11 +3,12 @@
 namespace App\Migration;
 
 use App\DTO\MigrationItem;
+use App\Enum\Type;
 use Generator;
 
 interface MigrationSourceInterface
 {
-    public function getIdentifier(): string;
+    public function getType(): Type;
 
     /**
      * @param int $lastProcessedId

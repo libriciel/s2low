@@ -3,6 +3,7 @@
 namespace App\Migration;
 
 use App\DTO\MigrationItem;
+use App\Enum\Status;
 use App\Enum\Type;
 use App\Repository\PesAcquitRepository;
 use App\Service\TransactionImportFromS2low;
@@ -15,9 +16,9 @@ class PesAcquitSource implements MigrationSourceInterface
     ) {
     }
 
-    public function getIdentifier(): string
+    public function getType(): Type
     {
-        return Type::PES_ACQUIT->value;
+        return Type::PES_ACQUIT;
     }
 
     public function getItems(int $lastProcessedId, ?string $minDate = null, ?string $maxDate = null): Generator
@@ -31,10 +32,11 @@ class PesAcquitSource implements MigrationSourceInterface
             foreach ($batch as $item) {
                 yield new MigrationItem(
                     id: $item['id'],
-                    oldKey: HELIOS_RESPONSES_ROOT . '/' . $item['acquit_filename'],
+                    oldKey: $item['acquit_filename'],
                     newKey: $item['authority_id'] . '/pes_acquit/' . $item['id'] . '/' . $item['acquit_filename'],
-                    type: $this->getIdentifier(),
+                    type: $this->getType(),
                     date: $item['submission_date'],
+                    status: $item['acquit_filename'] ? Status::HANDLE : Status::ERROR_KEY_NULL,
                 );
                 $lastProcessedId = $item['id'];
             }

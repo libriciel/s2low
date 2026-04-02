@@ -34,7 +34,7 @@ class TransactionImportTest extends TestCase
     {
         $repoMock = $this->createMock(ActesRepository::class);
         $source = new ActesSource($repoMock);
-        $this->assertEquals(Type::ACTE->value, $source->getIdentifier());
+        $this->assertEquals(Type::ACTE->value, $source->getType());
     }
 
     public function testActesSourceGetItemsYieldsCorrectMigrationItems(): void
@@ -81,7 +81,7 @@ class TransactionImportTest extends TestCase
     {
         $repoMock = $this->createMock(PesRepository::class);
         $source = new PesSource($repoMock);
-        $this->assertEquals(Type::PES_ALLER->value, $source->getIdentifier());
+        $this->assertEquals(Type::PES_ALLER->value, $source->getType());
     }
 
     public function testPesSourceGetItemsYieldsCorrectKey(): void
@@ -110,7 +110,7 @@ class TransactionImportTest extends TestCase
     {
         $repoMock = $this->createMock(PesAcquitRepository::class);
         $source = new PesAcquitSource($repoMock);
-        $this->assertEquals(Type::PES_ACQUIT->value, $source->getIdentifier());
+        $this->assertEquals(Type::PES_ACQUIT->value, $source->getType());
     }
 
     public function testPesAcquitSourceGetItemsYieldsCorrectKey(): void
@@ -139,7 +139,7 @@ class TransactionImportTest extends TestCase
     {
         $repoMock = $this->createMock(MailSecRepository::class);
         $source = new MailSource($repoMock);
-        $this->assertEquals(Type::MAIL->value, $source->getIdentifier());
+        $this->assertEquals(Type::MAIL->value, $source->getType());
     }
 
     public function testMailSourceGetItemsYieldsCorrectKey(): void
@@ -189,8 +189,8 @@ class TransactionImportTest extends TestCase
         $this->selfDBMock->expects($this->exactly(2))
             ->method('create')
             ->withConsecutive(
-                [$this->callback(fn (MigrationItem $item) => $item->id === 1 && $item->key === 'path1')],
-                [$this->callback(fn (MigrationItem $item) => $item->id === 2 && $item->key === 'path2')]
+                [$this->callback(fn (MigrationItem $item) => $item->id === 1 && $item->oldkey === 'path1')],
+                [$this->callback(fn (MigrationItem $item) => $item->id === 2 && $item->oldkey === 'path2')]
             );
 
         $importer = new TransactionImportFromS2low($source, $this->selfDBMock);

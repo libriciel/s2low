@@ -3,6 +3,7 @@
 namespace App\Migration;
 
 use App\DTO\MigrationItem;
+use App\Enum\Status;
 use App\Enum\Type;
 use App\Repository\ActesRepository;
 use App\Service\TransactionImportFromS2low;
@@ -15,9 +16,9 @@ class ActesSource implements MigrationSourceInterface
     ) {
     }
 
-    public function getIdentifier(): string
+    public function getType(): Type
     {
-        return Type::ACTE->value;
+        return Type::ACTE;
     }
 
     public function getItems(int $lastProcessedId, ?string $minDate = null, ?string $maxDate = null): Generator
@@ -33,8 +34,9 @@ class ActesSource implements MigrationSourceInterface
                     id: $item['id'],
                     oldKey: $item['file_path'],
                     newKey: $item['authority_id'] . '/' . 'acte' . '/' . $item['id'] . '/' . basename($item['file_path']),
-                    type: $this->getIdentifier(),
+                    type: $this->getType(),
                     date: $item['submission_date'],
+                    status: $item['file_path'] ? Status::HANDLE : Status::ERROR_KEY_NULL,
                 );
                 $lastProcessedId = $item['id'];
             }

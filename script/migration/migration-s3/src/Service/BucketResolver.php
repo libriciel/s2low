@@ -34,15 +34,15 @@ class BucketResolver
         $bucketsToTest = $this->getBucketsByPriority($transaction);
 
         foreach ($bucketsToTest as $bucketName) {
-            if ($this->oldS3->exists($bucketName, $transaction->key)) {
-                echo "[RESOLVE] {$transaction->type} #{$transaction->id} -> {$bucketName}" . PHP_EOL;
+            if ($this->oldS3->exists($bucketName, $transaction->oldKey)) {
+                echo "[RESOLVE] {$transaction->type->value} #{$transaction->id} -> {$bucketName}" . PHP_EOL;
                 $this->selfDB->updateBucket($transaction, $bucketName);
                 $this->selfDB->updateStatus($transaction, Status::BUCKET_FOUND);
                 return true;
             }
         }
 
-        echo "[RESOLVE] {$transaction->type} #{$transaction->id} -> NOT FOUND" . PHP_EOL;
+        echo "[RESOLVE] {$transaction->type->value} #{$transaction->id} -> NOT FOUND" . PHP_EOL;
         $this->selfDB->updateStatus($transaction, Status::ERROR, "File not found in any S3 bucket array tests.");
         return false;
     }
@@ -60,10 +60,10 @@ class BucketResolver
             // Si on est en Jan/Feb, on teste aussi N-1.
             // Si on est en Nov/Dec, on teste aussi N+1.
             // Puis fallback global sladullact-actes.
-            Type::ACTE->value => $this->getActesBuckets($transaction->date),
-            \App\Enum\Type::PES_ALLER->value => $this->getPesAllerBuckets($transaction->key),
-            \App\Enum\Type::PES_ACQUIT->value => ['sladullact-helios-pesacquitprefix'],
-            \App\Enum\Type::MAIL->value => ['sladullact-mail'],
+            Type::ACTE => $this->getActesBuckets($transaction->date),
+            Type::PES_ALLER => $this->getPesAllerBuckets($transaction->oldKey),
+            Type::PES_ACQUIT => ['sladullact-helios-pesacquitprefix'],
+            Type::MAIL => ['sladullact-mail'],
             default => ['sladullact-actes']
         };
     }
@@ -97,7 +97,6 @@ class BucketResolver
 
     private function getPesAllerBuckets(string $key): array
     {
-        $allHexChars = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'];
         $prefix = 'sladullact-helios-aller-file';
 
         $parts = explode('/', $key);
@@ -105,11 +104,6 @@ class BucketResolver
         $firstChar = strtolower(substr($sha1, 0, 1));
 
         $buckets = ["{$prefix}{$firstChar}"];
-        foreach ($allHexChars as $hex) {
-            if ($hex !== $firstChar) {
-                $buckets[] = "{$prefix}{$hex}";
-            }
-        }
 
         return $buckets;
     }

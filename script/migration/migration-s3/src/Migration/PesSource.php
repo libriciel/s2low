@@ -3,6 +3,7 @@
 namespace App\Migration;
 
 use App\DTO\MigrationItem;
+use App\Enum\Status;
 use App\Enum\Type;
 use App\Repository\PesRepository;
 use App\Service\TransactionImportFromS2low;
@@ -15,9 +16,9 @@ class PesSource implements MigrationSourceInterface
     ) {
     }
 
-    public function getIdentifier(): string
+    public function getType(): Type
     {
-        return Type::PES_ALLER->value;
+        return Type::PES_ALLER;
     }
 
     public function getItems(int $lastProcessedId, ?string $minDate = null, ?string $maxDate = null): Generator
@@ -31,10 +32,11 @@ class PesSource implements MigrationSourceInterface
             foreach ($batch as $item) {
                 yield new MigrationItem(
                     id: $item['id'],
-                    oldKey: HELIOS_FILES_UPLOAD_ROOT . '/' . $item['sha1'],
+                    oldKey: $item['sha1'],
                     newKey: $item['authority_id'] . '/pes_aller/' . $item['id'] . '/' . $item['sha1'],
-                    type: $this->getIdentifier(),
+                    type: $this->getType(),
                     date: $item['submission_date'],
+                    status: $item['sha1'] ? Status::HANDLE : Status::ERROR_KEY_NULL,
                 );
                 $lastProcessedId = $item['id'];
             }

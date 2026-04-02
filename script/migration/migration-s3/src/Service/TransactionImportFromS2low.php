@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\DatabaseAccess\SelfDB;
 use App\DTO\MigrationItem;
-use App\Enum\Status;
 use App\Migration\MigrationSourceInterface;
 
 class TransactionImportFromS2low
@@ -18,7 +17,7 @@ class TransactionImportFromS2low
 
     public function run($lastProcessedId = null, ?string $minDate = null, ?string $maxDate = null): void
     {
-        $id = $lastProcessedId ?? $this->selfDB->getLastId($this->source->getIdentifier());
+        $id = $lastProcessedId ?? $this->selfDB->getLastId($this->source->getType());
         $count = 0;
 
         foreach($this->source->getItems($id, $minDate, $maxDate) as $transaction)
@@ -26,11 +25,11 @@ class TransactionImportFromS2low
             /** @var MigrationItem $transaction */
             $this->selfDB->create($transaction);
             $count++;
-            if ($count % 5000 == 0) echo "[IMPORT] {$this->source->getIdentifier()} +{$count} (ID: {$transaction->id})" . PHP_EOL;
+            if ($count % 5000 == 0) echo "[IMPORT] {$this->source->getType()} +{$count} (ID: {$transaction->id})" . PHP_EOL;
         }
 
         if ($count > 0) {
-            echo "[IMPORT] {$this->source->getIdentifier()} done: +{$count} items" . PHP_EOL;
+            echo "[IMPORT] {$this->source->getType()->value} done: +{$count} items" . PHP_EOL;
         }
     }
 }
