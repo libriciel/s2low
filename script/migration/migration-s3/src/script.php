@@ -8,11 +8,13 @@ use App\Factory\OldS3ClientFactory;
 use App\Migration\ActesSource;
 use App\Migration\MailSource;
 use App\Migration\PesAcquitSource;
+use App\Migration\PesRetourSource;
 use App\Migration\PesSource;
 use App\Repository\ActesRepository;
 use App\Repository\MailSecRepository;
 use App\Repository\PesAcquitRepository;
 use App\Repository\PesRepository;
+use App\Repository\PesRetourRepository;
 use App\Service\BucketResolver;
 use App\Service\DownloadTransaction;
 use App\Service\GlacierRestoreChecker;
@@ -131,12 +133,14 @@ try {
 $actesRepository = new ActesRepository($S2lowDBConnexion);
 $pesRepository = new PesRepository($S2lowDBConnexion);
 $pesAcquitRepository = new PesAcquitRepository($S2lowDBConnexion);
+$pesRetourRepository = new PesRetourRepository($S2lowDBConnexion);
 $mailRepository = new MailSecRepository($S2lowDBConnexion);
 
 $allSavers = [
     Type::ACTE->value       => new TransactionImportFromS2low(new ActesSource($actesRepository), $selfDBConnexion),
     Type::PES_ALLER->value  => new TransactionImportFromS2low(new PesSource($pesRepository), $selfDBConnexion),
     Type::PES_ACQUIT->value => new TransactionImportFromS2low(new PesAcquitSource($pesAcquitRepository), $selfDBConnexion),
+    Type::PES_RETOUR->value => new TransactionImportFromS2low(new PesRetourSource($pesRetourRepository), $selfDBConnexion),
     Type::MAIL->value       => new TransactionImportFromS2low(new MailSource($mailRepository), $selfDBConnexion)
 ];
 

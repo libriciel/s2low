@@ -31,18 +31,13 @@ class PesAcquitSource implements MigrationSourceInterface
             foreach ($batch as $item) {
                 yield new MigrationItem(
                     id: $item['id'],
-                    key: $item['siren'] . '/' . $item['acquit_filename'],
+                    oldKey: HELIOS_RESPONSES_ROOT . '/' . $item['acquit_filename'],
+                    newKey: $item['authority_id'] . '/pes_acquit/' . $item['id'] . '/' . $item['acquit_filename'],
                     type: $this->getIdentifier(),
                     date: $item['submission_date'],
-                    siren: $item['siren']
                 );
                 $lastProcessedId = $item['id'];
             }
         }
-    }
-
-    public function getHandledTransactions(): Generator
-    {
-        // TODO: Implement getHandledTransactions() method.
     }
 }

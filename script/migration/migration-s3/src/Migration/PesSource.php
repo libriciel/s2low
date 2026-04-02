@@ -31,18 +31,13 @@ class PesSource implements MigrationSourceInterface
             foreach ($batch as $item) {
                 yield new MigrationItem(
                     id: $item['id'],
-                    key: $item['siren'] . '/' . $item['sha1'],
+                    oldKey: HELIOS_FILES_UPLOAD_ROOT . '/' . $item['sha1'],
+                    newKey: $item['authority_id'] . '/pes_aller/' . $item['id'] . '/' . $item['sha1'],
                     type: $this->getIdentifier(),
                     date: $item['submission_date'],
-                    siren: $item['siren']
                 );
                 $lastProcessedId = $item['id'];
             }
         }
-    }
-
-    public function getHandledTransactions(): Generator
-    {
-        // TODO: Implement getHandledTransactions() method.
     }
 }

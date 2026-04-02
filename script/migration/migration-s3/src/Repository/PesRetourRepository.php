@@ -4,31 +4,32 @@ namespace App\Repository;
 
 use PDO;
 
-class ActesRepository extends AbstractRepository
+class PesRetourRepository extends AbstractRepository
 {
     /**
      * @param int $lastId
      * @param int $limit
-     * @return array Returns array of ['id' => int, 'file_path' => string, 'siren' => string]
+     * @return array Returns array of ['id' => int, 'sha1' => string, 'filename' => string, 'siren' => string]
      */
     public function getBatch(int $lastId, int $limit, ?string $minDate = null, ?string $maxDate = null): array
     {
-        $sql = "SELECT ae.id, file_path, siren, submission_date, authority_id FROM actes_envelopes AS ae JOIN actes_transactions AS at ON at.envelope_id = ae.id
-                WHERE ae.id > ? AND not_available = FALSE ";
+        $sql = "SELECT id, authority_id, filename, date FROM helios_retour 
+                WHERE id > ? AND is_in_cloud = FALSE AND not_available = FALSE ";
         $params = [$lastId];
 
         if ($minDate) {
-            $sql .= "AND submission_date >= ? ";
+            $sql .= "AND date >= ? ";
             $params[] = $minDate;
         }
 
         if ($maxDate) {
-            $sql .= "AND submission_date < ? ";
+            $sql .= "AND date < ? ";
             $params[] = $maxDate;
         }
 
         $sql .= "ORDER BY id ASC LIMIT ?";
         $params[] = $limit;
+
         $stmt = $this->connexion->getPDO()->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

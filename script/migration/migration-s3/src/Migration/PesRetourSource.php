@@ -4,20 +4,20 @@ namespace App\Migration;
 
 use App\DTO\MigrationItem;
 use App\Enum\Type;
-use App\Repository\MailSecRepository;
+use App\Repository\PesRetourRepository;
 use App\Service\TransactionImportFromS2low;
 use Generator;
 
-class MailSource implements MigrationSourceInterface
+class PesRetourSource implements MigrationSourceInterface
 {
     public function __construct(
-        private readonly MailSecRepository $repository
+        private readonly PesRetourRepository $repository,
     ) {
     }
 
     public function getIdentifier(): string
     {
-        return Type::MAIL->value;
+        return Type::PES_RETOUR->value;
     }
 
     public function getItems(int $lastProcessedId, ?string $minDate = null, ?string $maxDate = null): Generator
@@ -27,13 +27,14 @@ class MailSource implements MigrationSourceInterface
             if (empty($batch)) {
                 break;
             }
+
             foreach ($batch as $item) {
                 yield new MigrationItem(
                     id: $item['id'],
-                    oldKey: MAIL_FILES_UPLOAD_ROOT . '/' . $item['fn_download'] . '/mail.zip',
-                    newKey: $item['authority_id'] . '/mail_sec/' . $item['id'] . '/' . $item['fn_download'] . '/mail.zip',
+                    oldKey: $item['filename'],
+                    newKey: $item['authority_id'] . '/pes_retour/' . $item['id'] . '/' . $item['filename'],
                     type: $this->getIdentifier(),
-                    date: $item['date_envoi'],
+                    date: $item['date'],
                 );
                 $lastProcessedId = $item['id'];
             }

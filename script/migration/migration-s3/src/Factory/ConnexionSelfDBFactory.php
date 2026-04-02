@@ -25,12 +25,13 @@ class ConnexionSelfDBFactory
                 "CREATE TABLE IF NOT EXISTS transactions (
                 id SERIAL PRIMARY KEY,
                 s2low_id INTEGER NOT NULL,
-                type TEXT NOT NULL CHECK(type IN ('" . Type::ACTE->value . "', '" . Type::PES_ALLER->value . "', '" . Type::PES_ACQUIT->value . "', '" . Type::MAIL->value . "')),
+                type TEXT NOT NULL CHECK(type IN ('" . Type::ACTE->value . "', '" . Type::PES_ALLER->value . "', '" . Type::PES_ACQUIT->value . "', '" . Type::PES_RETOUR->value . "', '" . Type::MAIL->value . "')),
                 date TIMESTAMP NOT NULL,
-                siren TEXT NOT NULL,
-                key TEXT NOT NULL,
+                oldKey TEXT NOT NULL,
+                newKey TEXT NOT NULL,
                 bucket TEXT,
                 status TEXT NOT NULL CHECK(status IN ('" . Status::HANDLE->value . "', '" . Status::BUCKET_FOUND->value . "', '" . Status::ASK->value . "', '" . Status::RESTORING->value . "', '" . Status::DOWNLOADED->value . "', '" . Status::COMPLETED->value . "', '" . Status::ERROR->value . "')),
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 UNIQUE(type, s2low_id))
                 ");

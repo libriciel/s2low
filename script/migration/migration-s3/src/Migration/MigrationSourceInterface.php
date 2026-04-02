@@ -16,6 +16,4 @@ interface MigrationSourceInterface
      * @return Generator<MigrationItem>
      */
     public function getItems(int $lastProcessedId, ?string $minDate = null, ?string $maxDate = null): Generator;
-
-    public function getHandledTransactions(): Generator;
 }

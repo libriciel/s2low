@@ -31,18 +31,13 @@ class ActesSource implements MigrationSourceInterface
             foreach ($batch as $item) {
                 yield new MigrationItem(
                     id: $item['id'],
-                    key: $item['file_path'],
+                    oldKey: $item['file_path'],
+                    newKey: $item['authority_id'] . '/' . 'acte' . '/' . $item['id'] . '/' . basename($item['file_path']),
                     type: $this->getIdentifier(),
                     date: $item['submission_date'],
-                    siren: $item['siren']
                 );
                 $lastProcessedId = $item['id'];
             }
         }
-    }
-
-    public function getHandledTransactions(): Generator
-    {
-        // TODO: Implement getHandledTransactions() method.
     }
 }

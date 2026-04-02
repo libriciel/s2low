@@ -6,10 +6,10 @@ class MigrationItem
 {
     public function __construct(
         readonly public int $id,
-        readonly public string $key,
+        readonly public string $oldKey,
+        readonly public string $newKey,
         readonly public string $type,
         readonly public string $date,
-        readonly public string $siren,
         public ?string $bucket = null
     ) {
     }
