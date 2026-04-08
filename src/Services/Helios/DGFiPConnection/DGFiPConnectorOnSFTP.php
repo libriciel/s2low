@@ -104,7 +104,7 @@ class DGFiPConnectorOnSFTP implements DGFiPConnector
     /**
      * @throws Exception
      */
-    public function chdir(string $remote_path)
+    public function chdir(string $remote_path): void
     {
         if (!$this->activeSFTPConnection->chdir($remote_path)) {
             throw new Exception("Impossible d'aller sur le répertoire distant $remote_path");
@@ -112,6 +112,6 @@ class DGFiPConnectorOnSFTP implements DGFiPConnector
     }
     public function pwd(): string
     {
-        return $this->activeSFTPConnection->putwd();
+        return $this->activeSFTPConnection->pwd();
     }
 }

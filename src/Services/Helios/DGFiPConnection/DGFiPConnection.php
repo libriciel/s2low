@@ -207,7 +207,7 @@ class DGFiPConnection
         $this->serverProtocol->chdir($this->response_server_path);
     }
 
-    public function pwd()
+    public function pwd(): string
     {
         return $this->serverProtocol->pwd();
     }

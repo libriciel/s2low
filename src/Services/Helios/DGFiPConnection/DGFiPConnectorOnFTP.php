@@ -211,19 +211,11 @@ class DGFiPConnectorOnFTP implements DGFiPConnector
         return "{$this->connection->getURL()}.$this->modeDemoWarning";
     }
 
-    public function chdir(string $remote_path)
+    public function chdir(string $remote_path): void
     {
         if (!$this->getConnection()->chdir($remote_path)) {
             throw new Exception("Impossible d'aller sur le répertoire distant $remote_path");
         }
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function putwd(): string
-    {
-        return $this->getConnection()->putwd();
     }
 
     public function pwd(): string
