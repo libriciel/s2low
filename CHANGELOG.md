@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.11 -
+
+### Corrections
+
+- Correction du changement de répertoire dans helios-reception lorsque l’étape de récupération des noms de fichiers était ignorée #1494
+
 ## 5.1.10 - 2026-04-13
 
 ### Sécurité
