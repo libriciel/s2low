@@ -179,4 +179,9 @@ class FTPConnection
     {
         return isset($this->ftp);
     }
+
+    public function pwd(): string
+    {
+        return $this->ftpServiceWrapper->pwd($this->getFtp());
+    }
 }

@@ -36,15 +36,11 @@ class DGFiPConnectorOnSFTP implements DGFiPConnector
 
     /**
      * Retourne les fichiers disponibles sur un répertoire du serveur
-     * @param string $remote_path Chemin du répertoire
      * @return array
      * @throws \Exception
      */
-    public function getFileNames(string $remote_path): array
+    public function getFileNames(): array
     {
-        if (!$this->activeSFTPConnection->chdir($remote_path)) {
-            throw new Exception("Impossible d'aller sur le répertoire distant $remote_path");
-        }
         return $this->activeSFTPConnection->nlist('./');
     }
 
@@ -103,5 +99,19 @@ class DGFiPConnectorOnSFTP implements DGFiPConnector
     public function getURL(): string
     {
         return "{$this->activeSFTPConnection->getURL()}";
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function chdir(string $remote_path): void
+    {
+        if (!$this->activeSFTPConnection->chdir($remote_path)) {
+            throw new Exception("Impossible d'aller sur le répertoire distant $remote_path");
+        }
+    }
+    public function pwd(): string
+    {
+        return $this->activeSFTPConnection->pwd();
     }
 }

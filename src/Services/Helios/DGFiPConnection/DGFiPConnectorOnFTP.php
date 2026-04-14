@@ -3,6 +3,7 @@
 namespace S2low\Services\Helios\DGFiPConnection;
 
 use Exception;
+use phpseclib3\Net\SFTP;
 
 /**
  *  Implémentation d'une connection vers le serveur DGFiP utilisant le protocole FTP ou FTPS
@@ -76,22 +77,17 @@ class DGFiPConnectorOnFTP implements DGFiPConnector
 
     /**
      * Retourne les fichiers disponibles sur un répertoire du serveur
-     * @param string $remote_path Chemin du répertoire
      * @return array
      * @throws \Exception
      */
-    public function getFileNames(string $remote_path): array
+    public function getFileNames(): array
     {
-        if (!$this->getConnection()->chdir($remote_path)) {
-            throw new Exception("Impossible d'aller sur le répertoire distant $remote_path");
-        }
-
         $all_file = $this->getConnection()->nlist(
             $this->currentDirectorySyntax
         );
 
         if ($all_file === false) {
-            throw new Exception("Impossible de lister le contenu du répertoire distant $remote_path");
+            throw new Exception("Impossible de lister le contenu du répertoire distant");
         }
         return $all_file;
     }
@@ -213,5 +209,17 @@ class DGFiPConnectorOnFTP implements DGFiPConnector
     public function getURL(): string
     {
         return "{$this->connection->getURL()}.$this->modeDemoWarning";
+    }
+
+    public function chdir(string $remote_path): void
+    {
+        if (!$this->getConnection()->chdir($remote_path)) {
+            throw new Exception("Impossible d'aller sur le répertoire distant $remote_path");
+        }
+    }
+
+    public function pwd(): string
+    {
+        return $this->getConnection()->pwd();
     }
 }
