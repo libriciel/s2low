@@ -220,6 +220,6 @@ class DGFiPConnectorOnFTP implements DGFiPConnector
 
     public function pwd(): string
     {
-        return $this->getConnection()->putwd();
+        return $this->getConnection()->pwd();
     }
 }
