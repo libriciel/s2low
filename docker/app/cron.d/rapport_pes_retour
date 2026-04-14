@@ -1,2 +1,1 @@
-0 8 * * * /usr/local/bin/php /app/script/helios/rapport-pes_retour-non-affecte.php
-0 12 * * *  /usr/local/bin/php /app/script/helios/pes_retour-reanalyse.php
+0 12 * * * /usr/local/bin/php /app/script/helios/pes_retour-reanalyse.php

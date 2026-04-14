@@ -1,4 +1,4 @@
-FROM hubdocker.libriciel.fr/node:24.14.0-alpine3.23 AS node_modules
+FROM hubdocker.libriciel.fr/node:24.15.0-alpine3.23 AS node_modules
 WORKDIR /app/
 COPY package*.json ./
 RUN npm install
@@ -26,6 +26,7 @@ RUN apk add --no-cache \
     c-client \
     ca-certificates \
     clamav-clamdscan \
+    findutils \
     git \
     icu \
     icu-data-full \
@@ -35,6 +36,7 @@ RUN apk add --no-cache \
     libpq \
     libssh2 \
     libzip \
+    logrotate \
     oniguruma \
     poppler-utils \
     supercronic \
@@ -117,7 +119,7 @@ USER "root"
 
 COPY --from=hubdocker.libriciel.fr/composer:2.9.8 /usr/bin/composer /usr/local/bin/composer
 
-RUN --mount=type=bind,from=ghcr.io/php/pie:1.3.10-bin,source=/pie,target=/usr/local/bin/pie \
+RUN --mount=type=bind,from=ghcr.io/php/pie:1.4.4-bin,source=/pie,target=/usr/local/bin/pie \
     apk add --no-cache --virtual .dev-build-deps \
     $PHPIZE_DEPS \
     linux-headers \
@@ -125,7 +127,7 @@ RUN --mount=type=bind,from=ghcr.io/php/pie:1.3.10-bin,source=/pie,target=/usr/lo
  && docker-php-ext-enable xdebug \
  && apk del .dev-build-deps
 
-RUN composer install --ignore-platform-reqs
+RUN composer install
 RUN chown app:app /app
 
 USER "app"

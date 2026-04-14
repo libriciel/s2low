@@ -1,1 +1,1 @@
-34 * * * * bash -c 'source /data/config/container_environment.sh && /usr/bin/php /app/bin/console beanstalkd:rebuild-queue' >> /data/log/rebuild-queue.log 2>&1
+34 * * * * /usr/local/bin/php /app/bin/console beanstalkd:rebuild-queue >> /data/log/rebuild-queue.log 2>&1
