@@ -6,6 +6,10 @@
 
 - Correction du changement de répertoire dans helios-reception lorsque l’étape de récupération des noms de fichiers était ignorée #1494
 
+### Sécurité
+
+- Correction d'une injection SQL (CVSS 8.8 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H) #1498
+
 ## 5.1.10 - 2026-04-13
 
 ### Sécurité
