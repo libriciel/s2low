@@ -9,6 +9,7 @@
 ### Sécurité
 
 - Correction d'une injection SQL (CVSS 8.8 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H) #1498
+- Correction d'une faille XSS (CVSS 6.1 - criticité MOYENNE - CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N) #1499
 
 ## 5.1.10 - 2026-04-13
 

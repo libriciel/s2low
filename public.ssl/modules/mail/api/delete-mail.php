@@ -26,5 +26,4 @@ if (!$detail) {
 
 MailPeer::DeleteMailTransation($id);
 
-
 echo "OK: Transaction $id supprimé";

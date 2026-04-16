@@ -31,7 +31,7 @@ class CreateActeTest extends S2lowIntegrationTestCase
             [
                 [
                     'with_file' => true,
-                    'stringInResponse' => 'Création de l\'enveloppe'
+                    'stringInResponse' => 'Création de l&#039;enveloppe'
                 ]
             ],
             [
