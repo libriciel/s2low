@@ -21,7 +21,7 @@ class LegacyController extends AbstractController
         try {
             require $legacyScript;
         } catch (Exception $e) {
-            var_dump($e->getMessage());
+            var_dump(htmlspecialchars($e->getMessage()));
         }
         $content = (string)ob_get_clean();
 
