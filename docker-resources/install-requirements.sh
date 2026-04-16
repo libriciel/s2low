@@ -56,6 +56,8 @@ apt-get install -y  --no-install-recommends \
 
 rm -r /var/lib/apt/lists/*
 
+rm /etc/cron.d/certbot
+
 # Locale
 sed -i -e 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/' /etc/locale.gen
 echo 'LANG="fr_FR.UTF-8"'>/etc/default/locale
