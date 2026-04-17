@@ -35,7 +35,7 @@ class AuthorityTest extends S2lowTestCase
     {
         return[
             [ 'email','email',''],
-            [ 'broadcast_email','email',''],
+            [ 'broadcast_email','broadcast_email',''],
             ['default_broadcast_email','email',''],
         ];
     }
