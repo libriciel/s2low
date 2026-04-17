@@ -2,6 +2,11 @@
 
 namespace S2lowLegacy\Class;
 
+/**
+ * @deprecated class plus utilisé. A supprimer pour la v6 TODO
+ * issue : https://gitlab.libriciel.fr/libriciel/pole-plate-formes/s2low/s2low/-/work_items/1504
+ *
+ */
 class OpensslTSWrapper
 {
     private $opensslPath;

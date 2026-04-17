@@ -2,14 +2,13 @@
 
 namespace S2lowLegacy\Lib;
 
-//http://users.dcc.uchile.cl/~pcamacho/tutorial/web/xmlsec/xmlsec.html
-use S2lowLegacy\Class\VerifyPemCertificate;
 use DateTime;
 use DateTimeZone;
 use DOMDocument;
 use DOMElement;
 use DOMNode;
 use Exception;
+use S2lowLegacy\Class\VerifyPemCertificate;
 
 class XadesSignature
 {
@@ -90,12 +89,19 @@ class XadesSignature
 
         $rootNodeName = $this->getLocalName($domDocument);
 
+        $rootNodeNameEscaped = escapeshellarg($rootNodeName);
         $signature_node_id = $this->getSignatureNodeId($document_id);
 
         $xpath = "//*[namespace-uri()='http://www.w3.org/2000/09/xmldsig#'][local-name()='Signature'][@Id='{$signature_node_id}']";
 
-        $command = "{$this->xmlsec1_path} --sign --node-xpath \"$xpath\" --id-attr:Id $rootNodeName --output $xml_file_signed --pkcs12 $p12_certificate_path --pwd $p12_password $tmp_file 2>&1";
+        $xmlSecPathEscaped = escapeshellarg($this->xmlsec1_path);
+        $xPathEscaped = escapeshellarg($xpath);
+        $xmlFileSignedEscaped = escapeshellarg($xml_file_signed);
+        $p12CertificatePathEscaped = escapeshellarg($p12_certificate_path);
+        $p12PasswordEscaped = escapeshellarg($p12_password);
+        $tmpFileEscaped = escapeshellarg($tmp_file);
 
+        $command = "{$xmlSecPathEscaped} --sign --node-xpath {$xPathEscaped} --id-attr:Id {$rootNodeNameEscaped} --output {$xmlFileSignedEscaped} --pkcs12 {$p12CertificatePathEscaped} --pwd {$p12PasswordEscaped} {$tmpFileEscaped} 2>&1";
         exec($command, $output, $return_var);
 
         unlink($tmp_file);
@@ -285,10 +291,16 @@ class XadesSignature
             $verificationTimeString = $verificationTime
                 ->setTimezone(new DateTimeZone('UTC'))
                 ->format("Y-m-d G:i:s");
-            $verificationTimeParameter = "--verification-time \"$verificationTimeString\"";
+            $verificationTimeParameter = "--verification-time " . escapeshellarg($verificationTimeString);
         }
 
-        $command = "export TZ=UTC && export SSL_CERT_DIR={$this->validca_path} && {$this->xmlsec1_path} --verify --node-xpath \"$xpath\" " . $verificationTimeParameter . " --id-attr:Id $signature_node_name $xml_file_signed 2>&1";
+        $validCaPathEscaped = escapeshellarg($this->validca_path);
+        $xmlSecPathEscaped = escapeshellarg($this->xmlsec1_path);
+        $xPathEscaped = escapeshellarg($xpath);
+        $signatureNodeNameEscaped = escapeshellarg($signature_node_name);
+        $xmlFileSignedEscaped = escapeshellarg($xml_file_signed);
+
+        $command = "export TZ=UTC && export SSL_CERT_DIR={$validCaPathEscaped} && {$xmlSecPathEscaped} --verify --node-xpath {$xPathEscaped} {$verificationTimeParameter} --id-attr:Id {$signatureNodeNameEscaped} {$xmlFileSignedEscaped} 2>&1";
         exec($command, $output, $return_var);
         $this->last_output = implode("\n", $output);
         return $return_var == 0;
