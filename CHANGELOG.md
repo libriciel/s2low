@@ -4,8 +4,10 @@
 
 ### Corrections
 
-- Correction du changement de répertoire dans helios-reception lorsque l’étape de récupération des noms de fichiers était ignorée #1494
+- Correction du changement de répertoire dans helios-reception lorsque l’étape de récupération des noms de fichiers
+était ignorée #1494
 - Faille RCE (CVSS 8.8 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H) #1501
+- Le cron certbot pouvait entrer en conflit avec le cron acme-renew #1503
 
 ### Sécurité
 
