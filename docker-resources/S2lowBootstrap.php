@@ -5,13 +5,17 @@ namespace S2lowLegacy\Boot;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Controller\PostgreSQLController;
 use S2lowLegacy\Lib\SQLQuery;
-use S2lowLegacy\Model\UserSQL;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class S2lowBootstrap
 {
     public function __construct(
         private readonly SQLQuery $sqlQuery,
         private readonly PostgreSQLController $postgreSQLController,
+        #[Autowire(service: 'console.messenger.application')]
+        private readonly Application $app
     ) {
     }
 
@@ -89,9 +93,9 @@ class S2lowBootstrap
 
     private function dbUpdate()
     {
-        $this->postgreSQLController->alterDatabase(function ($message) {
-            $this->log($message);
-        });
+        $command = $this->app->find('doctrine:migrations:migrate');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(['--no-interaction' => true]);
     }
 
     private function insertDemos()

@@ -70,7 +70,15 @@ new-migration:
 	$(DOCKER_COMPOSE_EXEC) php bin/console doctrine:migrations:generate
 
 migrate:
-	$(DOCKER_COMPOSE_EXEC) php bin/console doctrine:migrations:migrate --no-inte
+	$(DOCKER_COMPOSE_EXEC) php bin/console doctrine:migrations:migrate
+
+v ?= 0
+migrate-to:
+	$(DOCKER_COMPOSE_EXEC) php bin/console doctrine:migrations:migrate 'DoctrineMigrations\Version$(v)' --no-interaction
+
+migrate-reset:
+	$(DOCKER_COMPOSE_EXEC) php bin/console doctrine:migrations:migrate 0
+
 
 undo-last-migration:
 	$(DOCKER_COMPOSE_EXEC) php bin/console doctrine:migrations:migrate prev --no-interaction

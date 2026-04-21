@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Boot\S2lowBootstrap;
-use S2lowLegacy\Model\UserSQL;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 
 class S2lowBootstrapTest extends TestCase
 {
@@ -20,7 +20,7 @@ class S2lowBootstrapTest extends TestCase
         $S2lowBootstrap = new S2lowBootstrap(
             $this->getMockBuilder(\S2lowLegacy\Lib\SQLQuery::class)->disableOriginalConstructor()->getMock(),
             $this->getMockBuilder(\S2lowLegacy\Controller\PostgreSQLController::class)->disableOriginalConstructor()->getMock(),
-            $this->getMockBuilder(UserSQL::class)->disableOriginalConstructor()->getMock()
+            $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock()
         );
 
         file_put_contents($this->apachePath . "/privKeyFilename", "privKeyContent");
@@ -46,7 +46,7 @@ class S2lowBootstrapTest extends TestCase
         $S2lowBootstrap = new S2lowBootstrap(
             $this->getMockBuilder(\S2lowLegacy\Lib\SQLQuery::class)->disableOriginalConstructor()->getMock(),
             $this->getMockBuilder(\S2lowLegacy\Controller\PostgreSQLController::class)->disableOriginalConstructor()->getMock(),
-            $this->getMockBuilder(UserSQL::class)->disableOriginalConstructor()->getMock()
+            $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock()
         );
 
         mkdir($this->letsencryptPath . "/testhost");
@@ -71,7 +71,7 @@ class S2lowBootstrapTest extends TestCase
         $S2lowBootstrap = new S2lowBootstrap(
             $this->getMockBuilder(\S2lowLegacy\Lib\SQLQuery::class)->disableOriginalConstructor()->getMock(),
             $this->getMockBuilder(\S2lowLegacy\Controller\PostgreSQLController::class)->disableOriginalConstructor()->getMock(),
-            $this->getMockBuilder(UserSQL::class)->disableOriginalConstructor()->getMock()
+            $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock()
         );
 
         $S2lowBootstrap->installSelfSignedCertificateIfNoneExists(
