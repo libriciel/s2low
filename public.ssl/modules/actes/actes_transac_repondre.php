@@ -215,7 +215,8 @@ $html .= "</table>\n";
 $html .= "</div>\n";
 $html .= "<br />\n";
 
-$html .= "<form id=\"reply-transac-content\" role=\"form\" class=\"form\" action=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_reponse_create.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm(" . $trans->getValidationTrio('nature_code', 'number', 'decision_date', 'title', 'subject') . ", 'classif1', 'Classification', 'RisInt'");
+$html .= "<form id=\"reply-transac-content\" role=\"form\" class=\"form\" action=\"" .
+    \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_reponse_create.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm(" . $trans->getValidationTrio('nature_code', 'number', 'decision_date', 'title', 'subject') . ", 'classif1', 'Classification', 'RisInt'");
 $html .= ", 'acte_pdf_file', 'Fichier PDF contenant la réponse', 'RisString', 'acte_attachments[]', 'Pièces jointes', 'isString'";
 $html .= ")) { toggle_upload('form_progress', progress_bar); return true; } else { return false; }\">\n";
 

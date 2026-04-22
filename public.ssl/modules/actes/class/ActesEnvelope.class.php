@@ -296,7 +296,9 @@ class ActesEnvelope extends DataObject
         $xml .= "xsi:schemaLocation=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216 actesv1_1.xsd\">\n";
 
         $xml .= " <actes:Emetteur>\n";
-        $xml .= "  <actes:IDCL insee:SIREN=\"" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($this->siren) . "\" actes:Departement=\"" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($this->department) . "\" actes:Arrondissement=\"" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($this->district) . "\" actes:Nature=\"" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($this->authority_type_code) . "\"/>\n";
+        $xml .= "  <actes:IDCL insee:SIREN=\"" .
+            \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($this->siren) .
+            "\" actes:Departement=\"" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($this->department) . "\" actes:Arrondissement=\"" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($this->district) . "\" actes:Nature=\"" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($this->authority_type_code) . "\"/>\n";
         $xml .= "  <actes:Referent>\n";
         $xml .= "   <actes:Nom>" . XMLHelper::convertToIsoAndEscape($this->name) . "</actes:Nom>\n";
         $xml .= "   <actes:Telephone>" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($this->telephone) . "</actes:Telephone>\n";

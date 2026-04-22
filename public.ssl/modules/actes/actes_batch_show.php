@@ -136,7 +136,8 @@ if (is_array($batchFiles) && count($batchFiles) > 0) {
         $html .= "  <td headers=\"status\" >";
         $html .= ($batchFile->isProcessed()) ? "<a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_show.php?id=" . $batchFile->get("transaction_id")) . "\" title=\"Voir la transaction issue de ce fichier\">Traité</a>" : "Non traité";
         $html .= "</td>\n";
-        $html .= ( ! $batchFile->isProcessed()) ? "  <td headers=\"actions\" ><a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_add.php?batchfile=" . $batchFile->getId()) . "\" class=\"icon\" title=\"Créer la transaction correspondant à ce fichier\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"Icone traitement\" /></a></td>\n" : "<td headers=\"actions\" >&nbsp;</td>";
+        $html .= ( ! $batchFile->isProcessed()) ? "  <td headers=\"actions\" ><a href=\"" .
+            \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_add.php?batchfile=" . $batchFile->getId()) . "\" class=\"icon\" title=\"Créer la transaction correspondant à ce fichier\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"Icone traitement\" /></a></td>\n" : "<td headers=\"actions\" >&nbsp;</td>";
         $html .= " </tr>\n";
     }
     $html .= "</tbody>\n";
