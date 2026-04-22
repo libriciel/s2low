@@ -66,16 +66,20 @@ class X509Certificate
         return $result;
     }
 
+    /**
+     * @throws Exception
+     */
     public function getBase64Hash($cert_content, $hash_alg = 'sha1')
     {
-        $tmp_file = sys_get_temp_dir() . "/" . uniqid("x509_pem") . mt_rand(0, mt_getrandmax());
-        file_put_contents($tmp_file, $cert_content);
+        $search = ['-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----', "\r", "\n", " "];
+        $der_content = base64_decode(str_replace($search, '', $cert_content));
 
-        $command = "openssl x509 -in $tmp_file -outform der 2> /dev/null | openssl $hash_alg -binary | openssl base64";
-        exec($command, $output);
-        $certDigest = $output[0];
-        unlink($tmp_file);
-        return $certDigest;
+        if (!$der_content) {
+            return null; // Comportement Legacy
+        }
+        $hash_binary = hash($hash_alg, $der_content, true);
+
+        return base64_encode($hash_binary);
     }
 
     /**

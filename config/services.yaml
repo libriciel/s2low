@@ -579,7 +579,7 @@ services:
   S2lowLegacy\Class\actes\ActesFileSender:
     public: true
     arguments:
-      $trustore_path: '%app.truststore_path%'
+      $truststorePath: '%app.truststore_path%'
 
   S2lowLegacy\Class\Parapheur:
     autowire: false #Initialisé avec les données à traiter ...

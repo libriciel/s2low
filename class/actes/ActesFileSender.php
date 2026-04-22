@@ -3,20 +3,17 @@
 namespace S2lowLegacy\Class\actes;
 
 use S2lowLegacy\Class\CurlWrapper;
+use S2lowLegacy\Class\CurlWrapperFactory;
 use Exception;
 use S2lowLegacy\Lib\X509Certificate;
 
 class ActesFileSender
 {
-    private ActesMinistereProperties $actesMinistereProperties;
-    private string $truststorePath;
-
     public function __construct(
-        ActesMinistereProperties $actesMinistereProperties,
-        string $trustore_path
+        private readonly ActesMinistereProperties $actesMinistereProperties,
+        private readonly string $truststorePath,
+        private readonly CurlWrapperFactory $curlWrapperFactory
     ) {
-        $this->actesMinistereProperties = $actesMinistereProperties;
-        $this->truststorePath = $trustore_path;
     }
 
     /**
@@ -52,8 +49,6 @@ class ActesFileSender
 
         $curlWrapper->addPostFile(basename($filepath), $filepath);
 
-        $this->verifyCertificate();
-
         return $this->executeRequest($curlWrapper, $url, 200);
     }
 
@@ -84,7 +79,7 @@ class ActesFileSender
 
     private function getPreparedCurlWrapper(int $timeout, int $connectTimeout = 60): CurlWrapper
     {
-        $curlWrapper = new CurlWrapper();
+        $curlWrapper = $this->curlWrapperFactory->getNewInstance();
         $curlWrapper->setTimeout($connectTimeout, $timeout);
         $curlWrapper->setProperties(CURLOPT_USERAGENT, 'curl/7.81.1');
         $curlWrapper->setProperties(CURLOPT_CERTINFO, 1);
