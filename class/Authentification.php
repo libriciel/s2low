@@ -84,14 +84,14 @@ class Authentification
                 throw new Exception("La connexion n'a pas pu être établie");
             } // @codeCoverageIgnore
         } catch (NoPasswordException $e) {
-            $redirect = Helpers::getLink("/login.php");
-            Helpers::returnAndExit(1, $e->getMessage(), $redirect);
+            $redirect = \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/login.php");
+            \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, $e->getMessage(), $redirect);
         } catch (Exception $e) {
-            $redirect = Helpers::getLink("connexion-status");
+            $redirect = \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status");
             if ($e->getMessage() === "La connexion n'a pas pu être établie") {
-                $redirect = Helpers::getLink("/login.php");
+                $redirect = \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/login.php");
             }
-            Helpers::returnAndExit(1, $e->getMessage(), $redirect);
+            \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, $e->getMessage(), $redirect);
         }
 
         return $id_list[0];
@@ -106,13 +106,13 @@ class Authentification
         try {
             $connexion_info = $this->getAllConnexionInfo();
         } catch (Exception $e) {
-            Helpers::returnAndExit(1, "La connexion n'a pas pu être établie", Helpers::getLink("connexion-status"));
+            \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "La connexion n'a pas pu être établie", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
         } // @codeCoverageIgnore
 
         $list_id = $this->userSQL->getListIdFromConnexion($connexion_info['certificate_hash'], $connexion_info['certificate_rgs_2_etoiles']);
 
         if (! in_array($user_id, $list_id)) {
-            Helpers::returnAndExit(1, "La connexion n'a pas pu être établie", Helpers::getLink("/login.php"));
+            \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "La connexion n'a pas pu être établie", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/login.php"));
         } // @codeCoverageIgnore
     }
 

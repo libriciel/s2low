@@ -20,7 +20,7 @@ $me = new User();
 
 if (!$me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -32,16 +32,16 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
 
 $HR = new HeliosRetour();
 
-$fstatus = Helpers :: getVarFromGet("status");
+$fstatus = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("status");
 
 if ($fstatus !== '0' && $fstatus != 1) {
     $fstatus = 2;
 }
 
-$fmin_submission_date = Helpers :: getVarFromGet("min_submission_date");
-$fmax_submission_date = Helpers :: getVarFromGet("max_submission_date");
-$fnum = Helpers :: getVarFromGet("num");
-$fauthority = Helpers :: getVarFromGet("authority");
+$fmin_submission_date = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("min_submission_date");
+$fmax_submission_date = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("max_submission_date");
+$fnum = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("num");
+$fauthority = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("authority");
 
 $filter = [];
 // Construction chaine de filtrage
@@ -91,9 +91,9 @@ $etat = array(
 $envelops = $HR->getDocumentList($where);
 
 $doc = new HTMLLayout();
-$doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jquery.js") . '"></script>');
-$doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jqueryui.js") . '"></script>');
-$doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/select2.js") . '"></script>');
+$doc->addHeader('<script type="text/javascript" src="' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/jsmodules/jquery.js") . '"></script>');
+$doc->addHeader('<script type="text/javascript" src="' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/jsmodules/jqueryui.js") . '"></script>');
+$doc->addHeader('<script type="text/javascript" src="' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/jsmodules/select2.js") . '"></script>');
 $doc->addHeader('<script type="text/javascript" src="/javascript/zselect_s2low.js"></script>');
 
 
@@ -111,13 +111,13 @@ $html = "<h1>Helios - Dématérialisation de documents financiers</h1>\n";
 if ($module->getParam("paper") == "on") {
     $html .= "<p>Le système est actuellement en mode &nbsp;papier&nbsp;. Dans ce mode il est impossible de créer de nouvelle transaction. Les transferts doivent se faire par les moyens classiques.</p>\n";
 } else {
-    $html .= "<p id=\"back-user-btn\"><a href=\"" . Helpers::getLink("/modules/helios/index.php") . "\" class=\"btn btn-default\" title=\"afficher la liste des transactions\">Retour liste transactions</a></p>\n";
+    $html .= "<p id=\"back-user-btn\"><a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/index.php") . "\" class=\"btn btn-default\" title=\"afficher la liste des transactions\">Retour liste transactions</a></p>\n";
 }
 
 //filtrage aria
 $html .= "<h2 class=\"toggle_title\" onclick=\"javascript:toggle_visibility('filtering_area');\">Filtrage</h2>\n";
 $html .= "<div id=\"filtering_area\">\n";
-$html .= "<form class=\"form-horizontal\" action=\"" . Helpers::getLink("/modules/helios/helios_retour.php") . "\" method=\"get\">\n";
+$html .= "<form class=\"form-horizontal\" action=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_retour.php") . "\" method=\"get\">\n";
 
 if (empty($fstatus)) {
     $fstatus = 0; //par defaut état selectionnée
@@ -187,7 +187,7 @@ if ($me->isGroupAdminOrSuper()) {
 }
 $html .= "<div class=\"form-group\">";
 $html .= "    <button type=\"submit\" class=\"col-md-offset-3 col-md-3 btn btn-default\">Filtrer</button>";
-$html .= "    <a href=\"" . Helpers::getLink("/modules/helios/helios_retour.php") . "\" class=\"col-md-offset-3 col-md-3 btn btn-default\">Remise à zéro</a>";
+$html .= "    <a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_retour.php") . "\" class=\"col-md-offset-3 col-md-3 btn btn-default\">Remise à zéro</a>";
 $html .= "</div>";
 
 $html .= "</form>\n";
@@ -212,12 +212,12 @@ if (count($envelops) > 0) {
         $retour_id = $envelope["id"];
 
         $html .= "<tr>\n";
-        $html .= " <td> <a href=\"" . Helpers::getLink("/modules/helios/helios_download_response.php?id=" . $retour_id) . "\" title=\"Télécharger l'acquittement\">" . $envelope["filename"] . "</a> </td> \n";
-        $html .= " <td>" . Helpers::getDateFromBDDDate($envelope["date"], true) . "</td>\n";
+        $html .= " <td> <a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_download_response.php?id=" . $retour_id) . "\" title=\"Télécharger l'acquittement\">" . $envelope["filename"] . "</a> </td> \n";
+        $html .= " <td>" . \S2lowLegacy\Class\Helpers\DateHelper::getDateFromBDDDate($envelope["date"], true) . "</td>\n";
         $html .= " <td>" . $etat[$envelope["status"]] . "</td>\n";
         $html .= " <td> ";
         if ($envelope["status"] == 0 && !$me->isGroupAdminOrSuper()) {
-            $html .= "<a href=\"" . Helpers::getLink("/modules/helios/helios_change_status_retour.php?id=" . $retour_id) . "\" title=\"passer à l'état lu\" class=\"icon\"> <img alt=\"ok\" src=\"../../custom/images/icone_ok.gif\"> </a> ";
+            $html .= "<a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_change_status_retour.php?id=" . $retour_id) . "\" title=\"passer à l'état lu\" class=\"icon\"> <img alt=\"ok\" src=\"../../custom/images/icone_ok.gif\"> </a> ";
         }
         $html .= "</td>\n";
         $html .= "</tr>\n";

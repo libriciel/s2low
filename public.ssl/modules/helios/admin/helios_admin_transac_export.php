@@ -33,7 +33,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION['error'] = "Échec de l'authentification";
-    header('Location: ' . Helpers::getLink('connexion-status'));
+    header('Location: ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('connexion-status'));
     exit();
 }
 
@@ -60,7 +60,7 @@ if (count($history) > 0) {
         $entry = [];
       // Récupération de la liste des fichiers pour cette enveloppe
         $file = $env['filename'];
-        $timestamp = Helpers::getTimestampFromBDDDate($env['date']);
+        $timestamp = \S2lowLegacy\Class\Helpers\DateHelper::getTimestampFromBDDDate($env['date']);
 
       // Date de transmission
         $entry[] = date('c', $timestamp);

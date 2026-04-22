@@ -9,16 +9,16 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Éhec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
-$type = Helpers::getVarFromGet("type", true);
+$type = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("type", true);
 
 $myAuthority = new Authority($me->get("authority_id"));
 
 $doc = new HTMLLayout("xhtml_simple.tpl.php");
-$doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jquery.js") . "\"></script>");
+$doc->addHeader("<script type=\"text/javascript\" src=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/jsmodules/jquery.js") . "\"></script>");
 
 $doc->setTitle("Tedetis : sélection attribut");
 

@@ -28,7 +28,7 @@ $me = new User();
 
 if (!$me->authenticate()) {
     $_SESSION['error'] = "Échec de l'authentification";
-    header('Location: ' . Helpers::getLink('connexion-status'));
+    header('Location: ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('connexion-status'));
     exit();
 }
 
@@ -38,7 +38,7 @@ if (!$module->isActive() || !$me->canAccess($module->get('name'))) {
     exit();
 }
 
-$transaction_id = Helpers :: getVarFromGet('id');
+$transaction_id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet('id');
 
 
 $trans = new HeliosTransaction();
@@ -50,12 +50,12 @@ if (isset($transaction_id) && ! empty($transaction_id)) {
         $owner->init();
     } else {
         $_SESSION['error'] = "Erreur d'initialisation de la transaction.";
-        header('Location: ' . Helpers::getLink('/modules/helios/index.php'));
+        header('Location: ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/helios/index.php'));
         exit();
     }
 } else {
     $_SESSION['error'] = "Pas d'identifiant de transaction spécifié";
-    header('Location: ' . Helpers::getLink('/modules/helios/index.php'));
+    header('Location: ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/helios/index.php'));
     exit();
 }
 
@@ -64,7 +64,7 @@ $permission = new ModulePermission($serviceUser, 'helios');
 
 if (! $permission->canView($me, $owner)) {
     $_SESSION['error'] = 'Accès refusé';
-    header('Location: ' . Helpers::getLink('/modules/helios/index.php'));
+    header('Location: ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/helios/index.php'));
     exit();
 }
 
@@ -84,14 +84,14 @@ try {
     $filepath = $pesAllerRetriever->getPath($sha1);
 } catch (Exception $e) {
     $_SESSION['error'] = 'Erreur lors de la récupération du fichier : ' . $e->getMessage();
-    header('Location: ' . Helpers::getLink("/modules/helios/helios_transac_show.php?id=$transaction_id"));
+    header('Location: ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_transac_show.php?id=$transaction_id"));
     exit();
 }
 
 if (!$filepath) {
     $_SESSION['error'] = 'Erreur lors de la récupération du fichier ';
-    header('Location: ' . Helpers::getLink("/modules/helios/helios_transac_show.php?id=$transaction_id"));
+    header('Location: ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_transac_show.php?id=$transaction_id"));
     exit();
 }
 
-Helpers::sendFileToBrowser($filepath, $filename, 'text/xml');
+\S2lowLegacy\Class\Helpers\ResponseHelper::sendFileToBrowser($filepath, $filename, 'text/xml');

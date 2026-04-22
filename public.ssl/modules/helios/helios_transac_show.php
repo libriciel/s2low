@@ -31,7 +31,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Éhec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -42,10 +42,10 @@ if (! $module->isActive() || ! $me->canAccess($module->get("name"))) {
 }
 
 try {
-    $id = Helpers::getIntFromGet("id", true);
+    $id = \S2lowLegacy\Class\Helpers\RequestHelper::getIntFromGet("id", true);
 } catch (Exception $e) {
     $_SESSION["error"] = "id doit être un entier";
-    header("Location: " . Helpers::getLink("/modules/helios/index.php"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/index.php"));
     exit();
 }
 
@@ -63,12 +63,12 @@ if (isset($id) && ! empty($id)) {
         $owner->init();
     } else {
         $_SESSION["error"] = "Erreur d'initialisation de la transaction.";
-        header("Location: " . Helpers::getLink("/modules/helios/index.php"));
+        header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/index.php"));
         exit();
     }
 } else {
     $_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
-    header("Location: " . Helpers::getLink("/modules/helios/index.php"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/index.php"));
     exit();
 }
 
@@ -77,7 +77,7 @@ $permission = new ModulePermission($serviceUser, "helios");
 
 if (! $permission->canView($me, $owner)) {
     $_SESSION["error"] = "Accès refusé";
-    header("Location: " . Helpers::getLink("/modules/helios/index.php"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/index.php"));
     exit();
 }
 
@@ -86,10 +86,10 @@ $authority_info = $authoritySQL->getInfo($trans->get('authority_id'));
 
 
 if ($me->isSuper()) {
-    $link_authority = Helpers::getLink("admin/authorities/admin_authority_edit.php?id={$authority_info['id']}");
+    $link_authority = \S2lowLegacy\Class\Helpers\UrlHelper::getLink("admin/authorities/admin_authority_edit.php?id={$authority_info['id']}");
     $authority_td = "<a href='$link_authority'>" . get_hecho($authority_info['name']) . "</a>";
 
-    $link_user = Helpers::getLink("/admin/users/admin_user_edit.php?id=") . $owner->getId();
+    $link_user = \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/users/admin_user_edit.php?id=") . $owner->getId();
     $user_td = "<a href='$link_user'>" . get_hecho($owner->get("givenname") . " " . $owner->get("name")) . "</a>";
 } else {
     $authority_td = get_hecho($authority_info['name']);
@@ -118,7 +118,7 @@ $authorityInfo = new Authority($userInfo->get("authority_id"));
 $authorityInfo->init();
 
 
-$html = "<p id=\"back-transaction-btn\"><a href=\"" . Helpers::getLink("/modules/helios/index.php") . "\" class=\"btn btn-default\">Retour liste transactions</a></p>\n";
+$html = "<p id=\"back-transaction-btn\"><a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/index.php") . "\" class=\"btn btn-default\">Retour liste transactions</a></p>\n";
 $html .= "<h2>Détails de la transaction</h2>\n";
 $html .= "<div class=\"data_table\">\n";
 $html .= "<table class=\"data table table-bordered\">\n";
@@ -129,7 +129,7 @@ if ($trans->get('xml_nomfic')) {
     $html .= $doc->getHTMLArrayline("Code budget (codbud)", $trans->get('xml_cod_bud'));
     $html .= $doc->getHTMLArrayline("Identifiant du poste comptable (idPost)", $trans->get('xml_id_post'));
 }
-$html .= $doc->getHTMLArrayline("Date de postage", Helpers :: getDateFromBDDDate(HeliosTransactionWorkflow::getDatePoste($id), true));
+$html .= $doc->getHTMLArrayline("Date de postage", \S2lowLegacy\Class\Helpers\DateHelper::getDateFromBDDDate(HeliosTransactionWorkflow::getDatePoste($id), true));
 $html .= $doc->getHTMLArrayline("État actuel", $currentStatus);
 $html .= $doc->getHTMLArrayline("Taille (octets)", $trans->get("file_size"));
 $html .= $doc->getHTMLArrayline("Empreinte SHA1", $trans->get("sha1"));
@@ -156,11 +156,11 @@ $html .= "</div>\n";
 
 
 $html .= "<h2>Récuperation du fichier posté ";
-$html .= "<a href=\"" . Helpers::getLink("/modules/helios/helios_download_file.php?id=" . $id) . "\" title=\"Télécharger le fichier\">" . $trans->getFilenameForID($id) . "</a> </h2>";
+$html .= "<a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_download_file.php?id=" . $id) . "\" title=\"Télécharger le fichier\">" . $trans->getFilenameForID($id) . "</a> </h2>";
 
 
 if ($me->isSuper()) {
-    $link = Helpers::getLink("/modules/helios/helios_transac_validate_pes_aller.php?id=$id");
+    $link = \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_transac_validate_pes_aller.php?id=$id");
     $html .= "<a href='$link'>Validation XML du fichier</a>";
 }
 
@@ -185,7 +185,7 @@ if (count($workflow) > 0) {
         $html .= " <tr>\n";
         $html .= "  <td headers=\"status\">" . $status[$stage["status_id"]] ;
         $html .= "</td>\n";
-        $html .= "  <td headers=\"date\">" . Helpers::getDateFromBDDDate($stage["date"], true) . "</td>\n";
+        $html .= "  <td headers=\"date\">" . \S2lowLegacy\Class\Helpers\DateHelper::getDateFromBDDDate($stage["date"], true) . "</td>\n";
         $html .= "  <td headers=\"message\" class=\"long_field\">" . nl2br($stage["message"]) . "</td>\n";
         $html .= " </tr>\n";
     }
@@ -196,7 +196,7 @@ if (count($workflow) > 0) {
 }
 
 if ($trans->get('acquit_filename')) {
-    $html .= " <a href=\"" . Helpers::getLink("/modules/helios/helios_download_acquit.php?id=" . $id) . "\" title=\"Télécharger l'acquittement\">Télécharger le PES Acquit</a> ";
+    $html .= " <a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_download_acquit.php?id=" . $id) . "\" title=\"Télécharger l'acquittement\">Télécharger le PES Acquit</a> ";
 }
 
 
@@ -205,7 +205,7 @@ $currentStatusId = HeliosTransactionWorkflow::getCurrentStatusId($id);
 $actionHtml = "";
 if (in_array($currentStatusId, array(8,4,11,20))) {
     $actionHtml .= "<div class=\"action\">\n";
-    $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/helios/helios_transac_archiver.php") . "\"  method=\"post\">\n";
+    $actionHtml .= "<form action=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_transac_archiver.php") . "\"  method=\"post\">\n";
     $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
     $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
     $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Versement manuel\" />\n";
@@ -214,7 +214,7 @@ if (in_array($currentStatusId, array(8,4,11,20))) {
 
 if ($currentStatusId == HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE) {
     $actionHtml .= "<div class=\"action\">\n";
-    $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/helios/helios_transac_send_sae.php") . "\"  method=\"post\">\n";
+    $actionHtml .= "<form action=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_transac_send_sae.php") . "\"  method=\"post\">\n";
     $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
     $actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
     $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Envoyer la transaction sur Pastell\" />\n";
@@ -224,7 +224,7 @@ if ($currentStatusId == HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE) {
 
 if ($currentStatusId == HeliosStatusSQL::ENVOYER_AU_SAE) {
     $actionHtml .= "<div class=\"action\">\n";
-    $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/helios/helios_transac_verif_sae.php") . "\"  method=\"post\">\n";
+    $actionHtml .= "<form action=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_transac_verif_sae.php") . "\"  method=\"post\">\n";
     $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
     $actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
     $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Vérifier la transaction sur Pastell\" />\n";
@@ -235,7 +235,7 @@ $status_cible_list = $heliosSAEController->getActionPossible($currentStatusId);
 foreach ($status_cible_list as $new_status_id) {
     $libelle_status = HeliosStatusSQL::getStatusLibelle($new_status_id);
     $actionHtml .= "<div class=\"action\">\n";
-    $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/helios/helios_transac_change_status_sae.php") . "\" method=\"post\" onsubmit=\"return confirm('Voulez-vous vraiment mettre cette transaction en état $new_status_id ?.');\">\n";
+    $actionHtml .= "<form action=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_transac_change_status_sae.php") . "\" method=\"post\" onsubmit=\"return confirm('Voulez-vous vraiment mettre cette transaction en état $new_status_id ?.');\">\n";
     $actionHtml .= "<div class=\"form-group\"><label class=\"col-md-4 control-label\">&nbsp;</label>\n";
     $actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
     $actionHtml .= "<input type=\"hidden\" name=\"status_id\" value=\"" . $new_status_id . "\" />\n";
@@ -245,13 +245,13 @@ foreach ($status_cible_list as $new_status_id) {
 }
 
 if ($me->isSuper()) {
-    $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/helios/helios_transac_delete.php") . "\" onsubmit=\"return confirm('Cette transaction sera éradiquée DEFINITIVEMENT de la base sans espoir de retour?')\" method=\"post\">\n";
+    $actionHtml .= "<form action=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_transac_delete.php") . "\" onsubmit=\"return confirm('Cette transaction sera éradiquée DEFINITIVEMENT de la base sans espoir de retour?')\" method=\"post\">\n";
     $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Effacer de la base de donnée (TRES DANGEREUX) : </label>\n";
     $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $id . "\" />\n";
     $actionHtml .= "<input type=\"submit\" value=\"Effacer de la base de données\" class=\"btn btn-danger\" />\n";
     $actionHtml .= "</div></form>\n";
 
-    $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/helios/helios_transac_set_error.php") . "\" onsubmit=\"return confirm('Cette transaction sera passée en erreur ')\" method=\"post\">\n";
+    $actionHtml .= "<form action=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_transac_set_error.php") . "\" onsubmit=\"return confirm('Cette transaction sera passée en erreur ')\" method=\"post\">\n";
     $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer la transaction en erreur </label>\n";
     $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $id . "\" />\n";
     $actionHtml .= "<input type=\"submit\" value=\"Passer la transaction en erreur\" class=\"btn btn-warning\" />";
@@ -262,7 +262,7 @@ if ($me->isSuper()) {
         ob_start();?>
 
     <form
-        action="<?php echo Helpers::getLink("/modules/helios/helios_transac_rollback.php");?>"
+        action="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_transac_rollback.php");?>"
         method="post"
         onsubmit="return confirm('Êtes-vous certain de vouloir faire cela ?')"
         >
@@ -344,7 +344,7 @@ if ($currentStatusId == 13 && $me->checkDroit($module->get("name"), 'CS')) {
             <div class="libersign"></div>
         </div>
 
-<form action='<?php echo Helpers::getLink("modules/helios/helios_transac_sign.php");?>' id='form_sign' method='post'>
+<form action='<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("modules/helios/helios_transac_sign.php");?>' id='form_sign' method='post'>
     <input type='hidden' name='id_1' id='form_sign_id' value='<?php echo $id ?>'/>
     <input type='hidden' name='nb_signature'  value='1'/>
     <input type='hidden' name='signature_id_1' value='<?php echo $id_pes?>' />

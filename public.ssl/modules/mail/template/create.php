@@ -1,7 +1,7 @@
 <script src="<?php use S2lowLegacy\Class\Helpers;
 
-echo Helpers::getLink("/jsmodules/jquery.js"); ?>"></script>
-<script src="<?php echo Helpers::getLink("/jsmodules/jqueryui.js"); ?>"></script>
+echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/jsmodules/jquery.js"); ?>"></script>
+<script src="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/jsmodules/jqueryui.js"); ?>"></script>
  <h1> Mail - Système de mail sécurisé</h1>
   <h2>Actions</h2>
     <div id="actions_area"> 
@@ -30,7 +30,7 @@ echo Helpers::getLink("/jsmodules/jquery.js"); ?>"></script>
           })
           .autocomplete({
               source: function( request, response ) {
-                  $.getJSON( "<?php echo Helpers::getLink("/modules/mail/liste-mail.php?");?>", {
+                  $.getJSON( "<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/mail/liste-mail.php?");?>", {
                       term: extractLast( request.term )
                   }, response );
 

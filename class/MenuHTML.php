@@ -80,7 +80,7 @@ class MenuHTML
                         ?>
                         Rôle <?php  echo $userInfo['role_str'] ?>
             <?php if ($userInfo['nb_user_with_my_certificate'] > 1) : ?>
-            <br/><a href='<?php echo Helpers::getLink("logout.php")?>'>déconnexion</a>
+            <br/><a href='<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("logout.php")?>'>déconnexion</a>
             <?php endif;?>
                     </div>
                     <ul class="text-menu nav">
@@ -89,28 +89,28 @@ class MenuHTML
             <?php endif;?>
             
             <?php if ($userInfo['role'] == 'SADM') : ?>
-                <li><a href="<?php echo Helpers::getLink("/admin/modules/admin_modules.php");?>">Gestion des modules</a></li>
-                <li><a href="<?php echo Helpers::getLink('/admin/groups/admin_groups.php');?>">Gestion des groupes</a></li>
+                <li><a href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/modules/admin_modules.php");?>">Gestion des modules</a></li>
+                <li><a href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/admin/groups/admin_groups.php');?>">Gestion des groupes</a></li>
             <?php endif;?>
             <?php if (in_array($userInfo['role'], array('SADM','GADM'))) : ?>
-                <li><a href="<?php echo Helpers::getLink('/admin/authorities/admin_authorities.php')?>">Gestion des collectivités</a></li>
+                <li><a href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/admin/authorities/admin_authorities.php')?>">Gestion des collectivités</a></li>
             <?php endif?>
             <?php if ($userInfo['role'] == 'ADM') : ?>
-                <li><a href="<?php echo Helpers::getLink('/modules/mail/index.php?command=annuaire');?>">Carnet d'adresses de la collectivité</a></li>
-                <li><a href="<?php echo Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=" . $userInfo["authority_id"]); ?>">Paramètres collectivité</a></li>
+                <li><a href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/mail/index.php?command=annuaire');?>">Carnet d'adresses de la collectivité</a></li>
+                <li><a href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/authorities/admin_authority_edit.php?id=" . $userInfo["authority_id"]); ?>">Paramètres collectivité</a></li>
             <?php endif;?>
             <?php if (! in_array($userInfo['role'], [User::USER,User::ARCH])) : ?>
-                <li><a href="<?php echo Helpers::getLink("/admin/users/admin_users.php");?>">Gestion des utilisateurs</a></li>
-                <li><a href="<?php echo Helpers::getLink("/admin/services/admin_services.php");?>">Gestion des services</a></li>
+                <li><a href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/users/admin_users.php");?>">Gestion des utilisateurs</a></li>
+                <li><a href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/services/admin_services.php");?>">Gestion des services</a></li>
             <?php endif;?>
         
         
         
              <?php if ($userInfo['role'] == 'SADM') : ?>            
-                <li><a href="<?php echo Helpers::getLink("/admin/utilities/index.php");?>">Utilitaires système</a></li>
+                <li><a href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/utilities/index.php");?>">Utilitaires système</a></li>
              <?php endif;?>
             <?php foreach ($module_admin as $module) : ?>
-                <li><a href="<?php echo Helpers::getLink("/modules/" . $module["name"] . "/admin/index.php");?>">Utilitaires module <?php echo $module["name"] ?></a></li>
+                <li><a href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/" . $module["name"] . "/admin/index.php");?>">Utilitaires module <?php echo $module["name"] ?></a></li>
             <?php endforeach;?>
 
 
@@ -120,21 +120,21 @@ class MenuHTML
                 <li>Aucun module accessible</li>
             <?php endif;?>
             <?php foreach ($modulesInfo as $module) : ?>
-                <li><a href="<?php echo  Helpers::getLink("/modules/" . $module["name"] . "/index.php"); ?>"><?php echo $module["menu_entry"] ?></a></li>
+                <li><a href="<?php echo  \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/" . $module["name"] . "/index.php"); ?>"><?php echo $module["menu_entry"] ?></a></li>
             <?php endforeach; ?>
 
             <?php if ($module_export && in_array($userInfo['role'], array('ADM','GADM','SADM'))) : ?>
                 <li class="menu-list-title">Export des informations</li>
                 <?php foreach ($module_export as $module) : ?>
-                    <li><a href="<?php echo Helpers::getLink("/modules/" . $module["name"] . "/" . $module["name"] . "_export.php");?>">Exports module <?php echo $module["name"] ?></a></li>
+                    <li><a href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/" . $module["name"] . "/" . $module["name"] . "_export.php");?>">Exports module <?php echo $module["name"] ?></a></li>
                 <?php endforeach;?>
             <?php endif; ?>
 
 
             <li class="menu-list-title">Suivi <?php echo ! in_array($userInfo['role'], [User::USER,User::ARCH]) ? "du site" : ""?></li>
-            <li><a href="<?php echo Helpers::getLink("/common/logs_view.php");?>">Journal des événements</a></li>
+            <li><a href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/common/logs_view.php");?>">Journal des événements</a></li>
             <?php foreach ($module_stat as $module) : ?>
-                <li><a href="<?php echo Helpers::getLink("/modules/" . $module["name"] . "/" . $module["name"] . "_stats.php");?>">Statistiques module <?php echo $module["name"] ?></a></li>
+                <li><a href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/" . $module["name"] . "/" . $module["name"] . "_stats.php");?>">Statistiques module <?php echo $module["name"] ?></a></li>
             <?php endforeach;?>
 
 

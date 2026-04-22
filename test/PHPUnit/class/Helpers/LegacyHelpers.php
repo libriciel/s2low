@@ -1,14 +1,15 @@
 <?php
 
-namespace S2lowLegacy\Class;
+namespace PHPUnit\class\Helpers;
 
 use DateTime;
 use Exception;
 use IntlDateFormatter;
+use S2lowLegacy\Class\Trace;
 use S2lowLegacy\Lib\JSONoutput;
 use UnexpectedValueException;
 
-class Helpers
+class LegacyHelpers
 {
     public static $last_error;
 
@@ -45,7 +46,7 @@ class Helpers
   */
     public static function getVarFromPost($name, $memorize = false, bool $allowGetApiCall = false)
     {
-        $varFromRequest = Helpers::getVarFromRequest($name, "POST", $memorize);
+        $varFromRequest = self::getVarFromRequest($name, "POST", $memorize);
 
         if (!is_null($varFromRequest) && self::isApiCall($allowGetApiCall) && !is_array($varFromRequest)) {
             $varFromRequest = utf8_encode($varFromRequest);
@@ -62,15 +63,15 @@ class Helpers
         // La présence de allowGetApi est un hotfix
         // returnAndExit considère que l'on utilise l'API à partir du moment ou api est spécifiée à 1 dans post
         // ou à 1 dans get mais pas à 0 dans post.
-        $apiIsSetByPost = Helpers::getVarFromRequest("api", "POST") == 1;
-        $apiIsSetByGet = Helpers::getVarFromRequest("api", "GET") == 1;
+        $apiIsSetByPost = self::getVarFromRequest("api", "POST") == 1;
+        $apiIsSetByGet = self::getVarFromRequest("api", "GET") == 1;
         return ($apiIsSetByPost || ($apiIsSetByGet && $allowGetApi));
     }
 
     public static function getIntFromPost($name, $nullable = false, bool $memorize = false)
     {
         return self::checkInt(
-            Helpers::getVarFromRequest($name, "POST", $memorize),
+            self::getVarFromRequest($name, "POST", $memorize),
             $nullable,
             $name
         );
@@ -83,13 +84,13 @@ class Helpers
   */
     public static function getVarFromGet($name, $memorize = false)
     {
-        return Helpers::getVarFromRequest($name, "GET", $memorize);
+        return self::getVarFromRequest($name, "GET", $memorize);
     }
 
     public static function getIntFromGet($name, $nullable = false)
     {
         return self::checkInt(
-            Helpers::getVarFromRequest($name, "GET"),
+            self::getVarFromRequest($name, "GET"),
             $nullable,
             $name
         );
@@ -98,7 +99,7 @@ class Helpers
     public static function getDateFromGet($name, $nullable = false)
     {
         return self::checkDate(
-            Helpers::getVarFromRequest($name, "GET"),
+            self::getVarFromRequest($name, "GET"),
             $nullable,
             $name
         );
@@ -123,14 +124,14 @@ class Helpers
 
         if (is_array($ret)) {
             foreach ($ret as $key => $value) {
-                $ret[$key] = Helpers::stripSlashes($value);
+                $ret[$key] = self::stripSlashes($value);
             }
         } else {
-            $ret = Helpers::stripSlashes($ret);
+            $ret = self::stripSlashes($ret);
         }
 
         if ($memorize) {
-            Helpers::putInSession($name, $ret);
+            self::putInSession($name, $ret);
         }
 
         return $ret;
@@ -207,10 +208,10 @@ class Helpers
 
 
       // Détection si appel par API C ou formulaire Web (d'abord en POST puis en GET)
-        $api = Helpers::getVarFromPost("api");
+        $api = self::getVarFromPost("api");
 
         if (empty($api)) {
-            $api = Helpers::getVarFromGet("api");
+            $api = self::getVarFromGet("api");
         }
 
         if ($api != null && $api == "1") {
@@ -381,7 +382,7 @@ class Helpers
   */
     public static function getDateFromBDDDate($date, $with_hours = false)
     {
-        if ($timestamp = Helpers::getTimestampFromBDDDate($date)) {
+        if ($timestamp = self::getTimestampFromBDDDate($date)) {
             $myDateTime = new DateTime();
             $myDateTime->setTimestamp($timestamp);
             $pattern = "d MMMM yyyy";//"j F Y";
@@ -410,7 +411,7 @@ class Helpers
   */
     public static function getANSIDateFromBDDDate($date)
     {
-        if ($timestamp = Helpers::getTimestampFromBDDDate($date)) {
+        if ($timestamp = self::getTimestampFromBDDDate($date)) {
             $str = date("Y-m-d", $timestamp);
 
             return $str;
@@ -443,7 +444,7 @@ class Helpers
       // Remplacement des & par &amp; (XHTML)
         $args = preg_replace("/&/", "&amp;", $args);
 
-        $url = Helpers::getLink($_SERVER["PHP_SELF"] . "?" . $args);
+        $url = self::getLink($_SERVER["PHP_SELF"] . "?" . $args);
 
         return $url;
     }
@@ -479,7 +480,7 @@ class Helpers
 
           // Modification des permissions de toute l'arborescence créée
             while (mb_strlen($relPath) > 0) {
-                Helpers::fixPerms($base . "/" . $relPath);
+                self::fixPerms($base . "/" . $relPath);
                 $relPath = preg_replace('/[^\/]+\/*$/', "", $relPath);
             }
         } elseif (! is_dir($path)) {
@@ -565,7 +566,7 @@ class Helpers
 
                 if (is_file($file) && ! is_link($file)) {
                     if (! $cert = @file_get_contents($file)) {
-                        Helpers::$last_error .= "Certficate file error in validca:" . $file . "\n";
+                        self::$last_error .= "Certficate file error in validca:" . $file . "\n";
                         continue;
                     }
 
@@ -591,7 +592,7 @@ class Helpers
     {
         if ($path) {
             if (! file_exists($path)) {
-                Helpers::$last_error = "Fichier spécifié introuvable";
+                self::$last_error = "Fichier spécifié introuvable";
                 return false;
             }
         }
@@ -608,7 +609,7 @@ class Helpers
 
         if ($path) {
             if (! @readfile($path)) {
-                Helpers::$last_error = "Erreur lors de la lecture du fichier";
+                self::$last_error = "Erreur lors de la lecture du fichier";
                 return false;
             }
         }

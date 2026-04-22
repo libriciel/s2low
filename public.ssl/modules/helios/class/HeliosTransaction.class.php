@@ -304,7 +304,7 @@ class HeliosTransaction extends DataObject
 
         $ret_value = true;
       //AICI pot incerca sa modific parametrii...
-        if (!Helpers :: sendFileToBrowser(HELIOS_RESPONSES_ROOT . $filename, $filename, "text/xml")) {
+        if (!\S2lowLegacy\Class\Helpers\ResponseHelper::sendFileToBrowser(HELIOS_RESPONSES_ROOT . $filename, $filename, "text/xml")) {
             $this->errorMsg = "Erreur envoi fichier";
             echo "<br> heliosTansaction_class: sendAcquit " . $this->errorMsg;
             $ret_value = false;

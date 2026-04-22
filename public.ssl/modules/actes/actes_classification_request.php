@@ -9,21 +9,21 @@ use S2lowLegacy\Class\User;
 
 $module = new Module();
 if (! $module->initByName("actes")) {
-    Helpers::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
 }
 
 $me = new User();
 
 if (! $me->authenticate()) {
-    Helpers::returnAndExit(1, "Échec de l'authentification", Helpers::getLink("connexion-status"));
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Échec de l'authentification", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
 }
 
 if ($me->isGroupAdminOrSuper() || ! $module->isActive() || ! $me->checkDroit($module->get("name"), 'TT')) {
-    Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 
 if ($module->getParam("paper") == "on") {
-    Helpers::returnAndExit(1, "Mode « papier » actif. Accès interdit.", Helpers::getLink("/modules/actes/"));
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Mode « papier » actif. Accès interdit.", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/"));
 }
 
 $myAuthority = new Authority($me->get("authority_id"));
@@ -39,4 +39,4 @@ $result = $classificationCreation->createEnveloppe($myAuthority, $me);
 
 
 $transaction_id = $classificationCreation->getLastTransactionId();
-Helpers::returnAndExit(! $result, $classificationCreation->getLastMessage(), Helpers::getLink("/modules/actes/actes_transac_show.php?id=$transaction_id"), $transaction_id);
+\S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(! $result, $classificationCreation->getLastMessage(), \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_show.php?id=$transaction_id"), $transaction_id);

@@ -92,8 +92,8 @@ class MailController
         $sujet = "";
         $SendDateFrom = "";
         $SendDateTo = "";
-        $search = Helpers :: getVarFromGet("search");
-        $deleteId = Helpers :: getVarFromPost("list_id");
+        $search = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("search");
+        $deleteId = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("list_id");
 
      //---delete l'enregistment choisi.
      //FIXME : ca n'a rien à foutre là: faire un script intermédiaire
@@ -117,16 +117,16 @@ class MailController
         if (!$search) {
             $MailTransactions = MailPeer::mailList($MailTransaction, $this->me->getId());
         } else {
-            $etat = Helpers :: getVarFromGet("etat");
+            $etat = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("etat");
 
             $tabStatus = MailTransaction::getTabStatus();
             $etat_string = $tabStatus[$etat];
 
-            $sujet = Helpers :: getVarFromGet("sujet");
+            $sujet = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("sujet");
 
             try {
-                $SendDateFrom = Helpers :: getDateFromGet("SendDateFrom", true);
-                $SendDateTo = Helpers :: getDateFromGet("SendDateTo", true);
+                $SendDateFrom = \S2lowLegacy\Class\Helpers\RequestHelper::getDateFromGet("SendDateFrom", true);
+                $SendDateTo = \S2lowLegacy\Class\Helpers\RequestHelper::getDateFromGet("SendDateTo", true);
             } catch (Exception $exception) {
                 $this->lastError = $exception->getMessage();
                 $_SESSION['last_error'] = $exception->getMessage();
@@ -195,7 +195,7 @@ class MailController
         $error = $this->SaveError();
      //traitement des information
         try {
-            $trans_id = Helpers::getIntFromGet("trans_id");
+            $trans_id = \S2lowLegacy\Class\Helpers\RequestHelper::getIntFromGet("trans_id");
         } catch (Exception $e) {
             echo $e->getMessage();
             return false;
@@ -305,19 +305,19 @@ class MailController
         }
 
         //vérification de mail adress.
-        $mailTo = Helpers :: getVarFromPost("mailto");
-        $mailCC = Helpers :: getVarFromPost("mailcc");
-        $mailBCC = Helpers :: getVarFromPost("mailcci");
+        $mailTo = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("mailto");
+        $mailCC = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("mailcc");
+        $mailBCC = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("mailcci");
 
 
         $mailTo = $this->explodeMail($mailTo);
         $mailCC = $this->explodeMail($mailCC);
         $mailBCC = $this->explodeMail($mailBCC);
 
-        $subject = Helpers :: getVarFromPost("objet");
-        $message = Helpers :: getVarFromPost("message");
+        $subject = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("objet");
+        $message = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("message");
         $message = str_replace("\r", "", $message);
-        $send_password = Helpers :: getVarFromPost("send_password") ?? false;
+        $send_password = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("send_password") ?? false;
 
         if (! $mailTo) {
             $this->lastError = "Le destinataire est obligatoire";
@@ -366,7 +366,7 @@ class MailController
         //FileNumber = le nombre de File est attaché. Il commence par 1.
         //Il est défini dans le fichier de javascript file: mail.js
         $InputFileName = array();
-        $FileNumber = Helpers :: getVarFromPost("FileNumber");
+        $FileNumber = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("FileNumber");
         if ($FileNumber != null) {
             for ($i = 1; $i <= $FileNumber; $i++) {
                // le nom de uploadFile pass par var _FILES
@@ -474,9 +474,9 @@ class MailController
      */
     protected function executeAnnuaire()
     {
-        $email = Helpers :: getVarFromPost("email");
-        $description = Helpers :: getVarFromPost("description");
-        $id = Helpers :: getVarFromPost("id");
+        $email = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("email");
+        $description = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("description");
+        $id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("id");
 
         if ($email != null) {
             if (! is_valid_email($email)) {
@@ -490,11 +490,11 @@ class MailController
                 $annuaire->save(false);
             }
         }
-        $idArray = Helpers :: getVarFromPost("checkbox_id");
+        $idArray = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("checkbox_id");
 
         try {
-            $groupe_id = Helpers :: getIntFromPost("groupe_id", true);
-            $old_groupe_id = Helpers :: getIntFromPost("old_groupe_id", true);
+            $groupe_id = \S2lowLegacy\Class\Helpers\RequestHelper::getIntFromPost("groupe_id", true);
+            $old_groupe_id = \S2lowLegacy\Class\Helpers\RequestHelper::getIntFromPost("old_groupe_id", true);
         } catch (Exception $exception) {
             $this->lastError = $exception->getMessage();
             return false;
@@ -530,7 +530,7 @@ class MailController
             $groupe_id = $old_groupe_id;
         } else {
             try {
-                $groupe_id = Helpers :: getIntFromGet("groupe_id", true);
+                $groupe_id = \S2lowLegacy\Class\Helpers\RequestHelper::getIntFromGet("groupe_id", true);
             } catch (Exception $e) {
                 echo $e->getMessage();
                 return false;
@@ -627,8 +627,8 @@ class MailController
 
     protected function executeSaveNewEmail()
     {
-        $emails = Helpers :: getVarFromPost("newMailAddress");
-        $descriptions = Helpers :: getVarFromPost("newMailDescription");
+        $emails = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("newMailAddress");
+        $descriptions = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("newMailDescription");
         $maxLengh = count($emails);
 
         echo $maxLengh;

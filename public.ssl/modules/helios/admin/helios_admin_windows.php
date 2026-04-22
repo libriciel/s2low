@@ -31,7 +31,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -56,7 +56,7 @@ $doc->openContent();
 
 $html = "<h1>Gestion des fenêtres de transmission</h1>\n";
 $html .= "<h2>Actions</h2>\n";
-$html .= "<p><a href=\"" . Helpers::getLink("/modules/helios/admin/helios_admin_window_edit.php") . "\" class=\"btn btn-primary\">Ajouter une fenêtre</a></p>\n";
+$html .= "<p><a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/admin/helios_admin_window_edit.php") . "\" class=\"btn btn-primary\">Ajouter une fenêtre</a></p>\n";
 $html .= "<h2>Liste des fenêtres existantes</h2>\n";
 
 if (count($windows) > 0) {
@@ -75,10 +75,10 @@ if (count($windows) > 0) {
     foreach ($windows as $window) {
         $html .= "<tr>\n";
         $html .= " <td headers=\"id\">" . $window["id"] . "</td>\n";
-        $html .= " <td headers=\"start\">" . Helpers::getDateFromBDDDate($window["start"], true) . "</td>\n";
-        $html .= " <td headers=\"end\">" . Helpers::getDateFromBDDDate($window["end"], true) . "</td>\n";
+        $html .= " <td headers=\"start\">" . \S2lowLegacy\Class\Helpers\DateHelper::getDateFromBDDDate($window["start"], true) . "</td>\n";
+        $html .= " <td headers=\"end\">" . \S2lowLegacy\Class\Helpers\DateHelper::getDateFromBDDDate($window["end"], true) . "</td>\n";
         $html .= " <td headers=\"rate-limit\">" . $window["rate_limit"] . "</td>\n";
-        $html .= " <td headers=\"actions\"><a href=\"" . Helpers::getLink("/modules/helios/admin/helios_admin_window_edit.php?id=" . $window["id"]) . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
+        $html .= " <td headers=\"actions\"><a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/admin/helios_admin_window_edit.php?id=" . $window["id"]) . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n";
         $html .= "</tr>\n";
     }
 

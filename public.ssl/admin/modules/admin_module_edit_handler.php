@@ -24,7 +24,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Éhec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -36,20 +36,20 @@ if (! $me->isSuper()) {
 
 //! Recuperation des variables du POST
 //! Recuperation des informations sur le module
-$id = Helpers::getVarFromPost("id");
-$status = Helpers::getVarFromPost("status");
+$id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("id");
+$status = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("status");
 
 //! On récupère des informations sur les parametres du module sous forme de tableaux
-$param_id = Helpers::getVarFromPost("param_id");
-$param_name = Helpers::getVarFromPost("param_name");
-$param_description = Helpers::getVarFromPost("param_description");
-$param_value = Helpers::getVarFromPost("param_value");
-$param_to_suppr = Helpers::getVarFromPost("param_to_suppr");
+$param_id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("param_id");
+$param_name = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("param_name");
+$param_description = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("param_description");
+$param_value = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("param_value");
+$param_to_suppr = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("param_to_suppr");
 
 //! On recupere les informations concernant le paramètre du module a ajouter
-$new_param_name = Helpers::getVarFromPost("new_param_name");
-$new_param_value = Helpers::getVarFromPost("new_param_value");
-$new_param_description = Helpers::getVarFromPost("new_param_description");
+$new_param_name = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("new_param_name");
+$new_param_value = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("new_param_value");
+$new_param_description = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("new_param_description");
 
 $modules = new Module();
 
@@ -57,7 +57,7 @@ if (isset($id) && ! empty($id)) {
     $modules->setId($id);
     if (! $modules->init()) {
         $_SESSION["error"] = "Erreur lors de la modification de la collectivité";
-        header("Location: " . Helpers::getLink("/admin/authorities/admin_modules.php"));
+        header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/authorities/admin_modules.php"));
         exit();
     }
 }
@@ -87,7 +87,7 @@ if (! $modules->save()) {
     }
 
     $_SESSION["error"] = nl2br($msg);
-    header("Location: " . Helpers::getLink("/admin/modules/admin_modules.php"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/modules/admin_modules.php"));
     exit();
 } else {
     $msg = ($modules->isNew()) ? "Création" : "Modification";
@@ -97,7 +97,7 @@ if (! $modules->save()) {
     }
 
     $_SESSION["error"] = nl2br($msg);
-    header("Location: " . Helpers::getLink("/admin/modules/admin_module_edit.php?id=") . $modules->getId());
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/modules/admin_module_edit.php?id=") . $modules->getId());
 }
 
 exit();

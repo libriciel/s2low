@@ -19,7 +19,7 @@ $me = new User();
 
 if (!$me->authenticate()) {
     $_SESSION['error'] = "Échec de l'authentification";
-    header('Location: ' . Helpers::getLink('connexion-status'));
+    header('Location: ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('connexion-status'));
     exit();
 }
 

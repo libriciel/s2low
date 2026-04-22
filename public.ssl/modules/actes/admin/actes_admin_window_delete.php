@@ -40,7 +40,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -51,7 +51,7 @@ if (! $me->isSuper() || ! $module->isActive() || ! $me->canAccess($module->get("
 }
 
 // Récupération des variables du POST
-$id = Helpers::getVarFromPost("id");
+$id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("id");
 
 if (isset($id)) {
     $zeWin = new ActesTransmissionWindow($id);
@@ -64,7 +64,7 @@ if (isset($id)) {
         $workerScript->rebuildQueue($worker);
 
         $_SESSION["error"] = nl2br($msg);
-        header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_windows.php"));
+        header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/admin/actes_admin_windows.php"));
         exit();
     } else {
         $msg = "Erreur lors de la tentative de suppression de la fenêtre de transmission<br />" . $zeWin->getErrorMsg();
@@ -73,11 +73,11 @@ if (isset($id)) {
         }
 
         $_SESSION["error"] = nl2br($msg);
-        header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_windows.php"));
+        header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/admin/actes_admin_windows.php"));
         exit();
     }
 } else {
     $_SESSION["error"] = "Pas d'identifiant de fenêtre de transmission spécifié";
-    header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_windows.php"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/admin/actes_admin_windows.php"));
     exit();
 }

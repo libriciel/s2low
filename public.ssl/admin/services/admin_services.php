@@ -13,7 +13,7 @@ $authority_id = null;
 $authorities = $me->getAllPossibleAuthority();
 
 if (count($authorities) > 1) {
-    $authority_id = Helpers::getVarFromGet('authority_id');
+    $authority_id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet('authority_id');
 } else {
     $authority_id = array_keys($authorities);
     $authority_id = $authority_id[0];
@@ -23,14 +23,14 @@ $groupes = array();
 
 if ($authority_id) {
     if (!is_numeric($authority_id)) {
-        Helpers::returnAndExit(
+        \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(
             1,
             "[admin_services.php] authority_id doit être un entier, $authority_id fourni",
             WEBSITE_SSL
         );
     }
     if (!array_key_exists($authority_id, $authorities)) {
-        Helpers::returnAndExit(
+        \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(
             1,
             "[admin_services.php] authorities[$authority_id] n'existe pas",
             WEBSITE_SSL

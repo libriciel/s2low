@@ -10,7 +10,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -23,5 +23,5 @@ if (! $me->isSuper()) {
 $logger->critical("Test du déclenchement d'une erreur critique", ['user' => $me->getPrettyName(),'user_id' => $me->getId()]);
 
 $_SESSION["error"] = "Une erreur critique a été déclenchée. Envoi d'un mail à " . EMAIL_ADMIN_TECHNIQUE;
-header("Location: " . Helpers::getLink("/admin/utilities/"));
+header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/utilities/"));
 exit;

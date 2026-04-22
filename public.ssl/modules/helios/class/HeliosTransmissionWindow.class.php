@@ -201,7 +201,7 @@ class HeliosTransmissionWindow extends DataObject
             if ($currentHours) {
                 foreach ($currentHours as $hour) {
                   // Récupération des octets déjà consommés
-                    if (Helpers::getTimestampFromBDDDate($hour["window_begin"]) == $start_stamp) {
+                    if (\S2lowLegacy\Class\Helpers\DateHelper::getTimestampFromBDDDate($hour["window_begin"]) == $start_stamp) {
                         if (! empty($hour["consumed"])) {
                             $consumed = $hour["consumed"];
                         }
@@ -313,7 +313,7 @@ class HeliosTransmissionWindow extends DataObject
   */
     public static function roundDate($date, $hour)
     {
-        $timestamp = Helpers::ansiDateToTimestamp($date, true);
+        $timestamp = \S2lowLegacy\Class\Helpers\DateHelper::ansiDateToTimestamp($date, true);
 
         $hours = explode(':', $hour);
 

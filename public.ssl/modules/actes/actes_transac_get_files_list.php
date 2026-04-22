@@ -26,8 +26,8 @@ if ($me->isGroupAdminOrSuper() || ! $module->isActive() || !$me->canAccess($modu
 $myAuthority = new Authority($me->get('authority_id'));
 
 // Recuperation des variables du GET
-$transId = intval(Helpers::getVarFromGet('transaction'));
-$transUniqueId = intval(Helpers::getVarFromGet('unique_id'));
+$transId = intval(\S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet('transaction'));
+$transUniqueId = intval(\S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet('unique_id'));
 
 if (! empty($transUniqueId)) {
     $transId = ActesTransaction::getTransactionFromUniqueId($transUniqueId);

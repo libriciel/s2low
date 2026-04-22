@@ -99,7 +99,7 @@ class DataForBordereauPDF
         foreach ($workflow as $stage) {
             $cycle_table[] = [
                 $status[$stage["status_id"]],
-                Helpers :: getDateFromBDDDate($stage["date"], true),
+                \S2lowLegacy\Class\Helpers\DateHelper::getDateFromBDDDate($stage["date"], true),
                 $stage["message"]
             ];
         }

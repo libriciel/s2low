@@ -24,7 +24,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -35,10 +35,10 @@ if (! $module->isActive() || ! $me->checkDroit("helios", "TT")) {
 }
 
 
-$id = Helpers :: getVarFromPost("id");
+$id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("id");
 if (empty($id)) {
     $_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
-    header("Location: " . Helpers::getLink("/modules/helios/index.php"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/index.php"));
     exit();
 }
 
@@ -46,7 +46,7 @@ if (empty($id)) {
 $currentStatusId = HeliosTransactionWorkflow::getCurrentStatusId($id);
 if ($currentStatusId != 14) {
     $_SESSION["error"] = "\nLa transaction n'est pas dans le bon état";
-    header("Location: " . Helpers::getLink("/modules/helios/helios_transac_show.php?id=") . $id);
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_transac_show.php?id=") . $id);
     exit();
 }
 
@@ -64,7 +64,7 @@ if (!$htw->save(true)) {
     if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 3, false, 'USER', $module->get("name"), $me)) {
         $_SESSION["error"] .= "\nErreur de journalisation.";
     }
-    header("Location: " . Helpers::getLink("/modules/helios/index.php"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/index.php"));
     exit();
 }
 
@@ -78,4 +78,4 @@ if (!Log :: newEntry(LOG_ISSUER_NAME, $msg, 1, false, 'USER', $module->get("name
 
 $workerScript->putJobByQueueName(HeliosAnalyseFichierAEnvoyerWorker::QUEUE_NAME, $id);
 
-Helpers :: returnAndExit(0, "Préparation de la télétransmission réusssie.", Helpers::getLink("/modules/helios/helios_transac_show.php?id=") . $id);
+\S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(0, "Préparation de la télétransmission réusssie.", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_transac_show.php?id=") . $id);

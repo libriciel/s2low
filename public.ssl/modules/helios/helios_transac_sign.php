@@ -34,7 +34,7 @@ $me = new User();
 
 if (!$me->authenticate()) {
     $_SESSION['error'] = "Échec de l'authentification";
-    header('Location: ' . Helpers::getLink('connexion-status'));
+    header('Location: ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('connexion-status'));
     exit();
 }
 
@@ -44,19 +44,19 @@ if (!$module->isActive() || !$me->checkDroit($module->get('name'), 'CS')) {
     exit();
 }
 
-$nb_signature = Helpers :: getVarFromPost('nb_signature');
+$nb_signature = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost('nb_signature');
 
 
 
 for ($i = 1; $i <= $nb_signature; $i++) {
-    $id = Helpers :: getVarFromPost("id_$i");
-    $signature_id_1 = Helpers :: getVarFromPost("signature_id_$i");
-    $signature_1 = Helpers :: getVarFromPost("signature_$i");
-    $is_bordereau_1 = Helpers :: getVarFromPost("is_bordereau_$i");
+    $id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("id_$i");
+    $signature_id_1 = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("signature_id_$i");
+    $signature_1 = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("signature_$i");
+    $is_bordereau_1 = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("is_bordereau_$i");
 
     if (empty($id)) {
         $_SESSION['error'] = "Pas d'identifiant de transaction spécifié";
-        header('Location: ' . Helpers::getLink('/modules/helios/index.php'));
+        header('Location: ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/helios/index.php'));
         exit();
     }
 
@@ -65,13 +65,13 @@ for ($i = 1; $i <= $nb_signature; $i++) {
     $trans->setId($id);
     if (! $trans->init()) {
         $_SESSION['error'] = "Erreur d'initialisation de la transaction.";
-        header('Location: ' . Helpers::getLink('/modules/helios/index.php'));
+        header('Location: ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/helios/index.php'));
         exit();
     }
 
     if ($trans->get('last_status_id') != 13) {
         $_SESSION['error'] = 'Le fichier PES ne peut plus être signé à ce moment-là (status : ' . $trans->get('last_status_id') . ')';
-        header('Location:  ' . Helpers::getLink("/modules/helios/helios_transac_show.php?id=$id"));
+        header('Location:  ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_transac_show.php?id=$id"));
         exit();
     }
 
@@ -111,7 +111,7 @@ for ($i = 1; $i <= $nb_signature; $i++) {
             $_SESSION['error'] .= "\nErreur de journalisation.";
         }
         $_SESSION['error'] = $msg;
-        header('Location:  ' . Helpers::getLink("/modules/helios/helios_transac_show.php?id=$id"));
+        header('Location:  ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_transac_show.php?id=$id"));
         exit();
     }
 
@@ -123,10 +123,10 @@ for ($i = 1; $i <= $nb_signature; $i++) {
 
 if ($nb_signature > 1) {
     $_SESSION['error'] = 'Les signatures ont été enregistrées';
-    header('Location:  ' . Helpers::getLink('/modules/helios/index.php'));
+    header('Location:  ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/helios/index.php'));
     exit();
 } else {
     $_SESSION['error'] = 'La signature a été enregistrée';
-    header('Location:  ' . Helpers::getLink("/modules/helios/helios_transac_show.php?id=$id"));
+    header('Location:  ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_transac_show.php?id=$id"));
     exit();
 }

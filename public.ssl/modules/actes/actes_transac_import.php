@@ -23,7 +23,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -35,14 +35,14 @@ if ($me->isGroupAdminOrSuper() || ! $module->isActive() || !$me->checkDroit($mod
 
 if ($module->getParam("paper") == "on") {
     $_SESSION["error"] = "Mode «&nbsp;papier&nbsp;» actif. Accès interdit.";
-    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/index.php"));
     exit();
 }
 
 $rgsConnexion = LegacyObjectsManager::getLegacyObjectInstancier()->get(RgsConnexion::class);
 if (! $rgsConnexion->isRgsConnexion()) {
     $_SESSION["error"] = "Importer une enveloppe : votre certificat n'est pas conforme au RGS, vous ne pouvez pas télétransmettre !";
-    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/index.php"));
     exit;
 }
 
@@ -76,9 +76,9 @@ $doc->openContent();
 
 // Zone contenu
 $html .= "<h1>ACTES - Dématérialisation du contrôle de légalité</h1>\n";
-$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . Helpers::getLink("/modules/actes/index.php") . "\" class=\"bouton\">Retour liste transactions</a></p>\n";
+$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/index.php") . "\" class=\"bouton\">Retour liste transactions</a></p>\n";
 $html .= "<h2>Import d'une enveloppe</h2>\n";
-$html .= "<form class=\"form-horizontal import-file-form\" action=\"" . Helpers::getLink("/modules/actes/actes_transac_submit.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm('enveloppe', 'Fichier enveloppe', 'RisString')) { toggle_upload('form_progress', progress_bar); return true; } else { return false; }\">\n");
+$html .= "<form class=\"form-horizontal import-file-form\" action=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_submit.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm('enveloppe', 'Fichier enveloppe', 'RisString')) { toggle_upload('form_progress', progress_bar); return true; } else { return false; }\">\n");
 $html .= "<div class=\"form-group\">";
 $html .= "<label for=\"enveloppe\" class=\"col-md-6 control-label\">Indiquez le fichier archive de l'enveloppe à importer (taille maximum " . ACTES_ARCHIVE_MAX_SIZE . " octets)</label>\n";
 $html .= "<div class=\"col-md-6\">";

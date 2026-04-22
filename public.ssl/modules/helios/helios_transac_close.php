@@ -15,7 +15,7 @@ use S2lowLegacy\Class\Log;
 $initData = $initialisation->doInit();
 $initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
 
-$liste_id = Helpers::getVarFromPost('liste_id');
+$liste_id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost('liste_id');
 
 $msg = '';
 

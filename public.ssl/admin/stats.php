@@ -22,7 +22,7 @@ $moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEH
 
 if ($initData->userInfo['role'] != 'SADM') {
     $_SESSION['error'] = 'Super admin only !';
-    header('Location: ' . Helpers::getLink('connexion-status'));
+    header('Location: ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('connexion-status'));
     exit();
 }
 

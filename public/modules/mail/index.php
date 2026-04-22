@@ -12,8 +12,8 @@ use S2lowLegacy\Mail\MailTransaction;
 require_once('../../../init/init.php');
 LegacyObjectsManager::setLegacyObjectInstancier();
 
-$mail_emis_id = Helpers::getVarFromGet('mail_emis_id');
-$password = Helpers::getVarFromPost('mdp');
+$mail_emis_id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet('mail_emis_id');
+$password = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost('mdp');
 
 
 $mailEmis = new MailMessageEmis($mail_emis_id);

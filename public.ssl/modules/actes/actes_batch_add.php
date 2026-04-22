@@ -18,7 +18,7 @@ $me = new User();
 
 if (!$me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -45,8 +45,8 @@ $css = '';
 $js = '';
 
 $js .= "
-    <script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jquery.js") . "\"></script>
-    <script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jqueryfileupload.js") . "\"></script>\n";
+    <script type=\"text/javascript\" src=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/jsmodules/jquery.js") . "\"></script>
+    <script type=\"text/javascript\" src=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/jsmodules/jqueryfileupload.js") . "\"></script>\n";
 
 $doc->addHeader($css . $js);
 

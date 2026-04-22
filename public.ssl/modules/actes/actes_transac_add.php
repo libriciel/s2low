@@ -29,7 +29,7 @@ $me = new User();
 
 if (!$me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -41,7 +41,7 @@ if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->checkDroit($modu
 
 if ($module->getParam("paper") == "on") {
     $_SESSION["error"] = "Mode «&nbsp;papier&nbsp;» actif. Accès interdit.";
-    header("Location: " . Helpers::getLink("/modules/actes/"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/"));
     exit();
 }
 
@@ -50,7 +50,7 @@ if ($module->getParam("paper") == "on") {
 $myAuthority = new Authority($me->get("authority_id"));
 
 // Parametres pour le traitement par lot
-$batchFileId = Helpers :: getVarFromGet("batchfile");
+$batchFileId = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("batchfile");
 $zeBatch = null;
 $zeBatchFile = null;
 
@@ -84,9 +84,9 @@ $trans = new ActesTransaction();
 
 $doc = new HTMLLayout();
 
-$doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
-$doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jquery.js") . "\"></script>");
-$doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink("/jsmodules/jqueryui.js") . "\"></script>");
+$doc->addHeader("<script src=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
+$doc->addHeader("<script type=\"text/javascript\" src=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/jsmodules/jquery.js") . "\"></script>");
+$doc->addHeader("<script type=\"text/javascript\" src=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/jsmodules/jqueryui.js") . "\"></script>");
 
 $js = <<<EOJS
 <script type="text/javascript">
@@ -202,14 +202,14 @@ if (( ACTES_RESTRICT_CLASSIF_REQUEST_FREQUENCY == false) || (!ActesClassificatio
   // Affichage du lien pour demande de mise à jour classification matières sous-matières
     $html .= "<div  class=\"bs-callout bs-callout-info\">\n";
     if ($dateClassif = ActesClassification :: getLastRevisionDate($myAuthority->getId(), false)) {
-        $html .= "<p>La classification matières et sous-matières utilisée pour votre collectivité est la version du " . Helpers :: getDateFromBDDDate($dateClassif) . ".<br/>\n";
+        $html .= "<p>La classification matières et sous-matières utilisée pour votre collectivité est la version du " . \S2lowLegacy\Class\Helpers\DateHelper::getDateFromBDDDate($dateClassif) . ".<br/>\n";
         $html .= "Pour forcer la mise à jour de cette classification depuis le serveur du ministère, veuillez utiliser le bouton ci-dessous :</p>\n";
     } else {
         $html .= "<p>Il n'existe pas encore de classification matières et sous-matières associée à votre collectivité.</p>\n";
         $html .= "<p>Pour forcer la récupération de cette classification depuis le serveur du ministère, veuillez utiliser le bouton ci-dessous :</p>\n";
     }
 
-    $html .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_classification_request.php\" method=\"post\" onsubmit=\"return confirm('Voulez-vous vraiment créer une transaction de demande de classification ?');\">\n");
+    $html .= "<form action=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_classification_request.php\" method=\"post\" onsubmit=\"return confirm('Voulez-vous vraiment créer une transaction de demande de classification ?');\">\n");
     $html .= "<div class=\"button_area\"><input class=\"submit_button btn btn-default\" type=\"submit\" value=\"Mise à jour classification\" /></div>\n";
     $html .= "</form>\n";
 }
@@ -222,7 +222,7 @@ $doc->openContent();
 
 // Zone contenu
 $html = "<h1>ACTES - Dématérialisation du contrôle de légalité</h1>\n";
-$html .= "<p id=\"back-transaction-btn\"><a href=\"" . Helpers::getLink("/modules/actes/index.php") . "\" class=\"btn btn-default\">Retour liste transactions</a></p>\n";
+$html .= "<p id=\"back-transaction-btn\"><a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/index.php") . "\" class=\"btn btn-default\">Retour liste transactions</a></p>\n";
 
 $rgsConnexion = LegacyObjectsManager::getLegacyObjectInstancier()->get(RgsConnexion::class);
 if (! $rgsConnexion->isRgsConnexion()) {
@@ -239,7 +239,7 @@ if ($batchMode) {
 }
 
 $html .= "<form id=\"add-transac-content\" role=\"form\" class=\"form col-md-offset-1\" action=\"" .
-    Helpers::getLink(
+    \S2lowLegacy\Class\Helpers\UrlHelper::getLink(
         "/modules/actes/actes_transac_create.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm(" .
         $trans->getValidationTrio('nature_code', 'number', 'decision_date', 'title', 'subject') .
         ", 'classif1', 'Classification', 'RisInt','decision_date', 'Date de la décision', 'isDatePasse'"
@@ -260,17 +260,17 @@ if ($batchMode) {
 
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label for=\"nature_code\" class=\"control-label\"> Nature de l'acte : </label>\n";
-$html .=   $doc->getHTMLSelect("nature_code", $transNatures, Helpers :: getFromSession("nature_code"), "id='nature_code'") ;
+$html .=   $doc->getHTMLSelect("nature_code", $transNatures, \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("nature_code"), "id='nature_code'") ;
 $html .= " </div>";
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label for=\"classification_text\" class=\"control-label\">Classification : </label>\n";
-$html .= "   <a class=\"form-control\" href=\"#tedetis\" onclick=\"javascript:window.open('" . Helpers::getLink("/common/select_popup.php?type=classification', 'Selectattribut', 'location=0,scrollbars=1,menubar=0,status=0,toolbar=0,directories=0,width=512,height=500');\" id=\"classification_text\">");
+$html .= "   <a class=\"form-control\" href=\"#tedetis\" onclick=\"javascript:window.open('" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/common/select_popup.php?type=classification', 'Selectattribut', 'location=0,scrollbars=1,menubar=0,status=0,toolbar=0,directories=0,width=512,height=500');\" id=\"classification_text\">");
 
-$classif1 = Helpers :: getFromSession("classif1", false);
+$classif1 = \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("classif1", false);
 if (!empty($classif1)) {
     $classif = array ();
     for ($i = 1; $i <= 5; $i++) {
-        $classif[] = Helpers :: getFromSession("classif" . $i, false);
+        $classif[] = \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("classif" . $i, false);
     }
 
     $html .= implode(".", $classif);
@@ -279,17 +279,17 @@ if (!empty($classif1)) {
 }
 
 $html .= "</a>\n";
-$html .= "   <input type=\"hidden\" id=\"classif1\" name=\"classif1\" value=\"" . Helpers :: getFromSession("classif1") . "\" />\n";
-$html .= "   <input type=\"hidden\" id=\"classif2\" name=\"classif2\" value=\"" . Helpers :: getFromSession("classif2") . "\" />\n";
-$html .= "   <input type=\"hidden\" id=\"classif3\" name=\"classif3\" value=\"" . Helpers :: getFromSession("classif3") . "\" />\n";
-$html .= "   <input type=\"hidden\" id=\"classif4\" name=\"classif4\" value=\"" . Helpers :: getFromSession("classif4") . "\" />\n";
-$html .= "   <input type=\"hidden\" id=\"classif5\" name=\"classif5\" value=\"" . Helpers :: getFromSession("classif5") . "\" />\n";
+$html .= "   <input type=\"hidden\" id=\"classif1\" name=\"classif1\" value=\"" . \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("classif1") . "\" />\n";
+$html .= "   <input type=\"hidden\" id=\"classif2\" name=\"classif2\" value=\"" . \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("classif2") . "\" />\n";
+$html .= "   <input type=\"hidden\" id=\"classif3\" name=\"classif3\" value=\"" . \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("classif3") . "\" />\n";
+$html .= "   <input type=\"hidden\" id=\"classif4\" name=\"classif4\" value=\"" . \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("classif4") . "\" />\n";
+$html .= "   <input type=\"hidden\" id=\"classif5\" name=\"classif5\" value=\"" . \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("classif5") . "\" />\n";
 $html .= "   </div>\n";
 $html .= " <div class=\"form-group\">\n";
 $html .= "   <label for=\"act-number\" class=\"control-label\"> Numéro de l'acte (15 caractères maxi, chiffres, lettres en majuscule ou _)</label>\n";
 $html .= "   <input id=\"act-number\" class=\"form-control\" type=\"text\" name=\"number\" value=\"";
 
-$number = Helpers :: getFromSession("number");
+$number = \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("number");
 
 if ($batchMode) {
     $number = $zeBatch->get("num_prefix") . "_" . $zeBatch->getNextSuffix();
@@ -300,12 +300,12 @@ $html .= " </div>\n";
 $html .= " <div class=\"form-group\">\n";
 $html .= "   <label for=\"decision_date\" class=\"control-label\">Date de la décision : </label>\n";
 
-$decision_date = Helpers :: getFromSession("decision_date");
+$decision_date = \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("decision_date");
 
 $datePicker = new DatePicker("decision_date", $decision_date);
 $html .= $datePicker->show();
 
-$document_papier_checked = Helpers :: getFromSession("document_papier") ? 'checked="checked"' : "";
+$document_papier_checked = \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("document_papier") ? 'checked="checked"' : "";
 
 $html .= <<<"EOL"
     <div class="form-group">
@@ -317,7 +317,7 @@ EOL;
 
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label for=\"subject\" class=\"control-label\">Objet : </label>\n";
-$html .= "   <textarea id=\"subject\" class=\"form-control\" cols=\"60\" rows=\"7\" name=\"subject\">" . Helpers :: getFromSession("subject") . "</textarea></div>\n";
+$html .= "   <textarea id=\"subject\" class=\"form-control\" cols=\"60\" rows=\"7\" name=\"subject\">" . \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("subject") . "</textarea></div>\n";
 
 
 $html .= " <div class=\"form-group\">\n";

@@ -81,10 +81,10 @@ class ActesClassification extends DataObject
             //return $contents;
             //if (! $result->isError() && $result->num_row() == 1) {
             //$row = $result->get_next_row();
-            $this->request_date = $request_date; //Helpers::getFromBDD($row["request_date"]);
-            $this->requested_by = $requested_by; //Helpers::getFromBDD($row["requested_by"]);
-            $this->version_date = $version_date;//Helpers::getFromBDD($row["version_date"]);
-            $this->xml_data = $contents;//Helpers::getFromBDD($row["xml_data"]);
+            $this->request_date = $request_date; //\S2lowLegacy\Class\Helpers\StringHelper::getFromBDD($row["request_date"]);
+            $this->requested_by = $requested_by; //\S2lowLegacy\Class\Helpers\StringHelper::getFromBDD($row["requested_by"]);
+            $this->version_date = $version_date;//\S2lowLegacy\Class\Helpers\StringHelper::getFromBDD($row["version_date"]);
+            $this->xml_data = $contents;//\S2lowLegacy\Class\Helpers\StringHelper::getFromBDD($row["xml_data"]);
 
             return true;
             //}
@@ -175,7 +175,7 @@ class ActesClassification extends DataObject
             if (!$result->isError() && $result->num_row() > 0) {
                 $row = $result->get_next_row();
                 if ($return_ansi) {
-                    return Helpers::getANSIDateFromBDDDate($row["max_date"]);
+                    return \S2lowLegacy\Class\Helpers\DateHelper::getANSIDateFromBDDDate($row["max_date"]);
                 } else {
                     return $row["max_date"];
                 }

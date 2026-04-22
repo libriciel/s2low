@@ -296,11 +296,11 @@ class ActesEnvelope extends DataObject
         $xml .= "xsi:schemaLocation=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216 actesv1_1.xsd\">\n";
 
         $xml .= " <actes:Emetteur>\n";
-        $xml .= "  <actes:IDCL insee:SIREN=\"" . Helpers::escapeForXML($this->siren) . "\" actes:Departement=\"" . Helpers::escapeForXML($this->department) . "\" actes:Arrondissement=\"" . Helpers::escapeForXML($this->district) . "\" actes:Nature=\"" . Helpers::escapeForXML($this->authority_type_code) . "\"/>\n";
+        $xml .= "  <actes:IDCL insee:SIREN=\"" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($this->siren) . "\" actes:Departement=\"" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($this->department) . "\" actes:Arrondissement=\"" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($this->district) . "\" actes:Nature=\"" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($this->authority_type_code) . "\"/>\n";
         $xml .= "  <actes:Referent>\n";
         $xml .= "   <actes:Nom>" . XMLHelper::convertToIsoAndEscape($this->name) . "</actes:Nom>\n";
-        $xml .= "   <actes:Telephone>" . Helpers::escapeForXML($this->telephone) . "</actes:Telephone>\n";
-        $xml .= "   <actes:Email>" . Helpers::escapeForXML($this->email) . "</actes:Email>\n";
+        $xml .= "   <actes:Telephone>" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($this->telephone) . "</actes:Telephone>\n";
+        $xml .= "   <actes:Email>" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($this->email) . "</actes:Email>\n";
         $xml .= "  </actes:Referent>\n";
         $xml .= " </actes:Emetteur>\n";
 
@@ -326,7 +326,7 @@ class ActesEnvelope extends DataObject
 
         foreach ($this->transactions as $transac) {
             $xml .= "  <actes:Formulaire>\n";
-            $xml .= "   <actes:NomFichier>" . Helpers::escapeForXML(basename($transac->get("xmlFileName"))) . "</actes:NomFichier>\n";
+            $xml .= "   <actes:NomFichier>" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML(basename($transac->get("xmlFileName"))) . "</actes:NomFichier>\n";
             $xml .= "  </actes:Formulaire>\n";
         }
 
@@ -344,7 +344,7 @@ class ActesEnvelope extends DataObject
    */
     public function writeEnvFile($xml)
     {
-        if (! Helpers::createDirTree(dirname($this->rootDir . '/' . $this->envXmlFile))) {
+        if (! \S2lowLegacy\Class\Helpers\FileSystemHelper::createDirTree(dirname($this->rootDir . '/' . $this->envXmlFile))) {
             $this->errorMsg = "Erreur système de fichiers.";
             return false;
         }
@@ -414,7 +414,7 @@ class ActesEnvelope extends DataObject
                         return false;
                     }
 
-                    Helpers::fixPerms($this->rootDir . "/" . $this->file_path);
+                    \S2lowLegacy\Class\Helpers\FileSystemHelper::fixPerms($this->rootDir . "/" . $this->file_path);
                 }
             } else {
                 $this->errorMsg = "Pas de message dans l'enveloppe.";
@@ -477,7 +477,7 @@ class ActesEnvelope extends DataObject
         $this->file_path = $this->destDir . "/" . $name;
 
         // Création du répertoire de stockage de l'archive
-        if (! Helpers::createDirTree($dest)) {
+        if (! \S2lowLegacy\Class\Helpers\FileSystemHelper::createDirTree($dest)) {
             $this->errorMsg = "Erreur système de fichiers.";
             return false;
         }
@@ -611,7 +611,7 @@ class ActesEnvelope extends DataObject
   */
     private function genTempDirectory()
     {
-        $this->tmpDir = Helpers::genTempName();
+        $this->tmpDir = \S2lowLegacy\Class\Helpers\StringHelper::genTempName();
     }
 
   /**
@@ -625,7 +625,7 @@ class ActesEnvelope extends DataObject
    */
     public function extractArchive($dest)
     {
-        if (! Helpers::createDirTree($dest)) {
+        if (! \S2lowLegacy\Class\Helpers\FileSystemHelper::createDirTree($dest)) {
             $this->errorMsg = "Erreur système de fichiers.";
             return false;
         }
@@ -657,9 +657,9 @@ class ActesEnvelope extends DataObject
         $namespaces = $this->envXmlObj->getDocNamespaces();
       // Récupération des éléments dans le namespace "actes"
         $actesItems = $this->envXmlObj->children($namespaces["actes"]);
-        $this->name = Helpers::getFromXMLElt($actesItems->Emetteur->Referent->Nom);
-        $this->telephone = Helpers::getFromXMLElt($actesItems->Emetteur->Referent->Telephone);
-        $this->email = Helpers::getFromXMLElt($actesItems->Emetteur->Referent->Email);
+        $this->name = \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($actesItems->Emetteur->Referent->Nom);
+        $this->telephone = \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($actesItems->Emetteur->Referent->Telephone);
+        $this->email = \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($actesItems->Emetteur->Referent->Email);
 
       // Vérification SIREN enveloppe <=> posteur
         $authority_attr = $actesItems->Emetteur->IDCL->attributes($namespaces["insee"]);
@@ -676,14 +676,14 @@ class ActesEnvelope extends DataObject
         }
 
       // Vérification département enveloppe <=> posteur
-        $department = Helpers::getFromXMLElt($authority_attr['Departement']);
+        $department = \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($authority_attr['Departement']);
         if (strcmp($this->department, $department) != 0) {
             $this->errorMsg = "Le département de la collectivité contenu dans l'enveloppe ne correspond pas à celui de l'utilisateur authentifié. Abandon.";
             return false;
         }
 
       // Vérification arrondissement enveloppe <=> posteur
-        $district = Helpers::getFromXMLElt($authority_attr['Arrondissement']);
+        $district = \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($authority_attr['Arrondissement']);
         if (strcmp($this->district, $district) != 0) {
             $this->errorMsg = "L'arrondissement de la collectivité contenu dans l'enveloppe ne correspond pas à celui de l'utilisateur authentifié. Abandon.";
             return false;
@@ -832,7 +832,7 @@ class ActesEnvelope extends DataObject
         }
 
         if (
-            ! Helpers::sendFileToBrowser(
+            ! \S2lowLegacy\Class\Helpers\ResponseHelper::sendFileToBrowser(
                 $archive_path,
                 basename($archive_path),
                 "application/x-gzip"

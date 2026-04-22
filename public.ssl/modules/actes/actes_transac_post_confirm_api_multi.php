@@ -37,7 +37,7 @@ $actionHtml = "";
 
 function return_error_api_api_multi($error_message)
 {
-    $return_error = Helpers :: getVarFromGet('url_return') ?: WEBSITE_SSL;
+    $return_error = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet('url_return') ?: WEBSITE_SSL;
     header_wrapper("Location:  $return_error");
     exit_wrapper();
 }
@@ -113,6 +113,6 @@ foreach ($id_list as $id) {
     Log::newEntry(LOG_ISSUER_NAME, $msg4journal, 1, false, 'USER', "actes", false, $connexion->getId());
 }
 
-$return_ok = Helpers :: getVarFromGet('url_return');
+$return_ok = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet('url_return');
 header_wrapper("Location:  $return_ok");
 exit_wrapper();

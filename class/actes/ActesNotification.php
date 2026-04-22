@@ -230,7 +230,7 @@ class ActesNotification
             "nature_descr" => $transaction_info['nature_descr'],
             "subject" => $transaction_info['subject'],
             "decision_date" => $transaction_info['decision_date'],
-            "url" => Helpers::getLink("/modules/actes/actes_transac_show.php?id=") . $transaction_info['id'],
+            "url" => \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_show.php?id=") . $transaction_info['id'],
             "archive_url" => $transaction_info['archive_url'],
             "date" => $status_info['date'],
             "submission_date" => $envelope_info['submission_date'],

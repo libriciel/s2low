@@ -2,6 +2,7 @@
 
 use S2lowLegacy\Class\Helpers;
 use PHPUnit\Framework\TestCase;
+use S2lowLegacy\Class\Helpers\ResponseHelper;
 
 class HelpersTest extends TestCase
 {
@@ -24,64 +25,64 @@ class HelpersTest extends TestCase
     public function testGetVarFromPost()
     {
         $_POST = array('foo' => 'bar');
-        $this->assertEquals('bar', Helpers::getVarFromPost('foo'));
+        $this->assertEquals('bar', \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost('foo'));
     }
 
     public function testGetVarFromGet()
     {
         $_GET = array('foo' => 'bar');
-        $this->assertEquals('bar', Helpers::getVarFromGet('foo'));
+        $this->assertEquals('bar', \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet('foo'));
     }
 
     public function testGetVarFromRequest()
     {
         $_POST = array('foo' => 'bar');
-        $this->assertEquals('bar', Helpers::getVarFromRequest('foo', 'POST'));
+        $this->assertEquals('bar', \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromRequest('foo', 'POST'));
     }
 
     public function testGetVarFromRequestGet()
     {
         $_GET = array('foo' => 'bar');
-        $this->assertEquals('bar', Helpers::getVarFromRequest('foo', 'GET'));
+        $this->assertEquals('bar', \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromRequest('foo', 'GET'));
     }
 
     public function testGetVarFromRequestArray()
     {
         $_GET = array('foo' => array('bar','baz'));
-        $this->assertEquals(array('bar','baz'), Helpers::getVarFromRequest('foo', 'GET'));
+        $this->assertEquals(array('bar','baz'), \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromRequest('foo', 'GET'));
     }
 
     public function testGetVarFromRequestPutInSession()
     {
         $_GET = array('foo' => 'bar');
-        $this->assertEquals('bar', Helpers::getVarFromRequest('foo', 'GET', true));
+        $this->assertEquals('bar', \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromRequest('foo', 'GET', true));
     }
 
     public function testStripSlaches()
     {
         $str = "foo\'bar";
-        $this->assertEquals($str, Helpers::stripSlashes($str));
+        $this->assertEquals($str, \S2lowLegacy\Class\Helpers\RequestHelper::stripSlashes($str));
     }
 
     public function testGetFromSession()
     {
-        Helpers::putInSession('foo', 'bar');
-        $this->assertEquals('bar', Helpers::getFromSession('foo'));
+        \S2lowLegacy\Class\Helpers\SessionHelper::putInSession('foo', 'bar');
+        $this->assertEquals('bar', \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession('foo'));
     }
 
     public function testDeleteFromSession()
     {
-        Helpers::putInSession('foo', 'bar');
-        $this->assertEquals('bar', Helpers::getFromSession('foo', true));
-        $this->assertNull(Helpers::getFromSession('foo'));
+        \S2lowLegacy\Class\Helpers\SessionHelper::putInSession('foo', 'bar');
+        $this->assertEquals('bar', \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession('foo', true));
+        $this->assertNull(\S2lowLegacy\Class\Helpers\SessionHelper::getFromSession('foo'));
     }
 
     public function testPurgeSession()
     {
-        Helpers::putInSession('foo', 'bar');
-        $this->assertEquals('bar', Helpers::getFromSession('foo'));
-        Helpers::purgeTempSession();
-        $this->assertNull(Helpers::getFromSession('foo'));
+        \S2lowLegacy\Class\Helpers\SessionHelper::putInSession('foo', 'bar');
+        $this->assertEquals('bar', \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession('foo'));
+        \S2lowLegacy\Class\Helpers\SessionHelper::purgeTempSession();
+        $this->assertNull(\S2lowLegacy\Class\Helpers\SessionHelper::getFromSession('foo'));
     }
 
     public function testReturnAndExit()
@@ -89,7 +90,7 @@ class HelpersTest extends TestCase
         $_GET['api'] = 1;
         $this->setExpectedException("Exception", "foo");
         $this->expectOutputString("OK\nfoo\n");
-        Helpers::returnAndExit(0, "foo");
+        \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(0, "foo");
     }
 
     public function testReturnAndExitApiMessage()
@@ -97,20 +98,20 @@ class HelpersTest extends TestCase
         $_GET['api'] = 1;
         $this->setExpectedException("Exception", "foo");
         $this->expectOutputString("OK\nbaz\n");
-        Helpers::returnAndExit(0, "foo", null, "baz");
+        \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(0, "foo", null, "baz");
     }
 
     public function testReturnAndExitNoRedir()
     {
         $this->setExpectedException("Exception", "foo");
         $this->expectOutputString("foo\n");
-        Helpers::returnAndExit(0, "foo");
+        \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(0, "foo");
     }
 
     public function testReturnAndExitRedir()
     {
         $this->setExpectedException("Exception", "foo");
-        Helpers::returnAndExit(0, "foo", true);
+        \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(0, "foo", true);
     }
 
     public function testReturnAndExitFailed()
@@ -118,89 +119,89 @@ class HelpersTest extends TestCase
         $_GET['api'] = 1;
         $this->setExpectedException("Exception", "foo");
         $this->expectOutputString("KO\nfoo\n");
-        Helpers::returnAndExit(1, "foo");
+        \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "foo");
     }
 
     public function testAnsiDateToTimestamp()
     {
-        $this->assertEquals("1442224800", Helpers::ansiDateToTimestamp("2015-09-14"));
+        $this->assertEquals("1442224800", \S2lowLegacy\Class\Helpers\DateHelper::ansiDateToTimestamp("2015-09-14"));
     }
     public function testAnsiDateToTimestampAtMidnight()
     {
-        $this->assertEquals("1442181600", Helpers::ansiDateToTimestamp("2015-09-14", true));
+        $this->assertEquals("1442181600", \S2lowLegacy\Class\Helpers\DateHelper::ansiDateToTimestamp("2015-09-14", true));
     }
 
     public function testGetFromBdd()
     {
-        $this->assertEquals('foo', Helpers::getFromBDD('foo'));
+        $this->assertEquals('foo', \S2lowLegacy\Class\Helpers\StringHelper::getFromBDD('foo'));
     }
 
     public function testEscapeForXML()
     {
-        $this->assertEquals('\\\"foo\\\"', Helpers::escapeForXML('\"foo\"'));
+        $this->assertEquals('\\\"foo\\\"', \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML('\"foo\"'));
     }
 
     public function testGetFromXMLElt()
     {
-        $this->assertEquals("école", Helpers::getFromXMLElt("école"));
+        $this->assertEquals("école", \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt("école"));
     }
 
     public function testTruncateString()
     {
-        $this->assertEquals("foo...", Helpers::truncateString("foobar", 3, true));
+        $this->assertEquals("foo...", \S2lowLegacy\Class\Helpers\StringHelper::truncateString("foobar", 3, true));
     }
 
     public function testGetPrettyHours()
     {
-        $this->assertEquals("07h 22min 42s", Helpers::getPrettyHours("07:22:42"));
+        $this->assertEquals("07h 22min 42s", \S2lowLegacy\Class\Helpers\DateHelper::getPrettyHours("07:22:42"));
     }
 
     public function testGetPrettyHoursFailed()
     {
-        $this->assertNull(Helpers::getPrettyHours("foo"));
+        $this->assertNull(\S2lowLegacy\Class\Helpers\DateHelper::getPrettyHours("foo"));
     }
 
 
     public function testGetTimestampFromBDDDate()
     {
-        $this->assertEquals("1442208162", Helpers::getTimestampFromBDDDate("2015-09-14 07:22:42"));
+        $this->assertEquals("1442208162", \S2lowLegacy\Class\Helpers\DateHelper::getTimestampFromBDDDate("2015-09-14 07:22:42"));
     }
 
     public function testGetTimestampFromBDDDateFailed()
     {
-        $this->assertNull(Helpers::getTimestampFromBDDDate("foo"));
+        $this->assertNull(\S2lowLegacy\Class\Helpers\DateHelper::getTimestampFromBDDDate("foo"));
     }
 
     public function testGetDateFromBDDDate()
     {
-        $this->assertNull(Helpers::getDateFromBDDDate("foo"));
+        $this->assertNull(\S2lowLegacy\Class\Helpers\DateHelper::getDateFromBDDDate("foo"));
     }
 
     public function testGetDateFromBDDDateOK()
     {
-        $this->assertEquals("14 septembre 2015 à 07h22min42s", Helpers::getDateFromBDDDate("2015-09-14 07:22:42", true));
+        $this->assertEquals("14 septembre 2015 à 07h22min42s", \S2lowLegacy\Class\Helpers\DateHelper::getDateFromBDDDate("2015-09-14 07:22:42", true));
     }
 
     public function testGetDateFromBDDBeginningOfYear()
     {
-        $this->assertEquals("1 janvier 2022 à 00h00min00s", Helpers::getDateFromBDDDate("2022-01-01 00:00:00", true));
+        $this->assertEquals("1 janvier 2022 à 00h00min00s", \S2lowLegacy\Class\Helpers\DateHelper::getDateFromBDDDate("2022-01-01 00:00:00", true));
     }
 
     public function testGetANSIDateFromBDDDate()
     {
-        $this->assertEquals("2015-09-14", Helpers::getANSIDateFromBDDDate("2015-09-14 07:22:42"));
+        $this->assertEquals("2015-09-14", \S2lowLegacy\Class\Helpers\DateHelper::getANSIDateFromBDDDate("2015-09-14 07:22:42"));
     }
 
     public function testGetANSIDateFromBDDDateFailed()
     {
-        $this->assertNull(Helpers::getANSIDateFromBDDDate("foo"));
+        $this->assertNull(\S2lowLegacy\Class\Helpers\DateHelper::getANSIDateFromBDDDate("foo"));
     }
 
     public function testGetURLWithParam()
     {
         $_SERVER["QUERY_STRING"] = "";
         $_SERVER["PHP_SELF"] = "";
-        $this->assertEquals(Helpers::getLink("?foo=bar"), Helpers::getURLWithParam(array('foo' => 'bar')));
+        $this->assertEquals(\S2lowLegacy\Class\Helpers\UrlHelper::getLink("?foo=bar"), \S2lowLegacy\Class\Helpers\UrlHelper::getURLWithParam(array('foo' => 'bar')));
     }
 
     public function testCreateDirTree()
@@ -208,7 +209,7 @@ class HelpersTest extends TestCase
         org\bovigo\vfs\vfsStream::setup('test');
         $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
         $dir_to_create = "foo/bar/baz";
-        $this->assertTrue(Helpers::createDirTree($testStreamUrl . "/" . $dir_to_create, $testStreamUrl));
+        $this->assertTrue(\S2lowLegacy\Class\Helpers\FileSystemHelper::createDirTree($testStreamUrl . "/" . $dir_to_create, $testStreamUrl));
         $this->assertTrue(file_exists($testStreamUrl . "/" . $dir_to_create));
     }
 
@@ -217,7 +218,7 @@ class HelpersTest extends TestCase
         $dir_to_create = "foo/bar/baz";
         org\bovigo\vfs\vfsStream::setup('test');
         $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
-        $this->assertFalse(Helpers::createDirTree($dir_to_create, $testStreamUrl));
+        $this->assertFalse(\S2lowLegacy\Class\Helpers\FileSystemHelper::createDirTree($dir_to_create, $testStreamUrl));
     }
 
     public function testCreateDirTreeFailedFileExist()
@@ -226,7 +227,7 @@ class HelpersTest extends TestCase
         org\bovigo\vfs\vfsStream::setup('test');
         $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
         file_put_contents($testStreamUrl . "/foo", "foo");
-        $this->assertFalse(Helpers::createDirTree($testStreamUrl . "/" . $dir_to_create, $testStreamUrl));
+        $this->assertFalse(\S2lowLegacy\Class\Helpers\FileSystemHelper::createDirTree($testStreamUrl . "/" . $dir_to_create, $testStreamUrl));
     }
 
     public function testCreateDirTreeFailedFileExist2()
@@ -236,7 +237,7 @@ class HelpersTest extends TestCase
         $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
         mkdir($testStreamUrl . "/foo/bar", 0777, true);
         file_put_contents($testStreamUrl . "/foo/bar/baz", "baz");
-        $this->assertFalse(Helpers::createDirTree($testStreamUrl . "/" . $dir_to_create, $testStreamUrl));
+        $this->assertFalse(\S2lowLegacy\Class\Helpers\FileSystemHelper::createDirTree($testStreamUrl . "/" . $dir_to_create, $testStreamUrl));
     }
 
     public function testCreateDirTreeDirExist()
@@ -245,7 +246,7 @@ class HelpersTest extends TestCase
         org\bovigo\vfs\vfsStream::setup('test');
         $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
         mkdir($testStreamUrl . "/" . $dir_to_create, 0777, true);
-        $this->assertTrue(Helpers::createDirTree($testStreamUrl . "/" . $dir_to_create, $testStreamUrl));
+        $this->assertTrue(\S2lowLegacy\Class\Helpers\FileSystemHelper::createDirTree($testStreamUrl . "/" . $dir_to_create, $testStreamUrl));
     }
 
     public function testDeleteFromFS()
@@ -254,7 +255,7 @@ class HelpersTest extends TestCase
         $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
         mkdir($testStreamUrl . "/foo");
         file_put_contents($testStreamUrl . "/bar", "bar");
-        $this->assertTrue(Helpers::deleteFromFS($testStreamUrl . "/foo", $testStreamUrl . "/bar"));
+        $this->assertTrue(\S2lowLegacy\Class\Helpers\FileSystemHelper::deleteFromFS($testStreamUrl . "/foo", $testStreamUrl . "/bar"));
     }
 
     public function testDeleteFromFSFailed()
@@ -262,14 +263,14 @@ class HelpersTest extends TestCase
         org\bovigo\vfs\vfsStream::setup('test');
         $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
         mkdir($testStreamUrl . "/foo/bar", 0777, true);
-        $this->assertFalse(Helpers::deleteFromFS($testStreamUrl . "/foo", $testStreamUrl . "/bar"));
+        $this->assertFalse(\S2lowLegacy\Class\Helpers\FileSystemHelper::deleteFromFS($testStreamUrl . "/foo", $testStreamUrl . "/bar"));
     }
 
     public function testFixPerms()
     {
         org\bovigo\vfs\vfsStream::setup('test');
         $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
-        $this->assertFalse(Helpers::fixPerms($testStreamUrl . "/foo"));
+        $this->assertFalse(\S2lowLegacy\Class\Helpers\FileSystemHelper::fixPerms($testStreamUrl . "/foo"));
     }
 
     public function testFixPermsFile()
@@ -277,33 +278,33 @@ class HelpersTest extends TestCase
         org\bovigo\vfs\vfsStream::setup('test');
         $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
         file_put_contents($testStreamUrl . "/bar", "bar");
-        $this->assertTrue(Helpers::fixPerms($testStreamUrl . "/bar"));
+        $this->assertTrue(\S2lowLegacy\Class\Helpers\FileSystemHelper::fixPerms($testStreamUrl . "/bar"));
     }
 
     public function testGetFileType()
     {
-        $this->assertNull(Helpers::getFileType("foo"));
+        $this->assertNull(\S2lowLegacy\Class\Helpers\FileSystemHelper::getFileType("foo"));
     }
 
     public function testGetFileTypeTrueFile()
     {
-        $this->assertEquals("text/x-php", Helpers::getFileType(__FILE__));
+        $this->assertEquals("text/x-php", \S2lowLegacy\Class\Helpers\FileSystemHelper::getFileType(__FILE__));
     }
 
     public function testGetTempName()
     {
-        $this->assertMatchesRegularExpression("#^__tmp__[0-9]{8}$#", Helpers::genTempName());
+        $this->assertMatchesRegularExpression("#^__tmp__[0-9]{8}$#", \S2lowLegacy\Class\Helpers\StringHelper::genTempName());
     }
 
     public function testGetTempNamePrefix()
     {
-        $this->assertMatchesRegularExpression("#^[0-9]{8}$#", Helpers::genTempName(8, false));
+        $this->assertMatchesRegularExpression("#^[0-9]{8}$#", \S2lowLegacy\Class\Helpers\StringHelper::genTempName(8, false));
     }
 
     public function testSendFileToBrowserFileNotFound()
     {
-        $this->assertFalse(Helpers::sendFileToBrowser("foo", "bar"));
-        $this->assertEquals("Fichier spécifié introuvable", Helpers::$last_error);
+        $this->assertFalse(\S2lowLegacy\Class\Helpers\ResponseHelper::sendFileToBrowser("foo", "bar"));
+        $this->assertEquals("Fichier spécifié introuvable", ResponseHelper::$last_error);
     }
 
     /**
@@ -313,30 +314,30 @@ class HelpersTest extends TestCase
     public function testSendFileToBrowser()
     {
         $this->expectOutputRegex("#<?php#");
-        $this->assertTrue(Helpers::sendFileToBrowser(__FILE__, basename(__FILE__), Helpers::getFileType(__FILE__)));
+        $this->assertTrue(\S2lowLegacy\Class\Helpers\ResponseHelper::sendFileToBrowser(__FILE__, basename(__FILE__), \S2lowLegacy\Class\Helpers\FileSystemHelper::getFileType(__FILE__)));
     }
 
     public function testGetAuthorizedCACertsEmpty()
     {
-        $this->assertEmpty(Helpers::getAuthorizedCACerts("foo"));
+        $this->assertEmpty(\S2lowLegacy\Class\Helpers\CertificateHelper::getAuthorizedCACerts("foo"));
     }
 
     public function testGetAuthorizedCACerts()
     {
-        $certs = Helpers::getAuthorizedCACerts(__DIR__ . "/fixtures/");
+        $certs = \S2lowLegacy\Class\Helpers\CertificateHelper::getAuthorizedCACerts(__DIR__ . "/fixtures/");
         $this->assertEquals("ADULLACT-Projet", $certs[0]['subject']['O']);
     }
 
     public function testGetAuthorizedCACertsEmptyDir()
     {
-        $this->assertEmpty(Helpers::getAuthorizedCACerts(__DIR__ . "/fixtures/empty/"));
+        $this->assertEmpty(\S2lowLegacy\Class\Helpers\CertificateHelper::getAuthorizedCACerts(__DIR__ . "/fixtures/empty/"));
     }
 
     public function testNullIntFromPost()
     {
         $this->assertEquals(
             null,
-            Helpers::getIntFromPost("test", true)
+            \S2lowLegacy\Class\Helpers\RequestHelper::getIntFromPost("test", true)
         );
     }
 
@@ -344,7 +345,7 @@ class HelpersTest extends TestCase
     {
         $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessage("test est null");
-        Helpers::getIntFromPost("test", false);
+        \S2lowLegacy\Class\Helpers\RequestHelper::getIntFromPost("test", false);
     }
 
     /**
@@ -356,7 +357,7 @@ class HelpersTest extends TestCase
     {
         $this->assertEquals(
             $varSortie,
-            Helpers::checkInt($varEntree, $nullable, "test")
+            \S2lowLegacy\Class\Helpers\RequestHelper::checkInt($varEntree, $nullable, "test")
         );
     }
 
@@ -378,7 +379,7 @@ class HelpersTest extends TestCase
     public function testCheckIntWithError($var, $nullable)
     {
         $this->expectException(UnexpectedValueException::class);
-        Helpers::checkInt($var, $nullable, "test");
+        \S2lowLegacy\Class\Helpers\RequestHelper::checkInt($var, $nullable, "test");
     }
 
     public function checkIntProviderWithError()
@@ -399,7 +400,7 @@ class HelpersTest extends TestCase
     {
         $this->assertEquals(
             $var,
-            Helpers::checkDate($var, $nullable, "test")
+            \S2lowLegacy\Class\Helpers\RequestHelper::checkDate($var, $nullable, "test")
         );
     }
 
@@ -428,7 +429,7 @@ class HelpersTest extends TestCase
     public function testCheckDateWithError($var, $nullable)
     {
         $this->expectException(UnexpectedValueException::class);
-        Helpers::checkDate($var, $nullable, "test");
+        \S2lowLegacy\Class\Helpers\RequestHelper::checkDate($var, $nullable, "test");
     }
 
     public function checkDateProviderWithError(): array

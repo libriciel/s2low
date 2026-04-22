@@ -29,7 +29,7 @@ class ActesNotificationController extends \Symfony\Bundle\FrameworkBundle\Contro
         // Instanciation du module courant
         $module = new Module();
         if (!$module->initByName("actes")) {
-            Helpers :: returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
+            \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
         }
 
         $me = new User();
@@ -37,24 +37,24 @@ class ActesNotificationController extends \Symfony\Bundle\FrameworkBundle\Contro
         $sortie = "";
 
         if (!$me->authenticate()) {
-            Helpers :: returnAndExit(1, "Échec de l'authentification", Helpers::getLink("connexion-status"));
+            \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Échec de l'authentification", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
         }
 
 // Un super admin ne peut pas accéder à cette page
         if (!$module->isActive() || $me->isGroupAdminOrSuper() || !$me->canEdit($module->get("name"))) {
-            Helpers :: returnAndExit(1, "Accès refusé", WEBSITE_SSL);
+            \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
         }
 
         $liste_id = array ();
 
-        if (Helpers :: getVarFromPost("id")) {
-            $liste_id[] = Helpers :: getVarFromPost("id");
+        if (\S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("id")) {
+            $liste_id[] = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("id");
         } else {
-            $liste_id = Helpers :: getVarFromPost("liste_id");
+            $liste_id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("liste_id");
         }
 
         if (! $liste_id) {
-            Helpers :: returnAndExit(1, "Pas d'identifiant de transaction spécifié.", Helpers::getLink("/modules/actes/index.php"));
+            \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Pas d'identifiant de transaction spécifié.", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/index.php"));
         }
 
         $msg = "";
@@ -65,7 +65,7 @@ class ActesNotificationController extends \Symfony\Bundle\FrameworkBundle\Contro
             $trans->setId($id);
 
             if (! $trans->init()) {
-                Helpers :: returnAndExit(1, "Erreur d'initialisation de la transaction.", Helpers::getLink("/modules/actes/index.php"));
+                \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Erreur d'initialisation de la transaction.", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/index.php"));
             }
 
             $owner = new User($trans->get("user_id"));
@@ -73,21 +73,21 @@ class ActesNotificationController extends \Symfony\Bundle\FrameworkBundle\Contro
 
             //Vérification du type de transaction
             if (!$trans->isType(TypeTransaction::TransmissionActe)) {
-                Helpers::returnAndExit(
+                \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(
                     1,
                     'Ce type de transaction ne peut pas être notifié.',
-                    Helpers::getLink('/modules/actes/actes_transac_show.php?id=') . $trans->getId()
+                    \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/actes/actes_transac_show.php?id=') . $trans->getId()
                 );
             }
 
             // Vérification des permissions
             if (!($me->isAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && !($me->canEdit($module->get("name")))) {
-                Helpers :: returnAndExit(1, "Accès refusé.", Helpers::getLink("/modules/actes/index.php"));
+                \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Accès refusé.", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/index.php"));
             }
 
-            $broadcastEmail = Helpers :: getVarFromPost("broadcast_email");
+            $broadcastEmail = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("broadcast_email");
             if ($broadcastEmail) {
-                if ($trans->setNotification(implode(',', Helpers :: getVarFromPost("broadcast_email")), (Helpers :: getVarFromPost("send_sources") == 'on') ? 1 : 0)) {
+                if ($trans->setNotification(implode(',', \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("broadcast_email")), (\S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("send_sources") == 'on') ? 1 : 0)) {
                     $severity = 1;
                     $msg = "Notification manuelle de la transaction " . $id;
                     $sortie .= $msg;
@@ -108,11 +108,11 @@ class ActesNotificationController extends \Symfony\Bundle\FrameworkBundle\Contro
 
 
         if (count($liste_id) == 1) {
-            $retour = Helpers::getLink("/modules/actes/actes_transac_show.php?id=") . $liste_id[0];
+            $retour = \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_show.php?id=") . $liste_id[0];
         } else {
-            $retour = Helpers::getLink("/modules/actes/index.php");
+            $retour = \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/index.php");
         }
         $status = 0;
-        Helpers :: returnAndExit($status, $sortie, $retour);
+        \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit($status, $sortie, $retour);
     }
 }

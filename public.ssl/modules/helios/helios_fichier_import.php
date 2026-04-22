@@ -19,7 +19,7 @@ $me = new User();
 
 if (!$me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -31,7 +31,7 @@ if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->checkDroit($modu
 
 if ($module->getParam("paper") == "on") {
     $_SESSION["error"] = "Mode &nbsp;papier&nbsp; actif. Accès interdit.";
-    header("Location: " . Helpers::getLink("/modules/helios/index.php"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/index.php"));
     exit();
 }
 
@@ -39,7 +39,7 @@ if ($module->getParam("paper") == "on") {
 $rgsConnexion = LegacyObjectsManager::getLegacyObjectInstancier()->get(RgsConnexion::class);
 if (! $rgsConnexion->isRgsConnexion()) {
     $_SESSION["error"] = "Votre certificat n'est pas conforme au RGS, vous ne pouvez pas télétransmettre !";
-    header("Location: " . Helpers::getLink("/modules/helios/index.php"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/index.php"));
     exit();
 }
 
@@ -72,7 +72,7 @@ $doc->closeSideBar();
 $doc->openContent();
 
 $html = "<h1>Helios - Dématérialisation de documents comptables</h1>\n";
-$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . Helpers::getLink("/modules/helios/index.php") . "\" class=\"bouton\">Retour liste transactions</a></p>\n";
+$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/index.php") . "\" class=\"bouton\">Retour liste transactions</a></p>\n";
 
 ob_start();
 ?>

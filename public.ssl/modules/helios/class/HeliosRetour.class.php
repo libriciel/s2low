@@ -65,7 +65,7 @@ class HeliosRetour extends DataObject
 
         $ret_value = true;
       //AICI pot incerca sa modific parametrii...
-        if (!Helpers :: sendFileToBrowser(HELIOS_RESPONSES_ROOT . "/" . $fileName, $fileName, "text/xml")) {
+        if (!\S2lowLegacy\Class\Helpers\ResponseHelper::sendFileToBrowser(HELIOS_RESPONSES_ROOT . "/" . $fileName, $fileName, "text/xml")) {
             $this->errorMsg = "Erreur envoi fichier";
             echo "<br> heliosTansaction_class: sendFile " . $fileName . " :" . $this->errorMsg;
             $ret_value = false;

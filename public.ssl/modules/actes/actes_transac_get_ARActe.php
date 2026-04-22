@@ -28,27 +28,27 @@ $id = $recuperateur->getInt('id');
 
 $module = new Module();
 if (!$module->initByName('actes')) {
-    Helpers::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
 }
 
 $me = new User();
 
 if (!$me->authenticate()) {
-    Helpers::returnAndExit(1, "Échec de l'authentification", Helpers::getLink('connexion-status'));
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Échec de l'authentification", \S2lowLegacy\Class\Helpers\UrlHelper::getLink('connexion-status'));
 }
 
 // TODO : vérifier si ce n'est pas redondant avec ce qui se passe dans doInit
 if (!$module->isActive() || !$me->canAccess($module->get('name'))) {
-    Helpers::returnAndExit(1, 'Accès refusé', WEBSITE_SSL);
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, 'Accès refusé', WEBSITE_SSL);
 }
 
 $trans = new ActesTransaction();
 $trans->setId($id);
 if (!$trans->init()) {
-    Helpers::returnAndExit(
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(
         1,
         "Erreur d'initialisation de la transaction.",
-        Helpers::getLink('/modules/actes/index.php')
+        \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/actes/index.php')
     );
 }
 
@@ -62,13 +62,13 @@ $serviceUser = new ServiceUser(DatabasePool::getInstance());
 $permission = new ModulePermission($serviceUser, 'actes');
 
 if (!$permission->canView($me, $owner)) {
-    Helpers::returnAndExit(1, 'Accès refusé', Helpers::getLink('/modules/actes/index.php'));
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, 'Accès refusé', \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/actes/index.php'));
 }
 
 $info = $actesTransactionSQL->getStatusInfoWithFluxRetour($id, ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
 
 if (!$info) {
-    Helpers::returnAndExit(1, "Cette transaction n'existe pas", 'index.php');
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Cette transaction n'existe pas", 'index.php');
 }
 
 header_wrapper('Content-type: application/xml');

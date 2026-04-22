@@ -45,7 +45,7 @@ class CSVLayout extends Layout
             $content_type .= ";header=present";
         }
 
-        if (! Helpers::sendFileToBrowser(null, "transactions.csv", $content_type)) {
+        if (! \S2lowLegacy\Class\Helpers\ResponseHelper::sendFileToBrowser(null, "transactions.csv", $content_type)) {
             return false;
         }
 

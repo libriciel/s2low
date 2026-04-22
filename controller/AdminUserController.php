@@ -151,34 +151,34 @@ class AdminUserController extends Controller
         }
 
         $name = $this->getEnvironnement()->post()->get('name');
-        Helpers::putInSession("name", $name);
+        \S2lowLegacy\Class\Helpers\SessionHelper::putInSession("name", $name);
 
         $givenname = $this->getEnvironnement()->post()->get('givenname');
-        Helpers::putInSession("givenname", $givenname);
+        \S2lowLegacy\Class\Helpers\SessionHelper::putInSession("givenname", $givenname);
 
         $email = $this->getEnvironnement()->post()->get('email');
-        Helpers::putInSession("email", $email);
+        \S2lowLegacy\Class\Helpers\SessionHelper::putInSession("email", $email);
 
         $telephone = $this->getEnvironnement()->post()->get('telephone');
-        Helpers::putInSession("telephone", $telephone);
+        \S2lowLegacy\Class\Helpers\SessionHelper::putInSession("telephone", $telephone);
 
         $status = $this->getEnvironnement()->post()->getInt('status');
-        Helpers::putInSession("status", $status);
+        \S2lowLegacy\Class\Helpers\SessionHelper::putInSession("status", $status);
 
         $authority_id = $this->getEnvironnement()->post()->get('authority_id');
-        Helpers::putInSession("authority_id", $authority_id);
+        \S2lowLegacy\Class\Helpers\SessionHelper::putInSession("authority_id", $authority_id);
 
         $role = $this->getEnvironnement()->post()->get('role');
-        Helpers::putInSession("role", $role);
+        \S2lowLegacy\Class\Helpers\SessionHelper::putInSession("role", $role);
 
         $authority_group_id = $this->getEnvironnement()->post()->get('authority_group_id');
-        Helpers::putInSession("authority_group_id", $authority_group_id);
+        \S2lowLegacy\Class\Helpers\SessionHelper::putInSession("authority_group_id", $authority_group_id);
 
         $new_id = $this->getEnvironnement()->post()->get('new_id');
-        Helpers::putInSession("new_id", $new_id);
+        \S2lowLegacy\Class\Helpers\SessionHelper::putInSession("new_id", $new_id);
 
         $auth_method = $this->getEnvironnement()->post()->get('auth_method');
-        Helpers::putInSession("auth_method", $auth_method);
+        \S2lowLegacy\Class\Helpers\SessionHelper::putInSession("auth_method", $auth_method);
 
         if ($auth_method == UserSQL::IDENT_METHOD_CERT_ONLY) {      // Normalement, login et password devraient être vides ...
             $this->getEnvironnement()->post()->set('login', '');
@@ -187,13 +187,13 @@ class AdminUserController extends Controller
         }
 
         $login = $this->getEnvironnement()->post()->get('login');
-        Helpers::putInSession("login", $login);
+        \S2lowLegacy\Class\Helpers\SessionHelper::putInSession("login", $login);
 
         $password = $this->getEnvironnement()->post()->get('password');
-        Helpers::putInSession("password", $password);
+        \S2lowLegacy\Class\Helpers\SessionHelper::putInSession("password", $password);
 
         $password2 = $this->getEnvironnement()->post()->get('password2');
-        Helpers::putInSession("password2", $password2);
+        \S2lowLegacy\Class\Helpers\SessionHelper::putInSession("password2", $password2);
 
         $certificate = $_FILES['certificate'] ?? [];
 
@@ -329,7 +329,7 @@ class AdminUserController extends Controller
                 if ($me->isSuper()) {
                     $module['specific_perms']['GRANT'] = 'Concession';
                 }
-                $him->setPerm($module["id"], Helpers::getVarFromPost("perm_" . $module["id"]), $module['specific_perms']);
+                $him->setPerm($module["id"], \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("perm_" . $module["id"]), $module['specific_perms']);
             }
         }
 
@@ -343,7 +343,7 @@ class AdminUserController extends Controller
             if ($him->isNew()) {
                 $location = "/admin/users/admin_user_edit.php?new_id=$new_id";
             } else {
-                Helpers::purgeTempSession();
+                \S2lowLegacy\Class\Helpers\SessionHelper::purgeTempSession();
                 $location = "/admin/users/admin_user_edit.php?id=" . $him->getId() . "&new_id=$new_id";
             }
 
@@ -385,7 +385,7 @@ class AdminUserController extends Controller
             exit_wrapper();
         } else {
             $_SESSION["error"] = nl2br($msg);
-            Helpers::purgeTempSession();
+            \S2lowLegacy\Class\Helpers\SessionHelper::purgeTempSession();
             if (TESTING_ENVIRONNEMENT) {
                 return $him->getId();
             } else {

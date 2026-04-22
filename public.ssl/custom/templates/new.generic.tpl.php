@@ -16,7 +16,7 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" ?>
         <link rel="stylesheet" type="text/css" href="/custom/styles/bootstrap.min.css" />
         <link rel="stylesheet" type="text/css" href="/custom/styles/bootstrap-theme.min.css" />
         <link rel="stylesheet" type="text/css" href="/custom/styles/style_bs.css" />
-        <script src="<?php echo Helpers::getLink("/javascript/utils.js"); ?>" type="text/javascript"></script>
+        <script src="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/javascript/utils.js"); ?>" type="text/javascript"></script>
         <?php echo $this->header ?>
     </head>
     <body>

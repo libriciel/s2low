@@ -43,7 +43,7 @@ class MailSecuriseController extends AbstractController
     {
 
         //commencer traiter la layout normal correspond de le système.
-        $api = Helpers:: getVarFromPost("api");
+        $api = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("api");
 
         $doc = $this->doc;
         if (!$api) {
@@ -59,8 +59,8 @@ class MailSecuriseController extends AbstractController
                     if (!$api) {
                         //pour list.php
                         $doc->addHeader("<script src=\"/javascript/mailList.js\" type=\"text/javascript\"></script>\n");
-                        $doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jquery.js") . '"></script>');
-                        $doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jqueryui.js") . '"></script>');
+                        $doc->addHeader('<script type="text/javascript" src="' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/jsmodules/jquery.js") . '"></script>');
+                        $doc->addHeader('<script type="text/javascript" src="' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/jsmodules/jqueryui.js") . '"></script>');
 
                         //pour create.php
                         $doc->addHeader("<script src=\"/javascript/mail.js\" type=\"text/javascript\"></script>\n");
@@ -91,7 +91,7 @@ class MailSecuriseController extends AbstractController
     )]
     public function handleApiRequest(): Response
     {
-        //Quickfix pour homogénéiser l'utilisation de Helpers::getVarFromRequest
+        //Quickfix pour homogénéiser l'utilisation de \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromRequest
         // On spécifie qu'on utilise bien l'API ...
         $_POST["api"] = 1;
 

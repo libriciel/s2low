@@ -35,7 +35,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -64,8 +64,8 @@ if (isset($id) && ! empty($id)) {
 
 $doc = new HTMLLayout();
 
-$doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jquery.js") . '"></script>');
-$doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jqueryui.js") . '"></script>');
+$doc->addHeader('<script type="text/javascript" src="' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/jsmodules/jquery.js") . '"></script>');
+$doc->addHeader('<script type="text/javascript" src="' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/jsmodules/jqueryui.js") . '"></script>');
 
 $doc->addHeader("<script src=\"/javascript/validateform.js\" type=\"text/javascript\"></script>\n");
 
@@ -77,7 +77,7 @@ $doc->closeSideBar();
 $doc->openContent();
 
 $html .= "<h1>Gestion des fenêtres de transmission</h1>\n";
-$html .= "<p id=\"back-transaction-btn\"><a href=\"" . Helpers::getLink("/modules/actes/admin/actes_admin_windows.php\" class=\"btn btn-default\">Retour liste fenêtres</a></p>\n");
+$html .= "<p id=\"back-transaction-btn\"><a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/admin/actes_admin_windows.php\" class=\"btn btn-default\">Retour liste fenêtres</a></p>\n");
 $html .= "<h2>" . $modStr . " fenêtre";
 
 if ($mod) {
@@ -87,7 +87,7 @@ if ($mod) {
 $html .= "</h2>\n";
 $html .= "<p>Les heures de début et de fin de la fenêtre sont toujours arrondies à l'heure pleine la plus proche (10h, 15h...).</p>";
 $html .= "<form class=\"form-horizontal window-edit-form\" action=\"" .
-    Helpers::getLink(
+    \S2lowLegacy\Class\Helpers\UrlHelper::getLink(
         "/modules/actes/admin/actes_admin_window_edit_handler.php\" method=\"post\" name=\"form\" onsubmit=\"javascript:return validateForm('window_start_date', 'Date de début', 'RisDate', 'window_start_hour', 'Heure de début', 'RisString', 'window_end_date', 'Date de fin', 'RisDate', 'window_end_hour', 'Heure de fin', 'RisString', 'rate_limit', 'Volume maximum', 'RisInt');\">\n"
     );
 
@@ -95,18 +95,18 @@ if ($mod) {
     $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $zeWin->getId() . "\" />\n";
 }
 
-$start_date = Helpers::getFromSession("window_start_date");
-$start_hour = Helpers::getFromSession("window_start_hour");
+$start_date = \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("window_start_date");
+$start_hour = \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("window_start_hour");
 if (empty($start_date) && $mod) {
-    $start_date = date('Y-m-d', Helpers::getTimestampFromBDDDate($zeWin->get("window_start_date")));
-    $start_hour = date('H:i:s', Helpers::getTimestampFromBDDDate($zeWin->get("window_start_date")));
+    $start_date = date('Y-m-d', \S2lowLegacy\Class\Helpers\DateHelper::getTimestampFromBDDDate($zeWin->get("window_start_date")));
+    $start_hour = date('H:i:s', \S2lowLegacy\Class\Helpers\DateHelper::getTimestampFromBDDDate($zeWin->get("window_start_date")));
 }
 
-$end_date = Helpers::getFromSession("window_end_date");
-$end_hour = Helpers::getFromSession("window_end_hour");
+$end_date = \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("window_end_date");
+$end_hour = \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("window_end_hour");
 if (empty($end_date) && $mod) {
-    $end_date = date('Y-m-d', Helpers::getTimestampFromBDDDate($zeWin->get("window_end_date")));
-    $end_hour = date('H:i:s', Helpers::getTimestampFromBDDDate($zeWin->get("window_end_date")));
+    $end_date = date('Y-m-d', \S2lowLegacy\Class\Helpers\DateHelper::getTimestampFromBDDDate($zeWin->get("window_end_date")));
+    $end_hour = date('H:i:s', \S2lowLegacy\Class\Helpers\DateHelper::getTimestampFromBDDDate($zeWin->get("window_end_date")));
 }
 
 // Début de la fenêtre
@@ -133,7 +133,7 @@ $html .= "</span>\n";
 $html .= "   </div>\n";
 $html .= "   </div>\n";
 
-$rate_limit = Helpers::getFromSession("rate_limit");
+$rate_limit = \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("rate_limit");
 if (empty($rate_limit) && $mod) {
     $rate_limit = $zeWin->get("rate_limit");
 }
@@ -152,7 +152,7 @@ $html .= "</form>\n";
 
 if ($mod) {
     $html .= "<br />\n";
-    $html .= "<form action=\"" . Helpers::getLink("/modules/actes/admin/actes_admin_window_delete.php\" onsubmit=\"return confirm('Voulez-vous vraiment supprimer définitivement cette fenêtre de transmission ?')\" method=\"post\">\n");
+    $html .= "<form action=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/admin/actes_admin_window_delete.php\" onsubmit=\"return confirm('Voulez-vous vraiment supprimer définitivement cette fenêtre de transmission ?')\" method=\"post\">\n");
     $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $zeWin->getId() . "\" />\n";
     $html .= "<input type=\"submit\" value=\"Supprimer cette fenêtre\" class=\"btn btn-danger\" />\n";
     $html .= "</form>\n";

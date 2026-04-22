@@ -15,7 +15,7 @@ list($objectInstancier, $sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::ge
 
 function creationurl($idcoll, $status)
 {
-    $URL = Helpers::getLink("/modules/actes/index.php?type=1&nature=&status=" . $status . "&num=&objet=&min_submission_date=&min_ack_date=&max_submission_date=&max_ack_date=&authority=" . $idcoll . "&count=100");
+    $URL = \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/index.php?type=1&nature=&status=" . $status . "&num=&objet=&min_submission_date=&min_ack_date=&max_submission_date=&max_ack_date=&authority=" . $idcoll . "&count=100");
     return $URL;
 }
 
@@ -51,7 +51,7 @@ $sql = "SELECT name FROM authorities WHERE id = '" . $id_coll . "'";
 $namecoll = $sqlQuery->queryOne($sql);
 
 $message = "---------------------------------\n" .
-    "id : $id_coll " . Helpers::getLink("/admin/authorities/admin_authority_sae.php?id=$id_coll\n") .
+    "id : $id_coll " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/authorities/admin_authority_sae.php?id=$id_coll\n") .
     "nom de la collectivite : $namecoll\n";
 
 // Vérification : il doit y avoir 0 actes en Erreur lors de l'archivage, statut 14

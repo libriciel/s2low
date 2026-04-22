@@ -18,7 +18,7 @@ $me = new User();
 
 if (!$me->authenticate()) {
     $_SESSION["error"] = "Ehec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -34,16 +34,16 @@ if (!$module->isActive() || !$me->canAccess($module->get("name")) || $me->isGrou
 
 
 try {
-    $retour_id = Helpers :: getIntFromGet("id");
+    $retour_id = \S2lowLegacy\Class\Helpers\RequestHelper::getIntFromGet("id");
 } catch (Exception $e) {
-    Helpers :: returnAndExit(1, $e->getMessage(), Helpers::getLink("/modules/helios/helios_retour.php"));
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, $e->getMessage(), \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_retour.php"));
 }
 if (isset($retour_id) && !empty($retour_id)) {
     if ($hr->changeStatus($retour_id, 1)) {
-        Helpers :: returnAndExit(0, "Changement d'état effectué avec succès", Helpers::getLink("/modules/helios/helios_retour.php"));
+        \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(0, "Changement d'état effectué avec succès", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_retour.php"));
     } else {
-        Helpers :: returnAndExit(1, "Erreur lors du changement d'état", Helpers::getLink("/modules/helios/helios_retour.php"));
+        \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Erreur lors du changement d'état", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_retour.php"));
     }
 } else {
-    Helpers :: returnAndExit(1, "Pas de réponse sélectionnée pour le changement d'état", Helpers::getLink("/modules/helios/helios_retour.php"));
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Pas de réponse sélectionnée pour le changement d'état", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_retour.php"));
 }

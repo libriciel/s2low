@@ -18,7 +18,7 @@ list ( $initialisation, $actesPrepareEnvoiSAE) = LegacyObjectsManager::getLegacy
 // Instanciation du module courant
 $module = new Module();
 if (!$module->initByName('actes')) {
-    Helpers::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
 }
 
 $me = new User();
@@ -26,23 +26,23 @@ $me = new User();
 $sortie = '';
 
 if (!$me->authenticate()) {
-    Helpers::returnAndExit(1, "Échec de l'authentification", Helpers::getLink('connexion-status'));
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Échec de l'authentification", \S2lowLegacy\Class\Helpers\UrlHelper::getLink('connexion-status'));
 }
 
 if (! $me->isGroupAdminOrSuper() && (!$module->isActive() || !$me->checkDroit($module->get('name'), 'CS'))) {
-    Helpers::returnAndExit(1, 'Accès refusé', WEBSITE_SSL);
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, 'Accès refusé', WEBSITE_SSL);
 }
 
 $liste_id = [];
 
 
-if (Helpers::getVarFromPost('id') != null) {
-    $liste_id[] = Helpers::getVarFromPost('id');
-} elseif (Helpers::getVarFromPost('liste_id') != null) {
-        $liste_id = Helpers::getVarFromPost('liste_id');
+if (\S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost('id') != null) {
+    $liste_id[] = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost('id');
+} elseif (\S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost('liste_id') != null) {
+        $liste_id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost('liste_id');
 }
 
-$status = Helpers::getVarFromPost('status');
+$status = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost('status');
 $types = ActesTransaction::getStatusList();
 $myAuthority = new Authority($me->get('authority_id'));
 
@@ -54,12 +54,12 @@ if ($status == 'valid') {
 } elseif ($status == 'sae') {
     $new_status_id = 19;
 } else {
-    Helpers::returnAndExit(1, 'État incorrect.', Helpers::getLink('/modules/actes/index.php'));
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, 'État incorrect.', \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/actes/index.php'));
 }
 
 
 if ($status != 'sae' && $me->isGroupAdminOrSuper()) {
-    Helpers::returnAndExit(1, 'Accès refusé', WEBSITE_SSL);
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, 'Accès refusé', WEBSITE_SSL);
 }
 
 foreach ($liste_id as $id) {
@@ -69,11 +69,11 @@ foreach ($liste_id as $id) {
         $owner = new User($trans->get('user_id'));
         $owner->init();
     } else {
-        Helpers::returnAndExit(1, "Erreur d'initialisation de la transaction.", Helpers::getLink('/modules/actes/index.php'));
+        \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Erreur d'initialisation de la transaction.", \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/actes/index.php'));
     }
 
     if (!$trans->isType(TypeTransaction::TransmissionActe)) {
-        Helpers::returnAndExit(1, 'Ce type de transaction ne peut pas être cloturé.', Helpers::getLink('/modules/actes/actes_transac_show.php?id=') . $id);
+        \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, 'Ce type de transaction ne peut pas être cloturé.', \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/actes/actes_transac_show.php?id=') . $id);
     }
 
     if (! in_array($trans->get('last_status_id'), [4,5,14,20,18])) {
@@ -103,7 +103,7 @@ foreach ($liste_id as $id) {
 
     // Vérification des permissions
     if ($status != 'sae' && (!($me->isAdmin() && $me->get('authority_id') == $owner->get('authority_id')) && !($me->getId() == $envelope->get('user_id') && $me->checkDroit($module->get('name'), 'CS')))) {
-        Helpers::returnAndExit(1, 'Accès refusé.', Helpers::getLink('/modules/actes/index.php'));
+        \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, 'Accès refusé.', \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/actes/index.php'));
     }
 
     if ($new_status_id == 19) {
@@ -134,9 +134,9 @@ foreach ($liste_id as $id) {
 }
 
 if (count($liste_id) == 1) {
-    $retour = Helpers::getLink('/modules/actes/actes_transac_show.php?id=') . $liste_id[0];
+    $retour = \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/actes/actes_transac_show.php?id=') . $liste_id[0];
 } else {
-    $retour = Helpers::getLink('/modules/actes/index.php');
+    $retour = \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/actes/index.php');
 }
 
-Helpers::returnAndExit($status, $sortie, $retour);
+\S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit($status, $sortie, $retour);

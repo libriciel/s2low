@@ -6,5 +6,5 @@ use S2lowLegacy\Class\User;
 $me = new User();
 $me->logout();
 
-header('Location: ' . Helpers::getLink('/login.php'));
+header('Location: ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/login.php'));
 exit;

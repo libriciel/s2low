@@ -37,12 +37,12 @@ $myAuthority = new Authority($me->get("authority_id"));
 
 // Recuperation des variables du GET
 try {
-    $transId = Helpers::getIntFromGet("transaction", true);
+    $transId = \S2lowLegacy\Class\Helpers\RequestHelper::getIntFromGet("transaction", true);
 } catch (Exception $e) {
     echo $e->getMessage();
     exit();
 }
-$transUniqueId = Helpers::getVarFromGet("unique_id");
+$transUniqueId = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("unique_id");
 
 if (isset($transUniqueId) && ! empty($transUniqueId)) {
     $transId = ActesTransaction::getTransactionFromUniqueId($transUniqueId);

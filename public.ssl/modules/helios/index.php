@@ -107,7 +107,7 @@ $me = new User();
 
 if (!$me->authenticate()) {
     $_SESSION['error'] = "Echec de l'authentification";
-    header('Location: ' . Helpers::getLink('connexion-status'));
+    header('Location: ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('connexion-status'));
     exit();
 }
 
@@ -201,8 +201,8 @@ $pagerHTML  = new PagerHTML();
 $doc = new HTMLLayout();
 $doc->addHeader($js);
 
-$doc->addHeader("<script src=\"" . Helpers::getLink('/jsmodules/jquery.js') . "\" type=\"text/javascript\"></script>\n");
-$doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink('/jsmodules/jqueryui.js') . "\"></script>");
+$doc->addHeader("<script src=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/jsmodules/jquery.js') . "\" type=\"text/javascript\"></script>\n");
+$doc->addHeader("<script type=\"text/javascript\" src=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/jsmodules/jqueryui.js') . "\"></script>");
 $doc->setTitle('Tedetis : module helios');
 
 $doc->openContainer();
@@ -232,8 +232,8 @@ $sel_ok = [];
 
 ob_start();
 ?>
-<script type="text/javascript" src="<?php echo Helpers::getLink('/jsmodules/jquery.js')?>"></script>
-<script type="text/javascript" src="<?php echo Helpers::getLink('/jsmodules/select2.js')?>"></script>
+<script type="text/javascript" src="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/jsmodules/jquery.js')?>"></script>
+<script type="text/javascript" src="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/jsmodules/select2.js')?>"></script>
 <script type="text/javascript" src="/javascript/zselect_s2low.js"></script>
 
 <h1>Helios - Dématérialisation de documents financiers</h1>
@@ -253,15 +253,15 @@ ob_start();
                 Les transferts doivent se faire par les moyens classiques (non dématérialisé).
             </p>
         <?php else :  ?>
-            <a class="btn btn-primary" href="<?php echo Helpers::getLink('/modules/helios/helios_fichier_import.php'); ?>" >Importer un fichier</a>
+            <a class="btn btn-primary" href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/helios/helios_fichier_import.php'); ?>" >Importer un fichier</a>
         <?php endif; ?>
     <?php endif; ?>
-    <a class="btn btn-primary" href="<?php echo Helpers::getLink('/modules/helios/helios_retour.php'); ?>" title="afficher la liste des réponses reçues">Réponse d'Hélios</a>
+    <a class="btn btn-primary" href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/helios/helios_retour.php'); ?>" title="afficher la liste des réponses reçues">Réponse d'Hélios</a>
 </div>
 
 <h2 class="toggle_title" onclick="javascript:toggle_visibility('filtering-area');">Filtrage</h2>
 <div id="filtering-area">
-    <form role="form" class="form-horizontal" action="<?php echo Helpers::getLink('/modules/helios/index.php'); ?>" method="get">
+    <form role="form" class="form-horizontal" action="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/helios/index.php'); ?>" method="get">
         <div class="form-group">
             <label class="col-md-3 control-label" for="status">État</label>
             <div class="col-md-3">
@@ -320,7 +320,7 @@ ob_start();
         </div>
         <div class="form-group">
             <button type="submit" class="col-md-offset-3 col-md-3 btn btn-default">Filtrer</button>
-            <a href="<?php echo Helpers::getLink("/modules/helios/index.php");?>" class="col-md-offset-3 col-md-3 btn btn-default">Remise à zéro</a>
+            <a href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/index.php");?>" class="col-md-offset-3 col-md-3 btn btn-default">Remise à zéro</a>
         </div>
     </form>
 </div>
@@ -331,7 +331,7 @@ ob_start();
 <?php if (count($envelopes) <= 0) : ?>
     Pas de transaction trouvée correspondant aux critères de filtrage.
 <?php else : ?>
-    <form id="div_chck" onsubmit="return afficheWarning();" action="<?php echo Helpers::getLink("/modules/helios/helios_transac_close.php"); ?>" method="post">
+    <form id="div_chck" onsubmit="return afficheWarning();" action="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_transac_close.php"); ?>" method="post">
         <table class="transactions_list" role="presentation">
             <table id="transaction-list" class="data-table table table-striped" >
                 <caption>Liste des fichiers Helios postés en fonction des choix de filtrage</caption>
@@ -366,7 +366,7 @@ ob_start();
                                 <?php endif; ?>
                             </td>
                             <td headers="date">
-                                <?php echo Helpers::getDateFromBDDDate($envelope['submission_date'], true) ?>
+                                <?php echo \S2lowLegacy\Class\Helpers\DateHelper::getDateFromBDDDate($envelope['submission_date'], true) ?>
                             </td>
                             <td headers="status">
                                 <?php hecho($envelope['message']) ?>
@@ -378,8 +378,8 @@ ob_start();
                                 <td><?php hecho($envelope['authority_name']) ?></td>
                             <?php endif; ?>
                             <td headers="action">
-                                <a href="<?php echo Helpers::getLink("/modules/helios/helios_transac_show.php?id=" . $envelope["id"]) ?>" class="icon">
-                                    <img src="<?php echo Helpers::getLink("/custom/images/erreur.png"); ?>" alt="image_modif" title="Afficher le détail" />
+                                <a href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_transac_show.php?id=" . $envelope["id"]) ?>" class="icon">
+                                    <img src="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/custom/images/erreur.png"); ?>" alt="image_modif" title="Afficher le détail" />
                                 </a>
                             </td>
                         </tr>
@@ -406,7 +406,7 @@ ob_start();
 
 
     <?php   if (isset($sel_ok[13])) : ?>
-        <form id='form-sign' action="<?php echo Helpers::getLink("/modules/helios/helios_batch_sign.php"); ?>" method="post">
+        <form id='form-sign' action="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_batch_sign.php"); ?>" method="post">
             <input id='signer_button' type='submit' class='btn btn-default' value="Signer les transactions sélectionnées">
         </form>
         <script type='text/javascript'>

@@ -29,7 +29,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -55,7 +55,7 @@ $him = new User();
 
 if (isset($id) && ! empty($id)) {
     if (!is_numeric($id)) {
-        Helpers :: returnAndExit(
+        \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(
             1,
             "admin_user_edit.php : id doit être un entier, $id fourni",
             WEBSITE_SSL
@@ -71,10 +71,10 @@ if (isset($id) && ! empty($id)) {
 
 
 
-$new_id = Helpers::getVarFromGet('new_id');
+$new_id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet('new_id');
 if ($new_id) {
     if (!is_numeric($new_id)) {
-        Helpers :: returnAndExit(
+        \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(
             1,
             "admin_user_edit.php : new_id doit être un entier, $new_id fourni",
             WEBSITE_SSL
@@ -95,7 +95,7 @@ if (! $me->isSuper() && $mod) {
     }
     if (! $canUserEdit) {
         $_SESSION["error"] = "Impossible de modifier cet utilisateur. Accés refusé.";
-        header("Location: " . Helpers::getLink("/admin/users/admin_users.php"));
+        header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/users/admin_users.php"));
         exit();
     }
 }
@@ -126,7 +126,7 @@ if (! $mod) {
     $validate_form .= ", 'certificate', 'Certificat utilisateur', 'RisString'";
 }
 
-$him_status = ($val = Helpers::getFromSession("status")) ? $val : $him->get("status");
+$him_status = ($val = \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("status")) ? $val : $him->get("status");
 
 if ($me->isGroupAdminOrSuper()) {
     if ($me->isGroupAdmin()) {
@@ -137,10 +137,10 @@ if ($me->isGroupAdminOrSuper()) {
     }
     $authorities_list = Authority::getAuthoritiesIdName($cond);
 
-    $him_authorities = ($val = Helpers::getFromSession("authority_id")) ? $val : $him->get("authority_id");
+    $him_authorities = ($val = \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("authority_id")) ? $val : $him->get("authority_id");
 }
 
-$him_role = ($val = Helpers::getFromSession("role")) ? $val : $him->get("role");
+$him_role = ($val = \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("role")) ? $val : $him->get("role");
 
 
 
@@ -199,10 +199,10 @@ $certificat_rgs_2_etoiles_info = $x509Certificate->getInfo($certificate_rgs_2_et
 
 $doc = new HTMLLayout();
 
-$doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
+$doc->addHeader("<script src=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 
-$doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jquery.js") . '"></script>');
-$doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/select2.js") . '"></script>');
+$doc->addHeader('<script type="text/javascript" src="' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/jsmodules/jquery.js") . '"></script>');
+$doc->addHeader('<script type="text/javascript" src="' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/jsmodules/select2.js") . '"></script>');
 $doc->addHeader('<script type="text/javascript" src="/javascript/zselect_s2low.js"></script>');
 
 
@@ -243,7 +243,7 @@ ob_start();
 <div class="form-group">
     <label class="control-label col-md-4"><?php echo $input_label?> : </label>
     <div class="col-md-6">
-        <input class="form-control" type="text" name="<?php echo $input_id ?>" value="<?php echo ($val = Helpers::getFromSession($input_id)) ? get_hecho($val) : get_hecho($him->get($input_id)); ?>" size="30" maxlength="60" />
+        <input class="form-control" type="text" name="<?php echo $input_id ?>" value="<?php echo ($val = \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession($input_id)) ? get_hecho($val) : get_hecho($him->get($input_id)); ?>" size="30" maxlength="60" />
     </div>
 </div>  
 <?php endforeach;?>
@@ -315,7 +315,7 @@ ob_start();
         Expire le <?php echo $him->getCertificateExpirationDate(); ?>
         <?php if ($me->isSuper()) : ?>
             <br/>
-            <a href="<?php echo Helpers::getLink("/admin/users/admin_user_download_cert.php?id=" . $him->getId());?>">Télécharger</a>
+            <a href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/users/admin_user_download_cert.php?id=" . $him->getId());?>">Télécharger</a>
         <?php endif ?>
     </div>
 
@@ -344,7 +344,7 @@ ob_start();
 <div class="form-group">
     <label class="control-label col-md-4"><?php echo $input_label?> : </label>
     <div class="col-md-6">
-        <input class="form-control" type="text" id='<?php echo $input_id ?>' name="<?php echo $input_id ?>" value="<?php echo ($val = Helpers::getFromSession($input_id)) ? get_hecho($val) : get_hecho($him->get($input_id)); ?>" size="30" maxlength="128" />
+        <input class="form-control" type="text" id='<?php echo $input_id ?>' name="<?php echo $input_id ?>" value="<?php echo ($val = \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession($input_id)) ? get_hecho($val) : get_hecho($him->get($input_id)); ?>" size="30" maxlength="128" />
     </div>
 </div>  
     

@@ -81,7 +81,7 @@ class LogsController extends Controller
         $this->date_debut = date("Y-m-d", strtotime($recuperateur->get("date_debut", $date_debut_default)));
         $this->date_fin =  date("Y-m-d", strtotime($recuperateur->get("date_fin", date("Y-m-d"))));
 
-        $fseverity = Helpers::getVarFromGet("severity");
+        $fseverity = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("severity");
         if (! isset($fseverity)) {
             $fseverity = -1;
         }

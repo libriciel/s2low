@@ -21,7 +21,7 @@ if (! $me->isAdmin()) {
     $jsonOutput->displayErrorAndExit("Accés refusé");
 }
 
-$id = Helpers::getVarFromGet("id");
+$id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("id");
 
 $myAuthority = new Authority($me->get("authority_id"));
 

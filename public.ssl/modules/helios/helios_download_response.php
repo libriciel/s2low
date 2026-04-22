@@ -25,7 +25,7 @@ $me = new User();
 
 if (!$me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -35,7 +35,7 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
     exit();
 }
 
-$retourId = Helpers :: getVarFromGet("id");
+$retourId = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("id");
 
 // Vérification des permissions
 $info = $heliosRetourSQL->getInfo($retourId);
@@ -62,8 +62,8 @@ try {
     $filepath = $pesRetourCloudStorage->getPath($retourId);
 } catch (Exception $e) {
     $_SESSION["error"] = "Erreur lors de la r?cup?ration du fichier : " . $e->getMessage();
-    header("Location: " . Helpers::getLink("/modules/helios/helios_retour.php"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_retour.php"));
     exit();
 }
 
-Helpers::sendFileToBrowser($filepath, $filename, "text/xml");
+\S2lowLegacy\Class\Helpers\ResponseHelper::sendFileToBrowser($filepath, $filename, "text/xml");

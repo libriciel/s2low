@@ -167,7 +167,7 @@ if (!defined('TEDETIS_TMP_PATH')) {
 
 //Paramètre pour l'outil de signature Libersign
 if (!defined("LIBERSIGN_URL")) {
-        define("LIBERSIGN_URL", Helpers::getLink("/libersign/"));
+        define("LIBERSIGN_URL", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/libersign/"));
 }
 
 if (!defined("LIBERSIGN_HELP_URL")) {
@@ -175,7 +175,7 @@ if (!defined("LIBERSIGN_HELP_URL")) {
 }
 
 if (!defined("LIBERSIGN_EXTENSION_UPDATE_URL")) {
-    define("LIBERSIGN_EXTENSION_UPDATE_URL", Helpers::getLink("/libersign/"));
+    define("LIBERSIGN_EXTENSION_UPDATE_URL", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/libersign/"));
 }
 
 if (! defined("LIBERSIGN_INSTALLER")) {

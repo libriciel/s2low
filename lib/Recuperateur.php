@@ -28,7 +28,7 @@ class Recuperateur
 
     public function getDate(string $name): ?string
     {
-        return Helpers::checkDate(
+        return \S2lowLegacy\Class\Helpers\RequestHelper::checkDate(
             $this->get($name, null),
             true,
             $name

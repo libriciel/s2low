@@ -120,11 +120,11 @@ $listeActesHTML->setDate($fmin_submission_date, $fmin_ack_date, $fmax_submission
 $doc = new HTMLLayout();
 $doc->setTitle('Liste des transactions - ACTES - S²low');
 $doc->addHeader(
-    "<script type=\"text/javascript\" src=\"" . Helpers::getLink('/jsmodules/jquery.js') . "\">" .
+    "<script type=\"text/javascript\" src=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/jsmodules/jquery.js') . "\">" .
     '</script>'
 );
 $doc->addHeader(
-    "<script type=\"text/javascript\" src=\"" . Helpers::getLink('/jsmodules/jqueryui.js') . "\">" .
+    "<script type=\"text/javascript\" src=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/jsmodules/jqueryui.js') . "\">" .
     '</script>'
 );
 $doc->addJavascript('/javascript/tedetis.js');

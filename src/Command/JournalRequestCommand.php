@@ -99,7 +99,7 @@ class JournalRequestCommand extends Command
             $user_info = $this->userSQL->getInfo($user_id_demandeur);
 
             $messageMail = "Bonjour,\nVotre fichier contenant les lignes du journal est disponible sur " .
-                Helpers::getLink("/common/logs_request_view.php") . "\n\nCelui-ci est disponible pendant 24 heures.\n\nCordialement.\n";
+                \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/common/logs_request_view.php") . "\n\nCelui-ci est disponible pendant 24 heures.\n\nCordialement.\n";
 
             $mail = $this->mailerSymfonyFactory->getInstance();
             $mail->addRecipient($user_info['email']);

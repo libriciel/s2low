@@ -19,21 +19,21 @@ use S2lowLegacy\Class\WorkerScript;
 // Instanciation du module courant
 $module = new Module();
 if (!$module->initByName("actes")) {
-    Helpers::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
 }
 
 $me = new User();
 
 if (!$me->authenticate()) {
-    Helpers::returnAndExit(1, "Échec de l'authentification", Helpers::getLink("connexion-status"));
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Échec de l'authentification", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
 }
 
 if ($me->isSuper() || !$module->isActive() || !$me->canEdit($module->get("name"))) {
-    Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 
 if ($module->getParam("paper") == "on") {
-    Helpers::returnAndExit(1, "Mode « papier » actif. Accès interdit.", Helpers::getLink("/modules/actes/"));
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Mode « papier » actif. Accès interdit.", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/"));
 }
 
 $myAuthority = new Authority($me->get("authority_id"));
@@ -42,27 +42,27 @@ $myAuthority = new Authority($me->get("authority_id"));
 $enveloppe = $_FILES["enveloppe"];
 
 if (!is_array($enveloppe) || count($enveloppe) <= 0) {
-    Helpers::returnAndExit(
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(
         1,
         "Pas de fichier archive spécifié.",
-        Helpers::getLink("/modules/actes/actes_transac_import.php")
+        \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_import.php")
     );
 }
 
 if (!is_uploaded_file_wrapper($enveloppe["tmp_name"])) {
-    Helpers::returnAndExit(
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(
         1,
         "Envoi de fichier incorrect.",
-        Helpers::getLink("/modules/actes/actes_transac_import.php")
+        \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_import.php")
     );
 }
 
 $rgsConnexion = LegacyObjectsManager::getLegacyObjectInstancier()->get(RgsConnexion::class);
 if (!$rgsConnexion->isRgsConnexion()) {
-    Helpers:: returnAndExit(
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(
         1,
         "La télétransmission nécessite un certificat RGS<br/>Erreur : {$rgsConnexion->getLastMessage()}",
-        Helpers::getLink("/modules/actes/")
+        \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/")
     );
 }
 
@@ -71,10 +71,10 @@ $actesNameArchive = new ActesNameArchive(ACTES_APPLI_TRIGRAMME, ACTES_APPLI_QUAD
 try {
     $actesNameArchive->verifNameOK($enveloppe['name']);
 } catch (Exception $e) {
-    Helpers:: returnAndExit(
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(
         1,
         "L'archive n'a pas un nom valide : {$e->getMessage()}",
-        Helpers::getLink("/modules/actes/actes_transac_import.php")
+        \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_import.php")
     );
 }
 
@@ -96,10 +96,10 @@ $env->set("destDir", $dest);
 if (($xmlTransFiles = $env->importArchiveFile($enveloppe["name"], $enveloppe["tmp_name"])) === false) {
     $env->purgeFiles();
     $env->deleteArchiveFile();
-    Helpers::returnAndExit(
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(
         1,
         "Erreur d'importation de l'enveloppe :\n" . $env->getErrorMsg(),
-        Helpers::getLink("/modules/actes/actes_transac_import.php")
+        \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_import.php")
     );
 }
 
@@ -119,10 +119,10 @@ foreach ($xmlTransFiles as $xmlFile) {
     if (!$trans->createFromXML($xmlFile, $actesClassificationCodesSQL)) {
         $env->purgeFiles();
         $env->deleteArchiveFile();
-        Helpers::returnAndExit(
+        \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(
             1,
             "Erreur d'importation transaction : " . $trans->getErrorMsg(),
-            Helpers::getLink("/modules/actes/actes_transac_import.php")
+            \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_import.php")
         );
     }
 
@@ -133,10 +133,10 @@ foreach ($xmlTransFiles as $xmlFile) {
         if (!$trans->isUnique($myAuthority->getId())) {
             $env->purgeFiles();
             $env->deleteArchiveFile();
-            Helpers::returnAndExit(
+            \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(
                 1,
                 "Un numéro interne d'acte entre en conflit avec un acte existant dans la base de données.",
-                Helpers::getLink("/modules/actes/actes_transac_import.php")
+                \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_import.php")
             );
         }
     }
@@ -160,10 +160,10 @@ foreach ($xmlTransFiles as $xmlFile) {
 if (!$env->generateArchiveFile()) {
     $env->purgeFiles();
     $env->deleteArchiveFile();
-    Helpers::returnAndExit(
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(
         1,
         "Erreur lors de la regénération de l'archive.\n" . $env->getErrorMsg(),
-        Helpers::getLink("/modules/actes/actes_transac_import.php")
+        \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_import.php")
     );
 }
 
@@ -172,7 +172,7 @@ if (!$env->generateArchiveFile()) {
 if (!$env->checkArchiveSize()) {
     $env->purgeFiles();
     $env->deleteArchiveFile();
-    Helpers::returnAndExit(1, $env->getErrorMsg(), Helpers::getLink("/modules/actes/actes_transac_import.php"));
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, $env->getErrorMsg(), \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_import.php"));
 }
 
 // Purge des fichiers intermédiaires
@@ -188,7 +188,7 @@ if (!$env->save()) {
         $msg .= "\nErreur de journalisation.";
     }
 
-    Helpers::returnAndExit(1, $msg, Helpers::getLink("/modules/actes/actes_transac_import.php"));
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, $msg, \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_import.php"));
 }
 
 // Enregistrement des transactions
@@ -211,7 +211,7 @@ foreach ($transacs as $trans) {
         $env->deleteArchiveFile();
         $env->delete();
 
-        Helpers::returnAndExit(1, $msg, Helpers::getLink("/modules/actes/actes_transac_import.php"));
+        \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, $msg, \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_import.php"));
     }
 }
 
@@ -231,7 +231,7 @@ if (count($classifRequests) > 0) {
             $env->deleteArchiveFile();
             $env->delete();
 
-            Helpers::returnAndExit(1, $msg, Helpers::getLink("/modules/actes/actes_transac_import.php"));
+            \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, $msg, \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_import.php"));
         }
     }
 }
@@ -257,4 +257,4 @@ if (isset($trans)) {
 }
 
 
-Helpers::returnAndExit(0, $msg, Helpers::getLink("/modules/actes/index.php"), $apiMsg);
+\S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(0, $msg, \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/index.php"), $apiMsg);

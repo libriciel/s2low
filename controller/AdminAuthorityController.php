@@ -34,7 +34,7 @@ class AdminAuthorityController extends Controller
             );
         }
 
-        Helpers::sendFileToBrowser($convention_filepath, basename($convention_filepath));
+        \S2lowLegacy\Class\Helpers\ResponseHelper::sendFileToBrowser($convention_filepath, basename($convention_filepath));
 
         $this->controller_exit();
     }

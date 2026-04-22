@@ -129,7 +129,7 @@ class ActesBatchFile extends DataObject
    */
     public function deleteFile()
     {
-        return Helpers::deleteFromFS(ACTES_BATCHES_UPLOAD_ROOT . "/" . $this->filename);
+        return \S2lowLegacy\Class\Helpers\FileSystemHelper::deleteFromFS(ACTES_BATCHES_UPLOAD_ROOT . "/" . $this->filename);
     }
 
 
@@ -198,7 +198,7 @@ class ActesBatchFile extends DataObject
 
         if (isset($this->filename)) {
             if (file_exists($this->getAbsoluteFilePath())) {
-                if (! Helpers::sendFileToBrowser($this->getAbsoluteFilePath(), basename($this->getAbsoluteFilePath()), @mime_content_type($this->getAbsoluteFilePath()))) {
+                if (! \S2lowLegacy\Class\Helpers\ResponseHelper::sendFileToBrowser($this->getAbsoluteFilePath(), basename($this->getAbsoluteFilePath()), @mime_content_type($this->getAbsoluteFilePath()))) {
                     $this->errorMsg = "Erreur envoi fichier";
                 } else {
                     $ret_value = true;

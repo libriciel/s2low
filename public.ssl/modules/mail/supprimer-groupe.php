@@ -10,7 +10,7 @@ if (! $me->isAuthorityAdmin()) {
         exit;
 }
 try {
-    $groupe_id = Helpers::getIntFromGet('groupe_id');
+    $groupe_id = \S2lowLegacy\Class\Helpers\RequestHelper::getIntFromGet('groupe_id');
 } catch (Exception $e) {
     $_SESSION['last_error'] = $e->getMessage();
     header("Location: index.php?command=annuaire");

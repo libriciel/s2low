@@ -33,7 +33,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -44,10 +44,10 @@ if (! $module->isActive() || ! $me->canAccess($module->get("name"))) {
 }
 
 try {
-    $id = Helpers::getIntFromGet("id");
+    $id = \S2lowLegacy\Class\Helpers\RequestHelper::getIntFromGet("id");
 } catch (Exception $e) {
     $_SESSION["error"] = "Erreur d'initialisation du lot.";
-    header("Location: " . Helpers::getLink("/modules/actes/actes_batch_handle.php"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_batch_handle.php"));
     exit();
 }
 
@@ -62,12 +62,12 @@ if (isset($id) && ! empty($id)) {
         $owner->init();
     } else {
         $_SESSION["error"] = "Erreur d'initialisation du lot.";
-        header("Location: " . Helpers::getLink("/modules/actes/actes_batch_handle.php"));
+        header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_batch_handle.php"));
         exit();
     }
 } else {
     $_SESSION["error"] = "Pas d'identifiant de lot spécifié";
-    header("Location: " . Helpers::getLink("/modules/actes/actes_batch_handle.php"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_batch_handle.php"));
     exit();
 }
 
@@ -75,7 +75,7 @@ if (isset($id) && ! empty($id)) {
 if (! $me->isSuper()) {
     if (! ($me->isAuthorityAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && ($me->getId() != $owner->getId())) {
         $_SESSION["error"] = "Accès refusé";
-        header("Location: " . Helpers::getLink("/modules/actes/index.php"));
+        header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/index.php"));
         exit();
     }
 }
@@ -92,14 +92,14 @@ $doc->openContent();
 
 $html = "<div id=\"content\">\n";
 $html .= "<h1>Visualisation du lot " . $zeBatch->getId() . " </h1>";
-$html .= "<p id=\"back-transaction-btn\"><a href=\"" . Helpers::getLink("/modules/actes/actes_batch_handle.php\" class=\"btn btn-default\">Retour liste lots</a></p>\n");
+$html .= "<p id=\"back-transaction-btn\"><a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_batch_handle.php\" class=\"btn btn-default\">Retour liste lots</a></p>\n");
 $html .= "<h2>Détails du lot</h2>\n";
 $html .= "<div class=\"data_table\">\n";
 $html .= "<table class=\"data table table-bordered\">\n";
 $html .= $doc->getHTMLArrayline("Numéro du lot", $zeBatch->getId());
 $html .= $doc->getHTMLArrayline("Description", get_hecho($zeBatch->get("description")));
 $html .= $doc->getHTMLArrayline("Préfixe numéro interne", get_hecho($zeBatch->get("num_prefix")));
-$html .= $doc->getHTMLArrayline("Date de création", Helpers::getDateFromBDDDate($zeBatch->get("submission_date"), true));
+$html .= $doc->getHTMLArrayline("Date de création", \S2lowLegacy\Class\Helpers\DateHelper::getDateFromBDDDate($zeBatch->get("submission_date"), true));
 $html .= $doc->getHTMLArrayline("Nombre total de fichiers", $zeBatch->getAllFilesCount());
 $html .= $doc->getHTMLArrayline("Nombre de fichiers traités", ($zeBatch->getAllFilesCount() - $zeBatch->getUnprocessedFilesCount()));
 $html .= $doc->getHTMLArrayline("Nombre de fichiers restant à traiter", $zeBatch->getUnprocessedFilesCount());
@@ -127,16 +127,16 @@ if (is_array($batchFiles) && count($batchFiles) > 0) {
     foreach ($batchFiles as $batchFile) {
         $html .= " <tr>\n";
         $html .= "  <td headers=\"file\" class=\"long_field\">";
-        $html .= ($batchFile->isProcessed()) ? $batchFile->getDisplayName() : "<a href=\"" . Helpers::getLink("/modules/actes/actes_download_file.php?file=" . $batchFile->getId() . "&amp;type=batch\" title=\"Télécharger le fichier\">" . get_hecho($batchFile->getDisplayName()) . "</a>");
+        $html .= ($batchFile->isProcessed()) ? $batchFile->getDisplayName() : "<a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_download_file.php?file=" . $batchFile->getId() . "&amp;type=batch\" title=\"Télécharger le fichier\">" . get_hecho($batchFile->getDisplayName()) . "</a>");
         $html .= "</td>\n";
         $html .= "  <td headers=\"size\" >" . $batchFile->get("filesize") . "</td>\n";
         $html .= "  <td headers=\"signature\" >";
         $html .= (mb_strlen($batchFile->get("signature")) > 0) ? "Présente" : "Non présente";
         $html .= "</td>\n";
         $html .= "  <td headers=\"status\" >";
-        $html .= ($batchFile->isProcessed()) ? "<a href=\"" . Helpers::getLink("/modules/actes/actes_transac_show.php?id=" . $batchFile->get("transaction_id")) . "\" title=\"Voir la transaction issue de ce fichier\">Traité</a>" : "Non traité";
+        $html .= ($batchFile->isProcessed()) ? "<a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_show.php?id=" . $batchFile->get("transaction_id")) . "\" title=\"Voir la transaction issue de ce fichier\">Traité</a>" : "Non traité";
         $html .= "</td>\n";
-        $html .= ( ! $batchFile->isProcessed()) ? "  <td headers=\"actions\" ><a href=\"" . Helpers::getLink("/modules/actes/actes_transac_add.php?batchfile=" . $batchFile->getId()) . "\" class=\"icon\" title=\"Créer la transaction correspondant à ce fichier\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"Icone traitement\" /></a></td>\n" : "<td headers=\"actions\" >&nbsp;</td>";
+        $html .= ( ! $batchFile->isProcessed()) ? "  <td headers=\"actions\" ><a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_add.php?batchfile=" . $batchFile->getId()) . "\" class=\"icon\" title=\"Créer la transaction correspondant à ce fichier\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"Icone traitement\" /></a></td>\n" : "<td headers=\"actions\" >&nbsp;</td>";
         $html .= " </tr>\n";
     }
     $html .= "</tbody>\n";
@@ -147,7 +147,7 @@ if (is_array($batchFiles) && count($batchFiles) > 0) {
 
 $nb_fichier = count($batchFiles);
 $html .= "</div>\n";
-$html .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_batch_delete.php\" onsubmit=\"return confirm('Il reste $nb_fichier fichier(s) à traiter dans ce lot. Souhaitez-vous réellement supprimer ce lot ?')\" method=\"post\">\n");
+$html .= "<form action=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_batch_delete.php\" onsubmit=\"return confirm('Il reste $nb_fichier fichier(s) à traiter dans ce lot. Souhaitez-vous réellement supprimer ce lot ?')\" method=\"post\">\n");
 $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $zeBatch->getId() . "\" />\n";
 $html .= "<input type=\"submit\" value=\"Supprimer ce lot\" class=\"btn btn-warning\" />\n";
 $html .= "</form>\n";

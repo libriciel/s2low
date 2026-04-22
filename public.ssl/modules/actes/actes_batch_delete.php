@@ -23,23 +23,23 @@ use S2lowLegacy\Class\User;
 
 $module = new Module();
 if (! $module->initByName("actes")) {
-    Helpers::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
 }
 
 $me = new User();
 
 if (! $me->authenticate()) {
-    Helpers::returnAndExit(1, "Échec de l'authentification", Helpers::getLink("connexion-status"));
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Échec de l'authentification", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
 }
 
 if ($me->isGroupAdminOrSuper() || ! $module->isActive() || ! $me->canAccess($module->get("name"))) {
-    Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 
 try {
-    $id = Helpers::getIntFromPost("id");
+    $id = \S2lowLegacy\Class\Helpers\RequestHelper::getIntFromPost("id");
 } catch (Exception $e) {
-    Helpers::returnAndExit(1, $e->getMessage(), Helpers::getLink("/modules/actes/actes_batch_handle.php"));
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, $e->getMessage(), \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_batch_handle.php"));
 }
 
 $myAuthority = new Authority($me->get("authority_id"));
@@ -52,16 +52,16 @@ if (isset($id) && ! empty($id)) {
         $owner = new User($zeBatch->get("user_id"));
         $owner->init();
     } else {
-        Helpers::returnAndExit(1, "Erreur d'initialisation du lot.", Helpers::getLink("/modules/actes/actes_batch_handle.php"));
+        \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Erreur d'initialisation du lot.", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_batch_handle.php"));
     }
 } else {
-    Helpers::returnAndExit(1, "Pas d'identifiant de lot spécifié", Helpers::getLink("/modules/actes/actes_batch_handle.php"));
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Pas d'identifiant de lot spécifié", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_batch_handle.php"));
 }
 
 // Vérification des permissions
 if (! $me->isSuper()) {
     if (! ($me->isAuthorityAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && ($me->getId() != $owner->getId())) {
-        Helpers::returnAndExit(1, "Accès refusé", Helpers::getLink("/modules/actes/actes_batch_handle.php"));
+        \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Accès refusé", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_batch_handle.php"));
     }
 }
 
@@ -72,7 +72,7 @@ if (! $zeBatch->delete()) {
         $msg .= "\nErreur de journalisation.";
     }
 
-    Helpers::returnAndExit(1, $msg, Helpers::getLink("/modules/actes/actes_batch_handle.php"));
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, $msg, \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_batch_handle.php"));
 } else {
     $msg = "Suppression du lot n°" . $zeBatch->getId() . ". Résultat ok.";
 
@@ -80,5 +80,5 @@ if (! $zeBatch->delete()) {
         $msg .= "\nErreur de journalisation.";
     }
 
-    Helpers::returnAndExit(0, $msg, Helpers::getLink("/modules/actes/actes_batch_handle.php"));
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(0, $msg, \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_batch_handle.php"));
 }

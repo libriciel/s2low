@@ -19,7 +19,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION['error'] = "Echec de l'authentification";
-    header('Location: ' . Helpers::getLink('connexion-status'));
+    header('Location: ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('connexion-status'));
     exit();
 }
 
@@ -52,7 +52,7 @@ ob_start();
 
     <h1 id="groupes_col_desc">Groupes de collectivités</h1>
     <p id="back-transaction-btn">
-        <a href="<?php echo Helpers::getLink('/admin/groups/admin_groups.php'); ?>" class="btn btn-default">Retour liste groupes</a>
+        <a href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/admin/groups/admin_groups.php'); ?>" class="btn btn-default">Retour liste groupes</a>
     </p>
 
     <table class="data-table table table-striped " aria-describedby="groupes_col_desc">

@@ -23,7 +23,7 @@ list($PESRetourCloudStorage) = LegacyObjectsManager::getLegacyObjectInstancier()
         [PESRetourCloudStorage::class]
     );
 
-$retourId = Helpers :: getVarFromGet("id");
+$retourId = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("id");
 
 $doc = new DOMDocument();
 $doc->formatOutput = true;
@@ -80,7 +80,7 @@ try {
     $xmlFile = HELIOS_FILES_ROOT . "/temp/retour.xml";
     $doc->save($xmlFile);
 
-    if (!Helpers::sendFileToBrowser($xmlFile, basename($xmlFile), "text/xml")) {
+    if (!\S2lowLegacy\Class\Helpers\ResponseHelper::sendFileToBrowser($xmlFile, basename($xmlFile), "text/xml")) {
         echo "error: impossible de envoyer ce xml ";
     }
 }

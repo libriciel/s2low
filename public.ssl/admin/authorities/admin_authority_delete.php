@@ -32,7 +32,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -43,14 +43,14 @@ if (! $me->isGroupAdminOrSuper()) {
     exit();
 }
 
-$id = Helpers::getVarFromPost("id");
+$id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("id");
 
 if (isset($id) && ! empty($id)) {
     $authority = new Authority($id);
 
     if ($me->isGroupAdmin() && ! $authority->isInGroup($me->get("authority_group_id"))) {
         $_SESSION["error"] = "Accès refusé pour la collectivité spécifiée";
-        header("Location: " . Helpers::getLink("/admin/authorities/admin_authorities.php"));
+        header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/authorities/admin_authorities.php"));
         exit();
     }
 
@@ -61,7 +61,7 @@ if (isset($id) && ! empty($id)) {
         }
 
         $_SESSION["error"] = nl2br($msg);
-        header("Location: " . Helpers::getLink("/admin/authorities/admin_authorities.php"));
+        header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/authorities/admin_authorities.php"));
         exit();
     } else {
         $msg = "Erreur lors de la tentative de suppression de la collectivité<br />" . $authority->getErrorMsg();
@@ -70,11 +70,11 @@ if (isset($id) && ! empty($id)) {
         }
 
         $_SESSION["error"] = nl2br($msg);
-        header("Location: " . Helpers::getLink("/admin/authorities/admin_authorities.php"));
+        header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/authorities/admin_authorities.php"));
         exit();
     }
 } else {
     $_SESSION["error"] = "Pas d'identifiant de collectivité spécifié";
-    header("Location: " . Helpers::getLink("/admin/authorities/admin_authorities.php"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/authorities/admin_authorities.php"));
     exit();
 }

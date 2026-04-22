@@ -7,9 +7,9 @@ use Twig\Loader\FilesystemLoader;
 
 ?>
 
-<script type="text/javascript" src="<?php echo Helpers::getLink("/jsmodules/jquery.js")?>"></script>
-<script type="text/javascript" src="<?php echo Helpers::getLink("/jsmodules/jqueryui.js")?>"></script>
-<script type="text/javascript" src="<?php echo Helpers::getLink("/jsmodules/select2.js")?>"></script>
+<script type="text/javascript" src="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/jsmodules/jquery.js")?>"></script>
+<script type="text/javascript" src="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/jsmodules/jqueryui.js")?>"></script>
+<script type="text/javascript" src="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/jsmodules/select2.js")?>"></script>
 <script type="text/javascript" src="/javascript/zselect_s2low.js"></script>
 
 <?php $loader = new FilesystemLoader(__DIR__ . '/../templates');

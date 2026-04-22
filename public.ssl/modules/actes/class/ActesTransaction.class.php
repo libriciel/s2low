@@ -436,7 +436,7 @@ class ActesTransaction extends DataObject
       // Date de l'acte YYYYMMDD
         $name .= "-";
         if (!$this->isType(TypeTransaction::DemandeDeClassification)) {
-            $name .= date("Ymd", Helpers :: ansiDateToTimestamp($trans->decision_date));
+            $name .= date("Ymd", \S2lowLegacy\Class\Helpers\DateHelper::ansiDateToTimestamp($trans->decision_date));
         }
 
       // Numéro de l'acte interne à la collectivité
@@ -617,7 +617,7 @@ class ActesTransaction extends DataObject
         $xml_name .= "_0.xml";
         $this->xmlFileName = $xml_name;
 
-        if (!Helpers :: createDirTree(dirname($this->rootDir . "/" . $this->xmlFileName))) {
+        if (!\S2lowLegacy\Class\Helpers\FileSystemHelper::createDirTree(dirname($this->rootDir . "/" . $this->xmlFileName))) {
             $this->errorMsg = "Erreur système de fichiers (createDirTree).";
             return false;
         }
@@ -648,9 +648,9 @@ class ActesTransaction extends DataObject
         $xml .= "xmlns:insee=\"http://xml.insee.fr/schema\"\n";
         $xml .= "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
         $xml .= "xsi:schemaLocation=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216 actesv1_1.xsd\"\n";
-        $xml .= "actes:Date=\"" . date("Y-m-d", Helpers :: ansiDateToTimestamp($this->decision_date)) . "\"\n";
-        $xml .= "actes:NumeroInterne=\"" . Helpers :: escapeForXML($this->number) . "\"\n";
-        $xml .= "actes:CodeNatureActe=\"" . Helpers :: escapeForXML($this->nature_code) . "\">\n";
+        $xml .= "actes:Date=\"" . date("Y-m-d", \S2lowLegacy\Class\Helpers\DateHelper::ansiDateToTimestamp($this->decision_date)) . "\"\n";
+        $xml .= "actes:NumeroInterne=\"" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($this->number) . "\"\n";
+        $xml .= "actes:CodeNatureActe=\"" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($this->nature_code) . "\">\n";
 
       // Les codes matières
         for ($i = 1; $i <= 5; $i++) {
@@ -660,12 +660,12 @@ class ActesTransaction extends DataObject
             }
         }
         $xml .= " <actes:Objet>" . XMLHelper::convertToIsoAndEscape($this->subject ?? "") . "</actes:Objet>\n";
-        $xml .= " <actes:ClassificationDateVersion>" . date("Y-m-d", Helpers :: ansiDateToTimestamp($this->classification_date)) . "</actes:ClassificationDateVersion>\n";
+        $xml .= " <actes:ClassificationDateVersion>" . date("Y-m-d", \S2lowLegacy\Class\Helpers\DateHelper::ansiDateToTimestamp($this->classification_date)) . "</actes:ClassificationDateVersion>\n";
         $xml .= " <actes:Document>\n";
-        $xml .= "  <actes:NomFichier>" . Helpers :: escapeForXML(basename($this->files["acte"]["name"])) . "</actes:NomFichier>\n";
+        $xml .= "  <actes:NomFichier>" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML(basename($this->files["acte"]["name"])) . "</actes:NomFichier>\n";
 
         if (isset($this->files["acte"]["sign"])) {
-            $xml .= "  <actes:Signature>" . Helpers :: escapeForXML($this->files["acte"]["sign"]) . "</actes:Signature>\n";
+            $xml .= "  <actes:Signature>" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($this->files["acte"]["sign"]) . "</actes:Signature>\n";
         }
 
         $xml .= " </actes:Document>\n";
@@ -674,9 +674,9 @@ class ActesTransaction extends DataObject
         if (isset($this->files["attachment"])) {
             foreach ($this->files["attachment"] as $key => $file) {
                 $xml .= "  <actes:Annexe>\n";
-                $xml .= "   <actes:NomFichier>" . Helpers :: escapeForXML(basename($file["name"])) . "</actes:NomFichier>\n";
+                $xml .= "   <actes:NomFichier>" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML(basename($file["name"])) . "</actes:NomFichier>\n";
                 if (isset($file["sign"])) {
-                    $xml .= "  <actes:Signature>" . Helpers :: escapeForXML($file["sign"]) . "</actes:Signature>\n";
+                    $xml .= "  <actes:Signature>" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($file["sign"]) . "</actes:Signature>\n";
                 }
                 $xml .= "  </actes:Annexe>\n";
             }
@@ -730,7 +730,7 @@ class ActesTransaction extends DataObject
         $xml .= "xmlns:insee=\"http://xml.insee.fr/schema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
         $xml .= "xsi:schemaLocation=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216 actesv1_1.xsd\"\n";
         $xml .= "actes:DateCourrierPref=\"" . $this->decision_date . "\" \n";
-        $xml .= "actes:IDActe=\"" . Helpers :: escapeForXML($this->related_transaction->unique_id) . "\" > \n";
+        $xml .= "actes:IDActe=\"" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($this->related_transaction->unique_id) . "\" > \n";
 
         if ($this->isType(TypeTransaction::DemandePieceComplementaire) && $this->type_reponse == ActesTransaction::TYPE_ENVOIE) {
             $xml .= "<actes:Documents>";
@@ -738,7 +738,7 @@ class ActesTransaction extends DataObject
 
         $xml .= "<actes:Document>";
         $xml .= "<actes:NomFichier>";
-        $xml .= Helpers :: escapeForXML(basename($this->files["acte"]["name"]));
+        $xml .= \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML(basename($this->files["acte"]["name"]));
         $xml .= "</actes:NomFichier>\n";
         $xml .= "</actes:Document>\n";
 
@@ -746,7 +746,7 @@ class ActesTransaction extends DataObject
             if (isset($this->files["attachment"])) {
                 foreach ($this->files["attachment"] as $key => $file) {
                     $xml .= "  <actes:Document>\n";
-                    $xml .= "   <actes:NomFichier>" . Helpers :: escapeForXML(basename($file["name"])) . "</actes:NomFichier>\n";
+                    $xml .= "   <actes:NomFichier>" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML(basename($file["name"])) . "</actes:NomFichier>\n";
                     $xml .= "</actes:Document>\n";
                 }
             }
@@ -774,7 +774,7 @@ class ActesTransaction extends DataObject
             $xml .= "xmlns:insee=\"http://xml.insee.fr/schema\"\n";
             $xml .= "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
             $xml .= "xsi:schemaLocation=\"http://www.interieur.gouv.fr/ACTES#v1.1-20040216 actesv1_1.xsd\"\n";
-            $xml .= "actes:IDActe=\"" . Helpers :: escapeForXML($this->related_transaction->unique_id) . "\"/>\n";
+            $xml .= "actes:IDActe=\"" . \S2lowLegacy\Class\Helpers\StringHelper::escapeForXML($this->related_transaction->unique_id) . "\"/>\n";
         } else {
             $this->errorMsg = "Info manquante pour générer le XML.";
         }
@@ -847,11 +847,11 @@ class ActesTransaction extends DataObject
                 $this->setType(TypeTransaction::TransmissionActe);
                 $acte_attr = $this->xmlObj->attributes($namespaces["actes"]);
             // Date de la décision
-                $this->decision_date = Helpers :: getFromXMLElt($acte_attr["Date"]);
+                $this->decision_date = \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($acte_attr["Date"]);
             // Numéro interne
-                $this->number = Helpers :: getFromXMLElt($acte_attr["NumeroInterne"]);
+                $this->number = \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($acte_attr["NumeroInterne"]);
             // Nature de l'acte
-                $this->nature_code = Helpers :: getFromXMLElt($acte_attr["CodeNatureActe"]);
+                $this->nature_code = \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($acte_attr["CodeNatureActe"]);
                 $descrs = ActesTransaction :: getTransactionNatureDescr($this->nature_code);
                 $this->nature_descr = $descrs["descr"];
 
@@ -862,23 +862,23 @@ class ActesTransaction extends DataObject
                     if (isset($actesItems-> {"CodeMatiere" . $i })) {
                         $classif_attr = $actesItems-> { "CodeMatiere" . $i } ->attributes($namespaces["actes"]);
                         if (isset($classif_attr["CodeMatiere"])) {
-                                $this-> {"classif" . $i } = Helpers :: getFromXMLElt($classif_attr["CodeMatiere"]);
+                                $this-> {"classif" . $i } = \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($classif_attr["CodeMatiere"]);
                             $classification[$i - 1] = $this->{"classif" . $i};
                         }
                     }
                 }
 
             // Objet de l'acte
-                $this->subject = Helpers :: getFromXMLElt($actesItems->Objet);
+                $this->subject = \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($actesItems->Objet);
 
-                $this->classification_date = Helpers :: getFromXMLElt($actesItems->ClassificationDateVersion);
+                $this->classification_date = \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($actesItems->ClassificationDateVersion);
 
                 $classification_description = $actesClassificationCodesSQL->getDescription($this->get("authority_id"), $classification);
                 $this->set("classification_string", $classification_description);
 
 
               // Fichier de l'acte
-                $actePath = dirname($xmlFile) . "/" . Helpers :: getFromXMLElt($actesItems->Document->NomFichier);
+                $actePath = dirname($xmlFile) . "/" . \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($actesItems->Document->NomFichier);
 
                 if (count($actesItems->Document->NomFichier) != 1) {
                     $this->errorMsg = "Impossible de traiter plusieurs document actes";
@@ -909,7 +909,7 @@ class ActesTransaction extends DataObject
                         $this->errorMsg = $e->getMessage();
                         return false;
                     }
-                    if (!$this->storeSign("acte", Helpers :: getFromXMLElt($actesItems->Document->Signature))) {
+                    if (!$this->storeSign("acte", \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($actesItems->Document->Signature))) {
                         $this->errorMsg = "Erreur interne.";
                         return false;
                     }
@@ -918,14 +918,14 @@ class ActesTransaction extends DataObject
             // Fichiers pièces jointes
                 if (isset($actesItems->Annexes)) {
                     foreach ($actesItems->Annexes->Annexe as $annexe) {
-                        $attachmentPath = dirname($xmlFile) . "/" . Helpers :: getFromXMLElt($annexe->NomFichier);
+                        $attachmentPath = dirname($xmlFile) . "/" . \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($annexe->NomFichier);
 
                         if (!$this->addAttachmentFile($attachmentPath, $attachmentPath)) {
                             return false;
                         }
 
                         if (isset($annexe->Signature)) {
-                            if (!$this->storeSign("attachment", Helpers :: getFromXMLElt($annexe->Signature))) {
+                            if (!$this->storeSign("attachment", \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($annexe->Signature))) {
                                   $this->errorMsg = "Erreur interne.";
                                   return false;
                             }
@@ -959,7 +959,7 @@ class ActesTransaction extends DataObject
                 $this->setType(TypeTransaction::Annulation);
                 $acte_attr = $this->xmlObj->attributes($namespaces["actes"]);
 
-                $this->unique_id = Helpers :: getFromXMLElt($acte_attr["IDActe"]);
+                $this->unique_id = \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($acte_attr["IDActe"]);
 
                 if (!$this->related_id = ActesTransaction :: getTransactionFromUniqueId($this->unique_id)) {
                     $this->errorMsg = "Transaction de référence introuvable.";
@@ -1137,7 +1137,7 @@ class ActesTransaction extends DataObject
       // Mise en place du fichier dans le répertoire de destination
         if (!$import) {
             if ($path) {
-                if (!Helpers :: createDirTree(dirname($this->rootDir . "/" . $new_name))) {
+                if (!\S2lowLegacy\Class\Helpers\FileSystemHelper::createDirTree(dirname($this->rootDir . "/" . $new_name))) {
                     $this->errorMsg = "Erreur système (createDirTree). Abandon";
                     return false;
                 } else {
@@ -1180,8 +1180,8 @@ class ActesTransaction extends DataObject
 
         $acte_attr = $this->xmlObj->attributes($namespaces["actes"]);
 
-        $this->unique_id = Helpers :: getFromXMLElt($acte_attr["IDActe"]);
-            $this->decision_date = Helpers :: getFromXMLElt($acte_attr["DateCourrierPref"]);
+        $this->unique_id = \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($acte_attr["IDActe"]);
+            $this->decision_date = \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($acte_attr["DateCourrierPref"]);
 
         if (!$this->related_transaction_id = ActesTransaction :: getTransactionFromUniqueId($this->unique_id)) {
             $this->errorMsg = "Transaction de référence introuvable.";
@@ -1199,20 +1199,20 @@ class ActesTransaction extends DataObject
 
         if ($type == TypeTransaction::DemandePieceComplementaire && !$isRefus) {
             foreach ($actesItems->Documents->Document as $fichiers) {
-                $actePath = dirname($xmlFile) . "/" . Helpers :: getFromXMLElt($fichiers->NomFichier);
+                $actePath = dirname($xmlFile) . "/" . \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($fichiers->NomFichier);
                 if (!$this->addActeFile($actePath, $actePath)) {
                      return false;
                 }
             }
         } else {
-            $actePath = dirname($xmlFile) . "/" . Helpers :: getFromXMLElt($actesItems->Document->NomFichier);
+            $actePath = dirname($xmlFile) . "/" . \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($actesItems->Document->NomFichier);
 
             if (!$this->addActeFile($actePath, $actePath)) {
                  return false;
             }
 
             if (isset($actesItems->Document->Signature)) {
-                if (!$this->storeSign("acte", Helpers :: getFromXMLElt($actesItems->Document->Signature))) {
+                if (!$this->storeSign("acte", \S2lowLegacy\Class\Helpers\StringHelper::getFromXMLElt($actesItems->Document->Signature))) {
                     $this->errorMsg = "Erreur interne.";
                     return false;
                 }

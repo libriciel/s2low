@@ -26,7 +26,7 @@ use S2lowLegacy\Class\Helpers;
                         >
                             <?php
                             $str = "{$authority_type_libelle_info['id']} {$authority_type_libelle_info['description']}";
-                            hecho(Helpers::chunkString($str, 40))
+                            hecho(\S2lowLegacy\Class\Helpers\StringHelper::chunkString($str, 40))
                             ?>
                         </option>
                     <?php endforeach;?>
@@ -130,7 +130,7 @@ use S2lowLegacy\Class\Helpers;
             <td headers="actions">
                 <a href="admin_authority_edit.php?id=<?php echo $authority_info['id'] ?>" class="icon">
                     <img
-                            src="<?php echo Helpers::getLink('/custom/images/erreur.png'); ?>"
+                            src="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/custom/images/erreur.png'); ?>"
                             alt="image_modif"
                             title="Modifier"
                     />

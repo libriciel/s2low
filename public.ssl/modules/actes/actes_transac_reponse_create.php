@@ -20,10 +20,10 @@ if (!function_exists('sortir_atrc')) {
             echo "KO : " . $message;
             exit;
         } else {
-            Helpers:: returnAndExit(
+            \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(
                 1,
                 $message,
-                Helpers::getLink("/modules/actes/actes_transac_repondre.php?id=$related_id")
+                \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_repondre.php?id=$related_id")
             );
         }
     }
@@ -33,7 +33,7 @@ if (!function_exists('sortir_atrc')) {
 $workerScript = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(WorkerScript::class);
 
 
-$api = Helpers::getVarFromGet("api");
+$api = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("api");
 if ($api) {
     header("Content-type: text/plain");
 }
@@ -62,26 +62,26 @@ $myAuthority = new Authority($me->get("authority_id"));
 
 // Recuperation des variables du POST
 
-$related_id = Helpers::getVarFromPost("id");
+$related_id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("id");
 
 
 $related_trans = new ActesTransaction($related_id);
 $related_trans->init();
 
 
-$type_acte = Helpers::getVarFromPost('type_acte', true);
-$type_pj = Helpers::getVarFromPost('type_pj', true);
+$type_acte = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost('type_acte', true);
+$type_pj = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost('type_pj', true);
 
 if (empty($type_acte)) {
-    Helpers:: returnAndExit(
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(
         1,
         "Erreur lors de la réception du fichier : typologie absente",
-        Helpers::getLink("/modules/actes/actes_transac_reponse.php?id=$related_id")
+        \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_reponse.php?id=$related_id")
     );
 }
 
 $type_transaction = $related_trans->get("type");
-$type_envoie = Helpers:: getVarFromPost("type_envoie", true);
+$type_envoie = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("type_envoie", true);
 
 $actePDFFile = $_FILES["acte_pdf_file"];
 if (isset($_FILES["acte_pdf_file_sign"])) {
@@ -136,12 +136,12 @@ $trans->set("nature_code", $related_trans->get("nature_code"));
 $trans->set("nature_descr", $related_trans->get("nature_descr"));
 $trans->set("subject", $related_trans->get("subject"));
 $trans->set("number", $related_trans->get("number"));
-$trans->set("decision_date", Helpers::getANSIDateFromBDDDate($related_trans->get("decision_date")));
+$trans->set("decision_date", \S2lowLegacy\Class\Helpers\DateHelper::getANSIDateFromBDDDate($related_trans->get("decision_date")));
 $trans->set("type_reponse", $type_envoie);
 $trans->set("user_id", $related_trans->get('user_id'));
 $trans->set("authority_id", $related_trans->get('authority_id'));
 $trans->set("classification", $related_trans->get('classification'));
-$trans->set("classification_date", Helpers::getANSIDateFromBDDDate($related_trans->get('classification_date')));
+$trans->set("classification_date", \S2lowLegacy\Class\Helpers\DateHelper::getANSIDateFromBDDDate($related_trans->get('classification_date')));
 $trans->set("unique_id", $related_trans->get('unique_id'));
 
 
@@ -193,10 +193,10 @@ for ($i = 0; $i < count($acteAttachments["tmp_name"] ?: []); $i++) {
     if (mb_strlen($acteAttachments["tmp_name"][$i])) {
         if (is_uploaded_file_wrapper($acteAttachments["tmp_name"][$i])) {
             if (empty($type_pj[$i])) {
-                Helpers:: returnAndExit(
+                \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(
                     1,
                     "Erreur lors de la réception du fichier annexe {$acteAttachments["name"][$i]} : typologie absente",
-                    Helpers::getLink("/modules/actes/actes_transac_add.php")
+                    \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_add.php")
                 );
             }
 
@@ -310,10 +310,10 @@ $workerScript->putJobByClassName(ActesAntivirusWorker::class, $trans->getId());
 if ($api) {
     echo "OK : id généré : " . $apiMsg;
 } else {
-    Helpers:: returnAndExit(
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(
         0,
         $msg,
-        Helpers::getLink("/modules/actes/actes_transac_show.php?id=") . $trans->getId(),
+        \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_show.php?id=") . $trans->getId(),
         $apiMsg
     );
 }

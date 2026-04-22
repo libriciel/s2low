@@ -20,7 +20,7 @@ $me = new User();
 
 if (!$me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -41,7 +41,7 @@ $doc = new HTMLLayout();
 $js = "<script type=\"text/javascript\">\n";
 $js .= "  function redirect_to_create_form(select_form) {\n";
 $js .= "    batch_file_id = select_form.options[select_form.selectedIndex].value;\n";
-$js .= "    document.location='" . Helpers::getLink("/modules/actes/actes_transac_add.php?batchfile=' + batch_file_id;\n");
+$js .= "    document.location='" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_add.php?batchfile=' + batch_file_id;\n");
 $js .= "  }\n";
 $js .= "</script>\n";
 
@@ -57,11 +57,11 @@ $doc->closeSideBar();
 $doc->openContent();
 
 $html .= "<h1>ACTES - Traitement par lots</h1>\n";
-$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . Helpers::getLink("/modules/actes/index.php") . "\" class=\"bouton\">Retour liste transactions</a></p>\n";
+$html .= "<p id=\"back-transaction-btn\"><a class=\"btn btn-default\" href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/index.php") . "\" class=\"bouton\">Retour liste transactions</a></p>\n";
 if (! $me->isSuper() && $me->canEdit($module->get('name'))) {
     $html .= "<div id=\"actions_area\">\n";
     $html .= "<h2>Actions</h2>\n";
-    $html .= "<a class=\"btn btn-primary\" href=\"" . Helpers::getLink("/modules/actes/actes_batch_add.php\">Créer un nouveau lot</a>\n");
+    $html .= "<a class=\"btn btn-primary\" href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_batch_add.php\">Créer un nouveau lot</a>\n");
     $html .= "</div>\n";
 }
 
@@ -89,16 +89,16 @@ if (is_array($batchesList) && count($batchesList) > 0) {
         $batch->init();
 
         $html .= "<tr class=\"alternate" . ($i + 1) . "\">\n";
-        $html .= " <td headers=\"lot\"><a href=\"" . Helpers::getLink("/modules/actes/actes_batch_show.php?id=" . $batch->getId() . "\" title=\"Visualiser les détails du lot n°" . $batch->getId() . "\">" . get_hecho($batch->getId()) . "</a></td>\n");
+        $html .= " <td headers=\"lot\"><a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_batch_show.php?id=" . $batch->getId() . "\" title=\"Visualiser les détails du lot n°" . $batch->getId() . "\">" . get_hecho($batch->getId()) . "</a></td>\n");
         $html .= " <td headers=\"description\">" . get_hecho($batch->get("description")) . "</td>\n";
-        $html .= " <td headers=\"date\">" . Helpers::getDateFromBDDDate($batch->get("submission_date"), true) . "</td>\n";
+        $html .= " <td headers=\"date\">" . \S2lowLegacy\Class\Helpers\DateHelper::getDateFromBDDDate($batch->get("submission_date"), true) . "</td>\n";
         $html .= " <td headers=\"file-remaining\">" . $batch->getUnprocessedFilesCount() . "</td>\n";
         $html .= " <td  headers=\"treatment\" class=\"long_field\">";
 
         if ($batch->getUnprocessedFilesCount() > 0) {
             $html .= $doc->getHTMLSelect("batch_files", $batch->getUnprocessedFilesIdName(), null, " onchange=\"javascript:redirect_to_create_form(this);\"");
         } else {
-            $html .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_batch_delete.php\" onsubmit=\"return confirm('Voulez-vous vraiment supprimer définitivement ce lot ?')\" method=\"post\">\n");
+            $html .= "<form action=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_batch_delete.php\" onsubmit=\"return confirm('Voulez-vous vraiment supprimer définitivement ce lot ?')\" method=\"post\">\n");
             $html .= "<p>Tous les fichiers sont traités&nbsp;:\n";
             $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $batch->getId() . "\" />\n";
             $html .= "<input type=\"submit\" value=\"Supprimer le lot\" />\n";

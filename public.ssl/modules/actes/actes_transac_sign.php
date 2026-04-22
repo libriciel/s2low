@@ -55,7 +55,7 @@ $me = new User();
 
 if (!$me->authenticate()) {
     $_SESSION['error'] = "Échec de l'authentification";
-    header('Location: ' . Helpers::getLink('connexion-status'));
+    header('Location: ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('connexion-status'));
     exit();
 }
 
@@ -65,18 +65,18 @@ if (!$module->isActive() || ! $me->checkDroit($module->get("name"), 'CS')) {
     exit();
 }
 
-$nb_signature = Helpers::getVarFromPost('nb_signature');
+$nb_signature = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost('nb_signature');
 if ($nb_signature == 0) {
     $_SESSION['error'] = "Les signatures n'ont pas pu être récupérées";
-    header('Location:  ' . Helpers::getLink('/modules/actes/index.php'));
+    header('Location:  ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/actes/index.php'));
 }
 
 $all_transaction_id = [];
 
 try {
     for ($i = 1; $i <= $nb_signature; $i++) {
-        $signature = base64_decode(Helpers::getVarFromPost("signature_$i"));
-        $signature_id = Helpers::getVarFromPost("signature_id_$i");
+        $signature = base64_decode(\S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("signature_$i"));
+        $signature_id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("signature_id_$i");
         $transaction_id = $actesSignature->setSignature($signature_id, $signature);
         $all_transaction_id[] = $transaction_id;
         $verifyPKCS7Signature = new VerifyPKCS7Signature(
@@ -106,16 +106,16 @@ try {
     }
 } catch (Exception $exception) {
     $_SESSION['error'] = 'Erreur lors de la signature : ' . $exception->getMessage();
-    header('Location:  ' . Helpers::getLink('/modules/actes/index.php'));
+    header('Location:  ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/actes/index.php'));
 } catch (Throwable $exception) {
     $_SESSION['error'] = '[ Throwable ] Erreur lors de la signature : ' . $exception->getMessage();
-    header('Location:  ' . Helpers::getLink('/modules/actes/index.php'));
+    header('Location:  ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/actes/index.php'));
 }
 
 if (count($all_transaction_id) == 1) {
     $_SESSION['error'] = 'La signature a été enregistrée';
-    header('Location:  ' . Helpers::getLink("/modules/actes/actes_transac_show.php?id=$all_transaction_id[0]"));
+    header('Location:  ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_show.php?id=$all_transaction_id[0]"));
 } else {
     $_SESSION['error'] = 'Les signatures ont été enregistrées';
-    header('Location:  ' . Helpers::getLink('/modules/actes/index.php'));
+    header('Location:  ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/modules/actes/index.php'));
 }

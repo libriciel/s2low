@@ -127,7 +127,7 @@ class DataObject
                 $row = $result->get_next_row();
 
                 foreach (array_keys($this->dbFields) as $key) {
-                    $this->$key = Helpers::getFromBDD($row[$key]);
+                    $this->$key = \S2lowLegacy\Class\Helpers\StringHelper::getFromBDD($row[$key]);
                 }
 
                 return true;

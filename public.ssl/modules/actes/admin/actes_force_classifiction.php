@@ -32,8 +32,8 @@ $classificationCreation->unsetFrequencyRestriction();
 
 
 $result = $classificationCreation->createEnveloppe($authority, null, $force);
-Helpers::returnAndExit(
+\S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(
     ! $result,
     $classificationCreation->getLastMessage(),
-    Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=$authority_id")
+    \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/authorities/admin_authority_edit.php?id=$authority_id")
 );

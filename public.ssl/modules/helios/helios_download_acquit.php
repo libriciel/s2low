@@ -24,7 +24,7 @@ $me = new User();
 
 if (!$me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header_wrapper("Location: " . Helpers::getLink("connexion-status"));
+    header_wrapper("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit_wrapper();
 }
 
@@ -35,7 +35,7 @@ if (!$module->isActive() || !$me->canAccess($module->get("name"))) {
 }
 
 try {
-    $transaction_id = Helpers :: getIntFromGet("id", true);
+    $transaction_id = \S2lowLegacy\Class\Helpers\RequestHelper::getIntFromGet("id", true);
 } catch (Exception $e) {
     $_SESSION["error"] = $e->getMessage();
     header_wrapper("Location: " . WEBSITE_SSL);
@@ -59,12 +59,12 @@ if (isset($transaction_id) && ! empty($transaction_id)) {
         $owner->init();
     } else {
         $_SESSION["error"] = "Erreur d'initialisation de la transaction.";
-        header_wrapper("Location: " . Helpers::getLink("/modules/helios/index.php"));
+        header_wrapper("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/index.php"));
         exit_wrapper();
     }
 } else {
     $_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
-    header_wrapper("Location: " . Helpers::getLink("/modules/helios/index.php"));
+    header_wrapper("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/index.php"));
     exit_wrapper();
 }
 
@@ -73,7 +73,7 @@ $permission = new ModulePermission($serviceUser, "helios");
 
 if (! $permission->canView($me, $owner)) {
     $_SESSION["error"] = "Accès refusé";
-    header_wrapper("Location: " . Helpers::getLink("/modules/helios/index.php"));
+    header_wrapper("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/index.php"));
     exit_wrapper();
 }
 
@@ -93,7 +93,7 @@ try {
     $path = $pesAcquitCloudStorage->getPath($transaction_id);
 } catch (Exception $e) {
     $_SESSION["error"] = "Erreur d'envoi du fichier " . $filename . " : " . $e->getMessage();
-    header_wrapper("Location: " . Helpers::getLink("/modules/helios/index.php"));
+    header_wrapper("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/index.php"));
     exit_wrapper();
 }
 

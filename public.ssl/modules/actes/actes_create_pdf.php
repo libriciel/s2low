@@ -10,11 +10,11 @@ use S2lowLegacy\Class\User;
 
 $bordereauPdfGenerator = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(BordereauPdfGenerator::class);
 
-$id = Helpers :: getVarFromGet("trans_id");
+$id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("trans_id");
 
 if (empty($id)) {
     $_SESSION["error"] = "Pas d'identifiant de transaction spécifié";
-    header_wrapper("Location: " . Helpers::getLink("/modules/actes/index.php"));
+    header_wrapper("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/index.php"));
     exit_wrapper();
 }
 
@@ -30,7 +30,7 @@ $me = new User();
 
 if (!$me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header_wrapper("Location: " . Helpers::getLink("connexion-status"));
+    header_wrapper("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit_wrapper();
 }
 
@@ -45,7 +45,7 @@ $trans = new ActesTransaction();
 $trans->setId($id);
 if (! $trans->init()) {
     $_SESSION["error"] = "Erreur d'initialisation de la transaction.";
-    header_wrapper("Location: " . Helpers::getLink("/modules/actes/index.php"));
+    header_wrapper("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/index.php"));
     exit_wrapper();
 }
 
@@ -60,7 +60,7 @@ $permission = new ModulePermission($serviceUser, "actes");
 
 if (! $permission->canView($me, $owner)) {
     $_SESSION["error"] = "Accès refusé";
-    header_wrapper("Location: " . Helpers::getLink("/modules/actes/index.php"));
+    header_wrapper("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/index.php"));
     exit_wrapper();
 }
 

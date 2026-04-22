@@ -263,7 +263,7 @@ class Log extends DataObject
                     $return_status = true;
                 }
 
-                if (! Helpers::deleteFromFS($zipFile)) {
+                if (! \S2lowLegacy\Class\Helpers\FileSystemHelper::deleteFromFS($zipFile)) {
                     $this->errorMsg = "Erreur système de fichiers";
                     return false;
                 }
@@ -271,7 +271,7 @@ class Log extends DataObject
 
           // Suprression des fichiers temporaires
           // Bien laissé le répertoire à la fin
-            if (! Helpers::deleteFromFS($logFile, $timestampFile, $tmpDir)) {
+            if (! \S2lowLegacy\Class\Helpers\FileSystemHelper::deleteFromFS($logFile, $timestampFile, $tmpDir)) {
                 $this->errorMsg =  "Erreur système de fichiers";
                 return false;
             }
@@ -303,7 +303,7 @@ class Log extends DataObject
     public function generateMessageHorodate()
     {
         $data[] = $this->id;
-        $data[] = date('c', Helpers::getTimestampFromBDDDate($this->date));
+        $data[] = date('c', \S2lowLegacy\Class\Helpers\DateHelper::getTimestampFromBDDDate($this->date));
         $data[] = $this->module;
         $data[] = $this->severity;
         $data[] = $this->issuer;
@@ -328,7 +328,7 @@ class Log extends DataObject
         }
         //Ancienne méthode de génération du message horodaté
         $data[] = $this->id;
-        $data[] = date('Y-m-d H:i:s', Helpers::getTimestampFromBDDDate($this->date));
+        $data[] = date('Y-m-d H:i:s', \S2lowLegacy\Class\Helpers\DateHelper::getTimestampFromBDDDate($this->date));
         $data[] = $this->module;
         $data[] = $this->severity;
         $data[] = $this->issuer;

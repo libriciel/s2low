@@ -18,7 +18,7 @@ if (! $me->isGroupAdminOrSuper()) {
 }
 
 if ($me->isSuper()) {
-    $authority_group_id =  Helpers::getVarFromGet("authority_group_id");
+    $authority_group_id =  \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("authority_group_id");
 } else {
     $authority_group_id = $me->get("authority_group_id");
 }

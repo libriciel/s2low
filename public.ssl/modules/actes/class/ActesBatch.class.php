@@ -104,7 +104,7 @@ class ActesBatch extends DataObject
             $this->storage_dir = $authority->get("siren") . "/" . $this->id;
 
             if (
-                $this->storage_dir == "/" || !Helpers:: createDirTree(
+                $this->storage_dir == "/" || !\S2lowLegacy\Class\Helpers\FileSystemHelper::createDirTree(
                     ACTES_BATCHES_UPLOAD_ROOT . "/" . $this->storage_dir,
                     ACTES_BATCHES_UPLOAD_ROOT
                 )
@@ -131,7 +131,7 @@ class ActesBatch extends DataObject
             }
         }
 
-        if (!Helpers:: deleteFromFS(ACTES_BATCHES_UPLOAD_ROOT . "/" . $this->storage_dir)) {
+        if (!\S2lowLegacy\Class\Helpers\FileSystemHelper::deleteFromFS(ACTES_BATCHES_UPLOAD_ROOT . "/" . $this->storage_dir)) {
             return false;
         }
 
@@ -144,7 +144,7 @@ class ActesBatch extends DataObject
      */
     public function deleteStorage()
     {
-        return Helpers:: deleteFromFS(ACTES_BATCHES_UPLOAD_ROOT . "/" . $this->storage_dir);
+        return \S2lowLegacy\Class\Helpers\FileSystemHelper::deleteFromFS(ACTES_BATCHES_UPLOAD_ROOT . "/" . $this->storage_dir);
     }
 
     /**
@@ -445,13 +445,13 @@ class ActesBatch extends DataObject
                 $ret_value = false;
                 }*/
                 //echo $fiename;
-                //$filename = Helpers :: stripSlashes($file["name"]);
+                //$filename = \S2lowLegacy\Class\Helpers\RequestHelper::stripSlashes($file["name"]);
 
                 // On ne traite pas individuellement les fichiers de signature
                 if (!preg_match("/\.sig$/", $filename)) {
                     if (is_uploaded_file_wrapper($file["tmp_name"])) {
                         // Vérification du type de fichier
-                        $type = Helpers:: getFileType($file["tmp_name"]);
+                        $type = \S2lowLegacy\Class\Helpers\FileSystemHelper::getFileType($file["tmp_name"]);
                         $trace = Trace::getInstance();
 
                         $trace->log(

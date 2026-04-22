@@ -9,8 +9,8 @@ list($module, $me, $myAuthority) = MailInit::getIdentificationParameters();
 
 $db = DatabasePool::getInstance();
 $mailList = new MailList($db, $me->getId());
-$offset = Helpers::getVarFromGet("offset");
-$limit = Helpers::getVarFromGet("limit");
+$offset = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("offset");
+$limit = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("limit");
 
 ?>
 <?php foreach ($mailList->getListMail($offset, $limit) as $info) :?>

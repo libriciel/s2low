@@ -30,7 +30,7 @@ $actionHtml = '';
 
 function return_error_api($error_message)
 {
-    $return_error = Helpers :: getVarFromGet('url_return');
+    $return_error = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet('url_return');
     $return_error = str_replace('%%ERROR%%', 1, $return_error);
     $return_error = str_replace('%%MESSAGE%%', $error_message, $return_error);
     header_wrapper("Location:  $return_error");
@@ -61,7 +61,7 @@ if (! $rgsConnexion->isRgsConnexion()) {
 
 
 
-$id = Helpers :: getVarFromGet('id');
+$id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet('id');
 if (empty($id)) {
     return_error_api("Pas d'identifiant de transaction spécifié");
 }
@@ -100,7 +100,7 @@ $msg4journal = $actesScriptHelper->getMessage($id, $msg);
 
 Log::newEntry(LOG_ISSUER_NAME, $msg4journal, 1, false, 'USER', 'actes', false, $connexion->getId());
 
-$return_ok = Helpers :: getVarFromGet('url_return');
+$return_ok = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet('url_return');
 $return_ok = str_replace('%%ERROR%%', 0, $return_ok);
 $return_ok = str_replace('%%MESSAGE%%', '', $return_ok);
 

@@ -152,7 +152,7 @@ class HTMLLayout extends Layout
         $versionning = VersionningFactory::getInstance();
         $versionningInfo = $versionning->getAllInfo();
 
-        $html .= "                    Offre S²LOW - <a href=\"" . Helpers::getLink("/common/release_notes.php\">\n") .
+        $html .= "                    Offre S²LOW - <a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/common/release_notes.php\">\n") .
             $versionningInfo['version-complete'] . "</a>\n";
 
         if (defined(RENDER_STARTING_TIME)) {
@@ -193,7 +193,7 @@ class HTMLLayout extends Layout
         $html .= "<ul class=\"pagination pagination-sm\">\n";
         foreach (array(10, 20, 50, 100) as $val) {
             if ($dataObj->get("displayItems") != $val) {
-                $html .= "<li><a href=\"" . Helpers::getURLWithParam(array("count" => $val)) . "\" title=\"Afficher " . $val . " éléments par page\">" . $val . "</a></li>\n";
+                $html .= "<li><a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getURLWithParam(array("count" => $val)) . "\" title=\"Afficher " . $val . " éléments par page\">" . $val . "</a></li>\n";
             } else {
                 $html .= "<li class=\"disabled\"><a href=\"#\">" . $val . "</a></li>\n";
             }
@@ -216,7 +216,7 @@ class HTMLLayout extends Layout
             $args = preg_replace("/&/", "&amp;", $args);
             $sep = (mb_strlen($args) > 0) ? "&amp;" : "";
 
-            $html .= "<li><a href=\"" . Helpers::getURLWithParam(array("page" => ($dataObj->get("currentPage") - 1))) . "\" title=\"Afficher la page précédente\">&laquo;</a></li>\n";
+            $html .= "<li><a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getURLWithParam(array("page" => ($dataObj->get("currentPage") - 1))) . "\" title=\"Afficher la page précédente\">&laquo;</a></li>\n";
         } else {
             $html .= "<li class=\"disabled\"><a href=\"#\">&laquo;</a></li>\n";
         }
@@ -228,7 +228,7 @@ class HTMLLayout extends Layout
             if ($page_number == $i) {
                 $html .= "<li class=\"active\"><a href=\"#\">" . $i . "</a></li>\n";
             } else {
-                $html .= "<li><a href=\"" . Helpers::getURLWithParam(array("page" => $i)) . "\" title=\"Afficher la page " . $i . "\">" . $i . "</a></li>\n";
+                $html .= "<li><a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getURLWithParam(array("page" => $i)) . "\" title=\"Afficher la page " . $i . "\">" . $i . "</a></li>\n";
             }
         }
         if ($page_number < $nb_total_page) {
@@ -237,7 +237,7 @@ class HTMLLayout extends Layout
             $args = preg_replace("/&/", "&amp;", $args);
             $sep = (mb_strlen($args) > 0) ? "&amp;" : "";
 
-            $html .= "<li><a href=\"" . Helpers::getURLWithParam(array("page" => ($dataObj->get("currentPage") + 1))) . "\" title=\"Afficher la page suivante\">&raquo;</a></li>\n";
+            $html .= "<li><a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getURLWithParam(array("page" => ($dataObj->get("currentPage") + 1))) . "\" title=\"Afficher la page suivante\">&raquo;</a></li>\n";
         } else {
             $html .= "<li class=\"disabled\"><a href=\"#\">&raquo;</a></li>\n";
         }

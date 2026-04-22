@@ -8,7 +8,7 @@ require_once('../../../init/init.php');
 
 $doc = new MailLayout('xhtml_mail.tpl.php');
 $doc->setTitle(WEBSITE_TITLE);
-$mail_emis_id = Helpers::getVarFromGet("mail_emis_id");
+$mail_emis_id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("mail_emis_id");
 
 $error_message = $_SESSION['last_error'] ?? "";
 unset($_SESSION["last_error"]);

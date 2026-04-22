@@ -30,7 +30,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION['error'] = "Échec de l'authentification";
-    header('Location: ' . Helpers::getLink('connexion-status'));
+    header('Location: ' . \S2lowLegacy\Class\Helpers\UrlHelper::getLink('connexion-status'));
     exit();
 }
 
@@ -55,7 +55,7 @@ $doc->addHeader('Date de reception;Nom du fichier transmis;SIREN de la collectiv
 if (count($history) > 0) {
     foreach ($history as $env) {
         $entry = [];
-        $timestamp = Helpers::getTimestampFromBDDDate($env['date']);
+        $timestamp = \S2lowLegacy\Class\Helpers\DateHelper::getTimestampFromBDDDate($env['date']);
 
       // Date de transmission
         $entry[] = date('c', $timestamp);

@@ -48,17 +48,17 @@ use S2lowLegacy\Class\Helpers;
                             href="
                             <?php
                             $relativePath = '/admin/authorities/admin_authority_edit.php?id=' . $info['authority_id'];
-                            echo Helpers::getLink($relativePath);
+                            echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink($relativePath);
                             ?>"
                     >
                         <?php hecho($info['authority_name']) ?>
                     </a>
                 </td>
                 <td>
-                    <a href="<?php echo Helpers::getLink('/admin/users/admin_user_edit.php?id=' . $info['id']); ?>"
+                    <a href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/admin/users/admin_user_edit.php?id=' . $info['id']); ?>"
                        class="icon"
                        )>
-                        <img src="<?php echo Helpers::getLink('/custom/images/erreur.png'); ?>" alt="image_modif"
+                        <img src="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/custom/images/erreur.png'); ?>" alt="image_modif"
                              title="Modifier"/>
                     </a>
                 </td>

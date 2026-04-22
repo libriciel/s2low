@@ -11,9 +11,9 @@ list($module, $me, $myAuthority) = MailInit::getIdentificationParameters();
 $db = DatabasePool::getInstance();
 $mailList = new MailList($db, $me->getId());
 
-$id = Helpers::getVarFromGet("id");
+$id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("id");
 if (!$id) {
-    echo "Usage : " . Helpers::getLink("/modules/mail/api/detail-mail.php?id=xxxx");
+    echo "Usage : " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/mail/api/detail-mail.php?id=xxxx");
     exit;
 }
 

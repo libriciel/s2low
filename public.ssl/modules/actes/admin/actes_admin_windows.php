@@ -19,7 +19,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -45,7 +45,7 @@ $doc->openContent();
 
 $html .= "<h1>Gestion des fenêtres de transmission</h1>\n";
 $html .= "<h2>Actions</h2>\n";
-$html .= "<a href=\"" . Helpers::getLink("/modules/actes/admin/actes_admin_window_edit.php") . "\" class=\"btn btn-primary\">Ajouter une fenêtre</a>\n";
+$html .= "<a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/admin/actes_admin_window_edit.php") . "\" class=\"btn btn-primary\">Ajouter une fenêtre</a>\n";
 $html .= "<h2>Liste des fenêtres existantes</h2>\n";
 
 if (count($windows) > 0) {
@@ -65,10 +65,10 @@ if (count($windows) > 0) {
     foreach ($windows as $window) {
         $html .= "<tr>\n";
         $html .= " <td>" . $window["id"] . "</td>\n";
-        $html .= " <td>" . Helpers::getDateFromBDDDate($window["start"], true) . "</td>\n";
-        $html .= " <td>" . Helpers::getDateFromBDDDate($window["end"], true) . "</td>\n";
+        $html .= " <td>" . \S2lowLegacy\Class\Helpers\DateHelper::getDateFromBDDDate($window["start"], true) . "</td>\n";
+        $html .= " <td>" . \S2lowLegacy\Class\Helpers\DateHelper::getDateFromBDDDate($window["end"], true) . "</td>\n";
         $html .= " <td>" . $window["rate_limit"] . "</td>\n";
-        $html .= " <td><a href=\"" . Helpers::getLink("/modules/actes/admin/actes_admin_window_edit.php?id=" . $window["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n");
+        $html .= " <td><a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/admin/actes_admin_window_edit.php?id=" . $window["id"] . "\" class=\"icon\"><img src=\"" . WEBSITE_SSL . "/custom/images/erreur.png\" alt=\"image_modif\" title=\"Modifier\" /></a></td>\n");
         $html .= "</tr>\n";
 
         $i = ($i + 1) % 2;

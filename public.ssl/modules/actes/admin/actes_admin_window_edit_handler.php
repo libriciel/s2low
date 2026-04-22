@@ -40,7 +40,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -51,12 +51,12 @@ if (! $me->isSuper() || ! $module->isActive() || ! $me->canAccess($module->get("
 }
 
 // Récupération des variables du POST
-$id = Helpers::getVarFromPost("id");
-$window_start_date = Helpers::getVarFromPost("window_start_date", true);
-$window_start_hour = Helpers::getVarFromPost("window_start_hour", true);
-$window_end_date = Helpers::getVarFromPost("window_end_date", true);
-$window_end_hour = Helpers::getVarFromPost("window_end_hour", true);
-$rate_limit = Helpers::getVarFromPost("rate_limit", true);
+$id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("id");
+$window_start_date = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("window_start_date", true);
+$window_start_hour = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("window_start_hour", true);
+$window_end_date = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("window_end_date", true);
+$window_end_hour = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("window_end_hour", true);
+$rate_limit = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("rate_limit", true);
 
 // Mode modification ou pas
 $zeWin = new ActesTransmissionWindow();
@@ -66,7 +66,7 @@ if (isset($id) && ! empty($id)) {
     $zeWin->setId($id);
     if (! $zeWin->init()) {
         $_SESSION["error"] = "Erreur lors de la modification de la fenêtre.";
-        header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_windows.php"));
+        header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/admin/actes_admin_windows.php"));
         exit();
     } else {
         $mod = true;
@@ -80,9 +80,9 @@ $window_end_stamp = ActesTransmissionWindow::roundDate($window_end_date, $window
 if ($window_start_stamp > $window_end_stamp) {
     $_SESSION["error"] = "La date de fin est antérieure à la date de début.";
     if ($zeWin->isNew()) {
-        header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_window_edit.php"));
+        header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/admin/actes_admin_window_edit.php"));
     } else {
-        header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_window_edit.php?id=") . $zeWin->getId());
+        header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/admin/actes_admin_window_edit.php?id=") . $zeWin->getId());
     }
     exit();
 }
@@ -95,9 +95,9 @@ if (($id = $zeWin->hasCollision()) !== false) {
     $_SESSION["error"] = "La fenêtre interfère avec une ou plusieurs fenêtres déjà définies&nbsp;:<br />\nFenêtre numéro " . implode(', ', $id);
 
     if ($zeWin->isNew()) {
-        header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_window_edit.php"));
+        header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/admin/actes_admin_window_edit.php"));
     } else {
-        header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_window_edit.php?id=") . $zeWin->getId());
+        header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/admin/actes_admin_window_edit.php?id=") . $zeWin->getId());
     }
     exit();
 }
@@ -111,9 +111,9 @@ if (! $zeWin->save()) {
     $_SESSION["error"] = nl2br($msg);
 
     if ($zeWin->isNew()) {
-        header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_window_edit.php"));
+        header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/admin/actes_admin_window_edit.php"));
     } else {
-        header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_window_edit.php?id=") . $zeWin->getId());
+        header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/admin/actes_admin_window_edit.php?id=") . $zeWin->getId());
     }
     exit();
 } else {
@@ -124,10 +124,10 @@ if (! $zeWin->save()) {
     }
 
     $_SESSION["error"] = nl2br($msg);
-    Helpers::purgeTempSession();
+    \S2lowLegacy\Class\Helpers\SessionHelper::purgeTempSession();
 
     $workerScript->rebuildQueue($worker);
 
-    header("Location: " . Helpers::getLink("/modules/actes/admin/actes_admin_window_edit.php?id=") . $zeWin->getId());
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/admin/actes_admin_window_edit.php?id=") . $zeWin->getId());
     exit();
 }

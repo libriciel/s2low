@@ -7,7 +7,7 @@ use S2lowLegacy\Class\Helpers;
 ?>
 <h1><?php hecho($this->title); ?></h1>
 <p id="back-transaction-btn">
-    <a href="<?php echo Helpers::getLink("/admin/authorities/admin_authority_sae.php?id=$this->authority_id"); ?>" class="btn btn-default">Retour configuration SAE</a>
+    <a href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/authorities/admin_authority_sae.php?id=$this->authority_id"); ?>" class="btn btn-default">Retour configuration SAE</a>
 </p>
 
 <h2>Actes <?php echo $this->pastellProperties->actes_send_auto ? "(mode automatique)" : ""?></h2>

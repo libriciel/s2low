@@ -8,7 +8,7 @@ use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
-$transId = (int)Helpers::getVarFromGet("transaction");
+$transId = (int)\S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("transaction");
 
 $transaction['id'] = $transId;
 $transaction['resultat'] = "KO";

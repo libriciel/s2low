@@ -107,7 +107,7 @@ class ActesIncludedFile extends DataObject
     {
         if (isset($this->filename)) {
             // Il faut extraire le fichier demandé dans un stockage temporaire
-            $tmpDir = "/tmp/" . Helpers::genTempName();
+            $tmpDir = "/tmp/" . \S2lowLegacy\Class\Helpers\StringHelper::genTempName();
 
             $this->errorMsg = '';
             if (!@mkdir($tmpDir)) {
@@ -148,7 +148,7 @@ class ActesIncludedFile extends DataObject
 
                     $acteTamponne = $objectInstancier->get(ActeTamponne::class);
                     $acteTamponne->render($pathpdforig, $this->get("transaction_id"), $this->date_affichage);
-                } elseif (!Helpers::sendFileToBrowser($tmpDir . "/" . $this->filename, $browserName, $this->filetype)) {
+                } elseif (!\S2lowLegacy\Class\Helpers\ResponseHelper::sendFileToBrowser($tmpDir . "/" . $this->filename, $browserName, $this->filetype)) {
                     $this->errorMsg .= "Erreur envoi fichier";
                     $ret_value = false;
                 }

@@ -11,7 +11,7 @@ class FancyDate
         if (! $date) {
             return false;
         }
-        return Helpers::TimestampToString(strtotime($date));
+        return \S2lowLegacy\Class\Helpers\DateHelper::TimestampToString(strtotime($date));
     }
 
     public function getDateHeureFrancais($date)

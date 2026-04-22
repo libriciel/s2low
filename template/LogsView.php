@@ -5,8 +5,8 @@ use S2lowLegacy\Class\DatePicker;
 
 ?>
 
-<script type="text/javascript" src="<?php echo Helpers::getLink('/jsmodules/jquery.js');?>"></script>
-<script type="text/javascript" src="<?php echo Helpers::getLink('/jsmodules/jqueryui.js');?>"></script>
+<script type="text/javascript" src="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/jsmodules/jquery.js');?>"></script>
+<script type="text/javascript" src="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/jsmodules/jqueryui.js');?>"></script>
 
 
 <h1><?php echo $this->h1_title ?></h1>
@@ -129,7 +129,7 @@ use S2lowLegacy\Class\DatePicker;
             <?php foreach ($this->logs_list as $logEntry) : ?>
                 <tr>
                     <td headers="date">
-                        <?php echo Helpers::getDateFromBDDDate($logEntry['date'], true) ?>
+                        <?php echo \S2lowLegacy\Class\Helpers\DateHelper::getDateFromBDDDate($logEntry['date'], true) ?>
                     </td>
                     <td headers="author">
                         <?php hecho($logEntry['issuer']) ?>
@@ -151,12 +151,12 @@ use S2lowLegacy\Class\DatePicker;
                     </td>
                     <td headers="timestamp">
                             <a href="<?php
-                            echo Helpers::getLink('/common/logs_get_timestamp.php?id=' . $logEntry['id']);
+                            echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/common/logs_get_timestamp.php?id=' . $logEntry['id']);
                             ?>"
                                title="Télécharger une archive contenant l'entrée de journal n°<?php
                                 echo $logEntry['id'] ?> et sa signature"
                                class="icon">
-                                <img src="<?php echo Helpers::getLink('/custom/images/timestamping_icon.png'); ?>"
+                                <img src="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/custom/images/timestamping_icon.png'); ?>"
                                      alt="timestamp"
                                 />
                             </a>

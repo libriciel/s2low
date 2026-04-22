@@ -38,11 +38,11 @@ $html = "<div id=\"content\">\n";
 $html .= "<h1>Utilitaires - ACTES</h1>\n";
 $html .= "<h2 class=\"toggle_title\" onclick=\"javascript:toggle_visibility('export_area');\">Export liste transactions</h2>\n";
 $html .= "<p id=\"export_area\" style=\"display: block;\">Utilisez le lien ci-dessous pour obtenir un fichier au format CSV de toutes les transactions envoyées au ministère&nbsp;:<br />";
-$html .= "<a style=\"margin-left: 10px\" href=\"" . Helpers::getLink("/modules/actes/admin/actes_admin_transac_export.php\">Télécharger le fichier</a></p>\n");
+$html .= "<a style=\"margin-left: 10px\" href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/admin/actes_admin_transac_export.php\">Télécharger le fichier</a></p>\n");
 $html .= "<h2 class=\"toggle_title\" onclick=\"javascript:toggle_visibility('window_area');\">Gestion des fenêtres de transmission</h2>\n";
 $html .= "<p id=\"window_area\" style=\"display: block;\">\n";
 $html .= "La transmission des données vers le serveur du ministère se fait par défaut à tout moment de la journée sans limitation de volume. Il est cependant possible de définir des fenêtres horaires où le volume de transmission autorisé sera limité à une certaine taille ou tout simplement nul.<br />\n";
-$html .= "<a style=\"margin-left: 10px\" href=\"" . Helpers::getLink("/modules/actes/admin/actes_admin_windows.php\">Accéder à l'interface de définition des fenêtres</a></p>\n");
+$html .= "<a style=\"margin-left: 10px\" href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/admin/actes_admin_windows.php\">Accéder à l'interface de définition des fenêtres</a></p>\n");
 
 ob_start();
 

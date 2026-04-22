@@ -55,7 +55,7 @@ class HeliosController extends Controller
 
         $me = new User();
         if (!$me->authenticate()) {
-            $this->redirectSSL(Helpers::getLink("connexion-status"), "Échec de l'authentification");
+            $this->redirectSSL(\S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"), "Échec de l'authentification");
         }
 
         $userId = $me->getId();
@@ -69,14 +69,14 @@ class HeliosController extends Controller
         try {
             $id_transaction = $this->import($userId);
         } catch (Exception $e) {
-            Helpers :: returnAndExit(1, $e->getMessage(), Helpers::getLink("/modules/helios/helios_fichier_import.php"));
+            \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, $e->getMessage(), \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_fichier_import.php"));
         }
 
 
 
 
         $msg = "Création de la transation n°" . $id_transaction . ". Résultat ok.";
-        Helpers :: returnAndExit(0, $msg, Helpers::getLink("/modules/helios/helios_transac_show.php?id=") . $id_transaction);
+        \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(0, $msg, \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/helios_transac_show.php?id=") . $id_transaction);
     }
 
     public function import($user_id)
@@ -146,7 +146,7 @@ class HeliosController extends Controller
         $moduleSQL = new ModuleSQL($this->getSQLQuery());
         $module_info = $moduleSQL->getInfoByName(self::MODULE_NAME);
 
-        $must_signed = Helpers::getVarFromPost("must_signed", true);
+        $must_signed = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("must_signed", true);
 
         $siren = $authority_info['siren'];
 
@@ -229,7 +229,7 @@ class HeliosController extends Controller
 
         $doc->save($xmlFile);
 
-        if (!Helpers::sendFileToBrowser($xmlFile, "import.xml", "text/xml")) {
+        if (!\S2lowLegacy\Class\Helpers\ResponseHelper::sendFileToBrowser($xmlFile, "import.xml", "text/xml")) {
             echo "KO\nimpossible d'envoyer le fichier XML";
         }
         unlink($xmlFile);

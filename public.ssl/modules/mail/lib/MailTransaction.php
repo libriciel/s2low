@@ -45,9 +45,9 @@ class MailTransaction extends DataObject
     public function newSave($id)
     {
         $this->set("user_id", $id);
-        $this->set("objet", Helpers::getVarFromPost("objet"));
-        $this->set("password", Helpers::getVarFromPost("psw1"));
-        $this->set("message", Helpers::getVarFromPost("message"));
+        $this->set("objet", \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("objet"));
+        $this->set("password", \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("psw1"));
+        $this->set("message", \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("message"));
         $this->set("status", self::STATUS_NO_CONFIRMATION);
         $now = date("Y-m-d H:i:s");
         $this->set("date_envoi", $now);

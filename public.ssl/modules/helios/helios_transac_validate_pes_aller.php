@@ -100,7 +100,7 @@ ob_start();
 
     <p id="back-user-btn">
         <a
-            href="<?php echo Helpers::getLink("modules/helios/helios_transac_show.php?id=$transaction_id") ?>"
+            href="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("modules/helios/helios_transac_show.php?id=$transaction_id") ?>"
             class="btn btn-default"
             title="Retour à la transaction"
             >

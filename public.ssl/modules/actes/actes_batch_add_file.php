@@ -11,20 +11,20 @@ $logger = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->
 // Instanciation du module courant
 $module = new Module();
 if (!$module->initByName("actes")) {
-    Helpers::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
 }
 
 $me = new User();
 
 if (!$me->authenticate()) {
-    Helpers::returnAndExit(1, "Échec de l'authentification", Helpers::getLink("connexion-status"));
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Échec de l'authentification", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
 }
 
 if ($me->isGroupAdminOrSuper() || !$module->isActive() || ! $me->canAccess($module->get("name"))) {
-    Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 
-$batchId = Helpers::getIntFromPost("batch_id");
+$batchId = \S2lowLegacy\Class\Helpers\RequestHelper::getIntFromPost("batch_id");
 
 $zeBatch = new ActesBatch($batchId, true);
 $zeBatch->init();

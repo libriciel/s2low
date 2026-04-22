@@ -26,7 +26,7 @@ $me = new User();
 
 if (!$me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -38,13 +38,13 @@ if ($me->isGroupAdminOrSuper() || !$module->isActive() || !$me->checkDroit($modu
 
 if ($module->getParam("paper") == "on") {
     $_SESSION["error"] = "Mode «&nbsp;papier&nbsp;» actif. Accès interdit.";
-    header("Location: " . Helpers::getLink("/modules/actes/"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/"));
     exit();
 }
 
-$related_id = Helpers::getVarFromPost("id");
+$related_id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost("id");
 if (!$related_id) {
-    $related_id = Helpers::getVarFromGet("id");
+    $related_id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("id");
 }
 
 $trans = new ActesTransaction($related_id);
@@ -62,7 +62,7 @@ $typeReponse = array(
 
 $doc = new HTMLLayout();
 
-$doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
+$doc->addHeader("<script src=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 
 
 
@@ -189,7 +189,7 @@ $html .= "<div  class=\"bs-callout bs-callout-info\">\n";
 
 $html .= "<h3>Note&nbsp;:</h3>\n";
 $html .= "<p>Pour générer les signatures numériques des fichiers joints, sélectionnez d'abord les fichiers dans le formulaire ci-contre puis utilisez le bouton ci-dessous. Une nouvelle fenêtre s'ouvrira permettant de signer les fichiers.</p>\n";
-$html .= "<form action=\"" . Helpers::getLink("/modules/actes/applet/index.php\" method=\"post\" id=\"sign_form\" onsubmit=\"javascript:return open_sign_window();\">\n");
+$html .= "<form action=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/applet/index.php\" method=\"post\" id=\"sign_form\" onsubmit=\"javascript:return open_sign_window();\">\n");
 $html .= "<p><input class=\"submit_button btn btn-default\" id=\"sign_submit_button\" type=\"submit\" value=\"Générer les signatures\" />\n";
 $html .= "</p></form>\n";
 $html .= "</div>\n";
@@ -199,7 +199,7 @@ $doc->openContent();
 
 // Zone contenu
 $html = "<h1>ACTES - Dématérialisation du contrôle de légalité</h1>\n";
-$html .= "<p id=\"back-transaction-btn\"><a href=\"" . Helpers::getLink("/modules/actes/\" class=\"btn btn-default\">Retour liste transactions</a></p>\n");
+$html .= "<p id=\"back-transaction-btn\"><a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/\" class=\"btn btn-default\">Retour liste transactions</a></p>\n");
 $html .= "<h2>Réponse à un courrier</h2>\n";
 
 
@@ -208,14 +208,14 @@ $html .= "<table class=\"data table table-bordered\">\n";
 $html .= $doc->getHTMLArrayline("Type de transaction", $transactionTypes[$trans->get("type")]);
 $html .= $doc->getHTMLArrayline(
     "Acte ",
-    "<a href=\"" . Helpers::getLink("/modules/actes/actes_transac_show.php?id=" . $trans->getId() . "\">")
+    "<a href=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_show.php?id=" . $trans->getId() . "\">")
      . $trans->get("number") . "</a>"
 );
 $html .= "</table>\n";
 $html .= "</div>\n";
 $html .= "<br />\n";
 
-$html .= "<form id=\"reply-transac-content\" role=\"form\" class=\"form\" action=\"" . Helpers::getLink("/modules/actes/actes_transac_reponse_create.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm(" . $trans->getValidationTrio('nature_code', 'number', 'decision_date', 'title', 'subject') . ", 'classif1', 'Classification', 'RisInt'");
+$html .= "<form id=\"reply-transac-content\" role=\"form\" class=\"form\" action=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/actes_transac_reponse_create.php\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"javascript:if (validateForm(" . $trans->getValidationTrio('nature_code', 'number', 'decision_date', 'title', 'subject') . ", 'classif1', 'Classification', 'RisInt'");
 $html .= ", 'acte_pdf_file', 'Fichier PDF contenant la réponse', 'RisString', 'acte_attachments[]', 'Pièces jointes', 'isString'";
 $html .= ")) { toggle_upload('form_progress', progress_bar); return true; } else { return false; }\">\n";
 
@@ -227,7 +227,7 @@ if ($trans->isType(TypeTransaction::DemandePieceComplementaire) || $trans->isTyp
     $html .=  $doc->getHTMLSelect(
         "type_envoie",
         $typeReponse[$trans->get("type")],
-        Helpers :: getFromSession("type_envoie")
+        \S2lowLegacy\Class\Helpers\SessionHelper::getFromSession("type_envoie")
     ) . "\n";
     $html .= " </div>";
 } else {

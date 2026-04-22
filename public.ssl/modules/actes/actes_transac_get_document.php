@@ -10,21 +10,21 @@ header_wrapper("Content-type: text/plain");
 // Instanciation du module courant
 $module = new Module();
 if (!$module->initByName("actes")) {
-    Helpers::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
 }
 
 $me = new User();
 
 if (!$me->authenticate()) {
-    Helpers::returnAndExit(1, "Échec de l'authentification", Helpers::getLink("connexion-status"));
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Échec de l'authentification", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
 }
 
 if ($me->isSuper() || !$module->isActive() || !$me->canAccess($module->get("name"))) {
-    Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 
-$transId = Helpers::getVarFromGet("id");
-$unique_id = Helpers::getVarFromGet("unique_id");
+$transId = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("id");
+$unique_id = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("unique_id");
 
 if ($unique_id) {
     $transId = ActesTransaction::getTransactionFromUniqueId($unique_id);

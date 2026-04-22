@@ -8,7 +8,7 @@ list($module, $me, $myAuthority) = MailInit::getIdentificationParameters();
 if (! $me->isAuthorityAdmin()) {
         exit;
 }
-$name = Helpers::getVarFromPost('name');
+$name = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromPost('name');
 
 if (! $name) {
     $_SESSION['error'] = "Le nom du groupe ne doit pas être vide !";

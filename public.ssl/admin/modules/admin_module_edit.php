@@ -11,7 +11,7 @@ $me = new User();
 
 if (!$me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -35,13 +35,13 @@ if (isset($id) && !empty($id)) {
 
 if (! $mod) {
     $_SESSION["error"] = "Pas d'identifiant de module spécifié.";
-    header("Location: " . Helpers::getLink("/admin/modules/admin_modules.php"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/modules/admin_modules.php"));
     exit();
 }
 
 $doc = new HTMLLayout();
 
-$doc->addHeader("<script src=\"/" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
+$doc->addHeader("<script src=\"/" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 
 $doc->setTitle("Modification d'un module");
 
@@ -54,7 +54,7 @@ $doc->openContent();
 $html .= "<h1>Gestion des modules</h1>\n";
 $html .= "<p id=\"back-transaction-btn\"><a href=\"admin_modules.php\" class=\"btn btn-default\">Retour liste modules</a></p>\n";
 $html .= "<h2>Modification d'un module</h2>\n";
-$html .= "<form action=\"" . Helpers::getLink("/admin/modules/admin_module_edit_handler.php\" method=\"post\" name=\"form\" onsubmit=\"javascript:return validateForm(" . $zeModule->getValidationTrio('status') . ");\">\n");
+$html .= "<form action=\"" . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/admin/modules/admin_module_edit_handler.php\" method=\"post\" name=\"form\" onsubmit=\"javascript:return validateForm(" . $zeModule->getValidationTrio('status') . ");\">\n");
 $html .= "<input type=\"hidden\" name=\"id\" value=\"" . $zeModule->getId() . "\" />\n";
 $html .= "<div class=\"data_table\">\n";
 $html .= "<table class=\"data\">\n";

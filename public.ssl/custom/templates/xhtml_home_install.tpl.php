@@ -20,7 +20,7 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" ?>
     <body>
         <div id="bandeau_s2low" class="container">
             <a href='<?php echo WEBSITE_SSL ?>'>
-                <img src="<?php echo Helpers::getLink("/custom/images/bandeau_s2low.jpg"); ?>"
+                <img src="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/custom/images/bandeau_s2low.jpg"); ?>"
                      alt="bandeau s2low"
                 />
             </a>

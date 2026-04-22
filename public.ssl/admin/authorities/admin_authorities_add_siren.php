@@ -24,7 +24,7 @@ if (! $me->isGroupAdminOrSuper()) {
 $authority_group_id = false;
 
 if ($me->isSuper()) {
-        $gid = Helpers::getVarFromGet("authority_group_id");
+        $gid = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("authority_group_id");
     if (!is_numeric($gid)) {
             $jsonOutput->displayErrorAndExit("identifiant groupe invalide");
     } else {
@@ -34,7 +34,7 @@ if ($me->isSuper()) {
         $authority_group_id = $me->get("authority_group_id");
 }
 /** @var Siren $theSiren */
-$theSiren  = $sirenFactory->get(Helpers::getVarFromGet("siren"));
+$theSiren  = $sirenFactory->get(\S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("siren"));
 if (! $theSiren->isValid()) {
         $jsonOutput->displayErrorAndExit("siren non valide");
 }

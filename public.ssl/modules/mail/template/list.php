@@ -152,7 +152,7 @@
                                 <td headers="detail">
                                     <a href="index.php?command=show&trans_id=<?php echo $MailTrans['id']; ?>">
                                         <img
-                                                src="<?php echo Helpers::getLink('/custom/images/erreur.png'); ?>"
+                                                src="<?php echo \S2lowLegacy\Class\Helpers\UrlHelper::getLink('/custom/images/erreur.png'); ?>"
                                                 alt="image_modif" title="Afficher le détail"
                                         >
                                     </a>

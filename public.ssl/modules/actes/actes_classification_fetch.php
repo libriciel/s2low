@@ -8,17 +8,17 @@ use S2lowLegacy\Class\User;
 
 $module = new Module();
 if (! $module->initByName("actes")) {
-    Helpers::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
 }
 
 $me = new User();
 
 if (! $me->authenticate()) {
-    Helpers::returnAndExit(1, "Échec de l'authentification", Helpers::getLink("connexion-status"));
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Échec de l'authentification", \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
 }
 
 if ($me->isGroupAdminOrSuper() || ! $module->isActive() || ! $me->checkDroit($module->get("name"), 'CS')) {
-    Helpers::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Accès refusé", WEBSITE_SSL);
 }
 
 $myAuthority = new Authority($me->get("authority_id"));
@@ -26,9 +26,9 @@ $myAuthority = new Authority($me->get("authority_id"));
 $zeClassif = new ActesClassification();
 
 if (! $zeClassif->initWithLastSuccessful($myAuthority->getId())) {
-    Helpers::returnAndExit(1, "Erreur de récupération de la dernière classification.", WEBSITE_SSL);
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Erreur de récupération de la dernière classification.", WEBSITE_SSL);
 }
 
 if (! $zeClassif->pushXMLData()) {
-    Helpers::returnAndExit(1, "Erreur lors de l'envoi de la classification.", WEBSITE_SSL);
+    \S2lowLegacy\Class\Helpers\ResponseHelper::returnAndExit(1, "Erreur lors de l'envoi de la classification.", WEBSITE_SSL);
 }

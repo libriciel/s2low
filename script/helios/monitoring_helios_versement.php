@@ -13,7 +13,7 @@ $sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
 
 function creationurl($idcoll, $status)
 {
-    $URL = Helpers::getLink("/modules/helios/index.php?status=$status&num=&min_submission_date=&min_ack_date=&max_submission_date=&max_ack_date=&authority=$idcoll&nomFic=");
+    $URL = \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/helios/index.php?status=$status&num=&min_submission_date=&min_ack_date=&max_submission_date=&max_ack_date=&authority=$idcoll&nomFic=");
     return $URL;
 }
 

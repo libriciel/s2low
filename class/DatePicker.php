@@ -55,6 +55,6 @@ class DatePicker
         );
         $formatter->setPattern($format);
 
-        return $formatter->format(Helpers::ansiDateToTimestamp($ansiDate));
+        return $formatter->format(\S2lowLegacy\Class\Helpers\DateHelper::ansiDateToTimestamp($ansiDate));
     }
 }

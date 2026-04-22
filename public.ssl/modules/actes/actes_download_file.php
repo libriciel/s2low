@@ -20,7 +20,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("connexion-status"));
     exit();
 }
 
@@ -30,11 +30,11 @@ if (! $module->isActive() || ! $me->canAccess($module->get('name'))) {
     exit();
 }
 
-$envId = Helpers::getVarFromGet("env");
-$fileId = Helpers::getVarFromGet("file");
-$type = Helpers::getVarFromGet("type");
-$tampon = Helpers::getVarFromGet("tampon");
-$date_affichage = Helpers::getVarFromGet("date_affichage");
+$envId = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("env");
+$fileId = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("file");
+$type = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("type");
+$tampon = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("tampon");
+$date_affichage = \S2lowLegacy\Class\Helpers\RequestHelper::getVarFromGet("date_affichage");
 
 $myAuthority = new Authority($me->get("authority_id"));
 
@@ -82,7 +82,7 @@ $permission = new ModulePermission($serviceUser, "actes");
 
 if (! $permission->canView($me, $owner)) {
     $_SESSION["error"] = "Accès refusé";
-    header("Location: " . Helpers::getLink("/modules/actes/index.php"));
+    header("Location: " . \S2lowLegacy\Class\Helpers\UrlHelper::getLink("/modules/actes/index.php"));
     exit();
 }
 
