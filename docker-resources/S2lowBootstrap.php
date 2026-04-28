@@ -6,7 +6,6 @@ use S2lowLegacy\Class\User;
 use S2lowLegacy\Controller\PostgreSQLController;
 use S2lowLegacy\Lib\SQLQuery;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class S2lowBootstrap
@@ -40,7 +39,6 @@ class S2lowBootstrap
             $this->sqlQuery->waitStarting(function ($m) {
                 echo "$m\n";
             });
-            $this->dbUpdate();
             $this->insertDemoS();
             $this->populateDatabase();
         } catch (\Exception $e) {
@@ -89,13 +87,6 @@ class S2lowBootstrap
         if ($return_var != 0) {
             throw new \Exception("Impossible de générer ou de trouver le certificat du site $hostname !");
         }
-    }
-
-    private function dbUpdate()
-    {
-        $command = $this->app->find('doctrine:migrations:migrate');
-        $commandTester = new CommandTester($command);
-        $commandTester->execute(['--no-interaction' => true]);
     }
 
     private function insertDemos()
