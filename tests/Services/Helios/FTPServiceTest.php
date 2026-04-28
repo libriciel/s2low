@@ -224,12 +224,6 @@ class FTPServiceTest extends S2lowTestCase
 
         $this->ftpServiceWrapperMock
             ->expects(self::once())
-            ->method('chdir')
-            ->with($this->ftpConnectionMock, 'response_server_path')
-            ->willReturn(true);
-
-        $this->ftpServiceWrapperMock
-            ->expects(self::once())
             ->method('nlist')
             ->with($this->ftpConnectionMock, $currentDirectorySyntax)
             ->willReturn(['file1', 'file2']);
@@ -260,27 +254,6 @@ class FTPServiceTest extends S2lowTestCase
 
     /**
      * @return void
-     * @throws Exception
-     */
-    public function testGetError1()
-    {
-        $this->setupConnection();
-
-        $this->ftpServiceWrapperMock
-            ->expects(self::once())
-            ->method('chdir')
-            ->willReturn(false);
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Impossible d\'aller sur le répertoire distant response_server_path');
-
-        $connection = $this->getDGFiPConnection(false, DGFiPConnectionMode::GATEWAY);
-        $connection->connect();
-        $connection->getFileNames();
-    }
-
-    /**
-     * @return void
      * @throws \Exception
      */
     public function testGetError2()
@@ -296,7 +269,7 @@ class FTPServiceTest extends S2lowTestCase
             ->willReturn(false);
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Impossible de lister le contenu du répertoire distant response_server_path');
+        $this->expectExceptionMessage('Impossible de lister le contenu du répertoire distant');
 
         $connection = $this->getDGFiPConnection(false, DGFiPConnectionMode::GATEWAY);
         $connection->connect();

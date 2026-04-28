@@ -80,8 +80,7 @@ class DGFiPConnection
      */
     public function getFileNames(): array
     {
-        $this->logger->info("Remote_path : $this->response_server_path");
-        $all_file = $this->serverProtocol->getFileNames($this->response_server_path);
+        $all_file = $this->serverProtocol->getFileNames();
 
         $nbFiles = count($all_file);
         $message = "Il y a $nbFiles fichiers en attente dans le repertoire distant $this->response_server_path...";
@@ -200,5 +199,16 @@ class DGFiPConnection
     private function getURLWithoutCredentials(): string
     {
         return preg_replace('#//(.*?)@#', '//HIDDEN_URL_FOR_SECURITY@', $this->getURL());
+    }
+
+    public function moveToReponsePath()
+    {
+        $this->logger->info("Remote_path : $this->response_server_path");
+        $this->serverProtocol->chdir($this->response_server_path);
+    }
+
+    public function pwd(): string
+    {
+        return $this->serverProtocol->pwd();
     }
 }

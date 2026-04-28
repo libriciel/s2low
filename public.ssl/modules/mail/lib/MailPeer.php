@@ -4,9 +4,6 @@ namespace S2lowLegacy\Mail;
 
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Log;
-use S2lowLegacy\Mail\MailIncludedFile;
-use S2lowLegacy\Mail\MailMessageEmis;
-use S2lowLegacy\Mail\MailTransaction;
 
 /**
  * \class MailPeer  MailPeer.class.php
@@ -152,7 +149,7 @@ class MailPeer
             $db = DatabasePool::getInstance();
 
             $sql = "SELECT id FROM mail_annuaire WHERE ";
-            $sql .= " mail_address=" . $db->quote($mail) . " and authority_id=" . $authority_id;
+            $sql .= " mail_address=" . $db->getPdo()->quote($mail) . " and authority_id=" . $authority_id;
             $result = $db->select($sql);
             $idArray = $result->get_all_rows();
             return count($idArray) > 0;
