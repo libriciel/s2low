@@ -13,7 +13,10 @@ class TGZExtractor
 
     public function extract($archivePath, $name)
     {
-        $command = "tar xvzf $archivePath --directory {$this->tmpFolder} $name";
+        $archivePathEscaped = escapeshellarg($archivePath);
+        $nameEscaped = escapeshellarg($name);
+
+        $command = "tar xvzf $archivePathEscaped --directory {$this->tmpFolder} $nameEscaped";
         $status = exec($command);
         if (! $status) {
             return false;

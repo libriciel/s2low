@@ -2,11 +2,10 @@
 
 namespace S2lowLegacy\Lib;
 
-//http://users.dcc.uchile.cl/~pcamacho/tutorial/web/xmlsec/xmlsec.html
-use S2lowLegacy\Class\VerifyPemCertificate;
 use DateTime;
 use DateTimeZone;
 use Exception;
+use S2lowLegacy\Class\VerifyPemCertificate;
 
 class XadesSignature
 {
@@ -115,10 +114,16 @@ class XadesSignature
             $verificationTimeString = $verificationTime
                 ->setTimezone(new DateTimeZone('UTC'))
                 ->format("Y-m-d G:i:s");
-            $verificationTimeParameter = "--verification-time \"$verificationTimeString\"";
+            $verificationTimeParameter = "--verification-time " . escapeshellarg($verificationTimeString);
         }
 
-        $command = "export TZ=UTC && export SSL_CERT_DIR={$this->validca_path} && {$this->xmlsec1_path} --verify --node-xpath \"$xpath\" " . $verificationTimeParameter . " --id-attr:Id $signature_node_name $xml_file_signed 2>&1";
+        $validCaPathEscaped = escapeshellarg($this->validca_path);
+        $xmlSecPathEscaped = escapeshellarg($this->xmlsec1_path);
+        $xPathEscaped = escapeshellarg($xpath);
+        $signatureNodeNameEscaped = escapeshellarg($signature_node_name);
+        $xmlFileSignedEscaped = escapeshellarg($xml_file_signed);
+
+        $command = "export TZ=UTC && export SSL_CERT_DIR={$validCaPathEscaped} && {$xmlSecPathEscaped} --verify --node-xpath {$xPathEscaped} {$verificationTimeParameter} --id-attr:Id {$signatureNodeNameEscaped} {$xmlFileSignedEscaped} 2>&1";
         exec($command, $output, $return_var);
         $this->last_output = implode("\n", $output);
         return $return_var == 0;

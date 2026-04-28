@@ -24,6 +24,26 @@
 
 - Dépréciation de la soumission des enveloppes ACTE #1104
 
+## 5.1.11 - 2026-04-17
+
+### Corrections
+
+- Correction du changement de répertoire dans helios-reception lorsque l’étape de récupération des noms de fichiers
+était ignorée #1494
+- Le cron certbot pouvait entrer en conflit avec le cron acme-renew #1503
+
+### Sécurité
+
+- Correction d'une injection SQL (CVSS 8.8 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H) #1498
+- Correction d'une faille XSS (CVSS 6.1 - criticité MOYENNE - CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N) #1499
+- Faille RCE (CVSS 8.8 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H) #1501
+
+## 5.1.10 - 2026-04-13
+
+### Sécurité
+
+- Mise à jour des dépendances
+
 ## 5.1.9 - 2026-03-09
 
 ### Corrections

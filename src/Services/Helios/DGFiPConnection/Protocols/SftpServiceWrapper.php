@@ -102,4 +102,8 @@ class SftpServiceWrapper
     {
         return $ftp->chdir($remote_path);
     }
+    public function pwd(SFTP $ftp): string
+    {
+        return $ftp->pwd();
+    }
 }
