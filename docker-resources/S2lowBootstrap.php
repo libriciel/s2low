@@ -3,18 +3,12 @@
 namespace S2lowLegacy\Boot;
 
 use S2lowLegacy\Class\User;
-use S2lowLegacy\Controller\PostgreSQLController;
 use S2lowLegacy\Lib\SQLQuery;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class S2lowBootstrap
 {
     public function __construct(
         private readonly SQLQuery $sqlQuery,
-        private readonly PostgreSQLController $postgreSQLController,
-        #[Autowire(service: 'console.messenger.application')]
-        private readonly Application $app
     ) {
     }
 
