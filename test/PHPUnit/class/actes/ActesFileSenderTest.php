@@ -88,14 +88,14 @@ DwFFvAJyARuSFWQ=
      */
     public function testSendSuccess(): void
     {
-        $curlWrapperCheck = $this->createMock(CurlWrapper::class);
         $curlWrapperSend = $this->createMock(CurlWrapper::class);
 
-        $this->curlWrapperFactory->expects($this->exactly(2))
+        $this->curlWrapperFactory->expects($this->once())
             ->method('getNewInstance')
-            ->willReturnOnConsecutiveCalls($curlWrapperCheck, $curlWrapperSend);
+            ->willReturn($curlWrapperSend);
 
-        $curlWrapperCheck->method('getServerCertificate')->willReturn($this->dummyCertificate);
+        $curlWrapperSend->expects($this->once())
+            ->method('setHttpsConnexionWithVerifPeerPubKey');
         $curlWrapperSend->method('getHTTPCode')->willReturn(201);
 
         $sender = new ActesFileSender(
@@ -112,14 +112,14 @@ DwFFvAJyARuSFWQ=
      */
     public function testSendLegacySuccess(): void
     {
-        $curlWrapperCheck = $this->createMock(CurlWrapper::class);
         $curlWrapperSend = $this->createMock(CurlWrapper::class);
 
-        $this->curlWrapperFactory->expects($this->exactly(2))
+        $this->curlWrapperFactory->expects($this->once())
             ->method('getNewInstance')
-            ->willReturnOnConsecutiveCalls($curlWrapperCheck, $curlWrapperSend);
+            ->willReturn($curlWrapperSend);
 
-        $curlWrapperCheck->method('getServerCertificate')->willReturn($this->dummyCertificate);
+        $curlWrapperSend->expects($this->once())
+            ->method('setHttpsConnexionWithVerifPeerPubKey');
         $curlWrapperSend->method('getHTTPCode')->willReturn(200);
 
         $sender = new ActesFileSender(
@@ -131,34 +131,13 @@ DwFFvAJyARuSFWQ=
         $this->assertTrue($sender->send('/tmp/file.tar.gz'));
     }
 
-    public function testSendCertificateMismatch(): void
-    {
-        $curlWrapperCheck = $this->createMock(CurlWrapper::class);
-
-        $this->curlWrapperFactory->method('getNewInstance')->willReturn($curlWrapperCheck);
-        $curlWrapperCheck->method('getServerCertificate')->willReturn($this->wrongCertificate);
-
-        $sender = new ActesFileSender(
-            $this->getProperties(),
-            '/truststore/path',
-            $this->curlWrapperFactory
-        );
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('ne correspond pas à celui attendu');
-
-        $sender->send('/tmp/file.tar.gz');
-    }
-
     public function testSendHttpError(): void
     {
-        $curlWrapperCheck = $this->createMock(CurlWrapper::class);
         $curlWrapperSend = $this->createMock(CurlWrapper::class);
 
         $this->curlWrapperFactory->method('getNewInstance')
-            ->willReturnOnConsecutiveCalls($curlWrapperCheck, $curlWrapperSend);
+            ->willReturn($curlWrapperSend);
 
-        $curlWrapperCheck->method('getServerCertificate')->willReturn($this->dummyCertificate);
         $curlWrapperSend->method('getHTTPCode')->willReturn(500);
         $curlWrapperSend->method('getLastError')->willReturn('Internal Server Error');
 

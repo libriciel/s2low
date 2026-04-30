@@ -5,10 +5,12 @@ namespace S2lowLegacy\Class\actes;
 use S2lowLegacy\Class\CurlWrapper;
 use S2lowLegacy\Class\CurlWrapperFactory;
 use Exception;
-use S2lowLegacy\Lib\X509Certificate;
+use S2lowLegacy\Class\PublicKeyExtractor;
 
 class ActesFileSender
 {
+    private ?string $serverPublicKeyHash = null;
+
     public function __construct(
         private readonly ActesMinistereProperties $actesMinistereProperties,
         private readonly string $truststorePath,
@@ -16,13 +18,41 @@ class ActesFileSender
     ) {
     }
 
+    private function isHttps(): bool
+    {
+        return str_starts_with($this->actesMinistereProperties->url, 'https');
+    }
+
+    private function hasClientCertificate(): bool
+    {
+        return !empty($this->actesMinistereProperties->client_certificate);
+    }
+
+    private function getClientCertificateArray(): array
+    {
+        return [
+            $this->actesMinistereProperties->client_certificate,
+            $this->actesMinistereProperties->client_certificate_key,
+            $this->actesMinistereProperties->client_certificate_key_password
+        ];
+    }
+
+    private function getServerPublicKeyHash(): string
+    {
+        if ($this->serverPublicKeyHash === null) {
+            $publicKeyExtractor = new PublicKeyExtractor();
+            $this->serverPublicKeyHash = $publicKeyExtractor->getPublicKeyHashFromCertificatePath(
+                $this->actesMinistereProperties->server_certificate_path
+            );
+        }
+        return $this->serverPublicKeyHash;
+    }
+
     /**
      * @throws Exception
      */
     public function send(string $filepath): bool
     {
-        $this->verifyCertificate();
-
         if ($this->actesMinistereProperties->use_legacy_protocol) {
             return $this->sendLegacy($filepath);
         }
@@ -52,43 +82,21 @@ class ActesFileSender
         return $this->executeRequest($curlWrapper, $url, 200);
     }
 
-    /**
-     * @throws Exception
-     */
-    private function verifyCertificate(): void
-    {
-        $url = $this->actesMinistereProperties->url;
-        if (mb_substr($url, 0, 5) !== 'https') {
-            return;
-        }
-
-        $curlWrapper = $this->getPreparedCurlWrapper(10, 10);
-        $curlWrapper->setProperties(CURLOPT_NOBODY, true);
-
-        $useLegacy = $this->actesMinistereProperties->use_legacy_protocol;
-        $this->configureSSL($curlWrapper, $useLegacy);
-
-        if ($useLegacy) {
-            $this->configureAuthentication($curlWrapper, $url);
-        }
-
-        $curlWrapper->get($url);
-
-        $this->checkCertificateHash($curlWrapper->getServerCertificate());
-    }
-
     private function getPreparedCurlWrapper(int $timeout, int $connectTimeout = 60): CurlWrapper
     {
         $curlWrapper = $this->curlWrapperFactory->getNewInstance();
         $curlWrapper->setTimeout($connectTimeout, $timeout);
         $curlWrapper->setProperties(CURLOPT_USERAGENT, 'curl/7.81.1');
-        $curlWrapper->setProperties(CURLOPT_CERTINFO, 1);
 
-        $curlWrapper->setClientCertificate(
-            $this->actesMinistereProperties->client_certificate,
-            $this->actesMinistereProperties->client_certificate_key,
-            $this->actesMinistereProperties->client_certificate_key_password
-        );
+        if ($this->isHttps()) {
+            $curlWrapper->setHttpsConnexionWithVerifPeerPubKey($this->getServerPublicKeyHash());
+        } else {
+            $curlWrapper->setProperties(CURLOPT_CERTINFO, 1);
+        }
+
+        if ($this->hasClientCertificate()) {
+            $curlWrapper->setClientCertificate(...$this->getClientCertificateArray());
+        }
 
         return $curlWrapper;
     }
@@ -105,7 +113,7 @@ class ActesFileSender
                     'DEFAULT@SECLEVEL=0 !LOW !MEDIUM !RC4 !aNULL !eNULL !LOW !MD5 !EXP AES256-SHA '
                 );
             }
-        } else {
+        } elseif (!$this->isHttps()) {
             $curlWrapper->setProperties(CURLOPT_SSL_VERIFYPEER, 1);
             $curlWrapper->setProperties(CURLOPT_SSL_VERIFYHOST, 2);
         }
@@ -121,25 +129,6 @@ class ActesFileSender
                 $this->actesMinistereProperties->login,
                 $this->actesMinistereProperties->password
             );
-        }
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function checkCertificateHash(string $actualCertificate): void
-    {
-        $expectedPath = $this->actesMinistereProperties->server_certificate_path;
-        if (!$expectedPath) {
-            return;
-        }
-
-        $x509Certificate = new X509Certificate();
-        $actualHash = $x509Certificate->getBase64Hash($actualCertificate);
-        $expectedHash = $x509Certificate->getBase64Hash(file_get_contents($expectedPath));
-
-        if ($actualHash !== $expectedHash) {
-            throw new Exception("Le certificat reçu ($actualHash) ne correspond pas à celui attendu ($expectedHash)");
         }
     }
 
