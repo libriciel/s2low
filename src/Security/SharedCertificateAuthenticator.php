@@ -18,7 +18,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-class MultiCertificateAuthenticator extends AbstractAuthenticator
+class SharedCertificateAuthenticator extends AbstractAuthenticator
 {
     use TargetPathTrait;
     use CreateSecurityResponseTrait;

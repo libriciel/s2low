@@ -25,7 +25,7 @@ L'authentification s'effectue en deux étapes :
     │                        ├──────────────────────────>│
     │                        │                           │
     │                        │         Authentification  │
-    │                        │   (Simple / Multi / Nounce) │
+    │                        │   (Simple / Shared / Nounce) │
     │                        │                           │
     │     Page authentifiée  │                           │
     │<───────────────────────┴───────────────────────────┘
@@ -87,7 +87,7 @@ security:
             provider: app_user_provider
             custom_authenticators:
                 - S2low\Security\SimpleCertificateAuthenticator
-                - S2low\Security\MultiCertificateAuthenticator
+                - S2low\Security\SharedCertificateAuthenticator
                 - S2low\Security\NounceAuthenticator
             logout:
                 path: app_logout
@@ -107,7 +107,7 @@ L'authentification est structurée autour de **3 Authenticators spécifiques** e
 └───────────────┬───────────────┬────────────────┬────────────────┘
                 │               │                │
                 ▼               ▼                ▼
-    SimpleCertificate  MultiCertificate   NounceAuthenticator
+    SimpleCertificate  SharedCertificate   NounceAuthenticator
       Authenticator      Authenticator
                 │               │                │
                 └───────┬───────┴────────┬───────┘
@@ -139,7 +139,7 @@ L'authentification est structurée autour de **3 Authenticators spécifiques** e
 │     └─ Par défaut pour la majorité des requêtes sans params  │
 │        ni identifiants de session fournis en header.         │
 │                                                              │
-│  B. MultiCertificateAuthenticator :                          │
+│  B. SharedCertificateAuthenticator :                          │
 │     └─ Lors d'un POST sur /login.php ou si présence          │
 │        d'auth basique (PHP_AUTH_USER).                       │
 │                                                              │
@@ -157,7 +157,7 @@ L'authentification est structurée autour de **3 Authenticators spécifiques** e
 │           ├─ >1 compte → Exception multiple_accounts         │
 │           └─ 0 compte → Exception connection_impossible      │
 │                                                              │
-│     B. Multi (certificat + credentials)                      │
+│     B. Shared (certificat + credentials)                     │
 │        └─ Recherche par certificat_hash ET par login/password (POST)    │
 │           ├─ Match → Authentification                        │
 │           └─ Erreur → Exception bad_credentials              │
@@ -185,9 +185,9 @@ L'authentification est structurée autour de **3 Authenticators spécifiques** e
 - S'assure que la requête n'est pas pour `/login.php`, n'est pas une requête nonce, ni du *Basic Auth*.
 - Charge les utilisateurs correspondant au hash de certificat de la requête.
 - S'il n'y en a qu'un, il s'authentifie.
-- S'il y en a plusieurs, il déclenche l'erreur `multiple_accounts`, ce qui redirige l'utilisateur vers `/login.php` (qui sera elle-même gérée plus tard par `MultiCertificateAuthenticator`).
+- S'il y en a plusieurs, il déclenche l'erreur `multiple_accounts`, ce qui redirige l'utilisateur vers `/login.php` (qui sera elle-même gérée plus tard par `SharedCertificateAuthenticator`).
 
-### 2. MultiCertificateAuthenticator
+### 2. SharedCertificateAuthenticator
 **Rôle** : Gérer la connexion lorsqu'un certificat correspond à **plusieurs comptes**.
 - Répond présent lorsque la requête est faite sur `/login.php` via un POST (formulaire) contenant login/password ou via du *Basic Auth*.
 - Combine le hash du certificat avec les identifiants extraits de la requête et demande au `SecurityUserProvider` s'il correspond à un compte valide.
@@ -225,7 +225,7 @@ graph LR
 
 **Expérience utilisateur** : Navigation transparente, pas de formulaire de login.
 
-### Scénario 2 : Plusieurs comptes pour un certificat (MultiCertificate)
+### Scénario 2 : Plusieurs comptes pour un certificat (SharedCertificate)
 
 ```mermaid
 graph LR
@@ -234,7 +234,7 @@ graph LR
     C --> D[Plusieurs utilisateurs détectés]
     D --> E[Redirection /login.php]
     E --> F[Utilisateur soumet Formulaire POST]
-    F --> G[MultiCertificateAuthenticator]
+    F --> G[SharedCertificateAuthenticator]
     G --> H{Match login/password?}
     H -->|Oui| I[✅ Authentification]
     H -->|Non| J[❌ Retour sur login avec erreur]
@@ -275,5 +275,5 @@ Le code en place de l'ancienne base (comme la classe `S2lowLegacy\Class\Authenti
 
 Les redirections d'erreur sont prises en charge par la méthode `onAuthenticationFailure()` des authenticators :
 - `multiple_accounts` : `SimpleCertificateAuthenticator` redirige vers `/login.php?error=multiple_accounts`.
-- `bad_credentials` / `empty_login` : `MultiCertificateAuthenticator` redirige sur `/login.php` avec affichage d'une boîte d'erreur rouge.
+- `bad_credentials` / `empty_login` : `SharedCertificateAuthenticator` redirige sur `/login.php` avec affichage d'une boîte d'erreur rouge.
 - `connection_impossible` / autres problèmes : l'authentificator renvoie sur la page `/connexion-status/`.

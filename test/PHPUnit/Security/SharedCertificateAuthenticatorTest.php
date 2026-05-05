@@ -7,9 +7,9 @@ use Psr\Log\LoggerInterface;
 use S2low\Security\CertificateExtractor;
 use S2low\Security\CredentialsExtractor;
 use S2low\Security\Exceptions\CertificateExtractionException;
-use S2low\Security\MultiCertificateAuthenticator;
 use S2low\Security\SecurityUser;
 use S2low\Security\SecurityUserProvider;
+use S2low\Security\SharedCertificateAuthenticator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -22,7 +22,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\HttpUtils;
 
-class MultiCertificateAuthenticatorTest extends TestCase
+class SharedCertificateAuthenticatorTest extends TestCase
 {
     private function createDependencies(): array
     {
@@ -42,7 +42,7 @@ class MultiCertificateAuthenticatorTest extends TestCase
 
         $certExtractor->method('extractCertificateOrFail')->willThrowException(new CertificateExtractionException('cert error'));
 
-        $authenticator = new MultiCertificateAuthenticator(
+        $authenticator = new SharedCertificateAuthenticator(
             $credExtractor,
             $certExtractor,
             $provider,
@@ -64,7 +64,7 @@ class MultiCertificateAuthenticatorTest extends TestCase
         $certExtractor->method('extractCertificateOrFail')->willReturn(['certificate_hash' => 'hash']);
         $credExtractor->method('extract')->willReturn(['login' => '', 'password' => 'pwd']);
 
-        $authenticator = new MultiCertificateAuthenticator(
+        $authenticator = new SharedCertificateAuthenticator(
             $credExtractor,
             $certExtractor,
             $provider,
@@ -86,7 +86,7 @@ class MultiCertificateAuthenticatorTest extends TestCase
         $certExtractor->method('extractCertificateOrFail')->willReturn(['certificate_hash' => 'hash']);
         $credExtractor->method('extract')->willReturn(['login' => 'login', 'password' => '']);
 
-        $authenticator = new MultiCertificateAuthenticator(
+        $authenticator = new SharedCertificateAuthenticator(
             $credExtractor,
             $certExtractor,
             $provider,
@@ -109,7 +109,7 @@ class MultiCertificateAuthenticatorTest extends TestCase
         $credExtractor->method('extract')->willReturn(['login' => 'login', 'password' => 'pwd']);
         $provider->method('loadUserByCertificateAndLogin')->willReturn(null);
 
-        $authenticator = new MultiCertificateAuthenticator(
+        $authenticator = new SharedCertificateAuthenticator(
             $credExtractor,
             $certExtractor,
             $provider,
@@ -134,7 +134,7 @@ class MultiCertificateAuthenticatorTest extends TestCase
         $user = new SecurityUser(['id' => 1, 'login' => 'login']);
         $provider->method('loadUserByCertificateAndLogin')->willReturn($user);
 
-        $authenticator = new MultiCertificateAuthenticator(
+        $authenticator = new SharedCertificateAuthenticator(
             $credExtractor,
             $certExtractor,
             $provider,
@@ -153,7 +153,7 @@ class MultiCertificateAuthenticatorTest extends TestCase
     {
         [$credExtractor, $certExtractor, $provider, $httpUtils, $urlGen, $logger] = $this->createDependencies();
 
-        $authenticator = new MultiCertificateAuthenticator(
+        $authenticator = new SharedCertificateAuthenticator(
             $credExtractor,
             $certExtractor,
             $provider,
@@ -176,7 +176,7 @@ class MultiCertificateAuthenticatorTest extends TestCase
     {
         [$credExtractor, $certExtractor, $provider, $httpUtils, $urlGen, $logger] = $this->createDependencies();
 
-        $authenticator = new MultiCertificateAuthenticator(
+        $authenticator = new SharedCertificateAuthenticator(
             $credExtractor,
             $certExtractor,
             $provider,
