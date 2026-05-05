@@ -31,7 +31,7 @@ security:
             provider: app_user_provider
             custom_authenticators:
                 - S2low\Security\SimpleCertificateAuthenticator
-                - S2low\Security\MultiCertificateAuthenticator
+                - S2low\Security\SharedCertificateAuthenticator
             logout:
                 path: app_logout
 
