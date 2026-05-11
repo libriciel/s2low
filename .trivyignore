@@ -1,3 +1,4 @@
 # Mettre ici les CVE impossible à traiter avec la raison du non traitement
 # Not exploitable here: only redis-tools installed, no redis-server running
 CVE-2024-31449
+CVE-2025-49844
