@@ -39,6 +39,7 @@ if [ -z "$DONT_INIT_DATABASE" ] ; then
     sleep 5
   done
 
+  php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
   php /var/www/s2low/bin/console init:bootstrap
 fi
 

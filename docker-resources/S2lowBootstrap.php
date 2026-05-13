@@ -3,15 +3,12 @@
 namespace S2lowLegacy\Boot;
 
 use S2lowLegacy\Class\User;
-use S2lowLegacy\Controller\PostgreSQLController;
 use S2lowLegacy\Lib\SQLQuery;
-use S2lowLegacy\Model\UserSQL;
 
 class S2lowBootstrap
 {
     public function __construct(
         private readonly SQLQuery $sqlQuery,
-        private readonly PostgreSQLController $postgreSQLController,
     ) {
     }
 
@@ -36,7 +33,6 @@ class S2lowBootstrap
             $this->sqlQuery->waitStarting(function ($m) {
                 echo "$m\n";
             });
-            $this->dbUpdate();
             $this->insertDemoS();
             $this->populateDatabase();
         } catch (\Exception $e) {
@@ -85,13 +81,6 @@ class S2lowBootstrap
         if ($return_var != 0) {
             throw new \Exception("Impossible de générer ou de trouver le certificat du site $hostname !");
         }
-    }
-
-    private function dbUpdate()
-    {
-        $this->postgreSQLController->alterDatabase(function ($message) {
-            $this->log($message);
-        });
     }
 
     private function insertDemos()

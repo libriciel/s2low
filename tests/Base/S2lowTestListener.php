@@ -6,6 +6,8 @@ use S2low\Kernel;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Controller\PostgreSQLController;
 use S2lowLegacy\Lib\SQLQuery;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Tester\CommandTester;
 use Throwable;
 
 class S2lowTestListener implements \PHPUnit\Framework\TestListener
@@ -40,11 +42,16 @@ class S2lowTestListener implements \PHPUnit\Framework\TestListener
     public function startTestSuite(\PHPUnit\Framework\TestSuite $suite): void
     {
         gc_collect_cycles();
-        new Kernel('test', false);
+        $kernel = new Kernel('test', false);
         $postgreSQLControler = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
             ->get(PostgreSQLController::class);
 
         $postgreSQLControler->populateDbTest();
+
+        $application = new Application($kernel);
+        $command = $application->find('doctrine:migrations:migrate');
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(['--no-interaction' => true]);
     }
 
     public function endTestSuite(\PHPUnit\Framework\TestSuite $suite): void
