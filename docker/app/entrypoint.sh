@@ -34,6 +34,7 @@ if [ -z "$DONT_INIT_DATABASE" ] ; then
     sleep 5
   done
 
+  /app/bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
   /app/bin/console init:bootstrap
 fi
 
