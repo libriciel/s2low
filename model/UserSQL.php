@@ -19,7 +19,7 @@ class UserSQL extends SQL
 
     public const AUTHORITY_ID = 'authority_id';
 
-    private const USER_COLUMNS = 'id, email, login, password, role, authority_id, authority_group_id, status, certificate_hash, name, givenname';
+    private const USER_COLUMNS = 'id, email, login, password, role, authority_id, authority_group_id, status, certificate_hash, name, givenname, cert_not_after';
 
 
     public function getPrettyName($name, $givenname, $login)

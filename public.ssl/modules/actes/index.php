@@ -107,7 +107,6 @@ $menuHTML = new MenuHTML();
 $pagerHTML  = new PagerHTML();
 $fancyDate = new FancyDate();
 $listeActesHTML = new ListeActesHTML();
-
 if ($droit->isSuperAdmin($initData->userInfo)) {
     $listeActesHTML->addCollectivite($authoritySQL->getAll(), $authority_filtre);
 } elseif (! $droit->isGroupAdmin($initData->userInfo) && ($moduleData->permUser == 'RW' || $moduleData->permUser == 'CS')) {

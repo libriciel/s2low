@@ -11,7 +11,7 @@ function hide_all()
 function toggle_all(style, symbol)
 {
     let done = false;
-    let i = 0;
+    let i = 1;
 
     while (! done) {
         var content = document.getElementById("envelope_content_" + i);
@@ -21,6 +21,7 @@ function toggle_all(style, symbol)
             content.style.display = style;
             expander.innerHTML = symbol;
         } else {
+            console.log('done');
             done = true;
         }
         i++;

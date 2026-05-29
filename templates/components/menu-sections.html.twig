@@ -1,0 +1,50 @@
+<ul class="text-menu nav">
+    {% if isLargeAdmin() %}
+        <li class="menu-list-title">Administration</li>
+    {% endif %}
+    {% if isSadm() %}
+        <li><a href="/admin/modules/admin_modules.php">Gestion des modules</a></li>
+        <li><a href="/admin/groups/admin_groups.php">Gestion des groupes</a></li>
+    {% endif %}
+    {% if isSadmOrGadm() %}
+        <li><a href="/admin/authorities/admin_authorities.php">Gestion des collectivités</a></li>
+    {% endif %}
+    {% if isAdm() %}
+        <li><a href="/modules/mail/index.php?command=annuaire">Carnet d'adresses de la collectivité</a></li>
+        <li><a href="/admin/authorities/admin_authority_edit.php?id={{ app.user.authorityId }}">Paramètres
+                collectivité</a></li>
+    {% endif %}
+    {% if isLargeAdmin() %}
+        <li><a href="/admin/users/admin_users.php">Gestion des utilisateurs</a></li>
+        <li><a href="/admin/services/admin_services.php">Gestion des services</a></li>
+    {% endif %}
+    {% if isSadm() %}
+        <li><a href="/admin/utilities/index.php">Utilitaires système</a></li>
+    {% endif %}
+    {% if isSadmOrGadm() %}
+        {% for module in getModulesWithAdminPage() %}
+            <li><a href="/modules/{{ module.name }}/admin/index.php">Utilitaires module {{ module.name }}</a></li>
+        {% endfor %}
+    {% endif %}
+
+    <li class="menu-list-title">Modules</li>
+    {% if getModules()|length == 0 %}
+        <li>Aucun module accessible</li>
+    {% else %}
+        {% for module in getModules() %}
+            <li><a href="/modules/{{ module.name }}/index.php">{{ module.menu_entry }}</a></li>
+        {% endfor %}
+    {% endif %}
+
+    {% if isLargeAdmin() %}
+        <li class="menu-list-title">Export des informations</li>
+        <li><a href="/modules/actes/actes_export.php">Exports module actes</a></li>
+    {% endif %}
+
+    <li class="menu-list-title">Suivi{% if isLargeAdmin() %} du site{% endif %}</li>
+    <li><a href="/common/logs_view.php">Journal des événements</a></li>
+    {% for modules_with_stats in getModulesWithStatus() %}
+        <li><a href="/modules/{{ modules_with_stats.name }}/{{ modules_with_stats.name }}_stats.php">Statistiques
+                module {{ modules_with_stats.name }}</a></li>
+    {% endfor %}
+</ul>

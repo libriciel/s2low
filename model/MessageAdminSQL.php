@@ -112,4 +112,10 @@ class MessageAdminSQL extends SQL
         $sql = "SELECT * FROM message_admin WHERE is_publie=true AND is_retire=false";
         return $this->getMessageFromInfo($this->queryOne($sql));
     }
+
+    public function getMessages()
+    {
+        $sql = "SELECT * FROM message_admin WHERE is_publie=true AND is_retire=false";
+        return $this->queryOne($sql);
+    }
 }

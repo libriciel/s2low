@@ -2,8 +2,9 @@
 
 namespace S2low\Security;
 
-use Symfony\Component\Security\Core\User\UserInterface;
+use DateTimeImmutable;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -18,6 +19,8 @@ class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
     private string $certificateHash;
     private string $name;
     private string $givenname;
+    private \DateTimeImmutable $certExpirationDate;
+    private bool $sharedCertificate;
 
     /**
      * @param array<string, mixed> $userData
@@ -33,6 +36,13 @@ class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
         $this->authorityGroupId = isset($userData['authority_group_id']) ? (int) $userData['authority_group_id'] : null;
         $this->status = (int) ($userData['status'] ?? 0);
         $this->certificateHash = $userData['certificate_hash'] ?? '';
+        $this->sharedCertificate = $userData['login'] != null;
+        try {
+            $this->certExpirationDate = new DateTimeImmutable($userData['cert_not_after']);
+        } catch (\Exception $e) {
+            throw new \InvalidArgumentException("Impossible de lire la date d'expiration du certificat : " . $e->getMessage());
+        }
+
         $this->name = $userData['name'] ?? '';
         $this->givenname = $userData['givenname'] ?? '';
     }
@@ -44,8 +54,12 @@ class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        // Simplement préfixer le rôle legacy avec ROLE_ pour Symfony Security
         return ['ROLE_' . $this->role];
+    }
+
+    public function getRole(): string
+    {
+        return $this->role;
     }
 
     public function eraseCredentials(): void
@@ -108,8 +122,18 @@ class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->givenname;
     }
 
+    public function getCertExpirationDate(): DateTimeImmutable
+    {
+        return $this->certExpirationDate;
+    }
+
     public function isActive(): bool
     {
         return $this->status === 1;
+    }
+
+    public function isSharedCertificate(): bool
+    {
+        return $this->sharedCertificate;
     }
 }

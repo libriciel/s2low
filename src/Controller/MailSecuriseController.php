@@ -2,11 +2,11 @@
 
 namespace S2low\Controller;
 
+use Exception;
+use MailController;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\MailInit;
-use Exception;
-use MailController;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Mail\MailLayout;
@@ -31,7 +31,7 @@ class MailSecuriseController extends AbstractController
         path: '/modules/mail/index.php',
         name: 'app_modules_mail_index',
     )]
-    public function handleRequest(): StreamedResponse
+    public function index(): StreamedResponse
     {
 
         //commencer traiter la layout normal correspond de le système.

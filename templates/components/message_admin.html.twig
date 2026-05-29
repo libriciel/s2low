@@ -1,0 +1,13 @@
+{# templates/global/components/message_admin.twig #}
+<div class="alert alert-{{ message_admin.css_level|toCssClass }}">
+    <h4 class="alert-heading fw-bold mb-1">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span>
+            {{ message_admin.title }}
+        </span>
+    </h4>
+
+    <p class="mb-0">
+        {{ message_admin.message }}
+    </p>
+</div>

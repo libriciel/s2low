@@ -1,0 +1,34 @@
+{# global/components/menu.html.twig #}
+    {% if app.user.name is defined %}
+        <div id="menu-header">
+            <div>
+                <span>Bienvenue {{ app.user.name }} {{ app.user.givenname }}</span>
+                {% include 'components/certificat_expiration_warning.html.twig' with {'nb_day_before_certificate_expire': app.user.certExpirationDate|days_ago} %}
+            </div>
+            <div>
+                <p>
+                    {% if this.messageAdminTitle is not null %}
+                        <a class="label label-{{ this.getCssLevel|toCssClass }}" href="/">{{ this.messageAdminTitle }}</a>
+                    {% endif %}
+                </p>
+                <span>
+                    Rôle {{ app.user.role|labeliseRole }}
+                </span>
+            </div>
+            {% if app.user.sharedCertificate %}
+                <a href='/deconnexion'>déconnexion</a>
+            {% endif %}
+        </div>
+    {% else %}
+        <div id="menu-header">
+            <a href="{{ url_index_ssl }}">Accéder au site</a><br/>
+            (Certificat nécessaire)
+        </div>
+    {% endif %}
+    {% if global_warning_message is defined %}
+        <div>
+            <a class="label label-warning" href="/">
+                global_warning_message </a> {# TODO :  raccorder le warning message #}
+        </div>
+    {% endif %}
+    {% include 'components/menu-sections.html.twig' %}
