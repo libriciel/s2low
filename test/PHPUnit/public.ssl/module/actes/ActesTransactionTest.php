@@ -731,8 +731,12 @@ class ActesTransactionTest extends S2lowTestCase
         $this->actesTransaction->set('unique_id', '032-213201601-20170616-ARP201706407-AI');
         $this->actesTransaction->save();
 
-        mkdir(ACTES_FILES_UPLOAD_ROOT . '/siren');
-        mkdir(ACTES_FILES_UPLOAD_ROOT . '/siren/import/');
+        if (!is_dir(ACTES_FILES_UPLOAD_ROOT . '/siren')) {
+            mkdir(ACTES_FILES_UPLOAD_ROOT . '/siren');
+        }
+        if (!is_dir(ACTES_FILES_UPLOAD_ROOT . '/siren/import/')) {
+            mkdir(ACTES_FILES_UPLOAD_ROOT . '/siren/import/');
+        }
         copy($filename, ACTES_FILES_UPLOAD_ROOT . '/siren/import/' . basename($filename));
         copy(__DIR__ . '/fixtures/test_pdf.pdf', ACTES_FILES_UPLOAD_ROOT . '/siren/import/001-000000000-20170130-TEST42-DE-3-4_1.pdf');
         copy(__DIR__ . '/fixtures/test_pdf.pdf', ACTES_FILES_UPLOAD_ROOT .  '/siren/import/001-000000000-20170130-TEST42-DE-3-4_2.pdf');
