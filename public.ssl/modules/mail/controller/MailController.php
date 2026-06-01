@@ -8,6 +8,7 @@ use S2lowLegacy\Mail\Annuaire;
 use S2lowLegacy\Mail\GroupeMail;
 use S2lowLegacy\Mail\MailAnnuaire;
 use S2lowLegacy\Mail\MailErrors;
+use S2lowLegacy\Mail\MailList;
 use S2lowLegacy\Mail\MailPeer;
 use S2lowLegacy\Mail\MailTransaction;
 use S2lowLegacy\Mail\MailUtil;
