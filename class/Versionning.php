@@ -10,9 +10,9 @@ class Versionning
 
     private $manifest_file;
 
-    public function __construct($manifest_file)
+    public function __construct($manifestFile)
     {
-        $this->manifest_file = $manifest_file;
+        $this->manifest_file = $manifestFile;
     }
 
     private function getInfo()
