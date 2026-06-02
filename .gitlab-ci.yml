@@ -40,6 +40,8 @@ variables:
     APP_HOST: localhost
     MAILSEC_HOST: 127.0.0.1
     WEBMASTER: 'https://www.adullact.org'
+    HELIOS_SENDING_DESTINATION: '/entree/'
+
 
 build-app:
   stage: build
