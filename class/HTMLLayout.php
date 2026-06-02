@@ -396,7 +396,6 @@ class HTMLLayout extends Layout
             echo "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"fr\">\n";
             echo "    <head>\n";
             echo "        <title>" . $this->title . "</title>\n";
-            echo "        <meta name='unicite' content='4'>\n";
             echo $this->header . "\n";
             echo "    </head>\n";
             echo "    <body>\n";

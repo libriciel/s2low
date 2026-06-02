@@ -21,7 +21,6 @@ function toggle_all(style, symbol)
             content.style.display = style;
             expander.innerHTML = symbol;
         } else {
-            console.log('done');
             done = true;
         }
         i++;
