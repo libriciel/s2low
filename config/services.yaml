@@ -514,7 +514,7 @@ services:
     public: true
     autoconfigure: true
     arguments:
-      $manifestFile: '%kernel.project_dir%/manifest.txt'
+      $manifest_file: '%kernel.project_dir%/manifest.txt'
 
   S2lowLegacy\Class\CustomizableWorkerRunner:
     autowire: false
