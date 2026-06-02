@@ -16,11 +16,9 @@ use S2lowLegacy\Model\UsersPermsSQL;
 
 class HeliosControllerTest extends S2lowIntegrationTestCase
 {
-    /**
-     * @var HeliosController
-     */
-    private $heliosController;
-
+    private HeliosController $heliosController;
+    private string $testHeliosPrefix;
+    private HeliosTransactionsSQL $heliosTransactionSQL;
 
     protected function setUp(): void
     {

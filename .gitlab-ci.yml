@@ -1,7 +1,4 @@
 include:
-  - project: "libriciel/integration-continue/templates"
-    ref: publish-container-to-registry@2.0.0
-    file: '/jobs/publish-container-to-registry/publish-container-to-registry.yml'
   - template: Code-Quality.gitlab-ci.yml
   - template: Jobs/SAST.gitlab-ci.yml
   - template: Jobs/Secret-Detection.gitlab-ci.yml
@@ -25,82 +22,79 @@ stages:
     - production
 
 variables:
-    CONTAINER_IMAGE: "${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}"
-    POSTGRES_DB: s2lowdb
-    POSTGRES_USER: s2lowuser
-    POSTGRES_PASSWORD: s2lowpassword
-    DATABASE_URL: "postgresql://s2lowuser:s2lowpassword@postgres:5432/s2lowdb?serverVersion=14&charset=utf8"
-    PRODUCT: s2low
+    CONTAINER_IMAGE_BASE: "${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}"
+    CONTAINER_IMAGE_APP: "${CONTAINER_IMAGE_BASE}-app"
+    CONTAINER_IMAGE_WEB: "${CONTAINER_IMAGE_BASE}-web"
+    DATABASE_USER: s2low
+    DATABASE_PASSWORD: s2low
+    DATABASE_NAME: s2low
+    DATABASE_HOST: postgres
+    POSTGRES_USER: s2low
+    POSTGRES_PASSWORD: s2low
+    POSTGRES_DB: s2low
+    DATABASE_USER_TEST: s2low
+    DATABASE_PASSWORD_TEST: s2low
+    DATABASE_NAME_TEST: s2low
+    DATABASE_HOST_TEST: postgres
+    DATABASE_URL: "postgresql://s2low:s2low@postgres:5432/s2low?serverVersion=14&charset=utf8"
+    APP_HOST: localhost
+    MAILSEC_HOST: 127.0.0.1
 
-build:
+build-app:
   stage: build
-  except:
-    - tags
   tags:
     - docker-build
+#  variables:
+#    DOCKER_BUILDKIT: 1
   script:
-    - /bin/bash docker-resources/generate-manifest.sh > manifest.txt
+    - docker build --target dev --pull -t ${CONTAINER_IMAGE_APP} -f docker/app/Dockerfile .
     - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
-    - docker build --target s2low_dev --pull -t ${CONTAINER_IMAGE} .
-    - docker push ${CONTAINER_IMAGE}
+    - docker push ${CONTAINER_IMAGE_APP}
 
-# Utiliser lors de la pose d'un tag pour que la construction n'utilise pas le cache
-build_no_cache:
+build-web:
   stage: build
-  only:
-    - tags
   tags:
     - docker-build
+#  variables:
+#    DOCKER_BUILDKIT: 1
   script:
-    - /bin/bash docker-resources/generate-manifest.sh > manifest.txt
     - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
-    - docker build --no-cache --target s2low_dev --pull -t ${CONTAINER_IMAGE} .
-    - docker push ${CONTAINER_IMAGE}
+    - docker build  --pull -t ${CONTAINER_IMAGE_WEB} -f docker/web/Dockerfile .
+    - docker push ${CONTAINER_IMAGE_WEB}
 
 lint:
   stage: static-analysis
-  image : "$CONTAINER_IMAGE"
+  image : "$CONTAINER_IMAGE_APP"
   variables:
     DONT_RETRIEVE_VALIDCA: "true"
     DONT_INIT_DATABASE: "true"
   script:
-    - cd /var/www/s2low
+    - cd /app
     - vendor/bin/phpcs
 
 phpstan:
   stage: static-analysis
-  image : "$CONTAINER_IMAGE"
+  image : "$CONTAINER_IMAGE_APP"
   variables:
     DONT_INIT_DATABASE: "true"
     DONT_RETRIEVE_VALIDCA: "true"
   script:
-    - cd /var/www/s2low
+    - cd /app
     - vendor/bin/phpstan
 
 unit_test:
     stage: test
-    image : "$CONTAINER_IMAGE"
-    services:
-        - name: registry.libriciel.fr/public/outils/postgres:14.5
-          alias: postgres
-          command: ["postgres","-c", "max_connections=200"]
+    image : "$CONTAINER_IMAGE_APP"
     variables:
-        XDEBUG_ON: "true"
-        POSTGRES_USER_TEST: s2lowuser
-        POSTGRES_PASSWORD_TEST: s2lowpassword
-        POSTGRES_DB_TEST: s2lowdb
-        POSTGRES_DATABASE_TEST: s2lowdb
-        POSTGRES_HOST_TEST: postgres
-        POSTGRES_HOST: postgres
-        DATABASE_URL: "postgresql://s2lowuser:s2lowpassword@postgres:5432/s2lowdb?serverVersion=14&charset=utf8"
-        S2LOW_WEBSITE: "localhost"
         COMPOSER_PROCESS_TIMEOUT: 9000
-        DONT_RETRIEVE_VALIDCA: "true"
         XDEBUG_MODE: coverage
         APP_ENV: test
-        MAILER_DSN: smtp://mailsec:25?verify_peer=0
+    services:
+      - name: registry.libriciel.fr/public/outils/postgres:14.5
+        alias: postgres
+        command: [ "postgres","-c", "max_connections=200" ]
     script:
-        - cd /var/www/s2low/
+        - cd /app
         - composer test-cover
         - cp -rf coverage $CI_PROJECT_DIR
     coverage: '/^\s*Lines:\s*\d+.\d+\%/'
@@ -109,51 +103,72 @@ unit_test:
         - coverage
       expire_in: 1h
 
-code_quality:
-  services:
-  tags:
-    - cq-sans-dind
-
-container_scanning:
-  variables:
-    CS_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_BRANCH
-
 quality:
   stage: quality
   only:
     - master
   image:
-    name: hubdocker.libriciel.fr/sonarsource/sonar-scanner-cli:11.5@sha256:46341f2c2dc560381414e90347885f5cddc716db080adcbafc1cac13e1473094
+    name: hubdocker.libriciel.fr/sonarsource/sonar-scanner-cli:12.1@sha256:a429d20d22c8d97b9a10ea5585f1c56d2a54796f0ae3da06c7a1a49eec78e6c2
     entrypoint: [ "/bin/sh", "-c" ]
   script:
     - sonar-scanner -Dsonar.token=$SONAR_LOGIN -Dsonar.host.url=$SONAR_HOST_URL
 
-security-check:
+
+.security_scan_base:
   stage: test
-  allow_failure: true
   image:
     name: hubdocker.libriciel.fr/aquasec/trivy:0.71.0
-    entrypoint: [ "" ]
+    entrypoint: [""]
   services:
     - docker:dind
-  before_script:
-    - cp .trivyignore /
   script:
     - apk add --no-cache curl docker-cli
     - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
-    - trivy image --no-progress --output scanning-report.txt $CONTAINER_IMAGE
+    - trivy image --no-progress  --output scanning-report.txt $CONTAINER_IMAGE
     - trivy image --exit-code 1 --no-progress --severity HIGH,CRITICAL $CONTAINER_IMAGE
   artifacts:
     reports:
       container_scanning: scanning-report.txt
     expire_in: 1 week
 
+security_scan_app:
+  allow_failure: true
+  extends: .security_scan_base
+  variables:
+    CONTAINER_IMAGE: $CONTAINER_IMAGE_APP
+
+security_scan_web:
+  allow_failure: true
+  extends: .security_scan_base
+  variables:
+    CONTAINER_IMAGE: $CONTAINER_IMAGE_WEB
+
 publish-container-to-registry:
+  stage: deploy
+  tags:
+    - docker-build
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
+    - if: $CI_COMMIT_TAG != null
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "master"
+      variables:
+        IMAGE_VERSION: 'canary'
+  variables:
+    IMAGE_VERSION: $CI_COMMIT_REF_NAME
+    APP_IMAGE: ${REGISTRY_CONTAINER_HOST}${REGISTRY_CONTAINER_PATH}-app:$IMAGE_VERSION
+    WEB_IMAGE: ${REGISTRY_CONTAINER_HOST}${REGISTRY_CONTAINER_PATH}-web:$IMAGE_VERSION
   before_script:
     - date=$(date)
-    - sed -i "s/%CI_BUILD_ID%/${CI_PIPELINE_ID}/" ./manifest.txt
-    - sed -i "s/%BUILD_DATE%/$date/" ./manifest.txt
-    - sed -i "s/%VERSION%/${CI_COMMIT_REF_NAME}/" ./manifest.txt
+    - sed -i "s/%CI_BUILD_ID%/${CI_PIPELINE_ID}/" ./manifest.yml
+    - sed -i "s/%BUILD_DATE%/$date/" ./manifest.yml
+    - sed -i "s/%VERSION%/${CI_COMMIT_REF_NAME}/" ./manifest.yml
+  script:
+    - docker login -u "$REGISTRY_CONTAINER_USER" -p "$REGISTRY_CONTAINER_PASSWORD" "$REGISTRY_CONTAINER_HOST"
+    - docker build --pull -t ${APP_IMAGE} -f docker/app/Dockerfile .
+    - docker push ${APP_IMAGE}
+    - docker build --pull -t ${WEB_IMAGE} -f docker/web/Dockerfile .
+    - docker push ${WEB_IMAGE}
 
 generate-sbom-compose:
   needs: [ "publish-container-to-registry"]
@@ -165,11 +180,12 @@ publish-compose:
   needs: [ "publish-container-to-registry", "package-sbom-compose" ]
   variables:
     INPUT_DIRECTORY: ./
+    COMPOSE_FILE_NAME: compose.yaml
   before_script:
     - mv docker-resources docker-resources-orig
     - mkdir docker-resources
     - mv docker-resources-orig/Makefile docker-resources/
-    - sed -i "s/canary$/${CI_COMMIT_REF_NAME}/" ./docker-compose.yml
+    - sed -i "s/canary$/${CI_COMMIT_REF_NAME}/" ./compose.yaml
 
 deploy_app:
   stage: staging
@@ -182,9 +198,17 @@ deploy_app:
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - scp ./docker-compose.yml s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/
-    - scp ./docker-compose.test.yml s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/docker-compose.override.yml
+    - scp ./compose.yaml s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/
+    - scp ./compose.dev.yaml s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/compose.override.yaml
     - echo "$DEV_ENV_FILE" > /tmp/.env
     - scp /tmp/.env s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/
     - ssh -tt s2low@s2low-5-0.dev.libriciel.net "cd /opt/s2low/ && docker compose pull && docker compose up -d"
     - curl -i -X POST -d "$PAYLOAD" $MATTERMOST_WEBHOOK
+
+code_quality:
+  tags:
+    - cq-sans-dind
+
+container_scanning:
+  variables:
+    CS_IMAGE: $CONTAINER_IMAGE_APP

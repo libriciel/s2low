@@ -1,0 +1,3 @@
+10 * * * * /usr/local/bin/validca.sh && /usr/local/apache2/bin/apachectl graceful
+42 */6 * * * /bin/sh /usr/local/bin/certbot-acme.sh >> /data/log/certbot-renew.log && /usr/local/apache2/bin/apachectl graceful
+50 * * * * /usr/sbin/logrotate /etc/logrotate.d/s2low.conf -s /data/log/logrotate-status >> /data/log/logrotate.log 2>&1

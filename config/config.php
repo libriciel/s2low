@@ -9,7 +9,7 @@ require_once __DIR__ . "/../vendor/autoload.php";
 require_once(__DIR__ . "/LoadLocalSettings.php");
 
 
-ini_set("error_reporting", E_ALL & ~E_STRICT);
+ini_set("error_reporting", E_ALL);
 
 date_default_timezone_set("Europe/Paris");
 
@@ -163,9 +163,9 @@ if (! defined("ONLY_USE_VALIDCARGS")) {
 //voir "man c_rehash" pour le "hasher"
 //Ce répertoire ne doit contenir que des certificats RGS et sert à signer et télétransmettre des flux Actes
 if (! defined("RGS_VALIDCA_PATH")) {
-    $pathToRgsValidca = "/etc/s2low/ssl/validca/";
+    $pathToRgsValidca = "/data/certificates/_validca/validca/";
     if (ONLY_USE_VALIDCARGS) {
-        $pathToRgsValidca = "/etc/s2low/ssl/validcargs/";
+        $pathToRgsValidca = "/data/certificates/_validca/validcargs/";
     }
     define("RGS_VALIDCA_PATH", $pathToRgsValidca);
 }
@@ -173,16 +173,16 @@ if (! defined("RGS_VALIDCA_PATH")) {
 //Emplacement des certificats permettant la connexion à la plateforme ainsi que la signature et la télétransmission
 //des flux PES
 if (! defined("EXTENDED_VALIDCA_PATH")) {
-    $pathToRgsValidca = "/etc/s2low/ssl/validca/";
+    $pathToRgsValidca = "/data/certificates/_validca/validca/";
     if (ONLY_USE_VALIDCARGS) {
-        $pathToRgsValidca = "/etc/s2low/ssl/validcargs/";
+        $pathToRgsValidca = "/data/certificates/_validca/validcargs/";
     }
     define("EXTENDED_VALIDCA_PATH", $pathToRgsValidca);
 }
 
 //Emplacement où se trouve les AC de /etc/ssl/certs et celles du Ministere
 if (! defined("TRUSTSTORE_PATH")) {
-    define("TRUSTSTORE_PATH", "/data/certificate/truststore/");
+    define("TRUSTSTORE_PATH", "/data/certificates/actes_truststore/");
 }
 
 //Permet de définir le nombre de mois pendant lequelle un enregistrement est gardé dans la table logs avant

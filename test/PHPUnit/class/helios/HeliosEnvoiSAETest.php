@@ -214,9 +214,11 @@ class HeliosEnvoiSAETest extends S2lowTestCase
             $heliosEnvoiSAE->sendArchive($transaction_id)
         );
 
-        $this->testHandler->hasRecordThatContains(
-            "La transaction $transaction_id n'a pas pu être envoyée sur Pastell : [Exception] Error Send SAE et erreur lors de la suppression de dsf\[Exception] Error on delete",
-            Level::Error
+        self::assertTrue(
+            $this->testHandler->hasRecordThatContains(
+                "La transaction $transaction_id n'a pas pu être envoyée sur Pastell : [Exception] Error Send SAE et erreur lors de la suppression de dsf\[Exception] Error on delete",
+                Level::Error
+            )
         );
     }
 

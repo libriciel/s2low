@@ -47,7 +47,10 @@ class RgsConnexionTest extends S2lowIntegrationTestCase
         $server[self::SSL_CLIENT_CERT] = "rogue certificate";
         $this->rgsConnexion->setServerGlobal($server);
         $this->assertFalse($this->rgsConnexion->isRgsConnexion());
-        $this->assertMatchesRegularExpression("#Could not read certificate file#", $this->rgsConnexion->getLastMessage());
+        $this->assertMatchesRegularExpression(
+            "#Could not find certificate file#",
+            $this->rgsConnexion->getLastMessage()
+        );
     }
 
     public function testIsRgsConnexionOK()

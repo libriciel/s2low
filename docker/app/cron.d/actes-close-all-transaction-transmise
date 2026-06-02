@@ -1,0 +1,1 @@
+50 4 * * * /usr/local/bin/php /app/script/actes/actes-close-old-transactions-transmises.php >> /data/log/actes-close-old-transactions-transmises.log 2>&1

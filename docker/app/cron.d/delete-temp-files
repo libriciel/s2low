@@ -1,0 +1,2 @@
+# Nettoyage des messages temporaires ages de plus de 30 jours
+30 * * * * find /tmp/ -cmin +90 -print0 | xargs -0 /bin/rm -r -f

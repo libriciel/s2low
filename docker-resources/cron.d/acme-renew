@@ -1,1 +1,0 @@
-42 */6 * * * %USERNAME% /usr/bin/bash /var/www/s2low/docker-resources/certificate/acme-renew.sh

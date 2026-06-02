@@ -110,9 +110,11 @@ class ActesArchiveControlerTest extends S2lowTestCase
             $last_status_info['status_id']
         );
 
-        $this->testHandler->hasRecord(
-            "La transaction $transaction_id a été envoyé sur le SAE (id_d pastell : xyzt",
-            Level::Error
+        self::assertTrue(
+            $this->testHandler->hasRecord(
+                "La transaction $transaction_id a été envoyé sur le SAE (id_d pastell : xyzt)",
+                Level::Info,
+            ),
         );
     }
 

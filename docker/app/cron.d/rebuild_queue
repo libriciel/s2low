@@ -1,0 +1,1 @@
+34 * * * * /usr/local/bin/php /app/bin/console beanstalkd:rebuild-queue >> /data/log/rebuild-queue.log 2>&1

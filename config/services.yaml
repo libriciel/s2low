@@ -3,11 +3,12 @@ when@dev:
     - { resource: 'parameters_dev.yaml' }
 parameters:
   # Parametres a definir obligatoirement
-  app.database_host: '%env(POSTGRES_HOST)%'
-  app.database_login: '%env(POSTGRES_USER)%'
-  app.database_name: '%env(POSTGRES_DB)%'
-  app.database_password: '%env(POSTGRES_PASSWORD)%'
+  app.database_host: '%env(DATABASE_HOST)%'
+  app.database_login: '%env(DATABASE_USER)%'
+  app.database_password: '%env(DATABASE_PASSWORD)%'
+  app.database_name: '%env(DATABASE_NAME)%'
   app.database_url: 'postgresql://%app.database_login%:%app.database_password%@%app.database_host%:5432/%app.database_name%?serverVersion=14&charset=utf8'
+  env(HELIOS_SENDING_DESTINATION): '/entree/'
   app.helios_sending_destination: '%env(HELIOS_SENDING_DESTINATION)%'
 
   # Parametres avec des valeurs par default
@@ -113,11 +114,11 @@ parameters:
   app.mail_files_without_transac_dir: '%app.mail_file_upload_root%%sans_transaction/'
   app.openssl_path: '/usr/bin/openssl'
   app.pades_valid_url: 'http://pades-valid:8080'
-  app.path_to_rgs_valid_ca: '/etc/s2low/ssl/validca/'
-  app.path_to_rgs_valid_cargs: '/etc/s2low/ssl/validcargs/'
+  app.path_to_rgs_valid_ca: '/data/certificates/_validca/validca/'
+  app.path_to_rgs_valid_cargs: '/data/certificates/_validca/validcargs/'
   app.relative_legacy_ssl_path: 'public.ssl/'
   app.schema_pes_path: '%kernel.project_dir%/xsd/schemas_pes_v5.24/'
-  app.truststore_path: '/data/certificate/truststore/'
+  app.truststore_path: '/data/certificates/actes_truststore/'
   app.website: 'http://s2low.docker.libriciel.fr/'
   app.website_ssl: 'https://s2low.docker.libriciel.fr/'
   app.workspace_directory.default: '/data/tdt-workspace/'
@@ -378,7 +379,7 @@ services:
   S2lowLegacy\Model\MessageAdminSQL:
     public: true
     arguments:
-      $cachePath: "/var/run/htmlpurifier"
+      $cachePath: "/data/html_purifier"
 
   # ---------------------------------------------------------------------------------------------------------------------
   # Sous Namespace  S2lowLegacy/Class
@@ -616,7 +617,7 @@ services:
     public: true
     autowire: true
     arguments:
-      $img: "/var/www/s2low/public.ssl/custom/images/bandeau-s2low-190.jpg" #TODO : utiliser la variable d'env ?
+      $img: "%kernel.project_dir%/public.ssl/custom/images/bandeau-s2low-190.jpg" #TODO : utiliser la variable d'env ?
 
   S2lowLegacy\Class\actes\ActesPdfLegacy:
     autowire: false # Pas utilisé en v5 ...

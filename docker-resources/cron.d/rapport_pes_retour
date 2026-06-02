@@ -1,2 +1,0 @@
-0  8   *   *   *   %USERNAME%  /usr/bin/php /var/www/s2low/script/helios/rapport-pes_retour-non-affecte.php
-0  12   *   *   *   %USERNAME%  /usr/bin/php /var/www/s2low/script/helios/pes_retour-reanalyse.php

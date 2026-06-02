@@ -16,20 +16,6 @@ class S2lowBootstrap
     {
         $this->log("Initialisation de S2low");
         try {
-            // Ajout du certificat domaine s2low
-            $this->installSelfSignedCertificateIfNoneExists(
-                $this->getHostname(),
-                "privkey.pem",
-                "fullchain.pem",
-                apacheSSLPath: '/etc/apache2/ssl/app',
-            );
-            // Ajout du certificat domaine mailsec
-            $this->installSelfSignedCertificateIfNoneExists(
-                $this->getMailHostname(),
-                "privkey.pem",
-                "fullchain.pem",
-                apacheSSLPath: '/etc/apache2/ssl/mailsec',
-            );
             $this->sqlQuery->waitStarting(function ($m) {
                 echo "$m\n";
             });
@@ -37,49 +23,6 @@ class S2lowBootstrap
             $this->populateDatabase();
         } catch (\Exception $e) {
             $this->log("Erreur : " . $e->getMessage());
-        }
-    }
-
-    /**
-     * @param string $hostname
-     * @param string $privKeyFilename
-     * @param string $fullchainFilename
-     * @return void
-     * @throws \Exception
-     */
-    public function installSelfSignedCertificateIfNoneExists(
-        string $hostname,
-        string $privKeyFilename,
-        string $fullchainFilename,
-        string $letsencryptPath = "/etc/letsencrypt/live",
-        string $apacheSSLPath = "/etc/apache2/ssl"
-    ): void {
-        #TODO : pouvoir utiliser cette fonction pour le certificat du domaine s2low ET du domaine mail sec
-
-        if (file_exists("$apacheSSLPath/$privKeyFilename")) {
-            $this->log("Le certificat du site $hostname est déjà présent.");
-            return;
-        }
-
-        $letsencrypt_cert_path = "$letsencryptPath/$hostname";
-        $letsencryptPrivKeyFullPath = "$letsencrypt_cert_path/$privKeyFilename";
-        $letsencryptFullchainFullPath = "$letsencrypt_cert_path/{$fullchainFilename}";
-        $apachePrivKeyFullPath = "$apacheSSLPath/$privKeyFilename";
-        $apacheFullChainFullPath = "$apacheSSLPath/$fullchainFilename";
-
-        if (file_exists($letsencryptPrivKeyFullPath)) {
-            $this->log("Certificat letsencrypt trouvé !");
-            symlink($letsencryptPrivKeyFullPath, $apachePrivKeyFullPath);
-            symlink($letsencryptFullchainFullPath, $apacheFullChainFullPath);
-            return;
-        }
-
-        $script = __DIR__ . "/../docker-resources/certificate/generate-key-pair.sh";
-
-        exec("$script $hostname $apachePrivKeyFullPath $apacheFullChainFullPath", $output, $return_var);
-        $this->log(implode("\n", $output));
-        if ($return_var != 0) {
-            throw new \Exception("Impossible de générer ou de trouver le certificat du site $hostname !");
         }
     }
 

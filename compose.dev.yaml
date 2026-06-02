@@ -1,0 +1,138 @@
+services:
+  app:
+    image: s2low-local-dev-app
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+      target: dev
+      args:
+        UID: ${UID:-10001}
+        GID: ${GID:-10001}
+    environment:
+      MAILER_DSN: "${MAILER_DSN:-smtp://mailpit:1025?verify_peer=0}"
+      DATABASE_HOST_TEST: ${DATABASE_HOST_TEST:-db_test}
+      DATABASE_USER_TEST: ${DATABASE_USER_TEST:-s2low}
+      DATABASE_PASSWORD_TEST: ${DATABASE_PASSWORD_TEST:?}
+      DATABASE_NAME_TEST: ${DATABASE_NAME_TEST:-s2low_test}
+      COMPOSER_CACHE_DIR: /data/composer
+      NPM_CONFIG_CACHE: /data/npm
+    volumes:
+      - ./:/app:cached
+      - ${HOME}/.composer/cache:/data/composer
+      - /data/npm_cache:/data/npm
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  web:
+    image: s2low-local-dev-web
+    build:
+      context: .
+      dockerfile: ./docker/web/Dockerfile
+    volumes:
+      - ./node_modules:/app/node_modules:ro
+      - ./public:/app/public:ro
+      - ./public.ssl:/app/public.ssl:ro
+
+  db:
+    image: registry.libriciel.fr/public/outils/postgres:14.5@sha256:a0c6930be56082d2b6f747630ab6e5799c566c7ec45c49033e8b647ca2e50bee
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DATABASE_USER:-s2low}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-?}
+      POSTGRES_DB: ${DATABASE_NAME:-s2low}
+    volumes:
+      - ${DATABASE_DATADIR:-database_datadir}:/var/lib/postgresql/data:rw,noexec,nosuid,nodev
+    ports:
+      - "${DATABASE_PORT:-5432}:5432"
+
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - "${MAILPIT_PORT:-8025}:8025"
+
+  db_test:
+    image: registry.libriciel.fr/public/outils/postgres:14.5@sha256:a0c6930be56082d2b6f747630ab6e5799c566c7ec45c49033e8b647ca2e50bee
+    restart: unless-stopped
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: ${DATABASE_USER_TEST:-s2low}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD_TEST:-?}
+      POSTGRES_DB: ${DATABASE_NAME_TEST:-s2low_test}
+    volumes:
+      - ${DATABASE_DATADIR_TEST:-database_datadir_test}:/var/lib/postgresql/data:rw,noexec,nosuid,nodev
+
+  simulateur:
+    image: registry.libriciel.fr/public/plateforme/s2low-simulateur-helios:1.1.3@sha256:12ce257cdd0871caf7b033139475c6fe553dbbf77593631a0c5ad09338995217
+    restart: unless-stopped
+    depends_on:
+      - ftp
+    volumes:
+      - ${SIMULATEUR_WORKSPACE_DIRECTORY:-ftp_datadir}:/var/www/simulateur-helios/workspace
+    environment:
+      MAIL_HOST: mail
+      MAIL_PORT: 25
+      MAIL_FROM: "dgcl@${MAILNAME:-mail}"
+    ports:
+      - "${SIMULATEUR_PORT:-10449}:80"
+
+  ftp:
+    image: hubdocker.libriciel.fr/mcreations/ftp:latest@sha256:e7ee07afb36cc3c14ec33036de211bf633b2c26d9e3d1ce19a018de81109e894
+    restart: unless-stopped
+    environment:
+      FTP_USER: ${HELIOS_FTP_LOGIN:-helios}
+      FTP_PASS: ${HELIOS_FTP_PASSWORD:-helios}
+      PASV_MIN_PORT: ${PASV_MIN_PORT:-65000}
+      PASV_MAX_PORT: ${PASV_MAX_PORT:-65004}
+    volumes:
+      - ${SIMULATEUR_WORKSPACE_DIRECTORY:-ftp_datadir}:/data/${HELIOS_FTP_LOGIN:-helios}/
+
+  simulateur_passtrans:
+    image: registry.libriciel.fr/public/plateforme/s2low-simulateur-helios:1.1.3
+    restart: unless-stopped
+    depends_on:
+      - ftp_passtrans
+    volumes:
+      - ${SIMULATEUR_PASSTRANS_WORKSPACE_DIRECTORY:-ftp_passtrans_datadir}:/var/www/simulateur-helios/workspace
+
+  ftp_passtrans:
+    image: hubdocker.libriciel.fr/mcreations/ftp:latest@sha256:e7ee07afb36cc3c14ec33036de211bf633b2c26d9e3d1ce19a018de81109e894
+    restart: unless-stopped
+    environment:
+      FTP_USER: ${HELIOS_PASSTRANS_LOGIN:-helios-passtrans}
+      FTP_PASS: ${HELIOS_PASSTRANS_PASSWORD:-helios-passtrans}
+      PASV_MIN_PORT: ${PASV_MIN_PORT:-65000}
+      PASV_MAX_PORT: ${PASV_MAX_PORT:-65004}
+    volumes:
+      - ${SIMULATEUR_PASSTRANS_WORKSPACE_DIRECTORY:-ftp_passtrans_datadir}:/data/${HELIOS_PASSTRANS_LOGIN:-helios-passtrans}/
+
+  mail:
+    image: registry.libriciel.fr/public/outils/imap-devel:1.1@sha256:17ba220875994290a9a3c25ea8c8b3d6362e0c75066087c98e7c47e1ae74ffdc
+    restart: unless-stopped
+    environment:
+      - MAILNAME=${MAILNAME:-mail}
+      - MAIL_ADDRESS=${ACTES_IMAP_LOGIN:-mail@s2low.docker.libriciel.net}
+      - MAIL_PASS=${ACTES_IMAP_PASSWORD:-password}
+
+  webpack:
+    image: hubdocker.libriciel.fr/node:24.15.0-alpine3.23
+    working_dir: /app
+    user: "node"
+    volumes:
+      - ./:/app
+
+  local-s3:
+    image: minio/minio:RELEASE.2025-07-23T15-54-02Z-cpuv1@sha256:7330be2e7320a7a699b36f72bd06a94d8a21ec9f6f397345d9c38fc6751141f5
+    ports:
+      - "${MINIO_API_PORT:-9000}:9000"
+      - "${MINIO_WEB_PORT:-9001}:9001"
+    environment:
+      MINIO_ROOT_USER: 'admin'
+      MINIO_ROOT_PASSWORD: 'password'
+    command: server /data --console-address ":9001"
+    volumes:
+      - ${S3_DATADIR:-s3_data}:/data
+
+volumes:
+  database_datadir:
+  database_datadir_test:
+  s3_data:

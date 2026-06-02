@@ -1,1 +1,0 @@
-50  4   *   *   *   %USERNAME%  /usr/bin/php /var/www/s2low/script/actes/actes-close-old-transactions-transmises.php   >> /data/log/actes-close-old-transactions-transmises.log 2>&1

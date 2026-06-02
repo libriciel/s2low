@@ -250,9 +250,11 @@ class CloudStorageTest extends S2lowTestCase
 
     private function assertNbJourDerniereModif(): void
     {
-        $this->testHandler->hasRecord(
-            "Nombre de jour depuis la derniere modif : 0",
-            Level::Info
+        self::assertTrue(
+            $this->testHandler->hasRecord(
+                "Nombre de jour depuis la derniere modif : 0",
+                Level::Debug,
+            ),
         );
     }
 
