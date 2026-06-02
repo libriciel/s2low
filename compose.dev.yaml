@@ -16,6 +16,8 @@ services:
       DATABASE_NAME_TEST: ${DATABASE_NAME_TEST:-s2low_test}
       COMPOSER_CACHE_DIR: /data/composer
       NPM_CONFIG_CACHE: /data/npm
+      WEBMASTER: 'https://www.adullact.org'
+      HELIOS_SENDING_DESTINATION: '/entree/'
     volumes:
       - ./:/app:cached
       - ${HOME}/.composer/cache:/data/composer

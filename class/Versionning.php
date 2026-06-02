@@ -8,16 +8,16 @@ class Versionning
     private const BUILD_DATE = "BUILD_DATE";
     private const VERSION = "VERSION";
 
-    private $manifestFile;
+    private $manifest_file;
 
-    public function __construct($manifestFile)
+    public function __construct($manifest_file)
     {
-        $this->manifestFile = $manifestFile;
+        $this->manifest_file = $manifest_file;
     }
 
     private function getInfo()
     {
-        $revisionFileContent = file_get_contents($this->manifestFile);
+        $revisionFileContent = file_get_contents($this->manifest_file);
         $result = array();
         foreach (explode("\n", $revisionFileContent) as $line) {
             foreach (array(self::BUILD_DATE,self::BUILD_ID,self::VERSION) as $info) {
