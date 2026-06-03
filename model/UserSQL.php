@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Model;
 
+use S2low\Exceptions\CertificateException;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\SQL;
 use S2lowLegacy\Lib\X509Certificate;
@@ -226,5 +227,15 @@ class UserSQL extends SQL
             'SELECT ' . self::USER_COLUMNS . ' FROM users WHERE id = ? AND status = 1',
             $id
         );
+    }
+
+    public function getUserCertificate(int $id): string
+    {
+        $certificate = $this->queryOne('SELECT certificate FROM users WHERE id = ?', $id);
+        if (! $certificate) {
+            throw new CertificateException('User certificate not found');
+        }
+
+        return $certificate;
     }
 }
