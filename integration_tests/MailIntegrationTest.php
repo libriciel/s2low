@@ -21,9 +21,9 @@ class MailIntegrationTest extends S2lowIntegrationTestCase
     {
         $client = $this->client;
         $this->setUserWithRole(UserRole::SuperAdministrateur);
-        $crawler = $client->request('GET', '/index.php');
+        $crawler = $client->request('GET', '/');
         static::assertMatchesRegularExpression(
-            '#<title>Tiers de téléransmission multiprotocoles</title>#',
+            '#<title>Tiers de télétransmission multiprotocoles</title>#',
             $crawler->html()
         );
         static::assertResponseIsSuccessful();

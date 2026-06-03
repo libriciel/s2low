@@ -112,9 +112,9 @@ class MessageAdmin
             return;
         }
         ?>
-        <br/>
-        <a class="label label-<?php echo $this->getNiveauCSS() ?>" href="/"><?php hecho($this->titre) ?></a></a>&nbsp;&nbsp;
-        <br/><br/>
+        <p>
+            <a class="label label-<?php echo $this->getNiveauCSS() ?>" href="/"><?php hecho($this->titre) ?></a>
+        </p>
         <?php
     }
 }

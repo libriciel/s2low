@@ -34,9 +34,8 @@ class LegacyRouteLoader extends Loader
     private function findLegacyRoutes(string $baseDirPath): Finder
     {
         $excludedFiles = [
-            $this->trimPathToAccomodateVFS("$baseDirPath/index.php"),
-            $this->trimPathToAccomodateVFS("$baseDirPath/index.old.php")
-            ];
+            $this->trimPathToAccomodateVFS("$baseDirPath/index.php")
+        ];
         return (new Finder())->files()
             ->in($baseDirPath)
             ->name('*.php')
@@ -62,19 +61,6 @@ class LegacyRouteLoader extends Loader
             }
         }
 
-        $collection->add(
-            'homepage',
-            '/',
-            '/index.php',
-            $this->trimPathToAccomodateVFS("$this->legacy_ssl_path/index.old.php")
-        );
-
-        $collection->add(
-            'homepage_full',
-            '/index.php',
-            '/index.php',
-            $this->trimPathToAccomodateVFS("$this->legacy_ssl_path/index.old.php")
-        );
 
         return $collection->getRouteollection();
     }
