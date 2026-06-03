@@ -1,0 +1,21 @@
+{# templates/components/alert.html.twig #}
+
+{# 1. Symfony flash alerts #}
+{% if app is defined and app.flashes is defined %}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            {% set alert_class = label == 'error' ? 'danger' : label %}
+            <div class="alert alert-{{ alert_class }}">
+                <strong>{{ message|raw }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+
+{# 2. Legacy session error #}
+{% set legacy_error = get_legacy_error() %}
+{% if legacy_error is not null and legacy_error is not empty %}
+    <div class="alert alert-warning">
+        <strong>{{ legacy_error|raw }}</strong>
+    </div>
+{% endif %}

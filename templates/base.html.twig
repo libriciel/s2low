@@ -12,9 +12,7 @@
     <script type="text/javascript" src="{{ jqueryJsUrl }}"></script>
     <script type="text/javascript" src="{{ jqueryuiJsUrl }}"></script>
     <script type="text/javascript" src="{{ tedetisJsUrl }}"></script>
-    {% block head %}
-    {% endblock %}
-
+    {% block head %}{% endblock %}
 </head>
 <body>
     <div id="bandeau_s2low" class="container">
@@ -32,6 +30,9 @@
             {% block pagination %}{% endblock %}
         </div>
         <div id="content" class="col-md-9" role="main">
+            {% block alert %}
+                {% include 'components/alert.html.twig' %}
+            {% endblock %}
             <h1>{% block h1 %}{% endblock %}</h1>
             {% block body %}{% endblock %}
         </div>

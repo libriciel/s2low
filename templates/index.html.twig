@@ -10,6 +10,9 @@
 {#        {% include 'global/components/pagination.html.twig' with#}
 {#            { nb_total_page: nombre_de_transactions } %}#}
 {% endblock %}
+{% block alert %}
+    {% include 'components/alert.html.twig' %}
+{% endblock %}
 {% block h1 %}
     Espace de télétransmission
 {% endblock %}
