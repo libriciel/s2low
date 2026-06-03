@@ -511,7 +511,10 @@ services:
     autowire: false
 
   S2lowLegacy\Class\Versionning:
-    autowire: false
+    public: true
+    autoconfigure: true
+    arguments:
+      $manifest_file: '%kernel.project_dir%/manifest.txt'
 
   S2lowLegacy\Class\CustomizableWorkerRunner:
     autowire: false
