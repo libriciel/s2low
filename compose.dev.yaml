@@ -9,6 +9,7 @@ services:
         UID: ${UID:-10001}
         GID: ${GID:-10001}
     environment:
+      PHP_OPCACHE_VALIDATE_TIMESTAMPS: "1"
       MAILER_DSN: "${MAILER_DSN:-smtp://mailpit:1025?verify_peer=0}"
       DATABASE_HOST_TEST: ${DATABASE_HOST_TEST:-db_test}
       DATABASE_USER_TEST: ${DATABASE_USER_TEST:-s2low}
