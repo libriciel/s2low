@@ -78,8 +78,8 @@ build-web: ## Build web container
 
 build: build-app build-web ## Build containers
 
-bash: ## Get a bash console from the running "web" docker
-	$(DOCKER_COMPOSE) exec web bash
+bash: ## Get a bash console from the running "app" docker
+	$(DOCKER_COMPOSE) exec app bash
 
 run: ## Get a bash console from a fresh container
 	$(DOCKER_COMPOSE) run web bash

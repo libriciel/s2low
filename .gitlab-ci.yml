@@ -39,6 +39,9 @@ variables:
     DATABASE_URL: "postgresql://s2low:s2low@postgres:5432/s2low?serverVersion=14&charset=utf8"
     APP_HOST: localhost
     MAILSEC_HOST: 127.0.0.1
+    WEBMASTER: 'https://www.adullact.org'
+    HELIOS_SENDING_DESTINATION: '/entree/'
+
 
 build-app:
   stage: build
