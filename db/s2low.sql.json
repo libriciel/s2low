@@ -3562,6 +3562,10 @@
         "xml_nomfic_index": {
             "tablename": "helios_transactions",
             "indexdef": "CREATE INDEX xml_nomfic_index ON public.helios_transactions USING btree (xml_nomfic)"
+        },
+        "helios_retour_authority_id_status_idx": {
+            "tablename": "helios_retour",
+            "indexdef": "CREATE INDEX helios_retour_authority_id_status_idx ON public.helios_retour USING btree (authority_id, status)"
         }
     }
 }

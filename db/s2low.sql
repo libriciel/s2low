@@ -537,6 +537,7 @@ CREATE UNIQUE INDEX users_certificate_login ON public.users USING btree (subject
 CREATE INDEX users_login ON public.users USING btree (login);
 CREATE INDEX xml_nomfic_cod_col_index ON public.helios_transactions USING btree (xml_nomfic, xml_cod_col);
 CREATE INDEX xml_nomfic_index ON public.helios_transactions USING btree (xml_nomfic);
+CREATE INDEX helios_retour_authority_id_status_idx ON public.helios_retour USING btree (authority_id, status);
 ALTER TABLE mail_transaction ADD CONSTRAINT mail_transaction_pkey PRIMARY KEY (id);
 ALTER TABLE mail_included_file ADD CONSTRAINT mail_included_file_pkey PRIMARY KEY (id);
 ALTER TABLE mail_message_emis ADD CONSTRAINT mail_message_emis_pkey PRIMARY KEY (id);

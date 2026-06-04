@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.13 - 2026-06-08
+
+### Ajouts
+
+- Ajout d'un index sur la récupération des PES retour #1511
+
 ## 5.1.12 - 2026-05-11
 
 ### Sécurité
