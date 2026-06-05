@@ -3570,6 +3570,10 @@
         "helios_retour_authority_id_status_idx": {
             "tablename": "helios_retour",
             "indexdef": "CREATE INDEX helios_retour_authority_id_status_idx ON public.helios_retour USING btree (authority_id, status)"
+        },
+        "actes_transactions_authority_last_status_id_desc": {
+            "tablename": "actes_transactions",
+            "indexdef": "CREATE INDEX actes_transactions_authority_last_status_id_desc ON public.actes_transactions USING btree (authority_id, last_status_id, id DESC)"
         }
     }
 }
