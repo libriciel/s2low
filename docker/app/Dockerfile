@@ -1,4 +1,4 @@
-FROM hubdocker.libriciel.fr/node:24.15.0-alpine3.23 AS node_modules
+FROM hubdocker.libriciel.fr/node:24.15.0-alpine3.23@sha256:d1b3b4da11eefd5941e7f0b9cf17783fc99d9c6fc34884a665f40a06dbdfc94f AS node_modules
 WORKDIR /app/
 COPY package*.json ./
 RUN npm install
@@ -6,7 +6,7 @@ COPY webpack.config.js ./
 COPY src_js/ ./src_js/
 RUN npx webpack --config webpack.config.js
 
-FROM hubdocker.libriciel.fr/php:8.5.6-fpm-alpine3.23 AS base
+FROM hubdocker.libriciel.fr/php:8.5.6-fpm-alpine3.23@sha256:82dd8cfd2aa93a98b0357e4c810f894c4ca265b5034aef3be654faae5f579487 AS base
 
 ARG UID=10001
 ARG GID=10001
@@ -97,7 +97,7 @@ RUN bash -c "mkdir -p /data/{certificates,config,log,run,tdt-workspace}" \
  && chown "$UID":"$GID" -R /data/
 
 COPY --from=node_modules /app/node_modules/ /app/node_modules/
-COPY --from=hubdocker.libriciel.fr/composer:2.9.8 /usr/bin/composer /usr/local/bin/composer
+COPY --from=hubdocker.libriciel.fr/composer:2.9.8@sha256:b09bccd91a78fe8a9ab4b33d707b862e8fe54fec17782e32683ad2a69c46867d /usr/bin/composer /usr/local/bin/composer
 COPY ./composer.* /app/
 
 RUN composer install --no-ansi --no-dev --no-interaction --no-progress --no-scripts --no-autoloader
@@ -117,9 +117,9 @@ FROM base AS dev
 
 USER "root"
 
-COPY --from=hubdocker.libriciel.fr/composer:2.9.8 /usr/bin/composer /usr/local/bin/composer
+COPY --from=hubdocker.libriciel.fr/composer:2.9.8@sha256:b09bccd91a78fe8a9ab4b33d707b862e8fe54fec17782e32683ad2a69c46867d /usr/bin/composer /usr/local/bin/composer
 
-RUN --mount=type=bind,from=ghcr.io/php/pie:1.4.4-bin,source=/pie,target=/usr/local/bin/pie \
+RUN --mount=type=bind,from=ghcr.io/php/pie:1.4.4-bin@sha256:974d27799f46bf58f4a433e2407da21ff17bb22c7ae8255469f27b96ea56b31e,source=/pie,target=/usr/local/bin/pie \
     apk add --no-cache --virtual .dev-build-deps \
     $PHPIZE_DEPS \
     linux-headers \
