@@ -4,6 +4,7 @@
 
 ### Ajouts
 
+- Ajout d'un index sur la récupération des PES par collectivité et status #1512
 - Ajout d'un index sur la récupération des PES retour #1511
 
 ## 5.1.12 - 2026-05-11
