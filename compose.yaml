@@ -211,7 +211,7 @@ services:
       - /data:mode=750,rw,noexec,nosuid,nodev
 
   clamav:
-    image: hubdocker.libriciel.fr/clamav/clamav:1.5.2-35
+    image: hubdocker.libriciel.fr/clamav/clamav:1.5.2-35@sha256:898c176d1cfec61d4585f71d1e2e8515b3cc8d5f83cd9fc2f6748e8b20de82a2
     restart: unless-stopped
     read_only: true
     cap_drop:
