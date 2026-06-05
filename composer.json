@@ -55,6 +55,7 @@
     "symfony/security-bundle": "6.4.*",
     "symfony/serializer": "^6.4",
     "symfony/twig-bundle": "^6.4",
+    "symfony/ux-twig-component": "^2.36",
     "symfony/yaml": "^6.4",
     "twig/twig": "^3.8"
   },

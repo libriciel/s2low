@@ -7,8 +7,8 @@ parameters:
   app.database_login: '%env(DATABASE_USER)%'
   app.database_password: '%env(DATABASE_PASSWORD)%'
   app.database_name: '%env(DATABASE_NAME)%'
+  app.webmaster: '%env(WEBMASTER)%'
   app.database_url: 'postgresql://%app.database_login%:%app.database_password%@%app.database_host%:5432/%app.database_name%?serverVersion=14&charset=utf8'
-  env(HELIOS_SENDING_DESTINATION): '/entree/'
   app.helios_sending_destination: '%env(HELIOS_SENDING_DESTINATION)%'
 
   # Parametres avec des valeurs par default
@@ -37,6 +37,7 @@ parameters:
   app.redis_server: '%env(default:app.redis_server.default:REDIS_SERVER)%'
   app.use_legacy_bordereau_model: '%env(bool:default:app.use_legacy_bordereau_model.default:USE_LEGACY_BORDEREAU_MODEL)%'
   app.use_prod_notifications: '%env(bool:default:app.use_prod_notifications.default:USE_PROD_NOTIFICATIONS)%'
+  app.website_default_title: '%env(default:app.website_default_title.default:WEBSITE_TITLE)%'
   app.workspace_directory: '%env(default:app.workspace_directory.default:WORKSPACE_DIRECTORY)%'
   app.service_name: '%env(default:app.service_name.default:SERVICE_NAME)%'
   app.log_path: '%env(default:app.log_path.default:LOG_PATH)%'
@@ -79,6 +80,7 @@ parameters:
   app.redis_server.default: 'redis'
   app.use_legacy_bordereau_model.default: true
   app.use_prod_notifications.default: false
+  app.website_default_title.default: 'Tiers de télétransmission'
   app.service_name.default: 'app'
   app.log_path.default: '/data/log/'
   app.cloud.parameters.endpoint.default: 'endpoint'
@@ -509,7 +511,10 @@ services:
     autowire: false
 
   S2lowLegacy\Class\Versionning:
-    autowire: false
+    public: true
+    autoconfigure: true
+    arguments:
+      $manifest_file: '%kernel.project_dir%/manifest.txt'
 
   S2lowLegacy\Class\CustomizableWorkerRunner:
     autowire: false
