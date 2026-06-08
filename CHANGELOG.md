@@ -9,6 +9,7 @@
 - Ajout des liens "Liste des actes de la collectivité" et "Liste des PES de la collectivité" dans la page de gestion d'une collectivité. #1117
 - Ajoute la possibilité de filtrer les utilisateurs par certificat valide ou expiré. #617
 - Ajoute la possibilité de filtrer par type d'actes dans modules/actes/api/list_actes.php #1235
+- Passage de SimpleXML à XMLReader pour limiter l'empreinte mémoire de l'analyse des XML reçus #497
 
 ### Suppression
 

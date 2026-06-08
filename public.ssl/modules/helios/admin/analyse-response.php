@@ -1,6 +1,8 @@
 <?php
 
-use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu;
+use S2low\Enum\IncomingFileHandlingStatus;
+use S2low\ProcessingResults\MoveFileToErrorDirectoryFactory;
+use S2lowLegacy\Class\helios\IncomingFileProcessor;
 use S2lowLegacy\Class\helios\HeliosResponsesError;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
@@ -13,10 +15,12 @@ use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 /** @var Initialisation $initialisation */
 /** @var SQLQuery $sqlQuery */
-/** @var HeliosAnalyseFichierRecu $heliosAnalyseFichierRecu */
+/** @var IncomingFileProcessor $incomingFileProcessor */
+/** @var \S2low\Infrastructure\Directory $errorDirectory */
+/** @var MoveFileToErrorDirectoryFactory $processingResultFactory */
 
-[$initialisation,$sqlQuery,$heliosAnalyseFichierRecu] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, SQLQuery::class,HeliosAnalyseFichierRecu::class]);
+[$initialisation,$sqlQuery,$incomingFileProcessor, $errorDirectory, $processingResultFactory] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, SQLQuery::class,IncomingFileProcessor::class, 'app.heliosErrorDirectory', MoveFileToErrorDirectoryFactory::class]);
 
 $initData = $initialisation->doInit();
 $initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
@@ -36,18 +40,19 @@ $authoritySQL = new AuthoritySQL($sqlQuery);
 $heliosRetourSQL = new HeliosRetourSQL($sqlQuery);
 $authoritySiretSQL = new AuthoritySiretSQL($sqlQuery);
 
+$processingResultFactory->disableMailAndLoggingOnError();
+
 $_SESSION['error'] = '';
 
 ob_start();
-try {
-    $filepath = $heliosResponsesError->getFilepath($filename);
-
-    $heliosResponseRoot = LegacyObjectsManager::getLegacyObjectInstancier()->getParameter('app.helios_responses_root');
-    $heliosOcreFilePath = LegacyObjectsManager::getLegacyObjectInstancier()->getParameter('app.helios_ocre_file_path');
-
-    $heliosAnalyseFichierRecu->analyseOneFile($filepath, $heliosResponseRoot, $heliosOcreFilePath, true);
-} catch (Exception $e) {
-    $_SESSION['error'] = $e->getMessage();
+    $filePath = $errorDirectory->getPath($filename);
+if (!is_file($filePath)) {
+    throw new RuntimeException("Fichier introuvable : $filePath");
+}
+    $file = new SplFileObject(realpath($filePath));
+    $result = $incomingFileProcessor->process($file);
+if ($result->getStatus() === IncomingFileHandlingStatus::AnalysisFailed) {
+    $_SESSION['error'] = $result->getMessage();
 }
 
 $message = ob_get_contents();

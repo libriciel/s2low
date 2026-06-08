@@ -2,20 +2,24 @@
 
 namespace S2lowLegacy\Class\helios;
 
+use RuntimeException;
+use S2low\Infrastructure\Directory;
+use S2low\Services\FilesAndDirectoriesUtils\DirectoryScanner;
 use S2lowLegacy\Class\IWorker;
 use Exception;
+use SplFileObject;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class HeliosAnalyseFichierRecuWorker implements IWorker
 {
     public const QUEUE_NAME = 'helios-analyse-fichier-recu';
 
-
-    private $heliosAnalyseFichierRecu;
-
     public function __construct(
-        HeliosAnalyseFichierRecu $heliosAnalyseFichierRecu
+        private readonly IncomingFileProcessor $incomingFileProcessor,
+        #[Autowire(service: 'app.heliosFilesIncoming')]
+        private readonly Directory $incoming,
+        private readonly DirectoryScanner $scanner,
     ) {
-        $this->heliosAnalyseFichierRecu = $heliosAnalyseFichierRecu;
     }
 
     public function getQueueName(): string
@@ -29,12 +33,11 @@ class HeliosAnalyseFichierRecuWorker implements IWorker
     }
 
     /**
-     * @return array|false|int[]
-     * @throws Exception
+     * @return array
      */
     public function getAllId(): array
     {
-        return $this->heliosAnalyseFichierRecu->getAllDirectory(HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH);
+        return $this->scanner->getFileNames($this->incoming);
     }
 
     /**
@@ -44,13 +47,12 @@ class HeliosAnalyseFichierRecuWorker implements IWorker
      */
     public function work($data)
     {
-        $this->heliosAnalyseFichierRecu->analyseOneFileForWorker(
-            HELIOS_FTP_RESPONSE_TMP_LOCAL_PATH,
-            HELIOS_RESPONSES_ROOT,
-            HELIOS_RESPONSES_ERROR_PATH,
-            HELIOS_OCRE_FILE_PATH,
-            $data
-        );
+        $filePath = $this->incoming->getPath($data);
+        if (!is_file($filePath)) {
+            throw new RuntimeException("Fichier introuvable : $filePath");
+        }
+        $file = new SplFileObject(realpath($filePath));
+        $this->incomingFileProcessor->process($file);
     }
 
     public function getMutexName($data): string
