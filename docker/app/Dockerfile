@@ -6,7 +6,7 @@ COPY webpack.config.js ./
 COPY src_js/ ./src_js/
 RUN npx webpack --config webpack.config.js
 
-FROM hubdocker.libriciel.fr/php:8.5.6-fpm-alpine3.23@sha256:82dd8cfd2aa93a98b0357e4c810f894c4ca265b5034aef3be654faae5f579487 AS base
+FROM hubdocker.libriciel.fr/php:8.5.7-fpm-alpine3.23@sha256:bdc083e7b6acfb5eec64b5c85c134fe33cde8aa177da0d93fc46e43df2555b98 AS base
 
 ARG UID=10001
 ARG GID=10001
