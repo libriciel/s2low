@@ -78,7 +78,7 @@ class Authentification
 
             $id_list = $this->getIdFromConnexionInfo($this->getAllConnexionInfo($authentProcess));
             if (empty($id_list)) {
-                throw new Exception("Le certificat n'est pas valide : aucun compte trouvé");
+                throw new Exception("Le certificat n'est pas valide : aucun compte trouvé. Merci de contacter votre administrateur ou de déposer un ticket d'assistance chez votre éditeur ou votre mutualisant. ");
             }
             if (count($id_list) != 1) {
                 throw new Exception("La connexion n'a pas pu être établie");

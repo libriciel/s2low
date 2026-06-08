@@ -2,6 +2,10 @@
 
 ## 5.1.13 - 2026-06-08
 
+### Corrections
+
+- Clarification du message d'erreur en cas de certificat ne correspondant à aucun compte #1509
+
 ### Ajouts
 
 - Ajout d'un index sur la récupération des PES par collectivité et status #1512
