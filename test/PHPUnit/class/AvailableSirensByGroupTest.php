@@ -18,6 +18,9 @@ class AvailableSirensByGroupTest extends S2lowTestCase
         $this->getSQLQuery()->query('INSERT INTO authority_group_siren VALUES (3,1,491011698)');
         $this->getSQLQuery()->query('INSERT INTO authority_group_siren VALUES (4,2,443783170)');
         $this->getSQLQuery()->query('INSERT INTO authority_group_siren VALUES (5,546,829864099)');
+        $this->getSQLQuery()->query('INSERT INTO authority_group_siren VALUES (6,546,111111119)');
+        $this->getSQLQuery()->query('INSERT INTO authority_group_siren VALUES (7,2,111111119)');
+        $this->getSQLQuery()->query("INSERT INTO authority_groups VALUES (547, 'empty group', 1);");
     }
 
     /**
@@ -26,28 +29,57 @@ class AvailableSirensByGroupTest extends S2lowTestCase
     public function tearDown(): void
     {
         $this->getSQLQuery()->query('DELETE FROM authority_group_siren');
-        $this->getSQLQuery()->query('DELETE FROM authority_groups WHERE id=546');
+        $this->getSQLQuery()->query('DELETE FROM authority_groups WHERE id IN (546, 547)');
         parent::tearDown();
     }
-    public function testAvailableSirensByGroup()
+
+    public function testAvailableSirensByGroup(): void
     {
-        /** @var AvailableSirensByGroup $availableSirensByGroup */
         $availableSirensByGroup = $this->getObjectInstancier()->get(AvailableSirensByGroup::class);
         self::assertSame(
             [
                 [
+                    547 => 'empty group',
                     546 => 'groupe avec id bizarre',
                     1 => 'Groupe de test',
-                    2 => 'second groupe'
+                    2 => 'second groupe',
                 ],
                 [
-                    546 => ['829864099'],
+                    547 => [],
+                    546 => ['111111119', '829864099'],
                     1 => ['491011698'],
-                    2 => ['443783170']
-                ]
+                    2 => ['111111119', '443783170'],
+                ],
 
             ],
-            $availableSirensByGroup->get(6)
+            $availableSirensByGroup->get(6),
+        );
+    }
+
+    public function testGroupWithAllSirensTakenIsStillReturnedEmpty(): void
+    {
+        // 123456789 is the only siren of group 1, and it is taken by authority 1
+        $this->getSQLQuery()->query('DELETE FROM authority_group_siren');
+        $this->getSQLQuery()->query('INSERT INTO authority_group_siren VALUES (10,1,123456789)');
+
+        $availableSirensByGroup = $this->getObjectInstancier()->get(AvailableSirensByGroup::class);
+
+        self::assertSame(
+            [
+                [
+                    547 => 'empty group',
+                    546 => 'groupe avec id bizarre',
+                    1 => 'Groupe de test',
+                    2 => 'second groupe',
+                ],
+                [
+                    547 => [],
+                    546 => [],
+                    1 => [],
+                    2 => [],
+                ],
+            ],
+            $availableSirensByGroup->get(6),
         );
     }
 }

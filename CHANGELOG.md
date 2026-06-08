@@ -2,15 +2,16 @@
 
 ## 5.1.13 - 2026-06-08
 
-### Corrections
-
-- Clarification du message d'erreur en cas de certificat ne correspondant à aucun compte #1509
-
 ### Ajouts
 
 - Ajout d'un index sur la récupération des PES par collectivité et status #1512
 - Ajout d'un index sur la récupération des PES retour #1511
 - Ajout d'un index sur la récupération des actes par collectivité et status #1523
+
+### Corrections
+
+- Clarification du message d'erreur en cas de certificat ne correspondant à aucun compte #1509
+- Amélioration de la performance d'affichage de la page d'édition d'une collectivité #1524
 
 ## 5.1.12 - 2026-05-11
 
