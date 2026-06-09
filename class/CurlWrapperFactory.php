@@ -4,7 +4,7 @@ namespace S2lowLegacy\Class;
 
 class CurlWrapperFactory
 {
-    public function getNewInstance()
+    public function getNewInstance(): CurlWrapper
     {
         return new CurlWrapper();
     }

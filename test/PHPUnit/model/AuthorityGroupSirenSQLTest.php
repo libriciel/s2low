@@ -4,10 +4,7 @@ use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 
 class AuthorityGroupSirenSQLTest extends S2lowTestCase
 {
-    /**
-     * @var AuthorityGroupSirenSQL
-     */
-    private $authorityGroupSirenSQL;
+    private AuthorityGroupSirenSQL $authorityGroupSirenSQL;
 
     /**
      * @throws Exception
@@ -55,5 +52,39 @@ class AuthorityGroupSirenSQLTest extends S2lowTestCase
         // Si on créé une coll dans un nouveau groupe, elle doit avoir accès au SIREN
         $list = $this->authorityGroupSirenSQL->getAvailableSiren(2, 2);
         $this->assertEquals(['000000000','123456789'], $list);
+    }
+
+    public function testGetAvailableSirenForAllGroupsExcludesSirenUsedByOtherAuthority(): void
+    {
+        $this->authorityGroupSirenSQL->add(1, '123456789'); // taken by authority 1
+        $this->authorityGroupSirenSQL->add(1, '999999999'); // taken by authority 2
+        $this->authorityGroupSirenSQL->add(1, '491011698'); // free
+        $this->authorityGroupSirenSQL->add(1, '111111119'); // free
+        $this->authorityGroupSirenSQL->add(2, '443783170'); // free (no authority in group 2)
+
+        $rows = $this->authorityGroupSirenSQL->getAvailableSirenForAllGroups(6);
+
+        self::assertSame(
+            [
+                ['authority_group_id' => 1, 'siren' => '111111119'],
+                ['authority_group_id' => 1, 'siren' => '491011698'],
+                ['authority_group_id' => 2, 'siren' => '443783170'],
+            ],
+            $rows
+        );
+    }
+
+    public function testGetAvailableSirenForAllGroupsKeepsSirenOfCurrentAuthority(): void
+    {
+        $this->authorityGroupSirenSQL->add(1, '123456789'); // siren of authority 1 itself
+        $this->authorityGroupSirenSQL->add(1, '999999999'); // taken by authority 2
+
+        // authority 1 keeps its own siren (a.id != ?)
+        $rows = $this->authorityGroupSirenSQL->getAvailableSirenForAllGroups(1);
+
+        self::assertSame(
+            [['authority_group_id' => 1, 'siren' => '123456789']],
+            $rows
+        );
     }
 }
