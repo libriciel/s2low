@@ -1,9 +1,10 @@
 <?php
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\DataObject;
 use S2lowLegacy\Class\Helpers;
-use S2lowLegacy\Class\Trace;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\User;
 
 /**
@@ -68,6 +69,7 @@ class ActesBatch extends DataObject
     protected $batchFiles;
     protected $unprocessedBatchFiles;
     private bool $asNew;
+    private LoggerInterface $logger;
 
     /**
      * Constructeur d'un lot
@@ -77,6 +79,7 @@ class ActesBatch extends DataObject
     public function __construct($id = false, bool $asNew = false)
     {
         $this->asNew = $asNew;
+        $this->logger = LegacyObjectsManager::getLegacyObjectInstancier()->get(LoggerInterface::class);
         parent:: __construct($id);
     }
 
@@ -452,10 +455,13 @@ class ActesBatch extends DataObject
                     if (is_uploaded_file_wrapper($file["tmp_name"])) {
                         // Vérification du type de fichier
                         $type = Helpers:: getFileType($file["tmp_name"]);
-                        $trace = Trace::getInstance();
-
-                        $trace->log(
-                            "Récuperation de " . $file['name'] . " - type : " . $type . " - tmp_name : " . $file["tmp_name"]
+                        $this->logger->info(
+                            sprintf(
+                                "Récuperation de %s - type : %s - tmp_name : %s",
+                                $file["name"],
+                                $type,
+                                $file["tmp_name"]
+                            )
                         );
 
 
