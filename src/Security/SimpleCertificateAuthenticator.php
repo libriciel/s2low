@@ -2,7 +2,6 @@
 
 namespace S2low\Security;
 
-use Psr\Log\LoggerInterface;
 use S2low\Security\Exceptions\CertificateExtractionException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,11 +23,9 @@ class SimpleCertificateAuthenticator extends AbstractAuthenticator
 
     public function __construct(
         private readonly CertificateExtractor $certificateExtractor,
-        private readonly CredentialsExtractor $credentialsExtractor,
         private readonly SecurityUserProvider $userProvider,
-        private readonly UrlGeneratorInterface $urlGenerator,
         private readonly TokenStorageInterface $tokenStorage,
-        private readonly LoggerInterface $logger,
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
@@ -99,7 +96,14 @@ class SimpleCertificateAuthenticator extends AbstractAuthenticator
         $exceptionMessage = $exception->getMessage();
 
         if ($exceptionMessage === 'connection_impossible') {
-            return new RedirectResponse('/connexion-status/');
+            $request->getSession()->getFlashBag()->add(
+                'warning',
+                "Le certificat n'est pas valide : aucun compte trouvé. "
+                . 'Merci de contacter votre administrateur ou de déposer un ticket '
+                . "d'assistance chez votre éditeur ou votre mutualisant."
+            );
+
+            return new RedirectResponse($this->urlGenerator->generate('authentication_failed'));
         }
 
         if ($exceptionMessage === 'multiple_accounts') {
@@ -107,8 +111,7 @@ class SimpleCertificateAuthenticator extends AbstractAuthenticator
                 return $this->createConnexionImpossibleResponse();
             }
 
-            $loginUrl = '/login.php?error=' . urlencode($exceptionMessage);
-
+            $loginUrl = $this->urlGenerator->generate('app_legacy_login', ['error' => $exceptionMessage]);
 
             $targetPath = $request->getRequestUri();
             if ($targetPath) {
@@ -118,7 +121,7 @@ class SimpleCertificateAuthenticator extends AbstractAuthenticator
             return new RedirectResponse($loginUrl);
         }
 
-        return new RedirectResponse('/connexion-status/');
+        return new RedirectResponse($this->urlGenerator->generate('authentication_failed'));
     }
 
     private function hasAuthenticatedUser(): bool

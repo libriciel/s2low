@@ -1,0 +1,19 @@
+{% if app.request.hasPreviousSession %}
+    <div class="messages">
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                {% set alert_class = type == 'error' ? 'danger' : type %}
+                <div class="alert alert-{{ alert_class }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% set legacy_error = get_legacy_error() %}
+{% if legacy_error is not null and legacy_error is not empty %}
+    <div class="alert alert-warning">
+        <strong>{{ legacy_error }}</strong>
+    </div>
+{% endif %}

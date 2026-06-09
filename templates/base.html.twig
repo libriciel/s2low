@@ -1,50 +1,48 @@
-{# base.html.twig #}
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <meta name="robots" content="noindex">
     <title>{% block title %}{{ title }}{% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="{{ bootstrapMinCssUrl }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ styleBsCssUrl }}"/>
-    <script type="text/javascript" src="{{ jqueryJsUrl }}"></script>
-    <script type="text/javascript" src="{{ jqueryuiJsUrl }}"></script>
-    <script type="text/javascript" src="{{ tedetisJsUrl }}"></script>
-    <script type="text/javascript" src="{{ bootstrapJsUrl }}"></script>
-    {% block head %}{% endblock %}
+    {% block stylesheets %}
+        <link rel="stylesheet" type="text/css" href="{{ asset(bootstrapMinCssUrl) }}"/>
+        <link rel="stylesheet" type="text/css" href="{{ asset(styleBsCssUrl) }}"/>
+    {% endblock %}
+
+    {% block javascripts %}
+        <script type="text/javascript" src="{{ asset(jqueryJsUrl) }}"></script>
+        <script type="text/javascript" src="{{ asset(jqueryuiJsUrl) }}"></script>
+        <script type="text/javascript" src="{{ asset(tedetisJsUrl) }}"></script>
+        <script type="text/javascript" src="{{ asset(bootstrapJsUrl) }}"></script>
+    {% endblock %}
 </head>
+
 <body>
-    <div id="bandeau_s2low" class="container">
-        <a href='{{ url_index_ssl }}'>
-            <img src="{{ s2low_banner }}" alt="Bandeau S2low"/>
-        </a>
-    </div>
+
+{% block header %}
+    {{ include('components/header.html.twig') }}
+{% endblock %}
 
 <div class="container">
     <div class="row">
-        <div id="sidebar" class="col-md-3" role="navigation">
-            <div class="well sidebar-nav">
-                {{ component('menu') }}
-            </div>
-            {% block pagination %}{% endblock %}
-        </div>
+        {% if app.user %}
+            {{ include('components/sidebar.html.twig') }}
+        {% endif %}
+
         <div id="content" class="col-md-9" role="main">
-            {% block alert %}
-                {% include 'components/alert.html.twig' %}
-            {% endblock %}
+            {{ include('components/flash_messages.html.twig') }}
+
             <h1>{% block h1 %}{% endblock %}</h1>
             {% block body %}{% endblock %}
         </div>
     </div>
 </div>
 
-<footer class="bs-footer">
-    <div class="container">
-        <a href="{{ webmaster }}" class="link-white">Webmaster</a> -
-        <span class="link-white">Offre S²LOW</span> -
-        <a href="{{ path('app_legacy_common_release_notes') }}">{{ versionInfoLabel }}</a>
-    </div>
-</footer>
+{% block footer %}
+    {{ include('components/footer.html.twig') }}
+{% endblock %}
+
 </body>
 </html>
