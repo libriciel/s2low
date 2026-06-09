@@ -1,11 +1,10 @@
 <?php
 
-use S2lowLegacy\Class\actes\ActesRetriever;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\actes\ActeTamponne;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\DataObject;
 use S2lowLegacy\Class\Helpers;
-use S2lowLegacy\Class\Trace;
 
 class ActesIncludedFile extends DataObject
 {
@@ -26,6 +25,7 @@ class ActesIncludedFile extends DataObject
 
     private $tampon;
     private $date_affichage;
+    private readonly LoggerInterface $logger;
 
 
     protected $dbFields = array("envelope_id" => array("descr" => "Identifiant enveloppe", "type" => "isInt", "mandatory" => true),
@@ -80,6 +80,7 @@ class ActesIncludedFile extends DataObject
         }
 
         $this->tampon = false;
+        $this->logger = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(LoggerInterface::class);
     }
 
     /**
@@ -128,7 +129,18 @@ class ActesIncludedFile extends DataObject
 
             $cmd = 'tar xzf ' . $envelope_path . " -C " . $tmpDir . " " . $this->filename;
 
-            Trace::wrap_exec($cmd, $status, $ret);
+            exec($cmd, $status, $ret);
+
+            $output_str = implode("\n", $status);
+
+            $this->logger->debug(
+                sprintf(
+                    "Execution de: %s- résultat : %s - output : %s",
+                    $cmd,
+                    $ret,
+                    $output_str
+                )
+            );
 
             $ret_value = true;
 

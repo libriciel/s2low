@@ -50,27 +50,9 @@ class Trace
         fwrite($this->fichier, "[$date] [$level] - $message\n");
     }
 
-    public static function wrap_exec($commande, &$output, &$ret)
-    {
-        $log = Trace::getInstance();
-        exec($commande, $output, $ret);
-
-        $output_str = implode("\n", $output);
-
-        $log->log(
-            "Execution de: " . $commande .
-                    "- resultat : $ret - output : $output_str",
-            Trace::$TRACE_DEBUG
-        );
-    }
-
     private static $trace;
 
     private $fichier;
-
-    private function __construct()
-    {
-    }
 
     public function __destruct()
     {

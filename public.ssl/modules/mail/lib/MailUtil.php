@@ -16,7 +16,7 @@
 
 namespace S2lowLegacy\Mail;
 
-use S2lowLegacy\Class\Trace;
+use Psr\Log\LoggerInterface;
 use ZipArchive;
 
 require_once SITEROOT . '/class/include.php';
@@ -25,11 +25,10 @@ require_once SITEROOT . '/class/include.php';
 class MailUtil
 {
     public $errorMsg;
-    private $trace;
 
-    public function __construct()
-    {
-        $this->trace = Trace::getInstance();
+    public function __construct(
+        private readonly LoggerInterface $logger,
+    ) {
     }
 
     /**
@@ -74,14 +73,14 @@ class MailUtil
 
         if (! $res) {
             $this->errorMsg = "Impossible de créer l'archive zip $file : erreur " . $res;
-            $this->trace->log($this->errorMsg, Trace::$TRACE_ERROR);
+            $this->logger->error($this->errorMsg);
             return false;
         }
 
         foreach ($array_file as $fichier) {
             if (!$zip->addFile($fichier, basename($fichier))) {
                 $this->errorMsg = "Impossible de mettre le fichier $fichier dans l'archive $file ";
-                $this->trace->log($this->errorMsg, Trace::$TRACE_ERROR);
+                $this->logger->error($this->errorMsg);
                 return false;
             }
         }
