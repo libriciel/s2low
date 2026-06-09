@@ -10,17 +10,20 @@ use S2lowLegacy\Model\GroupSQL;
 class AvailableSirensByGroup
 {
     public function __construct(
-        private GroupSQL $groupSQL,
-        private AuthorityGroupSirenSQL $authorityGroupSirenSQL
+        private readonly GroupSQL $groupSQL,
+        private readonly AuthorityGroupSirenSQL $authorityGroupSirenSQL,
     ) {
     }
     public function get(?int $authorityId): array
     {
         $groups = $this->groupSQL->getGroupsIdName();
-        $sirensByGroup = [];
+        $sirensByGroup = array_fill_keys(array_keys($groups), []);
 
-        foreach ($groups as $key => $value) {
-            $sirensByGroup[$key] = $this->authorityGroupSirenSQL->getAvailableSiren($key, $authorityId);
+        foreach ($this->authorityGroupSirenSQL->getAvailableSirenForAllGroups($authorityId) as $row) {
+            $groupId = (int)$row['authority_group_id'];
+            if (isset($sirensByGroup[$groupId])) {
+                $sirensByGroup[$groupId][] = $row['siren'];
+            }
         }
         return [$groups, $sirensByGroup];
     }

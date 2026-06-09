@@ -85,6 +85,14 @@ class CurlWrapper
         $this->setProperties(CURLOPT_SSLKEYPASSWD, $clientKeyPassword);
     }
 
+    public function setHttpsConnexionWithVerifPeerPubKey($pubKeyHash): void
+    {
+        $this->setProperties(CURLOPT_SSL_VERIFYHOST, 0);
+        $this->setProperties(CURLOPT_SSL_VERIFYPEER, false);
+        $this->setProperties(CURLOPT_CERTINFO, 1);
+        $this->setProperties(CURLOPT_PINNEDPUBLICKEY, "sha256//" . $pubKeyHash);
+    }
+
     public function setPatch()
     {
         $this->patch = true;
