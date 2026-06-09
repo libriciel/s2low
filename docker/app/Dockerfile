@@ -97,7 +97,7 @@ RUN bash -c "mkdir -p /data/{certificates,config,log,run,tdt-workspace}" \
  && chown "$UID":"$GID" -R /data/
 
 COPY --from=node_modules /app/node_modules/ /app/node_modules/
-COPY --from=hubdocker.libriciel.fr/composer:2.9.8@sha256:b09bccd91a78fe8a9ab4b33d707b862e8fe54fec17782e32683ad2a69c46867d /usr/bin/composer /usr/local/bin/composer
+COPY --from=hubdocker.libriciel.fr/composer:2.10.1@sha256:41959f55087549989efcdfe953977b64e98e07ca0d7532d7e4b7fe1a90cc4159 /usr/bin/composer /usr/local/bin/composer
 COPY ./composer.* /app/
 
 RUN composer install --no-ansi --no-dev --no-interaction --no-progress --no-scripts --no-autoloader
@@ -117,7 +117,7 @@ FROM base AS dev
 
 USER "root"
 
-COPY --from=hubdocker.libriciel.fr/composer:2.9.8@sha256:b09bccd91a78fe8a9ab4b33d707b862e8fe54fec17782e32683ad2a69c46867d /usr/bin/composer /usr/local/bin/composer
+COPY --from=hubdocker.libriciel.fr/composer:2.10.1@sha256:41959f55087549989efcdfe953977b64e98e07ca0d7532d7e4b7fe1a90cc4159 /usr/bin/composer /usr/local/bin/composer
 
 RUN --mount=type=bind,from=ghcr.io/php/pie:1.4.5-bin@sha256:14bc484d9be70396e31b0b57222724f780fe91f76aa5294304086dbce386c044,source=/pie,target=/usr/local/bin/pie \
     apk add --no-cache --virtual .dev-build-deps \
