@@ -23,6 +23,10 @@ class FileMetadata
     {
         return $this->file->getExtension();
     }
+    public function hasExtension(string $extension): bool
+    {
+        return (bool)preg_match("#$extension#", mb_strtolower($this->getExtension()));
+    }
 
     public function isXmlFile(): bool
     {

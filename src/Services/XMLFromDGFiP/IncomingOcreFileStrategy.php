@@ -16,7 +16,7 @@ class IncomingOcreFileStrategy implements IncomingFileHandlingStrategy
 
     public function canHandle(FileMetadata $fileMetadata): bool
     {
-        return (bool) preg_match('#ocre#', mb_strtolower($fileMetadata->getExtension()));
+        return $fileMetadata->hasExtension('ocre');
     }
 
     public function handle(FileMetadata $fileMetadata, SplFileObject $fileObject): PesEntrantHandlingResult
