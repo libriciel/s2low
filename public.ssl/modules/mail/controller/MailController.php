@@ -1,5 +1,6 @@
 <?php
 
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\User;
@@ -17,6 +18,7 @@ class MailController
     private $lastError;
 
     public function __construct(
+        private readonly MailUtil $mailUtil,
         private readonly User $me,
         private $doc,
     ) {
@@ -278,8 +280,7 @@ class MailController
  */
     protected function SaveError()
     {
-        $mailUtil = new MailUtil();
-        $mailMessageArray = $mailUtil->GetMailMessage();
+        $mailMessageArray = $this->mailUtil->GetMailMessage();
         if ($mailMessageArray == null) {
           //echo "mail emis failed.";
             return false;

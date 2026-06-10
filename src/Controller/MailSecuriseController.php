@@ -10,20 +10,21 @@ use MailController;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Mail\MailLayout;
+use S2lowLegacy\Mail\MailUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MailSecuriseController extends AbstractController
 {
-    private MailLayout $doc;
     private Module $module;
     private User $me;
     private Authority $myAuthority;
 
-    public function __construct(MailLayout $mailLayout)
-    {
-        $this->doc = $mailLayout;
+    public function __construct(
+        private readonly MailUtil $mailUtil,
+        private MailLayout $doc,
+    ) {
         list($this->module, $this->me, $this->myAuthority) = MailInit::getIdentificationParameters();
     }
 
@@ -65,7 +66,7 @@ class MailSecuriseController extends AbstractController
 
                         $doc->DisplayHead();
                     }
-                    $MailCtl = new MailController($me, $this->doc);
+                    $MailCtl = new MailController($this->mailUtil, $me, $this->doc);
                     $MailCtl->run($command);
                     $doc->closeContent(true);
                     $doc->closeContainer(true);

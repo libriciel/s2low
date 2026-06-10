@@ -22,8 +22,7 @@ class Database
     public function __construct(
         private readonly LoggerInterface $logger,
         SQLQuery $sqlQuery
-    )
-    {
+    ) {
         $this->is_in_a_transaction = false;
         $this->has_transaction_error = false;
         $this->sqlQuery = $sqlQuery;
