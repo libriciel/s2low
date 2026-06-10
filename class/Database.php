@@ -4,6 +4,7 @@ namespace S2lowLegacy\Class;
 
 use Exception;
 use PDO;
+use Psr\Log\LoggerInterface;
 use S2lowLegacy\Lib\SQLQuery;
 
 class Database
@@ -18,8 +19,10 @@ class Database
      */
     private $has_transaction_error;
 
-    public function __construct(SQLQuery $sqlQuery)
-    {
+    public function __construct(
+        private readonly LoggerInterface $logger,
+        SQLQuery $sqlQuery
+    ) {
         $this->is_in_a_transaction = false;
         $this->has_transaction_error = false;
         $this->sqlQuery = $sqlQuery;
@@ -33,8 +36,7 @@ class Database
      */
     public function select($query, array $parameters = [])
     {
-        $trace = Trace::getInstance();
-        $trace->log($query, Trace::$TRACE_DEBUG);
+        $this->logger->debug($query);
         $pdoStatement = $this->sqlQuery->getPdo()->prepare($query);
         $pdoStatement->execute($parameters);
         return new QueryResult($pdoStatement);
