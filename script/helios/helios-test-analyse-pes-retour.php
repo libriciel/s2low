@@ -34,7 +34,7 @@ try {
     var_dump($extractedValues);
     var_dump($errors);
 } catch (Exception $e) {
-    echo $e->getMessage() . '\n';
+    echo $e->getMessage() . "\n";
 } finally {
     $status = file_get_contents('/proc/' . getmypid() . '/status');
     var_dump($status);
@@ -42,6 +42,6 @@ try {
     $mem_usage = memory_get_usage(true);
     /* Peak memory usage */
     $mem_peak = memory_get_peak_usage(true);
-    echo 'The script is now using: ' . round($mem_usage / 1024) . 'KB of memory\n';
-    echo 'Peak usage:' . round($mem_peak / 1024) . 'KB of memory.\n';
+    echo 'The script is now using: ' . round($mem_usage / 1024) . "KB of memory\n";
+    echo 'Peak usage:' . round($mem_peak / 1024) . "KB of memory.\n";
 }
