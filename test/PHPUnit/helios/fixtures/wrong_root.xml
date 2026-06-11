@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<n:wrong_root xmlns:n="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/retour/v2">
+    <Enveloppe>
+        <Parametres>
+            <Version V="2"/>
+        </Parametres>
+        <Emetteur>
+            <Sigle V="COSOLUCE"/>
+            <Adresse V="CORAIL 4.02.05 - MAUVE 4.02.07"/>
+        </Emetteur>
+        <Recepteur>
+            <Sigle V="HELIOS"/>
+        </Recepteur>
+    </Enveloppe>
+    <EnTetePES>
+        <DteStr V="2015-12-10"/>
+        <IdPost V="086016"/>
+        <IdColl V="20004910400025"/>
+        <CodCol V="400"/>
+        <CodBud V="01"/>
+        <LibelleColBud V="EAUX DE VIENNE -SIVEER- EAU"/>
+    </EnTetePES>
+    <ACQUIT>
+        <EnTeteAcquit>
+            <IdVer V="2"/>
+        </EnTeteAcquit>
+        <ElementACQUIT>
+            <DomaineAck V="5"/>
+            <EtatAck V="1"/>
+            <NumBord V="1847"/>
+            <ExerciceBord V="2015"/>
+        </ElementACQUIT>
+        <ElementACQUIT>
+            <DomaineAck V="4"/>
+            <EtatAck V="1"/>
+            <IdUnique V="200049104000252015DEPENSE0000087458"/>
+        </ElementACQUIT>
+        <ElementACQUIT>
+            <DomaineAck V="4"/>
+            <EtatAck V="1"/>
+            <IdUnique V="20004904000252015DEPENSE0000087460"/>
+        </ElementACQUIT>
+        <ElementACQUIT>
+            <DomaineAck V="4"/>
+            <EtatAck V="1"/>
+            <IdUnique V="200049104000252015DEPENSE0000087461"/>
+        </ElementACQUIT>
+        <ElementACQUIT>
+            <DomaineAck V="4"/>
+            <EtatAck V="1"/>
+            <IdUnique V="200049104000252015DEPENSE0000087459"/>
+        </ElementACQUIT>
+    </ACQUIT>
+</n:wrong_root>

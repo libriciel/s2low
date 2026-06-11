@@ -82,7 +82,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
 
         $client->request('GET', 'modules/helios/admin/analyse-response.php');
         static::assertMatchesRegularExpression(
-            '#identificant NomFic 03f432a4f6d35110bf309fb525eb61f7#',
+            '#Le couple NomFic 03f432a4f6d35110bf309fb525eb61f7 et CodCol 400 n\'est associé à aucune transaction dans la base de données#',
             $_SESSION['error']
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
@@ -273,7 +273,7 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
         $transaction_id = $this->createTransaction();
 
         $_GET['id'] = $transaction_id;
-        $this->expectError();           //Le Pes Aller n'est pas set
+        $this->expectError();           //Le ParsedPes Aller n'est pas set
         $client->request('GET', 'modules/helios/helios_transac_validate_pes_aller.php');
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }

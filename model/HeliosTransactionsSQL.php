@@ -801,4 +801,57 @@ AND authorities.helios_use_passtrans = ?
     {
         $this->setTransactionInCloud($transactionId);
     }
+
+    /**
+     * @param string $nomFich
+     * @param string|null $codCol
+     * @return int|null
+     */
+
+    public function findTransactionId(string $nomFich, ?string $codCol): ?int
+    {
+        if (is_null($codCol)) {
+            $helios_transaction_list = $this->getIdByNomFic($nomFich);
+        } else {
+            $helios_transaction_list = $this->getIdByNomFicAndCodCol($nomFich, $codCol);
+        }
+
+        if (!$helios_transaction_list) {
+            return null;
+        }
+
+        if (count($helios_transaction_list) == 1) {
+            return $helios_transaction_list[0];
+        }
+
+        foreach ($helios_transaction_list as $transaction_id) {
+            $workflow_info = $this->getLastStatusInfo($transaction_id);
+            $transaction_list[] = [
+                'transaction_id' => $transaction_id,
+                'status_id' => $workflow_info['status_id'],
+                'date' => $workflow_info['date']
+            ];
+        }
+
+        usort($transaction_list, function ($a, $b) {
+            if (
+                $a['status_id'] == HeliosTransactionsSQL::TRANSMIS &&
+                $b['status_id'] != HeliosTransactionsSQL::TRANSMIS
+            ) {
+                return -1;
+            }
+            if (
+                $b['status_id'] == HeliosTransactionsSQL::TRANSMIS &&
+                $a['status_id'] != HeliosTransactionsSQL::TRANSMIS
+            ) {
+                return 1;
+            }
+            if ($a['date'] > $b['date']) {
+                return -1;
+            } else {
+                return 1;
+            }
+        });
+        return $transaction_list[0]['transaction_id'];
+    }
 }

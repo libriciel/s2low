@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <level1a>
+        <level2a>
+            <level3a>Text1</level3a>
+            <level3b/>
+        </level2a>
+        <level2b>
+            <level3c>Text2</level3c>
+        </level2b>
+    </level1a>
+
+    <level1b>
+        <level2c>
+            <level3d>
+                <level4a>DeepText</level4a>
+            </level3d>
+        </level2c>
+    </level1b>
+
+    <level1c/> <!-- empty element -->
+
+    <level1d>
+        <level2d/>
+        <level2e>
+            <level3e/>
+        </level2e>
+    </level1d>
+</root>

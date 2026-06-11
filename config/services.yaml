@@ -639,12 +639,6 @@ services:
     arguments:
       $helios_counter_file: '%app.helios_counter_file%'
 
-  S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu:
-    public: true
-    arguments:
-      $schema_pes_path: "%app.schema_pes_path%"
-      $email_admin_technique: "%app.mail.email_admin_technique%"
-
   S2lowLegacy\Class\helios\HeliosPESValidation:
     public: true
     arguments:
@@ -952,3 +946,79 @@ services:
     autowire: true
     arguments:
       $authBridge: '@S2low\Security\LegacyAuthenticationBridge'
+
+  S2low\Services\XMLFromDGFiP\Parser:
+    public: true
+
+  S2low\Infrastructure\XML\StreamingXmlReader\XmlNodeStreamParser:
+    arguments:
+      $schema_pes_path: "%app.schema_pes_path%"
+
+  'XMLReader':
+    class: '\XMLReader'
+    public: true
+    shared: false
+
+  S2low\Infrastructure\AdminMailer:
+    public: true
+    arguments:
+      $email_admin_technique: "%app.mail.email_admin_technique%"
+
+  S2low\Infrastructure\Directory:
+    public: false
+    autowire: false
+
+  app.heliosFilesIncoming:
+    class: S2low\Infrastructure\Directory
+    arguments:
+      $path: '%app.helios_ftp_response_tmp_local_path%'
+
+  app.heliosFilesUpload:
+    class: S2low\Infrastructure\Directory
+    public: true
+    arguments:
+      $path: '%app.helios_files_upload_root%'
+
+  app.heliosResponseDirectory:
+    class: S2low\Infrastructure\Directory
+    public: true
+    arguments:
+      $path: '%app.helios_responses_root%'
+
+  app.heliosErrorDirectory:
+    class: S2low\Infrastructure\Directory
+    public: true
+    arguments:
+      $path: '%app.helios_responses_error_path%'
+
+  app.heliosOcreDirectory:
+    class: S2low\Infrastructure\Directory
+    public: true
+    arguments:
+      $path: '%app.helios_ocre_file_path%'
+
+  S2lowLegacy\Class\helios\HeliosFilesFactory:
+
+  S2low\ProcessingResults\MoveFileToErrorDirectoryFactory:
+    public: true
+    arguments:
+      $errorDirectory: '@app.heliosErrorDirectory'
+
+  S2low\Infrastructure\XML\RootFinder\XMLRootFinder:
+    public: true
+
+  S2lowLegacy\Class\helios\IncomingFileProcessor:
+    public: true
+    arguments:
+      $fileHandlingStrategies: !tagged_iterator app.file_handling_strategy
+
+  _instanceof:
+    S2low\Services\XMLFromDGFiP\IncomingFileHandlingStrategy:
+      tags: ['app.file_handling_strategy']
+
+    S2low\Services\XMLFromDGFiP\ParsedXmlFileStrategy:
+      tags: ['app.xml_handling_strategy']
+
+  S2low\Services\XMLFromDGFiP\IncomingXmlFileStrategy:
+    arguments:
+      $xmlFileTypeStrategy: !tagged_iterator app.xml_handling_strategy

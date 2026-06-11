@@ -6,19 +6,20 @@ use HeliosDirectoriesManager;
 use IntegrationTests\S2lowIntegrationTestCase;
 use Psr\Log\LoggerInterface;
 use S2low\Enum\UserRole;
+use S2low\Infrastructure\Directory;
 use S2low\Services\LocalFileResolver;
-use S2lowLegacy\Class\helios\HeliosAnalyseFichierRecu;
+use S2lowLegacy\Class\helios\IncomingFileProcessor;
 use S2lowLegacy\Class\helios\HeliosFilesFactory;
 use S2lowLegacy\Class\helios\HeliosPurge;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Controller\HeliosController;
-use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
+use SplFileObject;
 
 class HeliosPurgeTest extends S2lowIntegrationTestCase
 {
-    private HeliosDirectoriesManager $heliosUtils;
+    private HeliosDirectoriesManager $heliosDirectoriesManager;
 
     public function __construct(?string $name = null, array $data = [], $dataName = '')
     {
@@ -30,43 +31,67 @@ class HeliosPurgeTest extends S2lowIntegrationTestCase
         parent::setUp();
         $this->setUserWithRole(UserRole::Utilisateur);
 
-        $this->heliosTransactionSQL = self::getContainer()->get(HeliosTransactionsSQL::class);
-        $this->heliosUtils = new HeliosDirectoriesManager();
-        $this->heliosUtils->createDirectories();
-
-        $this->localFileResolver = new LocalFileResolver(
-            self::getContainer()->get(HeliosTransactionsSQL::class),
-            $this->heliosUtils->helios_files_upload_root
-        );
-
-        $this->heliosController = new HeliosController(
-            $this->localFileResolver,
-            self::getContainer()->get('app.store.file.pes_aller'),
-            self::getContainer()->get(ObjectInstancier::class),
-        );
-
-        $this->heliosFilesFactory = new HeliosFilesFactory(
-            $this->heliosTransactionSQL,
-            $this->heliosUtils->helios_files_upload_root,
-            $this->heliosUtils->helios_response_root,
-        );
-
-        $this->heliosAnalyseFichierRecu = self::getContainer()->get(HeliosAnalyseFichierRecu::class);
-
-
-        $this->tmpDirectory = sys_get_temp_dir() . "/" . uniqid("phpunit");
+        $this->tmpDirectory = sys_get_temp_dir() . '/' . uniqid('phpunit');
         mkdir($this->tmpDirectory);
 
-        $this->heliosPurge = new HeliosPurge(
-            self::getContainer()->get(LoggerInterface::class),
-            $this->heliosFilesFactory
+        $this->heliosDirectoriesManager = new HeliosDirectoriesManager();
+        $this->heliosDirectoriesManager->createDirectories();
+
+        self::getContainer()->set(
+            'app.heliosFilesIncoming',
+            new Directory(
+                $this->heliosDirectoriesManager->helios_ftp_response_tmp_local_path,
+            )
         );
+
+        self::getContainer()->set(
+            'app.heliosFilesUpload',
+            new Directory(
+                $this->heliosDirectoriesManager->helios_files_upload_root
+            )
+        );
+
+        self::getContainer()->set(
+            'app.localFileResolver.pes_aller',
+            new LocalFileResolver(
+                self::getContainer()->get(HeliosTransactionsSQL::class),
+                $this->heliosDirectoriesManager->helios_files_upload_root,
+            )
+        );
+
+
+        self::getContainer()->set(
+            'app.heliosResponseDirectory',
+            new Directory(
+                $this->heliosDirectoriesManager->helios_response_root
+            )
+        );
+
+        self::getContainer()->set(
+            'app.heliosErrorDirectory',
+            new Directory(
+                $this->heliosDirectoriesManager->helios_responses_error_path
+            )
+        );
+
+        self::getContainer()->set(
+            'app.heliosOcreDirectory',
+            new Directory(
+                $this->heliosDirectoriesManager->helios_ocre
+            )
+        );
+
+        $this->heliosTransactionSQL = self::getContainer()->get(HeliosTransactionsSQL::class);
+        $this->heliosController = self::getContainer()->get(HeliosController::class);
+        $this->heliosFilesFactory = self::getContainer()->get(HeliosFilesFactory::class);
+        $this->incomingFileProcessor = self::getContainer()->get(IncomingFileProcessor::class);
+        $this->heliosPurge = self::getContainer()->get(HeliosPurge::class);
     }
 
     public function tearDown(): void
     {
         parent::tearDown();
-        $this->heliosUtils->clearDirectories();
+        $this->heliosDirectoriesManager->clearDirectories();
         foreach (
             [$this->tmpDirectory] as $dirname
         ) {
@@ -89,7 +114,7 @@ class HeliosPurgeTest extends S2lowIntegrationTestCase
         );
 
         $pesAllerRetriever = new PesAllerRetriever(
-            $this->heliosUtils->helios_files_upload_root,
+            $this->heliosDirectoriesManager->helios_files_upload_root,
             self::getContainer()->get(OpenStackSwiftWrapper::class),
             self::getContainer()->get(LoggerInterface::class)
         );
@@ -98,7 +123,7 @@ class HeliosPurgeTest extends S2lowIntegrationTestCase
 
         $id_t = $this->heliosController->import(13);
 
-        // Les informations sont ajoutées par le cron HeliosAnalyseFichierRecu
+        // Les informations sont ajoutées par le cron IncomingFileProcessor
         $info_from_pes_aller['nom_fic'] = "03f432a4f6d35110bf309fb525eb61f7";
         $info_from_pes_aller['cod_col'] = "400";
         $info_from_pes_aller['cod_bud'] = "01";
@@ -106,18 +131,15 @@ class HeliosPurgeTest extends S2lowIntegrationTestCase
         $this->heliosTransactionSQL->setInfoFromPESAller($id_t, $info_from_pes_aller);
 
         $filename = "pes_acquit_modif.xml";
+        $path = $this->heliosDirectoriesManager->helios_ftp_response_tmp_local_path . "/$filename";
         file_put_contents(
-            $this->heliosUtils->helios_ftp_response_tmp_local_path . "/$filename",
+            $path,
             file_get_contents(__DIR__ . "/fixtures/pes_acquit_modif.xml")
         );
 
-        $this->heliosAnalyseFichierRecu->analyseOneFileForWorker(
-            $this->heliosUtils->helios_ftp_response_tmp_local_path,
-            $this->heliosUtils->helios_response_root,
-            $this->heliosUtils->helios_responses_error_path,
-            $this->heliosUtils->helios_ocre,
-            $filename
-        );
+        $file = new SplFileObject($path);
+
+        $this->incomingFileProcessor->process($file);
 
         $heliosTransactionSQL = self::getContainer()->get(HeliosTransactionsSQL::class);
         $this->assertEquals(
