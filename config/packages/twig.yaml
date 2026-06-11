@@ -13,8 +13,9 @@ twig:
         jqueryJsUrl: '/jsmodules/jquery.js'
         jqueryuiJsUrl: '/jsmodules/jqueryui.js'
         tedetisJsUrl: '/javascript/tedetis.js'
-        bootstrapMinCssUrl: '/custom/styles/bootstrap.min.css'
+        bootstrapMinCssUrl: '/custom/styles/bootstrap5.min.css'
         bootstrapThemeMinCssUrl: '/custom/styles/bootstrap-theme.min.css'
+        bootstrapJsUrl: '/custom/js/bootstrap.bundle.min.js'
         styleBsCssUrl: '/custom/styles/style_bs.css'
 
 when@test:

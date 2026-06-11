@@ -401,3 +401,168 @@ span.form-control {
 }
 
 
+/* ==========================================================================
+   Bootstrap 3 -> 5 CSS Bridge & Design Modernization (Phase 1)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #f8fafc;
+    color: #334155;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+}
+
+h1 {
+    color: #ff6600 !important; /* S2LOW signature orange */
+    margin-bottom: 1.5rem;
+}
+
+h2 {
+    color: #1e293b;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1.25rem;
+}
+
+/* Form inputs focus and rounded style */
+.form-control {
+    border-radius: 0.375rem;
+    border: 1px solid #cbd5e1;
+    padding: 0.375rem 0.75rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #ffaa66;
+    box-shadow: 0 0 0 0.25rem rgba(255, 102, 0, 0.25);
+    outline: 0;
+}
+
+/* Émulation du .well en carte moderne (card) */
+.well {
+    min-height: 20px;
+    padding: 1.25rem;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* Sidebar Menu navigation facelift */
+.text-menu.nav > li > a {
+    color: #475569;
+    font-weight: 500;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease-in-out;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.text-menu.nav > li > a:hover {
+    color: #ff6600;
+    background-color: #fff1e6;
+    text-decoration: none;
+    padding-left: 20px !important;
+}
+
+/* Bridge : boutons et badge .label */
+.btn-default {
+    background-color: #f1f5f9;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+}
+
+.btn-default:hover {
+    background-color: #e2e8f0;
+    color: #0f172a;
+    border-color: #94a3b8;
+}
+
+.label {
+    display: inline-block;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 50rem;
+    text-decoration: none;
+}
+
+.label-success {
+    background-color: #10b981;
+    color: #fff;
+}
+
+.label-warning {
+    background-color: #f59e0b;
+    color: #000;
+}
+
+.label-danger {
+    background-color: #ef4444;
+    color: #fff;
+}
+
+.label-info {
+    background-color: #06b6d4;
+    color: #000;
+}
+
+.label-primary {
+    background-color: #ff6600;
+    color: #fff;
+}
+
+/* Bridge : formulaires et grilles */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.control-label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #334155;
+}
+
+.help-block {
+    font-size: 0.875em;
+    color: #64748b;
+    margin-top: 0.25rem;
+}
+
+.img-responsive {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Bridge : Offsets grille Bootstrap 3 pour la compatibilité */
+@media (min-width: 768px) {
+    .col-md-offset-1  { margin-left: 8.33333333%; }
+    .col-md-offset-2  { margin-left: 16.66666667%; }
+    .col-md-offset-3  { margin-left: 25%; }
+    .col-md-offset-4  { margin-left: 33.33333333%; }
+    .col-md-offset-5  { margin-left: 41.66666667%; }
+    .col-md-offset-6  { margin-left: 50%; }
+    .col-md-offset-7  { margin-left: 58.33333333%; }
+    .col-md-offset-8  { margin-left: 66.66666667%; }
+    .col-md-offset-9  { margin-left: 75%; }
+    .col-md-offset-10 { margin-left: 83.33333333%; }
+    .col-md-offset-11 { margin-left: 91.66666667%; }
+}
+
+
+
