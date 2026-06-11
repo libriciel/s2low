@@ -28,6 +28,7 @@ class HeliosEnvoiSAE
         AuthoritySQL $authoritySQL,
         HeliosTransactionsSQL $heliosTransactionsSQL,
         PastellPropertiesSQL $pastellPropertiesSQL,
+        private readonly PESAcquitCloudStorage $pesAcquitCloudStorage,
         private readonly PESAllerCloudStorage $pesAllerCloudStorage
     ) {
         $this->heliosTransactionsSQL = $heliosTransactionsSQL;
@@ -103,7 +104,7 @@ class HeliosEnvoiSAE
             throw new FilesNotFoundInCloudException("Impossible de récupérer le PES ALLER {$transactionsInfo['sha1']}");
         }
 
-            $pes_acquit_filepath = $this->pesAllerCloudStorage->getPath($transaction_id);
+            $pes_acquit_filepath = $this->pesAcquitCloudStorage->getPath($transaction_id);
 
             $pastellProperties = $this->pastellPropertiesSQL->getPastellProperties($transactionsInfo[HeliosTransactionsSQL::AUTHORITY_ID]);
             $this->logger->info("Début du transfert vers $pastellProperties->url de la transaction $transaction_id");
