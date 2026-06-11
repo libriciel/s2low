@@ -130,6 +130,83 @@ class ActesArchiveControlerTest extends S2lowTestCase
     }
 
     /**
+     * @throws Exception
+     */
+    public function testSendArchiveWithSpy(): void
+    {
+        // Arrange
+        $this->mockActesTamponne();
+
+        $projectDir = self::getContainer()->getParameter('kernel.project_dir');
+        $arContent = file_get_contents($projectDir . '/test/PHPUnit/class/actes/fixtures/001-000000000-20170130-TEST42-DE-1-2_0.xml');
+
+        $expectedActeContent = $this->extractFixtureFile(
+            $projectDir . '/test/PHPUnit/class/actes/fixtures/abc-TACT--000000000--20170803-16.tar.gz',
+            '034-000000000-20170801-20170803E-AI-1-1_1.pdf'
+        );
+
+        $capturedActeContent = null;
+        $capturedARContent = null;
+
+        $pastell = $this->getMockBuilder(\S2lowLegacy\Class\PastellWrapper::class)->disableOriginalConstructor()->getMock();
+        $pastell->method('createActes')->willReturn("xyzt");
+        $pastell->method('getLastError')->willReturn("");
+        $pastell->method('sendSAE')->willReturn(true);
+
+        $pastell->method('postActes')
+            ->willReturnCallback(function ($id_d, $file_path, $file_name) use (&$capturedActeContent) {
+                $capturedActeContent = file_get_contents($file_path);
+                return true;
+            });
+
+        $pastell->method('postARActes')
+            ->willReturnCallback(function ($id_d, $file_path) use (&$capturedARContent) {
+                $capturedARContent = file_get_contents($file_path);
+                return true;
+            });
+
+        $mockedPastellFactory = $this->getMockBuilder(PastellWrapperFactory::class)->disableOriginalConstructor()->getMock();
+        $mockedPastellFactory->method('getNewInstance')->willReturn($pastell);
+
+        $transaction_id = $this->createTransactionEnAttenteEnvoiSAE();
+
+        $controller = $this->createActesArchivesController(self::getContainer()->get(ActesRetriever::class), $mockedPastellFactory);
+
+        // Act
+        $controller->sendArchive($transaction_id);
+
+        // Assert
+        $last_status_info = $this->getActesTransactionsSQL()->getLastStatusInfo($transaction_id);
+        static::assertSame(
+            ActesStatusSQL::STATUS_ENVOYE_AU_SAE,
+            $last_status_info['status_id']
+        );
+
+        $this->assertNotNull($capturedActeContent);
+        $this->assertNotNull($capturedARContent);
+        $this->assertSame($expectedActeContent, $capturedActeContent);
+        $this->assertSame($arContent, $capturedARContent);
+    }
+
+    /**
+     * Helper to extract a file from a tar.gz archive to memory
+     *
+     * @throws Exception
+     */
+    private function extractFixtureFile(string $tarGzPath, string $filename): string
+    {
+        $tmpFolder = new \S2lowLegacy\Class\TmpFolder();
+        $real_tmp = $tmpFolder->create();
+        try {
+            $tgzExtractor = new \S2lowLegacy\Class\TGZExtractor($real_tmp);
+            $tgzExtractor->extract($tarGzPath, $filename);
+            return file_get_contents($real_tmp . '/' . $filename);
+        } finally {
+            $tmpFolder->delete($real_tmp);
+        }
+    }
+
+    /**
      * @throws \Exception
      */
     private function createTransactionEnAttenteEnvoiSAE(): int

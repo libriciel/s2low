@@ -5,9 +5,12 @@ use org\bovigo\vfs\vfsStream;
 use S2lowLegacy\Class\helios\HeliosEnvoiSAE;
 use S2lowLegacy\Class\helios\HeliosPrepareEnvoiSAE;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
+use S2lowLegacy\Class\helios\PESAcquitCloudStorable;
+use S2lowLegacy\Class\helios\PESAcquitCloudStorage;
 use S2lowLegacy\Class\helios\PESAllerCloudStorable;
 use S2lowLegacy\Class\helios\PESAllerCloudStorage;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
+use S2lowLegacy\Class\PastellWrapper;
 use S2lowLegacy\Class\PastellWrapperFactory;
 use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Model\AuthoritySQL;
@@ -21,6 +24,7 @@ class HeliosEnvoiSAETest extends S2lowTestCase
 
     private OpenStackSwiftWrapper $openStackSwiftWrapper;
     private HeliosEnvoiSAE $heliosEnvoiSAE;
+    private HeliosTransactionsSQL $heliosTransactionsSQL;
 
     /**
      * @throws Exception
@@ -218,9 +222,63 @@ class HeliosEnvoiSAETest extends S2lowTestCase
         );
     }
 
+    /**
+     * @throws Exception
+     */
+    public function testSendWithSpyAndAcquit(): void
+    {
+        // Arrange
+        $pesAllerContent = file_get_contents(__DIR__ . '/../../helios/fixtures/pes_aller.xml');
+        $pesAcquitContent = file_get_contents(__DIR__ . '/../../helios/fixtures/pes_acquit.xml');
+
+        // Put files in the expected vfsStream paths
+        file_put_contents($this->tmpPathFolder . "/ab3321d34d3fb32b52332befa534c9854fff677b", $pesAllerContent);
+
+        $this->secondTmpPathFolder = $this->tmpPathFolder . '/test2';
+        mkdir($this->secondTmpPathFolder);
+        file_put_contents($this->secondTmpPathFolder . '/pes_acquit.xml', $pesAcquitContent);
+
+        $capturedPesAllerContent = null;
+        $capturedPesAcquitContent = null;
+
+        $pastell = $this->getMockBuilder(PastellWrapper::class)->disableOriginalConstructor()->getMock();
+        $pastell->method('createHelios')->willReturn("xyzt");
+        $pastell->method('getLastError')->willReturn("");
+        $pastell->method('sendSAE')->willReturn(true);
+        $pastell->method('postFile')
+            ->willReturnCallback(function ($id_d, $field, $file_path, $file_orig_name) use (&$capturedPesAllerContent, &$capturedPesAcquitContent) {
+                if ($field === 'fichier_pes') {
+                    $capturedPesAllerContent = file_get_contents($file_path);
+                } elseif ($field === 'fichier_reponse') {
+                    $capturedPesAcquitContent = file_get_contents($file_path);
+                }
+                return true;
+            });
+
+        $mockedPastellFactory = $this->getMockBuilder(PastellWrapperFactory::class)->disableOriginalConstructor()->getMock();
+        $mockedPastellFactory->method('getNewInstance')->willReturn($pastell);
+
+        $transaction_id = $this->setTransactionEnAttente();
+        $this->heliosTransactionsSQL->setAcquitFilename($transaction_id, 'pes_acquit.xml');
+
+        $heliosEnvoiSAE = $this->createHeliosEnvoiSae($mockedPastellFactory);
+
+        // Act
+        $result = $heliosEnvoiSAE->sendArchive($transaction_id);
+
+        // Assert
+        $this->assertTrue($result);
+        $this->assertNotNull($capturedPesAllerContent);
+        $this->assertNotNull($capturedPesAcquitContent);
+        $this->assertSame($pesAllerContent, $capturedPesAllerContent);
+        $this->assertSame($pesAcquitContent, $capturedPesAcquitContent);
+        $this->assertNotEquals($capturedPesAllerContent, $capturedPesAcquitContent);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
+        $this->heliosTransactionsSQL = $this->getHeliosTransactionsSQL();
         $this->secondTmpPathFolder = vfsStream::url('test2');
         $pesAllerPath = $this->tmpPathFolder . "/ab3321d34d3fb32b52332befa534c9854fff677b";
         file_put_contents($pesAllerPath, "<test></test>");
@@ -247,6 +305,7 @@ class HeliosEnvoiSAETest extends S2lowTestCase
         $pesAllerRetriever = $this->getPesAllerRetriever($openStackSwiftWrapper);
         $pastellWrapperFactory = $mockPastellFactory ?? $this->mockPastellFactory('dsf', "", true, true);
         $pastellPropertiesSQL = $this->getContainer()->get(PastellPropertiesSQL::class);
+
         $pesAllerCloudStorable = new PesAllerCloudStorable(
             $this->tmpPathFolder,
             self::getContainer()->get(HeliosTransactionsSQL::class),
@@ -259,6 +318,17 @@ class HeliosEnvoiSAETest extends S2lowTestCase
             openstack_enable: false
         );
 
+        $pesAcquitCloudStorable = new PesAcquitCloudStorable(
+            self::getContainer()->get(HeliosTransactionsSQL::class),
+            $this->secondTmpPathFolder,
+        );
+        $pesAcquitCloudStorage = new PesAcquitCloudStorage(
+            $pesAcquitCloudStorable,
+            $openStackSwiftWrapper ?? $this->openStackSwiftWrapper,
+            $this->logger,
+            openstack_enable: false
+        );
+
         return new HeliosEnvoiSAE(
             $pesAllerRetriever,
             $pastellWrapperFactory,
@@ -266,6 +336,7 @@ class HeliosEnvoiSAETest extends S2lowTestCase
             self::getContainer()->get(AuthoritySQL::class),
             $this->getHeliosTransactionsSQL(),
             $pastellPropertiesSQL,
+            $pesAcquitCloudStorage,
             $pesAllerCloudStorage
         );
     }
