@@ -308,11 +308,11 @@ span.form-control {
     display : none;
 }
 
-.th-row {
+.th-row, table.data th.th-row {
     text-align: right;
-    background-color: #BBC7E1;
+    background-color: #BBC7E1 !important;
+    box-shadow: none !important;
     width: 50%;
-
 }
 
 /*---------------------------------------------
@@ -463,6 +463,36 @@ h3 {
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
+/* Limitation universelle de la largeur des champs de formulaire */
+.form-control,
+.form-select,
+.select_type_pj,
+.control-form,
+form select,
+form textarea,
+form input[type="text"],
+form input[type="file"],
+form input[type="date"] {
+    max-width: 730px;
+    width: 100% !important;
+}
+
+/* Limitation de la largeur maximale du conteneur de formulaire (pour les fieldsets, tables, etc.) */
+form.form,
+#add-transac-content,
+#reply-transac-content,
+.import-file-form,
+.window-edit-form {
+    max-width: 730px;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+
+
+
 .form-control:focus {
     border-color: #ffaa66;
     box-shadow: 0 0 0 0.25rem rgba(255, 102, 0, 0.25);
@@ -480,10 +510,10 @@ h3 {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
 }
 
-/* Teinte légèrement plus foncée pour le menu de navigation */
-#navigation.well {
-    background-color: #f1f5f9 !important;
-    border-color: #cbd5e1;
+/* Teinte plus foncée pour le menu de navigation */
+.sidebar-nav, #sidebar .well {
+    background-color: #e2e8f0 !important;
+    border-color: #cbd5e1 !important;
 }
 
 
@@ -519,7 +549,7 @@ h3 {
 
 .text-menu.nav > li > a:hover {
     color: #004499 !important;
-    background-color: #f1f5f9;
+    background-color: #cbd5e1;
     text-decoration: none !important; /* Pas de soulignement */
     padding-left: 0.75rem !important;
 }
@@ -638,19 +668,19 @@ h3 {
     display: block;
 }
 
-/* Bridge : Offsets de grille */
+/* Bridge : Offsets de grille globaux */
 @media (min-width: 768px) {
-    .form-horizontal .col-md-offset-1  { margin-left: 8.33333333% !important; }
-    .form-horizontal .col-md-offset-2  { margin-left: 16.66666667% !important; }
-    .form-horizontal .col-md-offset-3  { margin-left: 25% !important; }
-    .form-horizontal .col-md-offset-4  { margin-left: 33.33333333% !important; }
-    .form-horizontal .col-md-offset-5  { margin-left: 41.66666667% !important; }
-    .form-horizontal .col-md-offset-6  { margin-left: 50% !important; }
-    .form-horizontal .col-md-offset-7  { margin-left: 58.33333333% !important; }
-    .form-horizontal .col-md-offset-8  { margin-left: 66.66666667% !important; }
-    .form-horizontal .col-md-offset-9  { margin-left: 75% !important; }
-    .form-horizontal .col-md-offset-10 { margin-left: 83.33333333% !important; }
-    .form-horizontal .col-md-offset-11 { margin-left: 91.66666667% !important; }
+    .col-md-offset-1  { margin-left: 8.33333333% !important; }
+    .col-md-offset-2  { margin-left: 16.66666667% !important; }
+    .col-md-offset-3  { margin-left: 25% !important; }
+    .col-md-offset-4  { margin-left: 33.33333333% !important; }
+    .col-md-offset-5  { margin-left: 41.66666667% !important; }
+    .col-md-offset-6  { margin-left: 50% !important; }
+    .col-md-offset-7  { margin-left: 58.33333333% !important; }
+    .col-md-offset-8  { margin-left: 66.66666667% !important; }
+    .col-md-offset-9  { margin-left: 75% !important; }
+    .col-md-offset-10 { margin-left: 83.33333333% !important; }
+    .col-md-offset-11 { margin-left: 91.66666667% !important; }
 }
 
 /* ==========================================================================
