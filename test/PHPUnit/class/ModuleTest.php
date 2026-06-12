@@ -1,6 +1,6 @@
 <?php
 
-use S2lowLegacy\Class\Module;
+use S2lowLegacy\Model\ModuleSQL;
 
 class ModuleTest extends S2lowTestCase
 {
@@ -8,7 +8,8 @@ class ModuleTest extends S2lowTestCase
     {
         $this->expectException(Exception::class);
         $this->expectExceptionMessage("SQLSTATE[22P02]");
-        $module = new Module("0' UNION SELECT 'you','have been','hacked','0");
-        $module->init();
+
+        $moduleSQL = $this->getObjectInstancier()->get(ModuleSQL::class);
+        $moduleSQL->getById("0' UNION SELECT 'you','have been','hacked','0");
     }
 }

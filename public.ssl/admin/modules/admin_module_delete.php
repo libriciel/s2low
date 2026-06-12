@@ -38,9 +38,10 @@ $id = (isset($_POST["id"])) ? $_POST["id"] : null;
 
 
 if (isset($id)) {
-    $module = new Module($id);
-    if ($module->delete()) {
-        $msg = "Suppression du module " . $module->get("name") . ". Résultat ok.";
+    $moduleSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2lowLegacy\Model\ModuleSQL::class);
+    $module = $moduleSQL->getById($id);
+    if ($module && $moduleSQL->delete($id)) {
+        $msg = "Suppression du module " . $module->name . ". Résultat ok.";
         if (!Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
             $msg .= "\nErreur de journalisation.";
         }
@@ -49,7 +50,7 @@ if (isset($id)) {
         header("Location: admin_modules.php");
         exit();
     } else {
-        $msg = "Erreur lors de la tentative de suppression du module<br />" . $module->getErrorMsg();
+        $msg = "Erreur lors de la tentative de suppression du module";
         if (!Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, $me->get("role"), false, $me)) {
             $msg .= "\nErreur de journalisation.";
         }

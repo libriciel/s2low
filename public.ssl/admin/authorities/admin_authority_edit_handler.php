@@ -15,9 +15,9 @@ use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\AuthoritySQL;
 
-list($objectInstancier, $sqlQuery, $helios_use_passtrans_as_default) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $sqlQuery, $helios_use_passtrans_as_default, $moduleSQL) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, SQLQuery::class, 'app.helios_use_passtrans_as_default']
+        [ObjectInstancier::class, SQLQuery::class, 'app.helios_use_passtrans_as_default', \S2lowLegacy\Model\ModuleSQL::class]
     );
 
 $me = new User();
@@ -166,7 +166,7 @@ $savePerms = false;
 if ($me->isGroupAdminOrSuper()) {
     $savePerms = true;
   // Module autorisés pour la collectivité
-    $modules = Module::getActiveModulesList();
+    $modules = $moduleSQL->getActiveModulesList();
     $authority->resetModulesPerms();
 
     foreach ($modules as $module) {

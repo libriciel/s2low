@@ -41,8 +41,9 @@ $root->appendChild($resultatElement);
 $root->appendChild($messageElement);
 
 try {
-    $module = new Module();
-    if (!$module->initByName("helios")) {
+    $moduleSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2lowLegacy\Model\ModuleSQL::class);
+        $module = $moduleSQL->initByName("helios");
+    if (!$module) {
         $msg = "Erreur d'initialisation du module";
         throw new Exception('KO');
     }

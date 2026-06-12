@@ -7,8 +7,8 @@ use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\JSONoutput;
 use S2lowLegacy\Model\AuthoritySQL;
 
-list($jsonOutput,$authoritySQL ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([JSONoutput::class, AuthoritySQL::class]);
+list($jsonOutput, $authoritySQL, $moduleSQL) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([JSONoutput::class, AuthoritySQL::class, \S2lowLegacy\Model\ModuleSQL::class]);
 
 $me = new User();
 
@@ -52,7 +52,7 @@ foreach ($info_to_display as $i) {
 }
 
 if ($me->isGroupAdminOrSuper()) {
-    $modules = Module::getActiveModulesList();
+    $modules = $moduleSQL->getActiveModulesList();
     foreach ($modules as $module) {
         $result['module'][$module["id"]] =  $authority->getModulePerm($module["id"]);
     }

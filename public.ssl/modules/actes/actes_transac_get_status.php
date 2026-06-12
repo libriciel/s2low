@@ -6,8 +6,9 @@ use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 
-$module = new Module();
-if (! $module->initByName('actes')) {
+$moduleSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2lowLegacy\Model\ModuleSQL::class);
+        $module = $moduleSQL->initByName('actes');
+if (!$module) {
     echo "KO\nErreur d'initialisation du module";
     exit_wrapper();
 }

@@ -143,7 +143,8 @@ class User extends DataObject
         if (isset($this->id)) {
             $this->resetPerms();
 
-            $authModules = Module::getModulesForAuthority($this->authority_id);
+            $moduleSQL = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(\S2lowLegacy\Model\ModuleSQL::class);
+            $authModules = $moduleSQL->getModulesForAuthority($this->authority_id);
 
             $sql = "SELECT users_perms.id, users_perms.module_id, users_perms.perm, modules.name " .
             " FROM users_perms LEFT JOIN modules ON users_perms.module_id=modules.id " .
@@ -378,12 +379,13 @@ class User extends DataObject
         }
         $authority = new Authority($this->authority_id);
 
-        $mod = new Module();
-        if (! $mod->initByName($module)) {
+        $moduleSQL = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(\S2lowLegacy\Model\ModuleSQL::class);
+        $mod = $moduleSQL->initByName($module);
+        if (! $mod) {
             return false;
         }
 
-        if (! $authority->getModulePerm($mod->getId())) {
+        if (! $authority->getModulePerm($mod->id)) {
             return false;
         }
 
@@ -400,12 +402,13 @@ class User extends DataObject
         }
         $authority = new Authority($this->authority_id);
 
-        $mod = new Module();
-        if (! $mod->initByName($module)) {
+        $moduleSQL = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(\S2lowLegacy\Model\ModuleSQL::class);
+        $mod = $moduleSQL->initByName($module);
+        if (! $mod) {
             return false;
         }
 
-        if (! $authority->getModulePerm($mod->getId())) {
+        if (! $authority->getModulePerm($mod->id)) {
             return false;
         }
 
@@ -431,12 +434,13 @@ class User extends DataObject
         }
         $authority = new Authority($this->authority_id);
 
-        $mod = new Module();
-        if (! $mod->initByName($module)) {
+        $moduleSQL = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(\S2lowLegacy\Model\ModuleSQL::class);
+        $mod = $moduleSQL->initByName($module);
+        if (! $mod) {
             return false;
         }
 
-        if (! $authority->getModulePerm($mod->getId())) {
+        if (! $authority->getModulePerm($mod->id)) {
             return false;
         }
         if ($this->getPerm($module) == "RW") {
@@ -453,8 +457,9 @@ class User extends DataObject
   */
     public function setPerm($module_id, $perm, array $specific_perms = array())
     {
-        $module = new Module($module_id);
-        if (! $module->init()) {
+        $moduleSQL = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(\S2lowLegacy\Model\ModuleSQL::class);
+        $module = $moduleSQL->getById($module_id);
+        if (! $module) {
             return false;
         }
 
@@ -464,7 +469,7 @@ class User extends DataObject
             $perm = "NONE";
         }
 
-        $this->perms[$module->get("name")] = array("module_id" => $module->getId(), "perm" => $perm);
+        $this->perms[$module->name] = array("module_id" => $module->id, "perm" => $perm);
         return true;
     }
 

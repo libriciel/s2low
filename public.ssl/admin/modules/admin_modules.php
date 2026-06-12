@@ -19,9 +19,9 @@ if (! $me->authenticate()) {
 }
 
 
-$zeMod = new Module();
-$modules = $zeMod->getModulesList("ORDER BY id ASC");
-$statusList = $zeMod->get("statusTypes");
+$moduleSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2lowLegacy\Model\ModuleSQL::class);
+$modules = $moduleSQL->getModulesList("ORDER BY id ASC");
+$statusList = [0 => "Désactivé", 1 => "Activé"];
 
 if ($me->isGroupAdminOrSuper() && $api) {
     $jsonOutput->retrictAndDisplay($modules, array('id','name','description'));

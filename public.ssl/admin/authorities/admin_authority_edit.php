@@ -13,9 +13,9 @@ use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 use S2lowLegacy\Model\AuthorityTypesSQL;
 use S2lowLegacy\Model\GroupSQL;
 
-list($objectInstancier, $availableSirensByGroup ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $availableSirensByGroup, $moduleSQL) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, AvailableSirensByGroup::class]
+        [ObjectInstancier::class, AvailableSirensByGroup::class, \S2lowLegacy\Model\ModuleSQL::class]
     );
 $html = '';
 $me = new User();
@@ -334,7 +334,7 @@ if (HELIOS_DO_NOT_VERIFY_NOM_FIC_UNICITY && $me->isSuper()) {
 //echo $authority->get('helios_do_not_verify_nom_fic_unicity');
 
 if ($me->isGroupAdminOrSuper()) {
-    $modules = Module::getActiveModulesList();
+    $modules = $moduleSQL->getActiveModulesList();
 
     $html .= " <div class=\"form-group\">\n";
     $html .= "  <label class=\"control-label col-md-4\">Modules autorisés</label>\n";

@@ -238,7 +238,7 @@ services:
   pdf-stamp:
     image: registry.libriciel.fr/public/signature/pdf-stamp:2.7.15@sha256:e111a2b77e67415270b0e9c149d4c7b5460aa464d379b390e15d27292576e261
     restart: unless-stopped
-    mem_limit: 2G
+    mem_limit: 10G
 
 volumes:
   app_workspace:

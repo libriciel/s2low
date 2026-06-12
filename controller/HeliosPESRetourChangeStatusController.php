@@ -7,9 +7,17 @@ use Exception;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Model\HeliosRetourSQL;
+use S2lowLegacy\Model\ModuleSQL;
+use S2lowLegacy\Lib\ObjectInstancier;
 
 class HeliosPESRetourChangeStatusController extends Controller
 {
+    public function __construct(
+        private readonly ModuleSQL $moduleSQL,
+        ObjectInstancier $objectInstancier
+    ) {
+        parent::__construct($objectInstancier);
+    }
     public function changeStatusAction()
     {
         $retour_id = $this->getEnvironnement()->get()->get('id');
@@ -51,8 +59,8 @@ class HeliosPESRetourChangeStatusController extends Controller
      */
     private function modifStatus($transaction_id)
     {
-        $module = new Module();
-        if (!$module->initByName("helios")) {
+        $module = $this->moduleSQL->initByName("helios");
+        if (!$module) {
             throw new Exception("Erreur d'initialisation du module");
         }
         $me = new User();

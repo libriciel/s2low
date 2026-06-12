@@ -9,8 +9,9 @@ class MailInit
      */
     public static function getIdentificationParameters()
     {
-        $module = new Module();
-        if (!$module->initByName("mail")) {
+        $moduleSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2lowLegacy\Model\ModuleSQL::class);
+        $module = $moduleSQL->initByName("mail");
+        if (!$module) {
             $_SESSION["error"] = "Erreur d'initialisation du module";
             header("Location: " . WEBSITE_SSL);
             exit();

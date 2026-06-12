@@ -16,8 +16,9 @@ list ( $initialisation, $actesPrepareEnvoiSAE) = LegacyObjectsManager::getLegacy
     ->getArray([Initialisation::class, ActesPrepareEnvoiSAE::class]);
 
 // Instanciation du module courant
-$module = new Module();
-if (!$module->initByName('actes')) {
+$moduleSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2lowLegacy\Model\ModuleSQL::class);
+        $module = $moduleSQL->initByName('actes');
+if (!$module) {
     Helpers::returnAndExit(1, "Erreur d'initialisation du module", WEBSITE_SSL);
 }
 

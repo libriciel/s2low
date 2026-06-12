@@ -173,7 +173,8 @@ class Authority extends DataObject
     public function initModulesPerms()
     {
         if (isset($this->id)) {
-            $this->modulesPerms = Module::getModulesForAuthority($this->id);
+            $moduleSQL = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(\S2lowLegacy\Model\ModuleSQL::class);
+            $this->modulesPerms = $moduleSQL->getModulesForAuthority($this->id);
             return true;
         }
 

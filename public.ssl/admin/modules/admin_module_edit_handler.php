@@ -39,21 +39,25 @@ if (! $me->isSuper()) {
 $id = Helpers::getVarFromPost("id");
 $status = Helpers::getVarFromPost("status");
 
-$modules = new Module();
+$moduleSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2lowLegacy\Model\ModuleSQL::class);
+$modules = null;
 
 if (isset($id) && ! empty($id)) {
-    $modules->setId($id);
-    if (! $modules->init()) {
+    $modules = $moduleSQL->getById($id);
+    if (! $modules) {
         $_SESSION["error"] = "Erreur lors de la modification de la collectivité";
         header("Location: " . Helpers::getLink("/admin/authorities/admin_modules.php"));
         exit();
     }
+} else {
+    $modules = new Module();
 }
 
-$modules->set("status", $status);
+$modules->status = $status;
 
-if (! $modules->save()) {
-    $msg = "Erreur lors de l'enregistrement du module :\n" . $modules->getErrorMsg();
+$isNew = $modules->id === null;
+if (! $moduleSQL->save($modules)) {
+    $msg = "Erreur lors de l'enregistrement du module";
     if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, $me->get("role"), false, $me)) {
         $msg .= "\nErreur de journalisation.";
     }
@@ -62,14 +66,14 @@ if (! $modules->save()) {
     header("Location: " . Helpers::getLink("/admin/modules/admin_modules.php"));
     exit();
 } else {
-    $msg = ($modules->isNew()) ? "Création" : "Modification";
-    $msg .= " du module " . $modules->get("name") . " (id=" . $modules->getId() . "). Résultat ok.";
+    $msg = $isNew ? "Création" : "Modification";
+    $msg .= " du module " . $modules->name . " (id=" . $modules->id . "). Résultat ok.";
     if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
         $msg .= "\nErreur de journalisation.";
     }
 
     $_SESSION["error"] = nl2br($msg);
-    header("Location: " . Helpers::getLink("/admin/modules/admin_module_edit.php?id=") . $modules->getId());
+    header("Location: " . Helpers::getLink("/admin/modules/admin_module_edit.php?id=") . $modules->id);
 }
 
 exit();

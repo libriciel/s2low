@@ -23,12 +23,12 @@ if (!$me->isSuper()) {
 
 $id = isset($_GET["id"]) ? $_GET["id"] : null;
 
-$mod = false;
-$zeModule = new Module();
+$moduleSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2lowLegacy\Model\ModuleSQL::class);
+$zeModule = null;
 
 if (isset($id) && !empty($id)) {
-    $zeModule->setId($id);
-    if ($zeModule->init()) {
+    $zeModule = $moduleSQL->getById($id);
+    if ($zeModule) {
         $mod = true;
     }
 }

@@ -29,8 +29,9 @@ list($workerScript, $worker) = \S2lowLegacy\Class\LegacyObjectsManager::getLegac
     );
 
 // Instanciation du module courant
-$module = new Module();
-if (! $module->initByName("actes")) {
+$moduleSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2lowLegacy\Model\ModuleSQL::class);
+        $module = $moduleSQL->initByName("actes");
+if (!$module) {
     $_SESSION["error"] = "Erreur d'initialisation du module";
     header("Location: " . WEBSITE_SSL);
     exit();

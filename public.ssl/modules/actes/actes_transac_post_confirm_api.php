@@ -39,8 +39,9 @@ function return_error_api($error_message)
 
 
 // Instanciation du module courant
-$module = new Module();
-if (!$module->initByName('actes')) {
+$moduleSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2lowLegacy\Model\ModuleSQL::class);
+        $module = $moduleSQL->initByName('actes');
+if (!$module) {
     return_error_api("Erreur d'intialisation du module");
 }
 

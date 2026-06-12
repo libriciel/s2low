@@ -34,6 +34,7 @@ class HeliosController extends Controller
         private readonly LocalFileResolver $pesAllerResolver,
         #[Autowire(service: 'app.store.file.pes_aller')]
         private readonly CloudFileStorageInterface $cloudPesAllerStorage,
+        private readonly ModuleSQL $moduleSQL,
         ObjectInstancier $objectInstancier
     ) {
         parent::__construct($objectInstancier);
@@ -47,8 +48,8 @@ class HeliosController extends Controller
 
     public function importAction()
     {
-        $module = new Module();
-        if (!$module->initByName(self::MODULE_NAME)) {
+        $module = $this->moduleSQL->initByName(self::MODULE_NAME);
+        if (!$module) {
             $this->redirectSSL(WEBSITE_SSL, "Erreur d'initialisation du module");
         }
 
@@ -175,8 +176,8 @@ class HeliosController extends Controller
 
     public function importAPIAction()
     {
-        $module = new Module();
-        if (!$module->initByName(self::MODULE_NAME)) {
+        $module = $this->moduleSQL->initByName(self::MODULE_NAME);
+        if (!$module) {
             echo "KO\nErreur d'initialisation du module";
             exit();
         }
@@ -272,8 +273,8 @@ class HeliosController extends Controller
             $root = $doc->createElement("liste");
             $doc->appendChild($root);
 
-            $module = new Module();
-            if (!$module->initByName("helios")) {
+            $module = $this->moduleSQL->initByName("helios");
+            if (!$module) {
                 $msg = "Erreur d'initialisation du module";
                 throw new Exception('KO');
             }

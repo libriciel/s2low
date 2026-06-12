@@ -14,6 +14,7 @@ use S2lowLegacy\Lib\Recuperateur;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Model\UserSQL;
+use S2lowLegacy\Model\ModuleSQL;
 
 class AdminUserController extends Controller
 {
@@ -22,8 +23,10 @@ class AdminUserController extends Controller
      */
     private $userSQL;
 
-    public function __construct(ObjectInstancier $objectInstancier)
-    {
+    public function __construct(
+        private readonly ModuleSQL $moduleSQL,
+        ObjectInstancier $objectInstancier
+    ) {
         parent::__construct($objectInstancier);
         $this->userSQL = new UserSQL($this->getSQLQuery());
     }
@@ -305,9 +308,9 @@ class AdminUserController extends Controller
 
         // Permissions sur les modules
         // Récupération des modules actifs globalement
-        $modules = Module::getActiveModulesList();
+        $modules = $this->moduleSQL->getActiveModulesList();
         // Récupération des modules authorisés pour la collectivité
-        $authModules = Module::getModulesForAuthority($him->get("authority_id"));
+        $authModules = $this->moduleSQL->getModulesForAuthority($him->get("authority_id"));
 
         $him->resetPerms();
 

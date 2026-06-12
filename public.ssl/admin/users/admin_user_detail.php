@@ -7,7 +7,8 @@ use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\JSONoutput;
 use S2lowLegacy\Lib\X509Certificate;
 
-$jsonOutput = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(JSONoutput::class);
+list($jsonOutput, $moduleSQL) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([JSONoutput::class, \S2lowLegacy\Model\ModuleSQL::class]);
 
 $x509Certificate = new X509Certificate();
 
@@ -37,7 +38,7 @@ foreach (array('name','givenname','login','email','telephone','status','authorit
     $result[$key] = $him->get($key);
 }
 
-$modules = Module::getActiveModulesList();
+$modules = $moduleSQL->getActiveModulesList();
 foreach ($modules as $module) {
     $result['module'][$module['id']] = $him->getPerm($module["name"]);
 }

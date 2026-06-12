@@ -17,9 +17,9 @@ use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Model\UserSQL;
 
-list($objectInstancier, $jsonOutput,$sqlQuery, $frontController,$pathToValidCa) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $jsonOutput,$sqlQuery, $frontController,$pathToValidCa, $moduleSQL) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, JSONoutput::class, SQLQuery::class, FrontController::class,'app.path_to_rgs_valid_ca']
+        [ObjectInstancier::class, JSONoutput::class, SQLQuery::class, FrontController::class,'app.path_to_rgs_valid_ca', \S2lowLegacy\Model\ModuleSQL::class]
     );
 
 $html = '';
@@ -150,12 +150,12 @@ $groups_list = Group::getGroupsIdName();
 
 
 // Récupération des modules actifs globalement
-$modules = Module::getActiveModulesList();
+$modules = $moduleSQL->getActiveModulesList();
 
 // Récupération des modules authorisés pour la collectivité
 $authModules = array();
 if ($mod) {
-    $authModules = Module::getModulesForAuthority($him->get("authority_id"));
+    $authModules = $moduleSQL->getModulesForAuthority($him->get("authority_id"));
 } else {
     if ($me->isGroupAdminOrSuper()) {
         // On ne sait pas à l'avance à quelle collectivité appartiendra l'utilisateur

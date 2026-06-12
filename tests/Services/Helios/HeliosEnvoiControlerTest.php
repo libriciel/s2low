@@ -607,6 +607,7 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
         return new HeliosController(
             $this->getLocalFileResolver(),
             self::getContainer()->get('app.store.file.pes_aller'),
+            self::getContainer()->get(\S2lowLegacy\Model\ModuleSQL::class),
             self::getContainer()->get(ObjectInstancier::class)
         );
     }

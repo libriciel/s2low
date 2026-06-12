@@ -39,8 +39,9 @@ if ($api) {
 }
 
 // Instanciation du module courant
-$module = new Module();
-if (!$module->initByName("actes")) {
+$moduleSQL = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2lowLegacy\Model\ModuleSQL::class);
+        $module = $moduleSQL->initByName("actes");
+if (!$module) {
     sortir_atrc("Erreur d'initialisation du module", $api);
 }
 
