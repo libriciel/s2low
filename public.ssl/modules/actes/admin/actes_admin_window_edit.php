@@ -109,27 +109,30 @@ if (empty($end_date) && $mod) {
     $end_hour = date('H:i:s', Helpers::getTimestampFromBDDDate($zeWin->get("window_end_date")));
 }
 
+$start_hour_val = !empty($start_hour) ? $start_hour : "Choisir une heure";
+$end_hour_val = !empty($end_hour) ? $end_hour : "Choisir une heure";
+
 // Début de la fenêtre
-$html .= "<div class=\"form-group\">\n";
+$html .= "<div class=\"form-group row align-items-center\">\n";
 $html .= "<label class=\"col-md-4 control-label\">Début de la fenêtre</label>\n";
 $html .= "<div class=\"col-md-8\">\n";
-$html .= "<span class=\"form-inline\">";
-$html .= (new DatePicker("window_start_date", $start_date, "form-inline"))->show();
-$html .= "<input class=\"timepicker form-inline\" href=\"#timepicker\" id=\"window_start_hour\" name=\"window_start_hour\"></input>";
+$html .= "<div class=\"d-flex align-items-center gap-2\">\n";
+$html .= (new DatePicker("window_start_date", $start_date, "form-control"))->show();
+$html .= "<input class=\"timepicker form-control\" href=\"#timepicker\" id=\"window_start_hour\" name=\"window_start_hour\" value=\"" . htmlspecialchars($start_hour_val, ENT_QUOTES) . "\" autocomplete=\"off\"></input>";
 $html .= "<script type=\"text/javascript\">\n $(document).ready(function(){ $('#window_start_hour').timepicker({timeFormat: 'HH:mm:ss',defaultTime: '$start_hour',minTime: '00:00',maxTime: '23:00',startTime: '00:00', interval:60,dynamic:false}); });</script>";
-$html .= "</span>\n";
+$html .= "</div>\n";
 $html .= "   </div>\n";
 $html .= "   </div>\n";
 
 // Fin de la fenêtre
-$html .= "<div class=\"form-group\">\n";
+$html .= "<div class=\"form-group row align-items-center\">\n";
 $html .= "<label class=\"col-md-4 control-label\">Fin de la fenêtre</label>\n";
 $html .= "<div class=\"col-md-8\">\n";
-$html .= "<span class=\"form-inline\">";
-$html .= (new DatePicker("window_end_date", $end_date, "form-inline"))->show();
-$html .= "<input class=\"timepicker form-inline\" href=\"#timepicker\" id=\"window_end_hour\" name=\"window_end_hour\" ></input>";
+$html .= "<div class=\"d-flex align-items-center gap-2\">\n";
+$html .= (new DatePicker("window_end_date", $end_date, "form-control"))->show();
+$html .= "<input class=\"timepicker form-control\" href=\"#timepicker\" id=\"window_end_hour\" name=\"window_end_hour\" value=\"" . htmlspecialchars($end_hour_val, ENT_QUOTES) . "\" autocomplete=\"off\"></input>";
 $html .= "<script type=\"text/javascript\">\n $(document).ready(function(){ $('#window_end_hour').timepicker({timeFormat: 'HH:mm:ss',defaultTime: '$end_hour',minTime: '00:59:59',maxTime: '23:59:59',startTime: '00:59:59', interval:60,dynamic:false}); });</script>";
-$html .= "</span>\n";
+$html .= "</div>\n";
 $html .= "   </div>\n";
 $html .= "   </div>\n";
 
