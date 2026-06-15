@@ -10,16 +10,12 @@ use PastellConfigurationTestTrait;
 use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Services\CloudFileStorageInterface;
 use S2lowLegacy\Class\actes\ActesArchiveControler;
-use S2lowLegacy\Class\actes\ActesCloudStorage;
 use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\ActesTypePJSQL;
 use S2lowLegacy\Class\actes\ActeTamponne;
-use S2lowLegacy\Class\actes\BordereauPdfGenerator;
-use S2lowLegacy\Class\actes\IActesPdf;
-use S2lowLegacy\Class\CloudStorage;
 use S2lowLegacy\Class\PastellWrapperFactory;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\PastellPropertiesSQL;
@@ -64,8 +60,10 @@ class ActesArchiveControlerTest extends S2lowTestCase
         );
     }
 
-    private function createActesArchivesController($pastellWrapperFactory = null, $fileInCloud = false): ActesArchiveControler
-    {
+    private function createActesArchivesController(
+        ?PastellWrapperFactory $pastellWrapperFactory = null,
+        bool $fileInCloud = false
+    ): ActesArchiveControler {
         $localFileResolver = self::getContainer()->get('app.localFileResolver.acte_enveloppe');
         $pastellPropertiesSQL = self::getContainer()->get(PastellPropertiesSQL::class);
         $pastellWrapperFactory = $pastellWrapperFactory ?? $this->mockPastellFactory(0, 'Erreur renvoyé par le mock');
@@ -159,7 +157,10 @@ class ActesArchiveControlerTest extends S2lowTestCase
 
         $transaction_id = $this->createTransactionEnAttenteEnvoiSAE();
 
-        $controller = $this->createActesArchivesController(self::getContainer()->get(ActesRetriever::class), $mockedPastellFactory);
+        $controller = $this->createActesArchivesController(
+            pastellWrapperFactory: $mockedPastellFactory,
+            fileInCloud: true
+        );
 
         // Act
         $controller->sendArchive($transaction_id);
@@ -297,6 +298,7 @@ class ActesArchiveControlerTest extends S2lowTestCase
         $acteTamponne->method('tamponnerPDF')->willReturn(
             file_get_contents(__DIR__ . '/fixtures/convention-exemple.pdf')
         );
+        self::getContainer()->set(ActeTamponne::class, $acteTamponne);
 
         return $acteTamponne;
     }

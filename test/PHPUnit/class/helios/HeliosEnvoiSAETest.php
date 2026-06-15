@@ -8,8 +8,8 @@ use S2low\Services\RemoveStoredFilesOnDisk;
 use S2lowLegacy\Class\helios\HeliosEnvoiSAE;
 use S2lowLegacy\Class\helios\HeliosPrepareEnvoiSAE;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
+use S2lowLegacy\Class\PastellWrapper;
 use S2lowLegacy\Class\PastellWrapperFactory;
-use S2lowLegacy\Lib\OpenStackSwiftWrapper;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 use S2lowLegacy\Model\PastellPropertiesSQL;
@@ -20,9 +20,9 @@ class HeliosEnvoiSAETest extends S2lowTestCase
     use HeliosUtilitiesTestTrait;
     use PastellConfigurationTestTrait;
 
-    private OpenStackSwiftWrapper $openStackSwiftWrapper;
-    private HeliosEnvoiSAE $heliosEnvoiSAE;
     private HeliosTransactionsSQL $heliosTransactionsSQL;
+    private string $pesAllerPath;
+    protected string $secondTmpPathFolder;
 
     /**
      * @throws Exception
@@ -233,8 +233,6 @@ class HeliosEnvoiSAETest extends S2lowTestCase
         // Put files in the expected vfsStream paths
         file_put_contents($this->tmpPathFolder . "/ab3321d34d3fb32b52332befa534c9854fff677b", $pesAllerContent);
 
-        $this->secondTmpPathFolder = $this->tmpPathFolder . '/test2';
-        mkdir($this->secondTmpPathFolder);
         file_put_contents($this->secondTmpPathFolder . '/pes_acquit.xml', $pesAcquitContent);
 
         $capturedPesAllerContent = null;
@@ -271,32 +269,25 @@ class HeliosEnvoiSAETest extends S2lowTestCase
         $this->assertNotNull($capturedPesAcquitContent);
         $this->assertSame($pesAllerContent, $capturedPesAllerContent);
         $this->assertSame($pesAcquitContent, $capturedPesAcquitContent);
-        $this->assertNotEquals($capturedPesAllerContent, $capturedPesAcquitContent);
+        $this->assertNotSame($capturedPesAllerContent, $capturedPesAcquitContent);
     }
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->heliosTransactionsSQL = $this->getHeliosTransactionsSQL();
-        $this->secondTmpPathFolder = vfsStream::url('test2');
+        $this->secondTmpPathFolder = $this->tmpPathFolder . '/test2';
+        if (!is_dir($this->secondTmpPathFolder)) {
+            mkdir($this->secondTmpPathFolder);
+        }
         $this->pesAllerPath = $this->tmpPathFolder . "/ab3321d34d3fb32b52332befa534c9854fff677b";
         file_put_contents($this->pesAllerPath, "<test></test>");
-        $this->openStackSwiftWrapper = $this->getOpenStackSwiftWrapperMocked();
-    }
-
-    private function getOpenStackSwiftWrapperMocked(): OpenStackSwiftWrapper
-    {
-        $openStackSwiftWrapper = $this->getMockBuilder(OpenStackSwiftWrapper::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $openStackSwiftWrapper->method("fileExistsOnCloud")->willReturn(true);
-
-        return $openStackSwiftWrapper;
     }
 
     private function createHeliosEnvoiSae(
         ?PastellWrapperFactory $mockPastellFactory = null,
         bool $fileInCloud = false,
+        ?LocalFileResolver $localPesAcquitResolver = null,
     ): HeliosEnvoiSAE {
         $pastellWrapperFactory = $mockPastellFactory ?? $this->mockPastellFactory('dsf', "", true, true);
         $pastellPropertiesSQL = $this->getContainer()->get(PastellPropertiesSQL::class);
@@ -306,14 +297,22 @@ class HeliosEnvoiSAETest extends S2lowTestCase
             ->method('fileExistOnCloud')
             ->willReturn($fileInCloud);
 
-        $removeStoredPesallerOnCloud = $this->getRemoveStoredfilesOnDisk($storePesAllerOnCloud);
-
         $localPesAllerResolver = self::createMock(LocalFileResolver::class);
         $localPesAllerResolver->method('getFullPath')->willReturn($this->pesAllerPath);
 
-        $localPesAcquitResolver = self::getContainer()->get('app.localFileResolver.pes_acquit');
-        $storePesAcquitOnCloud = self::getContainer()->get('app.store.file.pes_acquit');
-        $removeStoredPesacquitOnCloud = self::getContainer()->get('app.removeFiles.pes_acquit');
+        $removeStoredPesallerOnCloud = $this->getRemoveStoredFilesOnDisk($storePesAllerOnCloud, $localPesAllerResolver);
+
+        if ($localPesAcquitResolver === null) {
+            $localPesAcquitResolver = self::createMock(LocalFileResolver::class);
+            $localPesAcquitResolver->method('getFullPath')->willReturn($this->secondTmpPathFolder . '/pes_acquit.xml');
+        }
+
+        $storePesAcquitOnCloud = self::createMock(CloudFileStorageInterface::class);
+        $storePesAcquitOnCloud
+            ->method('fileExistOnCloud')
+            ->willReturn($fileInCloud);
+
+        $removeStoredPesacquitOnCloud = $this->getRemoveStoredFilesOnDisk($storePesAcquitOnCloud, $localPesAcquitResolver);
 
         return new HeliosEnvoiSAE(
             $localPesAllerResolver,
@@ -335,17 +334,19 @@ class HeliosEnvoiSAETest extends S2lowTestCase
         return self::getContainer()->get(HeliosTransactionsSQL::class);
     }
 
-    private function getRemoveStoredfilesOnDisk(CloudFileStorageInterface $cloudFileStorage): RemoveStoredFilesOnDisk
-    {
+    private function getRemoveStoredFilesOnDisk(
+        CloudFileStorageInterface $cloudFileStorage,
+        LocalFileResolver $localFileResolver,
+    ): RemoveStoredFilesOnDisk {
         return new RemoveStoredFilesOnDisk(
             $this->logger,
-            (new Filesystem()),
+            new Filesystem(),
             $cloudFileStorage,
             self::getContainer()->get(HeliosTransactionsSQL::class),
-            self::getContainer()->get('app.localFileResolver.pes_aller'),
-            self::getContainer()->get('app.finder.pes_aller'),
-            self::getContainer()->getParameter('app.helios_files_upload_root'),
-            self::getContainer()->getParameter('app.helios_repertoire_pes_aller_sans_transaction'),
+            $localFileResolver,
+            self::createMock(\Symfony\Component\Finder\Finder::class),
+            '/tmp',
+            '/tmp',
             true
         );
     }
