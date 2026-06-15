@@ -25,6 +25,12 @@
 
 - Dépréciation de la soumission des enveloppes ACTE #1104
 
+## 5.1.14 - 2026-06-11
+
+### Corrections
+
+- Archivage des PES : le fichier PES_ALLER était envoyé au SAE à la place du PES_ACQUIT (régression introduite en 5.1.1) #1526
+
 ## 5.1.13 - 2026-06-08
 
 ### Ajouts
