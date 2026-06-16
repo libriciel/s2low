@@ -35,7 +35,6 @@ if [ -z "$DONT_INIT_DATABASE" ] ; then
   done
 
   /app/bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
-  /app/bin/console init:bootstrap
 fi
 
 exec "$@"
