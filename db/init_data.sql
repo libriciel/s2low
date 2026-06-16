@@ -45,7 +45,6 @@ INSERT INTO modules (id, name, description, menu_entry, status)
 VALUES (4, 'mail', 'Module Mail', 'Transactions Mail', 1),
        (2, 'helios', 'Module Helios', 'Transactions Helios', 1),
        (1, 'actes', 'Module Actes', 'Transactions Actes', 1),
-       (3, 'dia', 'Module DIA', 'Transactions DIA', 0)
 ON CONFLICT DO NOTHING;
 
 INSERT INTO actes_natures (id, short_descr, descr)

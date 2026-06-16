@@ -11,7 +11,7 @@ final class Version20260616121933 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Initialise les données nécéssaires au bon fonctionnement de s2low (authority_types, modules, actes_natures, actes_status, authority_departments, authority_districts, helios_status).';
     }
 
     public function up(Schema $schema): void
