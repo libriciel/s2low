@@ -22,48 +22,36 @@ class RoleResolverExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('isSadm', [$this, 'isSadm']),
-            new TwigFunction('isAdm', [$this, 'isAdm']),
-            new TwigFunction('isGadm', [$this, 'isGadm']),
-            new TwigFunction('isLargeAdmin', [$this, 'isLargeAdmin']),
-            new TwigFunction('isSadmOrGadm', [$this, 'isSadmOrGadm']),
-            new TwigFunction('isNonAdminUser', [$this, 'isNonAdminUser']),
-            new TwigFunction('isArchivist', [$this, 'isArchivist']),
+            new TwigFunction('isSadm', [$this, 'isSuperAdmin']),
+            new TwigFunction('isAdm', [$this, 'isAuthorityAdmin']),
+            new TwigFunction('isGadm', [$this, 'isGroupAdmin']),
+            new TwigFunction('isLargeAdmin', [$this, 'isAdmin']),
+            new TwigFunction('isSadmOrGadm', [$this, 'isGroupOrSuperAdmin']),
         ];
     }
 
-    public function isSadm(): bool
+    public function isSuperAdmin(): bool
     {
         return UserRole::fromRole($this->userRole) === UserRole::SuperAdministrateur;
     }
 
-    public function isAdm(): bool
+    public function isAuthorityAdmin(): bool
     {
         return UserRole::fromRole($this->userRole) === UserRole::AdministrateurCollectivite;
     }
 
-    public function isGadm(): bool
+    public function isGroupAdmin(): bool
     {
         return UserRole::fromRole($this->userRole) === UserRole::AdministrateurGroupe;
     }
 
-    public function isLargeAdmin(): bool
+    public function isAdmin(): bool
     {
-        return $this->isAdm() || $this->isSadm() || $this->isGadm();
+        return $this->isAuthorityAdmin() || $this->isSuperAdmin() || $this->isGroupAdmin();
     }
 
-    public function isSadmOrGadm(): bool
+    public function isGroupOrSuperAdmin(): bool
     {
-        return $this->isSadm() || $this->isGadm();
-    }
-
-    public function isNonAdminUser(): bool
-    {
-        return !$this->isLargeAdmin();
-    }
-
-    public function isArchivist(): bool
-    {
-        return UserRole::fromRole($this->userRole) === UserRole::Archiviste;
+        return $this->isSuperAdmin() || $this->isGroupAdmin();
     }
 }
