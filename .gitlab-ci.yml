@@ -163,9 +163,9 @@ publish-container-to-registry:
     WEB_IMAGE: ${REGISTRY_CONTAINER_HOST}${REGISTRY_CONTAINER_PATH}-web:$IMAGE_VERSION
   before_script:
     - date=$(date)
-    - sed -i "s/%CI_BUILD_ID%/${CI_PIPELINE_ID}/" ./manifest.yml
-    - sed -i "s/%BUILD_DATE%/$date/" ./manifest.yml
-    - sed -i "s/%VERSION%/${CI_COMMIT_REF_NAME}/" ./manifest.yml
+    - sed -i "s/%CI_BUILD_ID%/${CI_PIPELINE_ID}/" ./manifest.txt
+    - sed -i "s/%BUILD_DATE%/$date/" ./manifest.txt
+    - sed -i "s/%VERSION%/${CI_COMMIT_REF_NAME}/" ./manifest.txt
   script:
     - docker login -u "$REGISTRY_CONTAINER_USER" -p "$REGISTRY_CONTAINER_PASSWORD" "$REGISTRY_CONTAINER_HOST"
     - docker build --pull -t ${APP_IMAGE} -f docker/app/Dockerfile .
