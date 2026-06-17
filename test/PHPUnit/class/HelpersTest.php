@@ -8,10 +8,10 @@ class HelpersTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $_POST = array();
-        $_GET = array();
-        $_REQUEST = array();
-        $_SESSION = array();
+        $_POST = [];
+        $_GET = [];
+        $_REQUEST = [];
+        $_SESSION = [];
     }
 
     /** @deprecated  */
@@ -21,22 +21,233 @@ class HelpersTest extends TestCase
         $this->expectExceptionMessage($message);
     }
 
-    public function testGetVarFromPost()
+    public function getFilesProvider()
     {
-        $_POST = array('foo' => 'bar');
-        $this->assertEquals('bar', Helpers::getVarFromPost('foo'));
+        return [
+            // [$_FILES, $_POST, $_GET, $allowGetApiCall, $expectedResult]
+            [
+                ['my_file' => ['name' => 'test.txt', 'type' => 'text/plain']],
+                [],
+                [],
+                false,
+                ['name' => 'test.txt', 'type' => 'text/plain']
+            ],
+            [
+                ['my_file' => ['name' => 'testé.txt', 'type' => 'text/plain']],
+                ['api' => '1'],
+                [],
+                false,
+                ['name' => mb_convert_encoding('testé.txt', 'UTF-8', 'ISO-8859-1'), 'type' => 'text/plain']
+            ],
+            [
+                ['my_file' => ['name' => 'testé.txt', 'type' => 'text/plain']],
+                [],
+                ['api' => '1'],
+                false,
+                ['name' => 'testé.txt', 'type' => 'text/plain']
+            ],
+            [
+                ['my_file' => ['name' => 'testé.txt', 'type' => 'text/plain']],
+                [],
+                ['api' => '1'],
+                true,
+                ['name' => mb_convert_encoding('testé.txt', 'UTF-8', 'ISO-8859-1'), 'type' => 'text/plain']
+            ],
+        ];
     }
 
-    public function testGetVarFromGet()
+    /**
+     * @dataProvider getFilesProvider
+     */
+    public function testGetFiles($files, $post, $get, $allowGetApiCall, $expected)
     {
-        $_GET = array('foo' => 'bar');
-        $this->assertEquals('bar', Helpers::getVarFromGet('foo'));
+        $_FILES = $files;
+        $_POST = $post;
+        $_GET = $get;
+        $this->assertEquals($expected, Helpers::getFiles('my_file', $allowGetApiCall));
     }
 
-    public function testGetVarFromRequest()
+    public function getFilesFromArrayProvider()
     {
-        $_POST = array('foo' => 'bar');
-        $this->assertEquals('bar', Helpers::getVarFromRequest('foo', 'POST'));
+        return [
+            [
+                ['my_files' => ['name' => ['file1.txt', 'file2.txt'], 'type' => ['text/plain', 'text/plain']]],
+                [],
+                [],
+                false,
+                ['name' => ['file1.txt', 'file2.txt'], 'type' => ['text/plain', 'text/plain']]
+            ],
+            [
+                ['my_files' => ['name' => ['testé1.txt', 'testé2.txt'], 'type' => ['text/plain', 'text/plain']]],
+                ['api' => '1'],
+                [],
+                false,
+                ['name' => [mb_convert_encoding('testé1.txt', 'UTF-8', 'ISO-8859-1'), mb_convert_encoding('testé2.txt', 'UTF-8', 'ISO-8859-1')], 'type' => ['text/plain', 'text/plain']]
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getFilesFromArrayProvider
+     */
+    public function testGetFilesFromArray($files, $post, $get, $allowGetApiCall, $expected)
+    {
+        $_FILES = $files;
+        $_POST = $post;
+        $_GET = $get;
+        $this->assertEquals($expected, Helpers::getFilesFromArray('my_files', $allowGetApiCall));
+    }
+
+    public function getVarFromPostProvider()
+    {
+        return [
+            // [$post, $name, $memorize, $allowGetApiCall, $expectedResult, $expectedSession]
+            [['foo' => 'bar'], 'foo', false, false, 'bar', null],
+            [['foo' => 'bar'], 'foo', true, false, 'bar', 'bar'],
+            [['foo' => 'bàr', 'api' => '1'], 'foo', false, false, mb_convert_encoding('bàr', 'UTF-8', 'ISO-8859-1'), null],
+            [[], 'foo', false, false, null, null],
+        ];
+    }
+
+    /**
+     * @dataProvider getVarFromPostProvider
+     */
+    public function testGetVarFromPost($post, $name, $memorize, $allowGetApiCall, $expectedResult, $expectedSession)
+    {
+        $_POST = $post;
+        $this->assertEquals($expectedResult, Helpers::getVarFromPost($name, $memorize, $allowGetApiCall));
+        if ($expectedSession !== null) {
+            $this->assertEquals($expectedSession, $_SESSION['temp'][$name]);
+        }
+    }
+
+    public function getIntFromPostProvider()
+    {
+        return [
+            // [$post, $name, $nullable, $memorize, $expectedResult, $expectException]
+            [['foo' => '42'], 'foo', false, false, '42', false],
+            [['foo' => '0'], 'foo', false, false, '0', false],
+            [['foo' => ''], 'foo', true, false, '', false],
+            [[], 'foo', true, false, null, false],
+            [[], 'foo', false, false, null, true],
+            [['foo' => 'not_an_int'], 'foo', false, false, null, true],
+        ];
+    }
+
+    /**
+     * @dataProvider getIntFromPostProvider
+     */
+    public function testGetIntFromPost($post, $name, $nullable, $memorize, $expectedResult, $expectException)
+    {
+        $_POST = $post;
+        if ($expectException) {
+            $this->expectException(UnexpectedValueException::class);
+        }
+        $result = Helpers::getIntFromPost($name, $nullable, $memorize);
+        if (!$expectException) {
+            $this->assertEquals($expectedResult, $result);
+            if ($memorize) {
+                $this->assertEquals($expectedResult, $_SESSION['temp'][$name]);
+            }
+        }
+    }
+
+    public function getVarFromGetProvider()
+    {
+        return [
+            // [$get, $name, $memorize, $expectedResult, $expectedSession]
+            [['foo' => 'bar'], 'foo', false, 'bar', null],
+            [['foo' => 'bar'], 'foo', true, 'bar', 'bar'],
+            [[], 'foo', false, null, null],
+        ];
+    }
+
+    /**
+     * @dataProvider getVarFromGetProvider
+     */
+    public function testGetVarFromGet($get, $name, $memorize, $expectedResult, $expectedSession)
+    {
+        $_GET = $get;
+        $this->assertEquals($expectedResult, Helpers::getVarFromGet($name, $memorize));
+        if ($expectedSession !== null) {
+            $this->assertEquals($expectedSession, $_SESSION['temp'][$name]);
+        }
+    }
+
+    public function getIntFromGetProvider()
+    {
+        return [
+            // [$get, $name, $nullable, $expectedResult, $expectException]
+            [['foo' => '123'], 'foo', false, '123', false],
+            [[], 'foo', true, null, false],
+            [[], 'foo', false, null, true],
+            [['foo' => 'abc'], 'foo', false, null, true],
+        ];
+    }
+
+    /**
+     * @dataProvider getIntFromGetProvider
+     */
+    public function testGetIntFromGet($get, $name, $nullable, $expectedResult, $expectException)
+    {
+        $_GET = $get;
+        if ($expectException) {
+            $this->expectException(UnexpectedValueException::class);
+        }
+        $result = Helpers::getIntFromGet($name, $nullable);
+        if (!$expectException) {
+            $this->assertEquals($expectedResult, $result);
+        }
+    }
+
+    public function getDateFromGetProvider()
+    {
+        return [
+            // [$get, $name, $nullable, $expectedResult, $expectException]
+            [['foo' => '2026-06-17'], 'foo', false, '2026-06-17', false],
+            [[], 'foo', true, null, false],
+            [[], 'foo', false, null, true],
+            [['foo' => 'not-a-date'], 'foo', false, null, true],
+        ];
+    }
+
+    /**
+     * @dataProvider getDateFromGetProvider
+     */
+    public function testGetDateFromGet($get, $name, $nullable, $expectedResult, $expectException)
+    {
+        $_GET = $get;
+        if ($expectException) {
+            $this->expectException(UnexpectedValueException::class);
+        }
+        $result = Helpers::getDateFromGet($name, $nullable);
+        if (!$expectException) {
+            $this->assertEquals($expectedResult, $result);
+        }
+    }
+
+    public function getVarFromRequestProvider()
+    {
+        return [
+            // [$post, $get, $name, $type, $memorize, $expectedResult, $expectedSession]
+            [['foo' => 'bar'], [], 'foo', 'POST', false, 'bar', null],
+            [[], ['foo' => 'bar'], 'foo', 'GET', false, 'bar', null],
+            [['foo' => ['bar', 'baz']], [], 'foo', 'POST', false, ['bar', 'baz'], null],
+            [['foo' => 'bar'], [], 'foo', 'POST', true, 'bar', 'bar'],
+        ];
+    }
+
+    /**
+     * @dataProvider getVarFromRequestProvider
+     */
+    public function testGetVarFromRequest($post, $get, $name, $type, $memorize, $expectedResult, $expectedSession)
+    {
+        $_POST = $post;
+        $_GET = $get;
+        $this->assertEquals($expectedResult, Helpers::getVarFromRequest($name, $type, $memorize));
+        if ($expectedSession !== null) {
+            $this->assertEquals($expectedSession, $_SESSION['temp'][$name]);
+        }
     }
 
     public function testGetVarFromRequestGet()
@@ -125,9 +336,27 @@ class HelpersTest extends TestCase
     {
         $this->assertEquals("1442224800", Helpers::ansiDateToTimestamp("2015-09-14"));
     }
+
     public function testAnsiDateToTimestampAtMidnight()
     {
         $this->assertEquals("1442181600", Helpers::ansiDateToTimestamp("2015-09-14", true));
+    }
+
+    public function timestampToStringProvider()
+    {
+        return [
+            [1442224800, '14 septembre 2015'],
+            [1640991600, '1 janvier 2021'], // due to week-year YYYY formatting
+            [1654034400, '1 juin 2022'],    // mid-year case
+        ];
+    }
+
+    /**
+     * @dataProvider timestampToStringProvider
+     */
+    public function testTimestampToString($timestamp, $expected)
+    {
+        $this->assertEquals($expected, Helpers::TimestampToString($timestamp));
     }
 
     public function testGetFromBdd()
@@ -135,72 +364,141 @@ class HelpersTest extends TestCase
         $this->assertEquals('foo', Helpers::getFromBDD('foo'));
     }
 
-    public function testEscapeForXML()
+    public function escapeForXMLProvider()
     {
-        $this->assertEquals('\\\"foo\\\"', Helpers::escapeForXML('\"foo\"'));
+        return [
+            ['"test"', '\\"test\\"'],
+            ['hello "world"', 'hello \\"world\\"'],
+            [null, ''],
+        ];
+    }
+
+    /**
+     * @dataProvider escapeForXMLProvider
+     */
+    public function testEscapeForXML($input, $expected)
+    {
+        $this->assertEquals($expected, Helpers::escapeForXML($input));
     }
 
     public function testGetFromXMLElt()
     {
         $this->assertEquals("école", Helpers::getFromXMLElt("école"));
+        $xml = new SimpleXMLElement('<element>école</element>');
+        $this->assertEquals("école", Helpers::getFromXMLElt($xml));
     }
 
-    public function testTruncateString()
+    public function truncateStringProvider()
     {
-        $this->assertEquals("foo...", Helpers::truncateString("foobar", 3, true));
+        return [
+            ['foobar', 3, true, 'foo...'],
+            ['foobar', 3, false, 'foo'],
+            ['foobar', 10, true, 'foobar'],
+            ['école', 3, true, 'éco...'],
+        ];
     }
 
-    public function testGetPrettyHours()
+    /**
+     * @dataProvider truncateStringProvider
+     */
+    public function testTruncateString($str, $length, $add_ellipsis, $expected)
     {
-        $this->assertEquals("07h 22min 42s", Helpers::getPrettyHours("07:22:42"));
+        $this->assertEquals($expected, Helpers::truncateString($str, $length, $add_ellipsis));
     }
 
-    public function testGetPrettyHoursFailed()
+    public function getPrettyHoursProvider()
     {
-        $this->assertNull(Helpers::getPrettyHours("foo"));
+        return [
+            ['07:22:42', '07h 22min 42s'],
+            ['12:00:00', '12h 00min 00s'],
+            ['invalid', null],
+        ];
     }
 
-
-    public function testGetTimestampFromBDDDate()
+    /**
+     * @dataProvider getPrettyHoursProvider
+     */
+    public function testGetPrettyHours($hour, $expected)
     {
-        $this->assertEquals("1442208162", Helpers::getTimestampFromBDDDate("2015-09-14 07:22:42"));
+        $this->assertEquals($expected, Helpers::getPrettyHours($hour));
     }
 
-    public function testGetTimestampFromBDDDateFailed()
+    public function getTimestampFromBDDDataProvider()
     {
-        $this->assertNull(Helpers::getTimestampFromBDDDate("foo"));
+        return [
+            ['2015-09-14 07:22:42', '1442208162'],
+            ['2022-01-01 00:00:00', '1640991600'],
+            ['invalid', null],
+            [null, null],
+        ];
     }
 
-    public function testGetDateFromBDDDate()
+    /**
+     * @dataProvider getTimestampFromBDDDataProvider
+     */
+    public function testGetTimestampFromBDDDate($date, $expected)
     {
-        $this->assertNull(Helpers::getDateFromBDDDate("foo"));
+        if ($expected !== null) {
+            $this->assertEquals($expected, Helpers::getTimestampFromBDDDate($date));
+        } else {
+            $this->assertNull(Helpers::getTimestampFromBDDDate($date));
+        }
     }
 
-    public function testGetDateFromBDDDateOK()
+    public function getDateFromBDDDataProvider()
     {
-        $this->assertEquals("14 septembre 2015 à 07h22min42s", Helpers::getDateFromBDDDate("2015-09-14 07:22:42", true));
+        return [
+            ['2015-09-14 07:22:42', true, '14 septembre 2015 à 07h22min42s'],
+            ['2015-09-14 07:22:42', false, '14 septembre 2015'],
+            ['2022-01-01 00:00:00', true, '1 janvier 2022 à 00h00min00s'],
+            ['2022-01-01 00:00:00', false, '1 janvier 2022'],
+            ['invalid', false, null],
+        ];
     }
 
-    public function testGetDateFromBDDBeginningOfYear()
+    /**
+     * @dataProvider getDateFromBDDDataProvider
+     */
+    public function testGetDateFromBDDDate($date, $with_hours, $expected)
     {
-        $this->assertEquals("1 janvier 2022 à 00h00min00s", Helpers::getDateFromBDDDate("2022-01-01 00:00:00", true));
+        $this->assertEquals($expected, Helpers::getDateFromBDDDate($date, $with_hours));
     }
 
-    public function testGetANSIDateFromBDDDate()
+    public function getANSIDateFromBDDDataProvider()
     {
-        $this->assertEquals("2015-09-14", Helpers::getANSIDateFromBDDDate("2015-09-14 07:22:42"));
+        return [
+            ['2015-09-14 07:22:42', '2015-09-14'],
+            ['2022-01-01 00:00:00', '2022-01-01'],
+            ['invalid', null],
+        ];
     }
 
-    public function testGetANSIDateFromBDDDateFailed()
+    /**
+     * @dataProvider getANSIDateFromBDDDataProvider
+     */
+    public function testGetANSIDateFromBDDDate($date, $expected)
     {
-        $this->assertNull(Helpers::getANSIDateFromBDDDate("foo"));
+        $this->assertEquals($expected, Helpers::getANSIDateFromBDDDate($date));
     }
 
-    public function testGetURLWithParam()
+    public function getURLWithParamProvider()
     {
-        $_SERVER["QUERY_STRING"] = "";
-        $_SERVER["PHP_SELF"] = "";
-        $this->assertEquals(Helpers::getLink("?foo=bar"), Helpers::getURLWithParam(array('foo' => 'bar')));
+        return [
+            ['', '/index.php', ['foo' => 'bar'], '?foo=bar'],
+            ['foo=baz', '/index.php', ['foo' => 'bar'], '?foo=bar'],
+            ['a=1&b=2', '/index.php', ['a' => '3'], '?b=2&amp;a=3'],
+            ['a=1&b=2', '/index.php', ['a' => '3', 'c' => '4'], '?b=2&amp;a=3&amp;c=4'],
+        ];
+    }
+
+    /**
+     * @dataProvider getURLWithParamProvider
+     */
+    public function testGetURLWithParam($queryString, $phpSelf, $params, $expectedRelativeUrl)
+    {
+        $_SERVER['QUERY_STRING'] = $queryString;
+        $_SERVER['PHP_SELF'] = $phpSelf;
+        $this->assertEquals(Helpers::getLink($phpSelf . $expectedRelativeUrl), Helpers::getURLWithParam($params));
     }
 
     public function testCreateDirTree()
@@ -351,7 +649,6 @@ class HelpersTest extends TestCase
      * @dataProvider checkIntProvider
      * @return void
      */
-
     public function testCheckInt($varEntree, $varSortie, $nullable)
     {
         $this->assertEquals(
@@ -374,7 +671,6 @@ class HelpersTest extends TestCase
      * @dataProvider checkIntProviderWithError
      * @return void
      */
-
     public function testCheckIntWithError($var, $nullable)
     {
         $this->expectException(UnexpectedValueException::class);
@@ -394,7 +690,6 @@ class HelpersTest extends TestCase
      * @dataProvider checkDateProvider
      * @return void
      */
-
     public function testCheckDate($var, $nullable)
     {
         $this->assertEquals(
@@ -419,12 +714,10 @@ class HelpersTest extends TestCase
         ];
     }
 
-
     /**
      * @dataProvider checkDateProviderWithError
      * @return void
      */
-
     public function testCheckDateWithError($var, $nullable)
     {
         $this->expectException(UnexpectedValueException::class);
@@ -443,5 +736,53 @@ class HelpersTest extends TestCase
             [null,false],
             ["",false]
         ];
+    }
+
+    public function chunkStringProvider()
+    {
+        return [
+            ['hello', 2, 'he'],
+            ['01234567890123456789012345678901234567890', 10, '0123456789...'],
+        ];
+    }
+
+    /**
+     * @dataProvider chunkStringProvider
+     */
+    public function testChunkString($string, $length, $expected)
+    {
+        $this->assertEquals($expected, Helpers::chunkString($string, $length));
+    }
+
+    public function getLinkProvider()
+    {
+        return [
+            ['/test', trim(WEBSITE_SSL, '/') . '/test'],
+            ['test/sub', trim(WEBSITE_SSL, '/') . '/test/sub'],
+        ];
+    }
+
+    /**
+     * @dataProvider getLinkProvider
+     */
+    public function testGetLink($relativePath, $expected)
+    {
+        $this->assertEquals($expected, Helpers::getLink($relativePath));
+    }
+
+    public function testExitOrDisplayErrorApi()
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Exit !");
+        $this->expectOutputString("header('Content-type: text/plain','1','0') called\n" . '{"status":"error","error-message":"test"}');
+        Helpers::exitOrDisplayError(true, "test", "http://redirect");
+    }
+
+    public function testExitOrDisplayErrorRedirect()
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("exit() called");
+        Helpers::exitOrDisplayError(false, "test", "http://redirect");
+        $this->assertEquals("test", $_SESSION['error']);
     }
 }
