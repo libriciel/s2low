@@ -250,6 +250,12 @@ services:
     arguments:
       $helios_ftp_p_appli: '%app.helios_ftp_p_appli%'
 
+  S2low\Helpers\:
+    resource: '%kernel.project_dir%/src/Helpers/*'
+    autowire: true
+    autoconfigure: true
+    public: true
+
   S2lowLegacy\Class\actes\IActesPdf:
     public: true
     factory: ['@S2low\Factory\ActesPdfFactory','create']
