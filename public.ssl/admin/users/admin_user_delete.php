@@ -32,7 +32,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("connexion-status"));
     exit();
 }
 
@@ -49,7 +49,7 @@ if (isset($id) && ! empty($id)) {
 
     if (! $me->canEditUser($id)) {
         $_SESSION["error"] = "Accès refusé pour la suppression de cet utilisateur";
-        header("Location: " . Helpers::getLink("/admin/users/admin_users.php"));
+        header("Location: " . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/users/admin_users.php"));
         exit();
     } else {
         if ($him->delete()) {
@@ -59,7 +59,7 @@ if (isset($id) && ! empty($id)) {
             }
 
             $_SESSION["error"] = nl2br($msg);
-            header("Location: " . Helpers::getLink("/admin/users/admin_users.php"));
+            header("Location: " . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/users/admin_users.php"));
             exit();
         } else {
             $msg = "Erreur lors de la tentative de suppression de l'utilisateur\n" . $him->getErrorMsg();
@@ -68,12 +68,12 @@ if (isset($id) && ! empty($id)) {
             }
 
             $_SESSION["error"] = nl2br($msg);
-            header("Location: " . Helpers::getLink("/admin/users/admin_users.php"));
+            header("Location: " . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/users/admin_users.php"));
             exit();
         }
     }
 } else {
     $_SESSION["error"] = "Pas d'identifiant utilisateur spécifié";
-    header("Location: " . Helpers::getLink("/admin/users/admin_users.php"));
+    header("Location: " . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/users/admin_users.php"));
     exit();
 }

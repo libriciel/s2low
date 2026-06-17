@@ -15,7 +15,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION['error'] = "Echec de l'authentification";
-    header('Location: ' . Helpers::getLink('connexion-status'));
+    header('Location: ' . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink('connexion-status'));
     exit();
 }
 
@@ -25,13 +25,13 @@ if (! $me->isAnyAdmin()) {
     exit();
 }
 
-$fauthority = Helpers::getVarFromGet('authority');
-$frole =  Helpers::getVarFromGet('role');
-$fname = Helpers::getVarFromGet('name');
-$fgroup = Helpers::getVarFromGet('group');
-$fstatus = Helpers::getVarFromGet('status') ?? 1;
-$fcertStatus = Helpers::getVarFromGet('certificat_status');
-$api = Helpers::getVarFromGet('api');
+$fauthority = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getVarFromGet('authority');
+$frole =  \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getVarFromGet('role');
+$fname = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getVarFromGet('name');
+$fgroup = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getVarFromGet('group');
+$fstatus = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getVarFromGet('status') ?? 1;
+$fcertStatus = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getVarFromGet('certificat_status');
+$api = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getVarFromGet('api');
 
 
 $myAuthority = new Authority($me->get('authority_id'));
@@ -143,8 +143,8 @@ $doc->openContent();
 
 ob_start();?>
 
-<script type="text/javascript" src="<?php echo Helpers::getLink('/jsmodules/jquery.js')?>"></script>
-<script type="text/javascript" src="<?php echo Helpers::getLink('/jsmodules/select2.js')?>"></script>
+<script type="text/javascript" src="<?php echo \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink('/jsmodules/jquery.js')?>"></script>
+<script type="text/javascript" src="<?php echo \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink('/jsmodules/select2.js')?>"></script>
 <script type="text/javascript" src="/javascript/zselect_s2low.js"></script>
 
 
@@ -252,7 +252,7 @@ ob_start();?>
         <td headers="authority">
             <a
                     href="<?php
-                    echo Helpers::getLink('/admin/authorities/admin_authority_edit.php?id=' . $user['authority_id']);
+                    echo \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink('/admin/authorities/admin_authority_edit.php?id=' . $user['authority_id']);
                     ?>"
             >
                 <?php hecho($user['authority_name'])?>
@@ -260,11 +260,11 @@ ob_start();?>
         </td>
         <td headers="actions">
             <a
-                    href="<?php echo Helpers::getLink('/admin/users/admin_user_edit.php?id=' . $user['id']); ?>"
+                    href="<?php echo \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink('/admin/users/admin_user_edit.php?id=' . $user['id']); ?>"
                     class="icon"
             >
                 <img
-                        src="<?php echo Helpers::getLink('/custom/images/erreur.png'); ?>"
+                        src="<?php echo \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink('/custom/images/erreur.png'); ?>"
                         alt="image_modif"
                         title="Modifier"
                 />

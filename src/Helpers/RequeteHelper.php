@@ -3,7 +3,6 @@
 namespace S2low\Helpers;
 
 use Exception;
-use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Lib\JSONoutput;
 
 class RequeteHelper
@@ -177,10 +176,10 @@ class RequeteHelper
      */
     public function returnAndExit($status, $msg, $redirect = null, $apiMsg = null): never
     {
-        $api = Helpers::getVarFromPost("api");
+        $api = $this->getVarFromPost("api");
 
         if (empty($api)) {
-            $api = Helpers::getVarFromGet("api");
+            $api = $this->getVarFromGet("api");
         }
 
         if ($api != null && $api == "1") {

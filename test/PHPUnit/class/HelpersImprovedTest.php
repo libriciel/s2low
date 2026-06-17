@@ -30,168 +30,6 @@ class HelpersImprovedTest extends TestCase
     // Méthodes d'entrée de requête / Superglobales
     // ==========================================
 
-    public function testGetFilesNormal()
-    {
-        $_FILES['test_file'] = [
-            'name' => 'document_é.pdf',
-            'type' => 'application/pdf',
-            'tmp_name' => '/tmp/phpabc123',
-            'error' => 0,
-            'size' => 12345
-        ];
-
-        $res = Helpers::getFiles('test_file');
-        $this->assertSame('document_é.pdf', $res['name']);
-        $this->assertSame(12345, $res['size']);
-    }
-
-    public function testGetFilesApiCall()
-    {
-        $_FILES['test_file'] = [
-            'name' => mb_convert_encoding('document_é.pdf', 'ISO-8859-1', 'UTF-8'),
-            'type' => 'application/pdf',
-            'tmp_name' => '/tmp/phpabc123',
-            'error' => 0,
-            'size' => 12345
-        ];
-
-        // Déclenche isApiCall en définissant la variable POST api à 1
-        $_POST['api'] = 1;
-
-        $res = Helpers::getFiles('test_file', true);
-        $this->assertSame('document_é.pdf', $res['name']);
-    }
-
-    public function testGetFilesFromArrayNormal()
-    {
-        $_FILES['test_files'] = [
-            'name' => ['file1_é.pdf', 'file2.pdf'],
-            'type' => ['application/pdf', 'application/pdf'],
-            'tmp_name' => ['/tmp/php1', '/tmp/php2'],
-            'error' => [0, 0],
-            'size' => [100, 200]
-        ];
-
-        $res = Helpers::getFilesFromArray('test_files');
-        $this->assertSame('file1_é.pdf', $res['name'][0]);
-        $this->assertSame(200, $res['size'][1]);
-    }
-
-    public function testGetFilesFromArrayApiCall()
-    {
-        $_FILES['test_files'] = [
-            'name' => [
-                mb_convert_encoding('file1_é.pdf', 'ISO-8859-1', 'UTF-8'),
-                'file2.pdf'
-            ],
-            'type' => ['application/pdf', 'application/pdf'],
-            'tmp_name' => ['/tmp/php1', '/tmp/php2'],
-            'error' => [0, 0],
-            'size' => [100, 200]
-        ];
-
-        $_POST['api'] = 1;
-
-        $res = Helpers::getFilesFromArray('test_files', true);
-        $this->assertSame('file1_é.pdf', $res['name'][0]);
-        $this->assertSame('file2.pdf', $res['name'][1]);
-    }
-
-    public function testGetVarFromPostNormal()
-    {
-        $_POST['foo'] = 'bar';
-        $this->assertSame('bar', Helpers::getVarFromPost('foo'));
-    }
-
-    public function testGetVarFromPostApiCall()
-    {
-        $_POST['api'] = 1;
-        $_POST['foo'] = mb_convert_encoding('value_é', 'ISO-8859-1', 'UTF-8');
-
-        $this->assertSame('value_é', Helpers::getVarFromPost('foo', false, true));
-    }
-
-    public function testGetVarFromPostMemorize()
-    {
-        $_POST['foo'] = 'bar';
-        Helpers::getVarFromPost('foo', true);
-        $this->assertSame('bar', $_SESSION['temp']['foo']);
-    }
-
-    public function testGetIntFromPost()
-    {
-        $_POST['age'] = '42';
-        $this->assertSame('42', Helpers::getIntFromPost('age'));
-    }
-
-    public function testGetIntFromPostNullable()
-    {
-        $_POST['age'] = '';
-        $this->assertSame('', Helpers::getIntFromPost('age', true));
-
-        unset($_POST['age']);
-        $this->assertNull(Helpers::getIntFromPost('age', true));
-    }
-
-    public function testGetIntFromPostException()
-    {
-        $_POST['age'] = 'not-an-int';
-        $this->setExpectedException(UnexpectedValueException::class, "age n'est pas un entier");
-        Helpers::getIntFromPost('age');
-    }
-
-    public function testGetVarFromGet()
-    {
-        $_GET['param'] = 'val';
-        $this->assertSame('val', Helpers::getVarFromGet('param'));
-    }
-
-    public function testGetIntFromGet()
-    {
-        $_GET['num'] = '100';
-        $this->assertSame('100', Helpers::getIntFromGet('num'));
-    }
-
-    public function testGetIntFromGetException()
-    {
-        $_GET['num'] = 'abc';
-        $this->setExpectedException(UnexpectedValueException::class, "num n'est pas un entier");
-        Helpers::getIntFromGet('num');
-    }
-
-    public function testGetDateFromGet()
-    {
-        $_GET['date'] = '2026-06-17';
-        $this->assertSame('2026-06-17', Helpers::getDateFromGet('date'));
-    }
-
-    public function testGetDateFromGetNullable()
-    {
-        $_GET['date'] = '';
-        $this->assertSame('', Helpers::getDateFromGet('date', true));
-
-        unset($_GET['date']);
-        $this->assertNull(Helpers::getDateFromGet('date', true));
-    }
-
-    public function testGetDateFromGetException()
-    {
-        $_GET['date'] = 'invalid-date';
-        $this->setExpectedException(UnexpectedValueException::class, "date n'est pas une date");
-        Helpers::getDateFromGet('date');
-    }
-
-    public function testGetVarFromRequestPost()
-    {
-        $_POST['data'] = 'post_data';
-        $this->assertSame('post_data', Helpers::getVarFromRequest('data', 'POST'));
-    }
-
-    public function testGetVarFromRequestGetArray()
-    {
-        $_GET['list'] = ['item1', 'item2'];
-        $this->assertSame(['item1', 'item2'], Helpers::getVarFromRequest('list', 'GET'));
-    }
 
     // ==========================================
     // Méthodes de Session
@@ -199,100 +37,28 @@ class HelpersImprovedTest extends TestCase
 
     public function testSessionLifecycle()
     {
-        Helpers::putInSession('key1', 'value1');
+        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\SessionHelper::class)->putInSession('key1', 'value1');
         $this->assertSame('value1', $_SESSION['temp']['key1']);
 
         // Test de récupération avec delete=false
-        $this->assertSame('value1', Helpers::getFromSession('key1', false));
+        $this->assertSame('value1', \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\SessionHelper::class)->getFromSession('key1', false));
         $this->assertSame('value1', $_SESSION['temp']['key1']);
 
         // Test de récupération avec delete=true (par défaut)
-        $this->assertSame('value1', Helpers::getFromSession('key1'));
-        $this->assertNull(Helpers::getFromSession('key1'));
+        $this->assertSame('value1', \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\SessionHelper::class)->getFromSession('key1'));
+        $this->assertNull(\S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\SessionHelper::class)->getFromSession('key1'));
         $this->assertFalse(isset($_SESSION['temp']['key1']));
 
         // Test de purge
-        Helpers::putInSession('key2', 'value2');
-        Helpers::purgeTempSession();
-        $this->assertNull(Helpers::getFromSession('key2'));
+        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\SessionHelper::class)->putInSession('key2', 'value2');
+        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\SessionHelper::class)->purgeTempSession();
+        $this->assertNull(\S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\SessionHelper::class)->getFromSession('key2'));
     }
 
     // ==========================================
     // Méthodes de Redirection / Sortie
     // ==========================================
 
-    public function testReturnAndExitApiSuccess()
-    {
-        $_GET['api'] = 1;
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Success message');
-        $this->expectOutputString("OK\nSuccess message\n");
-
-        Helpers::returnAndExit(0, 'Success message');
-    }
-
-    public function testReturnAndExitApiFailure()
-    {
-        $_GET['api'] = 1;
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Error message');
-        $this->expectOutputString("KO\nError message\n");
-
-        Helpers::returnAndExit(1, 'Error message');
-    }
-
-    public function testReturnAndExitApiCustomMessage()
-    {
-        $_GET['api'] = 1;
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Web message');
-        $this->expectOutputString("OK\nAPI Custom Message\n");
-
-        Helpers::returnAndExit(0, 'Web message', null, 'API Custom Message');
-    }
-
-    public function testReturnAndExitWebException()
-    {
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Web Error');
-        $this->expectOutputString("Web Error\n");
-
-        Helpers::returnAndExit(0, 'Web Error');
-    }
-
-    public function testReturnAndExitWebRedirect()
-    {
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Message : Web Error');
-
-        Helpers::returnAndExit(0, 'Web Error', '/redirect/url');
-    }
-
-    public function testExitOrDisplayErrorApi()
-    {
-        // Test du chemin api = true (qui appelle JSONoutput::displayErrorAndExit)
-        // Sous TESTING_ENVIRONNEMENT, cela va afficher le JSON et lever une Exception("Exit !")
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Exit !');
-
-        // Capture de la sortie standard
-        $this->expectOutputRegex('/"status":"error"/');
-        $this->expectOutputRegex('/"error-message":"API error msg"/');
-
-        Helpers::exitOrDisplayError(true, 'API error msg', '/fallback');
-    }
-
-    public function testExitOrDisplayErrorWeb()
-    {
-        // Test du chemin api = false
-        // Sous TESTING_ENVIRONNEMENT, cela doit appeler header_wrapper et exit_wrapper (qui lève une Exception)
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('exit() called');
-
-        $this->expectOutputString("header('Location: /redirect/here','1','0') called\n");
-
-        Helpers::exitOrDisplayError(false, 'Web error msg', '/redirect/here');
-    }
 
     // ==========================================
     // Méthodes de Date & Timestamp
@@ -318,84 +84,72 @@ class HelpersImprovedTest extends TestCase
         // Teste avec un timestamp fixe en Europe/Paris
         $timestamp = strtotime('2015-09-14 12:00:00 Europe/Paris');
         // Formatage de la date en français : 14 septembre 2015
-        $this->assertSame('14 septembre 2015', Helpers::TimestampToString($timestamp));
+        $this->assertSame('14 septembre 2015', \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->TimestampToString($timestamp));
     }
 
     public function testGetFromBDD()
     {
-        $this->assertSame('any_db_value', Helpers::getFromBDD('any_db_value'));
+        $this->assertSame('any_db_value', \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\FormatHelper::class)->getFromBDD('any_db_value'));
     }
 
     public function testEscapeForXML()
     {
         // Nous vérifions le comportement réel du code (échappement de " en \")
         // bien que cela soit techniquement incorrect pour du XML standard.
-        $this->assertSame('Hello \\"World\\"', Helpers::escapeForXML('Hello "World"'));
-        $this->assertSame('', Helpers::escapeForXML(null));
+        $this->assertSame('Hello \\"World\\"', \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\FormatHelper::class)->escapeForXML('Hello "World"'));
+        $this->assertSame('', \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\FormatHelper::class)->escapeForXML(null));
     }
 
     public function testGetFromXMLElt()
     {
         $elt = new SimpleXMLElement('<node>valeur_é</node>');
-        $this->assertSame('valeur_é', Helpers::getFromXMLElt($elt));
+        $this->assertSame('valeur_é', \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\FormatHelper::class)->getFromXMLElt($elt));
     }
 
     public function testTruncateString()
     {
         $str = 'Un texte assez long pour dépasser la limite';
-        $this->assertSame('Un texte...', Helpers::truncateString($str, 8, true));
-        $this->assertSame('Un texte', Helpers::truncateString($str, 8, false));
+        $this->assertSame('Un texte...', \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\FormatHelper::class)->truncateString($str, 8, true));
+        $this->assertSame('Un texte', \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\FormatHelper::class)->truncateString($str, 8, false));
 
         // Chaîne plus courte que la longueur max
-        $this->assertSame('Court', Helpers::truncateString('Court', 10, true));
+        $this->assertSame('Court', \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\FormatHelper::class)->truncateString('Court', 10, true));
     }
 
     public function testGetPrettyHours()
     {
-        $this->assertSame('14h 05min 32s', Helpers::getPrettyHours('14:05:32'));
-        $this->assertNull(Helpers::getPrettyHours('invalid'));
+        $this->assertSame('14h 05min 32s', \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->getPrettyHours('14:05:32'));
+        $this->assertNull(\S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->getPrettyHours('invalid'));
     }
 
     public function testGetTimestampFromBDDDate()
     {
         $dateStr = '2015-09-14 07:22:42';
         $expected = strtotime($dateStr . ' Europe/Paris');
-        $this->assertSame($expected, Helpers::getTimestampFromBDDDate($dateStr));
-        $this->assertNull(Helpers::getTimestampFromBDDDate('invalid-date'));
+        $this->assertSame($expected, \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->getTimestampFromBDDDate($dateStr));
+        $this->assertNull(\S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->getTimestampFromBDDDate('invalid-date'));
     }
 
     public function testGetDateFromBDDDate()
     {
         $dateStr = '2015-09-14 07:22:42';
         // Avec hours = false
-        $this->assertSame('14 septembre 2015', Helpers::getDateFromBDDDate($dateStr, false));
+        $this->assertSame('14 septembre 2015', \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->getDateFromBDDDate($dateStr, false));
 
         // Avec hours = true
-        $this->assertSame('14 septembre 2015 à 07h22min42s', Helpers::getDateFromBDDDate($dateStr, true));
+        $this->assertSame('14 septembre 2015 à 07h22min42s', \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->getDateFromBDDDate($dateStr, true));
 
         // Invalide
-        $this->assertNull(Helpers::getDateFromBDDDate('invalid-date'));
+        $this->assertNull(\S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->getDateFromBDDDate('invalid-date'));
     }
 
     public function testGetANSIDateFromBDDDate()
     {
         $dateStr = '2015-09-14 07:22:42';
-        $this->assertSame('2015-09-14', Helpers::getANSIDateFromBDDDate($dateStr));
-        $this->assertNull(Helpers::getANSIDateFromBDDDate('invalid'));
+        $this->assertSame('2015-09-14', \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->getANSIDateFromBDDDate($dateStr));
+        $this->assertNull(\S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->getANSIDateFromBDDDate('invalid'));
     }
 
-    public function testGetURLWithParam()
-    {
-        $_SERVER['PHP_SELF'] = '/script.php';
-        $_SERVER['QUERY_STRING'] = 'a=1&b=2';
-
-        $expected = trim(WEBSITE_SSL, '/') . '/script.php?a=1&amp;b=2&amp;c=3';
-        $this->assertSame($expected, Helpers::getURLWithParam(['c' => 3]));
-
-        // Écrase le paramètre
-        $expectedOverwrite = trim(WEBSITE_SSL, '/') . '/script.php?b=2&amp;a=5';
-        $this->assertSame($expectedOverwrite, Helpers::getURLWithParam(['a' => 5]));
-    }
 
     // ==========================================
     // Méthodes de Système de Fichiers

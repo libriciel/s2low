@@ -15,7 +15,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Ehec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("connexion-status"));
     exit();
 }
 
@@ -25,8 +25,8 @@ if (! $me->isSuper()) {
     exit();
 }
 
-$fname = Helpers::getVarFromGet("name");
-$api = Helpers::getVarFromGet("api");
+$fname = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getVarFromGet("name");
+$api = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getVarFromGet("api");
 
 $group = new Group();
 
@@ -63,8 +63,8 @@ $doc->openContent();
 
 $html .= "<h1>Gestion des groupes de collectivités</h1>\n";
 $html .= "<h2>Actions</h2>\n";
-$html .= "<a href=\"" . Helpers::getLink("/admin/groups/admin_group_edit.php\" class=\"btn btn-primary\">Ajouter un groupe</a>\n");
-$html .= "<a href=\"" . Helpers::getLink("/admin/groups/list_groups.php\" class=\"btn btn-primary\">Liste des groupes</a>\n");
+$html .= "<a href=\"" . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/groups/admin_group_edit.php\" class=\"btn btn-primary\">Ajouter un groupe</a>\n");
+$html .= "<a href=\"" . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/groups/list_groups.php\" class=\"btn btn-primary\">Liste des groupes</a>\n");
 $html .= "<div id=\"filtering-area\">\n";
 $html .= "<h2>Filtrage</h2>\n";
 $html .= "<form class=\"form form-horizontal\" action=\"admin_groups.php\" method=\"get\">\n";

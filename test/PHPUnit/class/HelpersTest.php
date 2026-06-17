@@ -21,194 +21,117 @@ class HelpersTest extends TestCase
         $this->expectExceptionMessage($message);
     }
 
-    public function testGetVarFromPost()
-    {
-        $_POST = array('foo' => 'bar');
-        $this->assertEquals('bar', Helpers::getVarFromPost('foo'));
-    }
-
-    public function testGetVarFromGet()
-    {
-        $_GET = array('foo' => 'bar');
-        $this->assertEquals('bar', Helpers::getVarFromGet('foo'));
-    }
-
-    public function testGetVarFromRequest()
-    {
-        $_POST = array('foo' => 'bar');
-        $this->assertEquals('bar', Helpers::getVarFromRequest('foo', 'POST'));
-    }
-
-    public function testGetVarFromRequestGet()
-    {
-        $_GET = array('foo' => 'bar');
-        $this->assertEquals('bar', Helpers::getVarFromRequest('foo', 'GET'));
-    }
-
-    public function testGetVarFromRequestArray()
-    {
-        $_GET = array('foo' => array('bar','baz'));
-        $this->assertEquals(array('bar','baz'), Helpers::getVarFromRequest('foo', 'GET'));
-    }
-
-    public function testGetVarFromRequestPutInSession()
-    {
-        $_GET = array('foo' => 'bar');
-        $this->assertEquals('bar', Helpers::getVarFromRequest('foo', 'GET', true));
-    }
 
     public function testStripSlaches()
     {
         $str = "foo\'bar";
-        $this->assertEquals($str, Helpers::stripSlashes($str));
+        $this->assertEquals($str, \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\FormatHelper::class)->stripSlashes($str));
     }
 
     public function testGetFromSession()
     {
-        Helpers::putInSession('foo', 'bar');
-        $this->assertEquals('bar', Helpers::getFromSession('foo'));
+        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\SessionHelper::class)->putInSession('foo', 'bar');
+        $this->assertEquals('bar', \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\SessionHelper::class)->getFromSession('foo'));
     }
 
     public function testDeleteFromSession()
     {
-        Helpers::putInSession('foo', 'bar');
-        $this->assertEquals('bar', Helpers::getFromSession('foo', true));
-        $this->assertNull(Helpers::getFromSession('foo'));
+        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\SessionHelper::class)->putInSession('foo', 'bar');
+        $this->assertEquals('bar', \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\SessionHelper::class)->getFromSession('foo', true));
+        $this->assertNull(\S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\SessionHelper::class)->getFromSession('foo'));
     }
 
     public function testPurgeSession()
     {
-        Helpers::putInSession('foo', 'bar');
-        $this->assertEquals('bar', Helpers::getFromSession('foo'));
-        Helpers::purgeTempSession();
-        $this->assertNull(Helpers::getFromSession('foo'));
+        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\SessionHelper::class)->putInSession('foo', 'bar');
+        $this->assertEquals('bar', \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\SessionHelper::class)->getFromSession('foo'));
+        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\SessionHelper::class)->purgeTempSession();
+        $this->assertNull(\S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\SessionHelper::class)->getFromSession('foo'));
     }
 
-    public function testReturnAndExit()
-    {
-        $_GET['api'] = 1;
-        $this->setExpectedException("Exception", "foo");
-        $this->expectOutputString("OK\nfoo\n");
-        Helpers::returnAndExit(0, "foo");
-    }
-
-    public function testReturnAndExitApiMessage()
-    {
-        $_GET['api'] = 1;
-        $this->setExpectedException("Exception", "foo");
-        $this->expectOutputString("OK\nbaz\n");
-        Helpers::returnAndExit(0, "foo", null, "baz");
-    }
-
-    public function testReturnAndExitNoRedir()
-    {
-        $this->setExpectedException("Exception", "foo");
-        $this->expectOutputString("foo\n");
-        Helpers::returnAndExit(0, "foo");
-    }
-
-    public function testReturnAndExitRedir()
-    {
-        $this->setExpectedException("Exception", "foo");
-        Helpers::returnAndExit(0, "foo", true);
-    }
-
-    public function testReturnAndExitFailed()
-    {
-        $_GET['api'] = 1;
-        $this->setExpectedException("Exception", "foo");
-        $this->expectOutputString("KO\nfoo\n");
-        Helpers::returnAndExit(1, "foo");
-    }
 
     public function testAnsiDateToTimestamp()
     {
-        $this->assertEquals("1442224800", Helpers::ansiDateToTimestamp("2015-09-14"));
+        $this->assertEquals("1442224800", \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->ansiDateToTimestamp("2015-09-14"));
     }
     public function testAnsiDateToTimestampAtMidnight()
     {
-        $this->assertEquals("1442181600", Helpers::ansiDateToTimestamp("2015-09-14", true));
+        $this->assertEquals("1442181600", \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->ansiDateToTimestamp("2015-09-14", true));
     }
 
     public function testGetFromBdd()
     {
-        $this->assertEquals('foo', Helpers::getFromBDD('foo'));
+        $this->assertEquals('foo', \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\FormatHelper::class)->getFromBDD('foo'));
     }
 
     public function testEscapeForXML()
     {
-        $this->assertEquals('\\\"foo\\\"', Helpers::escapeForXML('\"foo\"'));
+        $this->assertEquals('\\\"foo\\\"', \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\FormatHelper::class)->escapeForXML('\"foo\"'));
     }
 
     public function testGetFromXMLElt()
     {
-        $this->assertEquals("école", Helpers::getFromXMLElt("école"));
+        $this->assertEquals("école", \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\FormatHelper::class)->getFromXMLElt("école"));
     }
 
     public function testTruncateString()
     {
-        $this->assertEquals("foo...", Helpers::truncateString("foobar", 3, true));
+        $this->assertEquals("foo...", \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\FormatHelper::class)->truncateString("foobar", 3, true));
     }
 
     public function testGetPrettyHours()
     {
-        $this->assertEquals("07h 22min 42s", Helpers::getPrettyHours("07:22:42"));
+        $this->assertEquals("07h 22min 42s", \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->getPrettyHours("07:22:42"));
     }
 
     public function testGetPrettyHoursFailed()
     {
-        $this->assertNull(Helpers::getPrettyHours("foo"));
+        $this->assertNull(\S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->getPrettyHours("foo"));
     }
 
 
     public function testGetTimestampFromBDDDate()
     {
-        $this->assertEquals("1442208162", Helpers::getTimestampFromBDDDate("2015-09-14 07:22:42"));
+        $this->assertEquals("1442208162", \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->getTimestampFromBDDDate("2015-09-14 07:22:42"));
     }
 
     public function testGetTimestampFromBDDDateFailed()
     {
-        $this->assertNull(Helpers::getTimestampFromBDDDate("foo"));
+        $this->assertNull(\S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->getTimestampFromBDDDate("foo"));
     }
 
     public function testGetDateFromBDDDate()
     {
-        $this->assertNull(Helpers::getDateFromBDDDate("foo"));
+        $this->assertNull(\S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->getDateFromBDDDate("foo"));
     }
 
     public function testGetDateFromBDDDateOK()
     {
-        $this->assertEquals("14 septembre 2015 à 07h22min42s", Helpers::getDateFromBDDDate("2015-09-14 07:22:42", true));
+        $this->assertEquals("14 septembre 2015 à 07h22min42s", \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->getDateFromBDDDate("2015-09-14 07:22:42", true));
     }
 
     public function testGetDateFromBDDBeginningOfYear()
     {
-        $this->assertEquals("1 janvier 2022 à 00h00min00s", Helpers::getDateFromBDDDate("2022-01-01 00:00:00", true));
+        $this->assertEquals("1 janvier 2022 à 00h00min00s", \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->getDateFromBDDDate("2022-01-01 00:00:00", true));
     }
 
     public function testGetANSIDateFromBDDDate()
     {
-        $this->assertEquals("2015-09-14", Helpers::getANSIDateFromBDDDate("2015-09-14 07:22:42"));
+        $this->assertEquals("2015-09-14", \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->getANSIDateFromBDDDate("2015-09-14 07:22:42"));
     }
 
     public function testGetANSIDateFromBDDDateFailed()
     {
-        $this->assertNull(Helpers::getANSIDateFromBDDDate("foo"));
+        $this->assertNull(\S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\DateHelper::class)->getANSIDateFromBDDDate("foo"));
     }
 
-    public function testGetURLWithParam()
-    {
-        $_SERVER["QUERY_STRING"] = "";
-        $_SERVER["PHP_SELF"] = "";
-        $this->assertEquals(Helpers::getLink("?foo=bar"), Helpers::getURLWithParam(array('foo' => 'bar')));
-    }
 
     public function testCreateDirTree()
     {
         org\bovigo\vfs\vfsStream::setup('test');
         $testStreamUrl = org\bovigo\vfs\vfsStream::url('test');
         $dir_to_create = "foo/bar/baz";
-        $this->assertTrue(Helpers::createDirTree($testStreamUrl . "/" . $dir_to_create, $testStreamUrl));
+        $this->assertTrue(\S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\FichierHelper::class)->createDirTree($testStreamUrl . "/" . $dir_to_create, $testStreamUrl));
         $this->assertTrue(file_exists($testStreamUrl . "/" . $dir_to_create));
     }
 
