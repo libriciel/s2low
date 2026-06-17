@@ -201,7 +201,11 @@ $html .= "  <div class=\"col-md-6 link-input\">\n";
 
 if ($me->isGroupAdminOrSuper()) {
     $html .= "  <input  class=\"form-control\" type=\"hidden\" id=\"authority_type\" name=\"authority_type_id\" value=\"" . $authority->get("authority_type_id") . "\" />\n";
-    $html .= "  <a class=\"link_white\" href=\"#tedetis\" onclick=\"javascript:window.open('" . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/common/select_popup.php?type=authority_type', 'Selectattribut', 'location=no,scrollbars=yes,menubar=no,status=no,toolbar=no,directories=no,width=512,height=560');\" id=\"authority_type_text\">");
+    $html .= "  <a class=\"link_white\" href=\"#tedetis\" onclick=\"javascript:window.open('" .
+        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)
+            ->getLink(
+                "/common/select_popup.php?type=authority_type', 'Selectattribut', 'location=no,scrollbars=yes,menubar=no,status=no,toolbar=no,directories=no,width=512,height=560');\" id=\"authority_type_text\">"
+            );
 
     if ($authority->get("authority_type_id")) {
         $html .= $authority_type_name;
@@ -260,7 +264,12 @@ $html .= "  <input type=\"hidden\" id=\"department\" name=\"department\" value=\
 $html .= "  <input type=\"hidden\" id=\"district\" name=\"district\" value=\"" . $authority->get("district") . "\" />\n";
 
 if ($me->isGroupAdminOrSuper()) {
-    $html .= "  <a class=\"link_white\"href=\"#tedetis\"  class=\"form-control\" onclick=\"javascript:window.open('" . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/common/select_popup.php?type=department', 'Selectattribut', 'location=no,scrollbars=yes,menubar=no,status=no,toolbar=no,directories=no,width=300,height=560');\" id=\"department_text\">");
+    $html .= "  <a class=\"link_white\"href=\"#tedetis\"  class=\"form-control\" onclick=\"javascript:window.open('" .
+        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+            ->get(\S2low\Helpers\RequeteHelper::class)
+            ->getLink(
+                "/common/select_popup.php?type=department', 'Selectattribut', 'location=no,scrollbars=yes,menubar=no,status=no,toolbar=no,directories=no,width=300,height=560');\" id=\"department_text\">"
+            );
 
     if ($authority->getDeptDistrString()) {
         $html .= $authority->getDeptDistrString();
