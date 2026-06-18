@@ -24,7 +24,12 @@ class HomeController extends AbstractController
     ): Response {
         $authority = $authoritySQL->getInfo($user->getAuthorityId());
         $authorityName = $authority['name'];
-        $groupName = $groupSQL->getInfo($authority['authority_group_id'])['name'];
+
+        try {
+            $groupName = $groupSQL->getInfo($authority['authority_group_id'])['name'];
+        } catch (\Exception $e) {
+            $groupName = 'Aucun groupe';
+        }
 
         $now = new DateTimeImmutable();
         $interval = $now->diff($user->getCertExpirationDate());
