@@ -1,0 +1,45 @@
+{# index.html.twig #}
+{% extends 'base.html.twig' %}
+{% block title %}Tiers de télétransmission multiprotocoles{% endblock %}
+{% block head %}
+    <script type="text/javascript" src="/jsmodules/select2.js"></script>
+    <script type="text/javascript" src="/javascript/zselect_s2low.js"></script>
+{% endblock %}
+
+{% block pagination %}
+{#        {% include 'global/components/pagination.html.twig' with#}
+{#            { nb_total_page: nombre_de_transactions } %}#}
+{% endblock %}
+{% block h1 %}
+    Espace de télétransmission
+{% endblock %}
+{% block body %}
+    {% if isSadm() %}
+        <span>Vous êtes connecté avec le rôle de super administrateur.</span>
+    {% elseif isGadm() %}
+        <span>Vous êtes connecté avec le rôle d'administrateur du groupe <u>{{ group_name }}</u>.</span>
+    {% elseif isAdm() %}
+        <span>Vous êtes connecté avec le rôle d'administrateur de la collectivité <u>{{ authority_name }}</u>.</span>
+    {% else %}
+        <span>Vous êtes connecté avec le rôle d'utilisateur de la collectivité <u>{{ authority_name }}</u>.</span>
+
+    {% endif %}
+
+    <p>Le menu de gauche vous donne accès aux opérations permises par ce rôle.<p/>
+    <p>Le «&nbsp;Journal des événements&nbsp;» consigne l'ensemble des événements relatifs à vos opérations sur le
+        site.</p>
+    <p>
+        Merci de signaler tout problème rencontré sur la plate-forme au <a
+                href="https://www.adullact.org">webmaster</a>
+    </p>
+
+    {% if message_admin is not null %}
+        {% include 'components/message_admin.html.twig' with { message_admin: message_admin } %}
+    {% endif %}
+
+    {% if isSadm() %}
+        <h2>Fonctions super administrateur</h2>
+        <a href='admin/index.php' class='btn  btn-primary'>Console d'administration</a>
+    {% endif %}
+
+{% endblock %}

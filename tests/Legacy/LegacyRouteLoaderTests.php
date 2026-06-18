@@ -48,7 +48,7 @@ class LegacyRouteLoaderTests extends TestCase
                 [
                     'test.php' => "<?php echo \"test\";?>"
                 ],
-                4   // Only one file => one route with one slash one route with multiple slash + 2 routes pour index.old.php
+                2   // Only one file => one route with one slash one route with multiple slash
             ],
             [
                 [
@@ -58,8 +58,7 @@ class LegacyRouteLoaderTests extends TestCase
                     ],
                     'test.php' => "<?php echo \"test\";?>"
                 ],
-                6   // Three files, two routes for the files : the file without php extension shouldn't be taken into account
-                    // + 2 routes pour index.old.php
+                4   // Three files, two routes for the files : the file without php extension shouldn't be taken into account
             ],
             [
                 [
@@ -68,10 +67,9 @@ class LegacyRouteLoaderTests extends TestCase
                         'toRetrieve2.php' => 'I should be retrieved twice'
                     ],
                     'index.php' => "<?php echo \"I shouldn't be retrieved\";?>",
-                    'index.old.php' => "<?php echo \"I should be retrieved twice\";?>",
                     'toRetrieve.php' => "<?php echo \"I should be retrieved twice\";?>",
                 ],
-                9 // Five files, Nine routes (two for index.old.php)
+                7 // Four files, Seven routes
             ],
             [
                 [
@@ -79,7 +77,7 @@ class LegacyRouteLoaderTests extends TestCase
                         'index.php' => "<?php echo \"I should be retrieved\";?>",
                     ]
                 ],
-                5 // One file, Five routes ( 3 for secondDirectory/index.php two for index.old.php)
+                3 // One file, Three routes ( 3 for secondDirectory/index.php)
             ]
 
         ];
@@ -165,29 +163,12 @@ class LegacyRouteLoaderTests extends TestCase
                 ]
             ],
             'index.php' => "<?php echo \"I shouldn't be retrieved\";?>",
-            'index.old.php' => "<?php echo \"I shouldn't be retrieved\";?>",
             'toRetrieve.php' => "<?php echo \"I should be retrieved\";?>",
         ];
 
         $this->setUpVFSAndLegacyRoadLoader($directory);
 
         $collection = $this->legacyRouteLoader->load(null);
-
-        static::assertSame(
-            [
-                '_controller' => 'S2low\Controller\LegacyController::loadLegacyScript',
-                'requestPath' => '/index.php',
-                'legacyScript' => 'vfs://tmp/testDirectory/index.old.php'],
-            $collection->get('homepage')->getDefaults(),
-        );
-
-        static::assertSame(
-            [
-                '_controller' => 'S2low\Controller\LegacyController::loadLegacyScript',
-                'requestPath' => '/index.php',
-                'legacyScript' => 'vfs://tmp/testDirectory/index.old.php'],
-            $collection->get('homepage_full')->getDefaults(),
-        );
 
         static::assertSame(
             [
@@ -226,7 +207,10 @@ class LegacyRouteLoaderTests extends TestCase
         $collection = $this->legacyRouteLoader->load(null);
 
         static::assertSame(
-            ['_controller' => 'S2low\Tests\Legacy\fixtures\TestClass::generateResponse'],
+            [
+                '_controller' => 'S2low\Tests\Legacy\fixtures\TestClass::generateResponse',
+                'requestPath' => 'test.php'
+            ],
             $collection->get('app_legacy_testdoubleslash')->getDefaults(),
         );
     }
