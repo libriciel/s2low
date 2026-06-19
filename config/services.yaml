@@ -291,6 +291,10 @@ services:
     autoconfigure: true
     public: true
 
+  # TODO Deprecated en v6, v7 suppression
+  S2lowLegacy\Mail\MailUtil:
+    autowire: true
+
   # ---------------------------------------------------------------------------------------------------------------------
   # Namespace  S2lowLegacy : contient le code Legacy
   # ---------------------------------------------------------------------------------------------------------------------

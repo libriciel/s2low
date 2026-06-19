@@ -19,9 +19,9 @@ namespace S2lowLegacy\Mail;
 use Psr\Log\LoggerInterface;
 use ZipArchive;
 
-require_once SITEROOT . '/class/include.php';
-
-
+/**
+ * @deprecated Supprimé en v7
+ */
 class MailUtil
 {
     public $errorMsg;
