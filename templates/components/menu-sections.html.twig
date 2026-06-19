@@ -1,27 +1,27 @@
 <ul class="text-menu nav">
-    {% if isLargeAdmin() %}
+    {% if app.user.isAnyAdmin %}
         <li class="menu-list-title">Administration</li>
     {% endif %}
-    {% if isSadm() %}
+    {% if app.user.isSuperAdmin %}
         <li><a href="/admin/modules/admin_modules.php">Gestion des modules</a></li>
         <li><a href="/admin/groups/admin_groups.php">Gestion des groupes</a></li>
     {% endif %}
-    {% if isSadmOrGadm() %}
+    {% if app.user.isGroupOrSuperAdmin %}
         <li><a href="/admin/authorities/admin_authorities.php">Gestion des collectivités</a></li>
     {% endif %}
-    {% if isAdm() %}
+    {% if app.user.isAuthorityAdmin %}
         <li><a href="/modules/mail/index.php?command=annuaire">Carnet d'adresses de la collectivité</a></li>
         <li><a href="/admin/authorities/admin_authority_edit.php?id={{ app.user.authorityId }}">Paramètres
                 collectivité</a></li>
     {% endif %}
-    {% if isLargeAdmin() %}
+    {% if app.user.isAnyAdmin %}
         <li><a href="/admin/users/admin_users.php">Gestion des utilisateurs</a></li>
         <li><a href="/admin/services/admin_services.php">Gestion des services</a></li>
     {% endif %}
-    {% if isSadm() %}
+    {% if app.user.isSuperAdmin %}
         <li><a href="/admin/utilities/index.php">Utilitaires système</a></li>
     {% endif %}
-    {% if isSadmOrGadm() %}
+    {% if app.user.isGroupOrSuperAdmin %}
         {% for module in getModulesWithAdminPage() %}
             <li><a href="/modules/{{ module.name }}/admin/index.php">Utilitaires module {{ module.name }}</a></li>
         {% endfor %}
@@ -36,12 +36,12 @@
         {% endfor %}
     {% endif %}
 
-    {% if isLargeAdmin() %}
+    {% if app.user.isAnyAdmin %}
         <li class="menu-list-title">Export des informations</li>
         <li><a href="/modules/actes/actes_export.php">Exports module actes</a></li>
     {% endif %}
 
-    <li class="menu-list-title">Suivi{% if isLargeAdmin() %} du site{% endif %}</li>
+    <li class="menu-list-title">Suivi{% if app.user.isAnyAdmin %} du site{% endif %}</li>
     <li><a href="/common/logs_view.php">Journal des événements</a></li>
     {% for modules_with_stats in getModulesWithStatus() %}
         <li><a href="/modules/{{ modules_with_stats.name }}/{{ modules_with_stats.name }}_stats.php">Statistiques

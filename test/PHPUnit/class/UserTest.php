@@ -138,4 +138,37 @@ class UserTest extends S2lowTestCase
                 ]
             ;
     }
+
+    /**
+     * @dataProvider roleChecksProvider
+     */
+    public function testRoleCheckMethods(
+        string $role,
+        bool $isSuper,
+        bool $isGroupAdmin,
+        bool $isAdmin,
+        bool $isAuthorityAdmin,
+        bool $isGroupAdminOrSuper
+    ): void {
+        $user = new User();
+        $user->set('role', $role);
+        $user->set('authority_group_id', 42);
+
+        self::assertSame($isSuper, $user->isSuper());
+        self::assertSame($isGroupAdmin, $user->isGroupAdmin());
+        self::assertSame($isAdmin, $user->isAnyAdmin());
+        self::assertSame($isAuthorityAdmin, $user->isAuthorityAdmin());
+        self::assertSame($isGroupAdminOrSuper, $user->isGroupAdminOrSuper());
+    }
+
+    public function roleChecksProvider(): array
+    {
+        return [
+            [User::SADM, true,  false, true,  false, true],
+            [User::GADM, false, true,  true,  false, true],
+            [User::ADM,  false, false, true,  true,  false],
+            [User::USER, false, false, false, false, false],
+            [User::ARCH, false, false, false, false, false],
+        ];
+    }
 }

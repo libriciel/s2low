@@ -10,9 +10,53 @@ enum UserRole: string
     case AdministrateurGroupe = 'GADM';
     case SuperAdministrateur = 'SADM';
 
-    public static function fromRole($value): UserRole
+    public static function fromRole($value): ?UserRole
     {
-        return self::from(substr($value, 5));
+        if (!is_string($value)) {
+            return null;
+        }
+        if (str_starts_with($value, 'ROLE_')) {
+            return self::tryFrom(substr($value, 5));
+        }
+        return self::tryFrom($value);
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this === self::SuperAdministrateur;
+    }
+
+    public function isGroupAdmin(): bool
+    {
+        return $this === self::AdministrateurGroupe;
+    }
+
+    public function isAuthorityAdmin(): bool
+    {
+        return $this === self::AdministrateurCollectivite;
+    }
+
+    public function isArchivist(): bool
+    {
+        return $this === self::Archiviste;
+    }
+
+    public function isUser(): bool
+    {
+        return $this === self::Utilisateur;
+    }
+
+    public function isAnyAdmin(): bool
+    {
+        return $this === self::SuperAdministrateur
+            || $this === self::AdministrateurGroupe
+            || $this === self::AdministrateurCollectivite;
+    }
+
+    public function isGroupOrSuperAdmin(): bool
+    {
+        return $this === self::SuperAdministrateur
+            || $this === self::AdministrateurGroupe;
     }
 
     /**
