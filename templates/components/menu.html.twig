@@ -6,11 +6,11 @@
                 {% include 'components/certificat_expiration_warning.html.twig' with {'nb_day_before_certificate_expire': app.user.certExpirationDate|days_ago} %}
             </div>
             <div>
-                <p>
+                <span>
                     {% if this.messageAdminTitle is not null %}
                         <a class="label label-{{ this.getCssLevel|toCssClass }}" href="/">{{ this.messageAdminTitle }}</a>
                     {% endif %}
-                </p>
+                </span>
                 <span>
                     Rôle {{ app.user.role|labeliseRole }}
                 </span>
