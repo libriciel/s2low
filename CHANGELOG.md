@@ -20,6 +20,9 @@
 - Suppression de la possibilité d'enrichir le carnet d'adresse. #1116
 - Il est toujours possible de consulter les mails existants.
 - Suppression des paramètres de module et du mode papier #1426
+- Suppression de `Log::canView()`. #1533
+- Suppression de `Droit::isAdmin()`, remplacé par `Droit::isAnyAdmin()`. #1533
+- Suppression de `User::isAdmin()`, remplacé par `User::isAnyAdmin()`. #1533
 
 ### Dépréciation
 

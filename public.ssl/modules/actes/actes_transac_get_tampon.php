@@ -73,7 +73,7 @@ if (! $zeEnv->init()) {
 
 // Vérification des permissions
 if (! $me->isSuper()) {
-    if (! ($me->isAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && ! ($me->getId() == $zeEnv->get("user_id") && $me->canAccess($module->get("name")))) {
+    if (! ($me->isAnyAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && ! ($me->getId() == $zeEnv->get("user_id") && $me->canAccess($module->get("name")))) {
         echo "KO\nAccès refusé";
         exit();
     }

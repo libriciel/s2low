@@ -16,7 +16,7 @@ if (! $me->authenticate()) {
     $jsonOutput->displayErrorAndExit("Échec de l'authentification");
 }
 
-if (! $me->isAdmin()) {
+if (! $me->isAnyAdmin()) {
     $jsonOutput->displayErrorAndExit("Accès refusé");
 }
 

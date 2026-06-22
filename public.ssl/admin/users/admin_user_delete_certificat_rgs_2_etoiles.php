@@ -29,7 +29,7 @@ if (! $me->authenticate()) {
     exitOrDisplayError($api, "Échec de l'authentification", Helpers::getLink("connexion-status"));
 }
 
-if (! $me->isAdmin()) {
+if (! $me->isAnyAdmin()) {
     exitOrDisplayError($api, "Accès refusé", WEBSITE_SSL);
 }
 

@@ -113,7 +113,7 @@ class Droit
         return $userInfo['role'] == 'SADM';
     }
 
-    public function isAdmin(array $userInfo)
+    public function isAnyAdmin(array $userInfo)
     {
         return in_array($userInfo['role'], array('SADM','GADM','ADM'));
     }

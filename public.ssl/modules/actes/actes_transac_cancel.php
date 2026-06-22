@@ -62,7 +62,7 @@ $rel_envelope->init();
 
 // Vérification des permissions
 if (
-    ! ($me->isAdmin() && $me->get("authority_id") == $owner->get("authority_id"))
+    ! ($me->isAnyAdmin() && $me->get("authority_id") == $owner->get("authority_id"))
     && ! ($me->getId() == $rel_envelope->get("user_id") && $me->checkDroit($module->get("name"), 'TT'))
 ) {
     Helpers::returnAndExit(1, "Accès refusé.", Helpers::getLink("/modules/actes/index.php"));

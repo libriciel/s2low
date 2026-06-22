@@ -99,7 +99,7 @@ class HeliosSAEController extends Controller
 
         try {
             $failed = true;
-            if (!$this->me->isAdmin() && !$this->me->isArchivist()) {
+            if (!$this->me->isAnyAdmin() && !$this->me->isArchivist()) {
                 throw new FailedControllerActionException('Accès refusé', WEBSITE_SSL);
             }
             $transaction_id = $this->getRecuperateurPost()->getInt('transaction_id');

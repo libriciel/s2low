@@ -43,7 +43,7 @@ if ($me->isAuthorityAdmin()) {
     $author_filter = "users.authority_id=" . $me->get("authority_id");
 } elseif ($me->isGroupAdmin()) {
     $author_filter = "authorities.authority_group_id=" . $me->get("authority_group_id");
-} elseif (! $me->isAdmin()) {
+} elseif (! $me->isAnyAdmin()) {
     $author_filter = "users.id=" . $me->getId();
 }
 

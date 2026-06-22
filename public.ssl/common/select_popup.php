@@ -26,7 +26,7 @@ $html = "<div id=\"attribute_list\">\n";
 
 switch ($type) {
     case 'authority_type':
-        if (! $me->isAdmin()) {
+        if (! $me->isAnyAdmin()) {
             $_SESSION["error"] = "Accès refusé";
             header("Location: " . WEBSITE_SSL);
             exit();
@@ -56,7 +56,7 @@ switch ($type) {
         break;
 
     case 'department':
-        if (! $me->isAdmin()) {
+        if (! $me->isAnyAdmin()) {
             $_SESSION["error"] = "Accès refusé";
             header("Location: " . WEBSITE_SSL);
             exit();
