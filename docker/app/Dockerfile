@@ -1,4 +1,4 @@
-FROM hubdocker.libriciel.fr/node:24.15.0-alpine3.23@sha256:d1b3b4da11eefd5941e7f0b9cf17783fc99d9c6fc34884a665f40a06dbdfc94f AS node_modules
+FROM hubdocker.libriciel.fr/node:26.3.1-alpine3.24@sha256:a2dc166a387cc6ca1e62d0c8e265e49ca985d6e60abc9fe6e6c3d6ce8e63f606 AS node_modules
 WORKDIR /app/
 COPY package*.json ./
 RUN npm install
@@ -6,7 +6,7 @@ COPY webpack.config.js ./
 COPY src_js/ ./src_js/
 RUN npx webpack --config webpack.config.js
 
-FROM hubdocker.libriciel.fr/php:8.5.7-fpm-alpine3.23@sha256:bdc083e7b6acfb5eec64b5c85c134fe33cde8aa177da0d93fc46e43df2555b98 AS base
+FROM hubdocker.libriciel.fr/php:8.5.7-fpm-alpine3.24@sha256:fd9669cdc9caa2bc4857a2c9f6b5e86c47a7f85043a6717c29901ca4a8b1cd4e AS base
 
 ARG UID=10001
 ARG GID=10001
