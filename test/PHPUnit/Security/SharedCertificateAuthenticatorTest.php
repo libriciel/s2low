@@ -131,7 +131,7 @@ class SharedCertificateAuthenticatorTest extends TestCase
         $certExtractor->method('extractCertificateOrFail')->willReturn(['certificate_hash' => 'hash']);
         $credExtractor->method('extract')->willReturn(['login' => 'login', 'password' => 'pwd']);
 
-        $user = new SecurityUser(['id' => 1, 'login' => 'login']);
+        $user = new SecurityUser(['id' => 1, 'login' => 'login', 'role' => 'USER']);
         $provider->method('loadUserByCertificateAndLogin')->willReturn($user);
 
         $authenticator = new SharedCertificateAuthenticator(

@@ -103,9 +103,21 @@ class S2lowIntegrationTestCase extends WebTestCase
         $_POST = [];
         $_SERVER['QUERY_STRING'] = '';
 
-        self::getContainer()->get(Database::class)->disconnect();
-        self::getContainer()->get(PDOFactory::class)->closeAll();
-
+        if (self::getContainer()) {
+            try {
+                $connection = self::getContainer()->get(\Doctrine\DBAL\Connection::class);
+                if ($connection) {
+                    if ($connection->getTransactionNestingLevel() === 0) {
+                        $sql = file_get_contents($this->projectDir . '/test/PHPUnit/s2low-test.sql');
+                        $connection->executeStatement($sql);
+                        self::getContainer()->get(Database::class)->disconnect();
+                        self::getContainer()->get(PDOFactory::class)->closeAll();
+                    }
+                }
+            } catch (\Throwable) {
+                // Ignore container/DB errors during shutdown
+            }
+        }
 
         parent::tearDown();
     }

@@ -61,6 +61,7 @@
     "ext-xmlreader": "*"
   },
   "require-dev": {
+    "dama/doctrine-test-bundle": "^8.2",
     "mikey179/vfsstream": "^1.5",
     "phpstan/phpstan": "^2.0",
     "phpunit/phpunit": "^9.5",

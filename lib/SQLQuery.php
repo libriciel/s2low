@@ -7,6 +7,7 @@ use Exception;
 use PDO;
 use PDOStatement;
 use S2lowLegacy\Class\LegacyObjectsManager;
+use Doctrine\DBAL\Connection;
 
 class SQLQuery
 {
@@ -20,7 +21,8 @@ class SQLQuery
     private $hasMoreResult;
 
     public function __construct(
-        private ?PDO $pdo
+        private ?PDO $pdo,
+        private readonly ?Connection $connection = null
     ) {
         $this->setSlowQuery(self::SLOW_QUERY_IN_MS);
     }
@@ -60,8 +62,43 @@ class SQLQuery
         return $result;
     }
 
+    private function handleTransactionQuery(string $query): bool
+    {
+        $trimmed = strtoupper(trim($query, " \t\n\r\0\x0B;"));
+        if ($trimmed === 'BEGIN') {
+            if ($this->connection) {
+                $this->connection->beginTransaction();
+            } else {
+                $this->getPdo()->beginTransaction();
+            }
+            return true;
+        } elseif ($trimmed === 'COMMIT') {
+            if ($this->connection) {
+                if ($this->connection->isTransactionActive()) {
+                    $this->connection->commit();
+                }
+            } else {
+                $this->getPdo()->commit();
+            }
+            return true;
+        } elseif ($trimmed === 'ROLLBACK') {
+            if ($this->connection) {
+                if ($this->connection->isTransactionActive()) {
+                    $this->connection->rollBack();
+                }
+            } else {
+                $this->getPdo()->rollBack();
+            }
+            return true;
+        }
+        return false;
+    }
+
     public function query($query, $param = false): array
     {
+        if ($this->handleTransactionQuery($query)) {
+            return [];
+        }
         $start = microtime(true);
         if (!is_array($param)) {
             $param = func_get_args();
@@ -142,6 +179,9 @@ class SQLQuery
 
     public function exec($query): void
     {
+        if ($this->handleTransactionQuery($query)) {
+            return;
+        }
         $this->getPdo()->exec($query);
     }
 
