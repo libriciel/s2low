@@ -102,7 +102,7 @@ foreach ($liste_id as $id) {
     $envelope->init();
 
     // Vérification des permissions
-    if ($status != 'sae' && (!($me->isAdmin() && $me->get('authority_id') == $owner->get('authority_id')) && !($me->getId() == $envelope->get('user_id') && $me->checkDroit($module->get('name'), 'CS')))) {
+    if ($status != 'sae' && (!($me->isAnyAdmin() && $me->get('authority_id') == $owner->get('authority_id')) && !($me->getId() == $envelope->get('user_id') && $me->checkDroit($module->get('name'), 'CS')))) {
         Helpers::returnAndExit(1, 'Accès refusé.', Helpers::getLink('/modules/actes/index.php'));
     }
 

@@ -192,7 +192,7 @@ class AdminUserController extends Controller
             $this->displayErrorAndExit("Échec de l'authentification", "/");
         }
 
-        if (! $me->isAdmin()) {
+        if (! $me->isAnyAdmin()) {
             $this->displayErrorAndExit("Accès refusé", "/");
         }
 

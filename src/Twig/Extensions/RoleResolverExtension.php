@@ -25,7 +25,7 @@ class RoleResolverExtension extends AbstractExtension
             new TwigFunction('isSadm', [$this, 'isSuperAdmin']),
             new TwigFunction('isAdm', [$this, 'isAuthorityAdmin']),
             new TwigFunction('isGadm', [$this, 'isGroupAdmin']),
-            new TwigFunction('isLargeAdmin', [$this, 'isAdmin']),
+            new TwigFunction('isLargeAdmin', [$this, 'isAnyAdmin']),
             new TwigFunction('isSadmOrGadm', [$this, 'isGroupOrSuperAdmin']),
         ];
     }
@@ -45,7 +45,7 @@ class RoleResolverExtension extends AbstractExtension
         return UserRole::fromRole($this->userRole) === UserRole::AdministrateurGroupe;
     }
 
-    public function isAdmin(): bool
+    public function isAnyAdmin(): bool
     {
         return $this->isAuthorityAdmin() || $this->isSuperAdmin() || $this->isGroupAdmin();
     }

@@ -265,7 +265,7 @@ class User extends DataObject
    * \brief Méthode qui détermine si l'utilisateur est un administrateur, un administrateur de groupe ou un super administrateur
    * \return true si l'utilisateur est administrateur, administrateur de groupe ou super administrateur, false sinon
   */
-    public function isAdmin()
+    public function isAnyAdmin()
     {
         if (isset($this->role) && ($this->role == "SADM" || $this->role == "GADM" || $this->role == "ADM")) {
             return true;

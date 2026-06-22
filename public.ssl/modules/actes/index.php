@@ -60,7 +60,7 @@ if ($ftype != '0' && empty($ftype)) {
 
 if ($droit->isSuperAdmin($initData->userInfo)) {
     $transactionSQL->setAuthority($authority_filtre);
-} elseif ($droit->isAdmin($initData->userInfo)) {
+} elseif ($droit->isAnyAdmin($initData->userInfo)) {
     $transactionSQL->setAuthority($initData->userInfo['authority_id']);
 } else {
     $serviceUser = new ServiceUser(DatabasePool::getInstance());

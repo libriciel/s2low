@@ -160,7 +160,7 @@ class Controller
     {
         $this->verifUser();
 
-        if (!$this->me->isAdmin()) {
+        if (!$this->me->isAnyAdmin()) {
             $this->displayErrorAndExit("Accès refusé", "");
         } // @codeCoverageIgnore
         if ($this->me->isSuper()) {

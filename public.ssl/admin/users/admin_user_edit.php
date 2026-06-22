@@ -33,7 +33,7 @@ if (! $me->authenticate()) {
     exit();
 }
 
-if (! $me->isAdmin()) {
+if (! $me->isAnyAdmin()) {
     $_SESSION["error"] = "Accés refusé";
     header("Location: " . WEBSITE_SSL);
     exit();

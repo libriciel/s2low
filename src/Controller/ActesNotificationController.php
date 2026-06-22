@@ -81,7 +81,7 @@ class ActesNotificationController extends \Symfony\Bundle\FrameworkBundle\Contro
             }
 
             // Vérification des permissions
-            if (!($me->isAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && !($me->canEdit($module->get("name")))) {
+            if (!($me->isAnyAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && !($me->canEdit($module->get("name")))) {
                 Helpers :: returnAndExit(1, "Accès refusé.", Helpers::getLink("/modules/actes/index.php"));
             }
 
