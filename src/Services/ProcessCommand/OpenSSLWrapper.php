@@ -9,32 +9,26 @@ use Exception;
 class OpenSSLWrapper
 {
     /**
-     * @var string
-     */
-    private $authorized_ca_path;
-    /**
      * @var \S2low\Services\ProcessCommand\CommandLauncher
      */
     private $commandLauncher;
 
     public function __construct(
-        string $authorized_ca_path,
         CommandLauncher $commandLauncher,
         private readonly CheckSnInCRLFactory $checkSnInCRLFactory
     ) {
         $this->commandLauncher = $commandLauncher;
-        $this->authorized_ca_path = $authorized_ca_path;
     }
 
     /**
      * @throws RecoverableException
      */
-    public function verify(string $certificate_path, array $nonBlockingErrors, ?string $timestamp = null): void
+    public function verify(string $certificate_path, string $ca_path, array $nonBlockingErrors, ?string $timestamp = null): void
     {
-        $verifyCmd = ["openssl","verify","-CApath", $this->authorized_ca_path, $certificate_path];
+        $verifyCmd = ["openssl","verify","-CApath", $ca_path, $certificate_path];
 
         if ($timestamp) {
-            $verifyCmd = ["openssl","verify","-CApath",$this->authorized_ca_path,"-attime",$timestamp, $certificate_path];
+            $verifyCmd = ["openssl","verify","-CApath",$ca_path,"-attime",$timestamp, $certificate_path];
         }
 
         $this->commandLauncher->launch(
@@ -95,14 +89,14 @@ class OpenSSLWrapper
      * @return void
      * @throws Exception
      */
-    public function checkFileContentCorrespondsToSignature($signature_file, $file_path): string
+    public function checkFileContentCorrespondsToSignature($signature_file, $file_path, string $ca_path): string
     {
         # On ne va pas vérifier le certificat (option -noverify)
         # Au niveau du purpose, smime est trop restrictif par rapport à notre besoin
         # Au niveau de la date et de la chaine de certification, on va se reposer sur
         # la fonction précédente
         return $this->commandLauncher->launchFromString(
-            "openssl smime -in $signature_file -inform PEM -verify -noverify -content $file_path -CApath {$this->authorized_ca_path}",
+            "openssl smime -in $signature_file -inform PEM -verify -noverify -content $file_path -CApath {$ca_path}",
             new FileContentCorrespondsToSignatureChecker()
         );
     }

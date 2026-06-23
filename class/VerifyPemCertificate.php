@@ -47,7 +47,7 @@ class VerifyPemCertificate
             $date->setTimestamp($timestamp);
         }
         $this->checkForCrlRevocation($certificate_path, $timestamp);
-        $this->openSSLWrapper->verify($certificate_path, $filteredErrors, $timestamp);
+        $this->openSSLWrapper->verify($certificate_path, $this->authorized_ca_path, $filteredErrors, $timestamp);
         return true;
     }
 

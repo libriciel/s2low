@@ -15,7 +15,7 @@ class VerifyPKCS7Signature
 
 
     public function __construct(
-        string $authorized_ca_path,
+        private readonly string $authorized_ca_path,
         VerifyPemCertificateFactory $verifyPemCertificateFactory,
         PemCertificateFactory $pemCertificateFactory,
         OpenSSLWrapper $openSSLWrapper
@@ -54,7 +54,7 @@ class VerifyPKCS7Signature
                 $dateTime->getTimestamp()
             );
             if ($file_path) {
-                $this->openSSLWrapper->checkFileContentCorrespondsToSignature($signature_file, $file_path);
+                $this->openSSLWrapper->checkFileContentCorrespondsToSignature($signature_file, $file_path, $this->authorized_ca_path);
             }
         } finally {
             unlink($signature_file);

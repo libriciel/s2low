@@ -19,7 +19,6 @@ class VerifyPKCS7SignatureFactory
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory(),
             new OpenSSLWrapper(
-                $authorized_ca_path,
                 new CommandLauncher(),
                 new CheckSnInCRLFactory(new CRLReader())
             )

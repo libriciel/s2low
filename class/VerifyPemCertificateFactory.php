@@ -14,7 +14,7 @@ class VerifyPemCertificateFactory
     {
         return new VerifyPemCertificate(
             $caCertificatesPath,
-            new OpenSSLWrapper($caCertificatesPath, new CommandLauncher(), new CheckSnInCRLFactory(new CRLReader()))
+            new OpenSSLWrapper(new CommandLauncher(), new CheckSnInCRLFactory(new CRLReader()))
         );
     }
 }
