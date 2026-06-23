@@ -713,8 +713,8 @@ class Helpers
             $jsonOutput->displayErrorAndExit($erreur_msg);
         } else {
             $_SESSION['error'] = $erreur_msg;
-            header("Location: $location");
-            exit;
+            header_wrapper("Location: $location");
+            exit_wrapper();
         }
     }
 }
