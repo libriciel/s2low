@@ -9,17 +9,12 @@ use S2low\Services\ProcessCommand\OpenSSLWrapper;
 
 class VerifyPKCS7Signature
 {
-    private OpenSSLWrapper $openSSLWrapper;
-
-
     public function __construct(
         private readonly string $authorized_ca_path,
         private readonly VerifyPemCertificate $verifyPemCertificate,
-        PemCertificateFactory $pemCertificateFactory,
-        OpenSSLWrapper $openSSLWrapper
+        private readonly PemCertificateFactory $pemCertificateFactory,
+        private readonly OpenSSLWrapper $openSSLWrapper
     ) {
-        $this->pemCertificateFactory = $pemCertificateFactory;
-        $this->openSSLWrapper = $openSSLWrapper;
     }
 
     /**

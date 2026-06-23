@@ -54,7 +54,7 @@ class VerifyPemCertificate
      * @return void
      * @throws \S2lowLegacy\Class\RecoverableException
      */
-    protected function checkForCrlRevocation(string $file, string $ca_path, string $timestamp = null): void
+    protected function checkForCrlRevocation(string $file, string $ca_path, ?string $timestamp = null): void
     {
         $dateTime = new DateTime();
         if (!is_null($timestamp)) {

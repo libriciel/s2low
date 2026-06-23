@@ -12,9 +12,8 @@ class VerifyPadesSignature
     public function __construct(
         private readonly string $rgs_validca_path,
         private readonly VerifyPemCertificate $verifyPemCertificate,
-        PemCertificateFactory $pemCertificateFactory
+        private readonly PemCertificateFactory $pemCertificateFactory
     ) {
-        $this->pemCertificateFactory = $pemCertificateFactory;
     }
 
     /**
