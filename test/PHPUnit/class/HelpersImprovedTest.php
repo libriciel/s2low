@@ -472,11 +472,30 @@ class HelpersImprovedTest extends TestCase
         org\bovigo\vfs\vfsStream::setup('root');
         $rootUrl = org\bovigo\vfs\vfsStream::url('root');
 
-        // Répertoire vide
+        // 1. Test répertoire vide
         $this->assertEmpty(Helpers::getAuthorizedCACerts($rootUrl));
 
-        // Répertoire invalide
+        // 2. Test répertoire invalide
         $this->assertEmpty(Helpers::getAuthorizedCACerts($rootUrl . '/non-existent'));
+
+        // 3. Test cas nominal avec des fichiers virtuels
+        // On récupère le contenu du certificat de test existant pour éviter de le surcharger en chaîne brute
+        $certContent = file_get_contents(__DIR__ . '/fixtures/root_ca.crt');
+
+        // On crée un certificat valide dans le système de fichiers virtuel
+        file_put_contents($rootUrl . '/cert.pem', $certContent);
+
+        // On crée un fichier qui n'est pas un certificat (pour tester le filtrage/gestion d'erreur)
+        file_put_contents($rootUrl . '/not_a_cert.txt', 'invalid content');
+
+        // On crée un sous-dossier (pour vérifier qu'il est ignoré)
+        mkdir($rootUrl . '/subdir');
+
+        $certs = Helpers::getAuthorizedCACerts($rootUrl);
+
+        // Seul le certificat valide doit être détecté et parsé
+        $this->assertCount(1, $certs);
+        $this->assertSame('ADULLACT-Projet', $certs[0]['subject']['O']);
     }
 
     /**
