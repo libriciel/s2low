@@ -129,4 +129,32 @@ class DatabaseTest extends S2lowTestCase
     {
         self::assertInstanceOf(PDO::class, $this->database->getPdo());
     }
+
+    public function testTransactionMethodsCallSqlQuery()
+    {
+        $loggerMock = $this->createMock(\Psr\Log\LoggerInterface::class);
+        $sqlQueryMock = $this->createMock(\S2lowLegacy\Lib\SQLQuery::class);
+
+        $invocations = [];
+        $sqlQueryMock->expects($this->exactly(4))
+            ->method('query')
+            ->willReturnCallback(function (string $query, array $params = []) use (&$invocations) {
+                $invocations[] = [$query, $params];
+                return [];
+            });
+
+        $database = new Database($loggerMock, $sqlQueryMock);
+
+        $database->begin();
+        $database->commit();
+        $database->begin();
+        $database->rollback();
+
+        $this->assertEquals([
+            ['BEGIN', []],
+            ['COMMIT', []],
+            ['BEGIN', []],
+            ['ROLLBACK', []],
+        ], $invocations);
+    }
 }

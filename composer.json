@@ -79,7 +79,7 @@
     }
   },
   "scripts": {
-    "test-db-init": "php bin/console db:test-init",
+    "test-db-init": "php bin/console db:test-init --env=test",
     "test": [
       "@test-db-init",
       "phpunit"

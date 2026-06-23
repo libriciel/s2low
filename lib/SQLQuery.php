@@ -78,7 +78,9 @@ class SQLQuery
                     $this->connection->commit();
                 }
             } else {
-                $this->getPdo()->commit();
+                if ($this->getPdo()->inTransaction()) {
+                    $this->getPdo()->commit();
+                }
             }
             return true;
         } elseif ($trimmed === 'ROLLBACK') {
@@ -87,7 +89,9 @@ class SQLQuery
                     $this->connection->rollBack();
                 }
             } else {
-                $this->getPdo()->rollBack();
+                if ($this->getPdo()->inTransaction()) {
+                    $this->getPdo()->rollBack();
+                }
             }
             return true;
         }
