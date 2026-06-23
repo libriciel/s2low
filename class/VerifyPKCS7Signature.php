@@ -9,18 +9,15 @@ use S2low\Services\ProcessCommand\OpenSSLWrapper;
 
 class VerifyPKCS7Signature
 {
-    private VerifyPemCertificate $verifyPemCertificate;
-    private PemCertificateFactory $pemCertificateFactory;
     private OpenSSLWrapper $openSSLWrapper;
 
 
     public function __construct(
         private readonly string $authorized_ca_path,
-        VerifyPemCertificateFactory $verifyPemCertificateFactory,
+        private readonly VerifyPemCertificate $verifyPemCertificate,
         PemCertificateFactory $pemCertificateFactory,
         OpenSSLWrapper $openSSLWrapper
     ) {
-        $this->verifyPemCertificate = $verifyPemCertificateFactory->get($authorized_ca_path);
         $this->pemCertificateFactory = $pemCertificateFactory;
         $this->openSSLWrapper = $openSSLWrapper;
     }
@@ -50,6 +47,7 @@ class VerifyPKCS7Signature
 
             $this->verifyPemCertificate->checkCertificateWithOpenSSL(
                 $certificate_file,
+                $this->authorized_ca_path,
                 $filteredErrors,
                 $dateTime->getTimestamp()
             );

@@ -3,10 +3,19 @@
 declare(strict_types=1);
 
 use PHPUnit\class\VerifyPKCS7SignatureFactory;
+use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2lowLegacy\Class\VerifyPemCertificate;
 
 class VerifyPKCS7SignatureTest extends S2lowTestCase
 {
+    public function setUp(): void
+    {
+        $this->verifyPKCS7SignatureFactory =  new VerifyPKCS7SignatureFactory(
+            $this->getObjectInstancier()->get(VerifyPemCertificate::class),
+            $this->getObjectInstancier()->get(S2lowLegacy\Lib\PemCertificateFactory::class),
+            $this->getObjectInstancier()->get(OpensslWrapper::class)
+        );
+    }
     #-------Test des signatures----------------------------------------------------------------------------------------
     # Signature g�n�r�e selon https://stackoverflow.com/questions/56013953/how-to-verify-a-file-and-a-p7s-detached-signature-with-openssl
     #------------------------------------------------------------------------------------------------------------------
@@ -16,7 +25,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
      */
     public function testRightFileWithSignature()
     {
-        $verifyPKCS7Signature = VerifyPKCS7SignatureFactory::create(__DIR__ . '/fixtures/signaturesPKCS7/ac');
+        $verifyPKCS7Signature = $this->verifyPKCS7SignatureFactory->create(__DIR__ . '/fixtures/signaturesPKCS7/ac');
 
         static::assertTrue(
             $verifyPKCS7Signature->verifySignature(
@@ -30,7 +39,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
 
     public function testWrongFileWithSignature()
     {
-        $verifyPKCS7Signature = VerifyPKCS7SignatureFactory::create(__DIR__ . '/fixtures/signaturesPKCS7/ac');
+        $verifyPKCS7Signature = $this->verifyPKCS7SignatureFactory->create(__DIR__ . '/fixtures/signaturesPKCS7/ac');
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('La vérification de la signature a échoué');
@@ -44,7 +53,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
 
     public function testRightFileWithWrongAC()
     {
-        $verifyPKCS7Signature = VerifyPKCS7SignatureFactory::create(__DIR__ . '/');
+        $verifyPKCS7Signature = $this->verifyPKCS7SignatureFactory->create(__DIR__ . '/');
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage(' unable to get local issuer certificate');
@@ -74,7 +83,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
 
     public function testWrongDateIsTakenIntoAccount(DateTime $dateTime, string $message)
     {
-        $verifyPKCS7Signature = VerifyPKCS7SignatureFactory::create(__DIR__ . '/fixtures/signaturesPKCS7/ac');
+        $verifyPKCS7Signature = $this->verifyPKCS7SignatureFactory->create(__DIR__ . '/fixtures/signaturesPKCS7/ac');
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage($message);
@@ -110,7 +119,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
     {
         $baseSignatureDir = __DIR__ . '/fixtures/signaturesPKCS7';
 
-        $verifyPKCS7Signature = VerifyPKCS7SignatureFactory::create(__DIR__ . '/fixtures/signaturesPKCS7/ac');
+        $verifyPKCS7Signature = $this->verifyPKCS7SignatureFactory->create(__DIR__ . '/fixtures/signaturesPKCS7/ac');
 
         static::assertTrue(
             $verifyPKCS7Signature->verifySignature(
@@ -139,7 +148,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
     public function testverifyCertificate()
     {
         $baseSignatureDir = __DIR__ . '/fixtures/signaturesPKCS7';
-        $verificator = VerifyPKCS7SignatureFactory::create("$baseSignatureDir/ac/");
+        $verificator = $this->verifyPKCS7SignatureFactory->create("$baseSignatureDir/ac/");
 
         $verificator->verifySignature(
             file_get_contents("$baseSignatureDir/test_pdf.pdf.p7s"),

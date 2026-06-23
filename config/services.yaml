@@ -509,9 +509,6 @@ services:
     arguments:
       $authorized_ca_path: "%app.path_to_rgs_valid_cargs%"
 
-  S2lowLegacy\Class\VerifyPemCertificate:
-    autowire: false
-
   S2lowLegacy\Class\Versionning:
     public: true
     autoconfigure: true

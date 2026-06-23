@@ -1,6 +1,6 @@
 <?php
 
-use S2lowLegacy\Class\VerifyPemCertificateFactory;
+use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Lib\XadesSignature;
@@ -29,7 +29,7 @@ $xadesSignature = new XadesSignature(
     EXTENDED_VALIDCA_PATH,
     new XadesSignatureParser(),
     new PemCertificateFactory(),
-    (new VerifyPemCertificateFactory())->get(EXTENDED_VALIDCA_PATH)
+    $this->getObjectInstancier()->get(VerifyPemCertificate::class)
 );
 
 foreach ($transactions_list as $num_transaction => $transaction_helios) {

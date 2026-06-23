@@ -19,18 +19,14 @@ class VerifyPemCertificate
         20, # unable to get local issuer certificate
         21, # unable to verify the first certificate
     );
-    /** @var string */
-    private $authorized_ca_path;
     /**
      * @var \S2low\Services\ProcessCommand\OpenSSLWrapper
      */
     private $openSSLWrapper;
 
     public function __construct(
-        string $authorized_ca_path,
         OpenSSLWrapper $openSSLWrapper
     ) {
-        $this->authorized_ca_path = $authorized_ca_path;
         $this->openSSLWrapper = $openSSLWrapper;
     }
 
@@ -39,6 +35,7 @@ class VerifyPemCertificate
      */
     public function checkCertificateWithOpenSSL(
         $certificate_path,
+        string $ca_path,
         array $filteredErrors = [],
         ?string $timestamp = null,
     ): bool {
@@ -46,8 +43,8 @@ class VerifyPemCertificate
         if (!is_null($timestamp)) {
             $date->setTimestamp($timestamp);
         }
-        $this->checkForCrlRevocation($certificate_path, $timestamp);
-        $this->openSSLWrapper->verify($certificate_path, $this->authorized_ca_path, $filteredErrors, $timestamp);
+        $this->checkForCrlRevocation($certificate_path, $ca_path, $timestamp);
+        $this->openSSLWrapper->verify($certificate_path, $ca_path, $filteredErrors, $timestamp);
         return true;
     }
 
@@ -57,14 +54,14 @@ class VerifyPemCertificate
      * @return void
      * @throws \S2lowLegacy\Class\RecoverableException
      */
-    protected function checkForCrlRevocation(string $file, string $timestamp = null): void
+    protected function checkForCrlRevocation(string $file, string $ca_path, string $timestamp = null): void
     {
         $dateTime = new DateTime();
         if (!is_null($timestamp)) {
             $dateTime->setTimestamp($timestamp);
         }
         $file_r0_name = $this->openSSLWrapper->extractHash($file);
-        $file_r0 = $this->authorized_ca_path . "/$file_r0_name.r0";
+        $file_r0 = $ca_path . "/$file_r0_name.r0";
         if (file_exists($file_r0)) {
             // 1) extraire le SN du certificat
             $serialNumber = $this->openSSLWrapper->extractCertificateSN($file);

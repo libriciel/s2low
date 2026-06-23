@@ -9,23 +9,18 @@ use S2lowLegacy\Lib\PemCertificateFactory;
 
 class VerifyPadesSignature
 {
-    /** @var VerifyPemCertificate  */
-    private $verifyPemCertificate;
-    /** @var PemCertificateFactory  */
-    private $pemCertificateFactory;
-
     public function __construct(
-        $rgs_validca_path,
-        VerifyPemCertificateFactory $verifyPemCertificateFactory,
+        private readonly string $rgs_validca_path,
+        private readonly VerifyPemCertificate $verifyPemCertificate,
         PemCertificateFactory $pemCertificateFactory
     ) {
-        $this->verifyPemCertificate = $verifyPemCertificateFactory->get($rgs_validca_path);
         $this->pemCertificateFactory = $pemCertificateFactory;
     }
 
     /**
      * @param $signature
-     * @throws Exception
+     * @return \S2lowLegacy\Lib\PemCertificate
+     * @throws \Exception
      */
     public function validateSignatureWithoutCertificateChecking($signature): PemCertificate
     {
@@ -63,6 +58,7 @@ class VerifyPadesSignature
         try {
             $this->verifyPemCertificate->checkCertificateWithOpenSSL(
                 $certificate_path,
+                $this->rgs_validca_path,
                 VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS,
                 $signatureTimestamp
             );
