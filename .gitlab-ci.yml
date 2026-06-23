@@ -93,7 +93,7 @@ unit_test:
         XDEBUG_MODE: coverage
         APP_ENV: test
     services:
-      - name: registry.libriciel.fr/public/outils/postgres:14.5
+      - name: registry.libriciel.fr/public/outils/postgres:14.5@sha256:a0c6930be56082d2b6f747630ab6e5799c566c7ec45c49033e8b647ca2e50bee
         alias: postgres
         command: [ "postgres","-c", "max_connections=200" ]
     script:
@@ -120,10 +120,10 @@ quality:
 .security_scan_base:
   stage: test
   image:
-    name: hubdocker.libriciel.fr/aquasec/trivy:0.71.1
+    name: hubdocker.libriciel.fr/aquasec/trivy:0.71.1@sha256:53570e6911c2361ebe7995228088cf83a6b9b73e7f3cdca44bd8f8f425e80fa7
     entrypoint: [""]
   services:
-    - docker:dind
+    - docker:dind@sha256:7bb861a04bb42bda1d237fc2cb539f9823c9b666ecfbfdbd3e534ab74c8cb976
   script:
     - apk add --no-cache curl docker-cli
     - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
