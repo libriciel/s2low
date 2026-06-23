@@ -79,8 +79,15 @@
     }
   },
   "scripts": {
-    "test": "phpunit",
-    "test-cover": "phpunit --coverage-text --colors=never --coverage-clover coverage/coverage.xml --log-junit coverage/logfile.xml",
+    "test-db-init": "php bin/console db:test-init",
+    "test": [
+      "@test-db-init",
+      "phpunit"
+    ],
+    "test-cover": [
+      "@test-db-init",
+      "phpunit --coverage-text --colors=never --coverage-clover coverage/coverage.xml --log-junit coverage/logfile.xml"
+    ],
     "auto-scripts": {
       "cache:clear": "symfony-cmd",
       "assets:install %PUBLIC_DIR%": "symfony-cmd"

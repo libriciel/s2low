@@ -63,6 +63,7 @@ services:
       POSTGRES_DB: ${DATABASE_NAME_TEST:-s2low_test}
     volumes:
       - ${DATABASE_DATADIR_TEST:-database_datadir_test}:/var/lib/postgresql/data:rw,noexec,nosuid,nodev
+    command: ["postgres", "-c", "fsync=off", "-c", "synchronous_commit=off", "-c", "full_page_writes=off"]
 
   simulateur:
     image: registry.libriciel.fr/public/plateforme/s2low-simulateur-helios:1.1.3@sha256:12ce257cdd0871caf7b033139475c6fe553dbbf77593631a0c5ad09338995217
