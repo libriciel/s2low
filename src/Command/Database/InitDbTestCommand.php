@@ -56,6 +56,14 @@ class InitDbTestCommand extends Command
         $output->writeln("Loading fixtures s2low-test.sql from $fixturesPath...");
         $this->sqlQuery->exec(file_get_contents($fixturesPath));
 
+        $output->writeln("Resetting sequences...");
+        $this->sqlQuery->exec("SELECT SETVAL('users_id_seq', (SELECT MAX(id)+1 FROM users))");
+        $this->sqlQuery->exec("SELECT SETVAL('authority_siret_id_seq', (SELECT MAX(id)+1 FROM authority_siret))");
+        $this->sqlQuery->exec("SELECT SETVAL('nounce_id_seq', (SELECT MAX(id)+1 FROM nounce))");
+        $this->sqlQuery->exec("SELECT SETVAL('authorities_id_seq', (SELECT MAX(id)+1 FROM authorities))");
+        $this->sqlQuery->exec("SELECT SETVAL('helios_transactions_id_seq', (SELECT MAX(id)+1 FROM helios_transactions))");
+        $this->sqlQuery->exec("SELECT SETVAL('authority_groups_id_seq', (SELECT MAX(id)+1 FROM authority_groups))");
+
         $output->writeln("=== Database Initialization END ===");
         return Command::SUCCESS;
     }
