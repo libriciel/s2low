@@ -10,7 +10,6 @@ use S2low\Services\ProcessCommand\OpenSSLWrapper;
 class VerifyPKCS7Signature
 {
     public function __construct(
-        private readonly string $authorized_ca_path,
         private readonly VerifyPemCertificate $verifyPemCertificate,
         private readonly PemCertificateFactory $pemCertificateFactory,
         private readonly OpenSSLWrapper $openSSLWrapper
@@ -19,15 +18,17 @@ class VerifyPKCS7Signature
 
     /**
      * @param string $signature
+     * @param string $caPath
      * @param array $filteredErrors
      * @param string|null $file_path
      * @param \DateTime|null $dateTime
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
 
     public function verifySignature(
         string $signature,
+        string $caPath,
         array $filteredErrors = [],
         ?string $file_path = null,
         ?DateTime $dateTime = null,
@@ -42,12 +43,12 @@ class VerifyPKCS7Signature
 
             $this->verifyPemCertificate->checkCertificateWithOpenSSL(
                 $certificate_file,
-                $this->authorized_ca_path,
+                $caPath,
                 $filteredErrors,
                 $dateTime->getTimestamp()
             );
             if ($file_path) {
-                $this->openSSLWrapper->checkFileContentCorrespondsToSignature($signature_file, $file_path, $this->authorized_ca_path);
+                $this->openSSLWrapper->checkFileContentCorrespondsToSignature($signature_file, $file_path, $caPath);
             }
         } finally {
             unlink($signature_file);

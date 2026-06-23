@@ -888,6 +888,7 @@ class ActesTransaction extends DataObject
 
                 if (isset($actesItems->Document->Signature)) {
                     try {
+                        $RGSCaPath = LegacyObjectsManager::getLegacyObjectInstancier()->getParameter('%app.path_to_rgs_valid_cargs%');
                         $verifyPKCS7Signature = LegacyObjectsManager::getLegacyObjectInstancier()->get(VerifyPKCS7Signature::class);
                         $verifyPKCS7Signature->verifySignature(
                             $actesItems->Document->Signature,
