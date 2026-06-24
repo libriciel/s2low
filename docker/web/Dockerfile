@@ -49,6 +49,8 @@ RUN mkdir -p /data/certificates /data/log /data/run  && chown www-data:www-data 
 COPY ./public /app/public
 COPY ./public.ssl /app/public.ssl
 COPY --from=node_modules /app/public.ssl/jsmodules/ /app/public.ssl/jsmodules/
+COPY --from=node_modules /app/public.ssl/custom/styles/bootstrap5.min.css /app/public.ssl/custom/styles/bootstrap5.min.css
+COPY --from=node_modules /app/public.ssl/custom/js/bootstrap.bundle.min.js /app/public.ssl/custom/js/bootstrap.bundle.min.js
 
 USER www-data
 

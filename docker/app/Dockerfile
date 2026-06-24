@@ -103,6 +103,9 @@ COPY ./composer.* /app/
 RUN composer install --no-ansi --no-dev --no-interaction --no-progress --no-scripts --no-autoloader
 
 COPY --chown=app:app ./ /app/
+COPY --from=node_modules --chown=app:app /app/public.ssl/jsmodules/ /app/public.ssl/jsmodules/
+COPY --from=node_modules --chown=app:app /app/public.ssl/custom/styles/bootstrap5.min.css /app/public.ssl/custom/styles/bootstrap5.min.css
+COPY --from=node_modules --chown=app:app /app/public.ssl/custom/js/bootstrap.bundle.min.js /app/public.ssl/custom/js/bootstrap.bundle.min.js
 
 RUN sh /app/docker/app/add-legacy-provider-to-openssl-v3.sh \
     && composer run-script --no-dev post-install-cmd && composer dump-autoload --no-dev --optimize \
