@@ -17,11 +17,11 @@
     Espace de télétransmission
 {% endblock %}
 {% block body %}
-    {% if isSadm() %}
+    {% if app.user.isSuperAdmin %}
         <span>Vous êtes connecté avec le rôle de super administrateur.</span>
-    {% elseif isGadm() %}
+    {% elseif app.user.isGroupAdmin %}
         <span>Vous êtes connecté avec le rôle d'administrateur du groupe <u>{{ group_name }}</u>.</span>
-    {% elseif isAdm() %}
+    {% elseif app.user.isAuthorityAdmin %}
         <span>Vous êtes connecté avec le rôle d'administrateur de la collectivité <u>{{ authority_name }}</u>.</span>
     {% else %}
         <span>Vous êtes connecté avec le rôle d'utilisateur de la collectivité <u>{{ authority_name }}</u>.</span>
@@ -40,7 +40,7 @@
         {% include 'components/message_admin.html.twig' with { message_admin: message_admin } %}
     {% endif %}
 
-    {% if isSadm() %}
+    {% if app.user.isSuperAdmin %}
         <h2>Fonctions super administrateur</h2>
         <a href='admin/index.php' class='btn  btn-primary'>Console d'administration</a>
     {% endif %}

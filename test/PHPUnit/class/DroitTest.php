@@ -4,9 +4,9 @@ use S2lowLegacy\Class\Droit;
 
 class DroitTest extends S2lowTestCase
 {
-    private function getDroit()
+    private function getDroit(): Droit
     {
-        return $this->getObjectInstancier()->get(Droit::class);
+        return $this->getContainer()->get(Droit::class);
     }
 
     public function testCanAccess()

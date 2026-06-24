@@ -31,7 +31,7 @@ class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
         $this->email = $userData['email'] ?? '';
         $this->login = $userData['login'] ?: null;
         $this->password = $userData['password'] ?: null;
-        $this->role = $userData['role'] ?? 'USER';
+        $this->role = $userData['role'] ?? '';
         $this->authorityId = (int) ($userData['authority_id'] ?? 0);
         $this->authorityGroupId = isset($userData['authority_group_id']) ? (int) $userData['authority_group_id'] : null;
         $this->status = (int) ($userData['status'] ?? 0);
@@ -61,6 +61,41 @@ class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRole(): string
     {
         return $this->role;
+    }
+
+    public function getRoleEnum(): ?\S2low\Enum\UserRole
+    {
+        return \S2low\Enum\UserRole::fromRole($this->role);
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->getRoleEnum()?->isSuperAdmin() ?? false;
+    }
+
+    public function isGroupAdmin(): bool
+    {
+        return $this->getRoleEnum()?->isGroupAdmin() ?? false;
+    }
+
+    public function isAuthorityAdmin(): bool
+    {
+        return $this->getRoleEnum()?->isAuthorityAdmin() ?? false;
+    }
+
+    public function isArchivist(): bool
+    {
+        return $this->getRoleEnum()?->isArchivist() ?? false;
+    }
+
+    public function isAnyAdmin(): bool
+    {
+        return $this->getRoleEnum()?->isAnyAdmin() ?? false;
+    }
+
+    public function isGroupOrSuperAdmin(): bool
+    {
+        return $this->getRoleEnum()?->isGroupOrSuperAdmin() ?? false;
     }
 
     public function eraseCredentials(): void

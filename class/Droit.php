@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class;
 
+use S2low\Enum\UserRole;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\GroupSQL;
 use S2lowLegacy\Model\ModuleSQL;
@@ -9,14 +10,6 @@ use S2lowLegacy\Model\UserSQL;
 
 class Droit
 {
-    //Droit:checkUser()
-    //Droit:checkSuperAdmin()
-    //Droit:checkSuperAdminOrGroupAdmin()
-    //DroitActes::checkActes($transaction_id=0)
-    //DroitHelios::checkHelios($transaction_id=0)
-
-
-
     private $userSQL;
     private $authoritySQL;
     private $groupSQL;
@@ -105,27 +98,27 @@ class Droit
 
     public function isGroupOrSuperAdmin(array $userInfo)
     {
-        return in_array($userInfo['role'], array('SADM','GADM'));
+        return UserRole::fromRole($userInfo['role'] ?? '')?->isGroupOrSuperAdmin() ?? false;
     }
 
     public function isSuperAdmin(array $userInfo)
     {
-        return $userInfo['role'] == 'SADM';
+        return UserRole::fromRole($userInfo['role'] ?? '')?->isSuperAdmin() ?? false;
     }
 
     public function isAnyAdmin(array $userInfo)
     {
-        return in_array($userInfo['role'], array('SADM','GADM','ADM'));
+        return UserRole::fromRole($userInfo['role'] ?? '')?->isAnyAdmin() ?? false;
     }
 
     public function isGroupAdmin(array $userInfo)
     {
-        return $userInfo['role'] == 'GADM';
+        return UserRole::fromRole($userInfo['role'] ?? '')?->isGroupAdmin() ?? false;
     }
 
     public function isAuthorityAdmin(array $userInfo)
     {
-        return $userInfo['role'] == 'ADM';
+        return UserRole::fromRole($userInfo['role'] ?? '')?->isAuthorityAdmin() ?? false;
     }
 
     public function hasDroit(array $userInfo, array $authorityInfo)

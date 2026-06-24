@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class;
 
+use S2low\Enum\UserRole;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Model\UserSQL;
 
@@ -179,35 +180,24 @@ class User extends DataObject
    * \brief Méthode qui détermine si l'utilisateur est un administrateur de groupe ou un super administrateur
    * \return true si l'utilisateur est administrateur de groupe ou super administrateur, false sinon
   */
+    public function getRoleEnum(): ?UserRole
+    {
+        return UserRole::fromRole($this->role);
+    }
+
     public function isGroupAdminOrSuper()
     {
-        return ($this->isGroupAdmin() || $this->isSuper());
+        return $this->getRoleEnum()?->isGroupOrSuperAdmin() ?? false;
     }
 
-  /**
-   * \brief Méthode qui détermine si l'utilisateur est un administrateur de groupe
-   * \return true si l'utilisateur est administrateur de groupe, false sinon
-  */
     public function isGroupAdmin()
     {
-        if (isset($this->role) && ($this->role == "GADM") && is_numeric($this->authority_group_id)) {
-            return true;
-        } else {
-            return false;
-        }
+        return ($this->getRoleEnum()?->isGroupAdmin() ?? false) && is_numeric($this->authority_group_id);
     }
 
-  /**
-   * \brief Méthode qui détermine si l'utilisateur est un super administrateur
-   * \return true si l'utilisateur est super administrateur, false sinon
-  */
     public function isSuper()
     {
-        if (isset($this->role) && $this->role == 'SADM') {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->getRoleEnum()?->isSuperAdmin() ?? false;
     }
 
   /**
@@ -261,26 +251,14 @@ class User extends DataObject
         return array('subject' => $this->subject_dn, 'issuer' => $this->issuer_dn,'certificate_hash' => $this->certificate_hash);
     }
 
-  /**
-   * \brief Méthode qui détermine si l'utilisateur est un administrateur, un administrateur de groupe ou un super administrateur
-   * \return true si l'utilisateur est administrateur, administrateur de groupe ou super administrateur, false sinon
-  */
     public function isAnyAdmin()
     {
-        if (isset($this->role) && ($this->role == "SADM" || $this->role == "GADM" || $this->role == "ADM")) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->getRoleEnum()?->isAnyAdmin() ?? false;
     }
 
-  /**
-   * \brief Méthode qui détermine si l'utilisateur est un administrateur de collectivité
-   * \return true si l'utilisateur est administrateur de collectivité, false sinon
-  */
     public function isAuthorityAdmin(): bool
     {
-        return isset($this->role) && $this->role == self::ADM;
+        return $this->getRoleEnum()?->isAuthorityAdmin() ?? false;
     }
 
 
@@ -291,7 +269,7 @@ class User extends DataObject
 
     public function isArchivist(): bool
     {
-        return isset($this->role) && $this->role == self::ARCH;
+        return $this->getRoleEnum()?->isArchivist() ?? false;
     }
 
     public function archivistCanAccess(array|bool $transaction_info): bool
