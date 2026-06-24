@@ -11,7 +11,7 @@ class KernelFactory
     {
         require dirname(__DIR__) . '/../vendor/autoload.php';
 
-        (new Dotenv())->bootEnv(".env");
+        (new Dotenv())->bootEnv("/data/config/.env");
         new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
     }
 }

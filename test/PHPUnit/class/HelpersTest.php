@@ -306,10 +306,6 @@ class HelpersTest extends TestCase
         $this->assertEquals("Fichier spécifié introuvable", Helpers::$last_error);
     }
 
-    /**
-     * @preserveGlobalState disabled
-     * @runInSeparateProcess
-     */
     public function testSendFileToBrowser()
     {
         $this->expectOutputRegex("#<?php#");

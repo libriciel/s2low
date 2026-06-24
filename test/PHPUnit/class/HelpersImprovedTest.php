@@ -498,10 +498,6 @@ class HelpersImprovedTest extends TestCase
         $this->assertSame('ADULLACT-Projet', $certs[0]['subject']['O']);
     }
 
-    /**
-     * @preserveGlobalState disabled
-     * @runInSeparateProcess
-     */
     public function testSendFileToBrowser()
     {
         // Exécution dans un processus séparé pour capturer proprement header_wrapper et echo
