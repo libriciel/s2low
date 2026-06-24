@@ -9,7 +9,6 @@ use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use S2lowLegacy\Class\VerifyPadesSignature;
 use S2lowLegacy\Class\VerifyPemCertificate;
-use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Lib\PemCertificate;
 use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowTestCase;
@@ -45,12 +44,6 @@ class VerifyPadesSignatureTest extends S2lowTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $verifyPemCertificateFactoryMock = $this->getMockBuilder(VerifyPemCertificateFactory::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $verifyPemCertificateFactoryMock->method('get')->willReturn($this->verifyPemCertificateMock);
-
         $this->pemCertificateMock = $this->getMockBuilder(PemCertificate::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -64,15 +57,15 @@ class VerifyPadesSignatureTest extends S2lowTestCase
 
         $this->verifyPadesSignatureWithMock = new VerifyPadesSignature(
             'pathToValidCA',
-            $verifyPemCertificateFactoryMock,
+            $this->verifyPemCertificateMock,
             $pemCertificateFactoryMock
         );
 
-        $verifyPemCertificateFactory = new VerifyPemCertificateFactory();
+        $verifyPemCertificate = $this->getObjectInstancier()->get(VerifyPemCertificate::class);
 
         $this->verifyPadesSignature = new VerifyPadesSignature(
             __DIR__ . '/../lib/fixtures/validca/',
-            $verifyPemCertificateFactory,
+            $verifyPemCertificate,
             new PemCertificateFactory()
         );
     }
@@ -200,6 +193,7 @@ class VerifyPadesSignatureTest extends S2lowTestCase
                 static::stringContains(
                     '/s2low_valid_certifcate_'
                 ),
+                'pathToValidCA',
                 static::equalTo(VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS)
             );
 

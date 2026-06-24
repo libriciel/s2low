@@ -1,17 +1,15 @@
 <?php
 
-use S2low\Services\CloudFileStorage;
 use S2low\Services\CloudFileStorageInterface;
 use S2low\Services\LocalFileResolver;
 use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\helios\HeliosPESValidation;
-use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\User;
-use S2lowLegacy\Class\VerifyPemCertificateFactory;
+use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Lib\PemCertificateFactory;
 use S2lowLegacy\Lib\Recuperateur;
 use S2lowLegacy\Lib\XadesSignature;
@@ -66,14 +64,14 @@ $heliosPESValidation = new HeliosPESValidation(HELIOS_XSD_PATH);
 
 $r = $heliosPESValidation->validate($pes_content);
 
-$verifyPemCertificateFactory = new VerifyPemCertificateFactory();
+$verifyPemCertificate = $this->getObjectInstancier()->get(VerifyPemCertificate::class);
 
 $xadesSignature = new XadesSignature(
     XMLSEC1_PATH,
     EXTENDED_VALIDCA_PATH,
     new XadesSignatureParser(),
     new PemCertificateFactory(),
-    $verifyPemCertificateFactory->get(EXTENDED_VALIDCA_PATH)
+    $verifyPemCertificate
 );
 
 $verify_sign =  true;

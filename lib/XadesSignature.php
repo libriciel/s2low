@@ -84,6 +84,7 @@ class XadesSignature
             try {
                 $this->verifyPemCertificate->checkCertificateWithOpenSSL(
                     $file,
+                    $this->validca_path,
                     [
                         3,  //X509_V_ERR_UNABLE_TO_GET_CRL
                         11,  //X509_V_ERR_CRL_NOT_YET_VALID

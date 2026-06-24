@@ -9,38 +9,26 @@ use S2low\Services\ProcessCommand\OpenSSLWrapper;
 
 class VerifyPKCS7Signature
 {
-    /** @var VerifyPemCertificate  */
-    private $verifyPemCertificate;
-    /** @var \PemCertificateFactory */
-    private $pemCertificateFactory;
-    /**
-     * @var \S2low\Services\ProcessCommand\OpenSSLWrapper
-     */
-    private $openSSLWrapper;
-
-
     public function __construct(
-        string $authorized_ca_path,
-        VerifyPemCertificateFactory $verifyPemCertificateFactory,
-        PemCertificateFactory $pemCertificateFactory,
-        OpenSSLWrapper $openSSLWrapper
+        private readonly VerifyPemCertificate $verifyPemCertificate,
+        private readonly PemCertificateFactory $pemCertificateFactory,
+        private readonly OpenSSLWrapper $openSSLWrapper
     ) {
-        $this->verifyPemCertificate = $verifyPemCertificateFactory->get($authorized_ca_path);
-        $this->pemCertificateFactory = $pemCertificateFactory;
-        $this->openSSLWrapper = $openSSLWrapper;
     }
 
     /**
      * @param string $signature
+     * @param string $caPath
      * @param array $filteredErrors
      * @param string|null $file_path
      * @param \DateTime|null $dateTime
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
 
     public function verifySignature(
         string $signature,
+        string $caPath,
         array $filteredErrors = [],
         ?string $file_path = null,
         ?DateTime $dateTime = null,
@@ -55,11 +43,12 @@ class VerifyPKCS7Signature
 
             $this->verifyPemCertificate->checkCertificateWithOpenSSL(
                 $certificate_file,
+                $caPath,
                 $filteredErrors,
                 $dateTime->getTimestamp()
             );
             if ($file_path) {
-                $this->openSSLWrapper->checkFileContentCorrespondsToSignature($signature_file, $file_path);
+                $this->openSSLWrapper->checkFileContentCorrespondsToSignature($signature_file, $file_path, $caPath);
             }
         } finally {
             unlink($signature_file);
