@@ -194,10 +194,18 @@ $html .= "<h2>Liste des messages retours</h2>\n";
 
 if (count($envelops) > 0) {
     $html .= "<div id=\"retours-area\">\n";
+    if ($me->isSuper()) {
+        $html .= "<form method=\"post\" action=\"" . Helpers::getLink(
+            "/helios-retour/update/status"
+        ) . "\" id=\"helios-retour-mark-as-unread\">\n";
+    }
     $html .= "<table class=\"data-table table table-striped\" summary=\"Ce tableau présente respectivement le nom de fichier, la date, l'état, et un lien vers les actions disponibles de chaque message retour Helios\">\n";
     $html .= " <caption>Liste des messages retours Helios en fonction des choix de filtrage</caption>\n";
     $html .= " <thead>\n";
     $html .= " <tr>\n";
+    if ($me->isSuper()) {
+        $html .= "  <th scope=\"col\"><input type=\"checkbox\" id=\"retours-select-all\" aria-label=\"Tout sélectionner les retours\" onclick=\"toggleAllRetours('retours-select-all')\"></th>\n";
+    }
     $html .= "  <th>Nom du fichier</th>\n";
     $html .= "  <th>Date de réception</th>\n";
     $html .= "  <th>État</th>\n";
@@ -209,19 +217,34 @@ if (count($envelops) > 0) {
         $retour_id = $envelope["id"];
 
         $html .= "<tr>\n";
-        $html .= " <td> <a href=\"" . Helpers::getLink("/modules/helios/helios_download_response.php?id=" . $retour_id) . "\" title=\"Télécharger l'acquittement\">" . $envelope["filename"] . "</a> </td> \n";
+        if ($me->isSuper()) {
+            $html .= " <td><input type=\"checkbox\" name=\"ids[]\" value=\"" . $envelope['id'] . "\" style=\"margin-right:6px;\"></td>\n";
+        }
+        $html .= " <td> <a href=\"" . Helpers::getLink(
+            "/modules/helios/helios_download_response.php?id=" . $retour_id
+        ) . "\" title=\"Télécharger l'acquittement\">" . $envelope["filename"] . "</a> </td> \n";
         $html .= " <td>" . Helpers::getDateFromBDDDate($envelope["date"], true) . "</td>\n";
         $html .= " <td>" . $etat[$envelope["status"]] . "</td>\n";
         $html .= " <td> ";
         if ($envelope["status"] == 0 && !$me->isGroupAdminOrSuper()) {
-            $html .= "<a href=\"" . Helpers::getLink("/modules/helios/helios_change_status_retour.php?id=" . $retour_id) . "\" title=\"passer à l'état lu\" class=\"icon\"> <img alt=\"ok\" src=\"../../custom/images/icone_ok.gif\"> </a> ";
+            $html .= "<a href=\"" . Helpers::getLink(
+                "/modules/helios/helios_change_status_retour.php?id=" . $retour_id
+            ) . "\" title=\"passer à l'état lu\" class=\"icon\"> <img alt=\"ok\" src=\"../../custom/images/icone_ok.gif\"> </a> ";
         }
         $html .= "</td>\n";
         $html .= "</tr>\n";
     }
     $html .= "</tbody>\n";
     $html .= "</table>\n";
-        $html .= "</div>\n";
+    if ($me->isSuper()) {
+        $html .= " <div class=\"form-group\">\n";
+        $html .= "  <button type=\"submit\" name=\"status\" value=\"0\" class=\"btn btn-default\">Marquer comme non lu</button>\n";
+        $html .= "  <button type=\"submit\" name=\"status\" value=\"1\" class=\"btn btn-default\">Marquer comme lu</button>\n";
+        $html .= " </div>\n";
+        $html .= "</form>\n";
+    }
+
+    $html .= "</div>\n";
 } else {
     $html .= "Pas de transaction trouvée correspondant aux critères de filtrage.";
 }

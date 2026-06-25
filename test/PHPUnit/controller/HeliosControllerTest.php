@@ -317,6 +317,7 @@ class HeliosControllerTest extends S2lowIntegrationTestCase
         return new HeliosController(
             $this->getLocalFileResolver(),
             self::getContainer()->get('app.store.file.pes_aller'),
+            self::getContainer()->get(HeliosRetourSQL::class),
             self::getContainer()->get(ObjectInstancier::class)
         );
     }

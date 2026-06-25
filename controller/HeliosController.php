@@ -34,6 +34,7 @@ class HeliosController extends Controller
         private readonly LocalFileResolver $pesAllerResolver,
         #[Autowire(service: 'app.store.file.pes_aller')]
         private readonly CloudFileStorageInterface $cloudPesAllerStorage,
+        private readonly HeliosRetourSQL $heliosRetourSQL,
         ObjectInstancier $objectInstancier
     ) {
         parent::__construct($objectInstancier);
@@ -289,9 +290,7 @@ class HeliosController extends Controller
                 throw new Exception('KO');
             }
 
-            $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
-            $envelops = $heliosRetourSQL->getList($me->get("authority_id"));
-
+            $envelops = $this->heliosRetourSQL->getList($me->get("authority_id"));
 
             $idCollElement = $doc->createElement("idColl", $me->get('authority_id'));
             $resultatElement = $doc->createElement("resultat");

@@ -29,6 +29,7 @@ use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\PesAllerReader;
 use S2lowLegacy\Model\AuthoritySiretSQL;
 use S2lowLegacy\Model\AuthoritySQL;
+use S2lowLegacy\Model\HeliosRetourSQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
@@ -607,6 +608,7 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
         return new HeliosController(
             $this->getLocalFileResolver(),
             self::getContainer()->get('app.store.file.pes_aller'),
+            self::getContainer()->get(HeliosRetourSQL::class),
             self::getContainer()->get(ObjectInstancier::class)
         );
     }

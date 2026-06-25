@@ -1,5 +1,6 @@
 <?php
 
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\HeliosRetourSQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
@@ -71,7 +72,7 @@ trait HeliosUtilitiesTestTrait
         $size = 0;
         $sha1 = 'sha1';
 
-        $heliosRetourSQL = new HeliosRetourSQL($this->getSQLQuery());
+        $heliosRetourSQL = LegacyObjectsManager::getObject(HeliosRetourSQL::class);
         return $heliosRetourSQL->add(
             $collectiviteId,
             $siret,

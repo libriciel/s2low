@@ -13,7 +13,7 @@ class ModuleSQLTest extends S2lowTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->moduleSQL = new ModuleSQL($this->getSQLQuery());
+        $this->moduleSQL = self::getContainer()->get(ModuleSQL::class);
     }
 
     public function testGetInfoByName()

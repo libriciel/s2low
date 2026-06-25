@@ -37,7 +37,7 @@ $filename = $recuperateur->get('file');
 $heliosResponsesError = new HeliosResponsesError();
 $heliosTransactionSQL = new HeliosTransactionsSQL($sqlQuery);
 $authoritySQL = new AuthoritySQL($sqlQuery);
-$heliosRetourSQL = new HeliosRetourSQL($sqlQuery);
+$heliosRetourSQL = LegacyObjectsManager::getObject(HeliosRetourSQL::class);
 $authoritySiretSQL = new AuthoritySiretSQL($sqlQuery);
 
 $processingResultFactory->disableMailAndLoggingOnError();
