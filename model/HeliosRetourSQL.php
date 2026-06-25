@@ -2,15 +2,26 @@
 
 namespace S2lowLegacy\Model;
 
-use phpseclib3\Exception\FileNotFoundException;
+use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\ParameterType;
 use S2low\Exceptions\TransactionNotFoundException;
 use S2low\Services\FileDataProvider;
 use S2lowLegacy\Lib\SQL;
+use S2lowLegacy\Lib\SQLQuery;
 
 class HeliosRetourSQL extends SQL implements FileDataProvider
 {
     public const STATUS_NON_LU = 0;
     public const STATUS_LU = 1;
+
+    public function __construct(
+        SQLQuery $sqlQuery,
+        private readonly Connection $connection
+    ) {
+        parent::__construct($sqlQuery);
+    }
 
     public function add($authority_id, $siret, $filename, int $size, string $sha1)
     {
@@ -39,10 +50,33 @@ class HeliosRetourSQL extends SQL implements FileDataProvider
         return $this->query($sql, self::STATUS_NON_LU, $authority_id);
     }
 
-    public function changeStatus($id, $status)
+    public function changeStatus($id, $status): void
     {
         $sql = "UPDATE helios_retour SET status = ? WHERE id = ?";
         $this->query($sql, $status, $id);
+    }
+
+    /**
+     * @param string[] $ids
+     * @param int<0, 1> $status
+     * @return void
+     * @throws Exception
+     */
+    public function changeBulkStatus(array $ids, int $status): void
+    {
+        $sql = "UPDATE helios_retour SET status = :status WHERE id IN (:ids)";
+
+        $this->connection->executeQuery(
+            $sql,
+            [
+                'status' => $status,
+                'ids' => $ids
+            ],
+            [
+                'status' => ParameterType::INTEGER,
+                'ids' => ArrayParameterType::STRING
+            ]
+        );
     }
 
     public function getAllIdPESRetourToSendInCloud()

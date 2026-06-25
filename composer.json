@@ -92,7 +92,9 @@
       "S2lowLegacy\\Lib\\": "lib/",
       "S2lowLegacy\\Mail\\": "public.ssl/modules/mail/lib/",
       "S2lowLegacy\\Boot\\": "docker-resources/",
-      "S2lowLegacy\\Controller\\": "controller/"
+      "S2lowLegacy\\Controller\\": "controller/",
+      "S2lowLegacy\\Class\\": "class/",
+      "S2lowLegacy\\Model\\": "model/"
     },
     "classmap": [
       "lib",

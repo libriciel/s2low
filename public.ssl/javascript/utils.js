@@ -1,3 +1,12 @@
+function toggleAllRetours(idName)
+{
+    const checked = document.getElementById(idName).checked;
+    document.querySelectorAll('#helios-retour-mark-as-unread [name="ids[]"]')
+        .forEach(box => {
+            box.checked = checked;
+        });
+}
+
 function toggle_visibility(id)
 {
     var elt = document.getElementById(id);
