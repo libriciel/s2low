@@ -119,7 +119,7 @@ USER "root"
 
 COPY --from=hubdocker.libriciel.fr/composer:2.10.1@sha256:7725eb4545c438629ae8bde3ef0bb9a5038ef566126ad878442a69007242d267 /usr/bin/composer /usr/local/bin/composer
 
-RUN --mount=type=bind,from=ghcr.io/php/pie:1.4.6-bin@sha256:630f610826bc204dd42d5ccb0b66d395a476a1cb909cda0bbf90ee3f0bcd729b,source=/pie,target=/usr/local/bin/pie \
+RUN --mount=type=bind,from=ghcr.io/php/pie:1.4.7-bin@sha256:e166f4c940cf8e033f1bfeeb017523be5071a9a6bd15acf94009d9693115ff4d,source=/pie,target=/usr/local/bin/pie \
     apk add --no-cache --virtual .dev-build-deps \
     $PHPIZE_DEPS \
     linux-headers \
