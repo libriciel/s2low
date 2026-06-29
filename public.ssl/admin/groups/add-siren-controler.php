@@ -46,7 +46,7 @@ if (empty($authorityGroup->getInfo($id))) {
 
 if (!$siren->isValid()) {
     $_SESSION['error'] = 'Le siren ' . $siren->getValue() . ' ne semble  pas valide.';
-    header('Location: ' . Helpers::getLink("/admin/groups/admin_group_edit.php?id=$id"));
+    header('Location: ' . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/groups/admin_group_edit.php?id=$id"));
     exit;
 }
 
@@ -54,11 +54,11 @@ $authorityGroupSirenSQL = new AuthorityGroupSirenSQL($sqlQuery);
 
 if ($authorityGroupSirenSQL->exist($id, $siren->getValue())) {
     $_SESSION['error'] = 'Le siren existe déjà dans ce groupe';
-    header('Location: ' . Helpers::getLink("/admin/groups/admin_group_edit.php?id=$id"));
+    header('Location: ' . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/groups/admin_group_edit.php?id=$id"));
     exit;
 }
 
 $authorityGroupSirenSQL->add($id, $siren->getValue());
 $_SESSION['error'] = 'Le siren a été ajouté';
-header('Location: ' . Helpers::getLink("/admin/groups/admin_group_edit.php?id=$id"));
+header('Location: ' . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/groups/admin_group_edit.php?id=$id"));
 exit;

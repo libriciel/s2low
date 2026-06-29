@@ -22,7 +22,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("connexion-status"));
     exit();
 }
 
@@ -32,7 +32,7 @@ if (! $me->isAnyAdmin()) {
     exit();
 }
 
-$id = Helpers::getVarFromGet("id");
+$id = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getVarFromGet("id");
 
 
 // Mode modification ou pas
@@ -42,7 +42,7 @@ $authority = new Authority();
 $modStr = "Ajout";
 if (isset($id)) {
     if (!is_numeric($id)) {
-        Helpers::returnAndExit(
+        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->returnAndExit(
             1,
             "[admin_authority_edit.php] id doit être un entier, $id fourni",
             WEBSITE_SSL
@@ -85,7 +85,7 @@ try {
 
 $doc = new HTMLLayout();
 
-$doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
+$doc->addHeader("<script src=\"" . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 
 $doc->setTitle("Tedetis : " . $modStr . " collectivité");
 
@@ -105,12 +105,12 @@ if ($me->isGroupAdmin()) {
 $html .= "</h1>\n";
 
 if ($me->isGroupAdminOrSuper()) {
-    $html .= "<p id=\"back-transaction-btn\"><a href=\"" . Helpers::getLink("/admin/authorities/admin_authorities.php\" class=\"btn btn-default\">Retour liste collectivités</a></p>\n");
+    $html .= "<p id=\"back-transaction-btn\"><a href=\"" . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/authorities/admin_authorities.php\" class=\"btn btn-default\">Retour liste collectivités</a></p>\n");
 }
 
 $html .= "<h2>" . $modStr . " collectivité</h2>\n";
 $html .= "<form class=\"form form-horizontal\" action=\"" .
-    Helpers::getLink(
+    \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink(
         "/admin/authorities/admin_authority_edit_handler.php\" enctype=\"multipart/form-data\"  method=\"post\" name=\"form\" onsubmit=\"javascript:return validateForm("
         . $authority->getValidationTrio('name', 'siren', 'agreement', 'email', 'broadcast_email', 'default_broadcast_email', 'status', 'authority_type_id', 'address', 'postal_code', 'city', 'department', 'district', 'telephone', 'fax', 'email_mail_securise')
         . ")\">\n"
@@ -190,7 +190,7 @@ if ($me->isGroupAdminOrSuper()) {
 }
 
 $html .= " </div>\n";
-$html .= "<script src=\"" . Helpers::getLink('/jsmodules/handleSirenGroupe.js') . "\"></script>";
+$html .= "<script src=\"" . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink('/jsmodules/handleSirenGroupe.js') . "\"></script>";
 
 //************
 
@@ -201,7 +201,11 @@ $html .= "  <div class=\"col-md-6 link-input\">\n";
 
 if ($me->isGroupAdminOrSuper()) {
     $html .= "  <input  class=\"form-control\" type=\"hidden\" id=\"authority_type\" name=\"authority_type_id\" value=\"" . $authority->get("authority_type_id") . "\" />\n";
-    $html .= "  <a class=\"link_white\" href=\"#tedetis\" onclick=\"javascript:window.open('" . Helpers::getLink("/common/select_popup.php?type=authority_type', 'Selectattribut', 'location=no,scrollbars=yes,menubar=no,status=no,toolbar=no,directories=no,width=512,height=560');\" id=\"authority_type_text\">");
+    $html .= "  <a class=\"link_white\" href=\"#tedetis\" onclick=\"javascript:window.open('" .
+        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)
+            ->getLink(
+                "/common/select_popup.php?type=authority_type', 'Selectattribut', 'location=no,scrollbars=yes,menubar=no,status=no,toolbar=no,directories=no,width=512,height=560');\" id=\"authority_type_text\">"
+            );
 
     if ($authority->get("authority_type_id")) {
         $html .= $authority_type_name;
@@ -260,7 +264,12 @@ $html .= "  <input type=\"hidden\" id=\"department\" name=\"department\" value=\
 $html .= "  <input type=\"hidden\" id=\"district\" name=\"district\" value=\"" . $authority->get("district") . "\" />\n";
 
 if ($me->isGroupAdminOrSuper()) {
-    $html .= "  <a class=\"link_white\"href=\"#tedetis\"  class=\"form-control\" onclick=\"javascript:window.open('" . Helpers::getLink("/common/select_popup.php?type=department', 'Selectattribut', 'location=no,scrollbars=yes,menubar=no,status=no,toolbar=no,directories=no,width=300,height=560');\" id=\"department_text\">");
+    $html .= "  <a class=\"link_white\"href=\"#tedetis\"  class=\"form-control\" onclick=\"javascript:window.open('" .
+        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+            ->get(\S2low\Helpers\RequeteHelper::class)
+            ->getLink(
+                "/common/select_popup.php?type=department', 'Selectattribut', 'location=no,scrollbars=yes,menubar=no,status=no,toolbar=no,directories=no,width=300,height=560');\" id=\"department_text\">"
+            );
 
     if ($authority->getDeptDistrString()) {
         $html .= $authority->getDeptDistrString();
@@ -299,7 +308,7 @@ $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Convention @ctes:</label>\n";
 if ($actesConventions->hasConvention($id)) {
     $html .= "<div class=\"col-md-6 alert alert-info\">
-        <a href='" . Helpers::getLink("/admin/authorities/admin_authority_download_convention.php?authority_id=" . $id . "'>") .
+        <a href='" . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/authorities/admin_authority_download_convention.php?authority_id=" . $id . "'>") .
             $actesConventions->getConventionFilename($id) .
         "</a></div>";
 } else {
@@ -367,8 +376,8 @@ $html .= "<br/>";
 $html .= "<div><a class=\"btn btn-primary\" href='admin_authority_siret.php?id=" . $id . "'>Configurer les numéros SIRET »</a></div>";
 
 if ($me->isSuper()) {
-    $html .= "<br/><div><a class=\"btn btn-primary\" href='" . Helpers::getLink("/modules/actes/admin/actes_force_classifiction.php?authority_id=" . $id . "'>Envoyer une demande de classification</a></div>");
-    $html .= "<br/><div><a class=\"btn btn-primary\" href='" . Helpers::getLink("/modules/actes/admin/actes_force_classifiction.php?force=1&authority_id=" . $id . "'>Envoyer demande de classification vide</a></div>");
+    $html .= "<br/><div><a class=\"btn btn-primary\" href='" . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/modules/actes/admin/actes_force_classifiction.php?authority_id=" . $id . "'>Envoyer une demande de classification</a></div>");
+    $html .= "<br/><div><a class=\"btn btn-primary\" href='" . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/modules/actes/admin/actes_force_classifiction.php?force=1&authority_id=" . $id . "'>Envoyer demande de classification vide</a></div>");
 }
 if ($me->isGroupAdminOrSuper()) {
     $html .= "<br><div><a href='/admin/users/admin_users.php?authority=$id'>Liste des utilisateurs de la collectivité</a></div>";

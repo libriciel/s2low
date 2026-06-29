@@ -29,7 +29,7 @@ $me = new User();
 
 if (! $me->authenticate()) {
     $_SESSION["error"] = "Échec de l'authentification";
-    header("Location: " . Helpers::getLink("connexion-status"));
+    header("Location: " . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("connexion-status"));
     exit();
 }
 
@@ -55,7 +55,7 @@ $him = new User();
 
 if (isset($id) && ! empty($id)) {
     if (!is_numeric($id)) {
-        Helpers :: returnAndExit(
+        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->returnAndExit(
             1,
             "admin_user_edit.php : id doit être un entier, $id fourni",
             WEBSITE_SSL
@@ -71,10 +71,10 @@ if (isset($id) && ! empty($id)) {
 
 
 
-$new_id = Helpers::getVarFromGet('new_id');
+$new_id = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getVarFromGet('new_id');
 if ($new_id) {
     if (!is_numeric($new_id)) {
-        Helpers :: returnAndExit(
+        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->returnAndExit(
             1,
             "admin_user_edit.php : new_id doit être un entier, $new_id fourni",
             WEBSITE_SSL
@@ -95,7 +95,7 @@ if (! $me->isSuper() && $mod) {
     }
     if (! $canUserEdit) {
         $_SESSION["error"] = "Impossible de modifier cet utilisateur. Accés refusé.";
-        header("Location: " . Helpers::getLink("/admin/users/admin_users.php"));
+        header("Location: " . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/users/admin_users.php"));
         exit();
     }
 }
@@ -194,10 +194,10 @@ $ident_method_libelle = $userSQL->getIdentificationMethodeLibelle($ident_method_
 
 $doc = new HTMLLayout();
 
-$doc->addHeader("<script src=\"" . Helpers::getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
+$doc->addHeader("<script src=\"" . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
 
-$doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/jquery.js") . '"></script>');
-$doc->addHeader('<script type="text/javascript" src="' . Helpers::getLink("/jsmodules/select2.js") . '"></script>');
+$doc->addHeader('<script type="text/javascript" src="' . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/jsmodules/jquery.js") . '"></script>');
+$doc->addHeader('<script type="text/javascript" src="' . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/jsmodules/select2.js") . '"></script>');
 $doc->addHeader('<script type="text/javascript" src="/javascript/zselect_s2low.js"></script>');
 
 
@@ -301,7 +301,7 @@ ob_start();
         Expire le <?php echo $him->getCertificateExpirationDate(); ?>
         <?php if ($me->isSuper()) : ?>
             <br/>
-            <a href="<?php echo Helpers::getLink("/admin/users/admin_user_download_cert.php?id=" . $him->getId());?>">Télécharger</a>
+            <a href="<?php echo \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/users/admin_user_download_cert.php?id=" . $him->getId());?>">Télécharger</a>
         <?php endif ?>
     </div>
 
