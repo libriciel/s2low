@@ -39,4 +39,27 @@ class PDFStampWrapperTest extends PHPUnit_Framework_TestCase
             $pdfStampWrapper->stamp(__DIR__ . "/fixtures/signature-pades/Courrier.pdf", $pdfStampData)
         );
     }
+
+    public function testPdfStampUrlIsCorrect()
+    {
+        $this->assertTrue(defined('PDF_STAMP_URL'), "PDF_STAMP_URL constant must be defined");
+        $this->assertStringStartsWith('http://', PDF_STAMP_URL, "PDF_STAMP_URL must start with http:// or https://");
+        $this->assertStringContainsString('/pdf-stamp/', PDF_STAMP_URL, "PDF_STAMP_URL must contain the /pdf-stamp/ context path");
+    }
+
+    public function testPdfStampIsReachable()
+    {
+        if (!defined('PDF_STAMP_URL') || strpos(PDF_STAMP_URL, 'pdf-stamp') === false) {
+            $this->markTestSkipped("PDF_STAMP_URL is not configured for a live docker network test.");
+        }
+
+        $curlWrapper = new CurlWrapper();
+        $curlWrapper->get(PDF_STAMP_URL);
+
+        $this->assertEquals(
+            405,
+            $curlWrapper->getLastHttpCode(),
+            "PDF stamp service is not reachable or did not return HTTP 405 (Method Not Allowed) on GET. Output: " . $curlWrapper->getLastOutput()
+        );
+    }
 }
