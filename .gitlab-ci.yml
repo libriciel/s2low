@@ -96,6 +96,8 @@ unit_test:
       - name: registry.libriciel.fr/public/outils/postgres:14.5@sha256:a0c6930be56082d2b6f747630ab6e5799c566c7ec45c49033e8b647ca2e50bee
         alias: postgres
         command: [ "postgres","-c", "max_connections=200" ]
+      - name: registry.libriciel.fr/public/signature/pdf-stamp:2.7.15@sha256:e111a2b77e67415270b0e9c149d4c7b5460aa464d379b390e15d27292576e261
+        alias: pdf-stamp
     script:
         - cd /app
         - composer test-cover
