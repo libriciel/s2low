@@ -93,7 +93,7 @@ define("MAILSEC_OPENSTACK_SWIFT_CONTAINER_PREFIX","${MAILSEC_OPENSTACK_SWIFT_CON
 #A vérifier
 #define('ANTIVIRUS_COMMAND','/usr/bin/clamdscan --fdpass --stream');
 define('PADES_VALID_URL', "${PADES_VALID_URL:-http://pades-valid:8080}");
-define('PDF_STAMP_URL', "${PDF_STAMP_URL:-http://pdf-stamp:8080}");
+define('PDF_STAMP_URL', "${PDF_STAMP_URL:-http://pdf-stamp:8080/pdf-stamp/}");
 
 define('HELIOS_OCRE_FILE_PATH','/data/tdt-workspace/helios/ocre/');
 define('EXPORT_LOGS_DIRECTORY','/data/tdt-workspace/logs-export/');

@@ -75,7 +75,7 @@ parameters:
   app.mail.use_legacy_secure_mail.default: false
   app.only_use_validcargs.default: false
   app.openstack_enable.default: false
-  app.pdf_stamp_url.default: 'http://pdf-stamp:8080'
+  app.pdf_stamp_url.default: 'http://pdf-stamp:8080/pdf-stamp/'
   app.redis_port.default: 6379
   app.redis_server.default: 'redis'
   app.use_legacy_bordereau_model.default: true
