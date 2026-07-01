@@ -314,6 +314,7 @@ if ($actesConventions->hasConvention($id)) {
 } else {
     $html .= "<div class=\"col-md-6 alert alert-warning\">Aucune convention trouvée</div>";
 }
+$html .= " </div>\n";
 
 if ($me->isGroupAdminOrSuper()) {
     $html .= " <div class=\"form-group\">\n";
@@ -361,11 +362,11 @@ if ($me->isGroupAdminOrSuper()) {
     $html .= " </div>\n";
 }
 
+$html .= "<div class=\"form-group row\">\n";
+$html .= " <div class=\"offset-md-4 col-md-6\">\n";
+$html .= "  <button type=\"submit\" class=\"btn btn-default w-100\">" . (($mod) ? "Valider les modifications" : "Ajouter la collectivité") . "</button>\n";
+$html .= " </div>\n";
 $html .= "</div>\n";
-$html .= "<div class=\"form-group\"> <button type=\"submit\" class=\"col-md-offset-4 col-md-6 btn btn-default\">";
-
-$html .= ($mod) ? "Valider les modifications" : "Ajouter la collectivité";
-$html .= "</button></div>\n";
 $html .= "</form>\n";
 
 if ($me->isSuper()) {
@@ -385,8 +386,6 @@ if ($me->isGroupAdminOrSuper()) {
 
 $html .= "<br><div><a href='/modules/actes/index.php?authority=$id'>Transactions Actes de la collectivité</a></div>";
 $html .= "<br><div><a href='/modules/helios/index.php?authority=$id'>Transactions Helios de la collectivité</a></div>";
-
-$html .= "</div>\n";
 
 $doc->addBody($html);
 

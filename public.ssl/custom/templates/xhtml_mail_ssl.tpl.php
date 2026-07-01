@@ -11,11 +11,11 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" ?>
         <title><?php echo $this->title ?></title>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <meta name="robots" content="noindex">
-        <link rel="stylesheet" type="text/css" href="/custom/styles/bootstrap.min.css" />
-        <link rel="stylesheet" type="text/css" href="/custom/styles/bootstrap-theme.min.css" />
+        <link rel="stylesheet" type="text/css" href="/custom/styles/bootstrap5.min.css" />
         <link rel="stylesheet" type="text/css" href="/custom/styles/style_bs.css" />
         <link rel="stylesheet" type="text/css" href="/custom/styles/style_mail.css" />
         <script src="<?php echo Helpers::getLink("/javascript/utils.js"); ?>" type="text/javascript"></script>
+        <script src="/custom/js/bootstrap.bundle.min.js" type="text/javascript"></script>
         <?php echo $this->header ?>
     </head>
     <body>

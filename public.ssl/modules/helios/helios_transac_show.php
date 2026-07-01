@@ -204,29 +204,38 @@ $actionHtml = "";
 if (in_array($currentStatusId, array(8,4,11,20))) {
     $actionHtml .= "<div class=\"action\">\n";
     $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/helios/helios_transac_archiver.php") . "\"  method=\"post\">\n";
-    $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
+    $actionHtml .= "<div class=\"form-group row align-items-center\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
+    $actionHtml .= "<div class=\"col-md-8\">\n";
     $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
     $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Versement manuel\" />\n";
+    $actionHtml .= "</div>\n";
     $actionHtml .= "</div>\n</form>\n";
+    $actionHtml .= "</div>\n";
 }
 
 if ($currentStatusId == HeliosStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE) {
     $actionHtml .= "<div class=\"action\">\n";
     $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/helios/helios_transac_send_sae.php") . "\"  method=\"post\">\n";
-    $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
+    $actionHtml .= "<div class=\"form-group row align-items-center\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
+    $actionHtml .= "<div class=\"col-md-8\">\n";
     $actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
     $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Envoyer la transaction sur Pastell\" />\n";
     $actionHtml .= " (Attention, peut être très long.) \n";
+    $actionHtml .= "</div>\n";
     $actionHtml .= "</div>\n</form>\n";
+    $actionHtml .= "</div>\n";
 }
 
 if ($currentStatusId == HeliosStatusSQL::ENVOYER_AU_SAE) {
     $actionHtml .= "<div class=\"action\">\n";
     $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/helios/helios_transac_verif_sae.php") . "\"  method=\"post\">\n";
-    $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
+    $actionHtml .= "<div class=\"form-group row align-items-center\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
+    $actionHtml .= "<div class=\"col-md-8\">\n";
     $actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
     $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Vérifier la transaction sur Pastell\" />\n";
+    $actionHtml .= "</div>\n";
     $actionHtml .= "</div>\n</form>\n";
+    $actionHtml .= "</div>\n";
 }
 
 $status_cible_list = $heliosSAEController->getActionPossible($currentStatusId);
@@ -234,26 +243,32 @@ foreach ($status_cible_list as $new_status_id) {
     $libelle_status = HeliosStatusSQL::getStatusLibelle($new_status_id);
     $actionHtml .= "<div class=\"action\">\n";
     $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/helios/helios_transac_change_status_sae.php") . "\" method=\"post\" onsubmit=\"return confirm('Voulez-vous vraiment mettre cette transaction en état $new_status_id ?.');\">\n";
-    $actionHtml .= "<div class=\"form-group\"><label class=\"col-md-4 control-label\">&nbsp;</label>\n";
+    $actionHtml .= "<div class=\"form-group row align-items-center\"><label class=\"col-md-4 control-label\">&nbsp;</label>\n";
+    $actionHtml .= "<div class=\"col-md-8\">\n";
     $actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
     $actionHtml .= "<input type=\"hidden\" name=\"status_id\" value=\"" . $new_status_id . "\" />\n";
     $actionHtml .= "<input type=\"submit\" class=\"btn btn-warning\" value=\"Forcer le status « $libelle_status »\" /> \n";
+    $actionHtml .= "</div>\n";
     $actionHtml .= "</div>\n</form>\n";
     $actionHtml .= "</div>\n";
 }
 
 if ($me->isSuper()) {
     $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/helios/helios_transac_delete.php") . "\" onsubmit=\"return confirm('Cette transaction sera éradiquée DEFINITIVEMENT de la base sans espoir de retour?')\" method=\"post\">\n";
-    $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Effacer de la base de donnée (TRES DANGEREUX) : </label>\n";
+    $actionHtml .= "<div class=\"form-group row align-items-center\">\n<label class=\"col-md-4 control-label\">Effacer de la base de donnée (TRES DANGEREUX) : </label>\n";
+    $actionHtml .= "<div class=\"col-md-8\">\n";
     $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $id . "\" />\n";
     $actionHtml .= "<input type=\"submit\" value=\"Effacer de la base de données\" class=\"btn btn-danger\" />\n";
+    $actionHtml .= "</div>\n";
     $actionHtml .= "</div></form>\n";
 
     $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/helios/helios_transac_set_error.php") . "\" onsubmit=\"return confirm('Cette transaction sera passée en erreur ')\" method=\"post\">\n";
-    $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer la transaction en erreur </label>\n";
-    $actionHtml .= "<input type=\"text\" placeholder=\"Message\" name=\"message\"  size='23' style='margin-right: 10px;'/>";
+    $actionHtml .= "<div class=\"form-group row align-items-center\">\n<label class=\"col-md-4 control-label\">Passer la transaction en erreur </label>\n";
+    $actionHtml .= "<div class=\"col-md-8 d-flex align-items-center\">\n";
+    $actionHtml .= "<input type=\"text\" placeholder=\"Message\" name=\"message\" class=\"form-control me-2\" style='width: auto !important; max-width: 250px;'/>";
     $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $id . "\" />\n";
-    $actionHtml .= "<input type=\"submit\" value=\"Passer en erreur\" class=\"btn btn-warning\" />";
+    $actionHtml .= "<input type=\"submit\" value=\"Passer en erreur\" class=\"btn btn-warning\" style='white-space: nowrap;' />";
+    $actionHtml .= "</div>\n";
     $actionHtml .= "</div></form>\n";
 
     if (in_array($currentStatusId, array(2,3,-1,7))) {
@@ -264,10 +279,12 @@ if ($me->isSuper()) {
         method="post"
         onsubmit="return confirm('Êtes-vous certain de vouloir faire cela ?')"
         >
-        <div class="form-group">
+        <div class="form-group row align-items-center">
             <label class="col-md-4 control-label">Repasser la transaction en « posté »</label>
-            <input type="hidden" name="id" value="<?php hecho($id) ?>"/>
-            <input type="submit" value="Revenir en arrière" class="btn btn-danger" />
+            <div class="col-md-8">
+                <input type="hidden" name="id" value="<?php hecho($id) ?>"/>
+                <input type="submit" value="Revenir en arrière" class="btn btn-danger" />
+            </div>
         </div>
 
 

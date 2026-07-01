@@ -4,6 +4,8 @@
 /config/LocalSettings.php
 /node_modules/
 /public.ssl/jsmodules/
+/public.ssl/custom/styles/bootstrap5.min.css
+/public.ssl/custom/js/bootstrap.bundle.min.js
 /public.ssl/modules/actes/files/
 /temp/
 

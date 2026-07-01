@@ -476,21 +476,25 @@ if (!$trans->hasPendingCancelTrans()) {
     if ($trans->isType(TypeTransaction::TransmissionActe) && $transStatus == 4 && !  $me->isGroupAdminOrSuper()) {
         if ($trans->canValidate()) {
             $actionHtml .= "<div class=\"action\">\n";
-            $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ? Cette action est non réversible et est sous votre entière responsabilité.' . "');\" method=\"post\">\n");
-            $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Acte validé par le ministère : </label>\n";
+            $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_close.php") . "\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ? Cette action est non réversible et est sous votre entière responsabilité.' . "');\" method=\"post\">\n";
+            $actionHtml .= "<div class=\"form-group row align-items-center\">\n<label class=\"col-md-4 control-label\">Acte validé par le ministère : </label>\n";
+            $actionHtml .= "<div class=\"col-md-8\">\n";
             $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
             $actionHtml .= "<input type=\"hidden\" name=\"status\" value=\"valid\" />\n";
             $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Passer la transaction en état « Validée »\" />\n";
+            $actionHtml .= "</div>\n";
             $actionHtml .= "</div>\n</form>\n";
             $actionHtml .= "</div>\n";
         }//fin if verfiie canValidate
 
         $actionHtml .= "<div class=\"action\">\n";
-        $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_close.php\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ? Cette action est non réversible et est sous votre entière responsabilité.' . "')\" method=\"post\">\n");
-        $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Acte refusé par le ministère : </label>\n";
+        $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_close.php") . "\" onsubmit=\"return confirm('" . 'Voulez-vous vraiment fermer cette transaction ? Cette action est non réversible et est sous votre entière responsabilité.' . "')\" method=\"post\">\n";
+        $actionHtml .= "<div class=\"form-group row align-items-center\">\n<label class=\"col-md-4 control-label\">Acte refusé par le ministère : </label>\n";
+        $actionHtml .= "<div class=\"col-md-8\">\n";
         $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
         $actionHtml .= "<input type=\"hidden\" name=\"status\" value=\"invalid\" />\n";
         $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Passer la transaction en état «&nbsp;Refusée&nbsp;»\" />\n";
+        $actionHtml .= "</div>\n";
         $actionHtml .= "</div>\n</form>\n";
         $actionHtml .= "</div>\n";
     }//fin if qui verifie type == 1 et status == 4
@@ -502,10 +506,12 @@ if (!$trans->hasPendingCancelTrans()) {
 
     if ($trans->isType(TypeTransaction::TransmissionActe) && in_array($transStatus, [4,5,14,20]) && $trans->canValidate()) {
          $actionHtml .= "<div class=\"action\">\n";
-          $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_archiver.php\"  method=\"post\" id='form_send_sae'>\n");
-          $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
+          $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_archiver.php") . "\" method=\"post\" id='form_send_sae'>\n";
+          $actionHtml .= "<div class=\"form-group row align-items-center\">\n<label class=\"col-md-4 control-label\">Archivage SEDA : </label>\n";
+          $actionHtml .= "<div class=\"col-md-8\">\n";
           $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
           $actionHtml .= "<input type=\"submit\" id='button_send_sae' class=\"btn btn-primary\" value=\"Versement manuel\" />\n";
+          $actionHtml .= "</div>\n";
           $actionHtml .= "</div>\n</form>\n";
           $actionHtml .= "</div>\n";
         ob_start();
@@ -533,20 +539,24 @@ if (!$trans->hasPendingCancelTrans()) {
 
 if ($me->isSuper() && $transStatus == ActesStatusSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE) {
     $actionHtml .= "<div class=\"action\">\n";
-    $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_force_send_sae.php\" method=\"post\">\n");
-    $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Versement SEDA : </label>\n";
+    $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_force_send_sae.php") . "\" method=\"post\">\n";
+    $actionHtml .= "<div class=\"form-group row align-items-center\">\n<label class=\"col-md-4 control-label\">Versement SEDA : </label>\n";
+    $actionHtml .= "<div class=\"col-md-8\">\n";
     $actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
     $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Envoyer au SAE\" /> (Attention, peut-être long)\n";
+    $actionHtml .= "</div>\n";
     $actionHtml .= "</div>\n</form>\n";
     $actionHtml .= "</div>\n";
 }
 
 if ($me->isSuper() && $transStatus == ActesStatusSQL::STATUS_ENVOYE_AU_SAE) {
     $actionHtml .= "<div class=\"action\">\n";
-    $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_verif_sae.php\" method=\"post\" >\n");
-    $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Versement SEDA : </label>\n";
+    $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_verif_sae.php") . "\" method=\"post\">\n";
+    $actionHtml .= "<div class=\"form-group row align-items-center\">\n<label class=\"col-md-4 control-label\">Versement SEDA : </label>\n";
+    $actionHtml .= "<div class=\"col-md-8\">\n";
     $actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
     $actionHtml .= "<input type=\"submit\" class=\"btn btn-primary\" value=\"Vérifier la transaction sur le SAE\" /> \n";
+    $actionHtml .= "</div>\n";
     $actionHtml .= "</div>\n</form>\n";
     $actionHtml .= "</div>\n";
 }
@@ -556,11 +566,13 @@ if ($me->isSuper()) {
     foreach ($status_cible_list as $new_status_id) {
         $libelle_status = ActesStatusSQL::getStatusLibelle($new_status_id);
         $actionHtml .= "<div class=\"action\">\n";
-        $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_change_status_sae.php\" method=\"post\" onsubmit=\"return confirm('Voulez-vous vraiment mettre cette transaction en état $new_status_id ?.');\">\n");
-        $actionHtml .= "<div class=\"form-group\"><label class=\"col-md-4 control-label\">&nbsp;</label>\n";
+        $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_change_status_sae.php") . "\" method=\"post\" onsubmit=\"return confirm('Voulez-vous vraiment mettre cette transaction en état $new_status_id ?.');\">\n";
+        $actionHtml .= "<div class=\"form-group row align-items-center\"><label class=\"col-md-4 control-label\">&nbsp;</label>\n";
+        $actionHtml .= "<div class=\"col-md-8\">\n";
         $actionHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"" . $trans->getId() . "\" />\n";
         $actionHtml .= "<input type=\"hidden\" name=\"status_id\" value=\"" . $new_status_id . "\" />\n";
         $actionHtml .= "<input type=\"submit\" class=\"btn btn-warning\" value=\"Forcer le status « $libelle_status »\" /> \n";
+        $actionHtml .= "</div>\n";
         $actionHtml .= "</div>\n</form>\n";
         $actionHtml .= "</div>\n";
     }
@@ -573,10 +585,12 @@ if ($me->isSuper()) {
 if ($trans->isType(TypeTransaction::TransmissionActe) && $transStatus == 4  && $me->checkDroit("actes", "TT") && !  $me->isGroupAdminOrSuper()) {
     $actionHtml .= "<div class=\"action\">\n";
     if (!$trans->hasPendingCancelTrans()) {
-            $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_cancel.php\" onsubmit=\"return confirm('Voulez-vous vraiment annuler cette transaction ?')\" method=\"post\">\n");
-            $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Annulation : </label>\n";
+            $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_cancel.php") . "\" onsubmit=\"return confirm('Voulez-vous vraiment annuler cette transaction ?')\" method=\"post\">\n";
+            $actionHtml .= "<div class=\"form-group row align-items-center\">\n<label class=\"col-md-4 control-label\">Annulation : </label>\n";
+            $actionHtml .= "<div class=\"col-md-8\">\n";
             $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
             $actionHtml .= "<input type=\"submit\" value=\"Annuler cette transaction\" class=\"btn btn-danger\" />\n";
+            $actionHtml .= "</div>\n";
             $actionHtml .= "</div></form>\n";
     } else {
         $actionHtml .= "Une demande d'annulation est en cours pour cet acte.";
@@ -587,56 +601,69 @@ if ($trans->isType(TypeTransaction::TransmissionActe) && $transStatus == 4  && $
 // Boutons de réponse à un courrier
 
 if (in_array($transStatus, [7,8,21]) && !$trans->isType(TypeTransaction::DefereAuTribunalAdministratif)  && $me->checkDroit('actes', 'CS')) {
-      $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_repondre.php\" method=\"post\">\n");
-      $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Répondre : </label>\n";
+      $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_repondre.php") . "\" method=\"post\">\n";
+      $actionHtml .= "<div class=\"form-group row align-items-center\">\n<label class=\"col-md-4 control-label\">Répondre : </label>\n";
+      $actionHtml .= "<div class=\"col-md-8\">\n";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
       $actionHtml .= "<input type=\"submit\" value=\"Répondre à ce document\" class=\"btn btn-primary\" />\n";
+      $actionHtml .= "</div>\n";
       $actionHtml .= "</div></form>\n";
 }
 
 if ($transStatus == 17 && $me->checkDroit("actes", "TT")) {
-      $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_post_confirm.php\" method=\"post\">\n");
-      $actionHtml .= "<p>Valider &nbsp;:&nbsp;";
+      $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_post_confirm.php") . "\" method=\"post\">\n";
+      $actionHtml .= "<div class=\"form-group row align-items-center\">\n<label class=\"col-md-4 control-label\">Valider : </label>\n";
+      $actionHtml .= "<div class=\"col-md-8\">\n";
       $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-      $actionHtml .= "<input type=\"submit\" value=\"Poster ce document\" class=\"submit_button\" />\n";
-      $actionHtml .= "</p></form>\n";
+      $actionHtml .= "<input type=\"submit\" value=\"Poster ce document\" class=\"btn btn-primary\" />\n";
+      $actionHtml .= "</div>\n";
+      $actionHtml .= "</div></form>\n";
 }
 
 $actionHtml .= "<div class=\"action\">\n";
-$actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Horodatage : </label>\n<a onclick=\"window.open(this.href); return false;\" href=\"" .
+$actionHtml .= "<div class=\"form-group row align-items-center\">\n<label class=\"col-md-4 control-label\">Horodatage : </label>\n";
+$actionHtml .= "<div class=\"col-md-8\">\n";
+$actionHtml .= "<a onclick=\"window.open(this.href); return false;\" href=\"" .
     Helpers::getLink(
         "/common/logs_view.php?module=actes&amp;severity=-1&amp;message=" . $trans->getId() . "\" title=\"Rechercher les logs relatifs à l'acte n°" . $trans->getId()  . " \" >Rechercher les logs relatifs à l'acte</a>\n"
     );
+$actionHtml .= "</div>\n";
 $actionHtml .= "</div>\n</div>\n";
 
 if ($me->isSuper()) {
-       $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_delete.php\" onsubmit=\"return confirm('Cette transaction sera éradiquée DEFINITIVEMENT de la base sans espoir de retour?')\" method=\"post\">\n");
-      $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Effacer de la base de donnée (TRES DANGEREUX) : </label>\n";
-      $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-      $actionHtml .= "<input type=\"submit\" value=\"Effacer de la base de données\" class=\"btn btn-danger\" />\n";
-      $actionHtml .= "</div></form>\n";
-
-      $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_set_error.php\" onsubmit=\"return confirm('Cette transaction sera passée en erreur ')\" method=\"post\">\n");
-      $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer la transaction en erreur </label>\n";
-    $actionHtml .= "<input type=\"text\" placeholder='Message' name=\"message\"  size='23' style='margin-right: 10px;' />\n";
+    $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_delete.php") . "\" onsubmit=\"return confirm('Cette transaction sera éradiquée DEFINITIVEMENT de la base sans espoir de retour?')\" method=\"post\">\n";
+    $actionHtml .= "<div class=\"form-group row align-items-center\">\n<label class=\"col-md-4 control-label\">Effacer de la base de donnée (TRES DANGEREUX) : </label>\n";
+    $actionHtml .= "<div class=\"col-md-8\">\n";
     $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
-    $actionHtml .= "<input type=\"submit\" value=\"Passer en erreur\" class=\"btn btn-warning\" />\n";
+    $actionHtml .= "<input type=\"submit\" value=\"Effacer de la base de données\" class=\"btn btn-danger\" />\n";
+    $actionHtml .= "</div>\n";
     $actionHtml .= "</div></form>\n";
 
-
+    $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_set_error.php") . "\" onsubmit=\"return confirm('Cette transaction sera passée en erreur ')\" method=\"post\">\n";
+    $actionHtml .= "<div class=\"form-group row align-items-center\">\n<label class=\"col-md-4 control-label\">Passer la transaction en erreur </label>\n";
+    $actionHtml .= "<div class=\"col-md-8 d-flex align-items-center\">\n";
+    $actionHtml .= "<input type=\"text\" placeholder='Message' name=\"message\" class=\"form-control me-2\" style='width: auto !important; max-width: 250px;' />\n";
+    $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
+    $actionHtml .= "<input type=\"submit\" value=\"Passer en erreur\" class=\"btn btn-warning\" style='white-space: nowrap;' />\n";
+    $actionHtml .= "</div>\n";
+    $actionHtml .= "</div></form>\n";
 
     if (in_array($transStatus, [3,-1])  && $trans->isType(TypeTransaction::TransmissionActe)  && $me->checkDroit("actes", "CS")) {
-        $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_rolback_attente.php\" onsubmit=\"return confirm('Êtes-vous certain de vouloir faire cela ? ')\" method=\"post\">\n");
-        $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer à En attente de transmission </label>\n";
+        $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_rolback_attente.php") . "\" onsubmit=\"return confirm('Êtes-vous certain de vouloir faire cela ? ')\" method=\"post\">\n";
+        $actionHtml .= "<div class=\"form-group row align-items-center\">\n<label class=\"col-md-4 control-label\">Passer à En attente de transmission </label>\n";
+        $actionHtml .= "<div class=\"col-md-8\">\n";
         $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
         $actionHtml .= "<input type=\"submit\" value=\"Passer en attente de transmission\" class=\"btn btn-warning\" />\n";
+        $actionHtml .= "</div>\n";
         $actionHtml .= "</div></form>\n";
 
-        $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_rolback_attente.php\" onsubmit=\"return confirm('Êtes-vous certain de vouloir faire cela ? ')\" method=\"post\">\n");
-        $actionHtml .= "<div class=\"form-group\">\n<label class=\"col-md-4 control-label\">Passer à Poster </label>\n";
+        $actionHtml .= "<form action=\"" . Helpers::getLink("/modules/actes/actes_transac_rolback_attente.php") . "\" onsubmit=\"return confirm('Êtes-vous certain de vouloir faire cela ? ')\" method=\"post\">\n";
+        $actionHtml .= "<div class=\"form-group row align-items-center\">\n<label class=\"col-md-4 control-label\">Passer à Poster </label>\n";
+        $actionHtml .= "<div class=\"col-md-8\">\n";
         $actionHtml .= "<input type=\"hidden\" name=\"id\" value=\"" . $trans->getId() . "\" />\n";
         $actionHtml .= "<input type=\"hidden\" name=\"status_id\" value=\"1\" />\n";
         $actionHtml .= "<input type=\"submit\" value=\"Passer à Poster\" class=\"btn btn-warning\" />\n";
+        $actionHtml .= "</div>\n";
         $actionHtml .= "</div></form>\n";
     }
 }
