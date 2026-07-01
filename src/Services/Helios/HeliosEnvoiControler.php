@@ -12,7 +12,7 @@ use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\helios\FichierCompteur;
 use S2lowLegacy\Class\helios\HeliosTransmissionWindowsSQL;
 use S2lowLegacy\Class\Log;
-use S2lowLegacy\Class\VerifyPemCertificateFactory;
+use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\HeliosNamesGenerator;
 use S2lowLegacy\Lib\PemCertificateFactory;
@@ -48,14 +48,14 @@ class HeliosEnvoiControler
         private readonly LoggerInterface $logger,
         private readonly PesAllerReader $pesAllerReader,
         private readonly HeliosNamesGenerator $namesGenerator,
-        VerifyPemCertificateFactory $verifyPemFactory
+        private readonly VerifyPemCertificate $verifyPemCertificate
     ) {
         $this->xadesSignature = new XadesSignature(
             XMLSEC1_PATH,
             EXTENDED_VALIDCA_PATH,
             new XadesSignatureParser(),
             new PemCertificateFactory(),
-            $verifyPemFactory->get(EXTENDED_VALIDCA_PATH)
+            $this->verifyPemCertificate,
         );
     }
 

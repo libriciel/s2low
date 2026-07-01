@@ -1,17 +1,14 @@
 <?php
 
-use S2low\Services\ProcessCommand\CommandLauncher;
-use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2lowLegacy\Class\actes\ActesClassificationCodesSQL;
 use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\TypeTransaction;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\DataObject;
 use S2lowLegacy\Class\Helpers;
-use S2lowLegacy\Class\VerifyPemCertificateFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
 use S2lowLegacy\Class\XMLHelper;
-use S2lowLegacy\Lib\PemCertificateFactory;
 
 class ActesTransaction extends DataObject
 {
@@ -891,17 +888,12 @@ class ActesTransaction extends DataObject
 
                 if (isset($actesItems->Document->Signature)) {
                     try {
-                        $verifyPKCS7Signature = new VerifyPKCS7Signature(
-                            RGS_VALIDCA_PATH,
-                            new VerifyPemCertificateFactory(),
-                            new PemCertificateFactory(),
-                            new OpenSSLWrapper(
-                                RGS_VALIDCA_PATH,
-                                new CommandLauncher()
-                            )
-                        );
+                        $RGSCaPath = LegacyObjectsManager::getLegacyObjectInstancier()->getParameter('app.path_to_rgs_valid_cargs');
+                        /** @var VerifyPKCS7Signature $verifyPKCS7Signature */
+                        $verifyPKCS7Signature = LegacyObjectsManager::getLegacyObjectInstancier()->get(VerifyPKCS7Signature::class);
                         $verifyPKCS7Signature->verifySignature(
                             $actesItems->Document->Signature,
+                            $RGSCaPath,
                             [],
                             $this->rootDir . "/" . $actePath
                         );

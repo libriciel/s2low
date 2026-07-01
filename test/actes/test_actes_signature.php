@@ -1,31 +1,48 @@
 <?php
 
-use S2lowLegacy\Class\VerifyPemCertificateFactory;
+use S2lowLegacy\Class\LegacyObjectsManager;
+use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
-use S2lowLegacy\Lib\PemCertificateFactory;
 
-$file_path = "/Users/eric/Desktop/test/034-123456725-20151201-TESTS132-AU-1-1_1.pdf";
+require_once(__DIR__ . '/../../init/init.php');
 
-$file_manifest_path = "/Users/eric/Desktop/test/034-123456725-20151201-TESTS132-AU-1-1_0.xml";
+$options = getopt('', [
+    'use-wrong-file',
+    'use-wrong-date',
+]);
 
-$dom = simplexml_load_file($file_manifest_path);
+$useWrongFile = isset($options['use-wrong-file']);
+$useWrongDate = isset($options['use-wrong-date']);
 
-$namespaces = $dom->getDocNamespaces();
-// Récupération des éléments dans le namespace "actes"
-$actesItems = $dom->children($namespaces["actes"]);
+$signature = __DIR__ . '/../PHPUnit/class/fixtures/signaturesPKCS7/test_pdf.pdf.p7s';
+$file_path = __DIR__ . '/../PHPUnit/class/fixtures/signaturesPKCS7/test_pdf.pdf';
+$dateTime = null;
+
+if ($useWrongFile) {
+    $file_path = __DIR__ . '/../PHPUnit/class/fixtures/vide.pdf';
+}
+
+if ($useWrongDate) {
+    $dateTime = new DateTime('01-01-1980');
+}
 
 
-$signature =  $actesItems->Document->Signature . "\n";
+$RGSCaPath = LegacyObjectsManager::getLegacyObjectInstancier()->getParameter('app.path_to_rgs_valid_cargs');
+/** @var VerifyPKCS7Signature $verifyPKCS7Signature */
+$verifyPKCS7Signature = LegacyObjectsManager::getLegacyObjectInstancier()->get(VerifyPKCS7Signature::class);
 
+try {
+    $verifyPKCS7Signature->verifySignature(
+        file_get_contents($signature),
+        $RGSCaPath,
+        VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS,
+        $file_path,
+        $dateTime
+    );
+} catch (Throwable $e) {
+    echo "La signature est invalide\n";
+    var_dump($e->getMessage());
+    return;
+}
 
-$verifyPKCS7Signature = new VerifyPKCS7Signature(
-    "/etc/tedetis/ssl/validca/",
-    new VerifyPemCertificateFactory(),
-    new PemCertificateFactory(),
-    new \S2low\Services\ProcessCommand\OpenSSLWrapper(
-        "/etc/tedetis/ssl/validca/",
-        new \S2low\Services\ProcessCommand\CommandLauncher()
-    )
-);
-
-$verifyPKCS7Signature->verifySignature($signature, VerifyPemCertificate::CERTIFICATE_CHAIN_ERRORS);
+echo "La signature est valide\n";
