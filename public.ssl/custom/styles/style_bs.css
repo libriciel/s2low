@@ -519,7 +519,7 @@ form.form,
 
 /* Teinte plus foncée pour le menu de navigation */
 .sidebar-nav, #sidebar .well {
-    background-color: #e2e8f0 !important;
+    background-color: #eaeaea !important;
     border-color: #cbd5e1 !important;
 }
 
@@ -550,7 +550,7 @@ form.form,
     margin-bottom: 2px;
     padding: 0.125rem 0.5rem !important; /* Hauteur réduite */
     line-height: 1.25 !important;
-    font-size: 0.85rem !important;
+    font-size: 15px !important;
     text-decoration: none !important;
 }
 
