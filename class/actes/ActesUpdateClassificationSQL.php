@@ -110,7 +110,7 @@ class ActesUpdateClassificationSQL extends SQL
         $sql = "UPDATE actes_classification_requests SET version_date = ?, xml_data = ? " .
                 " WHERE version_date IS NULL AND requested_by IN ( SELECT users.id FROM  users, authorities" .
                 " WHERE users.authority_id = authorities.id AND authorities.siren = ? )";
-                
+
         $this->getConnection()->executeStatement(
             $sql,
             [$date_classification, $xml_data, $siren],
@@ -127,7 +127,7 @@ class ActesUpdateClassificationSQL extends SQL
             " WHERE users.authority_id = authorities.id AND authorities.siren = ? ) ORDER BY version_date LIMIT 1";
 
         $xml_data = $this->getConnection()->fetchOne($sql, [$siren]);
-        
+
         if (is_resource($xml_data)) {
             $contents = stream_get_contents($xml_data);
             fclose($xml_data);

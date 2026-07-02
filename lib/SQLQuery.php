@@ -22,7 +22,7 @@ class SQLQuery
     ) {
         $this->setSlowQuery(self::SLOW_QUERY_IN_MS);
     }
-    
+
     public function getConnection(): \Doctrine\DBAL\Connection
     {
         if ($this->connection === null) {

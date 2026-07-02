@@ -332,17 +332,17 @@ class ActesTransaction extends DataObject
                 " WHERE transaction_id = ? AND status_id = ?";
 
         $flux_retour = $this->db->getConnection()->fetchOne($sql, [$this->id, $status_id]);
-        
+
         if ($flux_retour === false || is_null($flux_retour)) {
             return false;
         }
-        
+
         if (is_resource($flux_retour)) {
             $flux_retour_contents = stream_get_contents($flux_retour);
             fclose($flux_retour);
             return $flux_retour_contents;
         }
-        
+
         return $flux_retour;
     }
 

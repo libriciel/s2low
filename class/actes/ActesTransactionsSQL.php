@@ -29,11 +29,11 @@ class ActesTransactionsSQL extends SQL
         $sql = "SELECT flux_retour,transaction_id FROM actes_transactions_workflow WHERE transaction_id=? AND status_id=?";
 
         $result = $this->getConnection()->fetchAssociative($sql, [$id, $status]);
-        
+
         if (!$result || !isset($result['flux_retour'])) {
             return ['flux_retour' => null, 'transaction_id' => $result['transaction_id'] ?? null];
         }
-        
+
         $flux_retour = $result['flux_retour'];
         // DBAL returns a stream resource for PostgreSQL bytea columns
         if (is_resource($flux_retour)) {
@@ -88,8 +88,8 @@ class ActesTransactionsSQL extends SQL
         if (!empty($flux_retour)) {
             $sql = 'UPDATE actes_transactions_workflow SET flux_retour = ? WHERE id = ?';
             $this->getConnection()->executeStatement(
-                $sql, 
-                [$flux_retour, $id], 
+                $sql,
+                [$flux_retour, $id],
                 [\Doctrine\DBAL\ParameterType::LARGE_OBJECT, \Doctrine\DBAL\ParameterType::INTEGER]
             );
         }

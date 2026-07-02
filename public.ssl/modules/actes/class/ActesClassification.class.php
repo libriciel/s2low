@@ -65,7 +65,7 @@ class ActesClassification extends DataObject
             if (!$row) {
                 return false;
             }
-            
+
             $xml_data = $row['xml_data'];
             if (is_resource($xml_data)) {
                 $contents = stream_get_contents($xml_data);
@@ -73,11 +73,11 @@ class ActesClassification extends DataObject
             } else {
                 $contents = $xml_data;
             }
-            
+
             if ($contents === false) {
                 return false;
             }
-            
+
             $this->request_date = $row['request_date'];
             $this->requested_by = $row['requested_by'];
             $this->version_date = $row['version_date'];
