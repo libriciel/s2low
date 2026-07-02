@@ -2,7 +2,6 @@
 
 namespace S2lowLegacy\Class\actes;
 
-use PDO;
 use S2lowLegacy\Lib\SQL;
 use S2lowLegacy\Model\ModuleSQL;
 
@@ -29,23 +28,22 @@ class ActesTransactionsSQL extends SQL
     {
         $sql = "SELECT flux_retour,transaction_id FROM actes_transactions_workflow WHERE transaction_id=? AND status_id=?";
 
-        $pdo = $this->getSQLQuery()->getPdo();
-
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([$id, $status]);
-
-        $flux_retour = null;
-        $transaction_id = null;
-        $stmt->bindColumn(1, $flux_retour, PDO::PARAM_LOB);
-        $stmt->bindColumn(2, $transaction_id, PDO::PARAM_INT);
-        $stmt->fetch(PDO::FETCH_BOUND);
-        if ($flux_retour === null) {
-            return ['flux_retour' => null, 'transaction_id' => null];
+        $result = $this->getConnection()->fetchAssociative($sql, [$id, $status]);
+        
+        if (!$result || !isset($result['flux_retour'])) {
+            return ['flux_retour' => null, 'transaction_id' => $result['transaction_id'] ?? null];
         }
-        $flux_retour_contents = stream_get_contents($flux_retour);
-        fclose($flux_retour);
+        
+        $flux_retour = $result['flux_retour'];
+        // DBAL returns a stream resource for PostgreSQL bytea columns
+        if (is_resource($flux_retour)) {
+            $flux_retour_contents = stream_get_contents($flux_retour);
+            fclose($flux_retour);
+        } else {
+            $flux_retour_contents = $flux_retour;
+        }
 
-        return ['flux_retour' => $flux_retour_contents, 'transaction_id' => $transaction_id];
+        return ['flux_retour' => $flux_retour_contents, 'transaction_id' => $result['transaction_id']];
     }
 
     public function getLastStatusInfo($id)
@@ -89,11 +87,11 @@ class ActesTransactionsSQL extends SQL
 
         if (!empty($flux_retour)) {
             $sql = 'UPDATE actes_transactions_workflow SET flux_retour = ? WHERE id = ?';
-            $pdo = $this->getSQLQuery()->getPdo();
-            $stmt = $pdo->prepare($sql);                                    //QUICKFIX Passage UTF-8
-            $stmt->bindParam(1, $flux_retour, PDO::PARAM_LOB);
-            $stmt->bindParam(2, $id);
-            $stmt->execute();
+            $this->getConnection()->executeStatement(
+                $sql, 
+                [$flux_retour, $id], 
+                [\Doctrine\DBAL\ParameterType::LARGE_OBJECT, \Doctrine\DBAL\ParameterType::INTEGER]
+            );
         }
         $sql = 'UPDATE actes_transactions SET last_status_id=? WHERE id=?';
         $this->query($sql, $status_id, $transaction_id);

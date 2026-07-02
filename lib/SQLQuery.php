@@ -4,8 +4,6 @@ namespace S2lowLegacy\Lib;
 
 use Closure;
 use Exception;
-use PDO;
-use PDOStatement;
 use S2lowLegacy\Class\LegacyObjectsManager;
 
 class SQLQuery
@@ -14,15 +12,23 @@ class SQLQuery
 
     private $slow_query_in_ms;
 
-    /** @var  PDOStatement */
-    private $lastPdoStatement;
+    /** @var  \Doctrine\DBAL\Result */
+    private $lastResult;
     private $nextResult;
     private $hasMoreResult;
 
     public function __construct(
-        private ?PDO $pdo
+        private readonly ?\Doctrine\DBAL\Connection $connection = null
     ) {
         $this->setSlowQuery(self::SLOW_QUERY_IN_MS);
+    }
+    
+    public function getConnection(): \Doctrine\DBAL\Connection
+    {
+        if ($this->connection === null) {
+            throw new Exception("Doctrine DBAL Connection was not injected into SQLQuery.");
+        }
+        return $this->connection;
     }
 
     public function setSlowQuery($millisecond): void
@@ -38,7 +44,6 @@ class SQLQuery
 
     public function disconnect(): void
     {
-        $this->pdo = null;
     }
 
     public function queryOne($query, $param = false)
@@ -68,36 +73,25 @@ class SQLQuery
             array_shift($param);
         }
         try {
-            $pdoStatement = $this->getPdo()->prepare($query);
+            $resultObject = $this->getConnection()->executeQuery($query, $param);
         } catch (Exception $e) {
             throw new Exception($e->getMessage() . " - " . $query);
         }
 
-        try {
-            $pdoStatement->execute($param);
-        } catch (Exception $e) {
-            throw new Exception(
-                $e->getMessage() . " - " . $pdoStatement->queryString
-            );
-        }
         $result = array();
-        if ($pdoStatement->columnCount()) {
-            $result = $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
+        if ($resultObject->columnCount()) {
+            $result = $resultObject->fetchAllAssociative();
         }
 
         $duration = microtime(true) - $start;
         if ($duration > $this->slow_query_in_ms) {
-            $requete = $pdoStatement->queryString . "|" . implode(",", $param);
+            $requete = $query . "|" . implode(",", $param);
             trigger_error("Requete lente ({$duration}ms): $requete", E_USER_WARNING);
         } // @codeCoverageIgnore
 
         return $result;
     }
 
-    public function getPdo(): PDO
-    {
-        return $this->pdo;
-    }
 
     public function queryOneCol($query, $param = false): array
     {
@@ -123,8 +117,7 @@ class SQLQuery
             $param = func_get_args();
             array_shift($param);
         }
-        $this->lastPdoStatement = $this->getPdo()->prepare($query);
-        $this->lastPdoStatement->execute($param);
+        $this->lastResult = $this->getConnection()->executeQuery($query, $param);
         $this->hasMoreResult = true;
         $this->fetch();
     }
@@ -132,7 +125,7 @@ class SQLQuery
     public function fetch()
     {
         $result = $this->nextResult;
-        $this->nextResult = $this->lastPdoStatement->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT);
+        $this->nextResult = $this->lastResult->fetchAssociative();
 
         if (!$this->nextResult) {
             $this->hasMoreResult = false;
@@ -142,7 +135,7 @@ class SQLQuery
 
     public function exec($query): void
     {
-        $this->getPdo()->exec($query);
+        $this->getConnection()->executeStatement($query);
     }
 
     public function hasMoreResult()

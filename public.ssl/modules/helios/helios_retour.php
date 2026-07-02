@@ -15,7 +15,7 @@ if (!$module->initByName("helios")) {
     exit();
 }
 
-$pdo = LegacyObjectsManager::getLegacyObjectInstancier()->get(PDO::class);
+$connection = LegacyObjectsManager::getLegacyObjectInstancier()->get(\Doctrine\DBAL\Connection::class);
 $me = new User();
 
 if (!$me->authenticate()) {
@@ -67,14 +67,14 @@ if (!$me->isGroupAdminOrSuper()) { // Le super utilisateur voit les reponses de 
 }
 // On ajoute les filtres relatifs aux dates
 if (isset($fmin_submission_date) && !empty($fmin_submission_date)) {
-    $filter[] = "date >= " . $pdo->quote($fmin_submission_date);
+    $filter[] = "date >= " . $connection->quote($fmin_submission_date);
 }
 if (isset($fmax_submission_date) && !empty($fmax_submission_date)) {
-    $filter[] = "date <= " . $pdo->quote($fmax_submission_date);
+    $filter[] = "date <= " . $connection->quote($fmax_submission_date);
 }
 //on ajoute filtre sur nom fichier
 if (isset($fnum) && !empty($fnum)) {
-    $filter[] = "filename LIKE " . $pdo->quote('%' . $fnum . '%');
+    $filter[] = "filename LIKE " . $connection->quote('%' . $fnum . '%');
 }
 
 $where = "";

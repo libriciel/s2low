@@ -7,7 +7,6 @@ use S2lowLegacy\Lib\SQL;
 use S2lowLegacy\Lib\SQLQuery;
 use Libriciel\LibActes\ActesXSD;
 use S2lowLegacy\Model\AuthoritySQL;
-use PDO;
 use SimpleXMLElement;
 
 class ActesUpdateClassificationSQL extends SQL
@@ -23,11 +22,11 @@ class ActesUpdateClassificationSQL extends SQL
     public function updateClassification($siren, $xml_content)
     {
         try {
-            $this->queryOne("BEGIN");
+            $this->getConnection()->beginTransaction();
             $this->updateClassificationThrow($siren, $xml_content);
-            $this->queryOne("COMMIT");
+            $this->getConnection()->commit();
         } catch (Exception $e) {
-            $this->query("ROLLBACK");
+            $this->getConnection()->rollBack();
             throw $e;
         }
     }
@@ -111,15 +110,12 @@ class ActesUpdateClassificationSQL extends SQL
         $sql = "UPDATE actes_classification_requests SET version_date = ?, xml_data = ? " .
                 " WHERE version_date IS NULL AND requested_by IN ( SELECT users.id FROM  users, authorities" .
                 " WHERE users.authority_id = authorities.id AND authorities.siren = ? )";
-        $pdo = $this->getSQLQuery()->getPdo();
-        $stmt = $pdo->prepare($sql);                                    //QUICKFIX Passage UTF-8
-        $stmt->bindParam(1, $date_classification);
-        $stmt->bindParam(2, $xml_data, PDO::PARAM_LOB);
-        $stmt->bindParam(3, $siren);
-        //$pdo->beginTransaction();
-        $stmt->execute();
-        //$pdo->commit();
-        //$this->query($sql,$date_classification,$xml_data,$siren);
+                
+        $this->getConnection()->executeStatement(
+            $sql,
+            [$date_classification, $xml_data, $siren],
+            [\Doctrine\DBAL\ParameterType::STRING, \Doctrine\DBAL\ParameterType::LARGE_OBJECT, \Doctrine\DBAL\ParameterType::STRING]
+        );
     }
 
     /**
@@ -130,15 +126,14 @@ class ActesUpdateClassificationSQL extends SQL
         $sql = "SELECT xml_data FROM actes_classification_requests WHERE requested_by IN ( SELECT users.id FROM  users, authorities" .
             " WHERE users.authority_id = authorities.id AND authorities.siren = ? ) ORDER BY version_date LIMIT 1";
 
-        $pdo = $this->getSQLQuery()->getPdo();
-        $stmt = $pdo->prepare($sql);                                    //QUICKFIX Passage UTF-8
-        $stmt->execute([$siren]);
-        $xml_data = \stream_context_create();
-        $stmt->bindColumn(1, $xml_data, PDO::PARAM_LOB);
-        $stmt->fetch(PDO::FETCH_BOUND);
-        $contents = stream_get_contents($xml_data);
-        fclose($xml_data);
-        return $contents;
+        $xml_data = $this->getConnection()->fetchOne($sql, [$siren]);
+        
+        if (is_resource($xml_data)) {
+            $contents = stream_get_contents($xml_data);
+            fclose($xml_data);
+            return $contents;
+        }
+        return $xml_data;
     }
 
     public function deleteActeNature()

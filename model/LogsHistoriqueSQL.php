@@ -12,7 +12,7 @@ class LogsHistoriqueSQL extends SQL
     {
         $date = date("Y-m-d H:i:s", strtotime("-{$nb_month_to_keep} month"));
 
-        $this->query("BEGIN");
+        $this->getConnection()->beginTransaction();
         try {
             $sql = "INSERT INTO logs_historique SELECT * FROM logs WHERE logs.date<?";
             $this->query($sql, $date);
@@ -20,9 +20,9 @@ class LogsHistoriqueSQL extends SQL
             $sql = "DELETE FROM logs WHERE logs.date<?";
             $this->query($sql, $date);
 
-            $this->query("COMMIT");
+            $this->getConnection()->commit();
         } catch (Exception $e) {
-            $this->query("ROLLBACK");
+            $this->getConnection()->rollBack();
         }
     }
 
