@@ -42,4 +42,9 @@ abstract class SQL
     {
         return $this->sqlQuery;
     }
+
+    protected function getConnection(): \Doctrine\DBAL\Connection
+    {
+        return $this->sqlQuery->getConnection();
+    }
 }
