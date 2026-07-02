@@ -642,7 +642,7 @@ if (! defined("PADES_VALID_URL")) {
 }
 
 if (! defined("PDF_STAMP_URL")) {
-    define("PDF_STAMP_URL", "http://pdf-stamp:8080");
+    define("PDF_STAMP_URL", "http://pdf-stamp:8080/pdf-stamp/");
 }
 
 # Macro permettant de définir le nombre de jours de rétention des actes
