@@ -1029,3 +1029,7 @@ services:
   S2low\Services\XMLFromDGFiP\IncomingXmlFileStrategy:
     arguments:
       $xmlFileTypeStrategy: !tagged_iterator app.xml_handling_strategy
+
+  Doctrine\DBAL\Connection:
+    alias: 'doctrine.dbal.default_connection'
+    public: true
