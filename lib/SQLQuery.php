@@ -60,6 +60,7 @@ class SQLQuery
 
     public function disconnect(): void
     {
+        $this->pdo = null;
     }
 
     public function queryOne($query, $param = false)
