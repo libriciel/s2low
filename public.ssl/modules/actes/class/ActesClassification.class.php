@@ -61,33 +61,29 @@ class ActesClassification extends DataObject
                 " WHERE users.authority_id=? AND acr.xml_data IS NOT NULL " .
                 " ORDER BY request_date DESC, version_date DESC LIMIT 1";
 
-            //$result = $this->db->select($sql);
-            $pdo = $this->db->getPdo();
-
-            $stmt = $pdo->prepare($sql);                                    //QUICKFIX Passage UTF-8
-            $stmt->execute([$authority_id]);
-            $stmt->bindColumn(1, $id, PDO::PARAM_INT);
-            $stmt->bindColumn(2, $request_date, PDO::PARAM_STR);
-            $stmt->bindColumn(3, $requested_by, PDO::PARAM_INT);
-            $stmt->bindColumn(4, $version_date, PDO::PARAM_STR);
-            $stmt->bindColumn(5, $xml_data, PDO::PARAM_LOB);
-            $stmt->fetch(PDO::FETCH_BOUND);
-            try {
-                $contents = stream_get_contents($xml_data);
-            } catch (TypeError $e) {
+            $row = $this->db->getConnection()->fetchAssociative($sql, [$authority_id]);
+            if (!$row) {
                 return false;
             }
-            fclose($xml_data);
-            //return $contents;
-            //if (! $result->isError() && $result->num_row() == 1) {
-            //$row = $result->get_next_row();
-            $this->request_date = $request_date; //Helpers::getFromBDD($row["request_date"]);
-            $this->requested_by = $requested_by; //Helpers::getFromBDD($row["requested_by"]);
-            $this->version_date = $version_date;//Helpers::getFromBDD($row["version_date"]);
-            $this->xml_data = $contents;//Helpers::getFromBDD($row["xml_data"]);
+
+            $xml_data = $row['xml_data'];
+            if (is_resource($xml_data)) {
+                $contents = stream_get_contents($xml_data);
+                fclose($xml_data);
+            } else {
+                $contents = $xml_data;
+            }
+
+            if ($contents === false) {
+                return false;
+            }
+
+            $this->request_date = $row['request_date'];
+            $this->requested_by = $row['requested_by'];
+            $this->version_date = $row['version_date'];
+            $this->xml_data = $contents;
 
             return true;
-            //}
         }
 
         return false;

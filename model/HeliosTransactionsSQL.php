@@ -70,19 +70,6 @@ class HeliosTransactionsSQL extends SQL implements FileDataProvider
         return $id;
     }
 
-    public function begin()
-    {
-        $this->queryOne("BEGIN;");
-    }
-    public function commit()
-    {
-        $this->queryOne("COMMIT;");
-    }
-    public function rollback()
-    {
-        $this->query("ROLLBACK;");
-    }
-
     public function getLastStatusInfo($id)
     {
         $sql = "SELECT * FROM helios_transactions_workflow WHERE transaction_id=? ORDER BY date DESC,id DESC LIMIT 1";
