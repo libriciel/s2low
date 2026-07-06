@@ -38,7 +38,7 @@ class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
         $this->certificateHash = $userData['certificate_hash'] ?? '';
         $this->sharedCertificate = $userData['login'] != null;
         try {
-            $certDate = $userData['cert_not_after'] ?: '9999-12-31 23:59:59';
+            $certDate = $userData['cert_not_after'] ?? '9999-12-31 23:59:59';
             $this->certExpirationDate = new DateTimeImmutable($certDate);
         } catch (\Exception $e) {
             throw new \InvalidArgumentException("Impossible de lire la date d'expiration du certificat : " . $e->getMessage());

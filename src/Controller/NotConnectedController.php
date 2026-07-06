@@ -14,24 +14,11 @@ class NotConnectedController extends AbstractController
 {
     #[Route(
         path: '/connexion-status/',
-        name: 'connection-status',
+        name: 'authentication_failed',
     )]
     public function handleRequest(): Response
     {
-        return new StreamedResponse(
-            function () {
-                $doc = new HTMLLayout();
-
-                $doc->setTitle(WEBSITE_TITLE);
-                $doc->openContainer();
-                $doc->openContent();
-                $doc->addBody("<h1>Echec de connexion</h1><p>Si vous avez été redirigé vers cette page, le certificat présenté ne permet pas l'authentification sur la plateforme.</p>");
-                $doc->closeContent();
-                $doc->closeContainer();
-                $doc->buildFooter();
-                $doc->display();
-            }
-        );
+        return $this->render('security/authentication_failed.html.twig');
     }
 
     #[Route(
