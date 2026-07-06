@@ -149,7 +149,7 @@ class MailPeer
             $db = DatabasePool::getInstance();
 
             $sql = "SELECT id FROM mail_annuaire WHERE ";
-            $sql .= " mail_address=" . $db->getPdo()->quote($mail) . " and authority_id=" . $authority_id;
+            $sql .= " mail_address=" . $db->getConnection()->quote($mail) . " and authority_id=" . $authority_id;
             $result = $db->select($sql);
             $idArray = $result->get_all_rows();
             return count($idArray) > 0;

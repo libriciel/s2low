@@ -116,13 +116,13 @@ class MailController
                 $cond .= " and status='" . $etat_string . "'";
             }
             if ($sujet) {
-                $cond .= " and objet ILIKE " . $db->getPDO()->quote('%' . $sujet . '%');
+                $cond .= " and objet ILIKE " . $db->getConnection()->quote('%' . $sujet . '%');
             }
             if ($SendDateFrom) {
-                $cond .= " and date_envoi >=" . $db->getPDO()->quote($SendDateFrom);
+                $cond .= " and date_envoi >=" . $db->getConnection()->quote($SendDateFrom);
             }
             if ($SendDateTo) {
-                $cond .= " and date_envoi <=" . $db->getPDO()->quote($SendDateTo);
+                $cond .= " and date_envoi <=" . $db->getConnection()->quote($SendDateTo);
             }
 
 

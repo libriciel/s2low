@@ -61,18 +61,18 @@ class PostgreSQLController
             $log_function("La base de données est déjà à jour");
             return;
         }
-        $this->sqlQuery->query("BEGIN");
+        $this->sqlQuery->getConnection()->beginTransaction();
         $log_function("Début de la transaction");
         try {
             foreach ($sql_command as $sql) {
                 $log_function("$sql");
                 $this->sqlQuery->query($sql);
             }
-            $this->sqlQuery->query("COMMIT");
+            $this->sqlQuery->getConnection()->commit();
             $log_function("Base de données modifié avec succès");
         } catch (Exception $e) {
             $log_function($e->getMessage());
-            $this->sqlQuery->query("ROLLBACK");
+            $this->sqlQuery->getConnection()->rollBack();
             $log_function("Erreur : La base de données N'A PAS été modifié");
         }
     }

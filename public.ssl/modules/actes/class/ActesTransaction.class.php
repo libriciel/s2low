@@ -331,19 +331,19 @@ class ActesTransaction extends DataObject
         $sql = "SELECT flux_retour FROM actes_transactions_workflow" .
                 " WHERE transaction_id = ? AND status_id = ?";
 
-        $pdo = $this->db->getPdo();
+        $flux_retour = $this->db->getConnection()->fetchOne($sql, [$this->id, $status_id]);
 
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([$this->id,$status_id]);
-        $stmt->bindColumn(1, $flux_retour, PDO::PARAM_LOB);
-        $stmt->fetch(PDO::FETCH_BOUND);
-        if (is_null($flux_retour)) {
+        if ($flux_retour === false || is_null($flux_retour)) {
             return false;
         }
-        $flux_retour_contents = stream_get_contents($flux_retour);
-        fclose($flux_retour);
 
-        return $flux_retour_contents;
+        if (is_resource($flux_retour)) {
+            $flux_retour_contents = stream_get_contents($flux_retour);
+            fclose($flux_retour);
+            return $flux_retour_contents;
+        }
+
+        return $flux_retour;
     }
 
   /**
@@ -1226,7 +1226,7 @@ class ActesTransaction extends DataObject
     {
         $db = DatabasePool::getInstance();
         $sql = "SELECT id FROM actes_transactions WHERE unique_id=" .
-            $db->getPdo()->quote($unique_id) . " AND type='1'";
+            $db->getConnection()->quote($unique_id) . " AND type='1'";
 
         $result = $db->select($sql);
 
@@ -1237,7 +1237,7 @@ class ActesTransaction extends DataObject
 
       //On a pas trouvé, on va essayer dans les messages métier.
         $sql = "SELECT * FROM actes_included_files " .
-            " WHERE filename=" . $db->getPdo()->quote($unique_id . "_0.xml");
+            " WHERE filename=" . $db->getConnection()->quote($unique_id . "_0.xml");
 
         $result = $db->select($sql);
 

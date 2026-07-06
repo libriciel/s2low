@@ -9,7 +9,7 @@ use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\JSONoutput;
 
 $jsonOutput = LegacyObjectsManager::getLegacyObjectInstancier()->get(JSONoutput::class);
-$pdo = LegacyObjectsManager::getLegacyObjectInstancier()->get(PDO::class);
+$connection = LegacyObjectsManager::getLegacyObjectInstancier()->get(\Doctrine\DBAL\Connection::class);
 
 $me = new User();
 
@@ -40,18 +40,18 @@ $filter = [];
 // Construction chaîne de filtrage
 if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivités et tous les groupes
     if (isset($fauthority) && is_numeric($fauthority)) {
-        $filter[] = 'users.authority_id=' . $pdo->quote($fauthority);
+        $filter[] = 'users.authority_id=' . $connection->quote($fauthority);
     }
 
     if (isset($fgroup) && is_numeric($fgroup)) {
-        $filter[] = 'authorities.authority_group_id=' . $pdo->quote($fgroup);
+        $filter[] = 'authorities.authority_group_id=' . $connection->quote($fgroup);
     }
 } elseif ($me->isGroupAdmin()) {
   // Un admin de groupe ne voit forcément que les utilisateurs des collectivité appartenant à son groupe
     if (isset($fauthority) && mb_strlen($fauthority) > 0) {
         $auth = new Authority($fauthority);
         if ($auth->isInGroup($me->get('authority_group_id'))) {
-            $filter[] = "users.authority_id=" . $pdo->quote($fauthority);
+            $filter[] = "users.authority_id=" . $connection->quote($fauthority);
         }
     }
     $filter[] = "authorities.authority_group_id='" . $me->get('authority_group_id') . "'";
@@ -61,11 +61,11 @@ if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivités et 
 }
 
 if (isset($frole) && mb_strlen($frole) > 0) {
-    $filter[] = "users.role=" . $pdo->quote($frole);
+    $filter[] = "users.role=" . $connection->quote($frole);
 }
 
 if (isset($fname) && mb_strlen($fname) > 0) {
-    $filter[] = "users.name ILIKE " . $pdo->quote("%" . $fname . "%");
+    $filter[] = "users.name ILIKE " . $connection->quote("%" . $fname . "%");
 }
 
 if (isset($fstatus)) {
