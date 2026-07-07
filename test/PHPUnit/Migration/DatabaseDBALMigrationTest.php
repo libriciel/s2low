@@ -171,18 +171,14 @@ class DatabaseDBALMigrationTest extends S2lowTestCase
         $this->dbalConnection->beginTransaction(); // Level 2
         $this->dbalConnection->executeStatement("INSERT INTO actes_status (id, name) VALUES (996, 'Lvl2')");
 
-        $this->dbalConnection->rollBack(); // Rolls back Level 2
-        try {
-            $this->dbalConnection->commit(); // Commits Level 1
-            $this->fail('DBAL should throw ConnectionException when committing a rollback-only transaction (savepoints disabled by default)');
-        } catch (\Doctrine\DBAL\ConnectionException $e) {
-            $this->assertStringContainsString('rollback only', $e->getMessage());
-            // We must explicitly rollback the outer transaction to actually send ROLLBACK to DB
-            $this->dbalConnection->rollBack();
-        }
+        $this->dbalConnection->rollBack(); // Rolls back Level 2 (via SAVEPOINT)
 
-        // Now that the transaction is truly rolled back, neither Lvl1 nor Lvl2 should exist
-        $this->assertFalse($this->dbalConnection->fetchOne("SELECT name FROM actes_status WHERE id = 997"));
+        // Grâce à "use_savepoints: true" dans doctrine.yaml, l'annulation
+        // du niveau 2 ne casse pas la transaction globale.
+        $this->dbalConnection->commit(); // Commits Level 1
+
+        // On vérifie que Lvl1 a bien été commit, mais pas Lvl2
+        $this->assertSame('Lvl1', $this->dbalConnection->fetchOne("SELECT name FROM actes_status WHERE id = 997"));
         $this->assertFalse($this->dbalConnection->fetchOne("SELECT name FROM actes_status WHERE id = 996"));
 
         // Clean up

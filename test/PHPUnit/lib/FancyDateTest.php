@@ -2,7 +2,7 @@
 
 use S2lowLegacy\Lib\FancyDate;
 
-class FancyDateTest extends PHPUnit_Framework_TestCase
+class FancyDateTest extends S2lowTestCase
 {
     public function testGetDateFrancais()
     {

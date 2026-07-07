@@ -8,6 +8,7 @@
 
         <!-- ###+ symfony/framework-bundle ### -->
         <env name="APP_ENV" value="test" force="true"/>
+        <env name="APP_DEBUG" value="false" force="true"/>
         <env name="APP_SECRET" value="b0fc277a3213f78858601e7dee6892d0"/>
         <!-- ###- symfony/framework-bundle ### -->
     </php>
