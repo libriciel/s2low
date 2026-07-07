@@ -30,19 +30,17 @@ echo "2) Set defaut value $default_value for column $column_name\n";
 $sqlQuery->query("ALTER TABLE $table_name ALTER COLUMN $column_name SET DEFAULT $default_value;");
 
 echo "3) Set value $default_value for column $column_name on all tuples\n";
-$pdo = $sqlQuery->getPdo();
+$connection = $sqlQuery->getConnection();
 $total = 0;
 do {
-    $pdoStatement = $pdo->prepare(
+    $row_count = $connection->executeStatement(
         "UPDATE $table_name SET $column_name=$default_value WHERE id in (
                     SELECT id FROM $table_name WHERE $column_name IS NULL LIMIT 100
                 )"
     );
-    $pdoStatement->execute();
-    $row_count = $pdoStatement->rowCount() . "\n";
-    $total += intval($row_count);
+    $total += $row_count;
     echo "$total\n";
-} while (intval($row_count) != 0);
+} while ($row_count != 0);
 
 echo "4) Add not null constraint\n";
 $sqlQuery->query("ALTER TABLE $table_name ALTER COLUMN $column_name SET NOT NULL");
