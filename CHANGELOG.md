@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.1.15 - 2026-07-13
+
+### Sécurité
+
+- Correction d'une injection de commande système (RCE)
+  (CVSS 8.8 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H) #1551
+
 ## 5.1.14 - 2026-06-11
 
 ### Corrections
