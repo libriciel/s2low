@@ -915,6 +915,10 @@ services:
     shared: true
     factory: ['@S2low\Factory\PDOFactory', 'create']
 
+  Doctrine\DBAL\Connection:
+    alias: 'doctrine.dbal.default_connection'
+    public: true
+
   S2low\Factory\PDOFactory:
     public: true
     shared: true

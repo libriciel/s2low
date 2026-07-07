@@ -125,8 +125,8 @@ class DatabaseTest extends S2lowTestCase
         $this->database->select("SELECT toto");
     }
 
-    public function testGetPDO()
+    public function testGetConnection()
     {
-        self::assertInstanceOf(PDO::class, $this->database->getPdo());
+        self::assertInstanceOf(\Doctrine\DBAL\Connection::class, $this->database->getConnection());
     }
 }

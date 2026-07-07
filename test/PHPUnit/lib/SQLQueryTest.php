@@ -15,9 +15,10 @@ class SQLQueryTest extends S2lowTestCase
         $this->sqlQuery = self::getContainer()->get(SQLQuery::class);
     }
 
-    public function testGetPdo()
+
+    public function testGetConnection()
     {
-        $this->assertInstanceOf("PDO", $this->sqlQuery->getPdo());
+        $this->assertInstanceOf(\Doctrine\DBAL\Connection::class, $this->sqlQuery->getConnection());
     }
 
     public function testQuery()

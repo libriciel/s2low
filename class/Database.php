@@ -37,9 +37,8 @@ class Database
     public function select($query, array $parameters = [])
     {
         $this->logger->debug($query);
-        $pdoStatement = $this->sqlQuery->getPdo()->prepare($query);
-        $pdoStatement->execute($parameters);
-        return new QueryResult($pdoStatement);
+        $result = $this->getConnection()->executeQuery($query, $parameters);
+        return new QueryResult($result);
     }
 
     /**
@@ -66,7 +65,7 @@ class Database
         if ($this->is_in_a_transaction) {
             return 0;
         }
-        $this->exec("BEGIN");
+        $this->getConnection()->beginTransaction();
         $this->is_in_a_transaction = true;
         $this->has_transaction_error = false;
         return 1;
@@ -81,7 +80,7 @@ class Database
         if (!$this->is_in_a_transaction) {
             return 0;
         }
-        $this->exec("COMMIT");
+        $this->getConnection()->commit();
         $this->is_in_a_transaction = false;
         if (! $this->has_transaction_error) {
             return 1;
@@ -98,7 +97,7 @@ class Database
         if (!$this->is_in_a_transaction) {
             return 0;
         }
-        $this->exec("ROLLBACK");
+        $this->getConnection()->rollBack();
         $this->is_in_a_transaction = false;
         return 1;
     }
@@ -141,9 +140,17 @@ class Database
         return $this->sqlQuery->query($sql, $param);
     }
 
+    /**
+     * @deprecated Use getConnection() instead
+     */
     public function getPdo(): PDO
     {
         return $this->sqlQuery->getPdo();
+    }
+
+    public function getConnection(): \Doctrine\DBAL\Connection
+    {
+        return $this->sqlQuery->getConnection();
     }
 
     public function disconnect(): void
