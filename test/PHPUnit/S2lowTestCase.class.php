@@ -42,24 +42,6 @@ abstract class S2lowTestCase extends KernelTestCase
         \S2lowLegacy\Class\DatabasePool::setObjectInstancier($objectInstancier);
     }
 
-    public function tearDown(): void
-    {
-        if (self::getContainer()) {
-            try {
-                $connection = self::getContainer()->get(\Doctrine\DBAL\Connection::class);
-                if ($connection) {
-                    if ($connection->getTransactionNestingLevel() === 0) {
-                        $sql = file_get_contents($this->projectDir . '/test/PHPUnit/s2low-test.sql');
-                        $connection->executeStatement($sql);
-                    }
-                }
-            } catch (\Throwable) {
-                // Ignore container/DB errors during shutdown
-            }
-        }
-        parent::tearDown();
-    }
-
     /**
      * @deprecated ObjectInstancier n'existe plus : utiliser self::getContainer à la place
      */

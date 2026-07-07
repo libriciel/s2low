@@ -57,12 +57,22 @@ class InitDbTestCommand extends Command
         $this->sqlQuery->exec(file_get_contents($fixturesPath));
 
         $output->writeln("Resetting sequences...");
-        $this->sqlQuery->exec("SELECT SETVAL('users_id_seq', (SELECT MAX(id)+1 FROM users))");
-        $this->sqlQuery->exec("SELECT SETVAL('authority_siret_id_seq', (SELECT MAX(id)+1 FROM authority_siret))");
-        $this->sqlQuery->exec("SELECT SETVAL('nounce_id_seq', (SELECT MAX(id)+1 FROM nounce))");
-        $this->sqlQuery->exec("SELECT SETVAL('authorities_id_seq', (SELECT MAX(id)+1 FROM authorities))");
-        $this->sqlQuery->exec("SELECT SETVAL('helios_transactions_id_seq', (SELECT MAX(id)+1 FROM helios_transactions))");
-        $this->sqlQuery->exec("SELECT SETVAL('authority_groups_id_seq', (SELECT MAX(id)+1 FROM authority_groups))");
+        $this->sqlQuery->exec(
+            "DO $$
+                    DECLARE
+                        seq RECORD;
+                    BEGIN
+                        -- Boucle sur toutes les séquences du schéma public
+                        FOR seq IN (
+                            SELECT sequence_name 
+                            FROM information_schema.sequences 
+                            WHERE sequence_schema = 'public'
+                        ) LOOP
+                            -- Exécute le reset pour chaque séquence trouvée
+                            EXECUTE 'ALTER SEQUENCE public.' || quote_ident(seq.sequence_name) || ' RESTART WITH 100;';
+                        END LOOP;
+                    END $$;"
+        );
 
         $output->writeln("=== Database Initialization END ===");
         return Command::SUCCESS;

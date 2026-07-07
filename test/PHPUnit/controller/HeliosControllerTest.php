@@ -75,10 +75,6 @@ class HeliosControllerTest extends S2lowIntegrationTestCase
         }
     }
 
-    /**
-     * @preserveGlobalState disabled
-     * @runInSeparateProcess
-     */
     public function testImportAction()
     {
         $this->expectException(Exception::class);
@@ -109,10 +105,6 @@ class HeliosControllerTest extends S2lowIntegrationTestCase
         }
     }
 
-    /**
-     * @preserveGlobalState disabled
-     * @runInSeparateProcess
-     */
     public function testImportMustPoster()
     {
         $userPermsSQL = self::getContainer()->get(UsersPermsSQL::class);
@@ -129,10 +121,6 @@ class HeliosControllerTest extends S2lowIntegrationTestCase
         $this->assertEquals(HeliosTransactionsSQL::ATTENTE_POSTEE, $info_wf[0]['status_id']);
     }
 
-    /**
-     * @preserveGlobalState disabled
-     * @runInSeparateProcess
-     */
     public function testImportApiError()
     {
         unset($_FILES);
@@ -147,10 +135,6 @@ class HeliosControllerTest extends S2lowIntegrationTestCase
         $this->expectOutputRegex("#$message#");
     }
 
-    /**
-     * @preserveGlobalState disabled
-     * @runInSeparateProcess
-     */
     public function testBadFile()
     {
         $tmp_file = $this->tmpPathFolder . "/pes_aller_not_exist.xml";
@@ -183,10 +167,6 @@ class HeliosControllerTest extends S2lowIntegrationTestCase
         }
     }
 
-    /**
-     * @preserveGlobalState disabled
-     * @runInSeparateProcess
-     */
     public function testDuplicate()
     {
         $pesAller = $this->getLocalFileResolver()->getFullPathFromFilePath("pes_aller.xml");
@@ -197,10 +177,6 @@ class HeliosControllerTest extends S2lowIntegrationTestCase
         $this->importAPI();
     }
 
-    /**
-     * @preserveGlobalState disabled
-     * @runInSeparateProcess
-     */
     public function testMaxSize()
     {
         $this->heliosController->setHeliosMaxUploadSize(0);
@@ -236,10 +212,6 @@ class HeliosControllerTest extends S2lowIntegrationTestCase
         $this->assertEquals("12345678912345", $list[0]['siret']);
     }
 
-    /**
-     * @preserveGlobalState disabled
-     * @runInSeparateProcess
-     */
     public function testGetPESRetourEmptyListAction()
     {
         $this->expectOutputRegex("#<idColl>1</idColl>#");
@@ -247,10 +219,6 @@ class HeliosControllerTest extends S2lowIntegrationTestCase
         $this->heliosController->getPESRetourListAction();
     }
 
-    /**
-     * @preserveGlobalState disabled
-     * @runInSeparateProcess
-     */
     public function testGetPESRetourListAction()
     {
         $heliosRetourSQL = self::getContainer()->get(HeliosRetourSQL::class);
@@ -261,10 +229,6 @@ class HeliosControllerTest extends S2lowIntegrationTestCase
         $this->heliosController->getPESRetourListAction();
     }
 
-    /**
-     * @preserveGlobalState disabled
-     * @runInSeparateProcess
-     */
     public function testGetPESRetourListActionForAdmin()
     {
         $this->setUserWithRole(UserRole::AdministrateurCollectivite);
@@ -276,10 +240,6 @@ class HeliosControllerTest extends S2lowIntegrationTestCase
         $this->heliosController->getPESRetourListAction();
     }
 
-    /**
-     * @preserveGlobalState disabled
-     * @runInSeparateProcess
-     */
     public function testGetPESRetourListActionForAdminUnauthorized()
     {
         $this->setUserWithRole(UserRole::AdministrateurCollectivite);

@@ -79,15 +79,6 @@ class GroupSQLTest extends S2lowTestCase
      */
     public function testGroupeVide()
     {
-        $sqlQuery = self::getContainer()->get(SQLQuery::class);
-        $sqlQuery->query("DELETE FROM users_perms");
-        $sqlQuery->query("DELETE FROM users");
-        $sqlQuery->query("DELETE FROM modules_authorities");
-        $sqlQuery->query("DELETE FROM nounce");
-        $sqlQuery->query("DELETE FROM authority_siret");
-        $sqlQuery->query("DELETE FROM helios_retour");
-        $sqlQuery->query("DELETE FROM authorities");
-        $sqlQuery->query("DELETE FROM authority_groups");
         $this->groupeSQL->getGroupsIdName();
         self::expectNotToPerformAssertions();
     }
