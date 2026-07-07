@@ -47,7 +47,8 @@ clean: ## Clear and remove dependencies
 	rm -rf /node_modules/*
 	rm -rf public.ssl/jsmodules/*
 
-test: phpunit  ## Run all tests (code style, unit test, ...)
+test-db-init:
+	$(DOCKER_COMPOSE_EXEC) composer test-db-init
 
 docker-compose-up: ## Up all container
 	$(DOCKER_COMPOSE_UP)

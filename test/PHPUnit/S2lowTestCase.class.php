@@ -30,8 +30,6 @@ abstract class S2lowTestCase extends KernelTestCase
         $this->tmpPathFolder = vfsStream::url('test');
         $this->secondTmpPathFolder = vfsStream::url('test2');
 
-        //Database Setup
-        self::getContainer()->get(PDOFactory::class)->create()->exec(file_get_contents(__DIR__ . '/../PHPUnit/s2low-test.sql'));
 
         // Loggers setup
         $this->testHandler = $this->createTestHandler();
@@ -46,9 +44,20 @@ abstract class S2lowTestCase extends KernelTestCase
 
     public function tearDown(): void
     {
-        self::getContainer()->get(Database::class)->disconnect();
-        self::getContainer()->get(PDOFactory::class)->closeAll();
-        self::ensureKernelShutdown();
+        if (self::getContainer()) {
+            try {
+                $connection = self::getContainer()->get(\Doctrine\DBAL\Connection::class);
+                if ($connection) {
+                    if ($connection->getTransactionNestingLevel() === 0) {
+                        $sql = file_get_contents($this->projectDir . '/test/PHPUnit/s2low-test.sql');
+                        $connection->executeStatement($sql);
+                    }
+                }
+            } catch (\Throwable) {
+                // Ignore container/DB errors during shutdown
+            }
+        }
+        parent::tearDown();
     }
 
     /**

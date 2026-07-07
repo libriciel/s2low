@@ -108,6 +108,6 @@ class SQLQueryTest extends S2lowTestCase
     {
         $sql = "SELECT * FROM users ORDER BY id ";
         $result = $this->sqlQuery->queryOne($sql);
-        $this->assertEquals(1, $result['id']);
+        $this->assertSame(1, $result['id']);
     }
 }

@@ -85,6 +85,7 @@ class GroupSQLTest extends S2lowTestCase
         $sqlQuery->query("DELETE FROM modules_authorities");
         $sqlQuery->query("DELETE FROM nounce");
         $sqlQuery->query("DELETE FROM authority_siret");
+        $sqlQuery->query("DELETE FROM helios_retour");
         $sqlQuery->query("DELETE FROM authorities");
         $sqlQuery->query("DELETE FROM authority_groups");
         $this->groupeSQL->getGroupsIdName();
