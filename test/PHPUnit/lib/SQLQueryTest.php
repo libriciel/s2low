@@ -35,12 +35,6 @@ class SQLQueryTest extends S2lowTestCase
         $this->sqlQuery->query($sql);
     }
 
-    public function testDisconnect()
-    {
-        $this->sqlQuery->disconnect();
-        self::expectNotToPerformAssertions();
-    }
-
     public function testSleep()
     {
         $this->sqlQuery->sleep(0);

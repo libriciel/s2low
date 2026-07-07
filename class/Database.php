@@ -3,7 +3,6 @@
 namespace S2lowLegacy\Class;
 
 use Exception;
-use PDO;
 use Psr\Log\LoggerInterface;
 use S2lowLegacy\Lib\SQLQuery;
 
@@ -140,21 +139,9 @@ class Database
         return $this->sqlQuery->query($sql, $param);
     }
 
-    /**
-     * @deprecated Use getConnection() instead
-     */
-    public function getPdo(): PDO
-    {
-        return $this->sqlQuery->getPdo();
-    }
 
     public function getConnection(): \Doctrine\DBAL\Connection
     {
         return $this->sqlQuery->getConnection();
-    }
-
-    public function disconnect(): void
-    {
-        $this->sqlQuery->disconnect();
     }
 }
