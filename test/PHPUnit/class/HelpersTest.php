@@ -1,9 +1,8 @@
 <?php
 
 use S2lowLegacy\Class\Helpers;
-use PHPUnit\Framework\TestCase;
 
-class HelpersTest extends TestCase
+class HelpersTest extends S2lowTestCase
 {
     public function setUp(): void
     {
@@ -13,14 +12,6 @@ class HelpersTest extends TestCase
         $_REQUEST = array();
         $_SESSION = array();
     }
-
-    /** @deprecated  */
-    public function setExpectedException(string $e, string $message)
-    {
-        $this->expectException($e);
-        $this->expectExceptionMessage($message);
-    }
-
 
     public function testStripSlaches()
     {

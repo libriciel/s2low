@@ -6,10 +6,10 @@ namespace PHPUnit\class;
 
 use Generator;
 use JsonException;
-use PHPUnit\Framework\TestCase;
 use S2lowLegacy\Class\DatePicker;
+use S2lowTestCase;
 
-class DatePickerTest extends TestCase
+class DatePickerTest extends S2lowTestCase
 {
     public static function dateProvider(): Generator
     {

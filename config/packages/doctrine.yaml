@@ -3,3 +3,4 @@ doctrine:
     driver: 'pdo_pgsql'
     server_version: '14'
     url: '%app.database_url%'
+    use_savepoints: true

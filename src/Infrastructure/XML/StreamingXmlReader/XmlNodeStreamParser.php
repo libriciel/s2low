@@ -49,7 +49,7 @@ class XmlNodeStreamParser
             $errors = libxml_get_errors();
             libxml_clear_errors();
 
-            if (isset($XMLReader)) {
+            if (isset($XMLReader) && $XMLReader instanceof XMLReader) {
                 $XMLReader->close();
             }
             if (!is_null($previousLibxmlState)) {

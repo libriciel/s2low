@@ -1,9 +1,8 @@
 <?php
 
 use S2lowLegacy\Class\Helpers;
-use PHPUnit\Framework\TestCase;
 
-class HelpersImprovedTest extends TestCase
+class HelpersImprovedTest extends S2lowTestCase
 {
     protected function setUp(): void
     {
@@ -15,15 +14,6 @@ class HelpersImprovedTest extends TestCase
         $_SESSION = [];
         $_SERVER['QUERY_STRING'] = '';
         $_SERVER['PHP_SELF'] = '';
-    }
-
-    /**
-     * Aide pour définir l'exception attendue (wrapper de compatibilité)
-     */
-    private function setExpectedException(string $exceptionClass, string $message)
-    {
-        $this->expectException($exceptionClass);
-        $this->expectExceptionMessage($message);
     }
 
     // ==========================================

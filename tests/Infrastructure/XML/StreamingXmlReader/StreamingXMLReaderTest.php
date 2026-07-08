@@ -55,9 +55,9 @@ class StreamingXMLReaderTest extends S2lowTestCase
 
     public function testPesAcquitUnexistingFile()
     {
-        self::expectException(ErrorException::class);
+        self::expectException(\RuntimeException::class);
         self::expectExceptionMessage(
-            'Unable to open source data'
+            'Unable to open file'
         );
 
         $reader = self::getContainer()->get(XmlNodeStreamParser::class);
