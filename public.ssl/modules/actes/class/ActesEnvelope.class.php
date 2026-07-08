@@ -404,7 +404,7 @@ class ActesEnvelope extends DataObject
                         $cmd .= " * ";
                     }
 
-                    $cmd .= ' |gzip -9 > ' . $this->rootDir . "/" . $this->file_path;
+                    $cmd .= ' |gzip -9 > ' . escapeshellarg($this->rootDir . "/" . $this->file_path);
 
 
                     $status = system($cmd, $ret);
@@ -555,22 +555,11 @@ class ActesEnvelope extends DataObject
           // On tente bêtement de lire l'archive et on récupère le statut de sortie
 
           // Test du format gzip
-            $cmd = "gzip -d -c " . $path;
+            $cmd = "gzip -d -c " . escapeshellarg($path);
 
             exec($cmd, $output, $ret);
 
-            if ($ret != 0) {
-                return false;
-            }
-
-          // Test du format tar.gz
-            $cmd = "gzip -d -c " . $path . " | tar tf - >/dev/null 2>&1";
-
-            if ($ret != 0) {
-                return false;
-            } else {
-                return true;
-            }
+            return $ret === 0;
         }
 
         return false;
@@ -630,7 +619,9 @@ class ActesEnvelope extends DataObject
             return false;
         }
 
-        $cmd = "gzip -d -c " . $this->rootDir . '/' . $this->file_path . " | tar xf - --directory " . $dest . " >/dev/null 2>&1";
+        $cmd = "gzip -d -c " . escapeshellarg($this->rootDir . '/' . $this->file_path)
+            . " | tar xf - --directory " . escapeshellarg($dest)
+            . " >/dev/null 2>&1";
 
         exec($cmd, $output, $ret);
 
@@ -775,7 +766,7 @@ class ActesEnvelope extends DataObject
 
       // Suppression du répertoire temporaire s'il existe
         if (! empty($this->tmpDir)) {
-            $cmd = "rm -rf " . $this->rootDir . "/" . $this->destDir . "/" . $this->tmpDir;
+            $cmd = "rm -rf " . escapeshellarg($this->rootDir . "/" . $this->destDir . "/" . $this->tmpDir);
 
             exec($cmd, $output, $ret);
 
