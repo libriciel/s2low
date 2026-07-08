@@ -45,8 +45,8 @@ class GroupeMail extends DataObject
 
     public function isUserInGroup($id_user)
     {
-        $sql = "SELECT count(*) as nb FROM mail_user_groupe WHERE id_user=$id_user";
-        $nb_groupe = $this->db->getOneValue($sql);
+        $sql = 'SELECT count(*) as nb FROM mail_user_groupe WHERE id_user=?;';
+        $nb_groupe = $this->db->getOneValue($sql, [$id_user]);
         return $nb_groupe != 0;
     }
 
