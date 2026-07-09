@@ -42,10 +42,8 @@ class ActesStatusSQL
     public function getAllStatus()
     {
         $sql = "SELECT id, name FROM actes_status ORDER BY id";
-        $result = array();
-        foreach ($this->sqlQuery->query($sql) as $line) {
-            $result[$line['id']] = $line['name'];
-        }
+        $result = $this->sqlQuery->getConnection()->fetchAllKeyValue($sql);
+
         return $result;
     }
 

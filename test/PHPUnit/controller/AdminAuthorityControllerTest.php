@@ -11,8 +11,6 @@ use S2lowLegacy\Lib\RedirectException;
 class AdminAuthorityControllerTest extends S2lowIntegrationTestCase
 {
     /**
-     * @preserveGlobalState disabled
-     * @runInSeparateProcess
      * @throws RedirectException
      */
     public function testDownloadConventionAction()

@@ -103,10 +103,6 @@ class S2lowIntegrationTestCase extends WebTestCase
         $_POST = [];
         $_SERVER['QUERY_STRING'] = '';
 
-        self::getContainer()->get(Database::class)->disconnect();
-        self::getContainer()->get(PDOFactory::class)->closeAll();
-
-
         parent::tearDown();
     }
 
@@ -217,8 +213,8 @@ class S2lowIntegrationTestCase extends WebTestCase
 
         // IMPORTANT: Initialiser la BDD APRÈS création du client mais AVANT l'authentification
         // car authenticateUserInSecurityContext charge l'utilisateur depuis la BDD
-        $pdo = self::getContainer()->get(PDOFactory::class)->create();
-        $pdo->exec(file_get_contents(__DIR__ . '/../test/PHPUnit/s2low-test.sql'));
+//        $pdo = self::getContainer()->get(PDOFactory::class)->create();
+//        $pdo->exec(file_get_contents(__DIR__ . '/../test/PHPUnit/s2low-test.sql'));
 
         // Authentifier l'utilisateur dans le contexte Symfony Security
         // pour les tests qui n'utilisent pas le client HTTP
