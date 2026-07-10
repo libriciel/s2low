@@ -3,9 +3,8 @@
 namespace S2lowLegacy\Lib;
 
 use Closure;
+use Doctrine\DBAL\Connection;
 use Exception;
-use PDO;
-use S2lowLegacy\Class\LegacyObjectsManager;
 
 class SQLQuery
 {
@@ -19,27 +18,13 @@ class SQLQuery
     private $hasMoreResult;
 
     public function __construct(
-        private ?PDO $pdo = null,
-        private readonly ?\Doctrine\DBAL\Connection $connection = null
+        private readonly ?Connection $connection = null
     ) {
         $this->setSlowQuery(self::SLOW_QUERY_IN_MS);
     }
 
-    /**
-     * @deprecated Doit etre remplacé par getConnection()
-     */
-    public function getPdo(): PDO
-    {
-        if ($this->pdo !== null) {
-            return $this->pdo;
-        }
-        if ($this->connection !== null) {
-            return $this->connection->getNativeConnection();
-        }
-        throw new Exception("PDO and Doctrine DBAL Connection were not injected into SQLQuery.");
-    }
 
-    public function getConnection(): \Doctrine\DBAL\Connection
+    public function getConnection(): Connection
     {
         if ($this->connection === null) {
             throw new Exception("Doctrine DBAL Connection was not injected into SQLQuery.");
@@ -54,13 +39,7 @@ class SQLQuery
 
     public function sleep($time_in_second)
     {
-        $this->disconnect();
         sleep($time_in_second);
-    }
-
-    public function disconnect(): void
-    {
-        $this->pdo = null;
     }
 
     public function queryOne($query, $param = false)

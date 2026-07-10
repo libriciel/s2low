@@ -909,19 +909,9 @@ services:
   S2lowLegacy\Controller\HeliosController:
     public: true
 
-  PDO:
-    public: true
-    class: PDO
-    shared: true
-    factory: ['@S2low\Factory\PDOFactory', 'create']
-
   Doctrine\DBAL\Connection:
     alias: 'doctrine.dbal.default_connection'
     public: true
-
-  S2low\Factory\PDOFactory:
-    public: true
-    shared: true
 
   S2low\Services\MailActesNotifications\MailerSymfony:
     public: true

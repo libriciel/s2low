@@ -4,7 +4,6 @@ use Monolog\Handler\TestHandler;
 use org\bovigo\vfs\vfsStream;
 use Psr\Log\LoggerInterface;
 use Monolog\Level;
-use S2low\Factory\PDOFactory;
 use S2lowLegacy\Class\Database;
 use S2lowLegacy\Class\RgsConnexion;
 use S2lowLegacy\Lib\ObjectInstancier;
@@ -30,16 +29,10 @@ abstract class S2lowTestCase extends KernelTestCase
         $this->tmpPathFolder = vfsStream::url('test');
         $this->secondTmpPathFolder = vfsStream::url('test2');
 
-
         // Loggers setup
         $this->testHandler = $this->createTestHandler();
         $this->logger = $this->createLogger($this->testHandler);
         $this->s2lowLogger = $this->createS2lowLogger($this->logger);
-
-        $objectInstancier = new ObjectInstancier(self::getContainer());
-        \S2lowLegacy\Class\LegacyObjectsManager::setObjectInstancier($objectInstancier);
-        \S2lowLegacy\Lib\ObjectInstancierFactory::setObjectInstancier($objectInstancier);
-        \S2lowLegacy\Class\DatabasePool::setObjectInstancier($objectInstancier);
     }
 
     /**
