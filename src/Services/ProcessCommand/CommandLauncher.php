@@ -34,12 +34,14 @@ class CommandLauncher
      * @throws RecoverableException
      * @throws Exception
      */
-    private function launchProcess(Process $process, ICommandOutputTranslator $outputTranslator): string
-    {
+    private function launchProcess(
+        Process $process,
+        ICommandOutputTranslator $outputTranslator
+    ): string {
         try {
             $process->run();
         } catch (Exception $exception) {
-            throw new RecoverableException(get_class($this) . " : " . $exception->getMessage());
+            throw new RecoverableException(get_class($this) . ' : ' . $exception->getMessage());
         }
 
         $commandOutput = $outputTranslator->getCommandOutput($process);
