@@ -517,6 +517,13 @@ services:
   S2lowLegacy\Class\VerifyPKCS7Signature:
     public: true
 
+  S2lowLegacy\Class\VerifyPemCertificate:
+    autowire: true
+
+  S2low\Services\ProcessCommand\OpenSSLWrapper:
+    autowire: true
+    public: true
+
   S2lowLegacy\Class\Versionning:
     public: true
     autoconfigure: true
@@ -1023,3 +1030,9 @@ services:
   S2low\Services\XMLFromDGFiP\IncomingXmlFileStrategy:
     arguments:
       $xmlFileTypeStrategy: !tagged_iterator app.xml_handling_strategy
+
+  S2low\Services\Certificates\CRLStreamingParser:
+    autowire: false
+
+  S2low\Component\Process\StreamingProcessRunner:
+    shared: false

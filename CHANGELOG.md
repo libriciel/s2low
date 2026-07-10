@@ -12,6 +12,10 @@
 - Ajoute la possibilité de passer les PES_RETOUR en lu / non-lu en lot #730
 - Passage de SimpleXML à XMLReader pour limiter l'empreinte mémoire de l'analyse des XML reçus #497
 
+### Corrections
+
+- Prise en compte de la date de révocation des certificats #576
+
 ### Suppression
 
 - Suppression de l'outil de signature intégré #1113

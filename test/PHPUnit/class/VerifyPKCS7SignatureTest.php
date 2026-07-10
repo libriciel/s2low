@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
-use S2lowLegacy\Lib\PemCertificateFactory;
 
 class VerifyPKCS7SignatureTest extends S2lowTestCase
 {
@@ -30,7 +29,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
                 file_get_contents(__DIR__ . '/fixtures/signaturesPKCS7/test_pdf.pdf.p7s'),
                 self::AC,
                 [],
-                __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
+                __DIR__ . '/fixtures/signaturesPKCS7/test_pdf.pdf',
                 new DateTime('01-01-2025')
             )
         );
@@ -44,7 +43,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
             file_get_contents(__DIR__ . '/fixtures/signaturesPKCS7/test_pdf.pdf.p7s'),
             self::AC,
             [],
-            __DIR__ . "/fixtures/toto.txt",
+            __DIR__ . '/fixtures/toto.txt',
             new DateTime('01-01-2025')
         );
     }
@@ -57,7 +56,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
             file_get_contents(__DIR__ . '/fixtures/signaturesPKCS7/test_pdf.pdf.p7s'),
             self::EMPTY_AC,
             [],
-            __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
+            __DIR__ . '/fixtures/signaturesPKCS7/test_pdf.pdf',
             new DateTime('01-01-2025')
         );
     }
@@ -86,7 +85,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
             file_get_contents(__DIR__ . '/fixtures/signaturesPKCS7/test_pdf.pdf.p7s'),
             self::AC,
             [],
-            __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
+            __DIR__ . '/fixtures/signaturesPKCS7/test_pdf.pdf',
             $dateTime
         );
     }
@@ -97,10 +96,10 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
     public function getWrongDate(): array
     {
         return [
-            [new DateTime("Jun 12 14:00:57 2020", new DateTimeZone("GMT")),
+            [new DateTime('Jun 12 14:00:57 2020', new DateTimeZone('GMT')),
                 "La date de la signature 12-Jun-2020 14:00:57 n'entre pas dans la date de validité du certificat 12-Jun-2020 16:00:58"
             ],
-            [new DateTime("Jun 10 14:00:59 2030", new DateTimeZone("GMT")),
+            [new DateTime('Jun 10 14:00:59 2030', new DateTimeZone('GMT')),
                 "La date de la signature 10-Jun-2030 14:00:59 n'entre pas dans la date de validité du certificat 12-Jun-2020 16:00:58"
             ]
         ];
@@ -113,7 +112,7 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
 
     public function testGoodDateIsTakenIntoAccount(DateTime $dateTime)
     {
-        $baseSignatureDir = __DIR__ . "/fixtures/signaturesPKCS7";
+        $baseSignatureDir = __DIR__ . '/fixtures/signaturesPKCS7';
 
         static::assertTrue(
             $this->verifyPKCS7Signature->verifySignature(
@@ -132,8 +131,8 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
     public function getGoodDate(): array
     {
         return [
-            [new DateTime("Jan 26 15:00:58 2021", new DateTimeZone("GMT"))],// Debut de validité crl
-            [new DateTime("Jun 11 14:00:55 2025", new DateTimeZone("GMT"))] // Fin de validité myCA.pem
+            [new DateTime('Jan 26 15:00:58 2021', new DateTimeZone('GMT'))],// Debut de validité crl
+            [new DateTime('Jun 11 14:00:55 2025', new DateTimeZone('GMT'))] // Fin de validité myCA.pem
         ];
     }
 

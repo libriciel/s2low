@@ -2,8 +2,13 @@
 
 namespace S2low\Services\ProcessCommand;
 
+use DateTime;
+use S2low\Component\Process\StreamingProcessRunner;
+use S2low\Exceptions\CrlParsingException;
+use S2low\Services\Certificates\CRLStreamingParser;
 use S2lowLegacy\Class\RecoverableException;
 use Exception;
+use Symfony\Component\Process\Process;
 
 class OpenSSLWrapper
 {
@@ -13,7 +18,8 @@ class OpenSSLWrapper
     private $commandLauncher;
 
     public function __construct(
-        CommandLauncher $commandLauncher
+        CommandLauncher $commandLauncher,
+        private readonly StreamingProcessRunner $streamingProcessRunner
     ) {
         $this->commandLauncher = $commandLauncher;
     }
@@ -59,13 +65,26 @@ class OpenSSLWrapper
 
     /**
      * @throws RecoverableException
+     * @throws Exception
      */
-    public function checkSNIsInCRL(string $crlPath, string $serialNumber): void
+    public function checkSNIsInCRL(string $crlPath, string $serialNumber, DateTime $dateTime): void
     {
-        $this->commandLauncher->launch(
-            ["openssl","crl","-in",$crlPath,"-text","-noout"],
-            new CheckSnInCRLCommandOutputTranslator($serialNumber)
-        );
+        $process = new Process(['openssl', 'crl', '-in',$crlPath, '-text', '-noout']);
+
+        try {
+            $streamingParser = new CRLStreamingParser(
+                $serialNumber,
+                $dateTime
+            );
+
+            $result = $this->streamingProcessRunner->run($process, $streamingParser);
+
+            if ($result) {
+                throw new Exception('Certificat révoqué');
+            }
+        } catch (CrlParsingException $exception) {
+            throw new RecoverableException($exception->getMessage());
+        }
     }
 
     /**
