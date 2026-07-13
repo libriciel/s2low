@@ -127,7 +127,9 @@ class ActesIncludedFile extends DataObject
                 return false;
             }
 
-            $cmd = 'tar xzf ' . $envelope_path . " -C " . $tmpDir . " " . $this->filename;
+            $cmd = 'tar xzf ' . escapeshellarg($envelope_path)
+                . " -C " . escapeshellarg($tmpDir)
+                . " " . escapeshellarg($this->filename);
 
             exec($cmd, $status, $ret);
 
