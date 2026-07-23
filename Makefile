@@ -40,6 +40,9 @@ npm-install: ## Run npm install
 webpack: ## Compile webpack assets
 	$(WEBPACK_RUN) npx webpack --config webpack.config.js
 
+js-unit-test:
+	$(WEBPACK_RUN) npm test
+
 install: composer-install npm-install webpack
 
 clean: ## Clear and remove dependencies
