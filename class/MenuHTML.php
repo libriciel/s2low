@@ -3,6 +3,7 @@
 namespace S2lowLegacy\Class;
 
 use S2lowLegacy\Lib\X509Certificate;
+use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\MessageAdminSQL;
 
 class MenuHTML
@@ -59,7 +60,11 @@ class MenuHTML
 
 
                     <div id="menu-header">
-                        Bienvenue <?php hecho($userInfo['pretty_name']) ?><br />
+                        <div class="menu-header-head">
+                            <div class="menu-header-hello">Bienvenue</div>
+                            <div class="menu-header-name"><?php hecho($userInfo['pretty_name']) ?></div>
+                        </div>
+                        <div class="menu-header-body">
 
                         <?php if ($nb_days_before_certificate_expires < self::NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_DANGER) :?>
                             <div class="alert alert-danger message-admin">
@@ -79,11 +84,29 @@ class MenuHTML
                         $messageAdmin->displayTitre();
 
                         ?>
-                        Rôle <?php  echo $userInfo['role_str'] ?>
-            <?php if ($userInfo['nb_user_with_my_certificate'] > 1) : ?>
-            <br/><a href='<?php echo $logoutRoute ?>'>déconnexion</a>
-            <?php endif;?>
+                        <div class="menu-header-row">
+                            <span class="menu-header-label">Rôle</span>
+                            <span class="menu-header-value"><?php  echo $userInfo['role_str'] ?></span>
+                        </div>
+                        <?php if ($userInfo['role'] === User::ADM) : ?>
+                            <?php
+                            /** @var AuthoritySQL $authoritySQL */
+                            $authoritySQL = $objectInstancier->get(AuthoritySQL::class);
+                            $authorityInfo = $authoritySQL->getInfo($userInfo['authority_id']);
+                            ?>
+                            <div class="menu-header-row">
+                                <span class="menu-header-label">Collectivité</span>
+                                <span class="menu-header-value"><?php hecho($authorityInfo['name']) ?></span>
+                            </div>
+                        <?php endif; ?>
+                        </div>
                     </div>
+            <?php if ($userInfo['nb_user_with_my_certificate'] > 1) : ?>
+                    <a class="menu-logout" href="<?php echo $logoutRoute ?>">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                        Se déconnecter
+                    </a>
+            <?php endif;?>
                     <ul class="text-menu nav">
             <?php if (in_array($userInfo['role'], array('SADM','GADM','ADM'))) : ?>
             <li class="menu-list-title">Administration</li>

@@ -71,8 +71,93 @@ h2 > a {
     height:80px;
 }
 
+/* Encart d'identification de l'utilisateur, en tête du menu */
+/* Pas de bordure : les fonds (ardoise et blanc) suffisent à détacher l'encart
+   du menu, et le bandeau et le corps gardent ainsi la même largeur exacte */
 #menu-header {
-    border-bottom: solid 1px  #EEEEEE;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .12);
+}
+
+#menu-header .menu-header-head {
+    background-color: #334155;
+    color: #ffffff;
+    padding: 8px 12px;
+}
+
+#menu-header .menu-header-hello {
+    font-size: 0.7rem;
+    color: #cbd5e1;
+    line-height: 1.2;
+}
+
+#menu-header .menu-header-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+#menu-header .menu-header-body {
+    background-color: #ffffff;
+    padding: 9px 12px;
+}
+
+#menu-header .menu-header-row + .menu-header-row {
+    margin-top: 7px;
+}
+
+#menu-header .menu-header-label {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: #64748b;
+}
+
+#menu-header .menu-header-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #0f172a;
+}
+
+#menu-header .alert {
+    padding: 6px 8px;
+    font-size: 0.75rem;
+    margin-bottom: 8px;
+}
+
+/* Déconnexion : action ponctuelle (certificats partagés uniquement).
+   Sans bordure, même surface blanche et même ombre que l'encart au-dessus.
+   Le !important contre la règle globale « a » plus bas dans ce fichier */
+.menu-logout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 12px;
+    padding: 8px 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #334155 !important;
+    background-color: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .12);
+    text-decoration: none !important;
+}
+
+.menu-logout:hover,
+.menu-logout:focus {
+    color: #0f172a !important;
+    background-color: #f8fafc;
+    text-decoration: none !important;
+}
+
+.menu-logout svg {
+    flex: none;
 }
 
 

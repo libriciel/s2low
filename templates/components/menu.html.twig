@@ -1,24 +1,33 @@
 {# global/components/menu.html.twig #}
     {% if app.user.name is defined %}
         <div id="menu-header">
-            <div>
-                <span>Bienvenue {{ app.user.givenname }} {{ app.user.name }}</span>
+            <div class="menu-header-head">
+                <div class="menu-header-hello">Bienvenue</div>
+                <div class="menu-header-name">{{ app.user.givenname }} {{ app.user.name }}</div>
+            </div>
+            <div class="menu-header-body">
                 {% include 'components/certificat_expiration_warning.html.twig' with {'nb_day_before_certificate_expire': app.user.certExpirationDate|days_ago} %}
+                {% if this.messageAdminTitle is not null %}
+                    <a class="label label-{{ this.getCssLevel|toCssClass }}" href="/">{{ this.messageAdminTitle }}</a>
+                {% endif %}
+                <div class="menu-header-row">
+                    <span class="menu-header-label">Rôle</span>
+                    <span class="menu-header-value">{{ app.user.role|labeliseRole }}</span>
+                </div>
+                {% if this.authorityNameForAuthorityAdmin is not null %}
+                    <div class="menu-header-row">
+                        <span class="menu-header-label">Collectivité</span>
+                        <span class="menu-header-value">{{ this.authorityNameForAuthorityAdmin }}</span>
+                    </div>
+                {% endif %}
             </div>
-            <div>
-                <span>
-                    {% if this.messageAdminTitle is not null %}
-                        <a class="label label-{{ this.getCssLevel|toCssClass }}" href="/">{{ this.messageAdminTitle }}</a>
-                    {% endif %}
-                </span>
-                <span>
-                    Rôle {{ app.user.role|labeliseRole }}
-                </span>
-            </div>
-            {% if app.user.sharedCertificate %}
-                <a href='/deconnexion'>déconnexion</a>
-            {% endif %}
         </div>
+        {% if this.certificateSharedWithOtherUsers %}
+            <a class="menu-logout" href="/deconnexion">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Se déconnecter
+            </a>
+        {% endif %}
     {% else %}
         <div id="menu-header">
             <a href="{{ url_index_ssl }}">Accéder au site</a><br/>
