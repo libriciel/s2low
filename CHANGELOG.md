@@ -42,6 +42,7 @@ dépendances transitives.
 - L'export Actes n'est plus servi à un administrateur de groupe que pour les collectivités dont son groupe administre le
   module Actes. #1585
 - La base de données refuse la suppression d'un groupe encore désigné pour administrer le module Actes ou Helios d'une collectivité. #1599
+- Refonte du menu et ajout des informations importantes selon le statut de l'utilisateur connecté. #1556
 
 ### Corrections
 
