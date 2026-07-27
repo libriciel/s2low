@@ -192,6 +192,10 @@ services:
     arguments:
       - !tagged_iterator s2low.queue_rebuilding_worker
 
+  # Public car le menu historique (MenuHTML) le récupère via l'ObjectInstancier
+  S2low\Services\UserAffiliation:
+    public: true
+
   S2low\Services\Helios\FTPHeliosReceiverFactory:
     public: true
     arguments:
