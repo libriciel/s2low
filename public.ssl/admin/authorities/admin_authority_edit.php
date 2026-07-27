@@ -175,7 +175,6 @@ if ($me->isGroupAdminOrSuper()) {
     $sirenList = $group->getAuthorizedSiren();
     $html .= "  <div class=\"col-md-6\">";
     $html .= "  <input id=\"originalSiren\" type =\"hidden\" value = \"" . $authority->get('siren') . '"/>';
-    $html .= "  <input id=\"originalGroupId\" type =\"hidden\" value = \"" . $authority->get('authority_group_id') . '"/>';
     $html .= "<select id=\"SelectSirenInput\" class=\"form-control\" name=\"siren\">";
     foreach ($sirenList as $siren_tmp) {
         if ($siren_tmp == $authority->get("siren")) {
