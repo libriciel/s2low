@@ -11,6 +11,7 @@
 - Ajoute la possibilité de filtrer par type d'actes dans modules/actes/api/list_actes.php #1235
 - Ajoute la possibilité de passer les PES_RETOUR en lu / non-lu en lot #730
 - Passage de SimpleXML à XMLReader pour limiter l'empreinte mémoire de l'analyse des XML reçus #497
+- Refonte du menu et ajout des informations importantes selon le statut de l'utilisateur connecté. #1556
 
 ### Corrections
 
