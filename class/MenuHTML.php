@@ -2,6 +2,8 @@
 
 namespace S2lowLegacy\Class;
 
+use S2low\Helpers\UserIdentityHelper;
+use S2low\Services\UserAffiliation;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Model\MessageAdminSQL;
 
@@ -55,35 +57,55 @@ class MenuHTML
             }
         }
 
-        $nb_days_before_certificate_expires = $this->getNbDaysBeforeCertificatExpire($userInfo); ?>
+        $nb_days_before_certificate_expires = $this->getNbDaysBeforeCertificatExpire($userInfo);
+
+        $objectInstancier  = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
+        /** @var UserAffiliation $userAffiliation */
+        $userAffiliation = $objectInstancier->get(UserAffiliation::class);
+        $affiliationType = $userAffiliation->getType($userInfo['role']);
+        $affiliationName = $userAffiliation->getName(
+            $userInfo['role'],
+            $userInfo['authority_id'] ?? null,
+            $userInfo['authority_group_id'] ?? null
+        );
+        $initials = UserIdentityHelper::getInitials(
+            $userInfo['givenname'] ?? null,
+            $userInfo['name'] ?? null
+        ); ?>
 
 
                     <div id="menu-header">
-                        Bienvenue <?php hecho($userInfo['pretty_name']) ?><br />
-
-                        <?php if ($nb_days_before_certificate_expires < self::NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_DANGER) :?>
-                            <div class="alert alert-danger message-admin">
-                                <strong>Votre certificat expire dans <?php echo $nb_days_before_certificate_expires ?> jours !</strong>
-                            </div>
-                        <?php elseif ($nb_days_before_certificate_expires < self::NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_WARNING) :?>
-                            <div class="alert alert-warning message-admin">
-                                <strong>Votre certificat expire dans <?php echo $nb_days_before_certificate_expires ?> jours !</strong>
-                            </div>
+                        <?php if ($userInfo['nb_user_with_my_certificate'] > 1) : ?>
+                            <a class="menu-logout" href="<?php echo $logoutRoute ?>" title="Se déconnecter"><span>Se déconnecter</span></a>
+                        <?php endif;?>
+                        <div class="menu-identity">
+                            <span class="menu-identity-initials" aria-hidden="true"><?php hecho($initials) ?></span>
+                            <span class="menu-identity-civility">
+                                <span class="menu-identity-name"><?php hecho($userInfo['givenname'] . ' ' . $userInfo['name']) ?></span>
+                                <span class="menu-identity-role"><?php echo $userInfo['role_str'] ?></span>
+                            </span>
+                        </div>
+                        <?php if ($affiliationName !== null) : ?>
+                            <div class="menu-affiliation menu-affiliation-<?php hecho($affiliationType) ?>"><?php hecho($affiliationName) ?></div>
                         <?php endif; ?>
-
-                        <?php
-                        $objectInstancier  = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
-                    /** @var MessageAdminSQL $messageAdminSQL */
-                        $messageAdminSQL = $objectInstancier->get(MessageAdminSQL::class);
-                        $messageAdmin = $messageAdminSQL->getPublishedMessage();
-                        $messageAdmin->displayTitre();
-
-                        ?>
-                        Rôle <?php  echo $userInfo['role_str'] ?>
-            <?php if ($userInfo['nb_user_with_my_certificate'] > 1) : ?>
-            <br/><a href='<?php echo $logoutRoute ?>'>déconnexion</a>
-            <?php endif;?>
                     </div>
+
+                    <?php if ($nb_days_before_certificate_expires < self::NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_DANGER) :?>
+                        <div class="alert alert-danger message-admin">
+                            <strong>Votre certificat expire dans <?php echo $nb_days_before_certificate_expires ?> jours !</strong>
+                        </div>
+                    <?php elseif ($nb_days_before_certificate_expires < self::NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_WARNING) :?>
+                        <div class="alert alert-warning message-admin">
+                            <strong>Votre certificat expire dans <?php echo $nb_days_before_certificate_expires ?> jours !</strong>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php
+                    /** @var MessageAdminSQL $messageAdminSQL */
+                    $messageAdminSQL = $objectInstancier->get(MessageAdminSQL::class);
+                    $messageAdmin = $messageAdminSQL->getPublishedMessage();
+                    $messageAdmin->displayTitre();
+                    ?>
                     <ul class="text-menu nav">
             <?php if (in_array($userInfo['role'], array('SADM','GADM','ADM'))) : ?>
             <li class="menu-list-title">Administration</li>
