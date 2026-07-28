@@ -92,60 +92,54 @@ class ActesApiControllerTest extends S2lowIntegrationTestCase
 
     public function maxDatesAndStatusProvider(): iterable
     {
-        // la transaction est crée avec une decision_date au 2017-07-01
-        // Et est transmise au 2017-08-01
-        // si min_date est antérieure, cette transaction apparaitra dans la liste
+        // La transaction est postée le 2017-07-01 et transmise le 2017-08-01.
+        // min_date et max_date encadrent la date de soumission (le passage au statut « posté »),
+        // pas la date de passage au statut demandé.
+
+        // si min_date est antérieure à la date de soumission, la transaction apparaitra dans la liste
         yield [
             '2017-06-30',null, ActesStatusSQL::STATUS_TRANSMIS,
             $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
         // si min_date est null, elle apparaitra dans la liste
         yield [null,null, ActesStatusSQL::STATUS_TRANSMIS,
             $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
-        // si min_date est égale à la date de transmission, elle apparaitra dans la liste
-        yield ['2017-08-01',null, ActesStatusSQL::STATUS_TRANSMIS,
+        // si min_date est égale à la date de soumission, elle apparaitra dans la liste
+        yield ['2017-07-01',null, ActesStatusSQL::STATUS_TRANSMIS,
             $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
-        // si elle est postérieure, on ne verra aucune transaction
+        // si min_date est postérieure à la date de soumission, on ne verra aucune transaction,
+        // même si elle est antérieure à la date de transmission
+        yield ['2017-07-02',null, ActesStatusSQL::STATUS_TRANSMIS,
+            $this->emptyResponse(ActesStatusSQL::STATUS_TRANSMIS)];
         yield ['2017-08-02',null, ActesStatusSQL::STATUS_TRANSMIS,
             $this->emptyResponse(ActesStatusSQL::STATUS_TRANSMIS)];
 
-        // la transaction est crée avec une decision_date au 2017-07-01
-        // Et est transmise au 2017-08-01
-        // si max_date est antérieure, aucune transaction n'apparaitra dans la liste
+        // si max_date est antérieure à la date de soumission, aucune transaction n'apparaitra dans la liste
         yield [null, '2017-06-30', ActesStatusSQL::STATUS_TRANSMIS,
             $this->emptyResponse(ActesStatusSQL::STATUS_TRANSMIS)];
         // si max_date est null, la transaction apparaitra
         yield [null, null, ActesStatusSQL::STATUS_TRANSMIS,
             $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
-        // si max_submission_date est égale à la date de création, la transaction apparaitra
-        yield [null, '2017-08-01', ActesStatusSQL::STATUS_TRANSMIS,
+        // si max_date est égale à la date de soumission, la transaction apparaitra
+        yield [null, '2017-07-01', ActesStatusSQL::STATUS_TRANSMIS,
             $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
-        // si max_date est postérieure, la transaction apparaitra
+        // si max_date est postérieure à la date de soumission mais antérieure à la date de transmission,
+        // la transaction apparaitra tout de même
+        yield [null, '2017-07-02', ActesStatusSQL::STATUS_TRANSMIS,
+            $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
         yield [null, '2017-08-02',ActesStatusSQL::STATUS_TRANSMIS,
             $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
 
-        // la transaction est crée avec une decision_date au 2017-07-01
-        // Et est transmise au 2017-08-01
-        // si max_date est antérieure aux deux, aucune transaction n'apparaitra dans la liste quel que soit
-        // le status
+        // la transaction n'est plus au statut « posté », elle n'apparait dans aucune liste de ce statut
         yield [null, '2017-06-30',ActesStatusSQL::STATUS_POSTE,
             $this->emptyResponse(ActesStatusSQL::STATUS_POSTE)];
-        yield [null, '2017-06-30',ActesStatusSQL::STATUS_TRANSMIS,
-            $this->emptyResponse(ActesStatusSQL::STATUS_TRANSMIS)];
-        // si 2017-07-01 < max_date < 2017-08-01, la transaction n'apparaitra pas dans la liste des posté car
-        // elle n'est plus à ce statut, dans la liste des transmise non plus car le changement est postérieur à la date
         yield [null, '2017-07-02', ActesStatusSQL::STATUS_POSTE,
             $this->emptyResponse(ActesStatusSQL::STATUS_POSTE)];
-        yield [null, '2017-07-02',ActesStatusSQL::STATUS_TRANSMIS,
-            $this->emptyResponse(ActesStatusSQL::STATUS_TRANSMIS)];
-        // si max_date est postérieure aux deux, la transaction la liste des transmise seulement
         yield [null, '2017-08-02', ActesStatusSQL::STATUS_POSTE,
             $this->emptyResponse(ActesStatusSQL::STATUS_POSTE)];
-        yield [null, '2017-08-02',ActesStatusSQL::STATUS_TRANSMIS,
-            $this->responseWithTransaction(ActesStatusSQL::STATUS_TRANSMIS)];
 
         // Si max_date est antérieure à min_date, la liste est vide ...
-        yield ['2017-08-02','2017-07-02' , ActesStatusSQL::STATUS_POSTE,
-            $this->emptyResponse(ActesStatusSQL::STATUS_POSTE)];
+        yield ['2017-08-02','2017-07-02' , ActesStatusSQL::STATUS_TRANSMIS,
+            $this->emptyResponse(ActesStatusSQL::STATUS_TRANSMIS)];
     }
 
 
