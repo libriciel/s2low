@@ -418,22 +418,22 @@ WHERE
         $status_id = intval($status_id);
 
         $sql = "SELECT actes_transactions.id,subject,number,date(decision_date),nature_descr,classification,type FROM actes_transactions";
+        $data = [];
         if ($min_submission_date !== null || $max_submission_date !== null) {
-            $sql .= " JOIN actes_transactions_workflow ON transaction_id=actes_transactions.id";
+            $sql .= " JOIN actes_transactions_workflow ON transaction_id=actes_transactions.id"
+                . " AND actes_transactions_workflow.status_id = ?";
+            $data[] = ActesStatusSQL::STATUS_POSTE;
         }
-            $sql .= " WHERE last_status_id=? AND authority_id = ?";
-        $data = [$status_id, $authority_id];
+        $sql .= " WHERE last_status_id=? AND authority_id = ?";
+        $data[] = $status_id;
+        $data[] = $authority_id;
         if ($min_submission_date !== null) {
-            $sql .= " AND date >= ?";
+            $sql .= " AND actes_transactions_workflow.date >= ?";
             $data[] = $min_submission_date;
         }
         if ($max_submission_date !== null) {
-            $sql .= " AND date <= ?";
+            $sql .= " AND actes_transactions_workflow.date <= ?";
             $data[] = $max_submission_date;
-        }
-        if ($min_submission_date !== null || $max_submission_date !== null) {
-            $sql .= " AND status_id = ?";
-            $data[] = $status_id;
         }
         if ($type_acte !== null) {
             $sql .= " AND type = ?";
