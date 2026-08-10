@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.16 - 2026-08-10
+
+### Sécurité
+
+- Mise à jour des dépendances
+
 ## 5.1.15 - 2026-07-13
 
 ### Sécurité
