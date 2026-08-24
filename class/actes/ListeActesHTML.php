@@ -291,24 +291,6 @@ class ListeActesHTML
                             <button type="submit" class="btn btn-default col-md-offset-3 col-md-2">Exécuter</button>
                         </div>
                     </form>
-                    <div class="form-group">
-                        <form id='form-sign' action="<?php echo Helpers::getLink('/modules/actes/actes_batch_sign.php'); ?>" method="post">
-                            <input id='signer_button' type='submit' class='btn btn-default' value="Signer les transactions sélectionnées">
-                        </form>
-                        <script type='text/javascript'>
-                        $(document).ready(function() {              
-                            $("#signer_button").click(function(){
-                                $("input:checkbox:checked").each(function() {
-                                    $("#form-sign").append("<input type='hidden' name='liste_id[]' value='" + $(this).val() + "' />");
-                                });
-                                $("#form-sign").submit();
-                                return false;
-                            })
-                        });
-                        </script>
-                        
-                    </div>
-                    
                 </div>
         <?php
     }
