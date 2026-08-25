@@ -345,7 +345,7 @@ ob_start();
                     <?php  foreach ($envelopes as $envelope) : ?>
                         <tr>
                             <td>
-                            <?php if (in_array($envelope['last_status_id'], array(4,8,13,11,20))) : ?>
+                            <?php if (in_array($envelope['last_status_id'], array(4,8,11,20))) : ?>
                                 <input type="checkbox" name="liste_id[]" value="<?php hecho($envelope['id']) ?>" id="checkbox<?php echo $envelope['id'] ?>" />
                                 <?php $sel_ok[$envelope['last_status_id']] = true ?>
                             <?php else : ?>
@@ -395,25 +395,6 @@ ob_start();
 
 
 <?php endif; ?>
-
-
-
-    <?php   if (isset($sel_ok[13])) : ?>
-        <form id='form-sign' action="<?php echo Helpers::getLink("/modules/helios/helios_batch_sign.php"); ?>" method="post">
-            <input id='signer_button' type='submit' class='btn btn-default' value="Signer les transactions sélectionnées">
-        </form>
-        <script type='text/javascript'>
-            $(document).ready(function() {
-                $("#signer_button").click(function(){
-                    $("input:checkbox:checked").each(function() {
-                        $("#form-sign").append("<input type='hidden' name='liste_id[]' value='" + $(this).val() + "' />");
-                    });
-                    $("#form-sign").submit();
-                    return false;
-                })
-            });
-        </script>
-    <?php endif; ?>
 </div>
 <?php
 
