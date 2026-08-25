@@ -583,12 +583,17 @@ form.form,
     text-decoration: none !important; /* Pas de soulignement */
 }
 
-.btn-primary, .btn-success, .btn-danger, .btn-warning {
+.btn-primary, .btn-info, .btn-success, .btn-danger, .btn-warning {
     color: #ffffff !important; /* Texte blanc si coloré */
 }
 
-.btn-primary:hover, .btn-success:hover, .btn-danger:hover, .btn-warning:hover {
+.btn-primary:hover, .btn-info:hover, .btn-success:hover, .btn-danger:hover, .btn-warning:hover,
+.btn-primary:focus, .btn-info:focus, .btn-success:focus, .btn-danger:focus, .btn-warning:focus {
     color: #ffffff !important; /* Garde le texte blanc au survol */
+}
+
+.btn-primary .glyphicon, .btn-info .glyphicon, .btn-success .glyphicon, .btn-danger .glyphicon, .btn-warning .glyphicon {
+    color: #ffffff !important;
 }
 
 .btn-default, .btn-secondary, .btn-light {
@@ -766,6 +771,106 @@ form select {
     max-width: 400px;
     width: 100% !important;
 }
+
+/* Bridge pour les input-group dans Bootstrap 5 */
+.input-group {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+}
+
+.input-group > .form-control,
+.input-group > input[type="text"] {
+    position: relative;
+    flex: 1 1 auto !important;
+    width: 1% !important;
+    min-width: 0;
+    max-width: none !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.input-group > .btn,
+.input-group > button,
+.input-group > .input-group-btn > .btn {
+    position: relative;
+    z-index: 2;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+/* Bridge pour float pull-right et pull-left */
+.pull-right {
+    float: right !important;
+}
+.pull-left {
+    float: left !important;
+}
+
+/* Bridge pour .btn-xs (boutons très petits) */
+.btn-xs {
+    padding: 0.2rem 0.45rem !important;
+    font-size: 0.75rem !important;
+    line-height: 1.25 !important;
+    border-radius: 0.25rem !important;
+}
+
+/* Bridge Glyphicons Font Face & Content Icons */
+@font-face {
+    font-family: 'Glyphicons Halflings';
+    src: url('/custom/fonts/glyphicons-halflings-regular.eot');
+    src: url('/custom/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
+         url('/custom/fonts/glyphicons-halflings-regular.woff') format('woff'),
+         url('/custom/fonts/glyphicons-halflings-regular.ttf') format('truetype'),
+         url('/custom/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+
+.glyphicon {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings' !important;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.glyphicon-trash:before { content: "\e020"; }
+.glyphicon-thumbs-down:before { content: "\e126"; }
+.glyphicon-thumbs-up:before { content: "\e125"; }
+.glyphicon-exclamation-sign:before { content: "\e101"; }
+.glyphicon-download:before { content: "\e025"; }
+.glyphicon-pencil:before { content: "\e065"; }
+.glyphicon-plus:before { content: "\e009"; }
+.glyphicon-remove:before { content: "\e014"; }
+.glyphicon-ok:before { content: "\e013"; }
+.glyphicon-search:before { content: "\e003"; }
+
+/* Bridge pour .panel et .panel-body de Bootstrap 3 vers Bootstrap 5 */
+.panel {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+}
+
+.panel-body {
+    padding: 1.25rem;
+}
+
+/* Compatibilité des colonnes col-xs-6 */
+@media (min-width: 768px) {
+    .col-xs-6 {
+        flex: 0 0 auto;
+        width: 50%;
+    }
+}
+
+
 
 
 
