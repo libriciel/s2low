@@ -13,6 +13,7 @@
 - Passage de SimpleXML à XMLReader pour limiter l'empreinte mémoire de l'analyse des XML reçus #497
 - Le champ HELIOS ftp Dest et le module Helios d'une collectivité ne sont plus visibles que par l'administrateur de son groupe Helios. #1558
 - À la création d'une collectivité par un administrateur de groupe, les modules activés désignent son groupe comme groupe administrateur. #1558
+- La convention @ctes et le module Actes d'une collectivité ne sont plus visibles ni modifiables que par l'administrateur de son groupe Actes. #1562
 
 ### Corrections
 

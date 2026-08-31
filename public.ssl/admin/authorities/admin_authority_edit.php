@@ -1,5 +1,6 @@
 <?php
 
+use S2low\Security\Authorization\ActesConventionAccess;
 use S2low\Security\Authorization\ModuleAdministration;
 use S2lowLegacy\Class\actes\ActesConventions;
 use S2lowLegacy\Class\Authority;
@@ -14,9 +15,9 @@ use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 use S2lowLegacy\Model\AuthorityTypesSQL;
 use S2lowLegacy\Model\GroupSQL;
 
-list($objectInstancier, $availableSirensByGroup, $moduleAdministration ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $availableSirensByGroup, $moduleAdministration, $actesConventionAccess) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, AvailableSirensByGroup::class, ModuleAdministration::class]
+        [ObjectInstancier::class, AvailableSirensByGroup::class, ModuleAdministration::class, ActesConventionAccess::class]
     );
 $html = '';
 $me = new User();
@@ -141,6 +142,7 @@ $html .= " </div>\n";
 // quand il chnange on le cripte par md5 et le sauvgarder dans base de donné.
 //en ce moment je pas le temp de tout faire et je laiss pour après.
 //********************************
+$isActesAdmin = $moduleAdministration->isActesAdmin((int)$authority->getId());
 $isHeliosAdmin = $moduleAdministration->isHeliosAdmin((int)$authority->getId());
 
 if ($isHeliosAdmin && $authority->getModulePermByName("helios")) {
@@ -299,22 +301,21 @@ $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Adresse électronique pour le module de mail sécurisé:</label>\n";
 $html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"email_mail_securise\" value=\"" . get_hecho($authority->get("email_mail_securise")) . "\" size=\"30\" maxlength=\"60\" /></div>\n";
 $html .= " </div>\n";
-$html .= " <div class=\"form-group\">\n";
-
-
-
-$html .= "  <label class=\"control-label col-md-4\">Convention @ctes:</label>\n";
-if ($actesConventions->hasConvention($id)) {
-    $html .= "<div class=\"col-md-6 alert alert-info\">
+if ($actesConventionAccess->isVisible((int)$authority->getId())) {
+    $html .= " <div class=\"form-group\">\n";
+    $html .= "  <label class=\"control-label col-md-4\">Convention @ctes:</label>\n";
+    if ($actesConventions->hasConvention($id)) {
+        $html .= "<div class=\"col-md-6 alert alert-info\">
         <a href='" . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/authorities/admin_authority_download_convention.php?authority_id=" . $id . "'>") .
             $actesConventions->getConventionFilename($id) .
         "</a></div>";
-} else {
-    $html .= "<div class=\"col-md-6 alert alert-warning\">Aucune convention trouvée</div>";
+    } else {
+        $html .= "<div class=\"col-md-6 alert alert-warning\">Aucune convention trouvée</div>";
+    }
+    $html .= " </div>\n";
 }
-$html .= " </div>\n";
 
-if ($me->isGroupAdminOrSuper()) {
+if ($isActesAdmin) {
     $html .= " <div class=\"form-group\">\n";
     $html .= "  <label class=\"control-label col-md-4\">&nbsp;</label>\n";
 
@@ -350,7 +351,10 @@ if ($me->isGroupAdminOrSuper()) {
 
   //$me->canGrantModule($module["name"]
     foreach ($modules as $module) {
-        if ($module["id"] == Module::HELIOS && ! $isHeliosAdmin) {
+        if ((int)$module["id"] === Module::ACTES && ! $isActesAdmin) {
+            continue;
+        }
+        if ((int)$module["id"] === Module::HELIOS && ! $isHeliosAdmin) {
             continue;
         }
         $html .= "<label>" . $doc->getHTMLCheckbox("perm_" . $module["id"], $authority->getModulePerm($module["id"]));
