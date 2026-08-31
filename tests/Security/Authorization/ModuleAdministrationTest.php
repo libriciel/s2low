@@ -15,6 +15,7 @@ class ModuleAdministrationTest extends S2lowTestCase
 {
     private const int AUTHORITY = 1;
     private const int HELIOS_GROUP = 1;
+    private const int OTHER_GROUP = 2;
 
     private const int SUPER_ADMIN = 1;
     private const int HELIOS_GROUP_ADMIN = 7;
@@ -94,6 +95,26 @@ class ModuleAdministrationTest extends S2lowTestCase
         static::assertFalse($this->moduleAdministration()->isHeliosAdmin(self::AUTHORITY));
     }
 
+    public function testTheActesGroupAdminAdministersActesAndNotHelios(): void
+    {
+        $this->designateActesGroup(self::OTHER_GROUP);
+        $this->designateHeliosGroup(self::HELIOS_GROUP);
+        $this->connectAs(self::OTHER_GROUP_ADMIN);
+
+        static::assertTrue($this->moduleAdministration()->isActesAdmin(self::AUTHORITY));
+        static::assertFalse($this->moduleAdministration()->isHeliosAdmin(self::AUTHORITY));
+    }
+
+    public function testTheHeliosGroupAdminAdministersHeliosAndNotActes(): void
+    {
+        $this->designateActesGroup(self::OTHER_GROUP);
+        $this->designateHeliosGroup(self::HELIOS_GROUP);
+        $this->connectAs(self::HELIOS_GROUP_ADMIN);
+
+        static::assertTrue($this->moduleAdministration()->isHeliosAdmin(self::AUTHORITY));
+        static::assertFalse($this->moduleAdministration()->isActesAdmin(self::AUTHORITY));
+    }
+
     private function connectAs(int $userId): void
     {
         self::getContainer()->get('security.token_storage')->setToken(
@@ -107,6 +128,14 @@ class ModuleAdministrationTest extends S2lowTestCase
     private function moduleAdministration(): ModuleAdministration
     {
         return self::getContainer()->get(ModuleAdministration::class);
+    }
+
+    private function designateActesGroup(?int $groupId): void
+    {
+        self::getContainer()->get(SQLQuery::class)->query(
+            'UPDATE authorities SET actes_group_id = ? WHERE id = ?',
+            [$groupId, self::AUTHORITY]
+        );
     }
 
     private function designateHeliosGroup(?int $groupId): void
