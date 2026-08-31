@@ -364,6 +364,10 @@ services:
     autowire: true
     public: true
 
+  S2low\Security\Authorization\ActesConventionAccess:
+    autowire: true
+    public: true
+
   S2lowLegacy\Lib\SQLQuery:
     autoconfigure: true
     autowire: true

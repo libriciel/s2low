@@ -136,6 +136,7 @@ if ($email_mail_securise && (  ! MailerSymfony::isValidMail($email_mail_securise
 }
 
 
+$isActesAdmin = $moduleAdministration->isActesAdmin((int)$id);
 $isHeliosAdmin = $moduleAdministration->isHeliosAdmin((int)$id);
 
 if ($me->isGroupAdminOrSuper()) {
@@ -176,17 +177,20 @@ if ($me->isGroupAdminOrSuper()) {
 
   // Module autorisés pour la collectivité
     $modules = Module::getActiveModulesList();
-    $heliosPermBeforeReset = $authority->getModulePerm(Module::HELIOS);
+    $permsBeforeReset = $authority->getAuthorizedModules() ?: [];
     $authority->resetModulesPerms();
 
     foreach ($modules as $module) {
-        // Le formulaire masque la case Helios à qui n'administre pas Helios, et une case masquée n'est pas
+        $moduleId = (int)$module["id"];
+
+        // Le formulaire masque la case d'un module à qui ne l'administre pas, et une case masquée n'est pas
         // postée : on rend au module sa valeur d'avant la remise à zéro, sinon elle serait effacée.
-        $heliosCheckboxWasHidden = $module["id"] == Module::HELIOS && ! $isHeliosAdmin;
+        $checkboxWasHidden = ($moduleId === Module::ACTES && ! $isActesAdmin)
+            || ($moduleId === Module::HELIOS && ! $isHeliosAdmin);
 
         $authority->setModulePerm(
-            $module["id"],
-            $heliosCheckboxWasHidden ? $heliosPermBeforeReset : $requeteHelper->getVarFromPost("perm_" . $module["id"])
+            $moduleId,
+            $checkboxWasHidden ? ($permsBeforeReset[$moduleId] ?? false) : $requeteHelper->getVarFromPost("perm_" . $moduleId)
         );
     }
 }
@@ -220,7 +224,7 @@ if ($isAuthorityCreation && $me->isGroupAdmin()) {
     }
 }
 
-if (isset($_FILES['convention_actes']) && $me->isGroupAdminOrSuper()) {
+if (isset($_FILES['convention_actes']) && $isActesAdmin) {
     $fileUploader = new FileUploader();
     if ($fileUploader->verifOK('convention_actes')) {
         $actesConventions = $objectInstancier->get(ActesConventions::class);
