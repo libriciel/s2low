@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace IntegrationTests;
 
+use S2low\Enum\AdministeredModule;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Module;
@@ -246,12 +247,96 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
     }
 
     /**
+     * @throws \Exception
+     */
+    public function testAGroupAdminCreatingAnAuthorityDesignatesItsOwnGroupForTheModulesItActivates(): void
+    {
+        $this->givenTheGroupAdminOfGroup1();
+        $this->givenSirenAuthorizedForGroup1('987654321');
+
+        $post = $this->authorityPostWithoutTheHeliosFields();
+        unset($post['id']);
+        $post['siren'] = '987654321';
+        $post['helios_ftp_dest'] = 'helios_ftp_dest';
+        $post['perm_' . Module::HELIOS] = 'on';
+
+        $this->whenTheFormIsPosted($post);
+
+        $authorityId = $this->authorityIdForSiren('987654321');
+        $authority = new Authority($authorityId);
+        $authority->init();
+
+        static::assertSame('helios_ftp_dest', $authority->get('helios_ftp_dest'));
+        static::assertTrue($authority->getModulePerm(Module::HELIOS));
+        static::assertSame(1, $this->administeringGroupOf($authorityId, AdministeredModule::HELIOS));
+        static::assertSame(1, $this->administeringGroupOf($authorityId, AdministeredModule::ACTES));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testAModuleLeftInactiveAtCreationDesignatesNoGroup(): void
+    {
+        $this->givenTheGroupAdminOfGroup1();
+        $this->givenSirenAuthorizedForGroup1('987654321');
+
+        $post = $this->authorityPostWithoutTheHeliosFields();
+        unset($post['id']);
+        $post['siren'] = '987654321';
+
+        $this->whenTheFormIsPosted($post);
+
+        $authorityId = $this->authorityIdForSiren('987654321');
+
+        static::assertSame(0, $this->administeringGroupOf($authorityId, AdministeredModule::HELIOS));
+        static::assertSame(1, $this->administeringGroupOf($authorityId, AdministeredModule::ACTES));
+    }
+
+    /**
+     * Le super administrateur n'administre pas au titre d'un groupe : il n'en désigne aucun.
+     *
+     * @throws \Exception
+     */
+    public function testASuperAdminCreatingAnAuthorityDesignatesNoGroup(): void
+    {
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+
+        $post = $this->authorityPostWithoutTheHeliosFields();
+        unset($post['id']);
+        $post['siren'] = '987654321';
+        $post['perm_' . Module::HELIOS] = 'on';
+
+        $this->whenTheFormIsPosted($post);
+
+        $authorityId = $this->authorityIdForSiren('987654321');
+
+        static::assertSame(0, $this->administeringGroupOf($authorityId, AdministeredModule::HELIOS));
+        static::assertSame(0, $this->administeringGroupOf($authorityId, AdministeredModule::ACTES));
+    }
+
+    /**
      * L'utilisateur 13 est administrateur du groupe 1, celui de la collectivité 1.
      */
     private function givenTheGroupAdminOfGroup1(): void
     {
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
         $this->givenSirenAuthorizedForGroup1('123456789');
+    }
+
+    private function administeringGroupOf(int $authorityId, AdministeredModule $module): int
+    {
+        return (int)self::getContainer()->get(SQLQuery::class)->queryOne(
+            "SELECT {$module->groupColumn()} FROM authorities WHERE id = ?",
+            [$authorityId]
+        );
+    }
+
+    private function authorityIdForSiren(string $siren): int
+    {
+        return (int)self::getContainer()->get(SQLQuery::class)->queryOne(
+            'SELECT id FROM authorities WHERE siren = ?',
+            [$siren]
+        );
     }
 
     private function givenSirenAuthorizedForGroup1(string $siren): void
