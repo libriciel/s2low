@@ -1,5 +1,6 @@
 <?php
 
+use S2low\Enum\AdministeredModule;
 use S2low\Security\Authorization\ModuleAdministration;
 use S2low\Services\MailActesNotifications\MailerSymfony;
 use S2lowLegacy\Class\actes\ActesConventions;
@@ -78,13 +79,13 @@ if (! $authoritySQL->verifDepartmentAndDistrict($department, $district)) {
 
 
 $authority = new Authority();
-$mod = false;
+$isAuthorityCreation = true;
 
 
 
 if (isset($id) && ! empty($id)) {
     $authority->setId($id);
-    $mod = true;
+    $isAuthorityCreation = false;
     if (! $authority->init()) {
         \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError(
             $api,
@@ -164,7 +165,7 @@ $authority->set("email_mail_securise", $email_mail_securise);
 $authority->set("descr_mail_securise", $descr_mail_securise);
 $authority->set("new_notification", $newmailnotif);
 
-if (!$mod) {
+if ($isAuthorityCreation) {
     $authority->set('helios_use_passtrans', $helios_use_passtrans_as_default);
 }
 
@@ -205,6 +206,19 @@ if (! $authority->save($savePerms)) {
     \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError($api, nl2br($msg), $location);
 }
 
+// La collectivité créée par un administrateur de groupe désigne son groupe pour les modules qu'il lui a activés.
+// Créée par un super administrateur, elle n'en désigne aucun : il n'administre pas au titre d'un groupe.
+if ($isAuthorityCreation && $me->isGroupAdmin()) {
+    foreach (AdministeredModule::cases() as $administeredModule) {
+        if ($authority->getModulePerm($administeredModule->value)) {
+            $authoritySQL->designateAdministeringGroup(
+                (int)$authority->getId(),
+                $administeredModule,
+                (int)$me->get("authority_group_id")
+            );
+        }
+    }
+}
 
 if (isset($_FILES['convention_actes']) && $me->isGroupAdminOrSuper()) {
     $fileUploader = new FileUploader();
@@ -228,7 +242,7 @@ if ($me->isSuper()) {
     $authoritySQL->updateDoNotVerifyNomFicUnicity($authority->getId(), $helios_do_not_verify_nom_fic_unicity);
 }
 
-$msg = ($mod) ? "Modification" : "Création";
+$msg = ($isAuthorityCreation) ? "Création" : "Modification";
 $msg .= " de la collectivité " . $authority->get("name") . " (id=" . $authority->getId() . "). Résultat ok.";
 if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 1, false, $me->get("role"), false, $me)) {
     $msg .= "\nErreur de journalisation.";

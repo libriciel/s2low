@@ -11,7 +11,8 @@ use Symfony\Bundle\SecurityBundle\Security;
  * Est-ce que l'utilisateur connecté administre un module pour une collectivité ?
  *
  * Le super administrateur administre tout. L'administrateur de groupe administre le module
- * si la collectivité a désigné son groupe. Les autres rôles sont exclus.
+ * si la collectivité a désigné son groupe, ou si elle n'existe pas encore : il est alors en
+ * train de la créer et c'est son groupe qui sera désigné. Les autres rôles sont exclus.
  */
 final readonly class ModuleAdministration
 {
@@ -43,6 +44,10 @@ final readonly class ModuleAdministration
         }
 
         $authority = $this->authoritySQL->getInfo($authorityId);
+
+        if (! $authority) {
+            return true;
+        }
 
         return (int)($authority[$module->groupColumn()] ?? 0) === $user->getAuthorityGroupId();
     }

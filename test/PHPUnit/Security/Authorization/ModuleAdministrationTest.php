@@ -63,9 +63,19 @@ class ModuleAdministrationTest extends S2lowTestCase
         static::assertTrue($this->moduleAdministration()->isHeliosAdmin(self::AUTHORITY));
     }
 
-    public function testOnAnAuthorityThatDoesNotExistYetTheGroupAdminDoesNotAdminister(): void
+    /**
+     * La collectivité est en cours de création : c'est le groupe de son créateur qui sera désigné.
+     */
+    public function testOnAnAuthorityThatDoesNotExistYetAnyGroupAdminAdministers(): void
     {
-        $this->connectAs(self::HELIOS_GROUP_ADMIN);
+        $this->connectAs(self::OTHER_GROUP_ADMIN);
+
+        static::assertTrue($this->moduleAdministration()->isHeliosAdmin(0));
+    }
+
+    public function testOnAnAuthorityThatDoesNotExistYetTheAuthorityAdminDoesNotAdminister(): void
+    {
+        $this->connectAs(self::AUTHORITY_ADMIN);
 
         static::assertFalse($this->moduleAdministration()->isHeliosAdmin(0));
     }
