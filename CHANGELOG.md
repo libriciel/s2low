@@ -11,6 +11,7 @@
 - Ajoute la possibilité de filtrer par type d'actes dans modules/actes/api/list_actes.php #1235
 - Ajoute la possibilité de passer les PES_RETOUR en lu / non-lu en lot #730
 - Passage de SimpleXML à XMLReader pour limiter l'empreinte mémoire de l'analyse des XML reçus #497
+- Le champ HELIOS ftp Dest et le module Helios d'une collectivité ne sont plus visibles que par l'administrateur de son groupe Helios. #1558
 
 ### Corrections
 

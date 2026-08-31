@@ -1,5 +1,6 @@
 <?php
 
+use S2low\Security\Authorization\ModuleAdministration;
 use S2lowLegacy\Class\actes\ActesConventions;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\AvailableSirensByGroup;
@@ -13,9 +14,9 @@ use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 use S2lowLegacy\Model\AuthorityTypesSQL;
 use S2lowLegacy\Model\GroupSQL;
 
-list($objectInstancier, $availableSirensByGroup ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $availableSirensByGroup, $moduleAdministration ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, AvailableSirensByGroup::class]
+        [ObjectInstancier::class, AvailableSirensByGroup::class, ModuleAdministration::class]
     );
 $html = '';
 $me = new User();
@@ -140,11 +141,9 @@ $html .= " </div>\n";
 // quand il chnange on le cripte par md5 et le sauvgarder dans base de donné.
 //en ce moment je pas le temp de tout faire et je laiss pour après.
 //********************************
-$accessHelios = 0;
+$isHeliosAdmin = $moduleAdministration->isHeliosAdmin((int)$authority->getId());
 
-
-
-if ($authority->getModulePermByName("helios") && $me->isGroupAdminOrSuper()) {
+if ($isHeliosAdmin && $authority->getModulePermByName("helios")) {
     $ftpLabel = "HELIOS" . ($authority->get('helios_use_passtrans') ? " [Passtrans]" : "") . " ftp Dest";
     $html .= " <div class=\"form-group\">\n";
     $html .= "  <label class=\"control-label col-md-4\">$ftpLabel</label>\n";
@@ -351,10 +350,11 @@ if ($me->isGroupAdminOrSuper()) {
 
   //$me->canGrantModule($module["name"]
     foreach ($modules as $module) {
-        if ($me->isGroupAdminOrSuper()) {
-            $html .= "<label>" . $doc->getHTMLCheckbox("perm_" . $module["id"], $authority->getModulePerm($module["id"]));
-            $html .= "&nbsp;" . $module["description"] . "</label><br />\n";
+        if ($module["id"] == Module::HELIOS && ! $isHeliosAdmin) {
+            continue;
         }
+        $html .= "<label>" . $doc->getHTMLCheckbox("perm_" . $module["id"], $authority->getModulePerm($module["id"]));
+        $html .= "&nbsp;" . $module["description"] . "</label><br />\n";
     }
 
     $html .= "  </div>\n";

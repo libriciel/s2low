@@ -360,6 +360,10 @@ services:
   S2lowLegacy\Lib\Recuperateur:
     autowire: false #pas un service
 
+  S2low\Security\Authorization\ModuleAdministration:
+    autowire: true
+    public: true
+
   S2lowLegacy\Lib\SQLQuery:
     autoconfigure: true
     autowire: true
