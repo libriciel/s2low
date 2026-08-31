@@ -1,5 +1,6 @@
 <?php
 
+use S2low\Security\Authorization\ModuleAdministration;
 use S2low\Services\MailActesNotifications\MailerSymfony;
 use S2lowLegacy\Class\actes\ActesConventions;
 use S2lowLegacy\Class\Authority;
@@ -15,9 +16,9 @@ use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\AuthoritySQL;
 
-list($objectInstancier, $sqlQuery, $helios_use_passtrans_as_default) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $sqlQuery, $helios_use_passtrans_as_default, $moduleAdministration) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, SQLQuery::class, 'app.helios_use_passtrans_as_default']
+        [ObjectInstancier::class, SQLQuery::class, 'app.helios_use_passtrans_as_default', ModuleAdministration::class]
     );
 
 $me = new User();
@@ -134,6 +135,8 @@ if ($email_mail_securise && (  ! MailerSymfony::isValidMail($email_mail_securise
 }
 
 
+$isHeliosAdmin = $moduleAdministration->isHeliosAdmin((int)$id);
+
 if ($me->isGroupAdminOrSuper()) {
     $authority->set("name", $name);
     $authority->set("siren", $siren);
@@ -143,7 +146,10 @@ if ($me->isGroupAdminOrSuper()) {
     $authority->set("authority_type_id", $authorityTypeId);
     $authority->set("department", $department);
     $authority->set("district", $district);
-    $authority->set("helios_ftp_dest", $helios_ftp_dest);
+
+    if ($isHeliosAdmin) {
+        $authority->set("helios_ftp_dest", $helios_ftp_dest);
+    }
 }
 
 $authority->set("email", $email);
@@ -165,12 +171,22 @@ if (!$mod) {
 $savePerms = false;
 if ($me->isGroupAdminOrSuper()) {
     $savePerms = true;
+    $requeteHelper = LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class);
+
   // Module autorisés pour la collectivité
     $modules = Module::getActiveModulesList();
+    $heliosPermBeforeReset = $authority->getModulePerm(Module::HELIOS);
     $authority->resetModulesPerms();
 
     foreach ($modules as $module) {
-        $authority->setModulePerm($module["id"], \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getVarFromPost("perm_" . $module["id"]));
+        // Le formulaire masque la case Helios à qui n'administre pas Helios, et une case masquée n'est pas
+        // postée : on rend au module sa valeur d'avant la remise à zéro, sinon elle serait effacée.
+        $heliosCheckboxWasHidden = $module["id"] == Module::HELIOS && ! $isHeliosAdmin;
+
+        $authority->setModulePerm(
+            $module["id"],
+            $heliosCheckboxWasHidden ? $heliosPermBeforeReset : $requeteHelper->getVarFromPost("perm_" . $module["id"])
+        );
     }
 }
 
