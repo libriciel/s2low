@@ -11,6 +11,8 @@ use S2lowLegacy\Lib\SQLQuery;
 
 class AdminAuthorityControllerTest extends S2lowIntegrationTestCase
 {
+    private const CONNECTED_USER = 13;
+
     /**
      * @throws RedirectException
      */
@@ -20,7 +22,7 @@ class AdminAuthorityControllerTest extends S2lowIntegrationTestCase
         $actesConvention->method("getConventionFilepath")->willReturn(
             __DIR__ . "/../class/fixtures/vide.pdf"
         );
-        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $this->givenTheConnectedUserIs(UserRole::SuperAdministrateur);
         self::getContainer()->get(Environnement::class)->get()->set('authority_id', 1);
         self::getContainer()->set(ActesConventions::class, $actesConvention);
         $adminAuthorityController = $this->getAdminAuthorityController();
@@ -37,7 +39,7 @@ class AdminAuthorityControllerTest extends S2lowIntegrationTestCase
      */
     public function testDownloadConventionActionNoConvention()
     {
-        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $this->givenTheConnectedUserIs(UserRole::SuperAdministrateur);
         self::getContainer()->get(Environnement::class)->get()->set('authority_id', 1);
         $adminAuthorityController = $this->getAdminAuthorityController();
         $this->expectException(Exception::class);
@@ -51,7 +53,7 @@ class AdminAuthorityControllerTest extends S2lowIntegrationTestCase
      */
     public function testDownloadConventionActionNoAuthorityId()
     {
-        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $this->givenTheConnectedUserIs(UserRole::SuperAdministrateur);
         $adminAuthorityController = self::getContainer()->get(AdminAuthorityController::class);
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Redirect to');
@@ -68,7 +70,7 @@ class AdminAuthorityControllerTest extends S2lowIntegrationTestCase
     public function testTheActesGroupAdminDownloadsTheConvention()
     {
         $this->givenAConventionExists();
-        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->givenTheConnectedUserIs(UserRole::AdministrateurGroupe);
         $this->givenAuthority1(['authority_group_id' => 2, 'actes_group_id' => 1]);
         self::getContainer()->get(Environnement::class)->get()->set('authority_id', 1);
 
@@ -84,7 +86,7 @@ class AdminAuthorityControllerTest extends S2lowIntegrationTestCase
     public function testTheAdminOfAnotherGroupDoesNotDownloadTheConvention()
     {
         $this->givenAConventionExists();
-        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->givenTheConnectedUserIs(UserRole::AdministrateurGroupe);
         $this->givenAuthority1(['authority_group_id' => 1, 'actes_group_id' => 2]);
         self::getContainer()->get(Environnement::class)->get()->set('authority_id', 1);
 
@@ -99,7 +101,7 @@ class AdminAuthorityControllerTest extends S2lowIntegrationTestCase
     public function testTheAuthorityAdminDownloadsItsOwnConvention()
     {
         $this->givenAConventionExists();
-        $this->setUserWithRole(UserRole::AdministrateurCollectivite);
+        $this->givenTheConnectedUserIs(UserRole::AdministrateurCollectivite);
         $this->givenAuthority1(['authority_group_id' => 1, 'actes_group_id' => 2]);
         self::getContainer()->get(Environnement::class)->get()->set('authority_id', 1);
 
@@ -115,13 +117,23 @@ class AdminAuthorityControllerTest extends S2lowIntegrationTestCase
     public function testASimpleUserDoesNotDownloadTheConvention()
     {
         $this->givenAConventionExists();
-        $this->setUserWithRole(UserRole::Utilisateur);
+        $this->givenTheConnectedUserIs(UserRole::Utilisateur);
         $this->givenAuthority1(['authority_group_id' => 1, 'actes_group_id' => 1]);
         self::getContainer()->get(Environnement::class)->get()->set('authority_id', 1);
 
         $this->expectException(RedirectException::class);
         $this->expectExceptionMessage('Accès refusé');
         $this->getAdminAuthorityController()->downloadConventionAction();
+    }
+
+    /**
+     * Le rôle est lu sur le token Symfony, dont le legacy dépend aussi : le changer en base
+     * ne suffit pas hors HTTP, il faut recharger l'utilisateur connecté.
+     */
+    private function givenTheConnectedUserIs(UserRole $role): void
+    {
+        $this->setUserWithRole($role, self::CONNECTED_USER);
+        $this->authenticateUserInSecurityContext(self::CONNECTED_USER);
     }
 
     private function givenAConventionExists(): void
@@ -146,7 +158,7 @@ class AdminAuthorityControllerTest extends S2lowIntegrationTestCase
      */
     public function testExportListAction()
     {
-        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $this->givenTheConnectedUserIs(UserRole::SuperAdministrateur);
         $adminAuthorityController = $this->getAdminAuthorityController();
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('exit() called');
@@ -159,7 +171,7 @@ class AdminAuthorityControllerTest extends S2lowIntegrationTestCase
      */
     public function testExportListActionGroupAdmin()
     {
-        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->givenTheConnectedUserIs(UserRole::AdministrateurGroupe);
         $adminAuthorityController = $this->getAdminAuthorityController();
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('exit() called');
@@ -172,7 +184,7 @@ class AdminAuthorityControllerTest extends S2lowIntegrationTestCase
      */
     public function testExportListActionUser()
     {
-        $this->setUserWithRole(UserRole::AdministrateurCollectivite);
+        $this->givenTheConnectedUserIs(UserRole::AdministrateurCollectivite);
         $adminAuthorityController = $this->getAdminAuthorityController();
         $this->expectException(RedirectException::class);
         $this->expectExceptionMessage('Vous devez être administrateur de groupe ou super admin');
