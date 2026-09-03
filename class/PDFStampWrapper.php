@@ -2,10 +2,14 @@
 
 namespace S2lowLegacy\Class;
 
+use CURLStringFile;
 use Exception;
 
 class PDFStampWrapper
 {
+    private const STAMP_ADD_PATH = '/pdf-stamp/v3/stamp/add';
+    private const LOGO_IMAGE_REF = 's2low-stamp.png';
+
     private $pdf_stamp_url;
     private $image_for_stamp;
 
@@ -42,51 +46,71 @@ class PDFStampWrapper
             $date_affichage = $this->getDateFr($pdfStampData->affichage_date);
         }
 
-        $data = array(
-            'opacity' => 0.8,
-            'fontSize' => 7,
-            'position' => array(
-                'width' => 190,
-                'height' => 55,
-                'x' => 10,
-                'y' => 10
-            ),
-            'rows' => array(
+        $stampRequest = array(
+            'stampList' => array(
                 array(
-                    'title' => $this->pdfStampMessage->getMessageEnvoi(),
-                    'value' => $this->getDateFr($pdfStampData->envoi_prefecture_date),
-                ),
-                array(
-                    'title' => $this->pdfStampMessage->getMessageReception(),
-                    'value' => $this->getDateFr($pdfStampData->recu_prefecture_date)
-                ),
-                array(
-                    'title' => $this->pdfStampMessage->getMessagePublication(),
-                    'value' => $date_affichage,
-                    'logo' => array(
-                        'data' =>  base64_encode(file_get_contents($this->image_for_stamp)),
-                        "width" =>  60,
-                        "marginRight" =>  20
+                    'page' => 1,
+                    'opacity' => 0.8,
+                    'fontSize' => 7,
+                    'position' => array(
+                        'width' => 190,
+                        'height' => 55,
+                        'x' => 10,
+                        'y' => 10,
+                        // origine implicite de l'API v2, à expliciter en v3 pour conserver le même rendu
+                        'origin' => 'TOP_RIGHT'
+                    ),
+                    'rows' => array(
+                        array(
+                            'title' => $this->pdfStampMessage->getMessageEnvoi(),
+                            'value' => $this->getDateFr($pdfStampData->envoi_prefecture_date),
+                        ),
+                        array(
+                            'title' => $this->pdfStampMessage->getMessageReception(),
+                            'value' => $this->getDateFr($pdfStampData->recu_prefecture_date)
+                        ),
+                        array(
+                            'title' => $this->pdfStampMessage->getMessagePublication(),
+                            'value' => $date_affichage,
+                            'logo' => array(
+                                'imageRef' => self::LOGO_IMAGE_REF,
+                                "width" =>  60,
+                                "marginRight" =>  20
+                            )
+                        ),
+                        array(
+                            'title' => 'ID :',
+                            'value' => $pdfStampData->identifiant_unique
+                        ),
                     )
-                ),
-                array(
-                    'title' => 'ID :',
-                    'value' => $pdfStampData->identifiant_unique
-                ),
+                )
             )
         );
 
-        /* curl -F "file=@Courrier.pdf" -F "metadata=$SAMPLE" -X POST http://pdf-stamp:8080 (!) */
+        /* curl -F "pdfSource=@Courrier.pdf" -F "images=@s2low-stamp.png" \
+               -F "stampRequest=$SAMPLE;type=application/json" \
+               -X POST http://pdf-stamp:8080/pdf-stamp/v3/stamp/add */
         $curlWrapper = $this->curlWrapperFactory->getNewInstance();
-        $curlWrapper->addPostFile('file', $pdf_filepath);
-        $curlWrapper->addPostData('metadata', json_encode($data));
+        $curlWrapper->addPostFile('pdfSource', $pdf_filepath);
+        // le nom du fichier sert de référence à la propriété imageRef du logo
+        $curlWrapper->addPostFile('images', $this->image_for_stamp, self::LOGO_IMAGE_REF);
+        // pdf-stamp répond 415 si la partie stampRequest n'est pas déclarée en application/json.
+        // Un CURLStringFile permet de typer la partie sans passer par un fichier temporaire.
+        $curlWrapper->addPostData(
+            'stampRequest',
+            new CURLStringFile(json_encode($stampRequest), 'stampRequest.json', 'application/json')
+        );
 
-
-        $result = $curlWrapper->get($this->pdf_stamp_url);
+        $result = $curlWrapper->get($this->getStampAddUrl());
         if (!$result) {
             throw new Exception($curlWrapper->getLastError() . " " . $curlWrapper->getLastOutput());
         }
         return $result;
+    }
+
+    private function getStampAddUrl(): string
+    {
+        return rtrim($this->pdf_stamp_url, '/') . self::STAMP_ADD_PATH;
     }
 
     private function getDateFr($date)
