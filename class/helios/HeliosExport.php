@@ -8,6 +8,7 @@ use Exception;
 use S2lowLegacy\Lib\UnrecoverableException;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class HeliosExport
@@ -114,7 +115,6 @@ class HeliosExport
     /**
      * @param $transaction_info
      * @param $output_directory
-     * @throws Exception
      */
     private function exportOneTransaction($transaction_info, $output_directory): void
     {
@@ -122,19 +122,72 @@ class HeliosExport
 
         $directory_name = $transaction_info['id'];
 
-        $filesystem = new Filesystem();
-        $filesystem->mkdir($output_directory . "/" . $directory_name);
-
-        $pes_aller_path = $this->pesAllerRetriever->getPath($transaction_info['sha1']);
-        $pes_aller_destination = $output_directory . "/$directory_name/{$transaction_info['filename']}";
-        $filesystem->copy($pes_aller_path, $pes_aller_destination);
-        $this->s2lowLogger->debug("[COPIE OK] $pes_aller_path -> $pes_aller_destination");
+        $this->exportOneFile(
+            $transaction_info['id'],
+            fn() => $this->pesAllerRetriever->getPath($transaction_info['sha1']),
+            $output_directory . "/$directory_name/{$transaction_info['filename']}"
+        );
 
         if ($transaction_info['acquit_filename']) {
-            $pes_acquit_path = $this->pesAcquitCloudStorage->getPath($transaction_info['id']);
-            $pes_acquit_destintation = $output_directory . "/$directory_name/{$transaction_info['acquit_filename']}";
-            $filesystem->copy($pes_acquit_path, $pes_acquit_destintation);
-            $this->s2lowLogger->debug("[COPIE OK] $pes_acquit_path -> $pes_acquit_destintation");
+            $this->exportOneFile(
+                $transaction_info['id'],
+                fn() => $this->pesAcquitCloudStorage->getPath($transaction_info['id']),
+                $output_directory . "/$directory_name/{$transaction_info['acquit_filename']}"
+            );
         }
+    }
+
+    /**
+     * Un fichier introuvable (ni sur le serveur, ni dans le cloud) ne doit pas interrompre l'export :
+     * il est signalé dans les logs et l'export continue avec les fichiers suivants.
+     *
+     * PesAllerRetriever::getPath() et CloudStorage::getPath() renvoient false lorsqu'ils n'ont pas pu
+     * fournir le fichier, et CloudStorage::getPath() lève une exception lorsque le fichier n'est ni
+     * sur le disque ni récupérable dans le cloud.
+     *
+     * @param $transaction_id
+     * @param callable $getSourcePath renvoie le chemin du fichier à copier, ou false
+     * @param string $destination_path
+     */
+    private function exportOneFile($transaction_id, callable $getSourcePath, string $destination_path): void
+    {
+        $nom_fichier = basename($destination_path);
+
+        try {
+            $source_path = $getSourcePath();
+        } catch (Exception $e) {
+            $this->signaleUnFichierNonExporte($transaction_id, $nom_fichier, $e->getMessage());
+            return;
+        }
+
+        if (! $source_path) {
+            $this->signaleUnFichierNonExporte(
+                $transaction_id,
+                $nom_fichier,
+                "fichier introuvable sur le serveur comme dans le cloud"
+            );
+            return;
+        }
+
+        try {
+            (new Filesystem())->copy($source_path, $destination_path);
+        } catch (IOExceptionInterface $e) {
+            $this->signaleUnFichierNonExporte($transaction_id, $nom_fichier, $e->getMessage());
+            return;
+        }
+
+        $this->s2lowLogger->debug("[COPIE OK] $source_path -> $destination_path");
+    }
+
+    private function signaleUnFichierNonExporte($transaction_id, string $nom_fichier, string $raison): void
+    {
+        $this->s2lowLogger->warning(
+            sprintf(
+                "[COPIE KO] transaction #ID %s : %s n'a pas pu être exporté (%s)",
+                $transaction_id,
+                $nom_fichier,
+                $raison
+            )
+        );
     }
 }
