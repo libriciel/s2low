@@ -40,6 +40,22 @@ class AdminAuthorityEditTest extends S2lowIntegrationTestCase
     }
 
     /**
+     * Une liste de SIREN vide n'explique rien à qui cherche à reprendre celui d'une autre
+     * collectivité.
+     *
+     * @throws \Exception
+     */
+    public function testAnEmptySirenListSaysWhy(): void
+    {
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->givenAuthority1AdministeredByGroup1();
+
+        $page = $this->whenTheAuthorityIsEdited();
+
+        static::assertStringContainsString('Aucun SIREN disponible', $page);
+    }
+
+    /**
      * @throws \Exception
      */
     public function testAGroupAdminCannotChooseAnyGroup(): void

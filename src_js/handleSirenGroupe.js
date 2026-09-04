@@ -63,7 +63,15 @@ window.onload = () => {
             return;
         }
 
-        updateSirenSelectList(getSirensToShow(sirens, originalSirenInput.value), sirenSelect);
+        const sirensToShow = getSirensToShow(sirens, originalSirenInput.value);
+
+        updateSirenSelectList(sirensToShow, sirenSelect);
+
+        const emptyNotice = document.getElementById('noSirenAvailable');
+
+        if (emptyNotice) {
+            emptyNotice.style.display = sirens.length === 0 ? '' : 'none';
+        }
     };
 
     modules.forEach(({block, groupSelect, moduleCheckbox}) => {

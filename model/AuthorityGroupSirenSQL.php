@@ -35,7 +35,11 @@ class AuthorityGroupSirenSQL extends SQL
 
     /**
      * Les SIREN que tous les groupes administrateurs autorisent — leur intersection — et qu'aucune
-     * autre collectivité administrée par l'un d'eux n'utilise déjà.
+     * autre collectivité n'utilise déjà.
+     *
+     * Un SIREN identifie une collectivité et une seule : la réservation par un groupe ne dit que
+     * qui a le droit de le poser, pas qu'il soit libre. Restreindre l'exclusion aux collectivités
+     * du groupe reviendrait à proposer un SIREN que l'enregistrement refusera.
      *
      * @param int[] $groupIds
      * @return string[]
@@ -58,7 +62,6 @@ WHERE ags.authority_group_id IN ($placeholders)
     SELECT 1 FROM authorities a
     WHERE a.siren = ags.siren
       AND a.id != ?
-      AND (a.actes_group_id = ags.authority_group_id OR a.helios_group_id = ags.authority_group_id)
 )
 GROUP BY ags.siren
 HAVING COUNT(DISTINCT ags.authority_group_id) = ?

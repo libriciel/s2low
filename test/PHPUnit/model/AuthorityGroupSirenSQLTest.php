@@ -66,6 +66,22 @@ class AuthorityGroupSirenSQLTest extends S2lowTestCase
         self::assertSame(['111111119', '491011698'], $sirens);
     }
 
+    /**
+     * Un SIREN identifie une collectivité et une seule : réservé à deux groupes, il reste
+     * indisponible pour le second dès que le premier l'a posé, sans quoi on le proposerait pour un
+     * enregistrement voué à l'échec.
+     */
+    public function testGetAvailableSirenForGroupsExcludesSirenUsedByAnAuthorityOfAnotherGroup(): void
+    {
+        $this->givenAuthorityAdministeredByGroup(1, 1); // la collectivité 1 porte 123456789
+        $this->authorityGroupSirenSQL->add(2, '123456789');
+        $this->authorityGroupSirenSQL->add(2, '491011698');
+
+        $sirens = $this->authorityGroupSirenSQL->getAvailableSirenForGroups([2], 6);
+
+        self::assertSame(['491011698'], $sirens);
+    }
+
     public function testGetAvailableSirenForGroupsKeepsSirenOfCurrentAuthority(): void
     {
         $this->givenAuthorityAdministeredByGroup(1, 1);

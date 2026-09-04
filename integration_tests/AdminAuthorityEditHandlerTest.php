@@ -392,6 +392,46 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
     }
 
     /**
+     * Un SIREN déjà porté par une collectivité ne se reprend pas, même par un autre groupe à qui il
+     * est aussi réservé : l'enregistrement échouerait sur l'unicité, avec un message illisible.
+     *
+     * @throws \Exception
+     */
+    public function testASirenAlreadyUsedByAnotherAuthorityIsRefused(): void
+    {
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $this->givenSirenAuthorizedForGroup(2, '123456789'); // celui de la collectivité 1
+
+        $post = $this->authorityPostWithoutTheHeliosFields();
+        unset($post['id']);
+        $post['actes_group_id'] = 2;
+
+        $this->whenTheFormIsRefused($post, "pas autoris");
+    }
+
+    /**
+     * Une création refusée renvoyait sur « admin_authority_edit.php?id= », dont l'identifiant vide
+     * déclenche « id doit être un entier » : le motif du refus était remplacé par un message
+     * technique.
+     *
+     * @throws \Exception
+     */
+    public function testARefusedCreationSendsBackToTheCreationForm(): void
+    {
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $this->givenSirenAuthorizedForGroup(2, '123456789');
+
+        $post = $this->authorityPostWithoutTheHeliosFields();
+        unset($post['id'], $post['api']);
+        $post['actes_group_id'] = 2;
+
+        $response = $this->postTheForm($post);
+
+        static::assertStringContainsString('admin_authority_edit.php', $response);
+        static::assertStringNotContainsString('admin_authority_edit.php?id=', $response);
+    }
+
+    /**
      * @throws \Exception
      */
     public function testAGroupAdminCannotChangeTheDesignatedGroup(): void

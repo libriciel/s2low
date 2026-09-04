@@ -20,6 +20,8 @@
 ### Corrections
 
 - Prise en compte de la date de révocation des certificats #576
+- Un SIREN déjà porté par une collectivité n'est plus proposé pour en créer une autre, y compris lorsqu'il est réservé à plusieurs groupes. #1574
+- Le motif du refus d'une création de collectivité n'est plus remplacé par un message technique sur l'identifiant. #1574
 
 ### Suppression
 

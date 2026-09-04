@@ -81,7 +81,9 @@ $helios_do_not_verify_nom_fic_unicity =
 $newmailnotif = 'true';
 
 
-$form_location =  \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/authorities/admin_authority_edit.php?id=$id");
+// Le formulaire de création n'a pas d'identifiant : le lui passer vide renvoie sur « id doit être un
+// entier », qui remplace le motif du refus par un message technique.
+$form_location =  \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/authorities/admin_authority_edit.php");
 
 $authoritySQL = new AuthoritySQL($sqlQuery);
 
@@ -240,7 +242,7 @@ if ($isAuthorityCreation) {
 }
 
 if (! $authority->save($savePerms)) {
-    $msg = "Erreur lors de l'enregistrement de la collectivité&nbsp;:\n" . $authority->getErrorMsg();
+    $msg = "Erreur lors de l'enregistrement de la collectivité : " . $authority->getErrorMsg();
     if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, $me->get("role"), false, $me)) {
         $msg .= "\nErreur de journalisation.";
     }
@@ -251,7 +253,7 @@ if (! $authority->save($savePerms)) {
         $location =  \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/authorities/admin_authority_edit.php?id=") . $authority->getId();
     }
 
-    \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError($api, nl2br($msg), $location);
+    \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError($api, $msg, $location);
 }
 
 if (isset($_FILES['convention_actes']) && $isActesAdmin) {
@@ -265,7 +267,7 @@ if (isset($_FILES['convention_actes']) && $isActesAdmin) {
         } else {
             \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError(
                 $api,
-                nl2br("Erreur lors de la sauvegarde de la convention (PDF attendu)"),
+                "Erreur lors de la sauvegarde de la convention (PDF attendu)",
                 $location =  \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/authorities/admin_authority_edit.php?id=") . $authority->getId()
             );
         }
@@ -286,7 +288,7 @@ if ($api) {
     $jsonOutput = new JSONoutput();
     $jsonOutput->display(array('status' => 'ok','message' => $msg,'id' => $authority->getId()));
 } else {
-    $_SESSION["error"] = nl2br($msg);
+    $_SESSION["error"] = $msg;
     header("Location: " . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/authorities/admin_authority_edit.php?id=") . $authority->getId());
     exit;
 }

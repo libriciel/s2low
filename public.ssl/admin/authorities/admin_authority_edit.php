@@ -194,7 +194,12 @@ if ($me->isGroupAdminOrSuper()) {
     if ($currentSiren && ! in_array($currentSiren, $sirenList, true)) {
         $html .= " <option value=\"\" selected=\"selected\" disabled=\"disabled\">" . get_hecho($currentSiren) . " (hors groupe)</option>";
     }
-    $html .= " </select></div>\n";
+    $html .= " </select>\n";
+    // Une liste vide n'explique rien : un SIREN déjà porté par une collectivité ne se reprend pas.
+    $html .= "  <div id=\"noSirenAvailable\" class=\"help-block\"" . ($sirenList === [] ? "" : " style=\"display: none\"") . ">" .
+        "Aucun SIREN disponible pour les groupes retenus. Un SIREN déjà utilisé par une autre collectivité ne peut pas être repris." .
+        "</div>\n";
+    $html .= "</div>\n";
 } else {
     $html .= "<div class=\"col-md-6\"><input type=\"text\" class=\"form-control\" disabled=\"disabled\" value=\"" . get_hecho($authority->get("siren")) . "\" />\n</div>\n";
 }
