@@ -100,7 +100,43 @@ class GroupSQLTest extends S2lowTestCase
 
         $this->assertEquals(
             [1 => self::GROUPE_1_NAME, 2 => 'second groupe'],
-            $this->groupeSQL->getSelectableGroupsIdName([2])
+            $this->groupeSQL->getSelectableGroupsIdName('', [2])
+        );
+    }
+
+    /**
+     * Un groupe à qui le SIREN de la collectivité n'est pas réservé n'a pas le droit de
+     * l'administrer : il n'est pas proposé.
+     */
+    public function testGetSelectableGroupsIdNameKeepsOnlyTheGroupsHoldingTheSiren()
+    {
+        $this->givenSirenHeldBy(2, '491011698');
+
+        $this->assertEquals(
+            [2 => 'second groupe'],
+            $this->groupeSQL->getSelectableGroupsIdName('491011698')
+        );
+    }
+
+    /**
+     * Dépossédé du SIREN après coup, le groupe déjà désigné reste affiché, sans quoi
+     * l'enregistrement changerait sa désignation en silence.
+     */
+    public function testGetSelectableGroupsIdNameKeepsAnAlreadyDesignatedGroupWithoutTheSiren()
+    {
+        $this->givenSirenHeldBy(2, '491011698');
+
+        $this->assertEquals(
+            [1 => self::GROUPE_1_NAME, 2 => 'second groupe'],
+            $this->groupeSQL->getSelectableGroupsIdName('491011698', [1])
+        );
+    }
+
+    public function testGetSelectableGroupsIdNameWithoutSirenKeepsEveryActiveGroup()
+    {
+        $this->assertEquals(
+            [1 => self::GROUPE_1_NAME, 2 => 'second groupe'],
+            $this->groupeSQL->getSelectableGroupsIdName()
         );
     }
 
@@ -115,5 +151,13 @@ class GroupSQLTest extends S2lowTestCase
     private function deactivateGroup(int $groupId): void
     {
         $this->getSQLQuery()->query('UPDATE authority_groups SET status = 0 WHERE id = ?', [$groupId]);
+    }
+
+    private function givenSirenHeldBy(int $groupId, string $siren): void
+    {
+        $this->getSQLQuery()->query(
+            'INSERT INTO authority_group_siren (authority_group_id, siren) VALUES (?, ?)',
+            [$groupId, $siren]
+        );
     }
 }

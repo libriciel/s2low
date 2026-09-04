@@ -16,6 +16,7 @@
 - La convention @ctes et le module Actes d'une collectivité ne sont plus visibles ni modifiables que par l'administrateur de son groupe Actes. #1562
 - Le champ « Groupe » de la fiche collectivité laisse place à un groupe administrateur par module, que le super administrateur choisit dans une liste recherchable. #1574
 - Les numéros de SIREN proposés pour une collectivité sont ceux que tous ses groupes administrateurs autorisent. #1574
+- Seuls les groupes détenant le SIREN d'une collectivité peuvent être désignés pour administrer ses modules. #1574
 
 ### Corrections
 

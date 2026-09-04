@@ -20,6 +20,7 @@ final readonly class ModuleActivationRequest
      */
     public function __construct(
         private int $authorityId,
+        private string $siren,
         private array $activatedByModule,
         private array $chosenGroupIdByModule,
     ) {
@@ -28,6 +29,11 @@ final readonly class ModuleActivationRequest
     public function authorityId(): int
     {
         return $this->authorityId;
+    }
+
+    public function siren(): string
+    {
+        return $this->siren;
     }
 
     public function isCreation(): bool

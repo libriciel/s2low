@@ -9,6 +9,7 @@ use S2low\DTO\ModuleActivationRequest;
 use S2low\Enum\AdministeredModule;
 use S2low\Exceptions\GroupDesignationRefusedException;
 use S2low\Security\SecurityUser;
+use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\GroupSQL;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -25,6 +26,7 @@ final readonly class AdministeringGroupDesignation
 {
     public function __construct(
         private AuthoritySQL $authoritySQL,
+        private AuthorityGroupSirenSQL $authorityGroupSirenSQL,
         private GroupSQL $groupSQL,
         private Security $security,
     ) {
@@ -69,7 +71,7 @@ final readonly class AdministeringGroupDesignation
         $user = $this->security->getUser();
 
         if ($user instanceof SecurityUser && $user->isSuperAdmin()) {
-            return $this->chosenGroup($module, $request->chosenGroupIdFor($module), $current);
+            return $this->chosenGroup($module, $request, $current);
         }
 
         if ($current->isDesignatedFor($module)) {
@@ -88,22 +90,38 @@ final readonly class AdministeringGroupDesignation
     }
 
     /**
-     * Un groupe désactivé après coup reste désignable tant qu'on ne le change pas : sinon la
-     * collectivité ne serait plus enregistrable sans lui changer de groupe en silence.
+     * Un groupe n'administre une collectivité que si le SIREN qu'elle porte lui est réservé, et
+     * qu'il est actif. Le groupe déjà désigné échappe aux deux contrôles : désactivé ou dépossédé du
+     * SIREN après coup, il rendrait sinon la collectivité inenregistrable sans en changer en silence.
      *
      * @throws GroupDesignationRefusedException
      */
-    private function chosenGroup(AdministeredModule $module, int $chosenGroupId, AdministeringGroups $current): int
-    {
+    private function chosenGroup(
+        AdministeredModule $module,
+        ModuleActivationRequest $request,
+        AdministeringGroups $current
+    ): int {
+        $chosenGroupId = $request->chosenGroupIdFor($module);
+
         if ($chosenGroupId === 0) {
             throw new GroupDesignationRefusedException(
                 "Le module {$module->label()} est activé : désignez le groupe qui l'administre."
             );
         }
 
-        if ($chosenGroupId !== $current->groupIdFor($module) && ! $this->groupSQL->isActive($chosenGroupId)) {
+        if ($chosenGroupId === $current->groupIdFor($module)) {
+            return $chosenGroupId;
+        }
+
+        if (! $this->groupSQL->isActive($chosenGroupId)) {
             throw new GroupDesignationRefusedException(
                 "Le groupe désigné pour le module {$module->label()} est désactivé."
+            );
+        }
+
+        if ($request->siren() !== '' && ! $this->authorityGroupSirenSQL->exist($chosenGroupId, $request->siren())) {
+            throw new GroupDesignationRefusedException(
+                "Le groupe désigné pour le module {$module->label()} ne détient pas le SIREN {$request->siren()}."
             );
         }
 

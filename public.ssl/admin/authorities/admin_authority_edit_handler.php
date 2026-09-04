@@ -184,7 +184,7 @@ if ($me->isGroupAdminOrSuper()) {
 
     try {
         $administeringGroups = $administeringGroupDesignation->resolve(
-            new ModuleActivationRequest((int)$id, $activatedByModule, $chosenGroupIdByModule)
+            new ModuleActivationRequest((int)$id, (string)$siren, $activatedByModule, $chosenGroupIdByModule)
         );
     } catch (GroupDesignationRefusedException $exception) {
         \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError($api, $exception->getMessage(), $form_location);

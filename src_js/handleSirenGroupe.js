@@ -7,6 +7,10 @@ import {
  * Les SIREN proposés dépendent des groupes qui administreront la collectivité : ils sont
  * l'intersection de ce que chacun autorise. Seul le super administrateur choisit ces groupes,
  * lui seul dispose donc de ces listes et du point d'entrée qui les recalcule.
+ *
+ * La réciproque n'est volontairement pas câblée : la liste des groupes, restreinte aux détenteurs
+ * du SIREN, est arrêtée au chargement de la page. On ne change pas le SIREN et les groupes d'une
+ * même collectivité au cours de la même modification, c'est l'un ou l'autre.
  */
 window.onload = () => {
     const modules = [...document.querySelectorAll('.administered-module')]

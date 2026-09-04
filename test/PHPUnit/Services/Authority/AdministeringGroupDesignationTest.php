@@ -103,6 +103,56 @@ class AdministeringGroupDesignationTest extends S2lowTestCase
         static::assertSame(self::OTHER_GROUP, $designated->groupIdFor(AdministeredModule::ACTES));
     }
 
+    /**
+     * Un groupe n'administre une collectivité que si le SIREN qu'elle porte lui est réservé.
+     */
+    public function testAGroupThatDoesNotHoldTheSirenCannotBeDesignated(): void
+    {
+        $this->connectAs(self::SUPER_ADMIN);
+        $this->givenSirenHeldBy(self::GROUP, '491011698');
+
+        $this->expectException(GroupDesignationRefusedException::class);
+        $this->expectExceptionMessage('ne détient pas le SIREN 491011698');
+
+        $this->designation()->resolve(
+            $this->request(self::AUTHORITY, [AdministeredModule::ACTES], [
+                AdministeredModule::ACTES->value => self::OTHER_GROUP,
+            ], '491011698')
+        );
+    }
+
+    public function testAGroupHoldingTheSirenIsDesignated(): void
+    {
+        $this->connectAs(self::SUPER_ADMIN);
+        $this->givenSirenHeldBy(self::OTHER_GROUP, '491011698');
+
+        $designated = $this->designation()->resolve(
+            $this->request(self::AUTHORITY, [AdministeredModule::ACTES], [
+                AdministeredModule::ACTES->value => self::OTHER_GROUP,
+            ], '491011698')
+        );
+
+        static::assertSame(self::OTHER_GROUP, $designated->groupIdFor(AdministeredModule::ACTES));
+    }
+
+    /**
+     * Dépossédé du SIREN après coup, le groupe déjà désigné reste enregistrable : sinon la
+     * collectivité ne pourrait plus être modifiée sans lui changer de groupe.
+     */
+    public function testTheGroupAlreadyDesignatedSurvivesLosingTheSiren(): void
+    {
+        $this->givenAuthorityAdministeredBy(self::OTHER_GROUP, self::OTHER_GROUP);
+        $this->connectAs(self::SUPER_ADMIN);
+
+        $designated = $this->designation()->resolve(
+            $this->request(self::AUTHORITY, [AdministeredModule::ACTES], [
+                AdministeredModule::ACTES->value => self::OTHER_GROUP,
+            ], '491011698')
+        );
+
+        static::assertSame(self::OTHER_GROUP, $designated->groupIdFor(AdministeredModule::ACTES));
+    }
+
     public function testAGroupAdminCreatingAnAuthorityDesignatesItsOwnGroupForTheActivatedModules(): void
     {
         $this->connectAs(self::GROUP_ADMIN);
@@ -144,17 +194,24 @@ class AdministeringGroupDesignationTest extends S2lowTestCase
     }
 
     /**
+     * Le SIREN reste vide par défaut : les cas qui ne portent pas sur lui échappent au contrôle de
+     * détention, traité par ses propres tests.
+     *
      * @param AdministeredModule[] $activatedModules
      * @param array<int, int> $chosenGroupIdByModule
      */
-    private function request(int $authorityId, array $activatedModules, array $chosenGroupIdByModule): ModuleActivationRequest
-    {
+    private function request(
+        int $authorityId,
+        array $activatedModules,
+        array $chosenGroupIdByModule,
+        string $siren = ''
+    ): ModuleActivationRequest {
         $activatedByModule = [];
         foreach (AdministeredModule::cases() as $module) {
             $activatedByModule[$module->value] = in_array($module, $activatedModules, true);
         }
 
-        return new ModuleActivationRequest($authorityId, $activatedByModule, $chosenGroupIdByModule);
+        return new ModuleActivationRequest($authorityId, $siren, $activatedByModule, $chosenGroupIdByModule);
     }
 
     private function designation(): AdministeringGroupDesignation
@@ -177,6 +234,14 @@ class AdministeringGroupDesignationTest extends S2lowTestCase
         self::getContainer()->get(SQLQuery::class)->query(
             'UPDATE authorities SET actes_group_id = ?, helios_group_id = ? WHERE id = ?',
             [$actesGroupId, $heliosGroupId, self::AUTHORITY]
+        );
+    }
+
+    private function givenSirenHeldBy(int $groupId, string $siren): void
+    {
+        self::getContainer()->get(SQLQuery::class)->query(
+            'INSERT INTO authority_group_siren (authority_group_id, siren) VALUES (?, ?)',
+            [$groupId, $siren]
         );
     }
 
