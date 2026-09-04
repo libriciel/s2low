@@ -368,6 +368,10 @@ services:
     autowire: true
     public: true
 
+  S2low\Services\Authority\AdministeringGroupDesignation:
+    autowire: true
+    public: true
+
   S2lowLegacy\Lib\SQLQuery:
     autoconfigure: true
     autowire: true

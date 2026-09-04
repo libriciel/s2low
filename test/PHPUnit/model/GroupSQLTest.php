@@ -82,4 +82,38 @@ class GroupSQLTest extends S2lowTestCase
         $this->groupeSQL->getGroupsIdName();
         self::expectNotToPerformAssertions();
     }
+
+    public function testGetSelectableGroupsIdNameLeavesOutInactiveGroups()
+    {
+        $this->deactivateGroup(2);
+
+        $this->assertEquals([1 => self::GROUPE_1_NAME], $this->groupeSQL->getSelectableGroupsIdName());
+    }
+
+    /**
+     * Un groupe désactivé après coup reste affiché tant qu'il administre la collectivité, sinon
+     * l'enregistrement changerait sa désignation en silence.
+     */
+    public function testGetSelectableGroupsIdNameKeepsAnInactiveGroupAlreadyDesignated()
+    {
+        $this->deactivateGroup(2);
+
+        $this->assertEquals(
+            [1 => self::GROUPE_1_NAME, 2 => 'second groupe'],
+            $this->groupeSQL->getSelectableGroupsIdName([2])
+        );
+    }
+
+    public function testIsActive()
+    {
+        $this->deactivateGroup(2);
+
+        $this->assertTrue($this->groupeSQL->isActive(1));
+        $this->assertFalse($this->groupeSQL->isActive(2));
+    }
+
+    private function deactivateGroup(int $groupId): void
+    {
+        $this->getSQLQuery()->query('UPDATE authority_groups SET status = 0 WHERE id = ?', [$groupId]);
+    }
 }

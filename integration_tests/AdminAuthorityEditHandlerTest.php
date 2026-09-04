@@ -27,7 +27,6 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
             'id' => '1',
             'name' => 'le nom',
             'siren' => '111',
-            'authority_group_id' => 1,
             'agreement' => '',
             'email' => 'test@test.ts',
             'default_broadcast_email' => 'test@test.ts',
@@ -61,7 +60,6 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
 
         static::assertSame('le nom', $authority->get('name'));
         static::assertSame('111', $authority->get('siren'));
-        static::assertSame(1, $authority->get('authority_group_id'));
         static::assertSame(null, $authority->get('agreement'));
         static::assertSame('test@test.ts', $authority->get('email'));
         static::assertSame('test@test.ts', $authority->get('default_broadcast_email'));
@@ -88,11 +86,13 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
     {
         $client = $this->client;
         $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $this->givenSirenAuthorizedForGroup(1, '111');
 
         $_POST = [
             'name' => 'le nom',
             'siren' => '111',
-            'authority_group_id' => 1,
+            'perm_' . Module::ACTES => 'on',
+            'actes_group_id' => 1,
             'agreement' => '',
             'email' => 'test@test.ts',
             'default_broadcast_email' => 'test@test.ts',
@@ -122,7 +122,7 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
         );
 
         $matches = [];
-        preg_match('#{.*}#', $crawler->html(), $matches);
+        preg_match('#\{"status":"ok"[^}]*\}#', $crawler->html(), $matches);
         $id = json_decode($matches[0])->id;
 
         $authority = new Authority($id);
@@ -130,7 +130,8 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
 
         static::assertSame('le nom', $authority->get('name'));
         static::assertSame('111', $authority->get('siren'));
-        static::assertSame(1, $authority->get('authority_group_id'));
+        static::assertSame(1, $authority->get('actes_group_id'));
+        static::assertSame(null, $authority->get('authority_group_id'));
         static::assertSame(null, $authority->get('agreement'));
         static::assertSame('test@test.ts', $authority->get('email'));
         static::assertSame('test@test.ts', $authority->get('default_broadcast_email'));
@@ -157,12 +158,14 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
     {
         $client = $this->client;
         $this->setUserWithRole(UserRole::SuperAdministrateur);                                                       // 2/ Le client ne modifie pas la variable _SERVER
+        $this->givenSirenAuthorizedForGroup(1, '111');
 
         $_POST = [
             'id' => $id,
             'name' => 'le nom',
             'siren' => '111',
-            'authority_group_id' => 1,
+            'perm_' . Module::ACTES => 'on',
+            'actes_group_id' => 1,
             'agreement' => '',
             'email' => 'test@test.ts',
             'default_broadcast_email' => 'test@test.ts',
@@ -192,7 +195,7 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
         );
 
         $matches = [];
-        preg_match('#{.*}#', $crawler->html(), $matches);
+        preg_match('#\{"status":"ok"[^}]*\}#', $crawler->html(), $matches);
         $id = json_decode($matches[0])->id;
 
         $authority = new Authority($id);
@@ -271,7 +274,7 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
     public function testAGroupAdminCreatingAnAuthorityDesignatesItsOwnGroupForTheModulesItActivates(): void
     {
         $this->givenTheGroupAdminOfGroup1();
-        $this->givenSirenAuthorizedForGroup1('987654321');
+        $this->givenSirenAuthorizedForGroup(1, '987654321');
 
         $post = $this->authorityPostWithoutTheHeliosFields();
         unset($post['id']);
@@ -297,7 +300,7 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
     public function testAModuleLeftInactiveAtCreationDesignatesNoGroup(): void
     {
         $this->givenTheGroupAdminOfGroup1();
-        $this->givenSirenAuthorizedForGroup1('987654321');
+        $this->givenSirenAuthorizedForGroup(1, '987654321');
 
         $post = $this->authorityPostWithoutTheHeliosFields();
         unset($post['id']);
@@ -312,34 +315,131 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
     }
 
     /**
-     * Le super administrateur n'administre pas au titre d'un groupe : il n'en désigne aucun.
+     * Le cas d'usage du paquage : deux mutualisants se partagent une collectivité, l'un pour Actes,
+     * l'autre pour Helios.
      *
      * @throws \Exception
      */
-    public function testASuperAdminCreatingAnAuthorityDesignatesNoGroup(): void
+    public function testASuperAdminDesignatesADifferentGroupForEachModule(): void
     {
         $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $this->givenSirenAuthorizedForGroup(1, '987654321');
+        $this->givenSirenAuthorizedForGroup(2, '987654321');
 
         $post = $this->authorityPostWithoutTheHeliosFields();
         unset($post['id']);
         $post['siren'] = '987654321';
         $post['perm_' . Module::HELIOS] = 'on';
+        $post['actes_group_id'] = 1;
+        $post['helios_group_id'] = 2;
 
         $this->whenTheFormIsPosted($post);
 
         $authorityId = $this->authorityIdForSiren('987654321');
 
-        static::assertSame(0, $this->administeringGroupOf($authorityId, AdministeredModule::HELIOS));
-        static::assertSame(0, $this->administeringGroupOf($authorityId, AdministeredModule::ACTES));
+        static::assertSame(1, $this->administeringGroupOf($authorityId, AdministeredModule::ACTES));
+        static::assertSame(2, $this->administeringGroupOf($authorityId, AdministeredModule::HELIOS));
     }
 
     /**
-     * L'utilisateur 13 est administrateur du groupe 1, celui de la collectivité 1.
+     * @throws \Exception
+     */
+    public function testASuperAdminActivatingAModuleWithoutAGroupIsRefused(): void
+    {
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $this->givenSirenAuthorizedForGroup(1, '987654321');
+
+        $post = $this->authorityPostWithoutTheHeliosFields();
+        unset($post['id']);
+        $post['siren'] = '987654321';
+
+        $this->whenTheFormIsRefused($post, "Le module Actes est activ");
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testAnAuthorityCreatedWithoutAnyModuleIsRefused(): void
+    {
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+
+        $post = $this->authorityPostWithoutTheHeliosFields();
+        unset($post['id'], $post['perm_' . Module::ACTES]);
+        $post['siren'] = '987654321';
+
+        $this->whenTheFormIsRefused($post, "au moins un groupe");
+    }
+
+    /**
+     * Le SIREN doit être autorisé par les deux groupes, faute de quoi l'un d'eux hérite d'une
+     * collectivité qu'il n'a pas le droit de gérer.
+     *
+     * @throws \Exception
+     */
+    public function testASirenOutsideTheIntersectionOfTheGroupsIsRefused(): void
+    {
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $this->givenSirenAuthorizedForGroup(1, '987654321');
+
+        $post = $this->authorityPostWithoutTheHeliosFields();
+        unset($post['id']);
+        $post['siren'] = '987654321';
+        $post['perm_' . Module::HELIOS] = 'on';
+        $post['actes_group_id'] = 1;
+        $post['helios_group_id'] = 2;
+
+        $this->whenTheFormIsRefused($post, "pas autoris");
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testAGroupAdminCannotChangeTheDesignatedGroup(): void
+    {
+        $this->givenTheGroupAdminOfGroup1();
+        $this->givenAuthority1AdministeredByGroups(actesGroupId: 1, heliosGroupId: 1);
+
+        $post = $this->authorityPostWithoutTheHeliosFields();
+        $post['actes_group_id'] = 2;
+
+        $this->whenTheFormIsPosted($post);
+
+        static::assertSame(1, $this->administeringGroupOf(1, AdministeredModule::ACTES));
+    }
+
+    /**
+     * Décocher un module ne le retire pas à son groupe : il en reste l'administrateur et peut
+     * le réactiver.
+     *
+     * @throws \Exception
+     */
+    public function testADeactivatedModuleKeepsItsAdministeringGroup(): void
+    {
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $this->givenSirenAuthorizedForGroup(1, '123456789');
+        $this->givenAuthority1AdministeredByGroups(actesGroupId: 1, heliosGroupId: 1);
+
+        $post = $this->authorityPostWithoutTheHeliosFields();
+        unset($post['perm_' . Module::ACTES]);
+
+        $this->whenTheFormIsPosted($post);
+
+        $authority = new Authority(1);
+        $authority->init();
+
+        static::assertFalse($authority->getModulePerm(Module::ACTES));
+        static::assertSame(1, $this->administeringGroupOf(1, AdministeredModule::ACTES));
+    }
+
+    /**
+     * L'utilisateur 13 est administrateur du groupe 1, celui de la collectivité 1. Le SIREN de la
+     * collectivité est ouvert aux deux groupes : ceux qui l'administrent doivent tous l'autoriser.
      */
     private function givenTheGroupAdminOfGroup1(): void
     {
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
-        $this->givenSirenAuthorizedForGroup1('123456789');
+        $this->givenSirenAuthorizedForGroup(1, '123456789');
+        $this->givenSirenAuthorizedForGroup(2, '123456789');
     }
 
     private function administeringGroupOf(int $authorityId, AdministeredModule $module): int
@@ -358,11 +458,11 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
         );
     }
 
-    private function givenSirenAuthorizedForGroup1(string $siren): void
+    private function givenSirenAuthorizedForGroup(int $groupId, string $siren): void
     {
         self::getContainer()->get(SQLQuery::class)->query(
-            'INSERT INTO authority_group_siren (authority_group_id, siren) VALUES (1, ?)',
-            [$siren]
+            'INSERT INTO authority_group_siren (authority_group_id, siren) VALUES (?, ?)',
+            [$groupId, $siren]
         );
     }
 
@@ -403,16 +503,24 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
 
     private function whenTheFormIsPosted(array $post): void
     {
+        static::assertMatchesRegularExpression('#"status":"ok"#', $this->postTheForm($post));
+    }
+
+    private function whenTheFormIsRefused(array $post, string $expectedMessage): void
+    {
+        $response = $this->postTheForm($post);
+
+        static::assertDoesNotMatchRegularExpression('#"status":"ok"#', $response);
+        static::assertStringContainsString($expectedMessage, $response);
+    }
+
+    private function postTheForm(array $post): string
+    {
         $_POST = $post;
 
-        $crawler = $this->client->request(
+        return $this->client->request(
             'POST',
             '/admin/authorities/admin_authority_edit_handler.php'
-        );
-
-        static::assertMatchesRegularExpression(
-            '#"status":"ok"#',
-            $crawler->html()
-        );
+        )->html();
     }
 }

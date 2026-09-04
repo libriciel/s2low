@@ -1,15 +1,14 @@
-export function getSirensToShow(selectedGroupId, currentSiren, sirensByGroup) {
+export function getSirensToShow(availableSirens, currentSiren) {
 
-    const sirensInGroup = sirensByGroup[selectedGroupId] ?? [];
-    const currentSirenIsInGroup = sirensInGroup.includes(currentSiren);
+    const currentSirenIsAvailable = availableSirens.includes(currentSiren);
 
-    const sirensToShow = sirensInGroup.map(siren => ({
+    const sirensToShow = availableSirens.map(siren => ({
         siren,
         selected: siren === currentSiren,
         disabled: false
     }));
 
-    if (currentSiren && !currentSirenIsInGroup) {
+    if (currentSiren && !currentSirenIsAvailable) {
         // On va afficher le SIREN original et le sélectionner pour éviter d'en selectionner un autre par défaut
         sirensToShow.push({
             siren: `${currentSiren} (hors groupe)`,

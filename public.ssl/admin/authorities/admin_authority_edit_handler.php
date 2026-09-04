@@ -1,12 +1,14 @@
 <?php
 
+use S2low\DTO\ModuleActivationRequest;
 use S2low\Enum\AdministeredModule;
+use S2low\Exceptions\GroupDesignationRefusedException;
 use S2low\Security\Authorization\ModuleAdministration;
+use S2low\Services\Authority\AdministeringGroupDesignation;
 use S2low\Services\MailActesNotifications\MailerSymfony;
 use S2lowLegacy\Class\actes\ActesConventions;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\FileUploader;
-use S2lowLegacy\Class\Group;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Log;
@@ -15,11 +17,26 @@ use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\JSONoutput;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 use S2lowLegacy\Model\AuthoritySQL;
 
-list($objectInstancier, $sqlQuery, $helios_use_passtrans_as_default, $moduleAdministration) = LegacyObjectsManager::getLegacyObjectInstancier()
+list(
+    $objectInstancier,
+    $sqlQuery,
+    $helios_use_passtrans_as_default,
+    $moduleAdministration,
+    $administeringGroupDesignation,
+    $authorityGroupSirenSQL
+) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, SQLQuery::class, 'app.helios_use_passtrans_as_default', ModuleAdministration::class]
+        [
+            ObjectInstancier::class,
+            SQLQuery::class,
+            'app.helios_use_passtrans_as_default',
+            ModuleAdministration::class,
+            AdministeringGroupDesignation::class,
+            AuthorityGroupSirenSQL::class,
+        ]
     );
 
 $me = new User();
@@ -43,7 +60,6 @@ try {
 
 $name = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getVarFromPost("name");
 $siren = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getVarFromPost("siren");
-$authorityGroupId = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getIntFromPost("authority_group_id", true);
 $agreement = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getVarFromPost("agreement");
 $email = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getVarFromPost("email");
 $defaultbroadcastEmail = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getVarFromPost("default_broadcast_email");
@@ -110,18 +126,6 @@ if (! $me->isGroupAdminOrSuper()) {
     if (! $authority->isNew() && ! $authority->isInGroup($me->get("authority_group_id"))) {
         \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError($api, "Accès refusé.", $form_location);
     }
-
-  // Vérification que le SIREN est bien autorisé pour ce groupe
-    $group = new Group($me->get("authority_group_id"));
-
-    $sirenList = $group->getAuthorizedSiren();
-
-    if (array_search($siren, $sirenList) === false) {
-        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError($api, "Ce numéro de SIREN (" . $siren . ") n'est pas autorisé pour le groupe " . $group->get("name"), $form_location);
-    }
-
-  // On force le authority_group_id à celui de l'admin du groupe
-    $authorityGroupId = $me->get("authority_group_id");
 }
 
 
@@ -139,15 +143,80 @@ if ($email_mail_securise && (  ! MailerSymfony::isValidMail($email_mail_securise
 $isActesAdmin = $moduleAdministration->isActesAdmin((int)$id);
 $isHeliosAdmin = $moduleAdministration->isHeliosAdmin((int)$id);
 
+$savePerms = false;
+
 if ($me->isGroupAdminOrSuper()) {
+    $savePerms = true;
+    $requeteHelper = LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class);
+
+  // Module autorisés pour la collectivité
+    $modules = Module::getActiveModulesList();
+    $permsBeforeReset = $authority->getAuthorizedModules() ?: [];
+    $authority->resetModulesPerms();
+
+    // getModulePerm() relit la base tant qu'aucune permission n'a été posée : on retient ici ce que
+    // le formulaire active, seule source fiable pour désigner les groupes.
+    $activatedByModule = [];
+
+    foreach ($modules as $module) {
+        $moduleId = (int)$module["id"];
+
+        // Le formulaire masque la case d'un module à qui ne l'administre pas, et une case masquée n'est pas
+        // postée : on rend au module sa valeur d'avant la remise à zéro, sinon elle serait effacée.
+        $checkboxWasHidden = ($moduleId === Module::ACTES && ! $isActesAdmin)
+            || ($moduleId === Module::HELIOS && ! $isHeliosAdmin);
+
+        $activatedByModule[$moduleId] = (bool)($checkboxWasHidden
+            ? ($permsBeforeReset[$moduleId] ?? false)
+            : $requeteHelper->getVarFromPost("perm_" . $moduleId));
+
+        $authority->setModulePerm($moduleId, $activatedByModule[$moduleId]);
+    }
+
+    $chosenGroupIdByModule = [];
+
+    foreach (AdministeredModule::cases() as $administeredModule) {
+        $chosenGroupIdByModule[$administeredModule->value] =
+            (int)$requeteHelper->getIntFromPost($administeredModule->groupColumn(), true);
+    }
+
+    try {
+        $administeringGroups = $administeringGroupDesignation->resolve(
+            new ModuleActivationRequest((int)$id, $activatedByModule, $chosenGroupIdByModule)
+        );
+    } catch (GroupDesignationRefusedException $exception) {
+        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError($api, $exception->getMessage(), $form_location);
+    }
+
+    // Sans groupe administrateur, aucun ne se prononce sur le SIREN : il n'y a rien à contrôler.
+    if ($administeringGroups->groupIds() !== []) {
+        $availableSirens = $authorityGroupSirenSQL->getAvailableSirenForGroups($administeringGroups->groupIds(), (int)$id);
+
+        if (! in_array($siren, $availableSirens, true)) {
+            \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError(
+                $api,
+                "Ce numéro de SIREN (" . $siren . ") n'est pas autorisé par les groupes qui administrent cette collectivité",
+                $form_location
+            );
+        }
+    }
+
     $authority->set("name", $name);
     $authority->set("siren", $siren);
-    $authority->set("authority_group_id", $authorityGroupId);
     $authority->set("agreement", $agreement);
     $authority->set("status", $status);
     $authority->set("authority_type_id", $authorityTypeId);
     $authority->set("department", $department);
     $authority->set("district", $district);
+
+    foreach (AdministeredModule::cases() as $administeredModule) {
+        if ($administeringGroups->isDesignatedFor($administeredModule)) {
+            $authority->set(
+                $administeredModule->groupColumn(),
+                $administeringGroups->groupIdFor($administeredModule)
+            );
+        }
+    }
 
     if ($isHeliosAdmin) {
         $authority->set("helios_ftp_dest", $helios_ftp_dest);
@@ -170,31 +239,6 @@ if ($isAuthorityCreation) {
     $authority->set('helios_use_passtrans', $helios_use_passtrans_as_default);
 }
 
-$savePerms = false;
-if ($me->isGroupAdminOrSuper()) {
-    $savePerms = true;
-    $requeteHelper = LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class);
-
-  // Module autorisés pour la collectivité
-    $modules = Module::getActiveModulesList();
-    $permsBeforeReset = $authority->getAuthorizedModules() ?: [];
-    $authority->resetModulesPerms();
-
-    foreach ($modules as $module) {
-        $moduleId = (int)$module["id"];
-
-        // Le formulaire masque la case d'un module à qui ne l'administre pas, et une case masquée n'est pas
-        // postée : on rend au module sa valeur d'avant la remise à zéro, sinon elle serait effacée.
-        $checkboxWasHidden = ($moduleId === Module::ACTES && ! $isActesAdmin)
-            || ($moduleId === Module::HELIOS && ! $isHeliosAdmin);
-
-        $authority->setModulePerm(
-            $moduleId,
-            $checkboxWasHidden ? ($permsBeforeReset[$moduleId] ?? false) : $requeteHelper->getVarFromPost("perm_" . $moduleId)
-        );
-    }
-}
-
 if (! $authority->save($savePerms)) {
     $msg = "Erreur lors de l'enregistrement de la collectivité&nbsp;:\n" . $authority->getErrorMsg();
     if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, $me->get("role"), false, $me)) {
@@ -208,20 +252,6 @@ if (! $authority->save($savePerms)) {
     }
 
     \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError($api, nl2br($msg), $location);
-}
-
-// La collectivité créée par un administrateur de groupe désigne son groupe pour les modules qu'il lui a activés.
-// Créée par un super administrateur, elle n'en désigne aucun : il n'administre pas au titre d'un groupe.
-if ($isAuthorityCreation && $me->isGroupAdmin()) {
-    foreach (AdministeredModule::cases() as $administeredModule) {
-        if ($authority->getModulePerm($administeredModule->value)) {
-            $authoritySQL->designateAdministeringGroup(
-                (int)$authority->getId(),
-                $administeredModule,
-                (int)$me->get("authority_group_id")
-            );
-        }
-    }
 }
 
 if (isset($_FILES['convention_actes']) && $isActesAdmin) {

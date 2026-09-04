@@ -19,4 +19,12 @@ enum AdministeredModule: int
             self::HELIOS => 'helios_group_id',
         };
     }
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::ACTES => 'Actes',
+            self::HELIOS => 'Helios',
+        };
+    }
 }

@@ -1,10 +1,10 @@
 <?php
 
+use S2low\Enum\AdministeredModule;
 use S2low\Security\Authorization\ActesConventionAccess;
 use S2low\Security\Authorization\ModuleAdministration;
 use S2lowLegacy\Class\actes\ActesConventions;
 use S2lowLegacy\Class\Authority;
-use S2lowLegacy\Class\AvailableSirensByGroup;
 use S2lowLegacy\Class\Group;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
@@ -15,9 +15,15 @@ use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 use S2lowLegacy\Model\AuthorityTypesSQL;
 use S2lowLegacy\Model\GroupSQL;
 
-list($objectInstancier, $availableSirensByGroup, $moduleAdministration, $actesConventionAccess) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $groupSQL, $authorityGroupSirenSQL, $moduleAdministration, $actesConventionAccess) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, AvailableSirensByGroup::class, ModuleAdministration::class, ActesConventionAccess::class]
+        [
+            ObjectInstancier::class,
+            GroupSQL::class,
+            AuthorityGroupSirenSQL::class,
+            ModuleAdministration::class,
+            ActesConventionAccess::class,
+        ]
     );
 $html = '';
 $me = new User();
@@ -88,6 +94,8 @@ try {
 $doc = new HTMLLayout();
 
 $doc->addHeader("<script src=\"" . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/javascript/validateform.js\" type=\"text/javascript\"></script>\n"));
+$doc->addHeader('<script type="text/javascript" src="' . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/jsmodules/jquery.js") . '"></script>');
+$doc->addHeader('<script type="text/javascript" src="' . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/jsmodules/select2.js") . '"></script>');
 
 $doc->setTitle("Tedetis : " . $modStr . " collectivité");
 
@@ -145,44 +153,46 @@ $html .= " </div>\n";
 $isActesAdmin = $moduleAdministration->isActesAdmin((int)$authority->getId());
 $isHeliosAdmin = $moduleAdministration->isHeliosAdmin((int)$authority->getId());
 
-if ($isHeliosAdmin && $authority->getModulePermByName("helios")) {
-    $ftpLabel = "HELIOS" . ($authority->get('helios_use_passtrans') ? " [Passtrans]" : "") . " ftp Dest";
-    $html .= " <div class=\"form-group\">\n";
-    $html .= "  <label class=\"control-label col-md-4\">$ftpLabel</label>\n";
-    $html .= "  <div class=\"col-md-6\"><input class=\"form-control\"  type=\"text\" name=\"helios_ftp_dest\" value=\"" . get_hecho($authority->get("helios_ftp_dest")) . "\" /></div>\n";
-    $html .= " </div>\n";
+// Les groupes qui administrent les modules gouvernent les SIREN proposés. Le choix de ces groupes
+// et les réglages de chaque module sont regroupés plus bas, avec les cases qui les activent.
+$designatedGroupIds = [];
+foreach (AdministeredModule::cases() as $administeredModule) {
+    $designatedGroupId = (int)$authority->get($administeredModule->groupColumn());
+    if ($designatedGroupId !== 0) {
+        $designatedGroupIds[] = $designatedGroupId;
+    }
 }
-//********************************
 
-if ($me->isSuper()) {
-    list($groups, $sirensByGroup) = $availableSirensByGroup->get($authority->get('id'));
-    $html .= " <div class=\"form-group\">\n";
-    $html .= "  <label for=\"authority_group_id\" class=\"control-label col-md-4\">Groupe</label>\n";
-    $html .= "  <div class=\"col-md-6\">\n";
-    $html .= $doc->getHTMLSelect("authority_group_id", $groups, $authority->get('authority_group_id'));
-    $html .= "<input type=\"hidden\" id=\"sirensByGroupArray\" value='" . json_encode($sirensByGroup) . "' />\n";
-    $html .= "  </div>\n";
-    $html .= " </div>\n";
-}
 $html .= " <div class=\"form-group\">\n";
 $html .= "  <label for=\"sirenId\" class=\"control-label col-md-4\">Numéro de SIREN</label>\n";
 
 if ($me->isGroupAdminOrSuper()) {
-    if ($modStr == "Ajout") {
-        $group = new Group($me->get('authority_group_id'));
-    } else {
-        $group = new Group($authority->get("authority_group_id"));
+    // Les SIREN que tous les groupes administrateurs autorisent. L'administrateur de groupe qui crée
+    // une collectivité n'en a encore désigné aucun : ce sera le sien.
+    $sirenGroupIds = $designatedGroupIds;
+    if ($sirenGroupIds === [] && $me->isGroupAdmin()) {
+        $sirenGroupIds = [(int)$me->get('authority_group_id')];
     }
-    $sirenList = $group->getAuthorizedSiren();
+
+    $sirenList = $authorityGroupSirenSQL->getAvailableSirenForGroups($sirenGroupIds, (int)$authority->getId());
+    $currentSiren = $authority->get("siren");
+
     $html .= "  <div class=\"col-md-6\">";
-    $html .= "  <input id=\"originalSiren\" type =\"hidden\" value = \"" . $authority->get('siren') . '"/>';
+    $html .= "  <input id=\"originalSiren\" type =\"hidden\" value = \"" . get_hecho($currentSiren) . '"/>';
+    $html .= "  <input id=\"availableSirensUrl\" type=\"hidden\" value=\"" .
+        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink('/api/authorities/available-sirens') . "\" />";
     $html .= "<select id=\"SelectSirenInput\" class=\"form-control\" name=\"siren\">";
     foreach ($sirenList as $siren_tmp) {
-        if ($siren_tmp == $authority->get("siren")) {
+        if ($siren_tmp == $currentSiren) {
               $html .= " <option value =\"$siren_tmp\" selected=\"selected\">$siren_tmp</option>";
         } else {
              $html .= " <option value =\"$siren_tmp\" >$siren_tmp</option>";
         }
+    }
+    // Le SIREN de la collectivité qu'aucun des groupes retenus n'autorise reste affiché, mais sans
+    // valeur : l'enregistrement le refusera plutôt que d'en substituer un autre en silence.
+    if ($currentSiren && ! in_array($currentSiren, $sirenList, true)) {
+        $html .= " <option value=\"\" selected=\"selected\" disabled=\"disabled\">" . get_hecho($currentSiren) . " (hors groupe)</option>";
     }
     $html .= " </select></div>\n";
 } else {
@@ -301,30 +311,6 @@ $html .= " <div class=\"form-group\">\n";
 $html .= "  <label class=\"control-label col-md-4\">Adresse électronique pour le module de mail sécurisé:</label>\n";
 $html .= "  <div class=\"col-md-6\"><input type=\"text\"  class=\"form-control\" name=\"email_mail_securise\" value=\"" . get_hecho($authority->get("email_mail_securise")) . "\" size=\"30\" maxlength=\"60\" /></div>\n";
 $html .= " </div>\n";
-if ($actesConventionAccess->isVisible((int)$authority->getId())) {
-    $html .= " <div class=\"form-group\">\n";
-    $html .= "  <label class=\"control-label col-md-4\">Convention @ctes:</label>\n";
-    if ($actesConventions->hasConvention($id)) {
-        $html .= "<div class=\"col-md-6 alert alert-info\">
-        <a href='" . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/authorities/admin_authority_download_convention.php?authority_id=" . $id . "'>") .
-            $actesConventions->getConventionFilename($id) .
-        "</a></div>";
-    } else {
-        $html .= "<div class=\"col-md-6 alert alert-warning\">Aucune convention trouvée</div>";
-    }
-    $html .= " </div>\n";
-}
-
-if ($isActesAdmin) {
-    $html .= " <div class=\"form-group\">\n";
-    $html .= "  <label class=\"control-label col-md-4\">&nbsp;</label>\n";
-
-    $html .= "  <div class=\"col-md-6\"><input type=\"file\" class=\"form-control\" name=\"convention_actes\" /></div>\n";
-    $html .= " </div>\n";
-}
-
-
-
 if (HELIOS_DO_NOT_VERIFY_NOM_FIC_UNICITY && $me->isSuper()) {
     $html .= " <div class=\"form-group\">\n";
     $html .= "  <label class=\"control-label col-md-4\">Unicité la balise NomFic (PES)</label>\n";
@@ -357,12 +343,84 @@ if ($me->isGroupAdminOrSuper()) {
         if ((int)$module["id"] === Module::HELIOS && ! $isHeliosAdmin) {
             continue;
         }
-        $html .= "<label>" . $doc->getHTMLCheckbox("perm_" . $module["id"], $authority->getModulePerm($module["id"]));
+        $html .= "<label>" . $doc->getHTMLCheckbox(
+            "perm_" . $module["id"],
+            $authority->getModulePerm($module["id"]),
+            " id=\"perm_" . $module["id"] . "\""
+        );
         $html .= "&nbsp;" . $module["description"] . "</label><br />\n";
     }
 
     $html .= "  </div>\n";
     $html .= " </div>\n";
+}
+
+// Chaque module administré rassemble sous la case qui l'active le groupe qui l'administre et ses
+// réglages propres. Le bloc se referme avec la case : un module éteint ne se règle pas.
+$selectableGroups = $me->isSuper() ? $groupSQL->getSelectableGroupsIdName($designatedGroupIds) : [];
+
+foreach (AdministeredModule::cases() as $administeredModule) {
+    $groupField = $administeredModule->groupColumn();
+    $designatedGroupId = (int)$authority->get($groupField);
+    $moduleSettings = '';
+
+    if ($me->isSuper()) {
+        $moduleSettings .= " <div class=\"form-group\">\n";
+        $moduleSettings .= "  <label for=\"$groupField\" class=\"control-label col-md-4\">Groupe administrateur</label>\n";
+        $moduleSettings .= "  <div class=\"col-md-6\">\n";
+        $moduleSettings .= $doc->getHTMLSelect($groupField, $selectableGroups, $authority->get($groupField), " id=\"$groupField\"");
+        $moduleSettings .= "  </div>\n";
+        $moduleSettings .= " </div>\n";
+    } elseif ($me->isGroupAdmin() && $designatedGroupId === (int)$me->get("authority_group_id")) {
+        $administeringGroup = new Group($designatedGroupId);
+
+        $moduleSettings .= " <div class=\"form-group\">\n";
+        $moduleSettings .= "  <label class=\"control-label col-md-4\">Groupe administrateur</label>\n";
+        $moduleSettings .= "  <div class=\"col-md-6\"><input type=\"text\" class=\"form-control\" disabled=\"disabled\" value=\"" . get_hecho($administeringGroup->get("name")) . "\" /></div>\n";
+        $moduleSettings .= " </div>\n";
+    }
+
+    if ($administeredModule === AdministeredModule::ACTES && $actesConventionAccess->isVisible((int)$authority->getId())) {
+        $moduleSettings .= " <div class=\"form-group\">\n";
+        $moduleSettings .= "  <label class=\"control-label col-md-4\">Convention @ctes</label>\n";
+        if ($actesConventions->hasConvention($id)) {
+            $moduleSettings .= "<div class=\"col-md-6 alert alert-info\">
+        <a href='" . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/authorities/admin_authority_download_convention.php?authority_id=" . $id . "'>") .
+                $actesConventions->getConventionFilename($id) .
+            "</a></div>";
+        } else {
+            $moduleSettings .= "<div class=\"col-md-6 alert alert-warning\">Aucune convention trouvée</div>";
+        }
+        $moduleSettings .= " </div>\n";
+    }
+
+    if ($administeredModule === AdministeredModule::ACTES && $isActesAdmin) {
+        $moduleSettings .= " <div class=\"form-group\">\n";
+        $moduleSettings .= "  <label class=\"control-label col-md-4\">Déposer une convention</label>\n";
+        $moduleSettings .= "  <div class=\"col-md-6\"><input type=\"file\" class=\"form-control\" name=\"convention_actes\" /></div>\n";
+        $moduleSettings .= " </div>\n";
+    }
+
+    if ($administeredModule === AdministeredModule::HELIOS && $isHeliosAdmin) {
+        $ftpLabel = "HELIOS" . ($authority->get('helios_use_passtrans') ? " [Passtrans]" : "") . " ftp Dest";
+
+        $moduleSettings .= " <div class=\"form-group\">\n";
+        $moduleSettings .= "  <label class=\"control-label col-md-4\">$ftpLabel</label>\n";
+        $moduleSettings .= "  <div class=\"col-md-6\"><input class=\"form-control\" type=\"text\" name=\"helios_ftp_dest\" value=\"" . get_hecho($authority->get("helios_ftp_dest")) . "\" /></div>\n";
+        $moduleSettings .= " </div>\n";
+    }
+
+    $isModuleActivated = (bool)$authority->getModulePerm($administeredModule->value);
+
+    if ($moduleSettings === '' || (! $isModuleActivated && ! $me->isGroupAdminOrSuper())) {
+        continue;
+    }
+
+    $html .= "<div class=\"card mb-3 administered-module\" data-module=\"" . $administeredModule->value . "\"" .
+        ($isModuleActivated ? "" : " style=\"display: none\"") . ">\n";
+    $html .= " <div class=\"card-header\">Module " . $administeredModule->label() . "</div>\n";
+    $html .= " <div class=\"card-body\">\n" . $moduleSettings . " </div>\n";
+    $html .= "</div>\n";
 }
 
 $html .= "<div class=\"form-group row\">\n";

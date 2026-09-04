@@ -55,4 +55,35 @@ class GroupSQL extends SQL
         }
         return $result;
     }
+
+    /**
+     * Les groupes désignables, complétés de ceux déjà désignés pour la collectivité : un groupe
+     * désactivé après coup doit rester affiché, sans quoi l'enregistrement changerait sa désignation
+     * en silence.
+     *
+     * @param int[] $alreadyDesignatedGroupIds
+     * @return array<int, string>
+     */
+    public function getSelectableGroupsIdName(array $alreadyDesignatedGroupIds = []): array
+    {
+        $sql = "SELECT id, name FROM authority_groups WHERE status = 1";
+        $params = [];
+
+        if ($alreadyDesignatedGroupIds !== []) {
+            $placeholders = implode(',', array_fill(0, count($alreadyDesignatedGroupIds), '?'));
+            $sql .= " OR id IN ($placeholders)";
+            $params = array_values($alreadyDesignatedGroupIds);
+        }
+
+        $result = [];
+        foreach ($this->query($sql . " ORDER BY name ASC", $params) as $line) {
+            $result[(int)$line['id']] = $line['name'];
+        }
+        return $result;
+    }
+
+    public function isActive(int $groupId): bool
+    {
+        return (int)$this->queryOne("SELECT status FROM authority_groups WHERE id = ?", [$groupId]) === 1;
+    }
 }

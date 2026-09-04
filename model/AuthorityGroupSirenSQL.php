@@ -33,20 +33,38 @@ class AuthorityGroupSirenSQL extends SQL
         return $this->queryOneCol($sql, $authority_group_id, $authority_group_id, $authority_id);
     }
 
-    public function getAvailableSirenForAllGroups(?int $authorityId): array
+    /**
+     * Les SIREN que tous les groupes administrateurs autorisent — leur intersection — et qu'aucune
+     * autre collectivité administrée par l'un d'eux n'utilise déjà.
+     *
+     * @param int[] $groupIds
+     * @return string[]
+     */
+    public function getAvailableSirenForGroups(array $groupIds, int $authorityId): array
     {
+        $groupIds = array_values(array_unique($groupIds));
+
+        if ($groupIds === []) {
+            return [];
+        }
+
+        $placeholders = implode(',', array_fill(0, count($groupIds), '?'));
+
         $sql = <<<SQL
-SELECT ags.authority_group_id, ags.siren
+SELECT ags.siren
 FROM authority_group_siren ags
-WHERE NOT EXISTS (
+WHERE ags.authority_group_id IN ($placeholders)
+  AND NOT EXISTS (
     SELECT 1 FROM authorities a
-    WHERE a.authority_group_id = ags.authority_group_id
-      AND a.siren = ags.siren
+    WHERE a.siren = ags.siren
       AND a.id != ?
+      AND (a.actes_group_id = ags.authority_group_id OR a.helios_group_id = ags.authority_group_id)
 )
-ORDER BY ags.authority_group_id, ags.siren
+GROUP BY ags.siren
+HAVING COUNT(DISTINCT ags.authority_group_id) = ?
+ORDER BY ags.siren
 SQL;
 
-        return $this->query($sql, $authorityId);
+        return $this->queryOneCol($sql, [...$groupIds, $authorityId, count($groupIds)]);
     }
 }
