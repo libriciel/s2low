@@ -40,18 +40,21 @@ class AuthorityGroupSirenSQLTest extends S2lowTestCase
         static::assertSame(['000000000', '999999999'], $listColl1);
     }
 
-    public function testGetUnusedSirenUsedInAnotherGroup()
+    /**
+     * Un SIREN réservé à deux groupes n'est libre que tant qu'aucune collectivité ne le porte.
+     * Le proposer au second menait à un enregistrement voué à échouer sur « Numéro de SIREN doit
+     * être unique ».
+     */
+    public function testGetAvailableSirenExcludesSirenUsedByAnAuthorityOfAnotherGroup(): void
     {
-        $this->authorityGroupSirenSQL->add(2, "123456789"); //Utilisé par la collectivité 1 du groupe 1
+        $this->authorityGroupSirenSQL->add(2, "123456789"); // porté par la collectivité 1, du groupe 1
         $this->authorityGroupSirenSQL->add(2, "000000000");
 
-        // Si on a changé la coll de groupe, elle doit garder accès à son SIREN
-        $list = $this->authorityGroupSirenSQL->getAvailableSiren(2, 1);
-        $this->assertEquals(['000000000','123456789'], $list);
+        // La collectivité qui change de groupe garde le SIREN qu'elle porte déjà
+        static::assertSame(['000000000', '123456789'], $this->authorityGroupSirenSQL->getAvailableSiren(2, 1));
 
-        // Si on créé une coll dans un nouveau groupe, elle doit avoir accès au SIREN
-        $list = $this->authorityGroupSirenSQL->getAvailableSiren(2, 2);
-        $this->assertEquals(['000000000','123456789'], $list);
+        // Une autre collectivité ne peut pas le lui reprendre
+        static::assertSame(['000000000'], $this->authorityGroupSirenSQL->getAvailableSiren(2, 2));
     }
 
     public function testGetAvailableSirenForAllGroupsExcludesSirenUsedByOtherAuthority(): void
@@ -72,6 +75,21 @@ class AuthorityGroupSirenSQLTest extends S2lowTestCase
             ],
             $rows
         );
+    }
+
+    /**
+     * Un SIREN identifie une collectivité et une seule : réservé à deux groupes, il reste
+     * indisponible pour le second dès que le premier l'a posé, sans quoi on le proposerait pour un
+     * enregistrement voué à échouer sur « Numéro de SIREN doit être unique ».
+     */
+    public function testGetAvailableSirenForAllGroupsExcludesSirenUsedByAnAuthorityOfAnotherGroup(): void
+    {
+        $this->authorityGroupSirenSQL->add(2, '123456789'); // porté par la collectivité 1, du groupe 1
+        $this->authorityGroupSirenSQL->add(2, '491011698');
+
+        $rows = $this->authorityGroupSirenSQL->getAvailableSirenForAllGroups(6);
+
+        self::assertSame([['authority_group_id' => 2, 'siren' => '491011698']], $rows);
     }
 
     public function testGetAvailableSirenForAllGroupsKeepsSirenOfCurrentAuthority(): void

@@ -15,11 +15,18 @@ use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\JSONoutput;
 use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 use S2lowLegacy\Model\AuthoritySQL;
 
-list($objectInstancier, $sqlQuery, $helios_use_passtrans_as_default, $moduleAdministration) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $sqlQuery, $helios_use_passtrans_as_default, $authorityGroupSirenSQL, $moduleAdministration) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, SQLQuery::class, 'app.helios_use_passtrans_as_default', ModuleAdministration::class]
+        [
+            ObjectInstancier::class,
+            SQLQuery::class,
+            'app.helios_use_passtrans_as_default',
+            AuthorityGroupSirenSQL::class,
+            ModuleAdministration::class,
+        ]
     );
 
 $me = new User();
@@ -111,13 +118,16 @@ if (! $me->isGroupAdminOrSuper()) {
         \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError($api, "Accès refusé.", $form_location);
     }
 
-  // Vérification que le SIREN est bien autorisé pour ce groupe
-    $group = new Group($me->get("authority_group_id"));
+  // Le SIREN doit être réservé au groupe, et libre
+    $groupId = (int)$me->get("authority_group_id");
+    $group = new Group($groupId);
 
-    $sirenList = $group->getAuthorizedSiren();
-
-    if (array_search($siren, $sirenList) === false) {
+    if (! $authorityGroupSirenSQL->exist($groupId, $siren)) {
         \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError($api, "Ce numéro de SIREN (" . $siren . ") n'est pas autorisé pour le groupe " . $group->get("name"), $form_location);
+    }
+
+    if (array_search($siren, $authorityGroupSirenSQL->getAvailableSiren($groupId, (int)$authority->getId())) === false) {
+        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError($api, "Ce numéro de SIREN (" . $siren . ") est déjà utilisé par une autre collectivité.", $form_location);
     }
 
   // On force le authority_group_id à celui de l'admin du groupe
@@ -196,7 +206,7 @@ if ($me->isGroupAdminOrSuper()) {
 }
 
 if (! $authority->save($savePerms)) {
-    $msg = "Erreur lors de l'enregistrement de la collectivité&nbsp;:\n" . $authority->getErrorMsg();
+    $msg = "Erreur lors de l'enregistrement de la collectivité : " . $authority->getErrorMsg();
     if (! Log::newEntry(LOG_ISSUER_NAME, $msg, 3, false, $me->get("role"), false, $me)) {
         $msg .= "\nErreur de journalisation.";
     }
@@ -207,7 +217,7 @@ if (! $authority->save($savePerms)) {
         $location =  \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/authorities/admin_authority_edit.php?id=") . $authority->getId();
     }
 
-    \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError($api, nl2br($msg), $location);
+    \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError($api, $msg, $location);
 }
 
 // La collectivité créée par un administrateur de groupe désigne son groupe pour les modules qu'il lui a activés.
@@ -235,7 +245,7 @@ if (isset($_FILES['convention_actes']) && $isActesAdmin) {
         } else {
             \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError(
                 $api,
-                nl2br("Erreur lors de la sauvegarde de la convention (PDF attendu)"),
+                "Erreur lors de la sauvegarde de la convention (PDF attendu)",
                 $location =  \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/authorities/admin_authority_edit.php?id=") . $authority->getId()
             );
         }
@@ -256,7 +266,7 @@ if ($api) {
     $jsonOutput = new JSONoutput();
     $jsonOutput->display(array('status' => 'ok','message' => $msg,'id' => $authority->getId()));
 } else {
-    $_SESSION["error"] = nl2br($msg);
+    $_SESSION["error"] = $msg;
     header("Location: " . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/admin/authorities/admin_authority_edit.php?id=") . $authority->getId());
     exit;
 }

@@ -22,17 +22,27 @@ class AuthorityGroupSirenSQL extends SQL
     }
 
     /**
-     * @deprecated 5.1.13
+     * Les SIREN réservés au groupe et qu'aucune autre collectivité n'utilise déjà.
+     *
+     * @return string[]
      */
-    public function getAvailableSiren($authority_group_id, $authority_id)
+    public function getAvailableSiren(int $authorityGroupId, int $authorityId): array
     {
         $sql = "SELECT siren FROM authority_group_siren " .
             " WHERE authority_group_id=? AND siren NOT IN (" .
-            "SELECT siren FROM authorities WHERE siren IS NOT NULL AND authority_group_id=? AND NOT id=?)" .
+            "SELECT siren FROM authorities WHERE siren IS NOT NULL AND NOT id=?)" .
             " ORDER BY siren";
-        return $this->queryOneCol($sql, $authority_group_id, $authority_group_id, $authority_id);
+        return $this->queryOneCol($sql, $authorityGroupId, $authorityId);
     }
 
+    /**
+     * Les SIREN réservés à chaque groupe et qu'aucune autre collectivité n'utilise déjà.
+     *
+     * Un SIREN identifie une collectivité et une seule — l'unicité est vérifiée sans regarder le
+     * groupe. La réservation par un groupe dit qui a le droit de le poser, pas qu'il soit libre :
+     * restreindre l'exclusion aux collectivités du groupe revenait à proposer un SIREN que
+     * l'enregistrement refuse.
+     */
     public function getAvailableSirenForAllGroups(?int $authorityId): array
     {
         $sql = <<<SQL
@@ -40,8 +50,7 @@ SELECT ags.authority_group_id, ags.siren
 FROM authority_group_siren ags
 WHERE NOT EXISTS (
     SELECT 1 FROM authorities a
-    WHERE a.authority_group_id = ags.authority_group_id
-      AND a.siren = ags.siren
+    WHERE a.siren = ags.siren
       AND a.id != ?
 )
 ORDER BY ags.authority_group_id, ags.siren
