@@ -58,4 +58,42 @@ SQL;
 
         return $this->query($sql, $authorityId);
     }
+
+    /**
+     * Les SIREN que tous les groupes administrateurs autorisent — leur intersection — et qu'aucune
+     * autre collectivité n'utilise déjà.
+     *
+     * Un SIREN identifie une collectivité et une seule : la réservation par un groupe ne dit que
+     * qui a le droit de le poser, pas qu'il soit libre. Restreindre l'exclusion aux collectivités
+     * du groupe reviendrait à proposer un SIREN que l'enregistrement refusera.
+     *
+     * @param int[] $groupIds
+     * @return string[]
+     */
+    public function getAvailableSirenForGroups(array $groupIds, int $authorityId): array
+    {
+        $groupIds = array_values(array_unique($groupIds));
+
+        if ($groupIds === []) {
+            return [];
+        }
+
+        $placeholders = implode(',', array_fill(0, count($groupIds), '?'));
+
+        $sql = <<<SQL
+SELECT ags.siren
+FROM authority_group_siren ags
+WHERE ags.authority_group_id IN ($placeholders)
+  AND NOT EXISTS (
+    SELECT 1 FROM authorities a
+    WHERE a.siren = ags.siren
+      AND a.id != ?
+)
+GROUP BY ags.siren
+HAVING COUNT(DISTINCT ags.authority_group_id) = ?
+ORDER BY ags.siren
+SQL;
+
+        return $this->queryOneCol($sql, [...$groupIds, $authorityId, count($groupIds)]);
+    }
 }
