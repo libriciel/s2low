@@ -55,4 +55,46 @@ class GroupSQL extends SQL
         }
         return $result;
     }
+
+    /**
+     * Les groupes qu'une collectivité peut désigner : actifs, et détenant le SIREN qu'elle porte —
+     * un groupe à qui ce SIREN n'est pas réservé n'a pas le droit de l'administrer. Un SIREN vide
+     * est une création, aucun n'est encore choisi.
+     *
+     * S'y ajoutent les groupes déjà désignés : désactivé ou dépossédé du SIREN après coup, un groupe
+     * doit rester affiché, sans quoi l'enregistrement changerait sa désignation en silence.
+     *
+     * @param int[] $alreadyDesignatedGroupIds
+     * @return array<int, string>
+     */
+    public function getSelectableGroupsIdName(string $siren = '', array $alreadyDesignatedGroupIds = []): array
+    {
+        $selectable = "status = 1";
+        $params = [];
+
+        if ($siren !== '') {
+            $selectable .= " AND EXISTS (SELECT 1 FROM authority_group_siren ags" .
+                " WHERE ags.authority_group_id = authority_groups.id AND ags.siren = ?)";
+            $params[] = $siren;
+        }
+
+        $where = "($selectable)";
+
+        if ($alreadyDesignatedGroupIds !== []) {
+            $placeholders = implode(',', array_fill(0, count($alreadyDesignatedGroupIds), '?'));
+            $where .= " OR id IN ($placeholders)";
+            $params = [...$params, ...array_values($alreadyDesignatedGroupIds)];
+        }
+
+        $result = [];
+        foreach ($this->query("SELECT id, name FROM authority_groups WHERE $where ORDER BY name ASC", $params) as $line) {
+            $result[(int)$line['id']] = $line['name'];
+        }
+        return $result;
+    }
+
+    public function isActive(int $groupId): bool
+    {
+        return (int)$this->queryOne("SELECT status FROM authority_groups WHERE id = ?", [$groupId]) === 1;
+    }
 }
