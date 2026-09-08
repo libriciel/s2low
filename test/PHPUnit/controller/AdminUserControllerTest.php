@@ -33,6 +33,15 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         $this->setOnlyDataOk();
     }
 
+    /**
+     * L'appartenance au groupe se lit sur les colonnes par module. Le jeu d'essai ne renseigne que
+     * authority_group_id, que la migration a pourtant recopiée dans les deux.
+     */
+    private function givenAuthority2AdministeredByGroup1(): void
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 1, helios_group_id = 1 WHERE id = 2');
+    }
+
     private function setOnlyDataOk()
     {
         $certificate_file = $this->testStreamUrl . "/user1.pem";
@@ -292,6 +301,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
     public function testSetInGroupOK()
     {
         $this->setOnlyDataOk();
+        $this->givenAuthority2AdministeredByGroup1();
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
         self::getContainer()->get(Environnement::class)->post()->set('authority_id', 2);
         $this->adminUserController->doEditAction();
@@ -301,6 +311,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
     public function testForceRole()
     {
         $this->setOnlyDataOk();
+        $this->givenAuthority2AdministeredByGroup1();
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
         self::getContainer()->get(Environnement::class)->post()->set('authority_id', 2);
         self::getContainer()->get(Environnement::class)->post()->set('role', 'SADM');
