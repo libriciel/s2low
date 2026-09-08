@@ -14,6 +14,10 @@
 - Le champ HELIOS ftp Dest et le module Helios d'une collectivité ne sont plus visibles que par l'administrateur de son groupe Helios. #1558
 - À la création d'une collectivité par un administrateur de groupe, les modules activés désignent son groupe comme groupe administrateur. #1558
 - La convention @ctes et le module Actes d'une collectivité ne sont plus visibles ni modifiables que par l'administrateur de son groupe Actes. #1562
+- Le champ « Groupe » de la fiche collectivité laisse place à un groupe administrateur par module, que le super administrateur choisit parmi ceux qui détiennent son SIREN. #1582
+- Les numéros de SIREN proposés pour une collectivité sont ceux que tous ses groupes administrateurs autorisent. #1582
+- Les réglages propres à un module — groupe administrateur, convention @ctes, adresse FTP — sont regroupés sous la case qui l'active, et le SIREN les précède. #1582
+- Les numéros de SIREN proposés sont servis à la demande au lieu d'être embarqués dans la page, qui n'expose plus les réservations de tous les groupes. #1582
 
 ### Corrections
 

@@ -2,18 +2,9 @@ import { getSirensToShow } from "../src_js/sirenSelector.js";
 
 describe("getSirensToShow", () => {
 
-    test("keeps original SIREN selected when it belongs to group", () => {
+    test("keeps original SIREN selected when the groups allow it", () => {
 
-        const result = getSirensToShow(
-            "1",
-            "123",
-            {
-                "1": [
-                    "123",
-                    "456"
-                ]
-            }
-        );
+        const result = getSirensToShow(["123", "456"], "123");
 
         expect(result).toEqual([
             {
@@ -30,18 +21,9 @@ describe("getSirensToShow", () => {
     });
 
 
-    test("adds original SIREN disabled when outside group", () => {
+    test("adds original SIREN disabled when no longer allowed", () => {
 
-        const result = getSirensToShow(
-            "2",
-            "123",
-            {
-                "2": [
-                    "456",
-                    "789"
-                ]
-            }
-        );
+        const result = getSirensToShow(["456", "789"], "123");
 
         expect(result).toContainEqual({
             siren: "123 (hors groupe)",
@@ -50,17 +32,9 @@ describe("getSirensToShow", () => {
         });
     });
 
-    test("only shows group's siren when no siren is selected", () => {
+    test("only shows available sirens when no siren is selected", () => {
 
-        const result = getSirensToShow(
-            "1",
-            "",
-            {
-                "1": [
-                    "456"
-                ]
-            }
-        );
+        const result = getSirensToShow(["456"], "");
 
         expect(result).toEqual(
             [
