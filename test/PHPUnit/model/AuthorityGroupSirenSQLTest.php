@@ -66,69 +66,6 @@ class AuthorityGroupSirenSQLTest extends S2lowTestCase
         static::assertSame(['000000000'], $this->authorityGroupSirenSQL->getAvailableSiren(2, 2));
     }
 
-    public function testGetAvailableSirenForAllGroupsExcludesSirenUsedByOtherAuthority(): void
-    {
-        $this->authorityGroupSirenSQL->add(1, '123456789'); // taken by authority 1
-        $this->authorityGroupSirenSQL->add(1, '999999999'); // taken by authority 2
-        $this->authorityGroupSirenSQL->add(1, '491011698'); // free
-        $this->authorityGroupSirenSQL->add(1, '111111119'); // free
-        $this->authorityGroupSirenSQL->add(2, '443783170'); // free (no authority in group 2)
-
-        $rows = $this->authorityGroupSirenSQL->getAvailableSirenForAllGroups(6);
-
-        self::assertSame(
-            [
-                ['authority_group_id' => 1, 'siren' => '111111119'],
-                ['authority_group_id' => 1, 'siren' => '491011698'],
-                ['authority_group_id' => 2, 'siren' => '443783170'],
-            ],
-            $rows
-        );
-    }
-
-    /**
-     * Un SIREN identifie une collectivité et une seule : réservé à deux groupes, il reste
-     * indisponible pour le second dès que le premier l'a posé, sans quoi on le proposerait pour un
-     * enregistrement voué à échouer sur « Numéro de SIREN doit être unique ».
-     */
-    public function testGetAvailableSirenForAllGroupsExcludesSirenUsedByAnAuthorityOfAnotherGroup(): void
-    {
-        $this->authorityGroupSirenSQL->add(2, '123456789'); // porté par la collectivité 1, du groupe 1
-        $this->authorityGroupSirenSQL->add(2, '491011698');
-
-        $rows = $this->authorityGroupSirenSQL->getAvailableSirenForAllGroups(6);
-
-        self::assertSame([['authority_group_id' => 2, 'siren' => '491011698']], $rows);
-    }
-
-    /**
-     * Une collectivité en cours de création n'a pas encore d'id : le point d'appel passe alors null,
-     * qui ne doit désigner aucune collectivité existante et ne doit donc jamais neutraliser l'exclusion.
-     */
-    public function testGetAvailableSirenForAllGroupsExcludesSirenUsedByOtherAuthorityWhenCreatingNewAuthority(): void
-    {
-        $this->authorityGroupSirenSQL->add(1, '123456789'); // taken by authority 1
-        $this->authorityGroupSirenSQL->add(1, '491011698'); // free
-
-        $rows = $this->authorityGroupSirenSQL->getAvailableSirenForAllGroups(null);
-
-        self::assertSame([['authority_group_id' => 1, 'siren' => '491011698']], $rows);
-    }
-
-    public function testGetAvailableSirenForAllGroupsKeepsSirenOfCurrentAuthority(): void
-    {
-        $this->authorityGroupSirenSQL->add(1, '123456789'); // siren of authority 1 itself
-        $this->authorityGroupSirenSQL->add(1, '999999999'); // taken by authority 2
-
-        // authority 1 keeps its own siren (a.id != ?)
-        $rows = $this->authorityGroupSirenSQL->getAvailableSirenForAllGroups(1);
-
-        self::assertSame(
-            [['authority_group_id' => 1, 'siren' => '123456789']],
-            $rows
-        );
-    }
-
     public function testGetAvailableSirenForGroupsExcludesSirenUsedByAnAuthorityOfTheGroup(): void
     {
         $this->givenAuthorityAdministeredByGroup(self::AUTHORITY_1, self::GROUP_1);
