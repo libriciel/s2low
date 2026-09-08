@@ -875,3 +875,35 @@ form select {
 
 
 
+
+/* ==========================================================================
+   Bridge : select2 à l'aspect des champs du formulaire
+
+   select2 injecte sa feuille au chargement du script, donc après celle-ci : à
+   spécificité égale c'est la sienne qui l'emporte, d'où les !important.
+   ========================================================================== */
+.select2-container--default .select2-selection--single {
+    border-color: #cbd5e1 !important;
+    border-radius: 0.375rem !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    font-size: 0.8333rem;
+    line-height: 26px;
+    color: #212529;
+}
+
+.select2-container--default.select2-container--focus .select2-selection--single,
+.select2-container--default.select2-container--open .select2-selection--single {
+    border-color: #ffaa66 !important;
+}
+
+.select2-dropdown {
+    border-color: #cbd5e1;
+    border-radius: 0.375rem;
+    font-size: 0.8333rem;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #ff6600;
+}

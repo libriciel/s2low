@@ -16,6 +16,8 @@ class Authority extends DataObject
     protected $name;
     protected $siren;
     protected $authority_group_id;
+    protected $actes_group_id;
+    protected $helios_group_id;
     protected $agreement;
     protected $email;
     protected $broadcast_email;
@@ -44,7 +46,9 @@ class Authority extends DataObject
 
     protected $dbFields = array( "name" => array( "descr" => "Nom", "type" => "isString", "mandatory" => true),
                          "siren" => array( "descr" => "Numéro de SIREN", "type" => "isString", "mandatory" => true, "unique" => true),
-                         "authority_group_id" => array( "descr" => "Groupe de collectivité", "type" => "isInt", "mandatory" => true),
+                         "authority_group_id" => array( "descr" => "Groupe de collectivité", "type" => "isInt", "mandatory" => false),
+                         "actes_group_id" => array( "descr" => "Groupe administrateur du module Actes", "type" => "isInt", "mandatory" => false),
+                         "helios_group_id" => array( "descr" => "Groupe administrateur du module Helios", "type" => "isInt", "mandatory" => false),
                          "agreement" => array( "descr" => "Référence convention", "type" => "isString", "mandatory" => false),
                          "email" => array( "descr" => "Adresse électronique", "type" => "isEmail", "mandatory" => false),
                          "broadcast_email" => array( "descr" => "Adresse électronique de diffusion", "type" => "isEmail", "mandatory" => false),
@@ -152,19 +156,24 @@ class Authority extends DataObject
     }
 
   /**
-   * \brief Méthode qui détermine si la collectivité appartient au groupe spécifié
+   * \brief Méthode qui détermine si le groupe spécifié administre la collectivité
+   *
+   * Une collectivité relève de deux groupes, un par module administré : le groupe l'administre
+   * dès qu'il en gère au moins un. La colonne historique authority_group_id n'est plus alimentée
+   * et n'entre plus dans le test ; elle sera supprimée.
+   *
    * \param $group_id integer : Numéro d'identifiant du groupe
-   * \return True si la collectivité appartient au groupe, False sinon
+   * \return True si le groupe administre la collectivité, False sinon
   */
     public function isInGroup($group_id)
     {
-        if (is_numeric($group_id)) {
-            if ($this->authority_group_id == $group_id) {
-                return true;
-            }
+        $groupId = (int)$group_id;
+
+        if (! is_numeric($group_id) || $groupId === 0) {
+            return false;
         }
 
-        return false;
+        return (int)$this->actes_group_id === $groupId || (int)$this->helios_group_id === $groupId;
     }
 
   /**

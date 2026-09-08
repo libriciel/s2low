@@ -36,30 +36,6 @@ class AuthorityGroupSirenSQL extends SQL
     }
 
     /**
-     * Les SIREN réservés à chaque groupe et qu'aucune autre collectivité n'utilise déjà.
-     *
-     * Un SIREN identifie une collectivité et une seule — l'unicité est vérifiée sans regarder le
-     * groupe. La réservation par un groupe dit qui a le droit de le poser, pas qu'il soit libre :
-     * restreindre l'exclusion aux collectivités du groupe revenait à proposer un SIREN que
-     * l'enregistrement refuse.
-     */
-    public function getAvailableSirenForAllGroups(?int $authorityId): array
-    {
-        $sql = <<<SQL
-SELECT ags.authority_group_id, ags.siren
-FROM authority_group_siren ags
-WHERE NOT EXISTS (
-    SELECT 1 FROM authorities a
-    WHERE a.siren = ags.siren
-      AND a.id IS DISTINCT FROM ?
-)
-ORDER BY ags.authority_group_id, ags.siren
-SQL;
-
-        return $this->query($sql, $authorityId);
-    }
-
-    /**
      * @param int[] $groupIds
      * @return string[]
      */
