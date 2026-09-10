@@ -28,7 +28,7 @@ class ActesExportController extends Controller
         if ($this->me->isSuper()) {
             $this->authority_id_list = $authoritySQL->getAll();
         } elseif ($this->me->isGroupAdmin()) {
-            $this->authority_id_list = $authoritySQL->getAllGroup($this->me->get('authority_group_id'));
+            $this->authority_id_list = $authoritySQL->getAllAdministeredBy((int)$this->me->get('authority_group_id'));
         } else {
             $this->authority_id = $this->me->get('authority_id');
         }
