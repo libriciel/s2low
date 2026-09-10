@@ -95,12 +95,49 @@ class DroitTest extends S2lowTestCase
         $this->assertFalse($droit->isAuthorityAdmin(array('role' => 'USER')));
     }
 
-    public function testHasDroit()
+    public function testAdministersHeliosSuperAdmin()
     {
         $droit = $this->getDroit();
-        $this->assertTrue($droit->hasDroit(array('role' => 'SADM'), array()));
-        $this->assertTrue($droit->hasDroit(array('role' => 'ADM','authority_group_id' => 42), array('authority_group_id' => 42)));
-        $this->assertTrue($droit->hasDroit(array('role' => 'GADM','authority_group_id' => 42), array('authority_group_id' => 42)));
-        $this->assertFalse($droit->hasDroit(array('role' => 'USER','authority_group_id' => 42), array('authority_group_id' => 42)));
+        $this->assertTrue($droit->administersHelios(['role' => 'SADM'], []));
+    }
+
+    public function testAdministersHeliosGroupAdminDesignatedForHelios()
+    {
+        $droit = $this->getDroit();
+        $this->assertTrue($droit->administersHelios(
+            ['role' => 'GADM', 'authority_group_id' => 42],
+            ['helios_group_id' => 42, 'actes_group_id' => 7]
+        ));
+    }
+
+    public function testAdministersHeliosGroupAdminDesignatedForActesOnly()
+    {
+        $droit = $this->getDroit();
+        $this->assertFalse($droit->administersHelios(
+            ['role' => 'GADM', 'authority_group_id' => 42],
+            ['helios_group_id' => 7, 'actes_group_id' => 42]
+        ));
+    }
+
+    public function testAdministersHeliosGroupAdminWithoutDesignation()
+    {
+        $droit = $this->getDroit();
+        $this->assertFalse($droit->administersHelios(
+            ['role' => 'GADM', 'authority_group_id' => 42],
+            []
+        ));
+    }
+
+    public function testAdministersHeliosOtherRoles()
+    {
+        $droit = $this->getDroit();
+        $this->assertFalse($droit->administersHelios(
+            ['role' => 'ADM', 'authority_group_id' => 42],
+            ['helios_group_id' => 42]
+        ));
+        $this->assertFalse($droit->administersHelios(
+            ['role' => 'USER', 'authority_group_id' => 42],
+            ['helios_group_id' => 42]
+        ));
     }
 }

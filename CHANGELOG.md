@@ -18,6 +18,11 @@
 - Les numéros de SIREN proposés pour une collectivité sont ceux que tous ses groupes administrateurs autorisent. #1582
 - Les réglages propres à un module — groupe administrateur, convention @ctes, adresse FTP — sont regroupés sous la case qui l'active, et le SIREN les précède. #1582
 - Les numéros de SIREN proposés sont servis à la demande au lieu d'être embarqués dans la page, qui n'expose plus les réservations de tous les groupes. #1582
+- Un administrateur de groupe administre une collectivité dès que son groupe est désigné pour un seul de ses modules : sa fiche, ses
+numéros SIRET et ses services lui sont ouverts, et il peut éditer ses utilisateurs. #1584
+- La liste des transactions Helios ne se filtre plus que sur les collectivités dont l'utilisateur administre le module Helios. #1584
+- Les statistiques Actes et Helios ne sont servies qu'au groupe de l'administrateur qui les demande. #1584
+- Un groupe désigné pour administrer un module d'une collectivité n'est plus supprimable. #1584
 
 ### Corrections
 

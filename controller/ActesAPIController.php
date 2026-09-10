@@ -7,7 +7,6 @@ use S2lowLegacy\Class\actes\ActesStatusSQL;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\actes\NaturesActes;
 use S2lowLegacy\Class\actes\TypeTransaction;
-use S2lowLegacy\Model\AuthoritySQL;
 
 class ActesAPIController extends Controller
 {
@@ -119,10 +118,7 @@ class ActesAPIController extends Controller
     public function nbCreatedActesByAuthorityGroupIdAndMonthAction(): bool
     {
         $this->verifAdmin();
-        $authority_id = intval($this->me->get('authority_id'));
-        $authoritySQL = $this->getObjectInstancier()->get(AuthoritySQL::class);
-        $authorityInfo = $authoritySQL->getInfo($authority_id);
-        $authority_group_id = $authorityInfo['authority_group_id'];
+        $authority_group_id = (int)$this->me->get('authority_group_id');
 
         if ($this->me->isSuper() && $this->getRecuperateurGet()->getInt('authority_group_id')) {
             $authority_group_id = $this->getRecuperateurGet()->getInt('authority_group_id');

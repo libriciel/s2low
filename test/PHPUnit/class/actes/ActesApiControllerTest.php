@@ -280,7 +280,8 @@ class ActesApiControllerTest extends S2lowIntegrationTestCase
     {
         $this->createTransaction(ActesStatusSQL::STATUS_POSTE);
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
-        $sql = 'UPDATE authorities SET authority_group_id=NULL WHERE authority_group_id=1';
+        // Le groupe interrogé est celui de l'appelant : c'est le sien qu'il faut retirer.
+        $sql = 'UPDATE users SET authority_group_id=NULL';
         self::getContainer()->get(SQLQuery::class)->query($sql);
 
         $this->getEnvironment()->get()->set('month', '7');

@@ -8,6 +8,9 @@
 
 namespace S2lowLegacy\Class;
 
+use S2low\DTO\AdministeringGroups;
+use S2low\Enum\AdministeredModule;
+
 class Authority extends DataObject
 {
     protected $objectName = "authorities";
@@ -167,13 +170,21 @@ class Authority extends DataObject
   */
     public function isInGroup($group_id)
     {
-        $groupId = (int)$group_id;
-
-        if (! is_numeric($group_id) || $groupId === 0) {
+        if (! is_numeric($group_id)) {
             return false;
         }
 
-        return (int)$this->actes_group_id === $groupId || (int)$this->helios_group_id === $groupId;
+        return $this->getAdministeringGroups()->isAdministeredBy((int)$group_id);
+    }
+
+    public function getAdministeringGroups(): AdministeringGroups
+    {
+        $authorityInfo = [];
+        foreach (AdministeredModule::cases() as $module) {
+            $authorityInfo[$module->groupColumn()] = $this->get($module->groupColumn());
+        }
+
+        return AdministeringGroups::fromAuthorityInfo($authorityInfo);
     }
 
   /**
