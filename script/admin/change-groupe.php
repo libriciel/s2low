@@ -30,7 +30,7 @@ echo "Déplacement des collectivités du groupe  --{$old_group['name']}-- vers l
 
 $authoritySQL = new AuthoritySQL($sqlQuery);
 
-$authorities_list = $authoritySQL->getAllGroup($old_groupe_id);
+$authorities_list = $authoritySQL->getAllAdministeredBy((int)$old_groupe_id);
 
 if (! $authorities_list) {
     echo "Aucune collecitivité trouvée...\n";
