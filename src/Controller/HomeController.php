@@ -25,11 +25,11 @@ class HomeController extends AbstractController
         $authority = $authoritySQL->getInfo($user->getAuthorityId());
         $authorityName = $authority['name'];
 
-        try {
-            $groupName = $groupSQL->getInfo($authority['authority_group_id'])['name'];
-        } catch (\Exception $e) {
-            $groupName = 'Aucun groupe';
-        }
+        // Le groupe annoncé est celui de l'utilisateur : sa collectivité en désigne un par module,
+        // et ce n'est pas d'elle qu'il tient son rôle d'administrateur de groupe.
+        $authorityGroupId = $user->getAuthorityGroupId();
+        $group = $authorityGroupId ? $groupSQL->getInfo($authorityGroupId) : false;
+        $groupName = $group ? $group['name'] : 'Aucun groupe';
 
         $now = new DateTimeImmutable();
         $interval = $now->diff($user->getCertExpirationDate());

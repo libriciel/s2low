@@ -22,6 +22,9 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
     {
         $client = $this->client;
         $this->setUserWithRole(UserRole::SuperAdministrateur);
+        // La collectivité 1 est administrée par le groupe 1 : le SIREN qu'elle porte doit lui être
+        // réservé, sans quoi l'enregistrement le refuse.
+        $this->givenSirenAuthorizedForGroup(1, '111');
 
         $_POST = [
             'id' => '1',

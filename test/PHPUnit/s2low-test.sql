@@ -74,6 +74,9 @@ INSERT INTO authority_types VALUES (11, 1, 'Conseil régional');
 INSERT INTO authorities VALUES (1, 1, 1, 'Bourg-en-Bresse', '', NULL, '123456789', NULL, NULL, NULL, NULL, NULL, NULL, '001', '1', 1, NULL, NULL, NULL, 'helios_ftp_password', 'helios_ftp_login', 'helios_ftp_dest', NULL, NULL, NULL, NULL, NULL, NULL, NULL, true, NULL, NULL, NULL, NULL, NULL, false);
 INSERT INTO authorities VALUES (2, NULL, 1, 'Saint-Andre de Corcy', 'email', NULL, '999999999', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 'email', NULL, 'email', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'url_pastell', 'pastell_login', 'pastell_password', NULL, NULL, NULL, false);
 INSERT INTO authorities VALUES (3, NULL, 1, 'une nouvelle authority', '', NULL, '123456780', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,'url_pastell', 'pastell_login', 'pastell_password', NULL, NULL, NULL, false);
+-- Les collectivités désignent leur groupe module par module, comme le fait la migration qui a
+-- introduit ces colonnes à partir de authority_group_id.
+UPDATE authorities SET helios_group_id = authority_group_id, actes_group_id = authority_group_id;
 INSERT INTO authority_departments VALUES (1, '001', 'department_name');
 INSERT INTO authority_districts VALUES (1, 1, '1', 'district_name');
 INSERT INTO users VALUES (1, 'eric@sigmalis.com', 'test_subject', 'test_issuer', 'Pommateau', 'Eric', NULL, 'SADM', 1, 1, '-----BEGIN CERTIFICATE-----
