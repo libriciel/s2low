@@ -6,12 +6,6 @@ namespace S2low\DTO;
 
 use S2low\Enum\AdministeredModule;
 
-/**
- * Ce que le formulaire de collectivité demande pour les modules dont l'administration est déléguée :
- * quels modules sont activés, et quel groupe le super administrateur a choisi pour chacun.
- *
- * Un identifiant de collectivité à 0 désigne une création.
- */
 final readonly class ModuleActivationRequest
 {
     /**

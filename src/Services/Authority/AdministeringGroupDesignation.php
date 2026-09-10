@@ -14,14 +14,6 @@ use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\GroupSQL;
 use Symfony\Bundle\SecurityBundle\Security;
 
-/**
- * Quels groupes administreront les modules de la collectivité après cet enregistrement ?
- *
- * Le super administrateur les choisit ; l'administrateur de groupe ne choisit pas : son propre
- * groupe prend un module qu'aucun groupe n'administre encore, ce qui n'arrive qu'à la création.
- * Décocher un module ne retire pas sa désignation, l'administrateur du groupe reste le sien et
- * peut le réactiver.
- */
 final readonly class AdministeringGroupDesignation
 {
     public function __construct(
@@ -47,7 +39,7 @@ final readonly class AdministeringGroupDesignation
 
             $designated = $designated->designate(
                 $module,
-                $this->groupTaking($module, $request, $current)
+                $this->administeringGroupFor($module, $request, $current)
             );
         }
 
@@ -63,7 +55,7 @@ final readonly class AdministeringGroupDesignation
     /**
      * @throws GroupDesignationRefusedException
      */
-    private function groupTaking(
+    private function administeringGroupFor(
         AdministeredModule $module,
         ModuleActivationRequest $request,
         AdministeringGroups $current
@@ -71,7 +63,7 @@ final readonly class AdministeringGroupDesignation
         $user = $this->security->getUser();
 
         if ($user instanceof SecurityUser && $user->isSuperAdmin()) {
-            return $this->chosenGroup($module, $request, $current);
+            return $this->chosenGroupFor($module, $request, $current);
         }
 
         if ($current->isDesignatedFor($module)) {
@@ -90,13 +82,9 @@ final readonly class AdministeringGroupDesignation
     }
 
     /**
-     * Un groupe n'administre une collectivité que si le SIREN qu'elle porte lui est réservé, et
-     * qu'il est actif. Le groupe déjà désigné échappe aux deux contrôles : désactivé ou dépossédé du
-     * SIREN après coup, il rendrait sinon la collectivité inenregistrable sans en changer en silence.
-     *
      * @throws GroupDesignationRefusedException
      */
-    private function chosenGroup(
+    private function chosenGroupFor(
         AdministeredModule $module,
         ModuleActivationRequest $request,
         AdministeringGroups $current

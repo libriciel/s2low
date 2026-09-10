@@ -60,13 +60,6 @@ SQL;
     }
 
     /**
-     * Les SIREN que tous les groupes administrateurs autorisent — leur intersection — et qu'aucune
-     * autre collectivité n'utilise déjà.
-     *
-     * Un SIREN identifie une collectivité et une seule : la réservation par un groupe ne dit que
-     * qui a le droit de le poser, pas qu'il soit libre. Restreindre l'exclusion aux collectivités
-     * du groupe reviendrait à proposer un SIREN que l'enregistrement refusera.
-     *
      * @param int[] $groupIds
      * @return string[]
      */
