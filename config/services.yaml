@@ -458,8 +458,8 @@ services:
   S2lowLegacy\Class\PDFStampWrapper:
     public: true
     arguments:
-      $pdf_stamp_url: '%app.pdf_stamp_url%'
-      $image_for_stamp: '%app.image_for_stamp%'
+      $pdfStampUrl: '%app.pdf_stamp_url%'
+      $logoFilePath: '%app.image_for_stamp%'
 
   S2lowLegacy\Class\QueryResult:
     autowire: false

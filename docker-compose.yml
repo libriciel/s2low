@@ -203,7 +203,7 @@ services:
 
     pdf-stamp:
         restart: unless-stopped
-        image: registry.libriciel.fr/public/signature/pdf-stamp:2.4.5
+        image: registry.libriciel.fr/public/signature/pdf-stamp:4.1.2
         networks:
           - services
         mem_limit: 2G
