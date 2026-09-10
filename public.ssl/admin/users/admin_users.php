@@ -1,5 +1,6 @@
 <?php
 
+use S2low\Model\AdministeredAuthorities;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Group;
 use S2lowLegacy\Class\Helpers;
@@ -54,7 +55,7 @@ if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivités et 
             $filter[] = "users.authority_id=" . $connection->quote($fauthority);
         }
     }
-    $filter[] = "authorities.authority_group_id='" . $me->get('authority_group_id') . "'";
+    $filter[] = AdministeredAuthorities::conditionForGroup((int)$me->get('authority_group_id'));
 } elseif ($me->isAuthorityAdmin()) {
     //Un admin d'une collectivité ne voit forcément que les utilisateurs de sa collectivité
     $filter[] = "users.authority_id='" . $me->get('authority_id') . "'";

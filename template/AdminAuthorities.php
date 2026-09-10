@@ -47,7 +47,7 @@ use S2lowLegacy\Class\Helpers;
         </div>
             <div class="form-group">
                 <?php if ($this->groupe_list) : ?>
-                <label for="group" class="col-md-3 control-label">Groupe</label>
+                <label for="group" class="col-md-3 control-label">Groupe administrateur</label>
                 <div class="col-md-3">
                     <select name="group" class="form-control">
                         <option value="">Choisissez</option>
@@ -105,7 +105,8 @@ use S2lowLegacy\Class\Helpers;
         <thead>
         <tr>
             <th id="name">Nom</th>
-            <th id="group-member">Groupe</th>
+            <th id="actes-group">Groupe Actes</th>
+            <th id="helios-group">Groupe Helios</th>
             <th id="authority-type">Type de collectivité</th>
             <th id="address">Adresse</th>
             <th id="phone">Téléphone</th>
@@ -117,7 +118,8 @@ use S2lowLegacy\Class\Helpers;
         <?php foreach ($this->authorities as $authority_info) :?>
         <tr>
             <td headers="name"><?php hecho($authority_info['name']) ?></td>
-            <td headers="group-member"><?php hecho($authority_info['group_name'] ?: 'Aucun') ?></td>
+            <td headers="actes-group"><?php hecho($authority_info['actes_group_name'] ?: 'Aucun') ?></td>
+            <td headers="helios-group"><?php hecho($authority_info['helios_group_name'] ?: 'Aucun') ?></td>
             <td headers="authority-type"><?php hecho($authority_info['type_name']) ?></td>
             <td headers="address"  class="long_field">
                 <?php echo nl2br(get_hecho($authority_info['address'])) ?>

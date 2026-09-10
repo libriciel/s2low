@@ -23,12 +23,20 @@ numéros SIRET et ses services lui sont ouverts, et il peut éditer ses utilisat
 - La liste des transactions Helios ne se filtre plus que sur les collectivités dont l'utilisateur administre le module Helios. #1584
 - Les statistiques Actes et Helios ne sont servies qu'au groupe de l'administrateur qui les demande. #1584
 - Un groupe désigné pour administrer un module d'une collectivité n'est plus supprimable. #1584
+- La liste des collectivités, leur export, la liste des utilisateurs et les journaux présentent à un administrateur de groupe toutes
+les collectivités dont son groupe administre au moins un module. #1585
+- La liste des collectivités nomme le groupe administrateur du module Actes et celui du module Helios, en deux colonnes. #1585
 
 ### Corrections
 
 - Prise en compte de la date de révocation des certificats #576
 - Un échec d'enregistrement d'une collectivité s'affiche sans son balisage. #1576
 - Un SIREN déjà porté par une collectivité n'est plus proposé pour en créer une autre, ni accepté à l'enregistrement, y compris lorsqu'il est réservé à plusieurs groupes. #1576
+
+### Sécurité
+
+- La page de gestion des collectivités et son API, qui servaient toutes les collectivités à un administrateur de collectivité,
+lui sont désormais refusées. #1585
 
 ### Suppression
 
