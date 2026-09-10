@@ -177,7 +177,9 @@ class AdminController extends Controller
 
     public function authoritiesAction()
     {
-        $this->verifAdmin();
+        // La liste porte sur toutes les collectivités d'un groupe : elle n'est pas du ressort de
+        // l'administrateur d'une seule, que le menu n'y conduit d'ailleurs pas.
+        $this->verifGroupOrSuperAdmin();
         $pagerHTML  = new PagerHTML();
         $this->setViewParameter('title', "Gestion des collectivités | S²low");
         $recuperateur = $this->getRecuperateurGet();
