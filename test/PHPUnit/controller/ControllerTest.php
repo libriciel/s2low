@@ -177,6 +177,24 @@ class ControllerTest extends S2lowIntegrationTestCase
         $this->controller->verifGroupAdmin(1);
     }
 
+    public function testVerifGroupAdminOnOwnGroup()
+    {
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+
+        $this->controller->verifGroupAdmin(1);
+
+        self::expectNotToPerformAssertions();
+    }
+
+    public function testVerifGroupAdminOnAnotherGroup()
+    {
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+
+        $this->expectException(RedirectException::class);
+        $this->expectExceptionMessage("Accès refusé");
+        $this->controller->verifGroupAdmin(2);
+    }
+
     public function testSetMessage()
     {
         $this->controller->setMessage("test");
@@ -203,6 +221,48 @@ class ControllerTest extends S2lowIntegrationTestCase
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
         $this->controller->verifAdmin(2);
         self::expectNotToPerformAssertions();
+    }
+
+    public function testVerifAdminAdminGroupDesignatedForActesOnly()
+    {
+        $this->givenAuthority2IsAdministeredBy(['actes_group_id' => 1, 'helios_group_id' => 2]);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+
+        $this->controller->verifAdmin(2);
+
+        self::expectNotToPerformAssertions();
+    }
+
+    public function testVerifAdminAdminGroupDesignatedForHeliosOnly()
+    {
+        $this->givenAuthority2IsAdministeredBy(['actes_group_id' => 2, 'helios_group_id' => 1]);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+
+        $this->controller->verifAdmin(2);
+
+        self::expectNotToPerformAssertions();
+    }
+
+    public function testVerifAdminAdminGroupWithoutDesignation()
+    {
+        $this->givenAuthority2IsAdministeredBy(['actes_group_id' => 2, 'helios_group_id' => 2]);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+
+        $this->expectException(RedirectException::class);
+        $this->expectExceptionMessage("Accès refusé");
+        $this->controller->verifAdmin(2);
+    }
+
+    /**
+     * @param array<string, int> $groupIdByColumn
+     */
+    private function givenAuthority2IsAdministeredBy(array $groupIdByColumn): void
+    {
+        self::getContainer()->get(SQLQuery::class)->query(
+            'UPDATE authorities SET actes_group_id = ?, helios_group_id = ? WHERE id = 2',
+            $groupIdByColumn['actes_group_id'],
+            $groupIdByColumn['helios_group_id']
+        );
     }
 
     public function testVerifAdminAdminGroupFailed()

@@ -3,6 +3,7 @@
 namespace S2lowLegacy\Controller;
 
 use Exception;
+use S2low\DTO\AdministeringGroups;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\User;
@@ -172,7 +173,8 @@ class Controller
             $info = $authoritySQL->getInfo($authority_id);
 
             if ($this->me->isGroupAdmin()) {
-                if ($info['authority_group_id'] == $this->me->get("authority_group_id")) {
+                $administeringGroups = AdministeringGroups::fromAuthorityInfo($info ?: []);
+                if ($administeringGroups->isAdministeredBy((int)$this->me->get("authority_group_id"))) {
                     return;
                 }
                 $this->displayErrorAndExit("Accès refusé", "");
@@ -185,19 +187,19 @@ class Controller
         } // @codeCoverageIgnore
     }
 
-    public function verifGroupAdmin($authority_id)
+    /**
+     * Le paramètre est un identifiant de groupe et non de collectivité : les statistiques Actes et
+     * Helios se demandent par groupe, et un administrateur de groupe n'obtient que le sien.
+     */
+    public function verifGroupAdmin(int $authorityGroupId): void
     {
         $this->verifAdmin();
         if ($this->me->isSuper()) {
             return;
         }
 
-        if ($this->me->isGroupAdmin()) {
-            $authoritySQL = new AuthoritySQL($this->getSQLQuery());
-            $info = $authoritySQL->getInfo($authority_id);
-            if ($info['authority_group_id'] == $this->me->get("authority_group_id")) {
-                return;
-            }
+        if ($this->me->isGroupAdmin() && $authorityGroupId === (int)$this->me->get("authority_group_id")) {
+            return;
         }
 
         $this->redirect(WEBSITE_SSL, "Accès refusé");

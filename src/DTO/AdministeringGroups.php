@@ -64,6 +64,21 @@ final readonly class AdministeringGroups
     }
 
     /**
+     * Le groupe administre la collectivité dès qu'elle le désigne pour un seul de ses modules.
+     *
+     * Un groupe inexistant n'administre rien : sans cette garde, une collectivité qui ne désigne
+     * personne se laisserait administrer par n'importe qui.
+     */
+    public function isAdministeredBy(int $groupId): bool
+    {
+        if ($groupId === 0) {
+            return false;
+        }
+
+        return in_array($groupId, $this->groupIdByModule, true);
+    }
+
+    /**
      * @return int[]
      */
     public function groupIds(): array
