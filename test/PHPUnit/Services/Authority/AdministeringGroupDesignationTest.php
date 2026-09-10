@@ -22,6 +22,8 @@ class AdministeringGroupDesignationTest extends S2lowTestCase
     private const GROUP = 1;
     private const OTHER_GROUP = 2;
 
+    private const SIREN = '491011698';
+
     private const SUPER_ADMIN = 1;
     private const GROUP_ADMIN = 7;
 
@@ -40,10 +42,6 @@ class AdministeringGroupDesignationTest extends S2lowTestCase
         static::assertSame(self::OTHER_GROUP, $designated->groupIdFor(AdministeredModule::HELIOS));
     }
 
-    /**
-     * Décocher un module ne le retire pas à son groupe : celui-ci reste administrateur et peut
-     * le réactiver.
-     */
     public function testADeactivatedModuleKeepsItsDesignation(): void
     {
         $this->givenAuthorityAdministeredBy(self::GROUP, self::OTHER_GROUP);
@@ -84,10 +82,6 @@ class AdministeringGroupDesignationTest extends S2lowTestCase
         );
     }
 
-    /**
-     * Un groupe désactivé après coup reste enregistrable tant qu'on ne le change pas, sinon la
-     * collectivité ne serait plus modifiable sans lui changer de groupe.
-     */
     public function testAnInactiveGroupAlreadyDesignatedRemainsSaveable(): void
     {
         $this->givenAuthorityAdministeredBy(self::OTHER_GROUP, self::OTHER_GROUP);
@@ -103,42 +97,35 @@ class AdministeringGroupDesignationTest extends S2lowTestCase
         static::assertSame(self::OTHER_GROUP, $designated->groupIdFor(AdministeredModule::ACTES));
     }
 
-    /**
-     * Un groupe n'administre une collectivité que si le SIREN qu'elle porte lui est réservé.
-     */
     public function testAGroupThatDoesNotHoldTheSirenCannotBeDesignated(): void
     {
         $this->connectAs(self::SUPER_ADMIN);
-        $this->givenSirenHeldBy(self::GROUP, '491011698');
+        $this->givenSirenHeldBy(self::GROUP, self::SIREN);
 
         $this->expectException(GroupDesignationRefusedException::class);
-        $this->expectExceptionMessage('ne détient pas le SIREN 491011698');
+        $this->expectExceptionMessage('ne détient pas le SIREN ' . self::SIREN);
 
         $this->designation()->resolve(
             $this->request(self::AUTHORITY, [AdministeredModule::ACTES], [
                 AdministeredModule::ACTES->value => self::OTHER_GROUP,
-            ], '491011698')
+            ], self::SIREN)
         );
     }
 
     public function testAGroupHoldingTheSirenIsDesignated(): void
     {
         $this->connectAs(self::SUPER_ADMIN);
-        $this->givenSirenHeldBy(self::OTHER_GROUP, '491011698');
+        $this->givenSirenHeldBy(self::OTHER_GROUP, self::SIREN);
 
         $designated = $this->designation()->resolve(
             $this->request(self::AUTHORITY, [AdministeredModule::ACTES], [
                 AdministeredModule::ACTES->value => self::OTHER_GROUP,
-            ], '491011698')
+            ], self::SIREN)
         );
 
         static::assertSame(self::OTHER_GROUP, $designated->groupIdFor(AdministeredModule::ACTES));
     }
 
-    /**
-     * Dépossédé du SIREN après coup, le groupe déjà désigné reste enregistrable : sinon la
-     * collectivité ne pourrait plus être modifiée sans lui changer de groupe.
-     */
     public function testTheGroupAlreadyDesignatedSurvivesLosingTheSiren(): void
     {
         $this->givenAuthorityAdministeredBy(self::OTHER_GROUP, self::OTHER_GROUP);
@@ -147,7 +134,7 @@ class AdministeringGroupDesignationTest extends S2lowTestCase
         $designated = $this->designation()->resolve(
             $this->request(self::AUTHORITY, [AdministeredModule::ACTES], [
                 AdministeredModule::ACTES->value => self::OTHER_GROUP,
-            ], '491011698')
+            ], self::SIREN)
         );
 
         static::assertSame(self::OTHER_GROUP, $designated->groupIdFor(AdministeredModule::ACTES));
@@ -165,10 +152,6 @@ class AdministeringGroupDesignationTest extends S2lowTestCase
         static::assertFalse($designated->isDesignatedFor(AdministeredModule::HELIOS));
     }
 
-    /**
-     * Le groupe ne se change pas hors création : celui que la collectivité a désigné reste le sien,
-     * quoi que poste l'administrateur de groupe.
-     */
     public function testAGroupAdminDoesNotTakeOverAModuleOfAnotherGroup(): void
     {
         $this->givenAuthorityAdministeredBy(self::OTHER_GROUP, self::OTHER_GROUP);
@@ -194,9 +177,6 @@ class AdministeringGroupDesignationTest extends S2lowTestCase
     }
 
     /**
-     * Le SIREN reste vide par défaut : les cas qui ne portent pas sur lui échappent au contrôle de
-     * détention, traité par ses propres tests.
-     *
      * @param AdministeredModule[] $activatedModules
      * @param array<int, int> $chosenGroupIdByModule
      */

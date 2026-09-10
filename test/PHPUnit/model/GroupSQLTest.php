@@ -8,6 +8,8 @@ class GroupSQLTest extends S2lowTestCase
 {
     private const GROUPE_1_NAME = "Groupe de test";
     private const GROUPE_2_NAME = "Groupe & co";
+    private const GROUPE_2_FIXTURE_NAME = "second groupe";
+    private const SIREN = "491011698";
 
     /**
      * @var GroupSQL
@@ -83,64 +85,52 @@ class GroupSQLTest extends S2lowTestCase
         self::expectNotToPerformAssertions();
     }
 
-    public function testGetSelectableGroupsIdNameLeavesOutInactiveGroups()
+    public function testGetSelectableGroupsIdNameLeavesOutInactiveGroups(): void
     {
         $this->deactivateGroup(2);
 
-        $this->assertEquals([1 => self::GROUPE_1_NAME], $this->groupeSQL->getSelectableGroupsIdName());
+        $this->assertSame([1 => self::GROUPE_1_NAME], $this->groupeSQL->getSelectableGroupsIdName());
     }
 
-    /**
-     * Un groupe désactivé après coup reste affiché tant qu'il administre la collectivité, sinon
-     * l'enregistrement changerait sa désignation en silence.
-     */
-    public function testGetSelectableGroupsIdNameKeepsAnInactiveGroupAlreadyDesignated()
+    public function testGetSelectableGroupsIdNameKeepsAnInactiveGroupAlreadyDesignated(): void
     {
         $this->deactivateGroup(2);
 
-        $this->assertEquals(
-            [1 => self::GROUPE_1_NAME, 2 => 'second groupe'],
+        $this->assertSame(
+            [1 => self::GROUPE_1_NAME, 2 => self::GROUPE_2_FIXTURE_NAME],
             $this->groupeSQL->getSelectableGroupsIdName('', [2])
         );
     }
 
-    /**
-     * Un groupe à qui le SIREN de la collectivité n'est pas réservé n'a pas le droit de
-     * l'administrer : il n'est pas proposé.
-     */
-    public function testGetSelectableGroupsIdNameKeepsOnlyTheGroupsHoldingTheSiren()
+    public function testGetSelectableGroupsIdNameKeepsOnlyTheGroupsHoldingTheSiren(): void
     {
-        $this->givenSirenHeldBy(2, '491011698');
+        $this->givenSirenHeldBy(2, self::SIREN);
 
-        $this->assertEquals(
-            [2 => 'second groupe'],
-            $this->groupeSQL->getSelectableGroupsIdName('491011698')
+        $this->assertSame(
+            [2 => self::GROUPE_2_FIXTURE_NAME],
+            $this->groupeSQL->getSelectableGroupsIdName(self::SIREN)
         );
     }
 
-    /**
-     * Dépossédé du SIREN après coup, le groupe déjà désigné reste affiché, sans quoi
-     * l'enregistrement changerait sa désignation en silence.
-     */
-    public function testGetSelectableGroupsIdNameKeepsAnAlreadyDesignatedGroupWithoutTheSiren()
+    public function testGetSelectableGroupsIdNameKeepsAnAlreadyDesignatedGroupWithoutTheSiren(): void
     {
-        $this->givenSirenHeldBy(2, '491011698');
+        $this->givenSirenHeldBy(2, self::SIREN);
 
-        $this->assertEquals(
-            [1 => self::GROUPE_1_NAME, 2 => 'second groupe'],
-            $this->groupeSQL->getSelectableGroupsIdName('491011698', [1])
+        $this->assertSame(
+            [1 => self::GROUPE_1_NAME, 2 => self::GROUPE_2_FIXTURE_NAME],
+            $this->groupeSQL->getSelectableGroupsIdName(self::SIREN, [1])
         );
     }
 
-    public function testGetSelectableGroupsIdNameWithoutSirenKeepsEveryActiveGroup()
+    public function testGetSelectableGroupsIdNameWithoutSirenKeepsEveryActiveGroup(): void
     {
-        $this->assertEquals(
-            [1 => self::GROUPE_1_NAME, 2 => 'second groupe'],
+        $this->assertSame(
+            [1 => self::GROUPE_1_NAME, 2 => self::GROUPE_2_FIXTURE_NAME],
             $this->groupeSQL->getSelectableGroupsIdName()
         );
     }
 
-    public function testIsActive()
+    public function testIsActive(): void
     {
         $this->deactivateGroup(2);
 

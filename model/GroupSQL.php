@@ -57,13 +57,6 @@ class GroupSQL extends SQL
     }
 
     /**
-     * Les groupes qu'une collectivité peut désigner : actifs, et détenant le SIREN qu'elle porte —
-     * un groupe à qui ce SIREN n'est pas réservé n'a pas le droit de l'administrer. Un SIREN vide
-     * est une création, aucun n'est encore choisi.
-     *
-     * S'y ajoutent les groupes déjà désignés : désactivé ou dépossédé du SIREN après coup, un groupe
-     * doit rester affiché, sans quoi l'enregistrement changerait sa désignation en silence.
-     *
      * @param int[] $alreadyDesignatedGroupIds
      * @return array<int, string>
      */

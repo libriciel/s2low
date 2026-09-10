@@ -6,12 +6,6 @@ namespace S2low\DTO;
 
 use S2low\Enum\AdministeredModule;
 
-/**
- * Les groupes qu'une collectivité désigne pour administrer ses modules.
- *
- * Un module absent n'a pas de groupe désigné : personne ne l'administre au titre d'un groupe,
- * seul le super administrateur le configure.
- */
 final readonly class AdministeringGroups
 {
     /**
@@ -56,21 +50,9 @@ final readonly class AdministeringGroups
         return isset($this->groupIdByModule[$module->value]);
     }
 
-    /**
-     * L'identifiant du groupe désigné, 0 lorsqu'il n'y en a pas — la valeur que porte l'option
-     * « Aucun » du formulaire.
-     */
     public function groupIdFor(AdministeredModule $module): int
     {
         return $this->groupIdByModule[$module->value] ?? 0;
-    }
-
-    /**
-     * @return int[]
-     */
-    public function groupIds(): array
-    {
-        return array_values(array_unique($this->groupIdByModule));
     }
 
     public function isEmpty(): bool
