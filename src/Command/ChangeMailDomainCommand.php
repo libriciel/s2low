@@ -3,6 +3,7 @@
 namespace S2low\Command;
 
 use Psr\Log\LoggerInterface;
+use S2low\Model\AdministeredAuthorities;
 use S2lowLegacy\Model\AuthoritySQL;
 use Exception;
 use S2lowLegacy\Model\UserSQL;
@@ -154,7 +155,7 @@ class ChangeMailDomainCommand extends Command
      */
     protected function getAuthoritiesTomodify(int $group_id): array
     {
-        $authorities = $this->authoritySQL->getAllGroup($group_id);
+        $authorities = $this->authoritySQL->getAllAdministeredBy($group_id);
 
         if (count($authorities) === 0) {
             throw new Exception("Aucune autorité liée au groupe $group_id, ou le groupe n'existe pas");
@@ -171,8 +172,9 @@ class ChangeMailDomainCommand extends Command
      */
     protected function getUsersTomodify(int $group_id, $existingMailDomain): array
     {
+        $condition = AdministeredAuthorities::conditionForGroup($group_id);
         $usersToModify = $this->user->getUsersList(
-            "WHERE authorities.authority_group_id= $group_id AND users.email LIKE '%@$existingMailDomain'"
+            "WHERE $condition AND users.email LIKE '%@$existingMailDomain'"
         );
 
         if ($usersToModify === false) {
