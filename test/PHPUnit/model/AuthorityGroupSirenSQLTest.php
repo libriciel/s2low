@@ -4,6 +4,15 @@ use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 
 class AuthorityGroupSirenSQLTest extends S2lowTestCase
 {
+    private const AUTHORITY_1 = 1;
+    private const ANOTHER_AUTHORITY = 6;
+    private const GROUP_1 = 1;
+    private const GROUP_2 = 2;
+    private const SIREN_OF_AUTHORITY_1 = '123456789';
+    private const FREE_SIREN = '491011698';
+    private const ANOTHER_FREE_SIREN = '111111119';
+    private const THIRD_FREE_SIREN = '443783170';
+
     private AuthorityGroupSirenSQL $authorityGroupSirenSQL;
 
     /**
@@ -108,63 +117,69 @@ class AuthorityGroupSirenSQLTest extends S2lowTestCase
 
     public function testGetAvailableSirenForGroupsExcludesSirenUsedByAnAuthorityOfTheGroup(): void
     {
-        $this->givenAuthorityAdministeredByGroup(1, 1);
-        $this->authorityGroupSirenSQL->add(1, '123456789'); // pris par la collectivité 1
-        $this->authorityGroupSirenSQL->add(1, '491011698');
-        $this->authorityGroupSirenSQL->add(1, '111111119');
+        $this->givenAuthorityAdministeredByGroup(self::AUTHORITY_1, self::GROUP_1);
+        $this->authorityGroupSirenSQL->add(self::GROUP_1, self::SIREN_OF_AUTHORITY_1);
+        $this->authorityGroupSirenSQL->add(self::GROUP_1, self::FREE_SIREN);
+        $this->authorityGroupSirenSQL->add(self::GROUP_1, self::ANOTHER_FREE_SIREN);
 
-        $sirens = $this->authorityGroupSirenSQL->getAvailableSirenForGroups([1], 6);
+        $sirens = $this->authorityGroupSirenSQL->getAvailableSirenForGroups(
+            [self::GROUP_1],
+            self::ANOTHER_AUTHORITY
+        );
 
-        self::assertSame(['111111119', '491011698'], $sirens);
+        self::assertSame([self::ANOTHER_FREE_SIREN, self::FREE_SIREN], $sirens);
     }
 
-    /**
-     * Un SIREN identifie une collectivité et une seule : réservé à deux groupes, il reste
-     * indisponible pour le second dès que le premier l'a posé, sans quoi on le proposerait pour un
-     * enregistrement voué à l'échec.
-     */
     public function testGetAvailableSirenForGroupsExcludesSirenUsedByAnAuthorityOfAnotherGroup(): void
     {
-        $this->givenAuthorityAdministeredByGroup(1, 1); // la collectivité 1 porte 123456789
-        $this->authorityGroupSirenSQL->add(2, '123456789');
-        $this->authorityGroupSirenSQL->add(2, '491011698');
+        $this->givenAuthorityAdministeredByGroup(self::AUTHORITY_1, self::GROUP_1);
+        $this->authorityGroupSirenSQL->add(self::GROUP_2, self::SIREN_OF_AUTHORITY_1);
+        $this->authorityGroupSirenSQL->add(self::GROUP_2, self::FREE_SIREN);
 
-        $sirens = $this->authorityGroupSirenSQL->getAvailableSirenForGroups([2], 6);
+        $sirens = $this->authorityGroupSirenSQL->getAvailableSirenForGroups(
+            [self::GROUP_2],
+            self::ANOTHER_AUTHORITY
+        );
 
-        self::assertSame(['491011698'], $sirens);
+        self::assertSame([self::FREE_SIREN], $sirens);
     }
 
     public function testGetAvailableSirenForGroupsKeepsSirenOfCurrentAuthority(): void
     {
-        $this->givenAuthorityAdministeredByGroup(1, 1);
-        $this->authorityGroupSirenSQL->add(1, '123456789'); // le SIREN de la collectivité 1 elle-même
+        $this->givenAuthorityAdministeredByGroup(self::AUTHORITY_1, self::GROUP_1);
+        $this->authorityGroupSirenSQL->add(self::GROUP_1, self::SIREN_OF_AUTHORITY_1);
 
-        $sirens = $this->authorityGroupSirenSQL->getAvailableSirenForGroups([1], 1);
+        $sirens = $this->authorityGroupSirenSQL->getAvailableSirenForGroups(
+            [self::GROUP_1],
+            self::AUTHORITY_1
+        );
 
-        self::assertSame(['123456789'], $sirens);
+        self::assertSame([self::SIREN_OF_AUTHORITY_1], $sirens);
     }
 
-    /**
-     * Deux mutualisants se partagent une collectivité : elle ne peut porter qu'un SIREN que les
-     * deux groupes autorisent.
-     */
     public function testGetAvailableSirenForGroupsReturnsTheIntersection(): void
     {
-        $this->authorityGroupSirenSQL->add(1, '491011698'); // les deux groupes
-        $this->authorityGroupSirenSQL->add(2, '491011698');
-        $this->authorityGroupSirenSQL->add(1, '111111119'); // groupe 1 seulement
-        $this->authorityGroupSirenSQL->add(2, '443783170'); // groupe 2 seulement
+        $this->authorityGroupSirenSQL->add(self::GROUP_1, self::FREE_SIREN);
+        $this->authorityGroupSirenSQL->add(self::GROUP_2, self::FREE_SIREN);
+        $this->authorityGroupSirenSQL->add(self::GROUP_1, self::ANOTHER_FREE_SIREN);
+        $this->authorityGroupSirenSQL->add(self::GROUP_2, self::THIRD_FREE_SIREN);
 
-        $sirens = $this->authorityGroupSirenSQL->getAvailableSirenForGroups([1, 2], 6);
+        $sirens = $this->authorityGroupSirenSQL->getAvailableSirenForGroups(
+            [self::GROUP_1, self::GROUP_2],
+            self::ANOTHER_AUTHORITY
+        );
 
-        self::assertSame(['491011698'], $sirens);
+        self::assertSame([self::FREE_SIREN], $sirens);
     }
 
     public function testGetAvailableSirenForGroupsWithoutAnyGroupReturnsNothing(): void
     {
-        $this->authorityGroupSirenSQL->add(1, '491011698');
+        $this->authorityGroupSirenSQL->add(self::GROUP_1, self::FREE_SIREN);
 
-        self::assertSame([], $this->authorityGroupSirenSQL->getAvailableSirenForGroups([], 6));
+        self::assertSame(
+            [],
+            $this->authorityGroupSirenSQL->getAvailableSirenForGroups([], self::ANOTHER_AUTHORITY)
+        );
     }
 
     private function givenAuthorityAdministeredByGroup(int $authorityId, int $groupId): void

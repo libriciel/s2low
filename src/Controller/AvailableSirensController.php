@@ -12,12 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/**
- * Les SIREN qu'un formulaire de collectivité peut proposer pour un jeu de groupes administrateurs.
- *
- * Réservé au super administrateur : lui seul choisit ces groupes, et la réponse expose les SIREN
- * réservés par des groupes dont l'appelant n'est pas membre.
- */
 class AvailableSirensController extends AbstractController
 {
     public function __construct(

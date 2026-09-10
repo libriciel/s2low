@@ -9,19 +9,24 @@ use S2lowLegacy\Lib\SQLQuery;
 
 class AvailableSirensControllerTest extends S2lowIntegrationTestCase
 {
+    private const GROUP_1 = 1;
+    private const GROUP_2 = 2;
+    private const SIREN_OF_BOTH_GROUPS = '491011698';
+    private const SIREN_OF_GROUP_1 = '111111119';
+
     /**
      * @throws \Exception
      */
     public function testTheSuperAdminGetsWhatBothGroupsAllow(): void
     {
         $this->setUserWithRole(UserRole::SuperAdministrateur);
-        $this->givenSirenAuthorizedForGroup(1, '491011698');
-        $this->givenSirenAuthorizedForGroup(2, '491011698');
-        $this->givenSirenAuthorizedForGroup(1, '111111119');
+        $this->givenSirenAuthorizedForGroup(self::GROUP_1, self::SIREN_OF_BOTH_GROUPS);
+        $this->givenSirenAuthorizedForGroup(self::GROUP_2, self::SIREN_OF_BOTH_GROUPS);
+        $this->givenSirenAuthorizedForGroup(self::GROUP_1, self::SIREN_OF_GROUP_1);
 
         $sirens = $this->whenTheAvailableSirensAreAsked('actes_group_id=1&helios_group_id=2');
 
-        static::assertSame(['491011698'], $sirens);
+        static::assertSame([self::SIREN_OF_BOTH_GROUPS], $sirens);
     }
 
     /**
@@ -30,30 +35,26 @@ class AvailableSirensControllerTest extends S2lowIntegrationTestCase
     public function testASingleGroupGivesItsOwnSirens(): void
     {
         $this->setUserWithRole(UserRole::SuperAdministrateur);
-        $this->givenSirenAuthorizedForGroup(1, '491011698');
-        $this->givenSirenAuthorizedForGroup(1, '111111119');
+        $this->givenSirenAuthorizedForGroup(self::GROUP_1, self::SIREN_OF_BOTH_GROUPS);
+        $this->givenSirenAuthorizedForGroup(self::GROUP_1, self::SIREN_OF_GROUP_1);
 
         $sirens = $this->whenTheAvailableSirensAreAsked('actes_group_id=1');
 
-        static::assertSame(['111111119', '491011698'], $sirens);
+        static::assertSame([self::SIREN_OF_GROUP_1, self::SIREN_OF_BOTH_GROUPS], $sirens);
     }
 
     /**
-     * La réponse expose les SIREN réservés par des groupes dont l'appelant n'est pas membre : seul
-     * le super administrateur, qui choisit ces groupes, y a droit. L'application traduit un accès
-     * refusé par une redirection vers l'accueil, pas par un 403.
-     *
      * @throws \Exception
      */
     public function testAGroupAdminIsDenied(): void
     {
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
-        $this->givenSirenAuthorizedForGroup(1, '491011698');
+        $this->givenSirenAuthorizedForGroup(self::GROUP_1, self::SIREN_OF_BOTH_GROUPS);
 
         $this->client->request('GET', '/api/authorities/available-sirens?actes_group_id=1');
 
         static::assertTrue($this->client->getResponse()->isRedirection());
-        static::assertStringNotContainsString('491011698', $this->client->getResponse()->getContent());
+        static::assertStringNotContainsString(self::SIREN_OF_BOTH_GROUPS, $this->client->getResponse()->getContent());
     }
 
     /**
