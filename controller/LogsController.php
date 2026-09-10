@@ -128,7 +128,7 @@ class LogsController extends Controller
             $groupSQL = new GroupSQL($this->getSQLQuery());
             $groupe_info = $groupSQL->getInfo($this->me->get("authority_group_id"));
             $h1_title .= " du groupe «&nbsp;{$groupe_info['name']}&nbsp;»";
-            $this->authorities_list = $authoritySQL->getAllGroup($this->me->get("authority_group_id"));
+            $this->authorities_list = $authoritySQL->getAllAdministeredBy((int)$this->me->get("authority_group_id"));
             $authority_group_id = $this->me->get("authority_group_id");
             $authority_id = $this->fauthority;
             $visibility = array('GADM','ADM','USER');

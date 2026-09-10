@@ -218,6 +218,17 @@ class Controller
         } // @codeCoverageIgnore
     }
 
+    /**
+     * @throws \S2lowLegacy\Lib\RedirectException
+     */
+    public function verifGroupOrSuperAdmin(): void
+    {
+        $this->verifAdmin();
+        if (! $this->me->isGroupAdminOrSuper()) {
+            $this->displayErrorAndExit("Accès refusé", "");
+        } // @codeCoverageIgnore
+    }
+
 
     public function renderDefault()
     {
