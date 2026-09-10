@@ -164,8 +164,78 @@ class AdminControllerTest extends S2lowIntegrationTestCase
 
         $authorities = $adminController->authorities;
         foreach ($authorities as $authority) {
-            $this->assertEquals(1, $authority['authority_group_id']);
+            $this->assertTrue(
+                (int)$authority['actes_group_id'] === 1 || (int)$authority['helios_group_id'] === 1
+            );
         }
+    }
+
+    public function testAuthoritiesActionGroupAdminSeesAnAuthorityAdministeredForActesOnly()
+    {
+        $this->givenAuthority2IsAdministeredBy(1, 2);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $adminController = self::getContainer()->get(AdminController::class);
+
+        $adminController->authoritiesAction();
+
+        $this->assertContains(2, array_column($adminController->authorities, 'id'));
+    }
+
+    public function testAuthoritiesActionGroupAdminDoesNotSeeAnAuthorityItDoesNotAdminister()
+    {
+        $this->givenAuthority2IsAdministeredBy(2, 2);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $adminController = self::getContainer()->get(AdminController::class);
+
+        $adminController->authoritiesAction();
+
+        $this->assertNotContains(2, array_column($adminController->authorities, 'id'));
+    }
+
+    public function testAuthoritiesActionNamesBothAdministeringGroups()
+    {
+        $this->givenAuthority2IsAdministeredBy(1, 2);
+        $adminController = self::getContainer()->get(AdminController::class);
+
+        $adminController->authoritiesAction();
+
+        $authority = $this->authorityFromList($adminController->authorities, 2);
+        $this->assertSame('Groupe de test', $authority['actes_group_name']);
+        $this->assertSame('second groupe', $authority['helios_group_name']);
+    }
+
+    public function testAuthoritiesActionIsRefusedToAnAuthorityAdmin()
+    {
+        $this->setUserWithRole(UserRole::AdministrateurCollectivite);
+        $adminController = self::getContainer()->get(AdminController::class);
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage("Accès refusé");
+        $adminController->authoritiesAction();
+    }
+
+    private function givenAuthority2IsAdministeredBy(int $actesGroupId, int $heliosGroupId): void
+    {
+        $this->getSQLQuery()->query(
+            'UPDATE authorities SET actes_group_id = ?, helios_group_id = ? WHERE id = 2',
+            $actesGroupId,
+            $heliosGroupId
+        );
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $authorities
+     * @return array<string, mixed>
+     */
+    private function authorityFromList(array $authorities, int $authorityId): array
+    {
+        foreach ($authorities as $authority) {
+            if ((int)$authority['id'] === $authorityId) {
+                return $authority;
+            }
+        }
+
+        self::fail("La collectivité $authorityId n'est pas dans la liste");
     }
 
     public function testAuthoritiesActionAPI()
