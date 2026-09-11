@@ -67,7 +67,7 @@ if (!$me->isGroupAdminOrSuper()) { // Le super utilisateur voit les reponses de 
         $filter[] = "helios_retour.authority_id=" . $pdo->quote($me->get('authority_id'));
     }
 } else {
-    if (isset($fauthority) && !empty($fauthority)) {
+    if (isset($fauthority) && $fauthority !== '') {
         $filter[] = "helios_retour.authority_id=" . $pdo->quote($fauthority);
     }
 }
