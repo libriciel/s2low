@@ -2,9 +2,10 @@
 
 ## 5.1.17
 
-### Correction
+### Corrections
 
 - Correction des tampons sur les documents pdf #1573
+- Correction du script helios-export des PES #1572
 
 ## 5.1.16 - 2026-08-10
 

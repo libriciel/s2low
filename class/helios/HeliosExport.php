@@ -5,32 +5,22 @@ namespace S2lowLegacy\Class\helios;
 use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use Exception;
+use S2lowLegacy\Class\CloudStorage;
 use S2lowLegacy\Lib\UnrecoverableException;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class HeliosExport
 {
-    private $s2lowLogger;
-    private $authoritySQL;
-    private $heliosTransactionsSQL;
-    private $pesAllerRetriever;
-    private $helios_responses_root;
-
     public function __construct(
-        LoggerInterface $s2lowLogger,
-        AuthoritySQL $authoritySQL,
-        HeliosTransactionsSQL $heliosTransactionsSQL,
-        PesAllerRetriever $pesAllerRetriever,
-        $helios_responses_root,
+        private LoggerInterface $s2lowLogger,
+        private AuthoritySQL $authoritySQL,
+        private HeliosTransactionsSQL $heliosTransactionsSQL,
+        private PESAllerCloudStorage $pesAllerCloudStorage,
         private PESAcquitCloudStorage $pesAcquitCloudStorage
     ) {
-        $this->s2lowLogger = $s2lowLogger;
-        $this->authoritySQL = $authoritySQL;
-        $this->heliosTransactionsSQL = $heliosTransactionsSQL;
-        $this->pesAllerRetriever = $pesAllerRetriever;
-        $this->helios_responses_root = $helios_responses_root;
     }
 
     /**
@@ -111,30 +101,78 @@ class HeliosExport
         }
     }
 
-    /**
-     * @param $transaction_info
-     * @param $output_directory
-     * @throws Exception
-     */
-    private function exportOneTransaction($transaction_info, $output_directory): void
+    private function exportOneTransaction(array $transaction_info, string $output_directory): void
     {
-        $this->s2lowLogger->info("Export de la transaction #ID {$transaction_info['id']}");
+        $transaction_id = (int)$transaction_info['id'];
 
-        $directory_name = $transaction_info['id'];
+        $this->s2lowLogger->info("Export de la transaction #ID $transaction_id");
 
-        $filesystem = new Filesystem();
-        $filesystem->mkdir($output_directory . "/" . $directory_name);
+        $transaction_directory = "$output_directory/$transaction_id";
 
-        $pes_aller_path = $this->pesAllerRetriever->getPath($transaction_info['sha1']);
-        $pes_aller_destination = $output_directory . "/$directory_name/{$transaction_info['filename']}";
-        $filesystem->copy($pes_aller_path, $pes_aller_destination);
-        $this->s2lowLogger->debug("[COPIE OK] $pes_aller_path -> $pes_aller_destination");
+        $this->exportOneFile(
+            $this->pesAllerCloudStorage,
+            $transaction_id,
+            "$transaction_directory/{$transaction_info['filename']}"
+        );
 
         if ($transaction_info['acquit_filename']) {
-            $pes_acquit_path = $this->pesAcquitCloudStorage->getPath($transaction_info['id']);
-            $pes_acquit_destintation = $output_directory . "/$directory_name/{$transaction_info['acquit_filename']}";
-            $filesystem->copy($pes_acquit_path, $pes_acquit_destintation);
-            $this->s2lowLogger->debug("[COPIE OK] $pes_acquit_path -> $pes_acquit_destintation");
+            $this->exportOneFile(
+                $this->pesAcquitCloudStorage,
+                $transaction_id,
+                "$transaction_directory/{$transaction_info['acquit_filename']}"
+            );
         }
+    }
+
+    /**
+     * Un fichier introuvable (ni sur le serveur, ni dans le cloud) ne doit pas interrompre l'export :
+     * il est signalé dans les logs et l'export continue avec les fichiers suivants.
+     *
+     * CloudStorage::getPath() renvoie false lorsqu'il n'a pas pu fournir le fichier, et lève une
+     * exception lorsque le fichier n'est ni sur le disque ni récupérable dans le cloud.
+     */
+    private function exportOneFile(
+        CloudStorage $cloudStorage,
+        int $transaction_id,
+        string $destination_path
+    ): void {
+        $nom_fichier = basename($destination_path);
+
+        try {
+            $source_path = $cloudStorage->getPath($transaction_id);
+        } catch (Exception $e) {
+            $this->signaleUnFichierNonExporte($transaction_id, $nom_fichier, $e->getMessage());
+            return;
+        }
+
+        if (! $source_path) {
+            $this->signaleUnFichierNonExporte(
+                $transaction_id,
+                $nom_fichier,
+                "fichier introuvable sur le serveur comme dans le cloud"
+            );
+            return;
+        }
+
+        try {
+            (new Filesystem())->copy($source_path, $destination_path);
+        } catch (IOExceptionInterface $e) {
+            $this->signaleUnFichierNonExporte($transaction_id, $nom_fichier, $e->getMessage());
+            return;
+        }
+
+        $this->s2lowLogger->debug("[COPIE OK] $source_path -> $destination_path");
+    }
+
+    private function signaleUnFichierNonExporte(int $transaction_id, string $nom_fichier, string $raison): void
+    {
+        $this->s2lowLogger->warning(
+            sprintf(
+                "[COPIE KO] transaction #ID %d : %s n'a pas pu être exporté (%s)",
+                $transaction_id,
+                $nom_fichier,
+                $raison
+            )
+        );
     }
 }
