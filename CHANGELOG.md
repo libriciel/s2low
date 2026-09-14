@@ -4,6 +4,8 @@
 
 ### Corrections
 
+- Correction de la date utilisée par modules/actes/api/list_actes.php : `min_date` et `max_date` encadrent désormais la
+  date de soumission de l'acte et non la date de passage au statut demandé. #1553
 - Correction des tampons sur les documents pdf #1573
 - Correction du script helios-export des PES #1572
 
@@ -16,11 +18,6 @@
 ### Sécurité
 
 - Mise à jour des dépendances
-
-### Corrections
-
-- Correction de la date utilisée par modules/actes/api/list_actes.php : `min_date` et `max_date` encadrent désormais la date de
-  soumission de l'acte et non la date de passage au statut demandé. #1553
 
 ## 5.1.15 - 2026-07-13
 
