@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 as s2low_base
+FROM hubdocker.libriciel.fr/ubuntu:22.04 AS s2low_base
 
 ARG UID=33
 ARG GID=33
@@ -38,7 +38,7 @@ USER "${USERNAME}"
 ENTRYPOINT ["docker-s2low-entrypoint"]
 CMD ["/usr/bin/supervisord","-c","/etc/supervisor/supervisord.conf"]
 
-FROM s2low_base as s2low_dev
+FROM s2low_base AS s2low_dev
 
 ARG UID=33
 ARG GID=33
@@ -49,7 +49,7 @@ USER root
 RUN /bin/bash /tmp/docker-resources/install-dev-requirements.sh
 USER "${USERNAME}"
 
-FROM node:18-slim as node_modules
+FROM hubdocker.libriciel.fr/node:18-slim AS node_modules
 WORKDIR /var/www/s2low/
 COPY package*.json ./
 RUN pwd
@@ -60,7 +60,7 @@ COPY src_js/ ./src_js/
 RUN ls -l
 RUN npx webpack --config webpack.config.js
 
-FROM s2low_base as s2low_prod
+FROM s2low_base AS s2low_prod
 WORKDIR /var/www/s2low/
 ARG USERNAME=www-data
 ARG GROUPNAME=www-data
