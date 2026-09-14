@@ -55,6 +55,14 @@ final readonly class AdministeringGroups
         return $this->groupIdByModule[$module->value] ?? 0;
     }
 
+    /**
+     * @return int[]
+     */
+    public function groupIds(): array
+    {
+        return array_values(array_unique($this->groupIdByModule));
+    }
+
     public function isEmpty(): bool
     {
         return $this->groupIdByModule === [];
