@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Test\PHPUnit\Security\Authorization;
+namespace S2low\Tests\Security\Authorization;
 
 use S2low\Security\Authorization\ModuleAdministration;
 use S2low\Security\SecurityUser;
@@ -13,14 +13,14 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class ModuleAdministrationTest extends S2lowTestCase
 {
-    private const AUTHORITY = 1;
-    private const HELIOS_GROUP = 1;
+    private const int AUTHORITY = 1;
+    private const int HELIOS_GROUP = 1;
 
-    private const SUPER_ADMIN = 1;
-    private const HELIOS_GROUP_ADMIN = 7;
-    private const OTHER_GROUP_ADMIN = 10;
-    private const AUTHORITY_ADMIN = 3;
-    private const SIMPLE_USER = 5;
+    private const int SUPER_ADMIN = 1;
+    private const int HELIOS_GROUP_ADMIN = 7;
+    private const int OTHER_GROUP_ADMIN = 10;
+    private const int AUTHORITY_ADMIN = 3;
+    private const int SIMPLE_USER = 5;
 
     /**
      * @dataProvider usersFacingHelios
