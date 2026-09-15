@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Model;
 
+use S2low\Enum\AdministeredModule;
 use S2lowLegacy\Lib\SQL;
 use S2lowLegacy\Lib\UnrecoverableException;
 
@@ -194,6 +195,16 @@ class AuthoritySQL extends SQL
     {
         $sql = "SELECT * FROM authorities WHERE id=?";
         return $this->queryOne($sql, $id);
+    }
+
+    public function designateAdministeringGroup(int $authorityId, AdministeredModule $module, int $groupId): void
+    {
+        $sql = match ($module) {
+            AdministeredModule::ACTES => "UPDATE authorities SET actes_group_id=? WHERE id=?",
+            AdministeredModule::HELIOS => "UPDATE authorities SET helios_group_id=? WHERE id=?",
+        };
+
+        $this->query($sql, [$groupId, $authorityId]);
     }
 
     public function updateDoNotVerifyNomFicUnicity($authority_id, $helios_do_not_verify_nom_fic_unicity)
