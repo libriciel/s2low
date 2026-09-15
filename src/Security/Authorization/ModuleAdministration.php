@@ -22,6 +22,11 @@ final readonly class ModuleAdministration
     ) {
     }
 
+    public function isActesAdmin(int $authorityId): bool
+    {
+        return $this->administers(AdministeredModule::ACTES, $authorityId);
+    }
+
     public function isHeliosAdmin(int $authorityId): bool
     {
         return $this->administers(AdministeredModule::HELIOS, $authorityId);

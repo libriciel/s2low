@@ -218,7 +218,7 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
     public function testAnAdminWhoDoesNotAdministerHeliosDoesNotEraseItsSettings(): void
     {
         $this->givenTheGroupAdminOfGroup1();
-        $this->givenAuthority1AdministeredForHeliosByGroup(2);
+        $this->givenAuthority1AdministeredByGroups(actesGroupId: 1, heliosGroupId: 2);
 
         $this->whenTheFormIsPosted($this->authorityPostWithoutTheHeliosFields());
 
@@ -235,7 +235,7 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
     public function testTheHeliosGroupAdminStillChangesHeliosSettings(): void
     {
         $this->givenTheGroupAdminOfGroup1();
-        $this->givenAuthority1AdministeredForHeliosByGroup(1);
+        $this->givenAuthority1AdministeredByGroups(actesGroupId: 1, heliosGroupId: 1);
 
         $this->whenTheFormIsPosted($this->authorityPostWithoutTheHeliosFields());
 
@@ -244,6 +244,25 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
 
         static::assertSame('', $authority->get('helios_ftp_dest'));
         static::assertFalse($authority->getModulePerm(Module::HELIOS));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testAnAdminWhoDoesNotAdministerActesDoesNotEraseItsPermission(): void
+    {
+        $this->givenTheGroupAdminOfGroup1();
+        $this->givenAuthority1AdministeredByGroups(actesGroupId: 2, heliosGroupId: 1);
+
+        $post = $this->authorityPostWithoutTheHeliosFields();
+        unset($post['perm_' . Module::ACTES]);
+
+        $this->whenTheFormIsPosted($post);
+
+        $authority = new Authority(1);
+        $authority->init();
+
+        static::assertTrue($authority->getModulePerm(Module::ACTES));
     }
 
     /**
@@ -347,11 +366,11 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
         );
     }
 
-    private function givenAuthority1AdministeredForHeliosByGroup(int $heliosGroupId): void
+    private function givenAuthority1AdministeredByGroups(int $actesGroupId, int $heliosGroupId): void
     {
         self::getContainer()->get(SQLQuery::class)->query(
-            'UPDATE authorities SET actes_group_id = 1, helios_group_id = ? WHERE id = 1',
-            [$heliosGroupId]
+            'UPDATE authorities SET actes_group_id = ?, helios_group_id = ? WHERE id = 1',
+            [$actesGroupId, $heliosGroupId]
         );
     }
 

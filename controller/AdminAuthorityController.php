@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Controller;
 
+use S2low\Security\Authorization\ActesConventionAccess;
 use S2lowLegacy\Class\actes\ActesConventions;
 use S2lowLegacy\Class\CSVOutput;
 use S2lowLegacy\Class\Helpers;
@@ -21,7 +22,11 @@ class AdminAuthorityController extends Controller
             $this->redirectSSL();
         }
 
-        $this->verifAdmin($authority_id);
+        $this->verifUser();
+
+        if (! $this->getObjectInstancier()->get(ActesConventionAccess::class)->isVisible((int)$authority_id)) {
+            $this->displayErrorAndExit("Accès refusé", "");
+        }
 
         $actesConvention = $this->getObjectInstancier()->get(ActesConventions::class);
 
