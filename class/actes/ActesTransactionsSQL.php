@@ -431,10 +431,6 @@ WHERE
             $sql .= " AND actes_envelopes.submission_date <= ?";
             $data[] = $max_submission_date;
         }
-        if ($min_submission_date !== null || $max_submission_date !== null) {
-            $sql .= " AND status_id = ?";
-            $data[] = $status_id;
-        }
         if ($type_acte !== null) {
             $sql .= " AND type = ?";
             $data[] = $type_acte;
