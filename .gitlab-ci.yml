@@ -30,6 +30,8 @@ variables:
     CONTAINER_IMAGE_BASE: "${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}"
     CONTAINER_IMAGE_APP: "${CONTAINER_IMAGE_BASE}-app"
     CONTAINER_IMAGE_WEB: "${CONTAINER_IMAGE_BASE}-web"
+    APK_PINNED_PACKAGES: ""
+    DOCKER_BUILD_OPTS: ""
     DATABASE_USER: s2low
     DATABASE_PASSWORD: s2low
     DATABASE_NAME: s2low
@@ -55,7 +57,7 @@ build-app:
 #  variables:
 #    DOCKER_BUILDKIT: 1
   script:
-    - docker build --target dev --pull -t ${CONTAINER_IMAGE_APP} -f docker/app/Dockerfile .
+    - docker build ${DOCKER_BUILD_OPTS} --build-arg APK_PINNED_PACKAGES="${APK_PINNED_PACKAGES}" --target dev --pull -t ${CONTAINER_IMAGE_APP} -f docker/app/Dockerfile .
     - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
     - docker push ${CONTAINER_IMAGE_APP}
 
@@ -67,7 +69,7 @@ build-web:
 #    DOCKER_BUILDKIT: 1
   script:
     - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
-    - docker build  --pull -t ${CONTAINER_IMAGE_WEB} -f docker/web/Dockerfile .
+    - docker build ${DOCKER_BUILD_OPTS} --pull -t ${CONTAINER_IMAGE_WEB} -f docker/web/Dockerfile .
     - docker push ${CONTAINER_IMAGE_WEB}
 
 lint:
@@ -180,9 +182,9 @@ publish-container-to-registry:
     - sed -i "s/%VERSION%/${CI_COMMIT_REF_NAME}/" ./manifest.txt
   script:
     - docker login -u "$REGISTRY_CONTAINER_USER" -p "$REGISTRY_CONTAINER_PASSWORD" "$REGISTRY_CONTAINER_HOST"
-    - docker build --pull -t ${APP_IMAGE} -f docker/app/Dockerfile .
+    - docker build ${DOCKER_BUILD_OPTS} --build-arg APK_PINNED_PACKAGES="${APK_PINNED_PACKAGES}" --pull -t ${APP_IMAGE} -f docker/app/Dockerfile .
     - docker push ${APP_IMAGE}
-    - docker build --pull -t ${WEB_IMAGE} -f docker/web/Dockerfile .
+    - docker build ${DOCKER_BUILD_OPTS} --pull -t ${WEB_IMAGE} -f docker/web/Dockerfile .
     - docker push ${WEB_IMAGE}
 
 generate-sbom-compose:

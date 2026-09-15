@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "assignees": ["project_25_bot_7b3ca4887e2797fc60846fd1099a8070"],
+  "assignees": ["project_25_bot_0a6bc49fdf004e9f3d9c8edce213fc21"],
   "extends": ["config:recommended", ":preserveSemverRanges"],
   "labels": ["deps", "renovate"],
   "branchPrefix": "renovate-",
