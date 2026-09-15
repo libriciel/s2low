@@ -1,9 +1,14 @@
 include:
-  - template: Code-Quality.gitlab-ci.yml
   - template: Jobs/SAST.gitlab-ci.yml
   - template: Jobs/Secret-Detection.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
   - template: Security/Container-Scanning.gitlab-ci.yml
+  # FIXME: disabled because the qlty code-quality job uses too much memory, gets OOM-killed
+  # by the runner and blocks the other jobs of the pipeline.
+  #  - component: $LIBRICIEL_CATALOG_PATH/qlty/code-quality@~latest
+  #    inputs:
+  #      mode: "changed"
+#  - component: $LIBRICIEL_CATALOG_PATH/project-standards/check-libriciel-standards@3.0.0
   - component: $LIBRICIEL_CATALOG_PATH/renovate-runner/runner@1.6.1
   - component: $LIBRICIEL_CATALOG_PATH/software-release/publish-compose@3.2.0
   - component: $LIBRICIEL_CATALOG_PATH/sbom-manager/build@1.4.0
@@ -25,6 +30,8 @@ variables:
     CONTAINER_IMAGE_BASE: "${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}"
     CONTAINER_IMAGE_APP: "${CONTAINER_IMAGE_BASE}-app"
     CONTAINER_IMAGE_WEB: "${CONTAINER_IMAGE_BASE}-web"
+    APK_PINNED_PACKAGES: ""
+    DOCKER_BUILD_OPTS: ""
     DATABASE_USER: s2low
     DATABASE_PASSWORD: s2low
     DATABASE_NAME: s2low
@@ -50,7 +57,7 @@ build-app:
 #  variables:
 #    DOCKER_BUILDKIT: 1
   script:
-    - docker build --target dev --pull -t ${CONTAINER_IMAGE_APP} -f docker/app/Dockerfile .
+    - docker build ${DOCKER_BUILD_OPTS} --build-arg APK_PINNED_PACKAGES="${APK_PINNED_PACKAGES}" --target dev --pull -t ${CONTAINER_IMAGE_APP} -f docker/app/Dockerfile .
     - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
     - docker push ${CONTAINER_IMAGE_APP}
 
@@ -62,7 +69,7 @@ build-web:
 #    DOCKER_BUILDKIT: 1
   script:
     - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
-    - docker build  --pull -t ${CONTAINER_IMAGE_WEB} -f docker/web/Dockerfile .
+    - docker build ${DOCKER_BUILD_OPTS} --pull -t ${CONTAINER_IMAGE_WEB} -f docker/web/Dockerfile .
     - docker push ${CONTAINER_IMAGE_WEB}
 
 lint:
@@ -106,6 +113,11 @@ unit_test:
     artifacts:
       paths:
         - coverage
+      reports:
+        coverage_report:
+          coverage_format: cobertura
+          path: coverage/cobertura.xml
+        junit: coverage/logfile.xml
       expire_in: 1h
 
 quality:
@@ -170,9 +182,9 @@ publish-container-to-registry:
     - sed -i "s/%VERSION%/${CI_COMMIT_REF_NAME}/" ./manifest.txt
   script:
     - docker login -u "$REGISTRY_CONTAINER_USER" -p "$REGISTRY_CONTAINER_PASSWORD" "$REGISTRY_CONTAINER_HOST"
-    - docker build --pull -t ${APP_IMAGE} -f docker/app/Dockerfile .
+    - docker build ${DOCKER_BUILD_OPTS} --build-arg APK_PINNED_PACKAGES="${APK_PINNED_PACKAGES}" --pull -t ${APP_IMAGE} -f docker/app/Dockerfile .
     - docker push ${APP_IMAGE}
-    - docker build --pull -t ${WEB_IMAGE} -f docker/web/Dockerfile .
+    - docker build ${DOCKER_BUILD_OPTS} --pull -t ${WEB_IMAGE} -f docker/web/Dockerfile .
     - docker push ${WEB_IMAGE}
 
 generate-sbom-compose:
@@ -209,10 +221,6 @@ deploy_app:
     - scp /tmp/.env s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/
     - ssh -tt s2low@s2low-5-0.dev.libriciel.net "cd /opt/s2low/ && docker compose pull && docker compose up -d"
     - curl -i -X POST -d "$PAYLOAD" $MATTERMOST_WEBHOOK
-
-code_quality:
-  tags:
-    - cq-sans-dind
 
 container_scanning:
   variables:

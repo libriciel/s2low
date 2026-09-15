@@ -4,62 +4,158 @@ use S2lowLegacy\Class\CurlWrapper;
 use S2lowLegacy\Class\CurlWrapperFactory;
 use S2lowLegacy\Class\PDFStampData;
 use S2lowLegacy\Class\PDFStampWrapper;
+use S2lowLegacy\Class\PdfStampMessages;
 
 class PDFStampWrapperTest extends PHPUnit_Framework_TestCase
 {
-    private function getCurlWrapperFactory($return_string)
+    private array $postFile = [];
+    private array $postData = [];
+    private string $calledUrl = '';
+    private string $lastOutput = '';
+
+    private function getCurlWrapperFactory(string|false $curlResponse): CurlWrapperFactory
     {
         $curlWrapper = $this->getMockBuilder(CurlWrapper::class)->getMock();
-        $curlWrapper->method("get")->willReturn($return_string);
+
+        $curlWrapper->method("addPostFile")->willReturnCallback(
+            function ($field, $filePath, $fileName = false, $contentType = "application/octet-stream") {
+                $this->postFile[$field] = [
+                    'path' => $filePath,
+                    'fileName' => $fileName,
+                    'contentType' => $contentType,
+                ];
+            }
+        );
+
+        $curlWrapper->method("addPostData")->willReturnCallback(
+            function ($name, $value) {
+                $this->postData[$name] = $value;
+            }
+        );
+
+        $curlWrapper->method("get")->willReturnCallback(
+            function ($url) use ($curlResponse) {
+                $this->calledUrl = $url;
+                return $curlResponse;
+            }
+        );
+
+        $curlWrapper->method("getLastOutput")->willReturnCallback(fn() => $this->lastOutput);
+        $curlWrapper->method("getLastError")->willReturn("Erreur HTTP : Code 400");
+
         $curlWrapperFactory = $this->getMockBuilder(CurlWrapperFactory::class)->getMock();
         $curlWrapperFactory->method("getNewInstance")->willReturn($curlWrapper);
-        /** @var CurlWrapperFactory $curlWrapperFactory */
         return $curlWrapperFactory;
     }
 
-    /**
-     * @throws Exception
-     */
-    public function testStamp()
-    {
+    private function getPdfStampWrapper(
+        string|false $curlResponse,
+        string $pdfStampUrl = "http://pdf-stamp:8080"
+    ): PDFStampWrapper {
         $pdfStampWrapper = new PDFStampWrapper(
-            "http://pdf-stamp/",
+            $pdfStampUrl,
             __DIR__ . "/../../../public.ssl/custom/images/s2low-stamp.png",
-            new \S2lowLegacy\Class\PdfStampMessages(false)
+            new PdfStampMessages(false)
         );
-        $pdfStampWrapper->setCurlWrapperFactory($this->getCurlWrapperFactory("test"));
+        $pdfStampWrapper->setCurlWrapperFactory($this->getCurlWrapperFactory($curlResponse));
+        return $pdfStampWrapper;
+    }
+
+    private function getPdfStampData(): PDFStampData
+    {
         $pdfStampData = new PDFStampData();
         $pdfStampData->identifiant_unique = "toto";
         $pdfStampData->affichage_date = "2017-09-18";
         $pdfStampData->envoi_prefecture_date = "2017-09-15";
         $pdfStampData->recu_prefecture_date = "2017-09-16";
+        return $pdfStampData;
+    }
 
-        $this->assertEquals(
-            "test",
-            $pdfStampWrapper->stamp(__DIR__ . "/fixtures/signature-pades/Courrier.pdf", $pdfStampData)
+    private function stamp(PDFStampWrapper $pdfStampWrapper): string
+    {
+        return $pdfStampWrapper->stamp(
+            __DIR__ . "/fixtures/signature-pades/Courrier.pdf",
+            $this->getPdfStampData()
         );
     }
 
-    public function testPdfStampUrlIsCorrect()
+    private function getStampRequest(): array
     {
-        $this->assertTrue(defined('PDF_STAMP_URL'), "PDF_STAMP_URL constant must be defined");
-        $this->assertStringStartsWith('http://', PDF_STAMP_URL, "PDF_STAMP_URL must start with http:// or https://");
-        $this->assertStringContainsString('/pdf-stamp/', PDF_STAMP_URL, "PDF_STAMP_URL must contain the /pdf-stamp/ context path");
+        return json_decode($this->postData['stampRequest']->data, true);
     }
 
-    public function testPdfStampIsReachable()
+    public function testStamp(): void
     {
-        if (!defined('PDF_STAMP_URL') || strpos(PDF_STAMP_URL, 'pdf-stamp') === false) {
-            $this->markTestSkipped("PDF_STAMP_URL is not configured for a live docker network test.");
-        }
+        $this->assertSame("test", $this->stamp($this->getPdfStampWrapper("test")));
+    }
 
-        $curlWrapper = new CurlWrapper();
-        $curlWrapper->get(PDF_STAMP_URL);
+    public function testStampCallsV3Endpoint(): void
+    {
+        $this->stamp($this->getPdfStampWrapper("test", "http://pdf-stamp:8080/"));
 
-        $this->assertEquals(
-            405,
-            $curlWrapper->getLastHttpCode(),
-            "PDF stamp service is not reachable or did not return HTTP 405 (Method Not Allowed) on GET. Output: " . $curlWrapper->getLastOutput()
+        $this->assertSame("http://pdf-stamp:8080/pdf-stamp/v3/stamp/add", $this->calledUrl);
+    }
+
+    public function testStampRequestIsSentAsJsonPart(): void
+    {
+        $this->stamp($this->getPdfStampWrapper("test"));
+
+        $this->assertArrayHasKey('stampRequest', $this->postData);
+        $this->assertInstanceOf(CURLStringFile::class, $this->postData['stampRequest']);
+        $this->assertSame('application/json', $this->postData['stampRequest']->mime);
+    }
+
+    public function testStampRequestContent(): void
+    {
+        $this->stamp($this->getPdfStampWrapper("test"));
+
+        $stampRequest = $this->getStampRequest();
+
+        $this->assertCount(1, $stampRequest['stampList']);
+        $stamp = $stampRequest['stampList'][0];
+
+        $this->assertSame(
+            ['width' => 190, 'height' => 55, 'x' => 10, 'y' => 10, 'origin' => 'TOP_RIGHT'],
+            $stamp['position']
         );
+        $this->assertSame(
+            [
+                ['title' => 'Envoi simulé le', 'value' => '15/09/2017'],
+                ['title' => 'Reception simulée le', 'value' => '16/09/2017'],
+                [
+                    'title' => 'Publication simulée le',
+                    'value' => '18/09/2017',
+                    'logo' => ['imageRef' => 's2low-stamp.png', 'width' => 60, 'marginRight' => 20],
+                ],
+                ['title' => 'ID :', 'value' => 'toto'],
+            ],
+            $stamp['rows']
+        );
+    }
+
+    public function testLogoIsSentAsImagePart(): void
+    {
+        $this->stamp($this->getPdfStampWrapper("test"));
+
+        $this->assertArrayHasKey('pdfSource', $this->postFile);
+        $this->assertArrayHasKey('images', $this->postFile);
+        $this->assertSame('s2low-stamp.png', $this->postFile['images']['fileName']);
+        $this->assertSame(
+            $this->postFile['images']['fileName'],
+            $this->getStampRequest()['stampList'][0]['rows'][2]['logo']['imageRef']
+        );
+    }
+
+    public function testStampThrowsWithLastErrorAndRawOutput(): void
+    {
+        $pdfStampWrapper = $this->getPdfStampWrapper(false);
+        $this->lastOutput = '{"status":415,"detail":"Content-Type is not supported."}';
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage(
+            'Erreur HTTP : Code 400 {"status":415,"detail":"Content-Type is not supported."}'
+        );
+
+        $this->stamp($pdfStampWrapper);
     }
 }
