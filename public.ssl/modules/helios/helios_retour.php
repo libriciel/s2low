@@ -53,16 +53,22 @@ if (isset($fstatus) && is_numeric($fstatus) && $fstatus != 2) {//si = 2 : tous l
 //collectivité (si sadmin)
 if (!$me->isGroupAdminOrSuper()) { // Le super utilisateur voit les reponses de toutes les collectivité
     // Un utilisateur ne voit que les reponses de sa collectivité
-    $filter[] = "helios_retour.authority_id='" . $me->get('authority_id') . "'";
-} elseif ($me->isGroupAdmin() && in_array($fauthority, array_keys($me->getAllPossibleAuthority()))) {
-    if (isset($fauthority) && !empty($fauthority)) {
-        $filter[] = "helios_retour.authority_id='" . $fauthority . "'";
+    $filter[] = "helios_retour.authority_id=" . $pdo->quote($me->get('authority_id'));
+} elseif ($me->isGroupAdmin()) {
+    if (isset($fauthority) && $fauthority !== '') {
+        // A group administrator may only filter on the authorities of their own group.
+        if (!array_key_exists($fauthority, $me->getAllPossibleAuthority())) {
+            $_SESSION['error'] = 'Accès refusé';
+            header('Location: ' . Helpers::getLink('/modules/helios/helios_retour.php'));
+            exit();
+        }
+        $filter[] = "helios_retour.authority_id=" . $pdo->quote($fauthority);
     } else {
-        $filter[] = "helios_retour.authority_id='" . $me->get('authority_id') . "'";
+        $filter[] = "helios_retour.authority_id=" . $pdo->quote($me->get('authority_id'));
     }
 } else {
-    if (isset($fauthority) && !empty($fauthority)) {
-        $filter[] = "helios_retour.authority_id='" . $fauthority . "'";
+    if (isset($fauthority) && $fauthority !== '') {
+        $filter[] = "helios_retour.authority_id=" . $pdo->quote($fauthority);
     }
 }
 // On ajoute les filtres relatifs aux dates

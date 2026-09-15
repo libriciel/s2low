@@ -87,7 +87,7 @@
     ],
     "test-cover": [
       "@test-db-init",
-      "phpunit --coverage-text --colors=never --coverage-clover coverage/coverage.xml --log-junit coverage/logfile.xml"
+      "phpunit --coverage-text --colors=never --coverage-clover coverage/coverage.xml --coverage-cobertura coverage/cobertura.xml --log-junit coverage/logfile.xml"
     ],
     "auto-scripts": {
       "cache:clear": "symfony-cmd",

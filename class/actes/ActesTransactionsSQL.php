@@ -419,16 +419,16 @@ WHERE
 
         $sql = "SELECT actes_transactions.id,subject,number,date(decision_date),nature_descr,classification,type FROM actes_transactions";
         if ($min_submission_date !== null || $max_submission_date !== null) {
-            $sql .= " JOIN actes_transactions_workflow ON transaction_id=actes_transactions.id";
+            $sql .= " JOIN actes_envelopes ON actes_transactions.envelope_id=actes_envelopes.id";
         }
-            $sql .= " WHERE last_status_id=? AND authority_id = ?";
+        $sql .= " WHERE last_status_id=? AND authority_id = ?";
         $data = [$status_id, $authority_id];
         if ($min_submission_date !== null) {
-            $sql .= " AND date >= ?";
+            $sql .= " AND actes_envelopes.submission_date >= ?";
             $data[] = $min_submission_date;
         }
         if ($max_submission_date !== null) {
-            $sql .= " AND date <= ?";
+            $sql .= " AND actes_envelopes.submission_date <= ?";
             $data[] = $max_submission_date;
         }
         if ($min_submission_date !== null || $max_submission_date !== null) {

@@ -33,6 +33,19 @@
 
 - Dépréciation de la soumission des enveloppes ACTE #1104
 
+## 5.1.17 - 2026-09-14
+
+### Corrections
+
+- Correction de la date utilisée par modules/actes/api/list_actes.php : `min_date` et `max_date` encadrent désormais la
+  date de soumission de l'acte et non la date de passage au statut demandé. #1553
+- Correction des tampons sur les documents pdf #1573
+- Correction du script helios-export des PES #1572
+
+### Sécurité
+
+- Faille SQL (CVSS 7.1 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:L) #1583
+
 ## 5.1.16 - 2026-08-10
 
 ### Sécurité

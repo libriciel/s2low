@@ -1,9 +1,14 @@
 include:
-  - template: Code-Quality.gitlab-ci.yml
   - template: Jobs/SAST.gitlab-ci.yml
   - template: Jobs/Secret-Detection.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
   - template: Security/Container-Scanning.gitlab-ci.yml
+  # FIXME: disabled because the qlty code-quality job uses too much memory, gets OOM-killed
+  # by the runner and blocks the other jobs of the pipeline.
+  #  - component: $LIBRICIEL_CATALOG_PATH/qlty/code-quality@~latest
+  #    inputs:
+  #      mode: "changed"
+#  - component: $LIBRICIEL_CATALOG_PATH/project-standards/check-libriciel-standards@3.0.0
   - component: $LIBRICIEL_CATALOG_PATH/renovate-runner/runner@1.6.1
   - component: $LIBRICIEL_CATALOG_PATH/software-release/publish-compose@3.2.0
   - component: $LIBRICIEL_CATALOG_PATH/sbom-manager/build@1.4.0
@@ -106,6 +111,11 @@ unit_test:
     artifacts:
       paths:
         - coverage
+      reports:
+        coverage_report:
+          coverage_format: cobertura
+          path: coverage/cobertura.xml
+        junit: coverage/logfile.xml
       expire_in: 1h
 
 quality:
@@ -209,10 +219,6 @@ deploy_app:
     - scp /tmp/.env s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/
     - ssh -tt s2low@s2low-5-0.dev.libriciel.net "cd /opt/s2low/ && docker compose pull && docker compose up -d"
     - curl -i -X POST -d "$PAYLOAD" $MATTERMOST_WEBHOOK
-
-code_quality:
-  tags:
-    - cq-sans-dind
 
 container_scanning:
   variables:
