@@ -18,6 +18,8 @@
 ### Corrections
 
 - Prise en compte de la date de révocation des certificats #576
+- Un échec d'enregistrement d'une collectivité s'affiche sans son balisage. #1576
+- Un SIREN déjà porté par une collectivité n'est plus proposé pour en créer une autre, ni accepté à l'enregistrement, y compris lorsqu'il est réservé à plusieurs groupes. #1576
 
 ### Suppression
 

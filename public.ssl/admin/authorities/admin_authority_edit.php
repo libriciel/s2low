@@ -15,9 +15,15 @@ use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 use S2lowLegacy\Model\AuthorityTypesSQL;
 use S2lowLegacy\Model\GroupSQL;
 
-list($objectInstancier, $availableSirensByGroup, $moduleAdministration, $actesConventionAccess) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $availableSirensByGroup, $authorityGroupSirenSQL, $moduleAdministration, $actesConventionAccess) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, AvailableSirensByGroup::class, ModuleAdministration::class, ActesConventionAccess::class]
+        [
+            ObjectInstancier::class,
+            AvailableSirensByGroup::class,
+            AuthorityGroupSirenSQL::class,
+            ModuleAdministration::class,
+            ActesConventionAccess::class,
+        ]
     );
 $html = '';
 $me = new User();
@@ -168,12 +174,8 @@ $html .= " <div class=\"form-group\">\n";
 $html .= "  <label for=\"sirenId\" class=\"control-label col-md-4\">Numéro de SIREN</label>\n";
 
 if ($me->isGroupAdminOrSuper()) {
-    if ($modStr == "Ajout") {
-        $group = new Group($me->get('authority_group_id'));
-    } else {
-        $group = new Group($authority->get("authority_group_id"));
-    }
-    $sirenList = $group->getAuthorizedSiren();
+    $sirenGroupId = $modStr == "Ajout" ? $me->get('authority_group_id') : $authority->get("authority_group_id");
+    $sirenList = $authorityGroupSirenSQL->getAvailableSiren((int)$sirenGroupId, (int)$authority->getId());
     $html .= "  <div class=\"col-md-6\">";
     $html .= "  <input id=\"originalSiren\" type =\"hidden\" value = \"" . $authority->get('siren') . '"/>';
     $html .= "<select id=\"SelectSirenInput\" class=\"form-control\" name=\"siren\">";

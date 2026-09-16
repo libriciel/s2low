@@ -415,4 +415,42 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
             $crawler->html()
         );
     }
+
+    /**
+     * Le SIREN d'une collectivité existante restait proposé et accepté pour en créer une autre :
+     * l'enregistrement échouait ensuite sur « Numéro de SIREN doit être unique ».
+     *
+     * @throws \Exception
+     */
+    public function testASirenAlreadyCarriedByAnotherAuthorityIsRefused(): void
+    {
+        $this->givenTheGroupAdminOfGroup1();
+
+        $post = $this->authorityPostWithoutTheHeliosFields();
+        unset($post['id']);
+        $post['siren'] = '123456789'; // réservé au groupe 1, mais porté par la collectivité 1
+
+        static::assertStringContainsString('utilisé par une autre collectivité', $this->refusalMessageFor($post));
+    }
+
+    /**
+     * Le motif du refus se lit dans le seul champ « error-message » : la réponse porte aussi la
+     * pile d'appels de xdebug, où le message attendu figure et ferait passer l'assertion à vide.
+     *
+     * @throws \Exception
+     */
+    private function refusalMessageFor(array $post): string
+    {
+        $_POST = $post;
+
+        $response = $this->client->request(
+            'POST',
+            '/admin/authorities/admin_authority_edit_handler.php'
+        )->html();
+
+        static::assertMatchesRegularExpression('#\{"status":"error"[^}]*\}#', $response, $response);
+        preg_match('#\{"status":"error"[^}]*\}#', $response, $matches);
+
+        return json_decode(html_entity_decode($matches[0]), true)['error-message'] ?? '';
+    }
 }
