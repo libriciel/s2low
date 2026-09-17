@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.18 - 2026-09-17
+
+### Correction
+
+- Le tampon des documents PDF n'était plus appliqué que sur la première page (régression introduite en 5.1.17) #1573 #1587
+
 ## 5.1.17 - 2026-09-14
 
 ### Corrections
