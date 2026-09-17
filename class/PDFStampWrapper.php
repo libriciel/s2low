@@ -10,6 +10,7 @@ class PDFStampWrapper
 {
     private const STAMP_ADD_PATH = '/pdf-stamp/v3/stamp/add';
     private const LOGO_IMAGE_REF = 's2low-stamp.png';
+    private const STAMP_ALL_PAGES = 0;
 
     private CurlWrapperFactory $curlWrapperFactory;
 
@@ -55,7 +56,7 @@ class PDFStampWrapper
         return [
             'stampList' => [
                 [
-                    'page' => 1,
+                    'page' => self::STAMP_ALL_PAGES,
                     'opacity' => 0.8,
                     'fontSize' => 7,
                     'position' => [
