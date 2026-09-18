@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/asap/r0/retour" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour" targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/asap/r0/retour" elementFormDefault="unqualified">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour" schemaLocation="../../Class_SchemasCommuns_Retour.xsd" />
+  <xs:include schemaLocation="CommunAsap_Retour.xsd" />
+  <xs:complexType name="TPES_AsapRetour">
+    <xs:sequence>
+      <xs:element name="EnTeteAsap" type="TEnTeteAsap" />
+      <xs:element name="Asap" type="TAsap" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Bordereau. Un bordereau comprend n pièces, constituées elle même de n lignes de pièces.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TEnTeteAsap">
+    <xs:sequence>
+      <xs:element name="IdVer" type="cm:Base_Num2">
+        <xs:annotation>
+          <xs:documentation>N° de version du PES ASAP – Mettre à « 2 »</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TAsap">
+    <xs:annotation>
+      <xs:documentation>Bloc valorisé si l'ASAP a fait l'objet d'un rejet de l'éditique ou du Pilote de Notification Par Mail</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IdUniquePJASAP" type="cm:Base_Alphanum50">
+        <xs:annotation>
+          <xs:documentation>Identification unique de la PJ ayant véhiculé  la facture, au format PES Facture pour les titres de recette et les titres ORMC, ou la facture au format PDF pour les titres ORMC.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdUniquePJCplt" type="cm:Base_Alphanum50" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Identification unique de la PJ ayant véhiculé le document complémentaire (format PDF) à l'ASAP d'un titre de recette.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Exer" type="cm:Base_Annee">
+        <xs:annotation>
+          <xs:documentation>Millésime de l'exercice de rattachement budgétaire</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdBord" type="cm:Base_Num12">
+        <xs:annotation>
+          <xs:documentation>Identifiant du bordereau</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypBord" type="TTypBord">
+        <xs:annotation>
+          <xs:documentation>Type du bordereau</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdPce" type="cm:Base_Num13">
+        <xs:annotation>
+          <xs:documentation>Identifiant de la pièce</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypPce" type="TTypPce">
+        <xs:annotation>
+          <xs:documentation>Type de pièce</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="EtatPJComplt" type="TEtatPJComplt" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Présent uniquement pour les titres de recette comportant une PJ complémentaire, indique si la PJ complémentaire a été adjointe dans la facture ou pas</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:choice>
+      <xs:element name="Postalisation" type="TPostalisation">
+        <xs:annotation>
+          <xs:documentation>Bloc valorisé si l’ASAP a fait l’objet d’une postalisation</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NotificationParMail" type="TNotificationParMail">
+        <xs:annotation>
+          <xs:documentation>Bloc valorisé si l’ASAP a fait l’objet d’une notification par mail (redevables reconnus ayant opté pour la dématérialisation)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Rejet" type="TRejet">
+        <xs:annotation>
+          <xs:documentation>Bloc valorisé si l’ASAP a fait l’objet d’un rejet de l’éditique ou du Pilote de Notification Par Mail</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TPostalisation">
+    <xs:annotation>
+      <xs:documentation>Bloc valorisé si l'ASAP a fait l'objet d'une postalisation</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="DatePostalisation" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date de remise de l'ASAP à La Poste par le centre éditique de la DGFiP.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TNotificationParMail">
+    <xs:annotation>
+      <xs:documentation>Bloc valorisé si l'ASAP a fait l'objet d'une notification par mail (redevables reconnus ayant opté pour la dématérialisation). A noter que dans le cas ou DateNotification et Date1ereLecture ne sont pas concomittantes (au regard de la périodicité du flux) un PES retour ASAP sera produit pour chacune de ces dates, le deuxième comportant les 2 dates.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="DateNotification" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de notification par mail indiquant à l'usager la disponibilité de l'ASAP dans son espace ENSU.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Date1ereLecture" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de première lecture indiquant que l'usager a pris connaissance du document à ladite date dans son espace ENSU.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TRejet">
+    <xs:annotation>
+      <xs:documentation>Bloc valorisé si l'ASAP a fait l'objet d'un rejet de l'éditique ou du Pilote de Notification Par Mail (redevables reconnus ayant opté pour la dématérialisation)</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="DateRejet" type="cm:Base_Date">
+        <xs:annotation>
+          <xs:documentation>Date du rejet transmise par l'éditique</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:choice>
+          <xs:sequence>
+              <xs:element name="MotifRejetPostalisation" type="TMotifRejetPostalisation">
+                <xs:annotation>
+              <xs:documentation>Motif de rejet transmis par l'éditique</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="IndicRelanceAsap" type="cm:Base_Booleen" minOccurs="0">
+                <xs:annotation>
+              <xs:documentation>Présent et valorisé à 1, TRUE dans le cas où un titre de recette comporte une PJ complémentaire et que l'erreur éditique ne concerne pas l'adresse. En effet Hélios transmet alors à nouveau la facture à l'éditique sans y adjoindre la PJ complémentaire. A l'issue de cette deuxième présentation l'ASAP se retrouvera soit dans les ASAP postalisés (cas nominal, pas de raison que la facture Hélios soit non éditable) soit à nouveau dans les ASAP rejetés</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+          </xs:sequence>
+          <xs:element name="MotifRejetNotificationParMail" type="TMotifRejetNotification">
+            <xs:annotation>
+              <xs:documentation>Motif de rejet transmis par le Pilote de Notification Par Mail</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

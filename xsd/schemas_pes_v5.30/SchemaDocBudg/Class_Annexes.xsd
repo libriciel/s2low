@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xad="http://uri.etsi.org/01903/v1.1.1#" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns:z="odm:enrichissement" targetNamespace="http://www.minefi.gouv.fr/cp/demat/docbudgetaire" elementFormDefault="qualified">
+  <xs:complexType name="TAnnexes">
+    <xs:annotation>
+      <xs:documentation>Ce bloc n'est pas utilisé dans Hélios.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

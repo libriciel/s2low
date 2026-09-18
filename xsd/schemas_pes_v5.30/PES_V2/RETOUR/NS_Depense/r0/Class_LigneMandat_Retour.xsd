@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun/retour" schemaLocation="../../Class_SchemasCommuns_Retour.xsd" />
+  <xs:include schemaLocation="CommunDepense_Retour.xsd" />
+  <xs:complexType name="TBlocLignePiece">
+    <xs:sequence>
+      <xs:element name="InfoLignePiece" type="TInfoLignePiece">
+        <xs:annotation>
+          <xs:documentation>Bloc restitué pour les retours détaillés</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="InfoPaiement" type="TInfoPaiement" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Il s'agit d'un bloc émargement/paiement.
+Ce bloc est obligatoirement présent  pour les lignes de pièces du flux récurrent.
+Il est absent des lignes de pièces du retour quotidien (mandats rejetés/mis en instance).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LiensIdent" type="TLiensIdent" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Identifiants complémentaires : régie, n° d'inventaire, n° emprunt, marché…).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoLignePiece">
+    <xs:annotation>
+      <xs:documentation>Bloc restitué pour les retours détaillés</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IdLigne" type="cm:Base_Num6">
+        <xs:annotation>
+          <xs:documentation>Numéro de la ligne de pièce.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="EtatLigPce" type="TEtatLigPce">
+        <xs:annotation>
+          <xs:documentation>Information retour sur l'état de la ligne de pièce.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ObsEtat" type="cm:Base_Texte100" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Observation sur l'état de la ligne de pièce : codification des motifs (si codification, il est possible de transmettre une pluralité de motifs).
+Remarque :En cas de pluralité, si le contenu contient une liste énumérée finie de code motif, il conviendra de définir un caractère séparateur (« - » le tiret  par exemple)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Commentaire" type="cm:Base_Texte400" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Commentaire saisi par le Comptable lors du visa.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LibVir1" type="cm:Base_Texte70" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Libellé du virement en retour des pièces à régulariser.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LibVir2" type="cm:Base_Texte70" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Libellé du virement en retour des pièces à régulariser.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CpteTiers" type="cm:Base_Texte12" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Compte de tiers et financier en retour des pièces à régulariser.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtHT" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant HT.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtTVA" type="cm:Base_Montant" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Montant TVA.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CessOpp" type="TCessOpp" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code cession de créance. Cette information permet d'indiquer à l'ordonnateur l'existence d'une cession ou d'une opposition sur une ligne de pièce.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TInfoPaiement">
+    <xs:annotation>
+      <xs:documentation>Il s'agit d'un bloc émargement/paiement.
+Ce bloc est obligatoirement présent  pour les lignes de pièces du flux récurrent.
+Il est absent des lignes de pièces du retour quotidien (mandats rejetés/mis en instance).</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="NbrPay" type="cm:Base_Num4">
+        <xs:annotation>
+          <xs:documentation>Nombre total des paiements ou des émargements effectués sur la ligne de pièce.
+Si pas d'émargement ou émargement neutralisé,la balise est renseignée à 0.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtPayTot" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant total des paiements ou des émargements effectués sur la ligne de pièce.
+Il s'agit de la somme algébrique des paiements et émargements. Si les événements se sont neutralisés, la balise est renseignée à 0.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TLiensIdent">
+    <xs:annotation>
+      <xs:documentation>Identifiants complémentaires : régie, n° d'inventaire, n° emprunt, marché…).</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IdConv" type="cm:Base_Texte25" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° de convention : Cette zone permet de faire le lien entre une ligne de pièce et une fiche convention.
+Exemple : Convention sur mandat global, autorisation de paiement.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TypConv" type="TTypConv" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Type de convention : Cette zone permet de caractériser la  convention.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ObjConv" type="cm:Base_Texte255" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Objet de convention : Cette zone permet de connaître la finalité de la convention.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdMarche" type="cm:Base_Texte30" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Numéro de marché: cet identifiant permet de déterminer les marchés contractés et suivis par la collectivité.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdEmpruntOrdo" type="cm:Base_Texte24" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° d'emprunt ordonnateur : Cette zone permet de faire le lien entre une ligne de pièce et une fiche emprunt.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NumEchEmprunt" type="cm:Base_Num5" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Numéro d'échéance d'emprunt pour lequel le paiement avant mandatement a été effectué par le comptable et qui nécessite une régularisation par l'Ordonnateur via l'émission d'un mandat émis après paiement.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteEchEmprunt" type="cm:Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date d'échéance pour le remboursement de l'emprunt.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdActif" type="cm:Base_Texte25" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° d'inventaire : Cette zone permet de faire le lien entre une ligne de pièce et une fiche inventaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IdRegie" type="cm:Base_Texte10" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>N° de régie : Cette zone permet de faire le lien entre une ligne de pièce et une fiche régie.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

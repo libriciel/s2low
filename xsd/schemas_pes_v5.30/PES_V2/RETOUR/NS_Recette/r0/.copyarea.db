@@ -1,0 +1,11 @@
+ClearCase CopyAreaDB|4
+VOBSOCLE\PES_XSD\PES_V2\Externe\Schemas_PES\PES_V2\RETOUR\NS_Recette\r0
+2
+7
+21:Class_InfoTiersRecette_Retour.xsd|1|1970d0ec7c4|1fd4|13a9778f|f5a758d7300811f0a8ee525400ed14c9|0
+16:PES_Recette_Retour.xsd|1|1970d0ec805|1917|87db718b|f54758c7300811f0a8ee525400ed14c9|0
+16:Class_Titre_Retour.xsd|1|1970d0ec7e1|16be|39eba0c1|f4475897300811f0a8ee525400ed14c9|0
+18:CommunRecette_Retour.xsd|1|1970d0ec7f3|96df|2fece59|f3e75887300811f0a8ee525400ed14c9|0
+21:Class_BordereauRecette_Retour.xsd|1|1970d0ec7c0|b54|3f7fb1c0|f49758a7300811f0a8ee525400ed14c9|0
+1d:Class_Encaissement_Retour.xsd|1|1921e1360b4|605|cf9107ec|aa296ee8d3f411e6958100163e0c063f|0
+1b:Class_LigneTitre_Retour.xsd|1|1970d0ec7c8|3d8a|a2043a47|f4f758b7300811f0a8ee525400ed14c9|0

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.minefi.gouv.fr/cp/demat/doccomptable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" targetNamespace="http://www.minefi.gouv.fr/cp/demat/doccomptable" elementFormDefault="qualified" attributeFormDefault="unqualified" vc:minVersion="1.1">
+	<xs:include schemaLocation="Class_EnteteComptable.xsd"/>
+	<xs:include schemaLocation="Class_BudgetComptable.xsd"/>
+	<xs:complexType name="TDocumentComptable">
+		<xs:annotation>
+			<xs:documentation>Etats CFU du comptable, comprenant l'entête et les données organisées par budget</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="EnteteComptable" type="TEnteteComptable"/>
+			<xs:element name="BudgetComptable" type="TBudgetComptable" maxOccurs="unbounded"/>
+			<xs:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Balise supplémentaire quelconque, pour les besoins d'évolution</xs:documentation>
+				</xs:annotation>
+			</xs:any>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

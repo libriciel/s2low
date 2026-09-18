@@ -91,7 +91,7 @@ parameters:
   app.path_to_rgs_valid_ca: '/etc/s2low/ssl/validca/'
   app.path_to_rgs_valid_cargs: '/etc/s2low/ssl/validcargs/'
   app.relative_legacy_ssl_path: 'public.ssl/'
-  app.schema_pes_path: '%kernel.project_dir%/xsd/schemas_pes_v5.24/'
+  app.schema_pes_path: '%kernel.project_dir%/xsd/schemas_pes_v5.30/'
   app.timestamp_token_retention_nb_days: 781
   app.truststore_path: '/data/certificate/truststore/'
   app.website: 'http://s2low.docker.libriciel.fr/'
