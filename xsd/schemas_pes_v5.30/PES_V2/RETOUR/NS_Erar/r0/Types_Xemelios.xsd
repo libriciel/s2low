@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:simpleType name="String2">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="2"/>
+            <xs:maxLength value="2"/>
+        </xs:restriction>
+    </xs:simpleType>
+<!--     <xs:simpleType name="String3"> -->
+<!--         <xs:restriction base="xs:string"> -->
+<!--             <xs:minLength value="3"/> -->
+<!--             <xs:maxLength value="3"/> -->
+<!--         </xs:restriction> -->
+<!--     </xs:simpleType> -->
+    
+    <xs:simpleType name="TTypTiers">
+        <xs:restriction base="Num3">
+            <!-- 
+        	<xs:enumeration value="1"><xs:annotation><xs:documentation>débiteur principal</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="6"><xs:annotation><xs:documentation>malade</xs:documentation></xs:annotation></xs:enumeration>            
+            <xs:enumeration value="7"><xs:annotation><xs:documentation>assuré</xs:documentation></xs:annotation></xs:enumeration>             
+            A completer -->
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TNatIdTiers">
+        <xs:restriction base="Num3">
+		<!--	
+			<xs:enumeration value="1"><xs:annotation><xs:documentation>SIRET</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="2"><xs:annotation><xs:documentation>SIREN</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="3"><xs:annotation><xs:documentation>FINESS</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="4"><xs:annotation><xs:documentation>SS</xs:documentation></xs:annotation></xs:enumeration>
+             A completer 
+         -->
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TCatTiers">
+        <xs:restriction base="Num3">
+            <!--
+        	<xs:enumeration value="1"><xs:annotation><xs:documentation>Pers. physique</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="2"><xs:annotation><xs:documentation>Pers. morale droit privé</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="3"><xs:annotation><xs:documentation>Pers. morale droit public</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="4"><xs:annotation><xs:documentation>Inconnu</xs:documentation></xs:annotation></xs:enumeration>
+             A completer -->
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TNatJur">
+        <xs:restriction base="Num3">
+            <!--
+            <xs:enumeration value="0"><xs:annotation><xs:documentation>Inconnue</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="1"><xs:annotation><xs:documentation>Particulier</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="2"><xs:annotation><xs:documentation>Artisan comm. agric.</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="3"><xs:annotation><xs:documentation>Société</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="4"><xs:annotation><xs:documentation>Caiss.assur.mal.</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="5"><xs:annotation><xs:documentation>Caisse complém.</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="6"><xs:annotation><xs:documentation>Association</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="7"><xs:annotation><xs:documentation>État ou org. état</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="8"><xs:annotation><xs:documentation>Etab. public nat.</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="9"><xs:annotation><xs:documentation>Collect.territor.</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="10"><xs:annotation><xs:documentation>Autres Etab. Pub, Etat étr.,ambassade</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="11"><xs:annotation><xs:documentation>Caisse alloc. fam.</xs:documentation></xs:annotation></xs:enumeration>            
+             A completer -->
+        </xs:restriction>            
+    </xs:simpleType>
+    <xs:simpleType name="TCivilite">
+        <xs:restriction base="Num3">
+			<!--
+			<xs:enumeration value="1"><xs:annotation><xs:documentation>Mademoiselle</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="2"><xs:annotation><xs:documentation>Mesdemoiselles</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="3"><xs:annotation><xs:documentation>Madame</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="4"><xs:annotation><xs:documentation>Mesdames</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="5"><xs:annotation><xs:documentation>Monsieur</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="6"><xs:annotation><xs:documentation>Messieurs</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="7"><xs:annotation><xs:documentation>Monsieur et Madame</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="8"><xs:annotation><xs:documentation>Monsieur ou Madame</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="9"><xs:annotation><xs:documentation>Madame et Monsieur</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="10"><xs:annotation><xs:documentation>Madame ou Monsieur</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="56"><xs:annotation><xs:documentation>Collège</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="63"><xs:annotation><xs:documentation>Direction</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="65"><xs:annotation><xs:documentation>Ecole</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="70"><xs:annotation><xs:documentation>Faculté</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="73"><xs:annotation><xs:documentation>Hopital</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="74"><xs:annotation><xs:documentation>Hospice</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="79"><xs:annotation><xs:documentation>Lycée</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="81"><xs:annotation><xs:documentation>Mairie</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="82"><xs:annotation><xs:documentation>Ministère</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="88"><xs:annotation><xs:documentation>Préfecture</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="96"><xs:annotation><xs:documentation>Sous-préfecture</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="98"><xs:annotation><xs:documentation>Syndicat</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="99"><xs:annotation><xs:documentation>Université</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="101"><xs:annotation><xs:documentation>Région</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="102"><xs:annotation><xs:documentation>Département</xs:documentation></xs:annotation></xs:enumeration> 
+             A completer -->
+        </xs:restriction>
+    </xs:simpleType>
+<!--     <xs:simpleType name="TCodPays"> -->
+<!--         <xs:restriction base="String3"> -->
+<!--             <xs:enumeration value="000"> -->
+<!--                 <xs:annotation> -->
+<!--                     <xs:documentation>libellé associé</xs:documentation> -->
+<!--                 </xs:annotation> -->
+<!--             </xs:enumeration> -->
+<!--             A completer -->
+<!--         </xs:restriction> -->
+<!--     </xs:simpleType> -->
+    <xs:simpleType name="TTypeRef">
+        <xs:restriction base="String2">
+            <xs:enumeration value="00">
+                <xs:annotation>
+                    <xs:documentation>libellé associé</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="01">
+                <xs:annotation>
+                    <xs:documentation>libellé associé</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>            
+        </xs:restriction>
+            <!-- A completer -->        
+    </xs:simpleType>      
+    <xs:simpleType name="TCodEmpech">
+        <xs:restriction base="Num3">
+			<!--
+			<xs:enumeration value="1"><xs:annotation><xs:documentation>delai accorde</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="2"><xs:annotation><xs:documentation>reclamation transmise ordo</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="3"><xs:annotation><xs:documentation>suspension demandee ordo</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="4"><xs:annotation><xs:documentation>opposition a poursuite</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="5"><xs:annotation><xs:documentation>redressement jud</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="6"><xs:annotation><xs:documentation>liquidation bien</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="7"><xs:annotation><xs:documentation>liquidation judiciaire</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="8"><xs:annotation><xs:documentation>surendettement</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="9"><xs:annotation><xs:documentation>npai psa</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="10"><xs:annotation><xs:documentation>annulation attendue</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="11"><xs:annotation><xs:documentation>anv demandee</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="12"><xs:annotation><xs:documentation>debiteur decede</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="13"><xs:annotation><xs:documentation>autorisation pours non accordee</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="14"><xs:annotation><xs:documentation>creance minime</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="15"><xs:annotation><xs:documentation>pv carence</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="16"><xs:annotation><xs:documentation>personne disparue</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="17"><xs:annotation><xs:documentation>anv</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="18"><xs:annotation><xs:documentation>plan reglement</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="19"><xs:annotation><xs:documentation>assignation rjlj</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="20"><xs:annotation><xs:documentation>cession fonds</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="21"><xs:annotation><xs:documentation>pourvoi tribx</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="22"><xs:annotation><xs:documentation>dr demandee</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="23"><xs:annotation><xs:documentation>tiers non rattache</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="24"><xs:annotation><xs:documentation>Plan de recouvrement inconnu</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="25"><xs:annotation><xs:documentation>Règlement attendu</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="26"><xs:annotation><xs:documentation>Poursuite à l'initiative du poste</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="27"><xs:annotation><xs:documentation>Réglé par l'aide médicale</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="28"><xs:annotation><xs:documentation>Production notaire</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="29"><xs:annotation><xs:documentation>Poursuites sans effet</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="30"><xs:annotation><xs:documentation>Certificat d'indigence</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="31"><xs:annotation><xs:documentation>Autorisation de poursuivre différée</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="32"><xs:annotation><xs:documentation>Attente réponse huissier ou TI</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="33"><xs:annotation><xs:documentation>PV de perquisition</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="34"><xs:annotation><xs:documentation>PV de recherche</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="35"><xs:annotation><xs:documentation>Vente - Autorisation refusée</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="36"><xs:annotation><xs:documentation>Divers</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="37"><xs:annotation><xs:documentation>Transferé BC Bénéficiaire</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="38"><xs:annotation><xs:documentation>Contestation de la créance</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="39"><xs:annotation><xs:documentation>Prélèvement périodiques</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="40"><xs:annotation><xs:documentation>Empêchement technique</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="41"><xs:annotation><xs:documentation>Paiement hôpital public rejeté</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="42"><xs:annotation><xs:documentation>Paiement hôpital public partiel ou nul</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="43"><xs:annotation><xs:documentation>Phase Comminatoire (OTD)</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="44"><xs:annotation><xs:documentation>OTD (en cours)</xs:documentation></xs:annotation></xs:enumeration>
+        	<xs:enumeration value="45"><xs:annotation><xs:documentation>Attente de fonds</xs:documentation></xs:annotation></xs:enumeration>
+        	 A completer -->
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="TCodEtape">
+        <xs:restriction base="Num3">
+			<!--
+			<xs:enumeration value="1"><xs:annotation><xs:documentation>avis somme a payer</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="2"><xs:annotation><xs:documentation>lettre rappel</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="3"><xs:annotation><xs:documentation>mise en demeure</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="4"><xs:annotation><xs:documentation>autorisation cmdt</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="5"><xs:annotation><xs:documentation>cdt sans frais</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="6"><xs:annotation><xs:documentation>autorisation saisie</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="7"><xs:annotation><xs:documentation>saisie attribution</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="8"><xs:annotation><xs:documentation>saisie attribution caf</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="9"><xs:annotation><xs:documentation>saisie remuneration</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="10"><xs:annotation><xs:documentation>saisie vente</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="11"><xs:annotation><xs:documentation>vente</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="12"><xs:annotation><xs:documentation>etat poursuite exterieure</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="14"><xs:annotation><xs:documentation>saisie coffre fort</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="15"><xs:annotation><xs:documentation>saisie vtm</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="16"><xs:annotation><xs:documentation>saisie vmp</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="17"><xs:annotation><xs:documentation>avis avant état des poursuites extérieures</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="18"><xs:annotation><xs:documentation>cdt avec frais</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="19"><xs:annotation><xs:documentation>cdt produit hospitalier sans frais</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="20"><xs:annotation><xs:documentation>cdt produit hospitalier avec frais</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="21"><xs:annotation><xs:documentation>lettre rappel produit hospitalier</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="22"><xs:annotation><xs:documentation>phase comminatoire</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="23"><xs:annotation><xs:documentation>OTD employeur</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="24"><xs:annotation><xs:documentation>OTD bancaire</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="25"><xs:annotation><xs:documentation>OTD autres tiers</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="26"><xs:annotation><xs:documentation>OTD_CAF</xs:documentation></xs:annotation></xs:enumeration> 
+			A completer -->
+        </xs:restriction>
+    </xs:simpleType>
+        
+    <xs:simpleType name="TEtatEtape">
+        <xs:restriction base="Num3">
+			<!--
+			<xs:enumeration value="1"><xs:annotation><xs:documentation>courante</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="3"><xs:annotation><xs:documentation>passee</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="4"><xs:annotation><xs:documentation>possible</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="5"><xs:annotation><xs:documentation>a faire</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="6"><xs:annotation><xs:documentation>annulée</xs:documentation></xs:annotation></xs:enumeration>
+             A completer 
+             -->
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TOrigineEtape">
+        <xs:restriction base="Num3">
+			<!--
+			<xs:enumeration value="1"><xs:annotation><xs:documentation>automate</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="2"><xs:annotation><xs:documentation>validation</xs:documentation></xs:annotation></xs:enumeration>
+			<xs:enumeration value="3"><xs:annotation><xs:documentation>action individuelle</xs:documentation></xs:annotation></xs:enumeration>
+             A completer 
+            -->
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TIdPost">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]*"/>
+            <xs:maxLength value="7"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TCodeActu">
+        <xs:restriction base="Num3">
+            <!--
+            <xs:enumeration value="1"><xs:annotation><xs:documentation>demande transmise</xs:documentation></xs:annotation></xs:enumeration>        
+            <xs:enumeration value="2"><xs:annotation><xs:documentation>npai</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="3"><xs:annotation><xs:documentation>dcd</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="4"><xs:annotation><xs:documentation>opposition a poursuite</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="5"><xs:annotation><xs:documentation>reconnaissance de dette</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="6"><xs:annotation><xs:documentation>notifié</xs:documentation></xs:annotation></xs:enumeration>        
+            <xs:enumeration value="7"><xs:annotation><xs:documentation>non reclamé</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="8"><xs:annotation><xs:documentation>envoyé à huissier</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="9"><xs:annotation><xs:documentation>positive</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="10"><xs:annotation><xs:documentation>positive différée</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="11"><xs:annotation><xs:documentation>négative</xs:documentation></xs:annotation></xs:enumeration>        
+            <xs:enumeration value="12"><xs:annotation><xs:documentation>envoi pour accord</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="13"><xs:annotation><xs:documentation>transmission caf</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="14"><xs:annotation><xs:documentation>remise huissier</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="15"><xs:annotation><xs:documentation>denonciation</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="16"><xs:annotation><xs:documentation>envoi certif non contestation</xs:documentation></xs:annotation></xs:enumeration>        
+            <xs:enumeration value="17"><xs:annotation><xs:documentation>contestation</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="18"><xs:annotation><xs:documentation>non contestation</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="19"><xs:annotation><xs:documentation>positive sans provision</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="20"><xs:annotation><xs:documentation>remise tribunal instance</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="21"><xs:annotation><xs:documentation>tentative conciliation</xs:documentation></xs:annotation></xs:enumeration>        
+            <xs:enumeration value="22"><xs:annotation><xs:documentation>saisie refusée</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="23"><xs:annotation><xs:documentation>saisie acceptée</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="24"><xs:annotation><xs:documentation>saisie exécutée</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="25"><xs:annotation><xs:documentation>pv perquisition</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="26"><xs:annotation><xs:documentation>saisie interrompue</xs:documentation></xs:annotation></xs:enumeration>        
+            <xs:enumeration value="27"><xs:annotation><xs:documentation>pv carence</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="28"><xs:annotation><xs:documentation>pv recherche</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="29"><xs:annotation><xs:documentation>envoi avis tpg</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="30"><xs:annotation><xs:documentation>autorisation tpg refusée</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="31"><xs:annotation><xs:documentation>autorisation tpg accordée</xs:documentation></xs:annotation></xs:enumeration>        
+            <xs:enumeration value="32"><xs:annotation><xs:documentation>vente executée</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="33"><xs:annotation><xs:documentation>produit insuffisant</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="34"><xs:annotation><xs:documentation>signification échec</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="35"><xs:annotation><xs:documentation>accord caf</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="36"><xs:annotation><xs:documentation>mandatement office</xs:documentation></xs:annotation></xs:enumeration>        
+            <xs:enumeration value="37"><xs:annotation><xs:documentation>inscription office</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="38"><xs:annotation><xs:documentation>règlement et liquidation judiciaire</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="39"><xs:annotation><xs:documentation>surendettement</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="40"><xs:annotation><xs:documentation>demande renseign. négative</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="41"><xs:annotation><xs:documentation>expulsion refusée</xs:documentation></xs:annotation></xs:enumeration>        
+            <xs:enumeration value="42"><xs:annotation><xs:documentation>dossier contrainte exterieure refusée TPG</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="43"><xs:annotation><xs:documentation>certificat irrecouvrabilite</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="44"><xs:annotation><xs:documentation>insuffisance actif rjlj</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="45"><xs:annotation><xs:documentation>dossier succession negatif</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="46"><xs:annotation><xs:documentation>refus par le représentant de l état du mandatement office</xs:documentation></xs:annotation></xs:enumeration>        
+            <xs:enumeration value="47"><xs:annotation><xs:documentation>action civile refusée par le juge</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="48"><xs:annotation><xs:documentation>soldé</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="49"><xs:annotation><xs:documentation>commandement signifié à parquet</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="50"><xs:annotation><xs:documentation>procédure post mise en demeure</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="51"><xs:annotation><xs:documentation>reprise plan de recouvrement après saisie</xs:documentation></xs:annotation></xs:enumeration>        
+            <xs:enumeration value="52"><xs:annotation><xs:documentation>saisie annulée</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="53"><xs:annotation><xs:documentation>tentative de saisie</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="54"><xs:annotation><xs:documentation>procès verbal opposition jonction</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="55"><xs:annotation><xs:documentation>acte retourné , destinataire non informé</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="56"><xs:annotation><xs:documentation>rappel P767 dans le cas de poursuites extérieures</xs:documentation></xs:annotation></xs:enumeration>        
+            <xs:enumeration value="57"><xs:annotation><xs:documentation>poursuite extérieure soldée</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="58"><xs:annotation><xs:documentation>Divers</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="59"><xs:annotation><xs:documentation>Non notifié</xs:documentation></xs:annotation></xs:enumeration>            
+            <xs:enumeration value="60"><xs:annotation><xs:documentation>Attestation liquidateur</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="61"><xs:annotation><xs:documentation>Attente visa ordonnateur</xs:documentation></xs:annotation></xs:enumeration>        
+            <xs:enumeration value="62"><xs:annotation><xs:documentation>Attente visa TPG</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="63"><xs:annotation><xs:documentation>Commandement refusé expressément</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="64"><xs:annotation><xs:documentation>Commandement refusé tacitement</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="65"><xs:annotation><xs:documentation>AP saisie/OTD différée</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="66"><xs:annotation><xs:documentation>AP saisie/OTD refusée expressément (toutes saisies)</xs:documentation></xs:annotation></xs:enumeration>        
+            <xs:enumeration value="67"><xs:annotation><xs:documentation>AP saisie/OTD refusée tacitement (toutes saisies)</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="68"><xs:annotation><xs:documentation>Vente - autorisation refusée</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="69"><xs:annotation><xs:documentation>AP accordée pour toutes saisies/OTD</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="70"><xs:annotation><xs:documentation>Refus Ordonnateur pour Saisie/OTD Remun. et SV</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="71"><xs:annotation><xs:documentation>Refus Ordonnateur pour autres que Saisie/OTD Remun.</xs:documentation></xs:annotation></xs:enumeration>        
+            <xs:enumeration value="72"><xs:annotation><xs:documentation>Refus Ordonnateur pour autre que SV</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="73"><xs:annotation><xs:documentation>Refus Ordonnateur pour SV</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="74"><xs:annotation><xs:documentation>Refus Ordonnateur pour Saisie/OTD Remun.</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="75"><xs:annotation><xs:documentation>Refus Ordonnateur pour autre que Saisie/OTD Remun. et SV</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="76"><xs:annotation><xs:documentation>Commandement accordé</xs:documentation></xs:annotation></xs:enumeration>        
+            <xs:enumeration value="77"><xs:annotation><xs:documentation>Saisie accordée (migration)</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="78"><xs:annotation><xs:documentation>Saisie refusee (migration)</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="79"><xs:annotation><xs:documentation>Vente demande autorisation</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="80"><xs:annotation><xs:documentation>Vente autorisation accordée</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="81"><xs:annotation><xs:documentation>Vente autorisation refusee</xs:documentation></xs:annotation></xs:enumeration>        
+            <xs:enumeration value="82"><xs:annotation><xs:documentation>Commandement annulé</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="83"><xs:annotation><xs:documentation>Acte de poursuite annulé</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="84"><xs:annotation><xs:documentation>Demande renseign. Envoyée</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="85"><xs:annotation><xs:documentation>Demande renseign. Positive</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="86"><xs:annotation><xs:documentation>Dénonciation au tiers débiteur</xs:documentation></xs:annotation></xs:enumeration>        
+            <xs:enumeration value="87"><xs:annotation><xs:documentation>Saisie acceptée par le débiteur</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="88"><xs:annotation><xs:documentation>Tentative de conciliation suite SR (échéancier)</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="89"><xs:annotation><xs:documentation>SR positive</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="90"><xs:annotation><xs:documentation>SR négative</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="91"><xs:annotation><xs:documentation>Cause interruptive de prescription</xs:documentation></xs:annotation></xs:enumeration>        
+            <xs:enumeration value="92"><xs:annotation><xs:documentation>Attente de fonds</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="93"><xs:annotation><xs:documentation>Cantonnement</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="94"><xs:annotation><xs:documentation>Tiers détenteur saisi par un autre créancier</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="95"><xs:annotation><xs:documentation>Négative / Echec</xs:documentation></xs:annotation></xs:enumeration>
+            <xs:enumeration value="96"><xs:annotation><xs:documentation>Procédure interrompue</xs:documentation></xs:annotation></xs:enumeration>        
+            
+            <xs:enumeration value="97"><xs:annotation><xs:documentation>  
+            <xs:enumeration value="98"><xs:annotation><xs:documentation>       
+            <xs:enumeration value="99"><xs:annotation><xs:documentation> 
+           -->      
+           <!-- A completer -->
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TTypeHuissier">
+    	<xs:restriction base="Num3">
+    		<!--
+        	<xs:enumeration value="1"><xs:annotation><xs:documentation>demande transmise</xs:documentation></xs:annotation></xs:enumeration>        
+        	<xs:enumeration value="2"><xs:annotation><xs:documentation>npai</xs:documentation></xs:annotation></xs:enumeration>            
+    		-->
+    	</xs:restriction>
+	</xs:simpleType>
+
+    <xs:simpleType name="Num1">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="1"/>
+            <xs:pattern value="[0-9]*"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Num2">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="2"/>
+            <xs:pattern value="[0-9]*"/>
+        </xs:restriction>
+    </xs:simpleType>    
+    <xs:simpleType name="Num3">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="3"/>
+            <xs:pattern value="[0-9]*"/>
+        </xs:restriction>
+    </xs:simpleType>    
+    <xs:simpleType name="Num4">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="4"/>
+            <xs:pattern value="[0-9]*"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Num5">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="5"/>
+            <xs:pattern value="[0-9]*"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Num7">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="7"/>
+            <xs:pattern value="[0-9]*"/>
+        </xs:restriction>
+    </xs:simpleType>    
+    <xs:simpleType name="Num8">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="8"/>
+            <xs:pattern value="[0-9]*"/>
+        </xs:restriction>
+    </xs:simpleType>    
+    <xs:simpleType name="Num12">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="12"/>
+            <xs:pattern value="[0-9]*"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Num13">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="13"/>
+            <xs:pattern value="[0-9]*"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Num20">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="20"/>
+            <xs:pattern value="[0-9]*"/>
+        </xs:restriction>
+    </xs:simpleType>    
+    <xs:simpleType name="AlphaNum3">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[a-zA-Z0-9]*"/>
+            <xs:minLength value="1"/>
+            <xs:maxLength value="3"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AlphaNum10">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[a-zA-Z0-9]*"/>
+            <xs:minLength value="1"/>
+            <xs:maxLength value="10"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AlphaNum12">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[a-zA-Z0-9]*"/>
+            <xs:minLength value="1"/>
+            <xs:maxLength value="12"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AlphaNum15">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[a-zA-Z0-9]*"/>
+            <xs:minLength value="1"/>
+            <xs:maxLength value="15"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AlphaNum30">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[a-zA-Z0-9]*"/>
+            <xs:minLength value="1"/>
+            <xs:maxLength value="30"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Alpha2">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="2"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Alpha3">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="3"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Alpha4">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="4"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Alpha6">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="6"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Alpha7">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="7"/>
+        </xs:restriction>
+    </xs:simpleType>    
+    <xs:simpleType name="Alpha10">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="10"/>
+        </xs:restriction>
+    </xs:simpleType>    
+    <xs:simpleType name="Alpha14">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="14"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Alpha15">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="15"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Alpha16">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="16"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Alpha20">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="20"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Alpha30">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="30"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Alpha38">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="38"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Alpha160">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="160"/>
+        </xs:restriction>
+    </xs:simpleType>
+	<!--<xs:complexType name="Base_Booleen">
+		<xs:attribute name="V" type="V_Booleen" use="required"/>
+	</xs:complexType>-->
+	<xs:simpleType name="Base_Booleen">
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<!--<xs:complexType name="Base_Montant">
+		<xs:attribute name="V" type="V_Montant" use="required"/>
+	</xs:complexType> -->
+	<xs:simpleType name="Base_Montant">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="14"/>
+			<xs:fractionDigits value="2"/>
+		</xs:restriction>
+	</xs:simpleType>    
+	<!--<xs:complexType name="Base_Date">
+		<xs:attribute name="V" type="V_Date" use="required"/>
+	</xs:complexType>-->
+	<xs:simpleType name="Base_Date">
+		<xs:restriction base="xs:date"/>
+	</xs:simpleType>
+	<xs:simpleType name="Base_Texte5">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="5"/>
+		</xs:restriction>
+	</xs:simpleType>	
+	<xs:simpleType name="Base_Texte10">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="10"/>
+		</xs:restriction>
+	</xs:simpleType>		
+	<!--<xs:complexType name="Base_Texte15">
+		<xs:attribute name="V" type="V_Texte15" use="required"/>
+	</xs:complexType> -->
+	<xs:simpleType name="Base_Texte15">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="15"/>
+		</xs:restriction>
+	</xs:simpleType>	
+	<!-- <xs:complexType name="Base_Texte20">
+		<xs:attribute name="V" type="V_Texte20" use="required"/>
+	</xs:complexType> -->
+	<xs:simpleType name="Base_Texte20">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Base_Texte38">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="38"/>
+		</xs:restriction>
+	</xs:simpleType>	
+	<xs:simpleType name="Base_Texte50">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

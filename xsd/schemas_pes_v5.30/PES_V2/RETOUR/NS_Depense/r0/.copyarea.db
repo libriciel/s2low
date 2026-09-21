@@ -1,0 +1,11 @@
+ClearCase CopyAreaDB|4
+VOBSOCLE\PES_XSD\PES_V2\Externe\Schemas_PES\PES_V2\RETOUR\NS_Depense\r0
+2
+7
+18:CommunDepense_Retour.xsd|1|1921e135ebd|6c8a|d1e93b24|a8c96ea8d3f411e6958100163e0c063f|0
+21:Class_BordereauDepense_Retour.xsd|1|1921e135e7e|565|9ca3d35e|a7e96e80d3f411e6958100163e0c063f|0
+17:Class_Mandat_Retour.xsd|1|1970d0ec7a6|1470|280211|dbe75853300811f0a8ee525400ed14c9|0
+19:Class_Paiement_Retour.xsd|1|1921e135e9e|5cf|f0a5f095|a8996ea0d3f411e6958100163e0c063f|0
+21:Class_InfoTiersDepense_Retour.xsd|1|1970d0ec79b|1059|f23e7f80|dc375863300811f0a8ee525400ed14c9|0
+16:PES_Depense_Retour.xsd|1|1970d0ec7aa|1683|bb379e95|dc875873300811f0a8ee525400ed14c9|0
+1c:Class_LigneMandat_Retour.xsd|1|1921e135e9e|2145|37421a5c|a8496e90d3f411e6958100163e0c063f|0

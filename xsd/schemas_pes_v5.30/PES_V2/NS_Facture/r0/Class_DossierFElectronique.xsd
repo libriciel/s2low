@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:include schemaLocation="Class_AdresseFacture.xsd" />
+  <xs:include schemaLocation="CommunsFacture.xsd" />
+  <xs:complexType name="TLigneFElectronique">
+    <xs:annotation>
+      <xs:documentation>Détail de la ligne de facture.électronique</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="Date" type="cm:Base_Date">
+          <xs:annotation>
+            <xs:documentation>Date de réalisation de la prestation</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:sequence>
+          <xs:element name="DateDebut" type="cm:Base_Date">
+            <xs:annotation>
+              <xs:documentation>Date du début de la prestation</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="DateFin" type="cm:Base_Date">
+            <xs:annotation>
+              <xs:documentation>Date de la fin de la prestation</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:choice>
+      <xs:choice>
+        <xs:sequence>
+          <xs:element name="Quantite1" type="cm:Base_Quantite">
+            <xs:annotation>
+              <xs:documentation>Quantité d'unités.
+La taille maximum autorisée est 6 chiffres (hors virgule), à défaut rejet du PES_Facture ASAP.
+Jusqu'à 4 décimales significatives possibles</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Unite1" type="cm:Base_Texte5" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Unité de mesure de la valeur indiquée dans Quantite1
+PES_Facture ASAP : si la balise est renseignée, Quantite doit être valorisé, à défaut rejet du PES_Facture ASAP.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Quantite2" type="cm:Base_Quantite" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Quantité 2 d'unités.
+La taille maximum autorisée est 6 chiffres (hors virgule), à défaut rejet du PES_Facture ASAP.
+Jusqu'à 4 décimales significatives possibles</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Unite2" type="cm:Base_Texte5" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Unité de mesure de la valeur indiquée dans
+								Quantite2
+								PES_Facture ASAP : si la balise est renseignée,
+								Quantite2 doit être
+								valorisé, à défaut rejet du PES_Facture ASAP.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="MtUnitaire" type="cm:Base_Montant">
+            <xs:annotation>
+              <xs:documentation>Prix de chaque Unité.
+PES_Facture ASAP : si la balise est renseignée, le montant doit être strictement positif, à défaut rejet du PES_Facture ASAP.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:sequence>
+          <xs:element name="MtBase" type="cm:Base_Montant">
+            <xs:annotation>
+              <xs:documentation>Base de calcul du prix.
+PES_Facture ASAP : si la balise est renseignée, le montant doit être strictement positif, à défaut rejet du PES_Facture ASAP.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:sequence>
+          <xs:element name="MtRemise" type="cm:Base_Montant">
+            <xs:annotation>
+              <xs:documentation>Montant de la Remise TTC.
+La remise doit apparaître sur une ligne de facture spécifique.
+Le montant de la remise apparaît en négatif sur l’édition ASAP.
+PES_Facture ASAP : si la balise est valorisée, le montant doit être strictement positif sinon rejet du PES_Facture ASAP.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:choice>
+      <xs:element name="IdentifiantLigneFacture" type="cm:Base_Num3">
+        <xs:annotation>
+          <xs:documentation>Identifiant unique d’une ligne de facture au sein d’une même facture. Ce numéro est unique et commence obligatoirement à 1 série continue sans doublon, sinon rejet guichet du flux.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Libelle" type="cm:Base_Texte255">
+        <xs:annotation>
+          <xs:documentation>Libellé détaillé du produit.
+PES_Facture ASAP de Type Facturation Electronique : la zone Libellé est à renseigner de l'objet de la ligne de facture . Correspond MotifRemiseFE en cas de remise</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MtHT" type="cm:Base_Montant">
+        <xs:annotation>
+          <xs:documentation>Montant HT de la Ligne.
+PES_Facture ASAP : le montant doit être strictement positif, à défaut rejet du PES_Facture ASAP.
+Le montant doit être cohérent avec les valeurs de MtRemise, ou MtBase ou de MtUnitaire x quantité1 (x  quantité2) sinon rejet du flux.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodeTypeTVA" type="TCodeTypeTVA">
+        <xs:annotation>
+          <xs:documentation>Code de type de TVA de la ligne facturée (cf Enumération CodeTypeTVA)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TauxTVA" type="cm:Base_Taux_Light">
+        <xs:annotation>
+          <xs:documentation>Taux de TVA , exprimé sous forme de pourcentage, applicable à la ligne de facturation électronique. A valoriser à 0 si pas de TVA</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MotifExoTVA" type="cm:Base_Texte30" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Obligatoire si CodeTypeTVA = E. Indique le motif d’exonération à la TVA (référence à la disposition fiscale applicable).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  
+</xs:schema>

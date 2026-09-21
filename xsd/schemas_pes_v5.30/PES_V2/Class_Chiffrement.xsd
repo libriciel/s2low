@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.w3.org/2001/04/xmlenc#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="../xmlenc/xenc-schema.xsd"/>
+	<xs:complexType name="PESEncryptedDataType">
+		<xs:annotation>
+			<xs:documentation>Element contenant la donnee chiffree et les informations necessaires au dechiffrement - L'element KeyInfo contient un element EncryptedKey par acteur destinataire de l'information.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="xenc:EncryptedDataType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:group name="PESEncryptedDataGroup">
+		<xs:sequence>
+			<xs:element name="EncryptedData" type="xenc:PESEncryptedDataType"/>
+		</xs:sequence>
+	</xs:group>
+</xs:schema>

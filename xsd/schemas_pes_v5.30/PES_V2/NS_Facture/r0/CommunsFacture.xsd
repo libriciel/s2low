@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" >
+  <xs:complexType name="TTypeFacture">
+    <xs:annotation>
+      <xs:documentation>Type de Facturation.
+Le TypeFact ASAP=09 est nécessaire et obligatoire pour permettre l'édition centralisée des ASAP.
+Le TypeFact ASAP=10 est nécessaire et obligatoire pour permettre l'édition centralisée des ASAP Patients</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>FACTURE  une facture</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>COMMANDE  une commande</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>AVOIR  un avoir</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>DEVIS  un devis</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>PRO FORMA  une facture pro forma</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="06">
+            <xs:annotation>
+              <xs:documentation>CARTE ACHAT  un relevé de carte achat</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="07">
+            <xs:annotation>
+              <xs:documentation>AVIS ECHEANCE  un avis d'échéance</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="08">
+            <xs:annotation>
+              <xs:documentation>QUITTANCE  une quittance</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="09">
+            <xs:annotation>
+              <xs:documentation>ASAP Avis des  sommes à payer</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="10">
+            <xs:annotation>
+              <xs:documentation>ASAP Avis des  sommes à payer Patients</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+           <xs:enumeration value="11">
+            <xs:annotation>
+              <xs:documentation>ASAP Avis des  sommes à payer ORMC</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+           <xs:enumeration value="12">
+            <xs:annotation>
+              <xs:documentation>ASAP Avis des sommes à payer Facturation Electronique</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+           <xs:enumeration value="13">
+            <xs:annotation>
+              <xs:documentation>ASAP Avis des sommes à payer ORMC Facturation Electronique</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+    <xs:complexType name="TCodeTypeTVA">
+    <xs:annotation>
+      <xs:documentation>Code de type de TVA</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="S">
+            <xs:annotation>
+              <xs:documentation>Taux de TVA standard</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+           <xs:enumeration value="E">
+            <xs:annotation>
+              <xs:documentation>Exempté de TVA</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+           <xs:enumeration value="O">
+            <xs:annotation>
+              <xs:documentation>Hors du périmètre d’application de la TVA </xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+   <xs:complexType name="TCadreFacturationVendeur">
+    <xs:annotation>
+      <xs:documentation>Cadre de facturation applicable au vendeur</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="B1">
+            <xs:annotation>
+              <xs:documentation>Dépôt d’une facture de biens</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="S1">
+            <xs:annotation>
+              <xs:documentation>Dépôt d’une facture de prestation de service</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>

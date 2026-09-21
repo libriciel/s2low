@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 rel. 2 U (http://www.xmlspy.com) by SERGE MURET (SEMA GROUP SA) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:complexType name="Base_Siret">
+		<xs:attribute name="V" type="V_Siret" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Siret">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{14}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Siren">
+		<xs:attribute name="V" type="V_Siren" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Siren">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{9}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Siret-Siren">
+		<xs:attribute name="V" type="V_Siret-Siren" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Siret-Siren">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]*"/>
+			<xs:minLength value="9"/>
+			<xs:maxLength value="14"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_CogInsee">
+		<xs:attribute name="V" type="V_CogInsee" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_CogInsee">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9a-zA-Z ]*"/>
+			<xs:maxLength value="11"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum10">
+		<xs:attribute name="V" type="V_Alphanum10" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum10">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="10"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum2">
+		<xs:attribute name="V" type="V_Alphanum2" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum2">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="2"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum3">
+		<xs:attribute name="V" type="V_Alphanum3" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum3">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="3"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Alphanum50">
+		<xs:attribute name="V" type="V_Alphanum50" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Alphanum50">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="50"/>
+			<xs:pattern value="[0-9a-zA-Z]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_ChaineNum10">
+		<xs:attribute name="V" type="V_ChaineNum10" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_ChaineNum10">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="10"/>
+			<xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_ChaineNum12">
+		<xs:attribute name="V" type="V_ChaineNum12" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_ChaineNum12">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="12"/>
+			<xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_ChaineNum30">
+		<xs:attribute name="V" type="V_ChaineNum30" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_ChaineNum30">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="30"/>
+			<xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num3">
+		<xs:attribute name="V" type="V_Num3" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num3">
+		<xs:restriction base="xs:int">
+			<xs:totalDigits value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num4">
+		<xs:attribute name="V" type="V_Num4" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num4">
+		<xs:restriction base="xs:int">
+			<xs:totalDigits value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num5">
+		<xs:attribute name="V" type="V_Num5" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num5">
+		<xs:restriction base="xs:int">
+			<xs:totalDigits value="5"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num8">
+		<xs:attribute name="V" type="V_Num8" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num8">
+		<xs:restriction base="xs:int">
+			<xs:totalDigits value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num10">
+		<xs:attribute name="V" type="V_Num10" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num10">
+		<xs:restriction base="xs:int">
+			<xs:totalDigits value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num14">
+		<xs:attribute name="V" type="V_Num14" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num14">
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="14"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Num20">
+		<xs:attribute name="V" type="V_Num20" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Num20">
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte1">
+		<xs:attribute name="V" type="V_Texte1" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte1">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte2">
+		<xs:attribute name="V" type="V_Texte2" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte2">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte3">
+		<xs:attribute name="V" type="V_Texte3" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte3">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte7">
+		<xs:attribute name="V" type="V_Texte7" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte7">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="7"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte10">
+		<xs:attribute name="V" type="V_Texte10" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte10">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte12">
+		<xs:attribute name="V" type="V_Texte12" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte12">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="12"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte30">
+		<xs:attribute name="V" type="V_Texte30" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte30">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="30"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte50">
+		<xs:attribute name="V" type="V_Texte50" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte50">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte60">
+		<xs:attribute name="V" type="V_Texte60" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte60">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="60"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Texte100">
+		<xs:attribute name="V" type="V_Texte100" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Texte100">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="V_TexteNoLimit">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:complexType name="Base_Annee">
+		<xs:attribute name="V" type="V_Annee" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Annee">
+		<xs:restriction base="xs:gYear"/>
+	</xs:simpleType>
+	<xs:complexType name="Base_Booleen">
+		<xs:attribute name="V" type="V_Booleen" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Booleen">
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:complexType name="Base_Date">
+		<xs:attribute name="V" type="V_Date" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Date">
+		<xs:restriction base="xs:date"/>
+	</xs:simpleType>
+	<xs:complexType name="Base_Montant">
+		<xs:attribute name="V" type="V_Montant" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Montant">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="14"/>
+			<xs:fractionDigits value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Montant_3deci">
+		<xs:attribute name="V" type="V_Montant_3deci" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Montant_3deci">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="14"/>
+			<xs:fractionDigits value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+ 	<xs:complexType name="Base_Taux">
+ 		<xs:attribute name="V" type="V_Taux" use="required"/>
+ 	</xs:complexType>
+ 	<xs:simpleType name="V_Taux">
+ 		<xs:restriction base="xs:decimal">
+ 			<xs:totalDigits value="5"/>
+ 			<xs:fractionDigits value="2"/>
+		</xs:restriction>
+ 	</xs:simpleType>
+	<xs:complexType name="Base_Taux_3deci">
+		<xs:attribute name="V" type="V_Taux_3deci" use="required"/>
+	</xs:complexType>
+ 	<xs:simpleType name="V_Taux_3deci">
+ 		<xs:restriction base="xs:decimal">
+ 			<xs:totalDigits value="4"/>
+ 			<xs:fractionDigits value="3"/>
+		</xs:restriction>
+ 	</xs:simpleType>
+    <xs:complexType name="Base_Version">
+        <xs:attribute name="V" type="V_Version" use="required"/>
+    </xs:complexType>
+    <xs:simpleType name="V_Version">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9a-zA-Z+_\.]*"></xs:pattern>
+        </xs:restriction>
+    </xs:simpleType>
+	<xs:complexType name="Base_Pourcentage">
+		<xs:attribute name="V" type="V_Pourcentage" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Pourcentage">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="12"/>
+			<xs:fractionDigits value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Pourcentage_3deci">
+		<xs:attribute name="V" type="V_Pourcentage_3deci" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Pourcentage_3deci">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="5"/>
+			<xs:fractionDigits value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Gros_Pourcentage_3deci">
+		<xs:attribute name="V" type="V_Gros_Pourcentage_3deci" use="required"/>
+	</xs:complexType>
+	<xs:simpleType name="V_Gros_Pourcentage_3deci">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="6"/>
+			<xs:fractionDigits value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Base_Date_MM_AAAA">
+		<xs:attribute name="V" type="xs:gYearMonth" use="required"/>
+	</xs:complexType>
+</xs:schema>
