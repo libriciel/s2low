@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.19
+
+### Évolutions
+
+- Prise en compte de la version 5.30 du schema XSD Pes Aller #1588
+
 ## 5.1.18 - 2026-09-18
 
 ### Correction
