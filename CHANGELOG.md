@@ -38,6 +38,12 @@
 
 - Dépréciation de la soumission des enveloppes ACTE #1104
 
+## 5.1.18 - 2026-09-18
+
+### Correction
+
+- Le tampon des documents PDF n'était plus appliqué que sur la première page (régression introduite en 5.1.17) #1587
+
 ## 5.1.17 - 2026-09-14
 
 ### Corrections

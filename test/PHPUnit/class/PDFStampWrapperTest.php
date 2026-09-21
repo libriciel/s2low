@@ -118,6 +118,8 @@ class PDFStampWrapperTest extends PHPUnit_Framework_TestCase
             ['width' => 190, 'height' => 55, 'x' => 10, 'y' => 10, 'origin' => 'TOP_RIGHT'],
             $stamp['position']
         );
+        // page = 0 : pdf-stamp tamponne toutes les pages, une valeur non nulle ne tamponnerait que cette page
+        $this->assertSame(0, $stamp['page']);
         $this->assertSame(
             [
                 ['title' => 'Envoi simulé le', 'value' => '15/09/2017'],
