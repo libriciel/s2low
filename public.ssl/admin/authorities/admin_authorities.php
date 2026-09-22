@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use S2low\Legacy\S2lowLegacyCommandInSymfonyContainer;
 use S2lowLegacy\Lib\FrontController;
 
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+// phpcs:ignore Squiz.Classes.ValidClassName.NotPascalCase
 class Admin_authorities extends S2lowLegacyCommandInSymfonyContainer
 {
     public function __construct(
