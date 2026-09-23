@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
+
+    <arg name="basepath" value="."/>
+    <arg name="cache" value=".phpcs-cache"/>
+    <arg name="colors"/>
+    <arg name="extensions" value="php"/>
+    <arg name="parallel" value="50"/>
+    <arg value="ps"/>
+
+    <rule ref="PSR12">
+        <!-- require and require_once before classes declarations -->
+        <exclude name="PSR1.Files.SideEffects.FoundWithSymbols"/>
+
+        <!-- namespaces -->
+        <exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace"/>
+
+        <exclude name="PSR1.Methods.CamelCapsMethodName.NotCamelCaps"/>
+
+        <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
+    </rule>
+
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="400"/>
+            <property name="absoluteLineLimit" value="400"/>
+        </properties>
+    </rule>
+
+    <file>bin/</file>
+    <file>class/</file>
+    <file>config/</file>
+    <file>controller/</file>
+    <file>cron/</file>
+    <file>docker-resources/</file>
+    <file>init/</file>
+    <file>integration_tests/</file>
+    <file>lib/</file>
+    <file>model/</file>
+    <file>public/</file>
+    <file>public.ssl/</file>
+    <file>script/</file>
+    <file>src/</file>
+    <file>template/</file>
+    <file>test/</file>
+    <file>tests/</file>
+
+    <exclude-pattern>./config/preload.php</exclude-pattern>
+    <exclude-pattern>./public.ssl/modules/mail/template/*</exclude-pattern>
+    <exclude-pattern>./test/PHPUnit/bootstrap.php</exclude-pattern>
+    <exclude-pattern>./tests/bootstrap.php</exclude-pattern>
+</ruleset>
