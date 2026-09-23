@@ -51,7 +51,7 @@ FROM authority_group_siren ags
 WHERE NOT EXISTS (
     SELECT 1 FROM authorities a
     WHERE a.siren = ags.siren
-      AND a.id != ?
+      AND a.id IS DISTINCT FROM ?
 )
 ORDER BY ags.authority_group_id, ags.siren
 SQL;
