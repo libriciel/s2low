@@ -7,9 +7,6 @@ use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Lib\FancyDate;
 
-/**
- *
- */
 class ListeActesHTML
 {
     private $allCollectivite;
@@ -27,9 +24,6 @@ class ListeActesHTML
     private $fstatus;
     private $fnum;
     private $objet;
-    /**
-     * @var \S2lowLegacy\Lib\FancyDate
-     */
     private FancyDate $fancyDate;
     private string $sortWay = 'desc';
 
@@ -107,7 +101,7 @@ class ListeActesHTML
         ?>
         <script type="text/javascript" src="<?php echo Helpers::getLink('/jsmodules/jquery.js')?>"></script>
         <script type="text/javascript" src="<?php echo Helpers::getLink('/jsmodules/select2.js')?>"></script>
-        <script type="text/javascript" src="/javascript/zselect_s2low.js"></script>   
+        <script type="text/javascript" src="/javascript/zselect_s2low.js"></script>
         
         <h2>
                     Liste des enveloppes de transactions
@@ -116,10 +110,10 @@ class ListeActesHTML
             ?>
                     <button id="expand-all" onclick="javascript:show_all();" class="toggle-action">Tout déplier<span class="hidden-info">les enveloppes de transactions</span></button>
                     <button id="collapse-all" onclick="javascript:hide_all()" class="toggle-action">Tout replier<span class="hidden-info">les enveloppes de transactions</span></button>
-                </h2>    
-                    <?php	 $this->displayList($enveloppe);
+                </h2>
+                    <?php $this->displayList($enveloppe);
         } else {
-            ?> 
+            ?>
                      </h2>       Pas de transaction trouvée correspondant aux critères de filtrage
                     <?php
         }
