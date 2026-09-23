@@ -101,6 +101,20 @@ class AuthorityGroupSirenSQLTest extends S2lowTestCase
         self::assertSame([['authority_group_id' => 2, 'siren' => '491011698']], $rows);
     }
 
+    /**
+     * Une collectivité en cours de création n'a pas encore d'id : le point d'appel passe alors null,
+     * qui ne doit désigner aucune collectivité existante et ne doit donc jamais neutraliser l'exclusion.
+     */
+    public function testGetAvailableSirenForAllGroupsExcludesSirenUsedByOtherAuthorityWhenCreatingNewAuthority(): void
+    {
+        $this->authorityGroupSirenSQL->add(1, '123456789'); // taken by authority 1
+        $this->authorityGroupSirenSQL->add(1, '491011698'); // free
+
+        $rows = $this->authorityGroupSirenSQL->getAvailableSirenForAllGroups(null);
+
+        self::assertSame([['authority_group_id' => 1, 'siren' => '491011698']], $rows);
+    }
+
     public function testGetAvailableSirenForAllGroupsKeepsSirenOfCurrentAuthority(): void
     {
         $this->authorityGroupSirenSQL->add(1, '123456789'); // siren of authority 1 itself
