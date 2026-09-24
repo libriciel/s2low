@@ -12,10 +12,42 @@ use Symfony\Component\Process\Process;
 
 class CheckSnInCRLCommandOutputTranslatorTest extends TestCase
 {
-    public function readCRL(): Process
+    // Extrait de `openssl crl -text -noout` sur la CRL RGS_AC_PERSONNE_AUTHENTIFICATION_V1
+    private const CRL_TEXT = <<<'OPENSSL_OUTPUT'
+        Certificate Revocation List (CRL):
+                Version 2 (0x1)
+                Signature Algorithm: sha256WithRSAEncryption
+                Issuer: C = FR, O = MINISTERE INTERIEUR, OU = 0002110014016, CN = AC PERSONNE AUTHENTIFICATION V1
+                Last Update: Sep 23 12:39:06 2025 GMT
+                Next Update: Sep 29 12:39:06 2025 GMT
+                CRL extensions:
+                    X509v3 Authority Key Identifier:
+                        E3:F9:97:F0:BF:DE:E2:65:6D:BF:C2:5E:F6:3D:0E:D8:90:02:8B:90
+                    2.5.29.60:
+                        ..20210916134425Z
+                    X509v3 CRL Number:
+                        103807
+        Revoked Certificates:
+            Serial Number: 2CD4120F35BB
+                Revocation Date: Dec  6 14:10:13 2021 GMT
+            Serial Number: 2D5756A0413A
+                Revocation Date: Nov 28 15:21:00 2023 GMT
+            Serial Number: 7E7D0FBEC6BB898C
+                Revocation Date: Jul 26 05:27:46 2022 GMT
+            Serial Number: 7E7D2D8DFD990C6A
+                Revocation Date: Jun 20 16:32:18 2022 GMT
+            Serial Number: 7E7D345D95880549
+                Revocation Date: Mar  9 15:55:12 2023 GMT
+            Signature Algorithm: sha256WithRSAEncryption
+            Signature Value:
+                3c:be:0c:f7:cc:79:cb:0c:bf:b7:dd:a2:72:f4:4b:3d:ae:64:
+                67:5b:d0:bd:6b:95:43:ba
+        OPENSSL_OUTPUT;
+
+    private function mockCRLProcess(): Process
     {
-        $process = new Process(['openssl', 'crl', '-in',__DIR__ . '/fixtures/RGS_AC_PERSONNE_AUTHENTIFICATION_V1_CRL.pem', '-text', '-noout']);
-        $process->run();
+        $process = $this->createMock(Process::class);
+        $process->method('getOutput')->willReturn(self::CRL_TEXT);
         return $process;
     }
 
@@ -27,7 +59,7 @@ class CheckSnInCRLCommandOutputTranslatorTest extends TestCase
         $translator = new CheckSnInCRLCommandOutputTranslator('7E7D2D8DFD990C6A', new DateTime('2022-06-20 16:32:17 GMT'));
 
         static::assertFalse(
-            $translator->getCommandOutput($this->readCRL())->hasBlockingErrors()
+            $translator->getCommandOutput($this->mockCRLProcess())->hasBlockingErrors()
         );
     }
 
@@ -38,7 +70,7 @@ class CheckSnInCRLCommandOutputTranslatorTest extends TestCase
     {
         $translator = new CheckSnInCRLCommandOutputTranslator('7E7D2D8DFD990C6A', new DateTime('2022-06-20 16:32:19 GMT'));
 
-        $analysedOutput = $translator->getCommandOutput($this->readCRL());
+        $analysedOutput = $translator->getCommandOutput($this->mockCRLProcess());
         static::assertTrue(
             $analysedOutput->hasBlockingErrors()
         );
@@ -74,7 +106,7 @@ class CheckSnInCRLCommandOutputTranslatorTest extends TestCase
 
         static::assertSame(
             $isRevoked,
-            $translator->getCommandOutput($this->readCRL())->hasBlockingErrors()
+            $translator->getCommandOutput($this->mockCRLProcess())->hasBlockingErrors()
         );
     }
 
