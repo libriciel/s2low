@@ -2,9 +2,12 @@
 
 use S2lowLegacy\Class\actes\ActesTypePJSQL;
 use S2lowLegacy\Class\actes\TypeTransaction;
+use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\ModulePermission;
+use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
 
 list($actesTypePJSQL) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
@@ -48,7 +51,15 @@ if (!$related_id) {
 }
 
 $trans = new ActesTransaction($related_id);
-$trans->init();
+if (!$trans->init()) {
+    Helpers::returnAndExit(1, "Transaction inconnue", Helpers::getLink("/modules/actes/"));
+}
+$owner = new User($trans->get('user_id'));
+$owner->init();
+$permission = new ModulePermission(new ServiceUser(DatabasePool::getInstance()), 'actes');
+if (!$permission->canView($me, $owner)) {
+    Helpers::returnAndExit(1, "Accès refusé", Helpers::getLink("/modules/actes/"));
+}
 $transactionTypes = $trans->get("transactionTypes");
 
 
