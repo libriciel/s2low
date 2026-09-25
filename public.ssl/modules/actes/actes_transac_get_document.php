@@ -1,8 +1,11 @@
 <?php
 
 use S2lowLegacy\Class\actes\TypeTransaction;
+use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\ModulePermission;
+use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
 
 header_wrapper("Content-type: text/plain");
@@ -43,6 +46,12 @@ if ($zeTrans->init()) {
     $owner->init();
 } else {
     echo "KO\nNuméro de transaction invalide.";
+    exit_wrapper();
+}
+
+$permission = new ModulePermission(new ServiceUser(DatabasePool::getInstance()), "actes");
+if (!$permission->canView($me, $owner)) {
+    echo "KO\nAccès refusé";
     exit_wrapper();
 }
 
