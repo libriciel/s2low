@@ -194,9 +194,9 @@ class HeliosController extends Controller
 
         $userId = $me->getId();
 
-        if (!$module->isActive() || !$me->canAccess(self::MODULE_NAME)) {
+        if (!$module->isActive() || !$me->checkDroit(self::MODULE_NAME, 'CS')) {
             echo "KO\nAccès refusé";
-            exit();
+            exit_wrapper();
         }
 
 
