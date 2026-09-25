@@ -331,6 +331,36 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
 
+    public function testHeliosTransacSubmitPostsOwnTransaction(): void
+    {
+        $transactionId = $this->createTransaction(1, HeliosTransactionsSQL::ATTENTE_POSTEE);
+        $this->setUserWithRole(UserRole::Utilisateur);
+        $_POST['id'] = $transactionId;
+
+        $this->client->request('GET', 'modules/helios/helios_transac_submit.php');
+
+        static::assertSame(HeliosTransactionsSQL::POSTE, $this->getLastStatusId($transactionId));
+    }
+
+    public function testHeliosTransacSubmitRefusesTransactionOfAnotherAuthority(): void
+    {
+        $userOfAnotherAuthority = 51;
+        $transactionId = $this->createTransaction(2, HeliosTransactionsSQL::ATTENTE_POSTEE);
+        $this->sqlQuery->query('UPDATE helios_transactions SET user_id = ? WHERE id = ?', $userOfAnotherAuthority, $transactionId);
+        $this->setUserWithRole(UserRole::Utilisateur);
+        $_POST['id'] = $transactionId;
+
+        $this->client->request('GET', 'modules/helios/helios_transac_submit.php');
+
+        static::assertSame(HeliosTransactionsSQL::ATTENTE_POSTEE, $this->getLastStatusId($transactionId));
+        static::assertSame('Accès refusé', $_SESSION['error']);
+    }
+
+    private function getLastStatusId(int $transactionId): int
+    {
+        return $this->heliosTransactionsSQL->getInfo($transactionId)['last_status_id'];
+    }
+
     public function getHeliosTransactionsSQL(): HeliosTransactionsSQL
     {
         return $this->heliosTransactionsSQL;

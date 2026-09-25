@@ -1,9 +1,12 @@
 <?php
 
 use S2low\Services\Helios\HeliosAnalyseFichierAEnvoyerWorker;
+use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\ModulePermission;
+use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
@@ -42,6 +45,16 @@ if (empty($id)) {
     exit();
 }
 
+$transactionInfo = $heliosTransactionSQL->getInfo($id);
+if (! $transactionInfo) {
+    Helpers::returnAndExit(1, "Transaction inconnue", Helpers::getLink("/modules/helios/index.php"));
+}
+$owner = new User($transactionInfo['user_id']);
+$owner->init();
+$permission = new ModulePermission(new ServiceUser(DatabasePool::getInstance()), "helios");
+if (! $permission->canView($me, $owner)) {
+    Helpers::returnAndExit(1, "Accès refusé", Helpers::getLink("/modules/helios/index.php"));
+}
 
 $currentStatusId = HeliosTransactionWorkflow::getCurrentStatusId($id);
 if ($currentStatusId != 14) {
