@@ -303,10 +303,9 @@ class AdminUserController extends Controller
 
         // Les admins de collectivité et de groupe ne peuvent créer que des administrateurs de collectivité
         // ou des utilisateurs simples
-        if (! $me->isSuper()) {
-            if (strcasecmp($role, 'SADM') == 0 || strcasecmp($role, 'GADM') == 0) {
-                $role = 'ADM';
-            }
+        $rolesReservedToSuperAdmin = [User::SADM, User::GADM, User::ARCH];
+        if (! $me->isSuper() && in_array(strtoupper((string) $role), $rolesReservedToSuperAdmin, true)) {
+            $role = User::ADM;
         }
 
         $him->set("role", $role);

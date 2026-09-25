@@ -296,6 +296,29 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         $this->assertEquals('ADM', $user_info['role']);
     }
 
+    public function testAuthorityAdminCannotGrantArchivistRole(): void
+    {
+        $this->setOnlyDataOk();
+        $this->setUserWithRole(UserRole::AdministrateurCollectivite);
+        self::getContainer()->get(Environnement::class)->post()->set('role', 'ARCH');
+
+        $user_id = $this->adminUserController->doEditAction();
+
+        $user_info = self::getContainer()->get(UserSQL::class)->getInfo($user_id);
+        static::assertSame('ADM', $user_info['role']);
+    }
+
+    public function testSuperAdminCanGrantArchivistRole(): void
+    {
+        $this->setDataOk();
+        self::getContainer()->get(Environnement::class)->post()->set('role', 'ARCH');
+
+        $user_id = $this->adminUserController->doEditAction();
+
+        $user_info = self::getContainer()->get(UserSQL::class)->getInfo($user_id);
+        static::assertSame('ARCH', $user_info['role']);
+    }
+
     public function testNotGoodRGSEtoile()
     {
         $this->setDataOk();
