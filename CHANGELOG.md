@@ -6,6 +6,11 @@
 
 - Prise en compte de la version 5.30 du schema XSD Pes Aller #1588
 
+### Sécurité
+
+- Contrôles d'accès manquants sur la modification d'utilisateurs, le statut SAE Helios et la réponse à un courrier
+  (CVSS 4.9 - criticité MOYENNE - CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:N/I:H/A:N) #1591
+
 ## 5.1.18 - 2026-09-18
 
 ### Correction
