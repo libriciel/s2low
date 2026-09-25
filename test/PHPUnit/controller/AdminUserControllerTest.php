@@ -245,14 +245,29 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
 
     public function testModifGroupAdmin()
     {
+        $userOfGroup = 5;
         $this->setOnlyDataOk();
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
         self::getContainer()->get(Environnement::class)->post()->set('login', 'bob');
         self::getContainer()->get(Environnement::class)->post()->set('password', 'eey3fo4A');
         self::getContainer()->get(Environnement::class)->post()->set('password2', 'eey3fo4A');
-        self::getContainer()->get(Environnement::class)->post()->set('id', 1);
+        self::getContainer()->get(Environnement::class)->post()->set('id', $userOfGroup);
         $this->adminUserController->doEditAction();
         self::expectNotToPerformAssertions();
+    }
+
+    public function testGroupAdminCannotModifySuperAdmin(): void
+    {
+        $superAdmin = 1;
+        $this->setOnlyDataOk();
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        self::getContainer()->get(Environnement::class)->post()->set('login', 'bob');
+        self::getContainer()->get(Environnement::class)->post()->set('password', 'eey3fo4A');
+        self::getContainer()->get(Environnement::class)->post()->set('password2', 'eey3fo4A');
+        self::getContainer()->get(Environnement::class)->post()->set('id', $superAdmin);
+
+        $this->expectExceptionMessage('Accès refusé pour la modification de cet utilisateur');
+        $this->adminUserController->doEditAction();
     }
 
     public function testCreateDifferentAuthorities()

@@ -320,12 +320,16 @@ class User extends DataObject
   */
     public function canEditUser($id)
     {
-        $sql = "SELECT authority_id FROM users WHERE id=?";
+        $sql = "SELECT authority_id, role FROM users WHERE id=?";
 
         $result = $this->db->select($sql, [$id]);
 
         if (! $result->isError() && $result->num_row() == 1) {
             $row = $result->get_next_row();
+
+            if (! $this->canEditUserWithRole($row["role"])) {
+                return false;
+            }
 
             $authority = new Authority($row["authority_id"]);
 
@@ -343,6 +347,15 @@ class User extends DataObject
             $this->errorMsg = "User::canEditUser - erreur de résultat requête base de données";
             return false;
         }
+    }
+
+    private function canEditUserWithRole(string $role): bool
+    {
+        return match ($role) {
+            self::SADM => $this->isSuper(),
+            self::GADM => $this->isGroupAdminOrSuper(),
+            default => true,
+        };
     }
 
   /**
