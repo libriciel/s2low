@@ -88,4 +88,22 @@ class DownloadPESRetourTest extends S2lowIntegrationTestCase
         $response = $client->getResponse();
         static::assertStringContainsString($data['string_in_response'], $response->getContent());
     }
+
+    public function testRefusesPESRetourOfAnotherAuthority(): void
+    {
+        $otherAuthorityId = 2;
+        $PESRetourFilename = "XMLTest.xml";
+        $PESRetourPath = self::getContainer()->getParameter('app.helios_responses_root') . "/" . $PESRetourFilename;
+        copy(__DIR__ . "/../../integration_tests/fixtures/XMLTest.xml", $PESRetourPath);
+        $PESRetourId = $this->addPESRetourToCollectivite($otherAuthorityId, $PESRetourFilename);
+        $this->setUserWithRole(UserRole::Utilisateur);
+        $_GET['id'] = $PESRetourId;
+
+        $this->client->request('GET', '/modules/helios/api/helios_get_retour.php', ['id' => $PESRetourId]);
+
+        unlink($PESRetourPath);
+        $content = $this->client->getResponse()->getContent();
+        static::assertStringContainsString('<message>Accès refusé</message>', html_entity_decode($content));
+        static::assertStringNotContainsString('<element>Contenu</element>', $content);
+    }
 }

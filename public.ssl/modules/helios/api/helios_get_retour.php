@@ -17,10 +17,11 @@ use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
+use S2lowLegacy\Model\HeliosRetourSQL;
 
-list($PESRetourCloudStorage) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($PESRetourCloudStorage, $heliosRetourSQL) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [PESRetourCloudStorage::class]
+        [PESRetourCloudStorage::class, HeliosRetourSQL::class]
     );
 
 $retourId = Helpers :: getVarFromGet("id");
@@ -65,6 +66,12 @@ try {
 
     if (!$filename) {
         $msg = "retour id n'est pas correcte";
+        throw new Exception('KO');
+    }
+
+    $retourAuthorityId = $heliosRetourSQL->getInfo($retourId)['authority_id'];
+    if (!$me->isSuper() && ($retourAuthorityId === null || !$me->canViewAuthority($retourAuthorityId))) {
+        $msg = "Accès refusé";
         throw new Exception('KO');
     }
 
