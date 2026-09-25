@@ -309,6 +309,39 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
 
+    public function testActesTransacRepondreShowsFormForOwnTransaction(): void
+    {
+        $transactionId = $this->createTransactionOfType(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, 3);
+        $this->sqlQuery->query("INSERT INTO actes_type_pj (nature_id, code, libelle) VALUES (3, '99_AU', 'Autre')");
+        $this->setUserWithRole(UserRole::Utilisateur);
+        $_GET['id'] = $transactionId;
+
+        $crawler = $this->client->request('GET', 'modules/actes/actes_transac_repondre.php');
+
+        static::assertMatchesRegularExpression('#20170728C#', $crawler->html());
+    }
+
+    public function testActesTransacRepondreRefusesTransactionOfAnotherAuthority(): void
+    {
+        $userOfAnotherAuthority = 51;
+        $transactionId = $this->createTransactionOfType(
+            ActesStatusSQL::STATUS_ACQUITTEMENT_RECU,
+            3,
+            '',
+            '2017-07-01',
+            '2017-07-01',
+            $userOfAnotherAuthority
+        );
+        $this->sqlQuery->query("INSERT INTO actes_type_pj (nature_id, code, libelle) VALUES (3, '99_AU', 'Autre')");
+        $this->setUserWithRole(UserRole::Utilisateur);
+        $_GET['id'] = $transactionId;
+
+        $this->client->request('GET', 'modules/actes/actes_transac_repondre.php');
+
+        static::assertSame('Accès refusé', $_SESSION['error']);
+        static::assertStringNotContainsString('20170728C', $this->client->getResponse()->getContent());
+    }
+
     /**
      * @param string $enveloppeName
      * @return void
