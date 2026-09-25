@@ -138,4 +138,25 @@ class UserTest extends S2lowTestCase
                 ]
             ;
     }
+
+    /**
+     * @dataProvider authorityVisibility
+     */
+    public function testCanViewAuthority(int $userId, int $authorityId, bool $canView): void
+    {
+        $user = new User($userId);
+        $user->init();
+
+        self::assertSame($canView, $user->canViewAuthority($authorityId));
+    }
+
+    public function authorityVisibility(): iterable
+    {
+        yield 'super admin, autre collectivité' => [1, 2, true];
+        yield 'utilisateur, sa collectivité' => [5, 1, true];
+        yield 'utilisateur, autre collectivité' => [5, 2, false];
+        yield 'admin de collectivité, autre collectivité' => [2, 2, false];
+        yield 'admin de groupe, collectivité de son groupe' => [7, 1, true];
+        yield 'admin de groupe, collectivité hors de son groupe' => [10, 1, false];
+    }
 }
