@@ -123,4 +123,31 @@ class RespondDocumentToMinistereResponseTest extends S2lowIntegrationTestCase
         $response = $client->getResponse();
         static::assertStringContainsString($data['stringInResponse'], $response->getContent());
     }
+
+    public function testRefusesToRespondToDocumentOfAnotherAuthority(): void
+    {
+        $userOfAnotherAuthority = 51;
+        $transactionId = $this->createTransactionOfType(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, 2, '', '2017-07-01', '2017-07-01', $userOfAnotherAuthority);
+        $filePath = __DIR__ . '/../fixtures/PDFTest.pdf';
+        $postedData = ['api' => 1, 'id' => $transactionId, 'type_envoie' => 3, 'type_acte' => '12345', 'type_pj' => '12345', 'nature_code' => '3'];
+        $_POST = $postedData;
+        $_FILES['acte_pdf_file'] = ['name' => 'PDFTest.pdf', 'type' => 'application/pdf', 'tmp_name' => $filePath, 'error' => UPLOAD_ERR_OK, 'size' => null];
+        $this->setUserWithRole(UserRole::Utilisateur);
+
+        $this->client->request(
+            'POST',
+            '/modules/actes/actes_transac_reponse_create.php',
+            $postedData,
+            ['acte_pdf_file' => new UploadedFile($filePath, 'PDFTest.pdf', 'application/pdf', UPLOAD_ERR_OK, true)]
+        );
+
+        static::assertStringContainsString(
+            "KO\n" . mb_convert_encoding('Accès refusé', 'ISO-8859-1', 'UTF-8'),
+            $this->client->getResponse()->getContent()
+        );
+        static::assertSame(
+            0,
+            $this->sqlQuery->queryOne('SELECT count(*) FROM actes_transactions WHERE related_transaction_id = ?', $transactionId)
+        );
+    }
 }
