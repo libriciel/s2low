@@ -134,4 +134,25 @@ class ChangeStatusHeliosInSAEContextTest extends S2lowIntegrationTestCase
 
         static::assertStringContainsString($data['string_in_response'], $response->getContent());
     }
+
+    public function testRefusesToChangeStatusOfTransactionOfAnotherAuthority(): void
+    {
+        $userOfAnotherAuthority = 51;
+        $transactionId = $this->createTransaction(2, HeliosTransactionsSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE);
+        $this->getSQLQuery()->query('UPDATE helios_transactions SET user_id = ? WHERE id = ?', $userOfAnotherAuthority, $transactionId);
+        $this->setUserWithRole(UserRole::AdministrateurCollectivite);
+        $postedData = ['api' => 1, 'transaction_id' => $transactionId, 'status_id' => HeliosTransactionsSQL::ACCEPTE_SAE];
+        $_POST = $postedData;
+
+        $this->client->request('POST', '/modules/helios/helios_transac_change_status_sae.php', $postedData);
+
+        static::assertStringContainsString(
+            '{"status":"error","error-message":"Acc\u00e8s refus\u00e9"}',
+            $this->client->getResponse()->getContent()
+        );
+        static::assertSame(
+            HeliosTransactionsSQL::STATUS_EN_ATTENTE_TRANMISSION_SAE,
+            $this->heliosTransactionsSQL->getLastStatusInfo($transactionId)['status_id']
+        );
+    }
 }
