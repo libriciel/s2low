@@ -8,11 +8,11 @@
 
 ### Sécurité
 
-- Exposition d'un secret de configuration SAE
+- Faille d'exposition d'informations sensibles
   (CVSS 7.6 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:C/C:H/I:L/A:N) #1590
-- Contrôles d'accès manquants sur les actes et les flux Helios
-  (CVSS 6.5 - criticité MOYENNE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N) #1590
-- Élévation de privilèges à la création d'un utilisateur
+- Faille IDOR (CVSS 6.5 - criticité MOYENNE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N) #1590
+- Faille de contrôle d'accès (CVSS 6.5 - criticité MOYENNE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:N) #1590
+- Faille de contrôle d'accès sur la gestion des utilisateurs
   (CVSS 4.9 - criticité MOYENNE - CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:N/A:N) #1590
 
 ### Corrections
