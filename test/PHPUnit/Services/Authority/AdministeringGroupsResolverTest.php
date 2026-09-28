@@ -8,34 +8,32 @@ use S2low\DTO\ModuleActivationRequest;
 use S2low\Enum\AdministeredModule;
 use S2low\Exceptions\GroupDesignationRefusedException;
 use S2low\Security\SecurityUser;
-use S2low\Services\Authority\AdministeringGroupDesignation;
+use S2low\Services\Authority\AdministeringGroupsResolver;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\UserSQL;
 use S2lowTestCase;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-class AdministeringGroupDesignationTest extends S2lowTestCase
+class AdministeringGroupsResolverTest extends S2lowTestCase
 {
-    private const AUTHORITY = 1;
-    private const CREATION = 0;
+    private const int AUTHORITY = 1;
+    private const int CREATION = 0;
 
-    private const GROUP = 1;
-    private const OTHER_GROUP = 2;
+    private const int GROUP = 1;
+    private const int OTHER_GROUP = 2;
 
-    private const SIREN = '491011698';
+    private const string SIREN = '491011698';
 
-    private const SUPER_ADMIN = 1;
-    private const GROUP_ADMIN = 7;
+    private const int SUPER_ADMIN = 1;
+    private const int GROUP_ADMIN = 7;
 
     public function testTheSuperAdminDesignatesTheGroupsItChooses(): void
     {
-        $this->connectAs(self::SUPER_ADMIN);
-
-        $designated = $this->designation()->resolve(
+        $designated = $this->resolver()->resolve(
             $this->request(self::AUTHORITY, [AdministeredModule::ACTES, AdministeredModule::HELIOS], [
                 AdministeredModule::ACTES->value => self::GROUP,
                 AdministeredModule::HELIOS->value => self::OTHER_GROUP,
-            ])
+            ]),
+            $this->user(self::SUPER_ADMIN)
         );
 
         static::assertSame(self::GROUP, $designated->groupIdFor(AdministeredModule::ACTES));
@@ -45,10 +43,10 @@ class AdministeringGroupDesignationTest extends S2lowTestCase
     public function testADeactivatedModuleKeepsItsDesignation(): void
     {
         $this->givenAuthorityAdministeredBy(self::GROUP, self::OTHER_GROUP);
-        $this->connectAs(self::SUPER_ADMIN);
 
-        $designated = $this->designation()->resolve(
-            $this->request(self::AUTHORITY, [], [])
+        $designated = $this->resolver()->resolve(
+            $this->request(self::AUTHORITY, [], []),
+            $this->user(self::SUPER_ADMIN)
         );
 
         static::assertSame(self::GROUP, $designated->groupIdFor(AdministeredModule::ACTES));
@@ -57,28 +55,27 @@ class AdministeringGroupDesignationTest extends S2lowTestCase
 
     public function testAnActivatedModuleWithoutAChosenGroupIsRefused(): void
     {
-        $this->connectAs(self::SUPER_ADMIN);
-
         $this->expectException(GroupDesignationRefusedException::class);
         $this->expectExceptionMessage('Le module Actes est activé');
 
-        $this->designation()->resolve(
-            $this->request(self::AUTHORITY, [AdministeredModule::ACTES], [])
+        $this->resolver()->resolve(
+            $this->request(self::AUTHORITY, [AdministeredModule::ACTES], []),
+            $this->user(self::SUPER_ADMIN)
         );
     }
 
     public function testAnInactiveGroupCannotBeDesignated(): void
     {
         $this->givenGroupIsDeactivated(self::OTHER_GROUP);
-        $this->connectAs(self::SUPER_ADMIN);
 
         $this->expectException(GroupDesignationRefusedException::class);
         $this->expectExceptionMessage('est désactivé');
 
-        $this->designation()->resolve(
+        $this->resolver()->resolve(
             $this->request(self::AUTHORITY, [AdministeredModule::ACTES], [
                 AdministeredModule::ACTES->value => self::OTHER_GROUP,
-            ])
+            ]),
+            $this->user(self::SUPER_ADMIN)
         );
     }
 
@@ -86,12 +83,12 @@ class AdministeringGroupDesignationTest extends S2lowTestCase
     {
         $this->givenAuthorityAdministeredBy(self::OTHER_GROUP, self::OTHER_GROUP);
         $this->givenGroupIsDeactivated(self::OTHER_GROUP);
-        $this->connectAs(self::SUPER_ADMIN);
 
-        $designated = $this->designation()->resolve(
+        $designated = $this->resolver()->resolve(
             $this->request(self::AUTHORITY, [AdministeredModule::ACTES], [
                 AdministeredModule::ACTES->value => self::OTHER_GROUP,
-            ])
+            ]),
+            $this->user(self::SUPER_ADMIN)
         );
 
         static::assertSame(self::OTHER_GROUP, $designated->groupIdFor(AdministeredModule::ACTES));
@@ -99,28 +96,28 @@ class AdministeringGroupDesignationTest extends S2lowTestCase
 
     public function testAGroupThatDoesNotHoldTheSirenCannotBeDesignated(): void
     {
-        $this->connectAs(self::SUPER_ADMIN);
         $this->givenSirenHeldBy(self::GROUP, self::SIREN);
 
         $this->expectException(GroupDesignationRefusedException::class);
         $this->expectExceptionMessage('ne détient pas le SIREN ' . self::SIREN);
 
-        $this->designation()->resolve(
+        $this->resolver()->resolve(
             $this->request(self::AUTHORITY, [AdministeredModule::ACTES], [
                 AdministeredModule::ACTES->value => self::OTHER_GROUP,
-            ], self::SIREN)
+            ], self::SIREN),
+            $this->user(self::SUPER_ADMIN)
         );
     }
 
     public function testAGroupHoldingTheSirenIsDesignated(): void
     {
-        $this->connectAs(self::SUPER_ADMIN);
         $this->givenSirenHeldBy(self::OTHER_GROUP, self::SIREN);
 
-        $designated = $this->designation()->resolve(
+        $designated = $this->resolver()->resolve(
             $this->request(self::AUTHORITY, [AdministeredModule::ACTES], [
                 AdministeredModule::ACTES->value => self::OTHER_GROUP,
-            ], self::SIREN)
+            ], self::SIREN),
+            $this->user(self::SUPER_ADMIN)
         );
 
         static::assertSame(self::OTHER_GROUP, $designated->groupIdFor(AdministeredModule::ACTES));
@@ -129,12 +126,12 @@ class AdministeringGroupDesignationTest extends S2lowTestCase
     public function testTheGroupAlreadyDesignatedSurvivesLosingTheSiren(): void
     {
         $this->givenAuthorityAdministeredBy(self::OTHER_GROUP, self::OTHER_GROUP);
-        $this->connectAs(self::SUPER_ADMIN);
 
-        $designated = $this->designation()->resolve(
+        $designated = $this->resolver()->resolve(
             $this->request(self::AUTHORITY, [AdministeredModule::ACTES], [
                 AdministeredModule::ACTES->value => self::OTHER_GROUP,
-            ], self::SIREN)
+            ], self::SIREN),
+            $this->user(self::SUPER_ADMIN)
         );
 
         static::assertSame(self::OTHER_GROUP, $designated->groupIdFor(AdministeredModule::ACTES));
@@ -142,10 +139,9 @@ class AdministeringGroupDesignationTest extends S2lowTestCase
 
     public function testAGroupAdminCreatingAnAuthorityDesignatesItsOwnGroupForTheActivatedModules(): void
     {
-        $this->connectAs(self::GROUP_ADMIN);
-
-        $designated = $this->designation()->resolve(
-            $this->request(self::CREATION, [AdministeredModule::ACTES], [])
+        $designated = $this->resolver()->resolve(
+            $this->request(self::CREATION, [AdministeredModule::ACTES], []),
+            $this->user(self::GROUP_ADMIN)
         );
 
         static::assertSame(self::GROUP, $designated->groupIdFor(AdministeredModule::ACTES));
@@ -155,12 +151,12 @@ class AdministeringGroupDesignationTest extends S2lowTestCase
     public function testAGroupAdminDoesNotTakeOverAModuleOfAnotherGroup(): void
     {
         $this->givenAuthorityAdministeredBy(self::OTHER_GROUP, self::OTHER_GROUP);
-        $this->connectAs(self::GROUP_ADMIN);
 
-        $designated = $this->designation()->resolve(
+        $designated = $this->resolver()->resolve(
             $this->request(self::AUTHORITY, [AdministeredModule::ACTES], [
                 AdministeredModule::ACTES->value => self::GROUP,
-            ])
+            ]),
+            $this->user(self::GROUP_ADMIN)
         );
 
         static::assertSame(self::OTHER_GROUP, $designated->groupIdFor(AdministeredModule::ACTES));
@@ -168,12 +164,13 @@ class AdministeringGroupDesignationTest extends S2lowTestCase
 
     public function testAnAuthorityCreatedWithoutAnyModuleIsRefused(): void
     {
-        $this->connectAs(self::SUPER_ADMIN);
-
         $this->expectException(GroupDesignationRefusedException::class);
         $this->expectExceptionMessage('au moins un groupe');
 
-        $this->designation()->resolve($this->request(self::CREATION, [], []));
+        $this->resolver()->resolve(
+            $this->request(self::CREATION, [], []),
+            $this->user(self::SUPER_ADMIN)
+        );
     }
 
     /**
@@ -194,19 +191,14 @@ class AdministeringGroupDesignationTest extends S2lowTestCase
         return new ModuleActivationRequest($authorityId, $siren, $activatedByModule, $chosenGroupIdByModule);
     }
 
-    private function designation(): AdministeringGroupDesignation
+    private function resolver(): AdministeringGroupsResolver
     {
-        return self::getContainer()->get(AdministeringGroupDesignation::class);
+        return self::getContainer()->get(AdministeringGroupsResolver::class);
     }
 
-    private function connectAs(int $userId): void
+    private function user(int $userId): SecurityUser
     {
-        self::getContainer()->get('security.token_storage')->setToken(
-            new UsernamePasswordToken(
-                new SecurityUser(self::getContainer()->get(UserSQL::class)->getUserById($userId)),
-                'main'
-            )
-        );
+        return new SecurityUser(self::getContainer()->get(UserSQL::class)->getUserById($userId));
     }
 
     private function givenAuthorityAdministeredBy(int $actesGroupId, int $heliosGroupId): void

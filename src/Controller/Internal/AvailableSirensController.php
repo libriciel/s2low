@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace S2low\Controller;
+namespace S2low\Controller\Internal;
 
 use S2low\Enum\AdministeredModule;
 use S2lowLegacy\Model\AuthorityGroupSirenSQL;
@@ -19,7 +19,7 @@ class AvailableSirensController extends AbstractController
     ) {
     }
 
-    #[Route('/api/authorities/available-sirens', name: 'api_authorities_available_sirens', methods: ['GET'])]
+    #[Route('/internal/authorities/available-sirens', name: 'internal_authorities_available_sirens', methods: ['GET'])]
     #[IsGranted('ROLE_SADM')]
     public function availableSirens(Request $request): JsonResponse
     {

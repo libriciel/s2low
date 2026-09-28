@@ -12,22 +12,20 @@ use S2low\Security\SecurityUser;
 use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\GroupSQL;
-use Symfony\Bundle\SecurityBundle\Security;
 
-final readonly class AdministeringGroupDesignation
+final readonly class AdministeringGroupsResolver
 {
     public function __construct(
         private AuthoritySQL $authoritySQL,
         private AuthorityGroupSirenSQL $authorityGroupSirenSQL,
         private GroupSQL $groupSQL,
-        private Security $security,
     ) {
     }
 
     /**
      * @throws GroupDesignationRefusedException
      */
-    public function resolve(ModuleActivationRequest $request): AdministeringGroups
+    public function resolve(ModuleActivationRequest $request, SecurityUser $user): AdministeringGroups
     {
         $current = $this->currentGroupsOf($request->authorityId());
         $designated = $current;
@@ -37,10 +35,11 @@ final readonly class AdministeringGroupDesignation
                 continue;
             }
 
-            $designated = $designated->designate(
-                $module,
-                $this->administeringGroupFor($module, $request, $current)
-            );
+            $groupId = $user->isSuperAdmin()
+                ? $this->chosenGroupFor($module, $request, $current)
+                : $this->currentOrOwnGroupFor($module, $current, $user);
+
+            $designated = $designated->designate($module, $groupId);
         }
 
         if ($request->isCreation() && $designated->isEmpty()) {
@@ -55,22 +54,16 @@ final readonly class AdministeringGroupDesignation
     /**
      * @throws GroupDesignationRefusedException
      */
-    private function administeringGroupFor(
+    private function currentOrOwnGroupFor(
         AdministeredModule $module,
-        ModuleActivationRequest $request,
-        AdministeringGroups $current
+        AdministeringGroups $current,
+        SecurityUser $user
     ): int {
-        $user = $this->security->getUser();
-
-        if ($user instanceof SecurityUser && $user->isSuperAdmin()) {
-            return $this->chosenGroupFor($module, $request, $current);
-        }
-
         if ($current->isDesignatedFor($module)) {
             return $current->groupIdFor($module);
         }
 
-        $ownGroupId = $user instanceof SecurityUser ? (int)$user->getAuthorityGroupId() : 0;
+        $ownGroupId = (int)$user->getAuthorityGroupId();
 
         if ($ownGroupId === 0) {
             throw new GroupDesignationRefusedException(

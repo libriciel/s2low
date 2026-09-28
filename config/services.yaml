@@ -368,7 +368,7 @@ services:
     autowire: true
     public: true
 
-  S2low\Services\Authority\AdministeringGroupDesignation:
+  S2low\Services\Authority\AdministeringGroupsResolver:
     autowire: true
     public: true
 

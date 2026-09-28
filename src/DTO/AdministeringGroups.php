@@ -8,11 +8,14 @@ use S2low\Enum\AdministeredModule;
 
 final readonly class AdministeringGroups
 {
+    private array $groupIdByModule;
+
     /**
      * @param array<int, int> $groupIdByModule indexé par AdministeredModule::value
      */
-    private function __construct(private array $groupIdByModule)
+    private function __construct(array $groupIdByModule)
     {
+        $this->groupIdByModule = array_filter($groupIdByModule, static fn(int $groupId): bool => $groupId !== 0);
     }
 
     public static function none(): self
@@ -28,10 +31,7 @@ final readonly class AdministeringGroups
         $groupIdByModule = [];
 
         foreach (AdministeredModule::cases() as $module) {
-            $groupId = (int)($authorityInfo[$module->groupColumn()] ?? 0);
-            if ($groupId !== 0) {
-                $groupIdByModule[$module->value] = $groupId;
-            }
+            $groupIdByModule[$module->value] = (int)($authorityInfo[$module->groupColumn()] ?? 0);
         }
 
         return new self($groupIdByModule);

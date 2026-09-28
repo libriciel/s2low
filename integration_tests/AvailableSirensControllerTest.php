@@ -51,7 +51,7 @@ class AvailableSirensControllerTest extends S2lowIntegrationTestCase
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
         $this->givenSirenAuthorizedForGroup(self::GROUP_1, self::SIREN_OF_BOTH_GROUPS);
 
-        $this->client->request('GET', '/api/authorities/available-sirens?actes_group_id=1');
+        $this->client->request('GET', '/internal/authorities/available-sirens?actes_group_id=1');
 
         static::assertTrue($this->client->getResponse()->isRedirection());
         static::assertStringNotContainsString(self::SIREN_OF_BOTH_GROUPS, $this->client->getResponse()->getContent());
@@ -62,7 +62,7 @@ class AvailableSirensControllerTest extends S2lowIntegrationTestCase
      */
     private function whenTheAvailableSirensAreAsked(string $queryString): array
     {
-        $this->client->request('GET', "/api/authorities/available-sirens?$queryString&authority_id=0");
+        $this->client->request('GET', "/internal/authorities/available-sirens?$queryString&authority_id=0");
 
         static::assertSame(200, $this->client->getResponse()->getStatusCode());
 

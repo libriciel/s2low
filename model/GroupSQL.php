@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Model;
 
+use Doctrine\DBAL\ArrayParameterType;
 use S2lowLegacy\Lib\SQL;
 
 class GroupSQL extends SQL
@@ -57,33 +58,35 @@ class GroupSQL extends SQL
     }
 
     /**
-     * @param int[] $alreadyDesignatedGroupIds
+     * @param int[] $currentAdministeringGroupIds
      * @return array<int, string>
      */
-    public function getSelectableGroupsIdName(string $siren = '', array $alreadyDesignatedGroupIds = []): array
+    public function getGroupsEligibleToAdminister(string $siren = '', array $currentAdministeringGroupIds = []): array
     {
-        $selectable = "status = 1";
-        $params = [];
+        $sql = <<<SQL
+SELECT id, name
+FROM authority_groups
+WHERE (
+        status = 1
+        AND (
+            :siren = ''
+            OR EXISTS (
+                SELECT 1
+                FROM authority_group_siren ags
+                WHERE ags.authority_group_id = authority_groups.id
+                  AND ags.siren = :siren
+            )
+        )
+    )
+   OR id IN (:currentAdministeringGroupIds)
+ORDER BY name ASC
+SQL;
 
-        if ($siren !== '') {
-            $selectable .= " AND EXISTS (SELECT 1 FROM authority_group_siren ags" .
-                " WHERE ags.authority_group_id = authority_groups.id AND ags.siren = ?)";
-            $params[] = $siren;
-        }
-
-        $where = "($selectable)";
-
-        if ($alreadyDesignatedGroupIds !== []) {
-            $placeholders = implode(',', array_fill(0, count($alreadyDesignatedGroupIds), '?'));
-            $where .= " OR id IN ($placeholders)";
-            $params = [...$params, ...array_values($alreadyDesignatedGroupIds)];
-        }
-
-        $result = [];
-        foreach ($this->query("SELECT id, name FROM authority_groups WHERE $where ORDER BY name ASC", $params) as $line) {
-            $result[(int)$line['id']] = $line['name'];
-        }
-        return $result;
+        return $this->getConnection()->fetchAllKeyValue(
+            $sql,
+            ['siren' => $siren, 'currentAdministeringGroupIds' => $currentAdministeringGroupIds],
+            ['currentAdministeringGroupIds' => ArrayParameterType::INTEGER]
+        );
     }
 
     public function isActive(int $groupId): bool

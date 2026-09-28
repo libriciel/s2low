@@ -85,48 +85,48 @@ class GroupSQLTest extends S2lowTestCase
         self::expectNotToPerformAssertions();
     }
 
-    public function testGetSelectableGroupsIdNameLeavesOutInactiveGroups(): void
+    public function testGetGroupsEligibleToAdministerLeavesOutInactiveGroups(): void
     {
         $this->deactivateGroup(2);
 
-        $this->assertSame([1 => self::GROUPE_1_NAME], $this->groupeSQL->getSelectableGroupsIdName());
+        $this->assertSame([1 => self::GROUPE_1_NAME], $this->groupeSQL->getGroupsEligibleToAdminister());
     }
 
-    public function testGetSelectableGroupsIdNameKeepsAnInactiveGroupAlreadyDesignated(): void
+    public function testGetGroupsEligibleToAdministerKeepsAnInactiveGroupCurrentlyAdministering(): void
     {
         $this->deactivateGroup(2);
 
         $this->assertSame(
             [1 => self::GROUPE_1_NAME, 2 => self::GROUPE_2_FIXTURE_NAME],
-            $this->groupeSQL->getSelectableGroupsIdName('', [2])
+            $this->groupeSQL->getGroupsEligibleToAdminister('', [2])
         );
     }
 
-    public function testGetSelectableGroupsIdNameKeepsOnlyTheGroupsHoldingTheSiren(): void
+    public function testGetGroupsEligibleToAdministerKeepsOnlyTheGroupsHoldingTheSiren(): void
     {
         $this->givenSirenHeldBy(2, self::SIREN);
 
         $this->assertSame(
             [2 => self::GROUPE_2_FIXTURE_NAME],
-            $this->groupeSQL->getSelectableGroupsIdName(self::SIREN)
+            $this->groupeSQL->getGroupsEligibleToAdminister(self::SIREN)
         );
     }
 
-    public function testGetSelectableGroupsIdNameKeepsAnAlreadyDesignatedGroupWithoutTheSiren(): void
+    public function testGetGroupsEligibleToAdministerKeepsAGroupCurrentlyAdministeringWithoutTheSiren(): void
     {
         $this->givenSirenHeldBy(2, self::SIREN);
 
         $this->assertSame(
             [1 => self::GROUPE_1_NAME, 2 => self::GROUPE_2_FIXTURE_NAME],
-            $this->groupeSQL->getSelectableGroupsIdName(self::SIREN, [1])
+            $this->groupeSQL->getGroupsEligibleToAdminister(self::SIREN, [1])
         );
     }
 
-    public function testGetSelectableGroupsIdNameWithoutSirenKeepsEveryActiveGroup(): void
+    public function testGetGroupsEligibleToAdministerWithoutSirenKeepsEveryActiveGroup(): void
     {
         $this->assertSame(
             [1 => self::GROUPE_1_NAME, 2 => self::GROUPE_2_FIXTURE_NAME],
-            $this->groupeSQL->getSelectableGroupsIdName()
+            $this->groupeSQL->getGroupsEligibleToAdminister()
         );
     }
 
