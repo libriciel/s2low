@@ -25,7 +25,8 @@ class ModulePermission
         if ($this->canWrite($me, $owner)) {
             return true;
         }
-        if ($me->isArchivistFor($owner->get('authority_id'))) {
+        $ownerAuthorityId = $owner->get('authority_id');
+        if ($ownerAuthorityId !== null && $me->isArchivistFor($ownerAuthorityId)) {
             return true;
         }
         return $this->service->areCollegues($me->getId(), $owner->getId());

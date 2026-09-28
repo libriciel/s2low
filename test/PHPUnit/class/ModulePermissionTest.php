@@ -11,6 +11,7 @@ final class ModulePermissionTest extends S2lowTestCase
     private const ARCHIVIST_OF_AUTHORITY_1 = 12;
     private const USER_OF_AUTHORITY_1 = 5;
     private const USER_OF_AUTHORITY_2 = 51;
+    private const UNKNOWN_USER = 999999;
 
     public function testArchivistCanViewTransactionOfOwnAuthority(): void
     {
@@ -31,6 +32,18 @@ final class ModulePermissionTest extends S2lowTestCase
         $canView = $permission->canView(
             $this->loadUser(self::ARCHIVIST_OF_AUTHORITY_1),
             $this->loadUser(self::USER_OF_AUTHORITY_2)
+        );
+
+        static::assertFalse($canView);
+    }
+
+    public function testArchivistCannotViewTransactionOfUnknownOwner(): void
+    {
+        $permission = $this->createActesPermission();
+
+        $canView = $permission->canView(
+            $this->loadUser(self::ARCHIVIST_OF_AUTHORITY_1),
+            $this->loadUser(self::UNKNOWN_USER)
         );
 
         static::assertFalse($canView);
