@@ -313,6 +313,14 @@ class User extends DataObject
         return $this->isArchivist() && $this->authority_id === $authority_id;
     }
 
+    public function canViewAuthority(int $authority_id): bool
+    {
+        if ($this->isSuper() || $this->authority_id === $authority_id) {
+            return true;
+        }
+        return $this->isGroupAdmin() && (new Authority($authority_id))->isInGroup($this->authority_group_id);
+    }
+
   /**
    * \brief Méthode qui détermine si l'utilisateur courant à les droits pour modifier un autre utilisateur
    * \param $id integer : Numéro d'identifiant de l'utilisateur a éditer

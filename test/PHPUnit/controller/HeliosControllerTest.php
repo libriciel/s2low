@@ -2,6 +2,7 @@
 
 use IntegrationTests\S2lowIntegrationTestCase;
 use Psr\Log\LoggerInterface;
+use S2low\Enum\ModulePermission;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use S2lowLegacy\Class\RgsConnexion;
@@ -73,6 +74,18 @@ class HeliosControllerTest extends S2lowIntegrationTestCase
         $this->assertEquals(HeliosTransactionsSQL::POSTE, $info['last_status_id']);
         $info_wf = $this->heliosTransactionSQL->getWorkflow($transaction_id);
         $this->assertEquals(1, $info_wf[0]['status_id']);
+    }
+
+    public function testImportAPIActionRefusesReadOnlyUser(): void
+    {
+        $this->setUserWithRole(UserRole::Utilisateur);
+        $this->setUserWithPermission(ModulePermission::Visualisation);
+        $nbTransactionsBefore = $this->getSQLQuery()->queryOne('SELECT count(*) FROM helios_transactions');
+
+        $this->expectOutputString("KO\nAccès refusé");
+        $this->importAPI();
+
+        static::assertSame($nbTransactionsBefore, $this->getSQLQuery()->queryOne('SELECT count(*) FROM helios_transactions'));
     }
 
     private function importAPI()

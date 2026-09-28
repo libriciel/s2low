@@ -36,9 +36,8 @@ if (
 
 $info_to_display = array("id","name","siren","authority_type_id","status","email","default_broadcast_email","broadcast_email",
                             "address","postal_code","city","department","district","telephone","fax","email_mail_securise");
-foreach (AuthoritySQL::getSAEProperties() as $id_properties => $properties) {
-    $info_to_display[] = $id_properties;
-}
+$saePropertiesWithoutPassword = array_diff(array_keys(AuthoritySQL::getSAEProperties()), ['pastell_password']);
+$info_to_display = array_merge($info_to_display, $saePropertiesWithoutPassword);
 
 
 if ($me->isGroupAdminOrSuper()) {

@@ -7,6 +7,8 @@ use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\ModulePermission;
+use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Class\WorkerScript;
 
@@ -66,7 +68,15 @@ $related_id = Helpers::getVarFromPost("id");
 
 
 $related_trans = new ActesTransaction($related_id);
-$related_trans->init();
+if (!$related_trans->init()) {
+    sortir_atrc("Transaction inconnue", $api);
+}
+$related_owner = new User($related_trans->get('user_id'));
+$related_owner->init();
+$permission = new ModulePermission(new ServiceUser(DatabasePool::getInstance()), 'actes');
+if (!$permission->canView($me, $related_owner)) {
+    sortir_atrc("Accès refusé", $api);
+}
 
 
 $type_acte = Helpers::getVarFromPost('type_acte', true);
