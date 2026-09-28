@@ -6,6 +6,11 @@
 
 - Prise en compte de la version 5.30 du schema XSD Pes Aller #1588
 
+### Corrections
+
+- Prise en compte de la date de révocation des certificats : une signature n'est invalide que si le certificat était
+  révoqué à la date de signature #1589
+
 ## 5.1.18 - 2026-09-18
 
 ### Correction

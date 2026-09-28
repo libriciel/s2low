@@ -80,6 +80,60 @@ class VerifyPemCertificateTest extends S2lowTestCase
         $verificator->checkCertificateWithOpenSSL("$baseCertificatesDir/dateOk/fullchain.pem");
     }
 
+    # Le certificat est révoqué dans la CRL de revokedFromAC avec
+    # Revocation Date: Jan 26 15:36:08 2021 GMT
+
+    public function testVerifyARevokedCertificateSignedBeforeRevocation()
+    {
+        $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR . "/dateOk/revokedFromAC/");
+
+        $this->assertTrue(
+            $verificator->checkCertificateWithOpenSSL(
+                self::BASE_CERTIFICATES_DIR . "/dateOk/fullchain.pem",
+                [],
+                (new DateTime('Jan 26 15:36:07 2021', new DateTimeZone('GMT')))->getTimestamp()
+            )
+        );
+    }
+
+    public function testVerifyARevokedCertificateSignedAfterRevocation()
+    {
+        $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR . "/dateOk/revokedFromAC/");
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessageMatches("/Certificat révoqué/");
+        $verificator->checkCertificateWithOpenSSL(
+            self::BASE_CERTIFICATES_DIR . "/dateOk/fullchain.pem",
+            [],
+            (new DateTime('Jan 26 15:36:09 2021', new DateTimeZone('GMT')))->getTimestamp()
+        );
+    }
+
+    public function getEmptyTimestamps(): array
+    {
+        return [
+            ['0'],
+            [''],
+        ];
+    }
+
+    /**
+     * Comme pour openssl verify, un timestamp vide vaut la date courante (et non le 01/01/1970)
+     * @dataProvider getEmptyTimestamps
+     */
+    public function testVerifyARevokedCertificateWithEmptyTimestamp(string $timestamp)
+    {
+        $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR . "/dateOk/revokedFromAC/");
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessageMatches("/Certificat révoqué/");
+        $verificator->checkCertificateWithOpenSSL(
+            self::BASE_CERTIFICATES_DIR . "/dateOk/fullchain.pem",
+            [],
+            $timestamp
+        );
+    }
+
     public function testVerifyWrongCertificate()
     {
         $baseCertificatesDir = __DIR__ . "/fixtures/certificats";
