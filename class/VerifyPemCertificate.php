@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Class;
 
+use DateTime;
 use Exception;
 use S2low\Services\ProcessCommand\OpenSSLWrapper;
 
@@ -41,28 +42,32 @@ class VerifyPemCertificate
         array $filteredErrors = [],
         ?string $timestamp = null,
     ): bool {
-        $this->checkForCrlRevocation($certificate_path);
+        $date = new DateTime();
+        if ($timestamp) {   // Comme pour openssl verify : sans timestamp, on vérifie à la date courante
+            $date->setTimestamp((int)$timestamp);
+        }
+        $this->checkForCrlRevocation($certificate_path, $date);
         $this->openSSLWrapper->verify($certificate_path, $filteredErrors, $timestamp);
         return true;
     }
 
     /**
      * @param string $file
+     * @param DateTime $dateTime
      * @return void
      * @throws Exception
      */
-    protected function checkForCrlRevocation(string $file): void
+    protected function checkForCrlRevocation(string $file, DateTime $dateTime): void
     {
         $file_r0_name = $this->openSSLWrapper->extractHash($file);
         $file_r0 = $this->authorized_ca_path . "/$file_r0_name.r0";
         if (file_exists($file_r0)) {
             // 1) extraire le SN du certificat
             $serialNumber = $this->openSSLWrapper->extractCertificateSN($file);
-            // 2) vérifier que ce SN n'est pas présent dans la CRL (Pour l'instant, la date n'est pas prise en compte)
+            // 2) vérifier que ce SN n'a pas été révoqué avant la date de signature
             // On ne vérifie pas
-            // 1) la date
-            // 2) si la CRL garde bien les certificats expirés ( extension 2.5.29.60 )
-            $this->openSSLWrapper->checkSNIsInCRL($file_r0, $serialNumber);
+            // 1) si la CRL garde bien les certificats expirés ( extension 2.5.29.60 )
+            $this->openSSLWrapper->checkSNIsInCRL($file_r0, $serialNumber, $dateTime);
         }
     }
 }
