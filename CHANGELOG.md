@@ -8,6 +8,8 @@
 
 ### Sécurité
 
+- Contrôles d'accès manquants sur la modification d'utilisateurs, le statut SAE Helios et la réponse à un courrier
+  (CVSS 4.9 - criticité MOYENNE - CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:N/I:H/A:N) #1591
 - Faille d'exposition d'informations sensibles
   (CVSS 7.6 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:C/C:H/I:L/A:N) #1590
 - Faille IDOR (CVSS 6.5 - criticité MOYENNE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N) #1590
