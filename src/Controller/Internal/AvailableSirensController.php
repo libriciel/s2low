@@ -1,0 +1,42 @@
+<?php
+
+declare(strict_types=1);
+
+namespace S2low\Controller\Internal;
+
+use S2low\Enum\AdministeredModule;
+use S2lowLegacy\Model\AuthorityGroupSirenSQL;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
+class AvailableSirensController extends AbstractController
+{
+    public function __construct(
+        private readonly AuthorityGroupSirenSQL $authorityGroupSirenSQL,
+    ) {
+    }
+
+    #[Route('/internal/authorities/available-sirens', name: 'internal_authorities_available_sirens', methods: ['GET'])]
+    #[IsGranted('ROLE_SADM')]
+    public function availableSirens(Request $request): JsonResponse
+    {
+        $groupIds = [];
+
+        foreach (AdministeredModule::cases() as $module) {
+            $groupId = $request->query->getInt($module->groupColumn());
+            if ($groupId !== 0) {
+                $groupIds[] = $groupId;
+            }
+        }
+
+        return new JsonResponse([
+            'sirens' => $this->authorityGroupSirenSQL->getAvailableSirenForGroups(
+                $groupIds,
+                $request->query->getInt('authority_id')
+            ),
+        ]);
+    }
+}

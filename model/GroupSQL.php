@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Model;
 
+use Doctrine\DBAL\ArrayParameterType;
 use S2lowLegacy\Lib\SQL;
 
 class GroupSQL extends SQL
@@ -54,5 +55,42 @@ class GroupSQL extends SQL
             $result[$line['id']] = $line['name'];
         }
         return $result;
+    }
+
+    /**
+     * @param int[] $currentAdministeringGroupIds
+     * @return array<int, string>
+     */
+    public function getGroupsEligibleToAdminister(string $siren = '', array $currentAdministeringGroupIds = []): array
+    {
+        $sql = <<<SQL
+SELECT id, name
+FROM authority_groups
+WHERE (
+        status = 1
+        AND (
+            :siren = ''
+            OR EXISTS (
+                SELECT 1
+                FROM authority_group_siren ags
+                WHERE ags.authority_group_id = authority_groups.id
+                  AND ags.siren = :siren
+            )
+        )
+    )
+   OR id IN (:currentAdministeringGroupIds)
+ORDER BY name ASC
+SQL;
+
+        return $this->getConnection()->fetchAllKeyValue(
+            $sql,
+            ['siren' => $siren, 'currentAdministeringGroupIds' => $currentAdministeringGroupIds],
+            ['currentAdministeringGroupIds' => ArrayParameterType::INTEGER]
+        );
+    }
+
+    public function isActive(int $groupId): bool
+    {
+        return (int)$this->queryOne("SELECT status FROM authority_groups WHERE id = ?", [$groupId]) === 1;
     }
 }

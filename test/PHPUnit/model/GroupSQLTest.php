@@ -8,6 +8,8 @@ class GroupSQLTest extends S2lowTestCase
 {
     private const GROUPE_1_NAME = "Groupe de test";
     private const GROUPE_2_NAME = "Groupe & co";
+    private const GROUPE_2_FIXTURE_NAME = "second groupe";
+    private const SIREN = "491011698";
 
     /**
      * @var GroupSQL
@@ -81,5 +83,71 @@ class GroupSQLTest extends S2lowTestCase
     {
         $this->groupeSQL->getGroupsIdName();
         self::expectNotToPerformAssertions();
+    }
+
+    public function testGetGroupsEligibleToAdministerLeavesOutInactiveGroups(): void
+    {
+        $this->deactivateGroup(2);
+
+        $this->assertSame([1 => self::GROUPE_1_NAME], $this->groupeSQL->getGroupsEligibleToAdminister());
+    }
+
+    public function testGetGroupsEligibleToAdministerKeepsAnInactiveGroupCurrentlyAdministering(): void
+    {
+        $this->deactivateGroup(2);
+
+        $this->assertSame(
+            [1 => self::GROUPE_1_NAME, 2 => self::GROUPE_2_FIXTURE_NAME],
+            $this->groupeSQL->getGroupsEligibleToAdminister('', [2])
+        );
+    }
+
+    public function testGetGroupsEligibleToAdministerKeepsOnlyTheGroupsHoldingTheSiren(): void
+    {
+        $this->givenSirenHeldBy(2, self::SIREN);
+
+        $this->assertSame(
+            [2 => self::GROUPE_2_FIXTURE_NAME],
+            $this->groupeSQL->getGroupsEligibleToAdminister(self::SIREN)
+        );
+    }
+
+    public function testGetGroupsEligibleToAdministerKeepsAGroupCurrentlyAdministeringWithoutTheSiren(): void
+    {
+        $this->givenSirenHeldBy(2, self::SIREN);
+
+        $this->assertSame(
+            [1 => self::GROUPE_1_NAME, 2 => self::GROUPE_2_FIXTURE_NAME],
+            $this->groupeSQL->getGroupsEligibleToAdminister(self::SIREN, [1])
+        );
+    }
+
+    public function testGetGroupsEligibleToAdministerWithoutSirenKeepsEveryActiveGroup(): void
+    {
+        $this->assertSame(
+            [1 => self::GROUPE_1_NAME, 2 => self::GROUPE_2_FIXTURE_NAME],
+            $this->groupeSQL->getGroupsEligibleToAdminister()
+        );
+    }
+
+    public function testIsActive(): void
+    {
+        $this->deactivateGroup(2);
+
+        $this->assertTrue($this->groupeSQL->isActive(1));
+        $this->assertFalse($this->groupeSQL->isActive(2));
+    }
+
+    private function deactivateGroup(int $groupId): void
+    {
+        $this->getSQLQuery()->query('UPDATE authority_groups SET status = 0 WHERE id = ?', [$groupId]);
+    }
+
+    private function givenSirenHeldBy(int $groupId, string $siren): void
+    {
+        $this->getSQLQuery()->query(
+            'INSERT INTO authority_group_siren (authority_group_id, siren) VALUES (?, ?)',
+            [$groupId, $siren]
+        );
     }
 }
