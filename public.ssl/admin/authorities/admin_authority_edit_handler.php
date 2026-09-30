@@ -4,7 +4,8 @@ use S2low\DTO\ModuleActivationRequest;
 use S2low\Enum\AdministeredModule;
 use S2low\Exceptions\GroupDesignationRefusedException;
 use S2low\Security\Authorization\ModuleAdministration;
-use S2low\Services\Authority\AdministeringGroupDesignation;
+use S2low\Security\SecurityUser;
+use S2low\Services\Authority\AdministeringGroupsResolver;
 use S2low\Services\MailActesNotifications\MailerSymfony;
 use S2lowLegacy\Class\actes\ActesConventions;
 use S2lowLegacy\Class\Authority;
@@ -19,13 +20,15 @@ use S2lowLegacy\Lib\ObjectInstancier;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\AuthorityGroupSirenSQL;
 use S2lowLegacy\Model\AuthoritySQL;
+use Symfony\Bundle\SecurityBundle\Security;
 
 list(
     $objectInstancier,
     $sqlQuery,
     $helios_use_passtrans_as_default,
     $moduleAdministration,
-    $administeringGroupDesignation,
+    $administeringGroupsResolver,
+    $security,
     $authorityGroupSirenSQL
 ) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
@@ -34,7 +37,8 @@ list(
             SQLQuery::class,
             'app.helios_use_passtrans_as_default',
             ModuleAdministration::class,
-            AdministeringGroupDesignation::class,
+            AdministeringGroupsResolver::class,
+            Security::class,
             AuthorityGroupSirenSQL::class,
         ]
     );
@@ -180,9 +184,16 @@ if ($me->isGroupAdminOrSuper()) {
             (int)$requeteHelper->getIntFromPost($administeredModule->groupColumn(), true);
     }
 
+    $currentUser = $security->getUser();
+
+    if (! $currentUser instanceof SecurityUser) {
+        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError($api, "Accès refusé", WEBSITE_SSL);
+    }
+
     try {
-        $administeringGroups = $administeringGroupDesignation->resolve(
-            new ModuleActivationRequest((int)$id, (string)$siren, $activatedByModule, $chosenGroupIdByModule)
+        $administeringGroups = $administeringGroupsResolver->resolve(
+            new ModuleActivationRequest((int)$id, (string)$siren, $activatedByModule, $chosenGroupIdByModule),
+            $currentUser
         );
     } catch (GroupDesignationRefusedException $exception) {
         \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError($api, $exception->getMessage(), $form_location);

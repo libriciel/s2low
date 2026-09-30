@@ -360,7 +360,7 @@ if ($me->isGroupAdminOrSuper()) {
 // Chaque module administré rassemble sous la case qui l'active le groupe qui l'administre et ses
 // réglages propres. Le bloc se referme avec la case : un module éteint ne se règle pas.
 $selectableGroups = $me->isSuper()
-    ? $groupSQL->getSelectableGroupsIdName((string)$authority->get("siren"), $designatedGroupIds)
+    ? $groupSQL->getGroupsEligibleToAdminister((string)$authority->get("siren"), $designatedGroupIds)
     : [];
 
 foreach (AdministeredModule::cases() as $administeredModule) {
