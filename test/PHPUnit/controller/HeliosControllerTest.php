@@ -143,9 +143,9 @@ class HeliosControllerTest extends S2lowIntegrationTestCase
         $this->importAPI();
     }
 
-    public function testMaxSizeIs100MegabytesUncompressed(): void
+    public function testMaxSizeIs100Mo(): void
     {
-        $this->assertSame(100_000_000, HELIOS_MAX_UPLOAD_SIZE);
+        $this->assertSame(104_857_600, HELIOS_MAX_UPLOAD_SIZE);
     }
 
     public function testAcceptsFileAtMaxSize(): void

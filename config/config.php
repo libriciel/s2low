@@ -439,7 +439,7 @@ if (!defined('HELIOS_UPSTART_TOUCH_FILE')) {
 }
 
 if (!defined('HELIOS_MAX_UPLOAD_SIZE')) {
-    define('HELIOS_MAX_UPLOAD_SIZE', 100 * 1000 * 1000);
+    define('HELIOS_MAX_UPLOAD_SIZE', 100 * 1024 * 1024);
 }
 
 if (!defined('HELIOS_GENERATED_FILE_PERMISSION')) {

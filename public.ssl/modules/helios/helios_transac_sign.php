@@ -89,7 +89,7 @@ for ($i = 1; $i <= $nb_signature; $i++) {
 
     if ($new_filesize > HELIOS_MAX_UPLOAD_SIZE) {
         $_SESSION['error'] = 'Taille de fichier supérieure à la limite autorisée (' .
-            (HELIOS_MAX_UPLOAD_SIZE / 1000 / 1000) . 'Mo maximum).';
+            (HELIOS_MAX_UPLOAD_SIZE / 1024 / 1024) . 'Mo maximum).';
         header('Location: ' . WEBSITE_SSL);
         exit();
     }

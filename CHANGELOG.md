@@ -21,7 +21,7 @@
 
 - Prise en compte de la date de révocation des certificats : une signature n'est invalide que si le certificat était
   révoqué à la date de signature #1589
-- Helios : la taille maximale d'un PES Aller passe de 128 Mio à 100 Mo (100 000 000 octets), conformément à l'exigence
+- Helios : la taille maximale d'un PES Aller passe de 128 Mo à 100 Mo, conformément à l'exigence
   2-3 du processus d'homologation #1596
 
 ## 5.1.18 - 2026-09-18
