@@ -143,6 +143,25 @@ class HeliosControllerTest extends S2lowIntegrationTestCase
         $this->importAPI();
     }
 
+    public function testMaxSizeIs100MegabytesUncompressed(): void
+    {
+        $this->assertSame(100_000_000, HELIOS_MAX_UPLOAD_SIZE);
+    }
+
+    public function testAcceptsFileAtMaxSize(): void
+    {
+        $_FILES['enveloppe']['size'] = HELIOS_MAX_UPLOAD_SIZE;
+        $this->expectOutputRegex("#<resultat>OK</resultat>#");
+        $this->importAPI();
+    }
+
+    public function testRefusesFileOneByteOverMaxSize(): void
+    {
+        $_FILES['enveloppe']['size'] = HELIOS_MAX_UPLOAD_SIZE + 1;
+        $this->expectedError("Taille de fichier supérieure à la limite autorisée \(100 Mo maximum\)");
+        $this->importAPI();
+    }
+
     private function expectedError($message)
     {
         $message = htmlspecialchars($message, ENT_COMPAT, "UTF-8");
