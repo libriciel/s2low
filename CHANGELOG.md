@@ -26,6 +26,7 @@ numéros SIRET et ses services lui sont ouverts, et il peut éditer ses utilisat
 les collectivités dont son groupe administre au moins un module. #1585
 - La liste des collectivités nomme le groupe administrateur du module Actes et celui du module Helios, en deux colonnes. #1585
 - La liste des transactions Helios ne se filtre plus que sur les collectivités dont l'utilisateur administre le module Helios. #1585
+- La base de données refuse la suppression d'un groupe encore désigné pour administrer le module Actes ou Helios d'une collectivité. #1599
 
 ### Corrections
 
