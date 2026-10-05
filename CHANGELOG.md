@@ -32,6 +32,8 @@ les collectivités dont son groupe administre au moins un module. #1585
 - Prise en compte de la date de révocation des certificats #576
 - Un échec d'enregistrement d'une collectivité s'affiche sans son balisage. #1576
 - Un SIREN déjà porté par une collectivité n'est plus proposé pour en créer une autre, ni accepté à l'enregistrement, y compris lorsqu'il est réservé à plusieurs groupes. #1576
+- La gestion des utilisateurs propose à l'administrateur de groupe, pour filtrer la liste comme pour rattacher un utilisateur,
+toutes les collectivités dont son groupe administre Actes ou Helios ; le filtre « Groupe » du super administrateur les retient aussi. #1597
 
 ### Sécurité
 

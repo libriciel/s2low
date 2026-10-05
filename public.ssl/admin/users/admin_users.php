@@ -45,7 +45,7 @@ if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivités et 
     }
 
     if (isset($fgroup) && is_numeric($fgroup)) {
-        $filter[] = 'authorities.authority_group_id=' . $connection->quote($fgroup);
+        $filter[] = AdministeredAuthorities::conditionForGroup((int)$fgroup);
     }
 } elseif ($me->isGroupAdmin()) {
   // Un admin de groupe ne voit forcément que les utilisateurs des collectivité appartenant à son groupe
@@ -119,14 +119,7 @@ if ($me->isAuthorityAdmin()) {
 $authority_id_list = [];
 
 if ($me->isGroupAdminOrSuper()) {
-    if ($me->isGroupAdmin()) {
-        $cond = ' WHERE authorities.authority_group_id=' . $me->get('authority_group_id');
-        $cond .= ' ORDER BY authorities.name ASC';
-    } else {
-        $cond = ' ORDER BY authorities.name ASC';
-    }
-
-    $authority_id_list = Authority::getAuthoritiesIdName($cond) ;
+    $authority_id_list = $me->getAllPossibleAuthority();
 }
 
 /*****************/

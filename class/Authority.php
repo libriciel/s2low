@@ -461,37 +461,6 @@ class Authority extends DataObject
   /* Méthodes statiques */
   /**********************/
 
-  /**
-   * \brief Méthode d'obtention d'une liste de collectivité
-   * \param $cond chaine : condition SQL a appliquer sur la requete
-   * \return Tableau de collectivités
-   *
-   * Cette méthode retourne un tableau dont les clefs sont les identifiants
-   * des collectivités et le contenu de la case est le nom de la collectivité
-  */
-    public static function getAuthoritiesIdName($cond = "")
-    {
-        $sql = "SELECT authorities.id, authorities.name FROM authorities " . $cond;
-
-        $db = DatabasePool::getInstance();
-
-        $result = $db->select($sql);
-
-        $authorities = false;
-        if (! $result->isError()) {
-            $authorities = $result->get_all_rows();
-        }
-
-        $tabAuthorities = array();
-        if (count($authorities) > 0) {
-            foreach ($authorities as $key => $authority) {
-                $tabAuthorities[$authority["id"]] = $authority["name"];
-            }
-        }
-
-        return $tabAuthorities;
-    }
-
     public static function getSirenFromId($id)
     {
         $sql = "SELECT siren FROM authorities WHERE id = ?";
