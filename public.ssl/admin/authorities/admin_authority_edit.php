@@ -153,8 +153,6 @@ $html .= " </div>\n";
 $isActesAdmin = $moduleAdministration->isActesAdmin((int)$authority->getId());
 $isHeliosAdmin = $moduleAdministration->isHeliosAdmin((int)$authority->getId());
 
-// SIREN et groupes administrateurs se contraignent l'un l'autre : ils sont présentés ensemble, plus
-// bas, avec les cases qui activent les modules.
 $designatedGroupIds = [];
 foreach (AdministeredModule::cases() as $administeredModule) {
     $designatedGroupId = (int)$authority->get($administeredModule->groupColumn());
@@ -290,8 +288,7 @@ $html .= " <div class=\"form-group\">\n";
 $html .= "  <label for=\"sirenId\" class=\"control-label col-md-4\">Numéro de SIREN</label>\n";
 
 if ($me->isGroupAdminOrSuper()) {
-    // Les SIREN que tous les groupes administrateurs autorisent. L'administrateur de groupe qui crée
-    // une collectivité n'en a encore désigné aucun : ce sera le sien.
+    // À la création, l'administrateur de groupe n'a encore désigné aucun groupe : ce sera le sien.
     $sirenGroupIds = $designatedGroupIds;
     if ($sirenGroupIds === [] && $me->isGroupAdmin()) {
         $sirenGroupIds = [(int)$me->get('authority_group_id')];
@@ -306,19 +303,18 @@ if ($me->isGroupAdminOrSuper()) {
         \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink('/api/authorities/available-sirens') . "\" />";
     $html .= "<select id=\"SelectSirenInput\" class=\"form-control\" name=\"siren\">";
     foreach ($sirenList as $siren_tmp) {
+        $escapedSiren = get_hecho($siren_tmp);
         if ($siren_tmp == $currentSiren) {
-              $html .= " <option value =\"$siren_tmp\" selected=\"selected\">$siren_tmp</option>";
+              $html .= " <option value =\"$escapedSiren\" selected=\"selected\">$escapedSiren</option>";
         } else {
-             $html .= " <option value =\"$siren_tmp\" >$siren_tmp</option>";
+             $html .= " <option value =\"$escapedSiren\" >$escapedSiren</option>";
         }
     }
-    // Le SIREN de la collectivité qu'aucun des groupes retenus n'autorise reste affiché, mais sans
-    // valeur : l'enregistrement le refusera plutôt que d'en substituer un autre en silence.
+    // Sans valeur : l'enregistrement le refuse au lieu de lui substituer en silence le premier SIREN proposé.
     if ($currentSiren && ! in_array($currentSiren, $sirenList, true)) {
         $html .= " <option value=\"\" selected=\"selected\" disabled=\"disabled\">" . get_hecho($currentSiren) . " (hors groupe)</option>";
     }
     $html .= " </select>\n";
-    // Une liste vide n'explique rien : un SIREN déjà porté par une collectivité ne se reprend pas.
     $html .= "  <div id=\"noSirenAvailable\" class=\"help-block\"" . ($sirenList === [] ? "" : " style=\"display: none\"") . ">" .
         "Aucun SIREN disponible pour les groupes retenus. Un SIREN déjà utilisé par une autre collectivité ne peut pas être repris." .
         "</div>\n";
@@ -357,8 +353,6 @@ if ($me->isGroupAdminOrSuper()) {
     $html .= " </div>\n";
 }
 
-// Chaque module administré rassemble sous la case qui l'active le groupe qui l'administre et ses
-// réglages propres. Le bloc se referme avec la case : un module éteint ne se règle pas.
 $selectableGroups = $me->isSuper()
     ? $groupSQL->getGroupsEligibleToAdminister((string)$authority->get("siren"), $designatedGroupIds)
     : [];
