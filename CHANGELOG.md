@@ -35,6 +35,7 @@ les collectivités dont son groupe administre au moins un module. #1585
   Un administrateur de groupe n'y lit que le nom du sien : le groupe qui administre l'autre module est masqué par
   des étoiles. #1585
 - La liste des transactions Helios ne se filtre plus que sur les collectivités dont l'utilisateur administre le module Helios. #1585
+- La base de données refuse la suppression d'un groupe encore désigné pour administrer le module Actes ou Helios d'une collectivité. #1599
 
 ### Corrections
 
