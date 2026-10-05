@@ -315,9 +315,6 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
     }
 
     /**
-     * Le cas d'usage du paquage : deux mutualisants se partagent une collectivité, l'un pour Actes,
-     * l'autre pour Helios.
-     *
      * @throws \Exception
      */
     public function testASuperAdminDesignatesADifferentGroupForEachModule(): void
@@ -371,10 +368,6 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
     }
 
     /**
-     * Le SIREN doit être autorisé par les deux groupes, faute de quoi l'un d'eux hérite d'une
-     * collectivité qu'il n'a pas le droit de gérer. La désignation le refuse dès le groupe fautif,
-     * sans attendre le contrôle d'intersection qui suit.
-     *
      * @throws \Exception
      */
     public function testAGroupThatDoesNotHoldTheSirenIsRefused(): void
@@ -393,9 +386,6 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
     }
 
     /**
-     * Un SIREN déjà porté par une collectivité ne se reprend pas, même par un autre groupe à qui il
-     * est aussi réservé : l'enregistrement échouerait sur l'unicité, avec un message illisible.
-     *
      * @throws \Exception
      */
     public function testASirenAlreadyUsedByAnotherAuthorityIsRefused(): void
@@ -427,9 +417,6 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
     }
 
     /**
-     * Décocher un module ne le retire pas à son groupe : il en reste l'administrateur et peut
-     * le réactiver.
-     *
      * @throws \Exception
      */
     public function testADeactivatedModuleKeepsItsAdministeringGroup(): void

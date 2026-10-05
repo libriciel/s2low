@@ -3,15 +3,6 @@ import {
     updateSirenSelectList
 } from "./sirenSelector.js";
 
-/**
- * Les SIREN proposés dépendent des groupes qui administreront la collectivité : ils sont
- * l'intersection de ce que chacun autorise. Seul le super administrateur choisit ces groupes,
- * lui seul dispose donc de ces listes et du point d'entrée qui les recalcule.
- *
- * La réciproque n'est volontairement pas câblée : la liste des groupes, restreinte aux détenteurs
- * du SIREN, est arrêtée au chargement de la page. On ne change pas le SIREN et les groupes d'une
- * même collectivité au cours de la même modification, c'est l'un ou l'autre.
- */
 window.onload = () => {
     const modules = [...document.querySelectorAll('.administered-module')]
         .map(block => ({
@@ -29,12 +20,9 @@ window.onload = () => {
     const originalSirenInput = document.getElementById('originalSiren');
     const availableSirensUrl = document.getElementById('availableSirensUrl');
 
-    // Seul le super administrateur choisit les groupes : lui seul a des SIREN à recalculer, et lui
-    // seul a droit au point d'entrée qui les fournit.
     const chosenGroups = modules.filter(({groupSelect}) => groupSelect);
 
-    // Cocher un module et changer son groupe lancent deux appels : sans ce jeton, le premier revenu
-    // en dernier réafficherait des SIREN qui ne correspondent plus aux groupes retenus.
+    // Deux appels peuvent se croiser : seule la réponse au dernier est affichée.
     let lastAskedSirens = 0;
 
     const refreshSirens = async () => {
@@ -58,7 +46,7 @@ window.onload = () => {
         });
 
         if (!response.ok) {
-            return;
+            throw new Error(`Recalcul des SIREN proposés refusé : HTTP ${response.status}`);
         }
 
         const {sirens} = await response.json();
@@ -78,16 +66,17 @@ window.onload = () => {
         }
     };
 
+    const refreshSirensOrReport = () => refreshSirens().catch(error => console.error(error));
+
     modules.forEach(({block, groupSelect, moduleCheckbox}) => {
         if (groupSelect) {
             // Sans largeur explicite, select2 mesure un bloc encore masqué et se rend minuscule.
-            window.jQuery(groupSelect).select2({width: '100%'}).on('change', refreshSirens);
+            window.jQuery(groupSelect).select2({width: '100%'}).on('change', refreshSirensOrReport);
         }
 
         moduleCheckbox.addEventListener('change', () => {
-            // Un module éteint ne se règle pas : son bloc se referme et sort du calcul des SIREN.
             block.style.display = moduleCheckbox.checked ? '' : 'none';
-            refreshSirens();
+            refreshSirensOrReport();
         });
     });
 };

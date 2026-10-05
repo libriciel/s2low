@@ -158,8 +158,7 @@ if ($me->isGroupAdminOrSuper()) {
     $permsBeforeReset = $authority->getAuthorizedModules() ?: [];
     $authority->resetModulesPerms();
 
-    // getModulePerm() relit la base tant qu'aucune permission n'a été posée : on retient ici ce que
-    // le formulaire active, seule source fiable pour désigner les groupes.
+    // Pas de getModulePerm() : il relit la base tant qu'aucune permission n'est posée.
     $activatedByModule = [];
 
     foreach ($modules as $module) {
@@ -199,13 +198,10 @@ if ($me->isGroupAdminOrSuper()) {
         \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError($api, $exception->getMessage(), $form_location);
     }
 
-    // Sans groupe administrateur, aucun ne se prononce sur le SIREN : il n'y a rien à contrôler.
     if ($administeringGroups->groupIds() !== []) {
         $availableSirens = $authorityGroupSirenSQL->getAvailableSirenForGroups($administeringGroups->groupIds(), (int)$id);
 
         if (! in_array($siren, $availableSirens, true)) {
-            // Deux refus distincts : un SIREN que les groupes autorisent mais qu'une collectivité
-            // porte déjà s'entendrait dire « pas autorisé », ce qu'il n'est pas.
             $carriedBy = (int)$authoritySQL->getIdBySIREN($siren);
             $reason = ($carriedBy !== 0 && $carriedBy !== (int)$id)
                 ? "est déjà utilisé par une autre collectivité."

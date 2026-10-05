@@ -9,9 +9,6 @@ use S2lowLegacy\Lib\SQLQuery;
 
 class AdminAuthorityEditTest extends S2lowIntegrationTestCase
 {
-    /**
-     * @throws \Exception
-     */
     public function testTheSuperAdminChoosesTheGroupOfEachAdministeredModule(): void
     {
         $this->setUserWithRole(UserRole::SuperAdministrateur);
@@ -22,11 +19,6 @@ class AdminAuthorityEditTest extends S2lowIntegrationTestCase
         static::assertStringContainsString('name="helios_group_id"', $page);
     }
 
-    /**
-     * Les réglages d'un module tiennent dans son propre bloc, avec la case qui l'active.
-     *
-     * @throws \Exception
-     */
     public function testEachAdministeredModuleGathersItsOwnSettings(): void
     {
         $this->setUserWithRole(UserRole::SuperAdministrateur);
@@ -39,12 +31,6 @@ class AdminAuthorityEditTest extends S2lowIntegrationTestCase
         static::assertStringContainsString('name="helios_ftp_dest"', $page);
     }
 
-    /**
-     * Une liste de SIREN vide n'explique rien à qui cherche à reprendre celui d'une autre
-     * collectivité.
-     *
-     * @throws \Exception
-     */
     public function testAnEmptySirenListSaysWhy(): void
     {
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
@@ -55,9 +41,6 @@ class AdminAuthorityEditTest extends S2lowIntegrationTestCase
         static::assertStringContainsString('Aucun SIREN disponible', $page);
     }
 
-    /**
-     * @throws \Exception
-     */
     public function testAGroupAdminCannotChooseAnyGroup(): void
     {
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
@@ -70,9 +53,6 @@ class AdminAuthorityEditTest extends S2lowIntegrationTestCase
         static::assertStringContainsString('Groupe administrateur', $page);
     }
 
-    /**
-     * @throws \Exception
-     */
     private function whenTheAuthorityIsEdited(): string
     {
         $_GET = ['id' => '1'];

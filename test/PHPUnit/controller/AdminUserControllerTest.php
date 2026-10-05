@@ -33,10 +33,7 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         $this->setOnlyDataOk();
     }
 
-    /**
-     * L'appartenance au groupe se lit sur les colonnes par module. Le jeu d'essai ne renseigne que
-     * authority_group_id, que la migration a pourtant recopiée dans les deux.
-     */
+    // Le jeu d'essai ne renseigne que authority_group_id, que la migration recopie dans les colonnes par module.
     private function givenAuthority2AdministeredByGroup1(): void
     {
         $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 1, helios_group_id = 1 WHERE id = 2');

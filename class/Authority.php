@@ -157,10 +157,7 @@ class Authority extends DataObject
 
   /**
    * \brief Méthode qui détermine si le groupe spécifié administre la collectivité
-   *
-   * Une collectivité relève de deux groupes, un par module administré : le groupe l'administre
-   * dès qu'il en gère au moins un. La colonne historique authority_group_id n'est plus alimentée
-   * et n'entre plus dans le test ; elle sera supprimée.
+   * dès qu'il en administre au moins un module
    *
    * \param $group_id integer : Numéro d'identifiant du groupe
    * \return True si le groupe administre la collectivité, False sinon
