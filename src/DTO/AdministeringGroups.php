@@ -78,6 +78,11 @@ final readonly class AdministeringGroups
         return in_array($groupId, $this->groupIdByModule, true);
     }
 
+    public function administers(AdministeredModule $module, int $groupId): bool
+    {
+        return $groupId !== 0 && $this->groupIdFor($module) === $groupId;
+    }
+
     /**
      * @return int[]
      */

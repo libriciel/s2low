@@ -2,6 +2,8 @@
 
 namespace S2lowLegacy\Class;
 
+use S2low\DTO\AdministeringGroups;
+use S2low\Enum\AdministeredModule;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\GroupSQL;
@@ -121,16 +123,23 @@ class Droit
         return UserRole::fromRole($userInfo['role'] ?? '')?->isAuthorityAdmin() ?? false;
     }
 
-    public function hasDroit(array $userInfo, array $authorityInfo)
+    /**
+     * Est-ce que l'utilisateur administre le module Helios de cette collectivité ?
+     *
+     * Le groupe Actes ne suffit pas : il donnerait à voir les transactions Helios de collectivités
+     * dont l'utilisateur n'administre pas ce module.
+     */
+    public function administersHelios(array $userInfo, array $authorityInfo): bool
     {
-
         if ($this->isSuperAdmin($userInfo)) {
             return true;
         }
 
-        if (! $this->isGroupAdmin($userInfo) && ! $this->isAuthorityAdmin($userInfo)) {
+        if (! $this->isGroupAdmin($userInfo)) {
             return false;
         }
-        return $authorityInfo['authority_group_id'] == $userInfo['authority_group_id'];
+
+        return AdministeringGroups::fromAuthorityInfo($authorityInfo)
+            ->administers(AdministeredModule::HELIOS, (int)($userInfo['authority_group_id'] ?? 0));
     }
 }
