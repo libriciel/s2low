@@ -31,6 +31,18 @@ class AdminAuthorityEditTest extends S2lowIntegrationTestCase
         static::assertStringContainsString('name="helios_ftp_dest"', $page);
     }
 
+    public function testTheSirenListIsRefreshedFromTheInternalEndpoint(): void
+    {
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+
+        $page = $this->whenTheAuthorityIsEdited();
+
+        static::assertMatchesRegularExpression(
+            '#id="availableSirensUrl" type="hidden" value="[^"]*/internal/authorities/available-sirens"#',
+            $page
+        );
+    }
+
     public function testAnEmptySirenListSaysWhy(): void
     {
         $this->setUserWithRole(UserRole::AdministrateurGroupe);

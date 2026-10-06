@@ -300,7 +300,7 @@ if ($me->isGroupAdminOrSuper()) {
     $html .= "  <div class=\"col-md-6\">";
     $html .= "  <input id=\"originalSiren\" type =\"hidden\" value = \"" . get_hecho($currentSiren) . '"/>';
     $html .= "  <input id=\"availableSirensUrl\" type=\"hidden\" value=\"" .
-        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink('/api/authorities/available-sirens') . "\" />";
+        \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink('/internal/authorities/available-sirens') . "\" />";
     $html .= "<select id=\"SelectSirenInput\" class=\"form-control\" name=\"siren\">";
     foreach ($sirenList as $siren_tmp) {
         $escapedSiren = get_hecho($siren_tmp);
