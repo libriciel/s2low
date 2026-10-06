@@ -95,7 +95,7 @@ ob_start();
         <tr>
             <td><?php hecho($user_info['name'])?></td>
             <td><?php hecho($user_info['group_name'])?></td>
-            <td><?php echo $user_info['email'] ?></td>
+            <td><?php hecho($user_info['email']); ?></td>
         </tr>
     <?php endforeach; ?>
 

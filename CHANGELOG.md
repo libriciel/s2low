@@ -16,6 +16,7 @@
 - Faille de contrôle d'accès (CVSS 6.5 - criticité MOYENNE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:N) #1590
 - Faille de contrôle d'accès sur la gestion des utilisateurs
   (CVSS 4.9 - criticité MOYENNE - CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:N/A:N) #1590
+- Failles XSS (CVSS 7.3 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:H/I:H/A:N) #1600
 
 ### Corrections
 
