@@ -59,7 +59,7 @@ if ($droit->isSuperAdmin($initData->userInfo)) {
 } elseif ($droit->isGroupAdmin($initData->userInfo) && $fauthority) {
     $authorityFiltreInfo = $authoritySQL->getInfo($fauthority);
 
-    if ($droit->hasDroit($initData->userInfo, $authorityFiltreInfo)) {
+    if ($droit->administersHelios($initData->userInfo, $authorityFiltreInfo)) {
         $heliosTransactionsListe->setAuthority($fauthority);
     } else {
         $heliosTransactionsListe->setAuthority($initData->userInfo['authority_id']);
