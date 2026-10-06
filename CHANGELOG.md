@@ -25,6 +25,7 @@ numéros SIRET et ses services lui sont ouverts, et il peut éditer ses utilisat
 - La liste des collectivités, leur export, la liste des utilisateurs et les journaux présentent à un administrateur de groupe toutes
 les collectivités dont son groupe administre au moins un module. #1585
 - La liste des collectivités nomme le groupe administrateur du module Actes et celui du module Helios, en deux colonnes. #1585
+- La liste des transactions Helios ne se filtre plus que sur les collectivités dont l'utilisateur administre le module Helios. #1585
 
 ### Corrections
 
