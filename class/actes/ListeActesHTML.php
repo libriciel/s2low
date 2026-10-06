@@ -372,7 +372,9 @@ class ListeActesHTML
                                                             <br/>
                                                     <?php endforeach; ?>
                                             </td>
-                                            <td headers="follower"><?php echo $envelope['givenname'] . ' ' . $envelope['name'] ?></td>
+                                            <td headers="follower">
+                                                <?php hecho($envelope['givenname'] . ' ' . $envelope['name']); ?>
+                                            </td>
                                             <td headers="actions">
                                                     <a href="<?php echo Helpers::getLink('/modules/actes/actes_transac_show.php?id=' . $envelope['transaction_id']);?>"
                                                                     class="icon">

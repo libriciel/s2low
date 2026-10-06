@@ -2,7 +2,7 @@
 <p id="back-transaction-btn">
     <a class="btn btn-default" href='admin_authority_edit.php?id=<?php echo $this->id ?>'>« revenir au formulaire standard</a><br/>
 </p>
-<h2>Modification des propriétés SAE (Pastell) de <?php echo $this->authorityInfo['name']?></h2>
+<h2>Modification des propriétés SAE (Pastell) de <?php hecho($this->authorityInfo['name']); ?></h2>
 
 <form class="form form-horizontal" action='admin_authority_sae_controler.php' method='post'>
     <input type='hidden' name='id' value='<?php echo $this->id ?>' />
