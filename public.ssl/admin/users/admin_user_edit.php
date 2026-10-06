@@ -129,13 +129,7 @@ if (! $mod) {
 $him_status = ($val = Helpers::getFromSession("status")) ? $val : $him->get("status");
 
 if ($me->isGroupAdminOrSuper()) {
-    if ($me->isGroupAdmin()) {
-        //WTF !!
-        $cond = " WHERE authorities.authority_group_id=" . $me->get("authority_group_id") . " ORDER BY authorities.name ASC";
-    } else {
-        $cond = " ORDER BY authorities.name ASC";
-    }
-    $authorities_list = Authority::getAuthoritiesIdName($cond);
+    $authorities_list = $me->getAllPossibleAuthority();
 
     $him_authorities = ($val = Helpers::getFromSession("authority_id")) ? $val : $him->get("authority_id");
 }
