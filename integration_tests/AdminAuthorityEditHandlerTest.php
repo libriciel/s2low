@@ -419,7 +419,7 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
     /**
      * @throws \Exception
      */
-    public function testADeactivatedModuleKeepsItsAdministeringGroup(): void
+    public function testADeactivatedModuleLosesItsAdministeringGroup(): void
     {
         $this->setUserWithRole(UserRole::SuperAdministrateur);
         $this->givenSirenAuthorizedForGroup(1, '123456789');
@@ -427,6 +427,8 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
 
         $post = $this->authorityPostWithoutTheHeliosFields();
         unset($post['perm_' . Module::ACTES]);
+        $post['perm_' . Module::HELIOS] = 'on';
+        $post['helios_group_id'] = 1;
 
         $this->whenTheFormIsPosted($post);
 
@@ -434,7 +436,25 @@ class AdminAuthorityEditHandlerTest extends S2lowIntegrationTestCase
         $authority->init();
 
         static::assertFalse($authority->getModulePerm(Module::ACTES));
-        static::assertSame(1, $this->administeringGroupOf(1, AdministeredModule::ACTES));
+        static::assertSame(0, $this->administeringGroupOf(1, AdministeredModule::ACTES));
+        static::assertSame(1, $this->administeringGroupOf(1, AdministeredModule::HELIOS));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testAModuleHiddenFromTheGroupAdminKeepsItsAdministeringGroup(): void
+    {
+        $this->givenTheGroupAdminOfGroup1();
+        $this->givenAuthority1AdministeredByGroups(actesGroupId: 1, heliosGroupId: 2);
+
+        $post = $this->authorityPostWithoutTheHeliosFields();
+        unset($post['perm_' . Module::ACTES]);
+
+        $this->whenTheFormIsPosted($post);
+
+        static::assertSame(0, $this->administeringGroupOf(1, AdministeredModule::ACTES));
+        static::assertSame(2, $this->administeringGroupOf(1, AdministeredModule::HELIOS));
     }
 
     /**

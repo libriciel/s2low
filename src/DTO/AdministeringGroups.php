@@ -45,6 +45,14 @@ final readonly class AdministeringGroups
         return new self($groupIdByModule);
     }
 
+    public function withdraw(AdministeredModule $module): self
+    {
+        $groupIdByModule = $this->groupIdByModule;
+        unset($groupIdByModule[$module->value]);
+
+        return new self($groupIdByModule);
+    }
+
     public function isDesignatedFor(AdministeredModule $module): bool
     {
         return isset($this->groupIdByModule[$module->value]);

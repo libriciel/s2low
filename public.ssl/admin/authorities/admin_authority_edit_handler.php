@@ -268,6 +268,15 @@ if (! $authority->save($savePerms)) {
     \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->exitOrDisplayError($api, $msg, $location);
 }
 
+if ($savePerms) {
+    // save() ignore les champs vides : le groupe d'un module désactivé s'efface à part.
+    foreach (AdministeredModule::cases() as $administeredModule) {
+        if (! $administeringGroups->isDesignatedFor($administeredModule)) {
+            $authoritySQL->clearAdministeringGroup((int)$authority->getId(), $administeredModule);
+        }
+    }
+}
+
 if (isset($_FILES['convention_actes']) && $isActesAdmin) {
     $fileUploader = new FileUploader();
     if ($fileUploader->verifOK('convention_actes')) {

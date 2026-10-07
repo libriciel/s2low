@@ -32,6 +32,7 @@ final readonly class AdministeringGroupsResolver
 
         foreach (AdministeredModule::cases() as $module) {
             if (! $request->activates($module)) {
+                $designated = $designated->withdraw($module);
                 continue;
             }
 

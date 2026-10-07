@@ -20,6 +20,17 @@ class AdministeringGroupsTest extends TestCase
         self::assertTrue($groups->isEmpty());
     }
 
+    public function testWithdrawingAModuleLeavesTheOtherDesignated(): void
+    {
+        $groups = AdministeringGroups::none()
+            ->designate(AdministeredModule::ACTES, self::GROUP)
+            ->designate(AdministeredModule::HELIOS, self::GROUP)
+            ->withdraw(AdministeredModule::ACTES);
+
+        self::assertFalse($groups->isDesignatedFor(AdministeredModule::ACTES));
+        self::assertSame(self::GROUP, $groups->groupIdFor(AdministeredModule::HELIOS));
+    }
+
     public function testAnAuthorityWithoutGroupForAModuleLeavesItWithoutGroup(): void
     {
         $groups = AdministeringGroups::fromAuthorityInfo([
