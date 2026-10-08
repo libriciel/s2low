@@ -40,17 +40,17 @@ class AdministeringGroupsResolverTest extends S2lowTestCase
         static::assertSame(self::OTHER_GROUP, $designated->groupIdFor(AdministeredModule::HELIOS));
     }
 
-    public function testADeactivatedModuleKeepsItsDesignation(): void
+    public function testADeactivatedModuleLosesItsDesignation(): void
     {
         $this->givenAuthorityAdministeredBy(self::GROUP, self::OTHER_GROUP);
 
         $designated = $this->resolver()->resolve(
-            $this->request(self::AUTHORITY, [], []),
+            $this->request(self::AUTHORITY, [AdministeredModule::ACTES], [AdministeredModule::ACTES->value => self::GROUP]),
             $this->user(self::SUPER_ADMIN)
         );
 
         static::assertSame(self::GROUP, $designated->groupIdFor(AdministeredModule::ACTES));
-        static::assertSame(self::OTHER_GROUP, $designated->groupIdFor(AdministeredModule::HELIOS));
+        static::assertFalse($designated->isDesignatedFor(AdministeredModule::HELIOS));
     }
 
     public function testAnActivatedModuleWithoutAChosenGroupIsRefused(): void

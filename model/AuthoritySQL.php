@@ -197,20 +197,16 @@ class AuthoritySQL extends SQL
         return $this->queryOne($sql, $id);
     }
 
-    public function designateAdministeringGroup(int $authorityId, AdministeredModule $module, int $groupId): void
-    {
-        $sql = match ($module) {
-            AdministeredModule::ACTES => "UPDATE authorities SET actes_group_id=? WHERE id=?",
-            AdministeredModule::HELIOS => "UPDATE authorities SET helios_group_id=? WHERE id=?",
-        };
-
-        $this->query($sql, [$groupId, $authorityId]);
-    }
-
     public function updateDoNotVerifyNomFicUnicity($authority_id, $helios_do_not_verify_nom_fic_unicity)
     {
         $sql = "UPDATE authorities SET helios_do_not_verify_nom_fic_unicity=? WHERE id=?";
         $this->query($sql, $helios_do_not_verify_nom_fic_unicity ? 1 : 0, $authority_id);
+    }
+
+    public function clearAdministeringGroup(int $authorityId, AdministeredModule $module): void
+    {
+        $sql = "UPDATE authorities SET {$module->groupColumn()} = NULL WHERE id = ?";
+        $this->query($sql, $authorityId);
     }
 
     public function create($name, $siren)

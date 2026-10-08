@@ -953,6 +953,10 @@ services:
       - { name: monolog.processor }
 
   # Security Services
+  Symfony\Bundle\SecurityBundle\Security:
+    alias: security.helper
+    public: true
+
   S2low\Security\SecurityUserProvider:
     public: true
     autowire: true
