@@ -177,6 +177,23 @@ class ControllerTest extends S2lowIntegrationTestCase
         $this->controller->verifGroupAdmin(1);
     }
 
+    public function testVerifGroupAdminGrantsGroupAdminOnOwnGroup(): void
+    {
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->expectNotToPerformAssertions();
+
+        $this->controller->verifGroupAdmin(1);
+    }
+
+    public function testVerifGroupAdminRefusesGroupAdminOnAnotherGroup(): void
+    {
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+
+        $this->expectException(RedirectException::class);
+        $this->expectExceptionMessage("Accès refusé");
+        $this->controller->verifGroupAdmin(2);
+    }
+
     public function testSetMessage()
     {
         $this->controller->setMessage("test");
@@ -203,6 +220,43 @@ class ControllerTest extends S2lowIntegrationTestCase
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
         $this->controller->verifAdmin(2);
         self::expectNotToPerformAssertions();
+    }
+
+    public function testVerifAdminGrantsGroupAdminDesignatedForActesOnly(): void
+    {
+        $this->givenAuthority2IsAdministeredBy(actesGroupId: 1, heliosGroupId: 2);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->expectNotToPerformAssertions();
+
+        $this->controller->verifAdmin(2);
+    }
+
+    public function testVerifAdminGrantsGroupAdminDesignatedForHeliosOnly(): void
+    {
+        $this->givenAuthority2IsAdministeredBy(actesGroupId: 2, heliosGroupId: 1);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->expectNotToPerformAssertions();
+
+        $this->controller->verifAdmin(2);
+    }
+
+    public function testVerifAdminRefusesGroupAdminNotDesignatedForAnyModule(): void
+    {
+        $this->givenAuthority2IsAdministeredBy(actesGroupId: 2, heliosGroupId: 2);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+
+        $this->expectException(RedirectException::class);
+        $this->expectExceptionMessage("Accès refusé");
+        $this->controller->verifAdmin(2);
+    }
+
+    private function givenAuthority2IsAdministeredBy(int $actesGroupId, int $heliosGroupId): void
+    {
+        self::getContainer()->get(SQLQuery::class)->query(
+            'UPDATE authorities SET actes_group_id = ?, helios_group_id = ? WHERE id = 2',
+            $actesGroupId,
+            $heliosGroupId
+        );
     }
 
     public function testVerifAdminAdminGroupFailed()

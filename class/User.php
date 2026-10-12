@@ -301,16 +301,9 @@ class User extends DataObject
 
             $authority = new Authority($row["authority_id"]);
 
-          // Prise en compte du groupe
-            if (is_numeric($authority->get("authority_group_id"))) {
-                $group = new Group($authority->get("authority_group_id"));
-                $inGroup = $this->role == "GADM" && $this->authority_group_id == $group->getId();
-            } else {
-              // La collectivité n'appartient à aucun groupe
-                $inGroup = false;
-            }
+            $inGroup = $this->isGroupAdmin() && $authority->isInGroup($this->authority_group_id);
 
-            return ($this->role == "SADM" || $inGroup || ($row["authority_id"] == $this->authority_id && $this->role == "ADM"));
+            return ($this->isSuper() || $inGroup || ($row["authority_id"] == $this->authority_id && $this->isAuthorityAdmin()));
         } else {
             $this->errorMsg = "User::canEditUser - erreur de résultat requête base de données";
             return false;
@@ -763,15 +756,18 @@ class User extends DataObject
     public function getAllPossibleAuthority()
     {
         assert(!!$this->id);
+        $param = [];
         if ($this->isSuper()) {
             $sql = "SELECT id,name FROM authorities ORDER by name";
         } elseif ($this->isGroupAdmin()) {
-            $sql = "SELECT id,name FROM authorities WHERE authority_group_id=" . $this->get('authority_group_id') . " ORDER by name";
+            $sql = "SELECT id,name FROM authorities WHERE actes_group_id=? OR helios_group_id=? ORDER by name";
+            $groupId = $this->get('authority_group_id');
+            $param = [$groupId, $groupId];
         } else {
             return array($this->get("authority_id") => '');
         }
         $result = array();
-        foreach ($this->db->fetchAll($sql) as $r) {
+        foreach ($this->db->fetchAll($sql, $param) as $r) {
             $result[$r['id']] = $r['name'];
         }
         return $result;

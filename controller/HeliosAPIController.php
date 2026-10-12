@@ -2,7 +2,6 @@
 
 namespace S2lowLegacy\Controller;
 
-use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 class HeliosAPIController extends Controller
@@ -21,10 +20,7 @@ class HeliosAPIController extends Controller
     public function nbCreatedPesAllerByAuthorityGroupIdAndMonthAction(): bool
     {
         $this->verifAdmin();
-        $authority_id = intval($this->me->get("authority_id"));
-        $authoritySQL = $this->getObjectInstancier()->get(AuthoritySQL::class);
-        $authorityInfo = $authoritySQL->getInfo($authority_id);
-        $authority_group_id = $authorityInfo['authority_group_id'];
+        $authority_group_id = (int)$this->me->get("authority_group_id");
 
         if ($this->me->isSuper() && $this->getRecuperateurGet()->getInt("authority_group_id")) {
             $authority_group_id = $this->getRecuperateurGet()->getInt("authority_group_id");
