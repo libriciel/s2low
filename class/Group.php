@@ -2,8 +2,6 @@
 
 namespace S2lowLegacy\Class;
 
-use S2low\Model\AdministeredAuthorities;
-
 class Group extends DataObject
 {
     protected $objectName = "authority_groups";
@@ -163,12 +161,11 @@ class Group extends DataObject
   */
     public static function isEmpty($id)
     {
-        $condition = AdministeredAuthorities::conditionForGroup((int)$id);
-        $sql = "SELECT authorities.id FROM authorities WHERE $condition";
+        $sql = "SELECT authorities.id FROM authorities WHERE actes_group_id=? OR helios_group_id=?";
 
         $db = DatabasePool::getInstance();
 
-        $result = $db->select($sql);
+        $result = $db->select($sql, [$id, $id]);
 
         if (! $result->isError()) {
             if ($result->num_row() > 0) {

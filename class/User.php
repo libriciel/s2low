@@ -3,7 +3,6 @@
 namespace S2lowLegacy\Class;
 
 use S2low\Enum\UserRole;
-use S2low\Model\AdministeredAuthorities;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Model\UserSQL;
 
@@ -757,16 +756,18 @@ class User extends DataObject
     public function getAllPossibleAuthority()
     {
         assert(!!$this->id);
+        $param = [];
         if ($this->isSuper()) {
             $sql = "SELECT id,name FROM authorities ORDER by name";
         } elseif ($this->isGroupAdmin()) {
-            $condition = AdministeredAuthorities::conditionForGroup((int)$this->get('authority_group_id'));
-            $sql = "SELECT id,name FROM authorities WHERE $condition ORDER by name";
+            $sql = "SELECT id,name FROM authorities WHERE actes_group_id=? OR helios_group_id=? ORDER by name";
+            $groupId = $this->get('authority_group_id');
+            $param = [$groupId, $groupId];
         } else {
             return array($this->get("authority_id") => '');
         }
         $result = array();
-        foreach ($this->db->fetchAll($sql) as $r) {
+        foreach ($this->db->fetchAll($sql, $param) as $r) {
             $result[$r['id']] = $r['name'];
         }
         return $result;

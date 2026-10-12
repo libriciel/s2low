@@ -177,16 +177,15 @@ class ControllerTest extends S2lowIntegrationTestCase
         $this->controller->verifGroupAdmin(1);
     }
 
-    public function testVerifGroupAdminOnOwnGroup()
+    public function testVerifGroupAdminGrantsGroupAdminOnOwnGroup(): void
     {
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->expectNotToPerformAssertions();
 
         $this->controller->verifGroupAdmin(1);
-
-        self::expectNotToPerformAssertions();
     }
 
-    public function testVerifGroupAdminOnAnotherGroup()
+    public function testVerifGroupAdminRefusesGroupAdminOnAnotherGroup(): void
     {
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
 
@@ -223,29 +222,27 @@ class ControllerTest extends S2lowIntegrationTestCase
         self::expectNotToPerformAssertions();
     }
 
-    public function testVerifAdminAdminGroupDesignatedForActesOnly()
+    public function testVerifAdminGrantsGroupAdminDesignatedForActesOnly(): void
     {
-        $this->givenAuthority2IsAdministeredBy(['actes_group_id' => 1, 'helios_group_id' => 2]);
+        $this->givenAuthority2IsAdministeredBy(actesGroupId: 1, heliosGroupId: 2);
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->expectNotToPerformAssertions();
 
         $this->controller->verifAdmin(2);
-
-        self::expectNotToPerformAssertions();
     }
 
-    public function testVerifAdminAdminGroupDesignatedForHeliosOnly()
+    public function testVerifAdminGrantsGroupAdminDesignatedForHeliosOnly(): void
     {
-        $this->givenAuthority2IsAdministeredBy(['actes_group_id' => 2, 'helios_group_id' => 1]);
+        $this->givenAuthority2IsAdministeredBy(actesGroupId: 2, heliosGroupId: 1);
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->expectNotToPerformAssertions();
 
         $this->controller->verifAdmin(2);
-
-        self::expectNotToPerformAssertions();
     }
 
-    public function testVerifAdminAdminGroupWithoutDesignation()
+    public function testVerifAdminRefusesGroupAdminNotDesignatedForAnyModule(): void
     {
-        $this->givenAuthority2IsAdministeredBy(['actes_group_id' => 2, 'helios_group_id' => 2]);
+        $this->givenAuthority2IsAdministeredBy(actesGroupId: 2, heliosGroupId: 2);
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
 
         $this->expectException(RedirectException::class);
@@ -253,15 +250,12 @@ class ControllerTest extends S2lowIntegrationTestCase
         $this->controller->verifAdmin(2);
     }
 
-    /**
-     * @param array<string, int> $groupIdByColumn
-     */
-    private function givenAuthority2IsAdministeredBy(array $groupIdByColumn): void
+    private function givenAuthority2IsAdministeredBy(int $actesGroupId, int $heliosGroupId): void
     {
         self::getContainer()->get(SQLQuery::class)->query(
             'UPDATE authorities SET actes_group_id = ?, helios_group_id = ? WHERE id = 2',
-            $groupIdByColumn['actes_group_id'],
-            $groupIdByColumn['helios_group_id']
+            $actesGroupId,
+            $heliosGroupId
         );
     }
 
