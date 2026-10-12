@@ -12,8 +12,8 @@ include:
   #    inputs:
   #      mode: "changed"
   - component: $LIBRICIEL_CATALOG_PATH/project-standards/check-libriciel-standards@3.1.0
-  - component: $LIBRICIEL_CATALOG_PATH/software-release/publish-compose@3.2.0
-  - component: $LIBRICIEL_CATALOG_PATH/sbom-manager/build@1.4.0
+  - component: $LIBRICIEL_CATALOG_PATH/software-release/publish-compose@3.3.0
+  - component: $LIBRICIEL_CATALOG_PATH/sbom-manager/build@2.0.0
     inputs:
       compose_file: "docker-compose.yml"
       version_placeholder: "canary"
@@ -124,7 +124,7 @@ quality:
   only:
     - master
   image:
-    name: hubdocker.libriciel.fr/sonarsource/sonar-scanner-cli:11.3
+    name: hubdocker.libriciel.fr/sonarsource/sonar-scanner-cli:12.2
     entrypoint: [ "/bin/sh", "-c" ]
   script:
     - sonar-scanner -Dsonar.token=$SONAR_LOGIN -Dsonar.host.url=$SONAR_HOST_URL
@@ -133,7 +133,7 @@ security-check:
   stage: test
   allow_failure: true
   image:
-    name: hubdocker.libriciel.fr/aquasec/trivy:0.73.0
+    name: hubdocker.libriciel.fr/aquasec/trivy:0.75.0
     entrypoint: [ "" ]
   services:
     - docker:dind
@@ -159,11 +159,8 @@ publish-container-to-registry:
 generate-sbom-compose:
   needs: [ "publish-container-to-registry"]
 
-package-sbom-compose:
-  needs: [ "generate-sbom-compose" ]
-
 publish-compose:
-  needs: [ "publish-container-to-registry", "package-sbom-compose" ]
+  needs: [ "publish-container-to-registry", "generate-sbom-compose" ]
   variables:
     INPUT_DIRECTORY: ./
   before_script:
@@ -171,21 +168,3 @@ publish-compose:
     - mkdir docker-resources
     - mv docker-resources-orig/Makefile docker-resources/
     - sed -i "s/canary$/${CI_COMMIT_REF_NAME}/" ./docker-compose.yml
-
-deploy_app:
-  stage: staging
-  only:
-    - master
-  variables:
-    PAYLOAD: "payload={\"text\": \"[s2low-5-0.dev.libriciel.net](https://s2low-5-0.dev.libriciel.net) a été mis à jour - [build $CI_PIPELINE_ID]($CI_PROJECT_URL/pipelines/$CI_PIPELINE_ID)\"}"
-  script:
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY")
-    - mkdir -p ~/.ssh
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - scp ./docker-compose.yml s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/
-    - scp ./docker-compose.test.yml s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/docker-compose.override.yml
-    - echo "$DEV_ENV_FILE" > /tmp/.env
-    - scp /tmp/.env s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/
-    - ssh -tt s2low@s2low-5-0.dev.libriciel.net "cd /opt/s2low/ && docker compose pull && docker compose up -d"
-    - curl -i -X POST -d "$PAYLOAD" $MATTERMOST_WEBHOOK

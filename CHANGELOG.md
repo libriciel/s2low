@@ -1,10 +1,15 @@
 # Changelog
 
-## 5.1.19
+## 5.1.19 - 2026-10-12
 
 ### Évolutions
 
 - Prise en compte de la version 5.30 du schema XSD Pes Aller #1588
+
+### Corrections
+
+- Prise en compte de la date de révocation des certificats : une signature n'est invalide que si le certificat était
+  révoqué à la date de signature #1589
 
 ### Sécurité
 
@@ -17,11 +22,6 @@
 - Faille de contrôle d'accès sur la gestion des utilisateurs
   (CVSS 4.9 - criticité MOYENNE - CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:N/A:N) #1590
 - Failles XSS (CVSS 7.3 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:H/I:H/A:N) #1600
-
-### Corrections
-
-- Prise en compte de la date de révocation des certificats : une signature n'est invalide que si le certificat était
-  révoqué à la date de signature #1589
 
 ## 5.1.18 - 2026-09-18
 
