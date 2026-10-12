@@ -187,7 +187,7 @@ services:
 
     clamav:
         restart: unless-stopped
-        image: hubdocker.libriciel.fr/clamav/clamav:0.105
+        image: hubdocker.libriciel.fr/clamav/clamav:1.5.4
         networks:
           - services
 

@@ -5,6 +5,7 @@
 ### Évolutions
 
 - Prise en compte de la version 5.30 du schema XSD Pes Aller #1588
+- Mise à jour de clamav #1601
 
 ### Corrections
 
