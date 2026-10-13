@@ -1,3 +1,4 @@
+{% set module_menu = getModuleMenu(app.user) %}
 <ul class="text-menu nav">
     {% if app.user.isAnyAdmin %}
         <li class="menu-list-title">Administration</li>
@@ -21,30 +22,28 @@
     {% if app.user.isSuperAdmin %}
         <li><a href="/admin/utilities/index.php">Utilitaires système</a></li>
     {% endif %}
-    {% if app.user.isGroupOrSuperAdmin %}
-        {% for module in getModulesWithAdminPage() %}
-            <li><a href="/modules/{{ module.name }}/admin/index.php">Utilitaires module {{ module.name }}</a></li>
-        {% endfor %}
-    {% endif %}
+    {% for module in module_menu.administrations %}
+        <li><a href="/modules/{{ module.name() }}/admin/index.php">Utilitaires module {{ module.name() }}</a></li>
+    {% endfor %}
 
     <li class="menu-list-title">Modules</li>
-    {% if getModules()|length == 0 %}
-        <li>Aucun module accessible</li>
+    {% for module in module_menu.transactions %}
+        <li><a href="/modules/{{ module.name }}/index.php">{{ module.menu_entry }}</a></li>
     {% else %}
-        {% for module in getModules() %}
-            <li><a href="/modules/{{ module.name }}/index.php">{{ module.menu_entry }}</a></li>
-        {% endfor %}
-    {% endif %}
+        <li>Aucun module accessible</li>
+    {% endfor %}
 
-    {% if app.user.isAnyAdmin %}
+    {% if module_menu.exports is not empty %}
         <li class="menu-list-title">Export des informations</li>
-        <li><a href="/modules/actes/actes_export.php">Exports module actes</a></li>
+        {% for module in module_menu.exports %}
+            <li><a href="/modules/{{ module.name() }}/{{ module.name() }}_export.php">Exports module {{ module.name() }}</a></li>
+        {% endfor %}
     {% endif %}
 
     <li class="menu-list-title">Suivi{% if app.user.isAnyAdmin %} du site{% endif %}</li>
     <li><a href="/common/logs_view.php">Journal des événements</a></li>
-    {% for modules_with_stats in getModulesWithStatus() %}
-        <li><a href="/modules/{{ modules_with_stats.name }}/{{ modules_with_stats.name }}_stats.php">Statistiques
-                module {{ modules_with_stats.name }}</a></li>
+    {% for module in module_menu.statistics %}
+        <li><a href="/modules/{{ module.name() }}/{{ module.name() }}_stats.php">Statistiques
+                module {{ module.name() }}</a></li>
     {% endfor %}
 </ul>

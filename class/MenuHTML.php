@@ -2,6 +2,8 @@
 
 namespace S2lowLegacy\Class;
 
+use S2low\DTO\ModuleMenu;
+use S2low\Enum\UserRole;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Model\MessageAdminSQL;
 
@@ -34,26 +36,10 @@ class MenuHTML
 
     private function displayUserMenu($userInfo, $modulesInfo)
     {
-
-        $module_admin = array();
-        $module_stat = array();
-        $module_export = array();
         $logoutRoute = LegacyObjectsManager::getLegacyObjectInstancier()->get('router')->generate('app_logout');
 
 
-        foreach ($modulesInfo as $i => $module) {
-            if (file_exists(SITEROOT . "/public.ssl/modules/" . $module["name"] . "/" . $module["name"] . "_stats.php")) {
-                $module_stat[] = $module;
-            }
-            if (file_exists(SITEROOT . "/public.ssl/modules/" . $module["name"] . "/admin/index.php")) {
-                if (in_array($userInfo['role'], array('SADM','GADM'))) {
-                    $module_admin[] = $module;
-                }
-            }
-            if (file_exists(SITEROOT . "/public.ssl/modules/" . $module["name"] . "/" . $module["name"] . "_export.php")) {
-                $module_export[] = $module;
-            }
-        }
+        $moduleMenu = new ModuleMenu(UserRole::from($userInfo['role']), $modulesInfo);
 
         $nb_days_before_certificate_expires = $this->getNbDaysBeforeCertificatExpire($userInfo); ?>
 
@@ -110,32 +96,32 @@ class MenuHTML
              <?php if ($userInfo['role'] == 'SADM') : ?>            
                 <li><a href="<?php echo Helpers::getLink("/admin/utilities/index.php");?>">Utilitaires système</a></li>
              <?php endif;?>
-            <?php foreach ($module_admin as $module) : ?>
-                <li><a href="<?php echo Helpers::getLink("/modules/" . $module["name"] . "/admin/index.php");?>">Utilitaires module <?php echo $module["name"] ?></a></li>
+            <?php foreach ($moduleMenu->administrations as $module) : ?>
+                <li><a href="<?php echo Helpers::getLink("/modules/" . $module->name() . "/admin/index.php");?>">Utilitaires module <?php echo $module->name() ?></a></li>
             <?php endforeach;?>
 
 
 
             <li class="menu-list-title">Modules</li>
-            <?php if (count($modulesInfo) == 0) : ?>
+            <?php if (count($moduleMenu->transactions) == 0) : ?>
                 <li>Aucun module accessible</li>
             <?php endif;?>
-            <?php foreach ($modulesInfo as $module) : ?>
+            <?php foreach ($moduleMenu->transactions as $module) : ?>
                 <li><a href="<?php echo  Helpers::getLink("/modules/" . $module["name"] . "/index.php"); ?>"><?php echo $module["menu_entry"] ?></a></li>
             <?php endforeach; ?>
 
-            <?php if ($module_export && in_array($userInfo['role'], array('ADM','GADM','SADM'))) : ?>
+            <?php if ($moduleMenu->exports) : ?>
                 <li class="menu-list-title">Export des informations</li>
-                <?php foreach ($module_export as $module) : ?>
-                    <li><a href="<?php echo Helpers::getLink("/modules/" . $module["name"] . "/" . $module["name"] . "_export.php");?>">Exports module <?php echo $module["name"] ?></a></li>
+                <?php foreach ($moduleMenu->exports as $module) : ?>
+                    <li><a href="<?php echo Helpers::getLink("/modules/" . $module->name() . "/" . $module->name() . "_export.php");?>">Exports module <?php echo $module->name() ?></a></li>
                 <?php endforeach;?>
             <?php endif; ?>
 
 
             <li class="menu-list-title">Suivi <?php echo ! in_array($userInfo['role'], [User::USER,User::ARCH]) ? "du site" : ""?></li>
             <li><a href="<?php echo Helpers::getLink("/common/logs_view.php");?>">Journal des événements</a></li>
-            <?php foreach ($module_stat as $module) : ?>
-                <li><a href="<?php echo Helpers::getLink("/modules/" . $module["name"] . "/" . $module["name"] . "_stats.php");?>">Statistiques module <?php echo $module["name"] ?></a></li>
+            <?php foreach ($moduleMenu->statistics as $module) : ?>
+                <li><a href="<?php echo Helpers::getLink("/modules/" . $module->name() . "/" . $module->name() . "_stats.php");?>">Statistiques module <?php echo $module->name() ?></a></li>
             <?php endforeach;?>
 
 

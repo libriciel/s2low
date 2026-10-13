@@ -21,6 +21,22 @@ enum Module : int
             self::MAIL => 'mail',
         };
     }
+
+    public function hasStatisticsPage(): bool
+    {
+        return $this === self::ACTES || $this === self::HELIOS;
+    }
+
+    public function hasExportPage(): bool
+    {
+        return $this === self::ACTES;
+    }
+
+    public function hasAdministrationPage(): bool
+    {
+        return $this === self::ACTES || $this === self::HELIOS;
+    }
+
     public static function fromId(int $id): ?self
     {
         return self::tryFrom($id);
