@@ -3,7 +3,6 @@
 namespace S2low\Command;
 
 use Psr\Log\LoggerInterface;
-use S2low\Model\AdministeredAuthorities;
 use S2lowLegacy\Model\AuthoritySQL;
 use Exception;
 use S2lowLegacy\Model\UserSQL;
@@ -172,9 +171,9 @@ class ChangeMailDomainCommand extends Command
      */
     protected function getUsersTomodify(int $group_id, $existingMailDomain): array
     {
-        $condition = AdministeredAuthorities::conditionForGroup($group_id);
         $usersToModify = $this->user->getUsersList(
-            "WHERE $condition AND users.email LIKE '%@$existingMailDomain'"
+            "WHERE (authorities.actes_group_id = $group_id OR authorities.helios_group_id = $group_id)" .
+            " AND users.email LIKE '%@$existingMailDomain'"
         );
 
         if ($usersToModify === false) {
