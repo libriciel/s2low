@@ -70,7 +70,7 @@ try {
     }
 
     $retourAuthorityId = $heliosRetourSQL->getInfo($retourId)['authority_id'];
-    if (!$me->isSuper() && ($retourAuthorityId === null || !$me->canViewAuthority($retourAuthorityId))) {
+    if ($retourAuthorityId === null || !$me->canAccessHeliosOf($retourAuthorityId)) {
         $msg = "Accès refusé";
         throw new Exception('KO');
     }

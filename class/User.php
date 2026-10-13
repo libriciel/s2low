@@ -285,12 +285,12 @@ class User extends DataObject
         return $this->isArchivist() && $this->authority_id === $authority_id;
     }
 
-    public function canViewAuthority(int $authority_id): bool
+    public function canAccessHeliosOf(int $authority_id): bool
     {
         if ($this->isSuper() || $this->authority_id === $authority_id) {
             return true;
         }
-        return $this->isGroupAdmin() && (new Authority($authority_id))->isInGroup($this->authority_group_id);
+        return $this->isGroupAdmin() && (new Authority($authority_id))->isInGroupHelios((int)$this->authority_group_id);
     }
 
   /**
