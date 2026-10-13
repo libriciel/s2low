@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://projets.admisource.gouv.fr/xemelios/namespaces#anomally" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:attribute name="V" type="xs:string" />
+  <xs:attribute name="T" type="xs:string" />
+  <xs:element name="DocumentRapport">
+    <xs:annotation>
+      <xs:documentation>Ce bloc n'est pas utilisé dans Hélios.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+</xs:schema>

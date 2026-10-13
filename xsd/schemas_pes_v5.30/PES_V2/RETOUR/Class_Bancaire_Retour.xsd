@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="Simple_Type_Retour.xsd" />
+  <xs:complexType name="TCpteBancaire">
+    <xs:annotation>
+      <xs:documentation>Le bloc CpteBancaire représente les information bancaires.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="BIC" type="Base_Texte11BIC" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Bank International Code.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IBAN" type="Base_Texte34IBAN">
+        <xs:annotation>
+          <xs:documentation>International Bank Account Number.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Valide" type="Base_Booleen" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Donnée permettant de déterminer si le compte bancaire par défaut du tiers Hélios rattaché au créancier ou au débiteur est valide ou pas (Est_Actif = FALSE ou Date_Fin_Validite &lt; date du jour). Valeurs : 0= valide, 1= invalide. Par défaut sur 0.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LibBanc" type="Base_Texte24" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Libellé de l'établissement bancaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TitCpte" type="Base_Texte32">
+        <xs:annotation>
+          <xs:documentation>Nom du titulaire du compte client.Cette zone reprend la désignation du titulaire du compte à créditer telle qu'elle est précisée sur le relevé d'identité bancaire.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteBanc" type="Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de mise à jour des éléments de la domiciliation bancaire par le comptable.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

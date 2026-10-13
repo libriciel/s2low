@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2010 rel. 2 (http://www.altova.com) by AIFE (BULL) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://www.interieur.gouv.fr/dsic/fctva" xmlns="http://www.interieur.gouv.fr/dsic/fctva">
+	<xs:element name="FCTVA">
+		<xs:annotation>
+			<xs:documentation></xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="EnTete"/>
+				<xs:element ref="BudgetCollectivite" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="EnTete">
+		<xs:annotation>
+			<xs:documentation>Contient les informations de l'en-tête</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Version" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Identifiant de la version</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="DateEmissionFlux" type="xs:date">
+					<xs:annotation>
+						<xs:documentation>Date d'emission du flux</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="BudgetCollectivite">
+		<xs:annotation>
+			<xs:documentation>Contient les informations du budget collectivité</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Libelle" type="xs:string" />
+				<xs:element name="Siret" type="TSiretVide" />
+				<xs:element name="Finess" type="TFinessVide" />
+				<xs:element name="IdentifiantNational">
+					<xs:annotation>
+						<xs:documentation></xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:pattern value="([0-9]{1,10})"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="Exercice" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="Mandats" minOccurs="0" />
+				<xs:element ref="Titres" minOccurs="0" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Exercice">
+		<xs:annotation>
+			<xs:documentation></xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="CodeExercice" type="TCodeExercice" />
+				<xs:element name="DateCloture" type="TDateVide" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Mandats">
+		<xs:annotation>
+			<xs:documentation></xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Mandat" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Titres">
+		<xs:annotation>
+			<xs:documentation></xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Titre" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Mandat">
+		<xs:annotation>
+			<xs:documentation></xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Numero" type="TNumero" />
+				<xs:element name="TypeMandat">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="Ordinaire"/>
+							<xs:enumeration value="Annulation"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="CodeExercice" type="TCodeExercice"/>
+				<xs:element name="Objet" type="xs:string"/>
+				<xs:element name="DatePEC" type="TDateVide"/>
+				<xs:element name="DateEmission" type="xs:date"/>
+				<xs:element ref="LigneMandat" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Titre">
+		<xs:annotation>
+			<xs:documentation></xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Numero" type="TNumero"/>
+				<xs:element name="CodeExercice" type="TCodeExercice"/>
+				<xs:element name="Objet" type="xs:string"/>
+				<xs:element name="DatePEC" type="xs:date"/>
+				<xs:element name="DateEmission" type="xs:date"/>
+				<xs:element ref="LigneTitre" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="LigneMandat">
+		<xs:annotation>
+			<xs:documentation></xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="NumLigne" type="xs:positiveInteger"/>
+				<xs:element name="Montant" type="xs:double"/>
+				<xs:element ref="ImputationComptable"/>
+				<xs:element ref="Fournisseur"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="LigneTitre">
+		<xs:annotation>
+			<xs:documentation></xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="NumLigne" type="xs:positiveInteger"/>
+				<xs:element name="Montant" type="xs:double"/>
+				<xs:element name="Objet" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ImputationComptable">
+		<xs:annotation>
+			<xs:documentation></xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="CompteNature" type="xs:string"/>
+				<xs:element name="LibelleCompteNature" type="xs:string"/>
+				<xs:element name="Fonction" type="xs:string"/>
+				<xs:element name="Operation" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Fournisseur">
+		<xs:annotation>
+			<xs:documentation></xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Siret" type="TSiretVide"/>
+				<xs:element name="Nom" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:simpleType name="Tbalise_vide">
+  		<xs:restriction base="xs:string">
+     		<xs:enumeration value=""/>
+   		</xs:restriction>
+   	</xs:simpleType>
+	
+	<xs:simpleType name="TSiretVide">
+		<xs:union memberTypes="TSiret Tbalise_vide"/>
+	</xs:simpleType>
+	
+	<xs:simpleType name="TSiret">
+		<xs:restriction base="xs:string">
+			<xs:length value="14"/>
+			<xs:pattern value="([0-9]{14})"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="TCodeExercice">
+		<xs:restriction base="xs:positiveInteger">
+<!-- 			<xs:pattern value="20(0|1|2)[0-9]"/> -->
+<!-- 			<xs:totalDigits value="4"/> -->
+			<xs:minInclusive value="2000"/>
+			<xs:maxInclusive value="2020"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="TFiness">
+		<xs:restriction base="xs:string">
+			<xs:length value="9"/>
+			<xs:pattern value="([0-9]{9})"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="TFinessVide">
+		<xs:union memberTypes="TFiness Tbalise_vide"/>
+	</xs:simpleType>
+	
+	<xs:simpleType name="TNumero">
+		<xs:restriction base="xs:unsignedLong">
+			<xs:minExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="TDateVide">
+		<xs:union memberTypes="xs:date Tbalise_vide"/>
+	</xs:simpleType>
+	
+</xs:schema>
+
+

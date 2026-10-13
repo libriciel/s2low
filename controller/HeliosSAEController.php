@@ -8,6 +8,9 @@ use S2lowLegacy\Class\FailedControllerActionException;
 use S2lowLegacy\Class\helios\HeliosEnvoiSAE;
 use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Class\helios\HeliosVerificationSAE;
+use S2lowLegacy\Class\ModulePermission;
+use S2lowLegacy\Class\ServiceUser;
+use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\JSONoutput;
 use S2lowLegacy\Lib\RedirectException;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
@@ -89,6 +92,14 @@ class HeliosSAEController extends Controller
         return in_array($status_final, $statusFinauxPossibles);
     }
 
+    private function canViewTransaction(array $transaction_info): bool
+    {
+        $owner = new User($transaction_info['user_id']);
+        $owner->init();
+        $permission = new ModulePermission($this->getObjectInstancier()->get(ServiceUser::class), 'helios');
+        return $permission->canView($this->me, $owner);
+    }
+
     /**
      * @throws RedirectException
      * @throws \Exception
@@ -115,6 +126,9 @@ class HeliosSAEController extends Controller
             $transaction_info = $heliosTransactionSQL->getInfo($transaction_id);
 
             if ($this->me->isArchivist() && !$this->me->archivistCanAccess($transaction_info)) {
+                throw new FailedControllerActionException('Accès refusé', WEBSITE_SSL);
+            }
+            if (!$this->me->isArchivist() && $transaction_info && !$this->canViewTransaction($transaction_info)) {
                 throw new FailedControllerActionException('Accès refusé', WEBSITE_SSL);
             }
 

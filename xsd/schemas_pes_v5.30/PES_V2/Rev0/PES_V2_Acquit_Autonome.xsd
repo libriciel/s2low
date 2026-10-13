@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/retour" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" targetNamespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/Rev0/retour" elementFormDefault="unqualified">
+	<xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../Class_SchemasCommuns.xsd"/>
+	<xs:include schemaLocation="../CommunAck.xsd"/>
+	<xs:element name="PES_ACQUIT" type="PES_ACQUIT"/>
+	<xs:complexType name="PES_ACQUIT">
+		<xs:sequence>
+			<xs:element name="Enveloppe" type="cm:TEnveloppe"/>
+			<xs:element name="EnTetePES" type="cm:TEnTetePES"/>
+			<xs:element name="ACQUIT" type="TPES_ACQUIT"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TPES_ACQUIT">
+		<xs:sequence>
+			<xs:element name="EnTeteAcquit">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="IdVer" type="cm:Base_Num2_Light"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ElementACQUIT" type="TElementACQUIT" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TElementACQUIT">
+		<xs:sequence>
+			<xs:element name="DomaineAck" type="TDomaineAck"/>
+			<xs:element name="EtatAck" type="cm:Base_Booleen"/>
+			<xs:element name="ExerciceBord" type="cm:Base_Num4_Light" minOccurs="0"/>
+			<xs:element name="NumBord" type="cm:Base_Num7_Light" minOccurs="0"/>
+			<xs:element name="NumPiece" type="cm:Base_Num13_Light" minOccurs="0"/>
+			<xs:element name="NumLigne" type="cm:Base_Num6_Light" minOccurs="0"/>
+			<xs:element name="IdUnique" type="cm:Base_Alphanum50_Light" minOccurs="0"/>
+			<xs:element name="NumAnoAck" type="TNumAnoAck" minOccurs="0"/>
+			<xs:element name="LibelleAnoAck" type="cm:Base_Texte500_Light" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

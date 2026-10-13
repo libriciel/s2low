@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.4 U (http://www.xmlspy.com) by FNC (MINISTERE DES FINANCES) -->
+<!-- edited with XMLSpy v2008 rel. 2 sp2 (http://www.altova.com) by DIRECTION GLE DE LA COMPTABILITE PUBLIQUE (DIRECTION GLE DE LA COMPTABILITE PUBLIQUE) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cm="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun">
+  <xs:import namespace="http://www.minefi.gouv.fr/cp/helios/pes_v2/commun" schemaLocation="../../Class_SchemasCommuns.xsd" />
+  <xs:complexType name="TBancaireFacture">
+    <xs:annotation>
+      <xs:documentation>Compte bancaire du Tiers.
+Obligatoire pour le Tiers Centre des Finances Publiques (PES_Facture ASAP), à défaut rejet du PES_Facture ASAP.
+Ce bloc est commun aux blocs 
+- PES_Facture Emetteur 
+- PES_Facture FactureIndiv Tiers
+- PES_Facture FactureIndiv Debiteur</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:sequence>
+          <xs:element name="IdPayInt" type="cm:Base_Alphanum4" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Identification internationale du pays.
+Cette zone permet d'obtenir les références bancaires internationales (IBAN).
+- Contrainte pour le bloc parent Debiteur : PESFacture ASAP : si valorisation, la valeur doit être connue et valide sinon rejet du PESFacture ASAP.
+Une valorisation à vide est interdite sinon rejet du PESFacture ASAP.
+La balise IdPayInt est obligatoirement valorisée si IdBancInt est servie. Si la balise IdPayInt n'est pas valorisée alors qu'IdBancInt l'est, rejet du PESFacture ASAP contenant le RIB incomplet.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="IdBancInt" type="cm:Base_Alphanum11" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Identification internationale de la banque.
+Cette zone permet d'obtenir les références bancaires internationales (IBAN).
+- Contrainte pour le bloc parent Debiteur : PESFacture ASAP : si valorisation, la valeur doit être connue et valide sinon rejet du PESFacture ASAP.
+Une valorisation à vide est interdite sinon rejet du PESFacture ASAP.
+La balise IdBancInt est obligatoirement valorisée si IdPayInt est servie. Si la balise IdBancInt n'est pas valorisée alors qu'IdPayInt l'est, rejet du PESFacture ASAP contenant le RIB incomplet.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CodeEtab" type="cm:Base_Alphanum5">
+            <xs:annotation>
+              <xs:documentation>Code de l'établissement bancaire.
+- Contrainte pour le bloc parent Debiteur : PES_Facture ASAP : 4 balises doivent être valorisées en même temps et RIB correct sinon rejet du PES_Facture ASAP qui comprend le Tiers qui porte ce RIB incomplet, erroné ou avec balises à vide.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CodeGuic" type="cm:Base_Alphanum5_Light">
+            <xs:annotation>
+              <xs:documentation>Code du guichet de l'établissement bancaire.
+- Contrainte pour le bloc parent Debiteur : PES_Facture ASAP : 4 balises doivent être valorisées en même temps et RIB correct sinon rejet du PES_Facture ASAP qui comprend le Tiers qui porte ce RIB incomplet, erroné ou avec balises à vide</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="IdCpte" type="cm:Base_Texte11">
+            <xs:annotation>
+              <xs:documentation>Numéro du compte du client de l'établissement bancaire.
+- Contrainte pour le bloc parent Debiteur : PES_Facture ASAP : 4 balises doivent être valorisées en même temps et RIB correct sinon rejet du PES_Facture ASAP qui comprend le Tiers qui porte ce RIB incomplet, erroné ou avec balises à vide.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CleRib" type="cm:Base_Num2_Light">
+            <xs:annotation>
+              <xs:documentation>Clé RIB du compte client.
+- Contrainte pour le bloc parent Debiteur : PES_Facture ASAP : 4 balises doivent être valorisées en même temps et RIB correct sinon rejet du PES_Facture ASAP qui comprend le Tiers qui porte ce RIB incomplet, erroné ou avec balises à vide.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:sequence>
+          <xs:element name="BIC" type="cm:Base_Texte11BIC" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Bank International Code.
+Tous les caractères alphabétiques du BIC doivent être en majuscules, sinon rejet du flux.
+- Contrainte pour le bloc parent Debiteur : PES_Facture ASAP : le BIC doit être connu et valide sinon rejet du PES_Facture ASAP.
+- Contrainte pour le bloc parent Tiers : PESFacture ASAP, pour TypeTiers = 26 : le BIC doit être connu et valide, sinon rejet du PESFacture ASAP.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="IBAN" type="cm:Base_Texte34IBAN">
+            <xs:annotation>
+              <xs:documentation>International Bank Account Number.
+Tous les caractères alphabétiques de l'IBAN doivent être en majuscules, sinon rejet du flux.
+- Contrainte pour le bloc parent Debiteur : PES_Facture ASAP : L''IBAN doit être connu, valide et correspondre à une domiciliation française (les deux premiers caractères alpha doivent être FR,GP,GF,MQ, RE, YT,MC,NC,PF,PM,TF,WF). A défaut, rejet du PES_Facture ASAP.
+- Contrainte pour le bloc parent Tiers : PESFacture ASAP, pour TypeTiers = 26 : L'IBAN doit être connu et valide, sinon rejet du PESFacture ASAP.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:choice>
+		  <xs:element name="TitCpte" type="cm:Base_Texte32" minOccurs="0">
+			<xs:annotation>
+			  <xs:documentation>Nom du titulaire du compte.
+Cette zone reprend la désignation du titulaire du compte à créditer telle qu'elle est précisée sur le relevé d'identité bancaire.
+- Contrainte pour le bloc parent Debiteur : PES_Facture ASAP : la balise doit être présente si le bloc BancaireFacture est présent.</xs:documentation>
+			</xs:annotation>
+		  </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

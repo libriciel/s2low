@@ -18,7 +18,7 @@ use S2lowLegacy\Class\Helpers;
                 <?php foreach ($users as $u) : ?>
                     <li>
                         <input type='checkbox' name='id_user[]' value='<?php echo $u['id_user']?>'>
-                        <a href='../users/admin_user_edit.php?id=<?php echo $u['id_user']?>'><?php echo $u['givenname'] . "&nbsp;" . $u['name']?></a>
+                        <a href='../users/admin_user_edit.php?id=<?php echo $u['id_user']?>'><?php hecho($u['givenname']); ?>&nbsp;<?php hecho($u['name']); ?></a>
 
                     </li>
                 <?php endforeach;?>

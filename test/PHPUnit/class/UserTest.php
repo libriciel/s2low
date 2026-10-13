@@ -28,6 +28,27 @@ class UserTest extends S2lowTestCase
         $this->assertEquals('Q1pUbEb5DK53BkYf0arDl/3zl5U=', $info['certificate_hash']);
     }
 
+    /**
+     * @dataProvider userEditions
+     */
+    public function testCanEditUser(int $editorId, int $editedUserId, bool $canEdit): void
+    {
+        $editor = new User($editorId);
+        $editor->init();
+
+        self::assertSame($canEdit, $editor->canEditUser($editedUserId));
+    }
+
+    public function userEditions(): iterable
+    {
+        yield 'admin de collectivité, utilisateur de sa collectivité' => [2, 5, true];
+        yield 'admin de collectivité, super admin de sa collectivité' => [2, 1, false];
+        yield 'admin de collectivité, admin de groupe de sa collectivité' => [6, 7, false];
+        yield 'admin de groupe, admin de collectivité de son groupe' => [7, 2, true];
+        yield 'admin de groupe, super admin de son groupe' => [7, 1, false];
+        yield 'super admin, admin de groupe' => [1, 7, true];
+    }
+
     public function testGetDn()
     {
         $user = new User();
@@ -137,6 +158,27 @@ class UserTest extends S2lowTestCase
                 [User::ARCH, true ]
                 ]
             ;
+    }
+
+    /**
+     * @dataProvider authorityVisibility
+     */
+    public function testCanViewAuthority(int $userId, int $authorityId, bool $canView): void
+    {
+        $user = new User($userId);
+        $user->init();
+
+        self::assertSame($canView, $user->canViewAuthority($authorityId));
+    }
+
+    public function authorityVisibility(): iterable
+    {
+        yield 'super admin, autre collectivité' => [1, 2, true];
+        yield 'utilisateur, sa collectivité' => [5, 1, true];
+        yield 'utilisateur, autre collectivité' => [5, 2, false];
+        yield 'admin de collectivité, autre collectivité' => [2, 2, false];
+        yield 'admin de groupe, collectivité de son groupe' => [7, 1, true];
+        yield 'admin de groupe, collectivité hors de son groupe' => [10, 1, false];
     }
 
     /**

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="Simple_Type.xsd" />
+  <xs:complexType name="TAdresse">
+    <xs:annotation>
+      <xs:documentation>Le bloc Adresse comprend l'adresse du tiers.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="TypAdr" type="TTypAdr">
+        <xs:annotation>
+          <xs:documentation>Type d'adresse. Cette zone permet de déterminer l'adresse principale d'un tiers et les éventuelles adresses secondaires. 
+Lorsque le type d'adresse est positionné dans le PES sur « non précisé », il sera entré dans Hélios en « principal » si la base ne contient aucune adresse principale ou sur « secondaire » si la base contient déjà une adresse principale.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Adr1" type="Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Complément distribution : norme postale.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Adr2" type="Base_Texte38">
+        <xs:annotation>
+          <xs:documentation>Adresse du tiers: Norme postale(Numéro de voie, voie).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Adr3" type="Base_Texte38" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Lieu dit ou complément d'adresse: Norme postale.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CP" type="Base_Num5_Light">
+        <xs:annotation>
+          <xs:documentation>Code postal : Norme postale ou Numéro de CEDEX : Norme postale.
+Le code postal doit être numérique sur 5 caractères obligatoires, sinon rejet du bordereau.                                                                                                             
+Consigne : Lorsque le tiers réside à l'étranger, mettre « 99999 » dans code postal (le cas échéant le code postal du pays étranger devra être positionné dans la zone ville).</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Ville" type="Base_Texte38">
+        <xs:annotation>
+          <xs:documentation>Localité de destination  : Norme postale ou Libellé CEDEX : Norme postale.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodRes" type="Base_Booleen">
+        <xs:annotation>
+          <xs:documentation>Code résidence. Donnée permettant de déterminer si le tiers est résident en France. Valeurs : 0=résident, 1= non résident. Par défaut sur 0.
+
+La balise CodRes à 1 ou non résident oblige à la valorisation de la balise CodPays. Si CodRes=1 et CodPays absent = rejet du bordereau.
+La balise CodRes à 0, ou résident, oblige à la non valorisation ou à la valorisation à 100 de la balise CodPays. Sinon, rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CodPays" type="Base_Num3" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Code du pays du tiers: cette information permet de déterminer le pays du tiers si celui-ci n'est pas résident. Cette zone utilise la codification de l'INSEE. Tout CodPays qui n'existe pas intègre Hélios mais aboutit à un traitement incidenté dans Hélios.
+
+La balise CodPays est obligatoire si CodRes à 1 sinon rejet du bordereau.
+La balise CodPays est obligatoirement non valorisée ou valorisée à 100 si CodRes est à 0, sinon rejet du bordereau.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DteAdr" type="Base_Date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Date de mise à jour de la nouvelle adresse.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TTypAdr">
+    <xs:annotation>
+      <xs:documentation>Type d'adresse.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="0">
+            <xs:annotation>
+              <xs:documentation>Non précisé.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="1">
+            <xs:annotation>
+              <xs:documentation>Principal.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="2">
+            <xs:annotation>
+              <xs:documentation>Secondaire.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>
