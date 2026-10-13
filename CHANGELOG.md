@@ -1,6 +1,12 @@
 # Changelog
 
-## 5.1.19 - 2026-10-12
+Ce changelog documente les correctifs de sécurité identifiés lors de la publication. Libriciel ne garantit pas
+l'exhaustivité des correctifs, notamment concernant les vulnérabilités découvertes ultérieurement ou présentes dans les
+dépendances transitives.
+
+## [5.1.19] - 2026-10-12
+
+**Ce patch corrige des failles de sécurité**
 
 ### Évolutions
 
@@ -1569,13 +1575,13 @@
   (correction invalide, reprise de la correction en version 3.0.6)
 - Correction d'un problème de sécurité
 
-## 3.0.3
+## 3.0.3 - 2018-01-17
 
 ### Évolutions
 
 - Modification de la position du tampon ~Actes
 
-## 3.0.2
+## 3.0.2 - 2018-01-16
 
 ### Évolutions
 
@@ -1674,7 +1680,7 @@
 
 - `VERIFICATION_SIREN` est déprécié et sera supprimé dans une prochaine version mineure du produit
 
-## 3.0.0-rc2
+## 3.0.0-rc2 - 2017-10-18
 
 ### Corrections
 
