@@ -6,20 +6,27 @@
 
 - Ajout d'un champ pour personnaliser le message lors du passage d'un acte en erreur. #683
 - Ajout d'un filtre permettant de trier les utilisateurs par status. #616
-- Ajout des liens "Liste des actes de la collectivité" et "Liste des PES de la collectivité" dans la page de gestion d'une collectivité. #1117
+- Ajout des liens "Liste des actes de la collectivité" et "Liste des PES de la collectivité" dans la page de gestion
+  d'une collectivité. #1117
 - Ajoute la possibilité de filtrer les utilisateurs par certificat valide ou expiré. #617
 - Ajoute la possibilité de filtrer par type d'actes dans modules/actes/api/list_actes.php #1235
 - Ajoute la possibilité de passer les PES_RETOUR en lu / non-lu en lot #730
 - Passage de SimpleXML à XMLReader pour limiter l'empreinte mémoire de l'analyse des XML reçus #497
-- Le champ HELIOS ftp Dest et le module Helios d'une collectivité ne sont plus visibles que par l'administrateur de son groupe Helios. #1558
-- À la création d'une collectivité par un administrateur de groupe, les modules activés désignent son groupe comme groupe administrateur. #1558
-- La convention @ctes et le module Actes d'une collectivité ne sont plus visibles ni modifiables que par l'administrateur de son groupe Actes. #1562
-- Le champ « Groupe » de la fiche collectivité laisse place à un groupe administrateur par module, que le super administrateur choisit parmi ceux qui détiennent son SIREN. #1582
+- Le champ HELIOS ftp Dest et le module Helios d'une collectivité ne sont plus visibles que par l'administrateur de son
+  groupe Helios. #1558
+- À la création d'une collectivité par un administrateur de groupe, les modules activés désignent son groupe comme
+  groupe administrateur. #1558
+- La convention @ctes et le module Actes d'une collectivité ne sont plus visibles ni modifiables que par
+  l'administrateur de son groupe Actes. #1562
+- Le champ « Groupe » de la fiche collectivité laisse place à un groupe administrateur par module, que le super
+  administrateur choisit parmi ceux qui détiennent son SIREN. #1582
 - Les numéros de SIREN proposés pour une collectivité sont ceux que tous ses groupes administrateurs autorisent. #1582
-- Les réglages propres à un module — groupe administrateur, convention @ctes, adresse FTP — sont regroupés sous la case qui l'active, et le SIREN les précède. #1582
-- Les numéros de SIREN proposés sont servis à la demande au lieu d'être embarqués dans la page, qui n'expose plus les réservations de tous les groupes. #1582
-- Un administrateur de groupe administre une collectivité dès que son groupe est désigné pour un seul de ses modules : sa fiche, ses
-numéros SIRET et ses services lui sont ouverts, et il peut éditer ses utilisateurs. #1584
+- Les réglages propres à un module — groupe administrateur, convention @ctes, adresse FTP — sont regroupés sous la case
+  qui l'active, et le SIREN les précède. #1582
+- Les numéros de SIREN proposés sont servis à la demande au lieu d'être embarqués dans la page, qui n'expose plus les
+  réservations de tous les groupes. #1582
+- Un administrateur de groupe administre une collectivité dès que son groupe est désigné pour un seul de ses modules :
+  sa fiche, ses numéros SIRET et ses services lui sont ouverts, et il peut éditer ses utilisateurs. #1584
 - Les statistiques Actes et Helios ne sont servies qu'au groupe de l'administrateur qui les demande. #1584
 - Un groupe désigné pour administrer un module d'une collectivité n'est plus supprimable. #1584
 
@@ -27,7 +34,8 @@ numéros SIRET et ses services lui sont ouverts, et il peut éditer ses utilisat
 
 - Prise en compte de la date de révocation des certificats #576
 - Un échec d'enregistrement d'une collectivité s'affiche sans son balisage. #1576
-- Un SIREN déjà porté par une collectivité n'est plus proposé pour en créer une autre, ni accepté à l'enregistrement, y compris lorsqu'il est réservé à plusieurs groupes. #1576
+- Un SIREN déjà porté par une collectivité n'est plus proposé pour en créer une autre, ni accepté à l'enregistrement, y
+  compris lorsqu'il est réservé à plusieurs groupes. #1576
 
 ### Suppression
 
@@ -45,6 +53,30 @@ numéros SIRET et ses services lui sont ouverts, et il peut éditer ses utilisat
 ### Dépréciation
 
 - Dépréciation de la soumission des enveloppes ACTE #1104
+
+## 5.1.19 - 2026-10-12
+
+### Évolutions
+
+- Prise en compte de la version 5.30 du schema XSD Pes Aller #1588
+- Mise à jour de clamav #1601
+
+### Corrections
+
+- Prise en compte de la date de révocation des certificats : une signature n'est invalide que si le certificat était
+  révoqué à la date de signature #1589
+
+### Sécurité
+
+- Contrôles d'accès manquants sur la modification d'utilisateurs, le statut SAE Helios et la réponse à un courrier
+  (CVSS 4.9 - criticité MOYENNE - CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:N/I:H/A:N) #1591
+- Faille d'exposition d'informations sensibles
+  (CVSS 7.6 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:C/C:H/I:L/A:N) #1590
+- Faille IDOR (CVSS 6.5 - criticité MOYENNE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N) #1590
+- Faille de contrôle d'accès (CVSS 6.5 - criticité MOYENNE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:N) #1590
+- Faille de contrôle d'accès sur la gestion des utilisateurs
+  (CVSS 4.9 - criticité MOYENNE - CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:N/A:N) #1590
+- Failles XSS (CVSS 7.3 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:H/I:H/A:N) #1600
 
 ## 5.1.18 - 2026-09-18
 

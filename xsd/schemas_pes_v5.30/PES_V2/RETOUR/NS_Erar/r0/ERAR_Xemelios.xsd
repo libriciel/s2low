@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://xemelios.org/namespaces#erar"
+    elementFormDefault="qualified"
+    xmlns="http://xemelios.org/namespaces#erar">
+    <xs:include schemaLocation="Types_Xemelios.xsd"/>
+    <xs:element name="PosteComptable">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Piece" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="LigneERAR" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Debiteur" type="TDebiteur" minOccurs="1" maxOccurs="1"/>
+                                        <xs:element name="Malade" type="TTiersHopital" minOccurs="0" maxOccurs="1"/>
+                                        <xs:element name="Assure" type="TTiersHopital" minOccurs="0" maxOccurs="1"/>
+                                        <xs:element name="Empechement" type="TEmpechement" minOccurs="0" maxOccurs="1"/>
+                                        <xs:element name="Etape" type="TEtape" maxOccurs="unbounded"/>
+                                    </xs:sequence>
+                                    <xs:attribute name="CodePeriode" type="Alpha2" use="optional"/>
+                                    <xs:attribute name="IdLigne" type="Num13" use="required"/>
+                                    <xs:attribute name="ReferenceOrdonnateur" type="Alpha15" use="optional"/>
+                                    <xs:attribute name="MtPrincipal" type="Base_Montant" use="required"/>
+                                    <xs:attribute name="MtFrais" type="Base_Montant" use="required"/>
+                                    <xs:attribute name="RarPrincipal" type="Base_Montant" use="required"/>
+                                    <xs:attribute name="RarFrais" type="Base_Montant" use="required"/>
+                                    <xs:attribute name="CodProduit" type="Alpha4" use="optional"/>  	
+                                    <xs:attribute name="LibProduit" type="Alpha30" use="optional"/>
+                                    <xs:attribute name="ServiceOrdonnateur" type="Alpha10" use="optional"/>
+                                    <xs:attribute name="DatePrescription" type="Base_Date" use="optional"/>
+                                    <xs:attribute name="DateAdmissionNV" type="Base_Date" use="optional"/>
+                                    <!-- a completer a l'import -->
+                                    <xs:attribute name="MtNV" type="Base_Montant" use="optional"/>
+                                    <xs:attribute name="DateMajoration" type="Base_Date" use="optional"/>
+                                    <xs:attribute name="LibellePlan" type="Alpha30" use="optional"/>
+                                    <xs:attribute name="DateDebFact" type="Base_Date" use="optional"/>
+                                    <xs:attribute name="DateFinFact" type="Base_Date" use="optional"/>
+                                    <xs:attribute name="NumFact" type="Base_Texte15" use="optional"/>    <!-- type a preciser -->
+                                    <xs:attribute name="ObjetPiece" type="Alpha160" use="optional"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="TypeRef" type="TTypeRef" use="required"/>
+                        <xs:attribute name="IdBord" type="Num13" use="required"/>
+                        <xs:attribute name="IdPiece" type="Num13" use="required"/>
+                        <xs:attribute name="ExerRattach" type="Num4" use="required"/>
+                        <xs:attribute name="DateEmissionPiece" type="Base_Date"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="IdPost" type="Alpha7" use="required"/>
+            <xs:attribute name="LibellePoste" type="Alpha38" use="required"/>
+            <xs:attribute name="IdColl" type="Alpha14" use="required"/>
+            <xs:attribute name="FinJur" type="Num20" use="optional"/>
+            <xs:attribute name="CodCol" type="Alpha3" use="required"/>
+            <xs:attribute name="CodBud" type="Alpha2" use="required"/>
+            <xs:attribute name="LibelleColBud" type="Alpha38" use="required"/>
+            <xs:attribute name="DateExport" type="Base_Date" use="optional"/>
+	        <xs:attribute name="CodBudgXemelios" use="required" fixed="00"/>
+    	    <xs:attribute name="LibBudgXemelios" use="required" fixed="Budget Principal"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="TDebiteur">
+        <!-- info tiers -->
+        <xs:attribute name="IdTiers" type="AlphaNum30" use="optional"/>
+        <xs:attribute name="DteMalade" type="Base_Date" use="optional"/>
+        <xs:attribute name="TypTiers" type="TTypTiers" use="optional"/>
+        <xs:attribute name="NatIdTiers" type="TNatIdTiers" use="optional"/>
+        <xs:attribute name="DteIdTiers" type="Base_Date" use="optional"/>
+        <xs:attribute name="RefTiers" type="AlphaNum30" use="optional"/>
+        <xs:attribute name="CatTiers" type="TCatTiers" use="required"/>
+        <xs:attribute name="NatJur" type="TNatJur" use="required"/>
+        <xs:attribute name="Civilite" type="TCivilite" use="optional"/>
+        <xs:attribute name="Nom" type="Alpha38" use="required"/>
+        <xs:attribute name="ComplNom" type="Alpha38" use="optional"/>
+        <xs:attribute name="Prenom" type="Alpha38" use="optional"/>
+        <!-- adresse -->
+        <xs:attribute name="Adr1" type="Alpha38" use="optional"/>
+        <xs:attribute name="Adr2" type="Alpha38" use="optional"/>
+        <xs:attribute name="Adr3" type="Alpha38" use="optional"/>
+        <xs:attribute name="CP" type="Base_Texte5" use="required"/>
+        <xs:attribute name="Ville" type="Alpha38" use="required"/>
+        <xs:attribute name="CodRes" type="Base_Booleen" use="required"/>
+        <xs:attribute name="CodPays" type="Base_Texte50" use="optional"/>
+        <!-- mettre String3 si la liste des code pays n'est pas finie -->
+        <xs:attribute name="DteAdr" type="Base_Date" use="optional"/>
+        <xs:attribute name="NPAI" type="Base_Booleen" default="false" use="optional"/>
+
+        <xs:attribute name="NIR" type="Alpha16" use="optional"/>
+        <xs:attribute name="RefAllocataire" type="Base_Texte20" use="optional"/>    <!-- type a preciser -->
+    </xs:complexType>
+
+    <xs:complexType name="TTiersHopital">
+        <!-- info tiers -->
+        <xs:attribute name="IdTiers" type="AlphaNum30" use="optional"/>
+        <xs:attribute name="DteMalade" type="Base_Date" use="optional"/>
+        <xs:attribute name="TypTiers" type="TTypTiers" use="optional"/>
+        <xs:attribute name="NatIdTiers" type="TNatIdTiers" use="optional"/>
+        <xs:attribute name="DteIdTiers" type="Base_Date" use="optional"/>
+        <xs:attribute name="RefTiers" type="AlphaNum30" use="optional"/>
+        <xs:attribute name="CatTiers" type="TCatTiers" use="required"/>
+        <xs:attribute name="NatJur" type="TNatJur" use="required"/>
+        <xs:attribute name="Civilite" type="TCivilite" use="optional"/>
+        <xs:attribute name="Nom" type="Alpha38" use="required"/>
+        <xs:attribute name="ComplNom" type="Alpha38" use="optional"/>
+        <xs:attribute name="Prenom" type="Alpha38" use="optional"/>
+
+        <xs:attribute name="NIR" type="Alpha16" use="optional"/>
+        <xs:attribute name="DateEntree" type="Base_Date" use="optional"/>
+        <xs:attribute name="DateSortie" type="Base_Date" use="optional"/>
+        <xs:attribute name="Maison" type="Alpha6" use="optional"/>
+        <xs:attribute name="NumEntree" type="xs:string" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="TEmpechement">
+        <xs:attribute name="Code" type="TCodEmpech" use="required"/>
+        <xs:attribute name="DateDebut" type="Base_Date" use="required"/>
+        <xs:attribute name="DateFin" type="Base_Date" use="optional"/>
+        <!-- renseigner a l'import  -->
+    </xs:complexType>
+
+    <xs:complexType name="TEtape">
+        <xs:attribute name="CodeEtape" type="TCodEtape" use="required"/>
+        <xs:attribute name="DateEtape" type="Base_Date" use="required"/>
+        <xs:attribute name="OrigineEtape" type="TOrigineEtape" use="required"/>
+        <xs:attribute name="EtatEtape" type="TEtatEtape" use="required"/>
+        <xs:attribute name="ValiditeEtape" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="1">
+                        <xs:annotation>
+                            <xs:documentation>Proposé</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="2">
+                        <xs:annotation>
+                            <xs:documentation>Validé</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="3">
+                        <xs:annotation>
+                            <xs:documentation>Aucun</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+
+        <xs:attribute name="DateAnnulation" type="Base_Date" use="optional"/>
+        <xs:attribute name="MtEtape" type="Base_Montant" use="required"/>
+        <xs:attribute name="MtFraisEtape" type="Base_Montant" use="optional"/>
+        <xs:attribute name="CodeActu" type="TCodeActu" use="optional"/>
+        <xs:attribute name="DateActu" type="Base_Date" use="optional"/>
+
+        <xs:attribute name="RefActe" type="Alpha14" use="optional"/>
+        <xs:attribute name="DateRemiseActe" type="Base_Date" use="optional"/>
+        <xs:attribute name="DateDemandeActe" type="Base_Date" use="optional"/>
+        <xs:attribute name="DateEnvoiActe" type="Base_Date" use="optional"/>
+        <xs:attribute name="MtActe" type="Base_Montant" use="optional"/>
+        <xs:attribute name="DateAutomate" type="Base_Date" use="optional"/>
+        
+        <xs:attribute name="NumeroHuissier" type="Num20" use="optional"/>
+        <xs:attribute name="TypeHuissier" type="TTypeHuissier" use="optional"/>
+        <xs:attribute name="NomHuissier" type="Base_Texte38" use="optional"/>
+    </xs:complexType>
+
+</xs:schema>

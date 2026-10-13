@@ -33,9 +33,13 @@ class VerifyPemCertificate
         array $filteredErrors = [],
         ?string $timestamp = null,
     ): bool {
+        // An empty or zero timestamp means the current date, not 01/01/1970
+        if ($timestamp === '' || $timestamp === '0') {
+            $timestamp = null;
+        }
         $date = new DateTime();
-        if (!is_null($timestamp)) {
-            $date->setTimestamp($timestamp);
+        if ($timestamp !== null) {
+            $date->setTimestamp((int)$timestamp);
         }
         $this->checkForCrlRevocation($certificate_path, $date, $ca_path);
         $this->openSSLWrapper->verify($certificate_path, $ca_path, $filteredErrors, $timestamp);

@@ -58,4 +58,27 @@ class GetDocumentOfTransactionTest extends S2lowIntegrationTestCase
         static::assertStringContainsString($strInHeader, $content);
         static::assertStringNotContainsString($strNotInHeader, $content);
     }
+
+    public function testRefusesDocumentsOfTransactionOfAnotherAuthority(): void
+    {
+        $userOfAnotherAuthority = 51;
+        $transactionId = $this->createTransactionOfType(
+            ActesStatusSQL::STATUS_ACQUITTEMENT_RECU,
+            self::TRANSMISSION_D_ACTE,
+            '',
+            '2017-07-01',
+            '2017-07-01',
+            $userOfAnotherAuthority
+        );
+        $courrierId = $this->createTransactionOfType(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, self::DEMANDE_PIECE_COMPLEMENTAIRES);
+        $this->sqlQuery->query('UPDATE actes_transactions SET related_transaction_id = ? WHERE id = ?', $transactionId, $courrierId);
+        $this->setUserWithRole(UserRole::Utilisateur);
+        $_GET['id'] = $transactionId;
+
+        $this->client->request('GET', '/modules/actes/actes_transac_get_document.php', ['id' => $transactionId]);
+
+        $content = $this->client->getResponse()->getContent();
+        static::assertStringContainsString("KO\nAccès refusé", $content);
+        static::assertStringNotContainsString("-$courrierId\n", $content);
+    }
 }

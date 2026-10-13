@@ -265,14 +265,29 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
 
     public function testModifGroupAdmin()
     {
+        $userOfGroup = 5;
         $this->setOnlyDataOk();
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
         self::getContainer()->get(Environnement::class)->post()->set('login', 'bob');
         self::getContainer()->get(Environnement::class)->post()->set('password', 'eey3fo4A');
         self::getContainer()->get(Environnement::class)->post()->set('password2', 'eey3fo4A');
-        self::getContainer()->get(Environnement::class)->post()->set('id', 1);
+        self::getContainer()->get(Environnement::class)->post()->set('id', $userOfGroup);
         $this->adminUserController->doEditAction();
         self::expectNotToPerformAssertions();
+    }
+
+    public function testGroupAdminCannotModifySuperAdmin(): void
+    {
+        $superAdmin = 1;
+        $this->setOnlyDataOk();
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        self::getContainer()->get(Environnement::class)->post()->set('login', 'bob');
+        self::getContainer()->get(Environnement::class)->post()->set('password', 'eey3fo4A');
+        self::getContainer()->get(Environnement::class)->post()->set('password2', 'eey3fo4A');
+        self::getContainer()->get(Environnement::class)->post()->set('id', $superAdmin);
+
+        $this->expectExceptionMessage('Accès refusé pour la modification de cet utilisateur');
+        $this->adminUserController->doEditAction();
     }
 
     public function testCreateDifferentAuthorities()
@@ -316,6 +331,29 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         $userSQL = self::getContainer()->get(UserSQL::class);
         $user_info = $userSQL->getInfo($user_id);
         $this->assertEquals('ADM', $user_info['role']);
+    }
+
+    public function testAuthorityAdminCannotGrantArchivistRole(): void
+    {
+        $this->setOnlyDataOk();
+        $this->setUserWithRole(UserRole::AdministrateurCollectivite);
+        self::getContainer()->get(Environnement::class)->post()->set('role', 'ARCH');
+
+        $user_id = $this->adminUserController->doEditAction();
+
+        $user_info = self::getContainer()->get(UserSQL::class)->getInfo($user_id);
+        static::assertSame('ADM', $user_info['role']);
+    }
+
+    public function testSuperAdminCanGrantArchivistRole(): void
+    {
+        $this->setDataOk();
+        self::getContainer()->get(Environnement::class)->post()->set('role', 'ARCH');
+
+        $user_id = $this->adminUserController->doEditAction();
+
+        $user_info = self::getContainer()->get(UserSQL::class)->getInfo($user_id);
+        static::assertSame('ARCH', $user_info['role']);
     }
 
     public function testSameInfo()

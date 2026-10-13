@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.minefi.gouv.fr/cp/demat/doccomptable"
+		   xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	       xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" 
+	       targetNamespace="http://www.minefi.gouv.fr/cp/demat/doccomptable"
+	       elementFormDefault="qualified" 
+	       attributeFormDefault="unqualified" 
+	       vc:minVersion="1.1">	
+<xs:include schemaLocation="Class_DocumentComptable.xsd"/>
+<xs:include schemaLocation="Class_BudgetComptable.xsd"/>
+<xs:element name="DocumentComptable" type="TDocumentComptable">
+		<xs:annotation>
+			<xs:documentation>Rassemble les informations liées à la partie comptable du CFU (Compte Financier Unique).</xs:documentation>
+		</xs:annotation>
+</xs:element>
+</xs:schema>

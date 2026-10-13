@@ -11,7 +11,7 @@ include:
   - component: $LIBRICIEL_CATALOG_PATH/project-standards/check-libriciel-standards@3.1.0
   - component: $LIBRICIEL_CATALOG_PATH/renovate-runner/runner@1.6.1
   - component: $LIBRICIEL_CATALOG_PATH/software-release/publish-compose@3.3.0
-  - component: $LIBRICIEL_CATALOG_PATH/sbom-manager/build@1.4.0
+  - component: $LIBRICIEL_CATALOG_PATH/sbom-manager/build@2.0.0
     inputs:
       compose_file: "compose.yaml"
       version_placeholder: "canary"
@@ -141,7 +141,7 @@ quality:
   script:
     - apk add --no-cache curl docker-cli
     - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
-    - trivy image --no-progress  --output scanning-report.txt $CONTAINER_IMAGE
+    - trivy image --no-progress --output scanning-report.txt $CONTAINER_IMAGE
     - trivy image --exit-code 1 --no-progress --severity HIGH,CRITICAL $CONTAINER_IMAGE
   artifacts:
     reports:
@@ -190,11 +190,8 @@ publish-container-to-registry:
 generate-sbom-compose:
   needs: [ "publish-container-to-registry"]
 
-package-sbom-compose:
-  needs: [ "generate-sbom-compose" ]
-
 publish-compose:
-  needs: [ "publish-container-to-registry", "package-sbom-compose" ]
+  needs: [ "publish-container-to-registry", "generate-sbom-compose" ]
   variables:
     INPUT_DIRECTORY: ./
     COMPOSE_FILE_NAME: compose.yaml
@@ -203,24 +200,6 @@ publish-compose:
     - mkdir docker-resources
     - mv docker-resources-orig/Makefile docker-resources/
     - sed -i "s/canary$/${CI_COMMIT_REF_NAME}/" ./compose.yaml
-
-deploy_app:
-  stage: staging
-  only:
-    - master
-  variables:
-    PAYLOAD: "payload={\"text\": \"[s2low-5-0.dev.libriciel.net](https://s2low-5-0.dev.libriciel.net) a été mis à jour - [build $CI_PIPELINE_ID]($CI_PROJECT_URL/pipelines/$CI_PIPELINE_ID)\"}"
-  script:
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY")
-    - mkdir -p ~/.ssh
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - scp ./compose.yaml s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/
-    - scp ./compose.dev.yaml s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/compose.override.yaml
-    - echo "$DEV_ENV_FILE" > /tmp/.env
-    - scp /tmp/.env s2low@s2low-5-0.dev.libriciel.net:/opt/s2low/
-    - ssh -tt s2low@s2low-5-0.dev.libriciel.net "cd /opt/s2low/ && docker compose pull && docker compose up -d"
-    - curl -i -X POST -d "$PAYLOAD" $MATTERMOST_WEBHOOK
 
 container_scanning:
   variables:

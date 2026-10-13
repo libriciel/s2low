@@ -174,6 +174,11 @@ class Authority extends DataObject
         return $this->getAdministeringGroups()->isAdministeredBy((int)$group_id);
     }
 
+    public function isInGroupHelios(int $groupId): bool
+    {
+        return $groupId !== 0 && $this->getAdministeringGroups()->groupIdFor(AdministeredModule::HELIOS) === $groupId;
+    }
+
     public function getAdministeringGroups(): AdministeringGroups
     {
         $authorityInfo = [];

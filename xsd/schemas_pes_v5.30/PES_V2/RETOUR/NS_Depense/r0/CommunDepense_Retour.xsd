@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="TTypRestit">
+    <xs:annotation>
+      <xs:documentation>Type de restitution offerte par le flux retour. Il s'agit du type de flux qui est généré.
+Rejet = mandats rejetés et mis en instance.
+Périodique = mandats ayant eu des événements sur la période et dépenses à régulariser sur la période</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Rejet</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Périodique</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TNatInf">
+    <xs:annotation>
+      <xs:documentation>Nature du retour d'information demandé par l'ordonnateur. Une unique valeur (2 flux détaillé) est utilisée  pour les flux périodiques et les flux de rejets</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="2">
+            <xs:annotation>
+              <xs:documentation>Flux détaillé</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TTypBord">
+    <xs:annotation>
+      <xs:documentation>Type de bordereau. Le type de bordereau 04 «Bordereau de régularisation» est utilisé afin de transmettre à l'ordonnateur des demandes de régularisation (demande d'émission de titre, ou demande d'émission de mandat).</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Ordinaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Annulation/réduction</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Ordres de paiement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Bordereau de régularisation</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TTypPce">
+    <xs:annotation>
+      <xs:documentation>Informations destinées à déterminer le type de pièce. Le type de pièce 12 : « Demande d'émission de mandat » est utilisé pour que l'ordonnateur transmette des mandats émis après paiement suite à paiement d'OPC. Le type de pièce 14 : « Demande d'émission de titre » est utilisé pour que l'ordonnateur transmette des titres suite à comptabilisation de pénalités de retard induites par la prise en charge de mandat sur marché porteurs d'un montant de pénalités.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Mandat ordinaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Mandat correctif</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Mandat d'ordre budgétaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Mandat d'ordre mixte</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>Mandat émis après paiement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="06">
+            <xs:annotation>
+              <xs:documentation>Mandat global</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="07">
+            <xs:annotation>
+              <xs:documentation>Mandat d'admission en non valeurs</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="08">
+            <xs:annotation>
+              <xs:documentation>Mandat collectif</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="09">
+            <xs:annotation>
+              <xs:documentation>Mandat sur marché</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="10">
+            <xs:annotation>
+              <xs:documentation>Mandat de rattachement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="11">
+            <xs:annotation>
+              <xs:documentation>Ordre de paiement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="12">
+            <xs:annotation>
+              <xs:documentation>Demande émission mandat</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="13">
+            <xs:annotation>
+              <xs:documentation>Charges constatées d'avance</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="14">
+            <xs:annotation>
+              <xs:documentation>Demande d'émission de titre</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="15">
+            <xs:annotation>
+              <xs:documentation>Ordre de paiement de retenue de garantie</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TNatPce">
+    <xs:annotation>
+      <xs:documentation>Nature du mandat pour les retours</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Fonctionnement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Investissement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Inventaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Emprunt</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>Régie</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="06">
+            <xs:annotation>
+              <xs:documentation>Annulation-Réduction</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="07">
+            <xs:annotation>
+              <xs:documentation>Complémentaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="08">
+            <xs:annotation>
+              <xs:documentation>Reémis</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="09">
+            <xs:annotation>
+              <xs:documentation>Annulant un titre</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="10">
+            <xs:annotation>
+              <xs:documentation>Annulation du mandat de rattachement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="11">
+            <xs:annotation>
+              <xs:documentation>Paie</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="12">
+            <xs:annotation>
+              <xs:documentation>Retenue de garantie</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="13">
+            <xs:annotation>
+              <xs:documentation>Dernier acompte sur marché</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="14">
+            <xs:annotation>
+              <xs:documentation>Avance forfaitaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="15">
+            <xs:annotation>
+              <xs:documentation>Autres</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="18">
+            <xs:annotation>
+              <xs:documentation>Opération d'ordre liée aux cessions</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="19">
+            <xs:annotation>
+              <xs:documentation>Réquisition ordonnateur</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="20">
+            <xs:annotation>
+              <xs:documentation>Autre opération avec émargement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="21">
+            <xs:annotation>
+              <xs:documentation>Constatation de frais financier</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="22">
+            <xs:annotation>
+              <xs:documentation>Débits d'office</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="23">
+            <xs:annotation>
+              <xs:documentation>Dépenses domiciliées</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="24">
+            <xs:annotation>
+              <xs:documentation>Rbt retenue de garantie</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="25">
+            <xs:annotation>
+              <xs:documentation>Rbt retenue de garantie manuel</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="26">
+            <xs:annotation>
+              <xs:documentation>Remboursement échéance emprunt</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="27">
+            <xs:annotation>
+              <xs:documentation>Secours d'urgence</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="28">
+            <xs:annotation>
+              <xs:documentation>Vacation police</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="29">
+            <xs:annotation>
+              <xs:documentation>Divers</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="30">
+            <xs:annotation>
+              <xs:documentation>Pénalités de retard</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TEtatPce">
+    <xs:annotation>
+      <xs:documentation>Information retour sur l'état de la pièce</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>En instance</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Prise en charge</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Rejeté</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>Soldé</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TEtatLigPce">
+    <xs:annotation>
+      <xs:documentation>Information retour sur l'état de la ligne de pièce</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Pris en charge</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Rejeté</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Pré visé PEC sans ano</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Pré visé PEC avec ano</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>Pré visé rejet forçable</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="06">
+            <xs:annotation>
+              <xs:documentation>Pré visé rejet non forçable</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="07">
+            <xs:annotation>
+              <xs:documentation>PEC avec anomalies</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="08">
+            <xs:annotation>
+              <xs:documentation>PEC sans anomalies</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="09">
+            <xs:annotation>
+              <xs:documentation>Rejet</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="10">
+            <xs:annotation>
+              <xs:documentation>Rejet non forçable</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="15">
+            <xs:annotation>
+              <xs:documentation>Pris en charge avec forçage</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="16">
+            <xs:annotation>
+              <xs:documentation>Mis en instance</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TCessOpp">
+    <xs:annotation>
+      <xs:documentation>Cette information permet d'indiquer à l'ordonnateur l'existence d'une cession ou d'une opposition sur une ligne de pièce.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Pas de cession-opposition</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Cession-opposition partielle</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Cession-opposition totale</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TObsEtat">
+    <xs:annotation>
+      <xs:documentation>Motif de rejet ou de mise en instance.  Les motif (s) d'erreur (1 à n) sont sélectionnable(s) par le Comptable pour une décision de rejet ou de mise en instance d'un mandat.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Absence totale ou invalidité des pièces justificatives</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Insuffisance pièces justificatives</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Insuffisance de crédits budgétaires</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>Liquidation erronée</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>Absence certification service fait et caractère exécutoire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="06">
+            <xs:annotation>
+              <xs:documentation>Autre motif</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="07">
+            <xs:annotation>
+              <xs:documentation>Double paiement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="09">
+            <xs:annotation>
+              <xs:documentation>Domiciliation bancaire absente ou erronée</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="10">
+            <xs:annotation>
+              <xs:documentation>Récupération avance non effectuée</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="11">
+            <xs:annotation>
+              <xs:documentation>Incompétence du donneur d'ordre</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="13">
+            <xs:annotation>
+              <xs:documentation>Prescription et déchéance</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="16">
+            <xs:annotation>
+              <xs:documentation>Mandant non établi au nom du véritable créancier</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="23">
+            <xs:annotation>
+              <xs:documentation>Erreur d'imputation comptable et budgétaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="24">
+            <xs:annotation>
+              <xs:documentation>Rejet technique</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TOrgEma">
+    <xs:annotation>
+      <xs:documentation>Nouvelle codification pour le domaine DEPENSE dédiée à la définition de l'origine de l'émargement portant sur une ligne dont le mandat doit être pris en compte dans les retours PES périodiques.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>« Paiement réel » si l'émargement est établi entre la ligne de mandat et le paiement associé à la ligne</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>« Ordre de paiement Pénalités de retard » si l'émargement est établi entre la ligne de mandat et la ligne de mandat typée Ordre de paiement pénalité de retards</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>« Ordre de paiement Retenue de garantie » si l'émargement est établi entre la ligne de mandat et la ligne de mandat typée Ordre de paiement retenue de garantie.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>« COP » si l' émargement est établi entre la ligne de mandat et un OPC de nature « Paiement à un Tiers opposant »</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>« Ordre de paiement comptable » si l'émargement est établi entre la ligne de mandat et un OPC de nature autre que « Paiement à Tiers opposant »</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="06">
+            <xs:annotation>
+              <xs:documentation>« Ordre de reversement » si  l'émargement est établi entre la ligne de mandat et la ligne de titre typé « Ordre de reversement »</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="07">
+            <xs:annotation>
+              <xs:documentation>« Mandat correctif » si l'émargement est établi entre la ligne de mandat et la ligne d'un mandat correctif</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="08">
+            <xs:annotation>
+              <xs:documentation>« Mandat » si la ligne de mandat est établi entre la ligne de mandat et la ligne d'un mandat autre que correctif</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="09">
+            <xs:annotation>
+              <xs:documentation>« Titre correctif » si l' émargement est établi entre la ligne de mandat et la ligne d'un titre correctif</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="10">
+            <xs:annotation>
+              <xs:documentation>« Titre » si l'émargement est établi entre la ligne de mandat et la ligne d'un titre autre que correctif, ou entre la ligne de mandat et un sous article de rôle (se rapportant à un rôle simple) ou un extrait de rôle</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="11">
+            <xs:annotation>
+              <xs:documentation>« Liste de non valeur » si  l' émargement est établi entre la ligne de mandat et la liste de non valeurs</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="12">
+            <xs:annotation>
+              <xs:documentation>« Encaissement » si l'émargement est établi entre la ligne de mandat et une pièce d'encaissement.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="13">
+            <xs:annotation>
+              <xs:documentation>« Avance sur marché d'investissement » : - si la ligne de mandat  (mandat ordinaire ou mandat sur marché de nature « Investissement ») est émargée avec une ligne de titre ordinaire de nature « Marché »  de compte nature  typé 2228 (comptes 237 et 238) ou, 
+- si la ligne de mandat  (mandat sur marché ou mandat d'ordre budgétaire de nature « Investissement ») est émargée avec une ligne de titre d'ordre budgétaire de nature « Investissement» de compte nature typé 2228 (comptes 237 et 238).</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="14">
+            <xs:annotation>
+              <xs:documentation>« Avance sur marché de fonctionnement »  si la ligne de mandat  (mandat ordinaire ou mandat sur marché de nature « Fonctionnement » avec une référence Marché) est émargée avec une ligne d'un ordre de paiement ordonnateur  de nature « Avance» de compte nature typé 2229 (compte 4091).</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="15">
+            <xs:annotation>
+              <xs:documentation>« Divers » pour tous les autres cas.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TTypConv">
+    <xs:annotation>
+      <xs:documentation>Type de convention.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Autorisation de paiement</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>Convention sur mandat global</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>

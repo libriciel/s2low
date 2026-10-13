@@ -88,6 +88,57 @@ class VerifyPemCertificateTest extends S2lowTestCase
         );
     }
 
+    # The certificate is revoked in the revokedFromAC CRL with
+    # Revocation Date: Jan 26 15:36:08 2021 GMT
+
+    public function testVerifyARevokedCertificateSignedBeforeRevocation()
+    {
+        $this->assertTrue(
+            $this->verifyPemCertificate->checkCertificateWithOpenSSL(
+                self::BASE_CERTIFICATES_DIR . "/dateOk/fullchain.pem",
+                self::BASE_CERTIFICATES_DIR . "/dateOk/revokedFromAC/",
+                [],
+                (new DateTime('Jan 26 15:36:07 2021', new DateTimeZone('GMT')))->getTimestamp()
+            )
+        );
+    }
+
+    public function testVerifyARevokedCertificateSignedAfterRevocation()
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessageMatches("/Certificat révoqué/");
+        $this->verifyPemCertificate->checkCertificateWithOpenSSL(
+            self::BASE_CERTIFICATES_DIR . "/dateOk/fullchain.pem",
+            self::BASE_CERTIFICATES_DIR . "/dateOk/revokedFromAC/",
+            [],
+            (new DateTime('Jan 26 15:36:09 2021', new DateTimeZone('GMT')))->getTimestamp()
+        );
+    }
+
+    public function getEmptyTimestamps(): array
+    {
+        return [
+            ['0'],
+            [''],
+        ];
+    }
+
+    /**
+     * Like openssl verify, an empty timestamp means the current date (not 01/01/1970)
+     * @dataProvider getEmptyTimestamps
+     */
+    public function testVerifyARevokedCertificateWithEmptyTimestamp(string $timestamp)
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessageMatches("/Certificat révoqué/");
+        $this->verifyPemCertificate->checkCertificateWithOpenSSL(
+            self::BASE_CERTIFICATES_DIR . "/dateOk/fullchain.pem",
+            self::BASE_CERTIFICATES_DIR . "/dateOk/revokedFromAC/",
+            [],
+            $timestamp
+        );
+    }
+
     public function testVerifyWrongCertificate()
     {
         $baseCertificatesDir = __DIR__ . "/fixtures/certificats";

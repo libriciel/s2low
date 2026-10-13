@@ -17,7 +17,7 @@ class Layout
   */
     public function setTitle($str)
     {
-        $this->title =  $str;
+        $this->title = get_hecho($str);
     }
 
   /**

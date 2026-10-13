@@ -13,7 +13,7 @@ class LogsControllerTest extends S2lowIntegrationTestCase
         $logsController = self::getContainer()->get(LogsController::class);
         $logsController->_actionBefore("Logs", "view");
         $logsController->viewAction();
-        $this->expectOutputRegex("#Tedetis : Journal d'évènements#");
+        $this->expectOutputRegex("/Tedetis : Journal d&#039;évènements/");
         $logsController->_actionAfter();
     }
 

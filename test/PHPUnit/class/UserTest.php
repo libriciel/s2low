@@ -28,6 +28,27 @@ class UserTest extends S2lowTestCase
         $this->assertEquals('Q1pUbEb5DK53BkYf0arDl/3zl5U=', $info['certificate_hash']);
     }
 
+    /**
+     * @dataProvider userEditions
+     */
+    public function testCanEditUser(int $editorId, int $editedUserId, bool $canEdit): void
+    {
+        $editor = new User($editorId);
+        $editor->init();
+
+        self::assertSame($canEdit, $editor->canEditUser($editedUserId));
+    }
+
+    public function userEditions(): iterable
+    {
+        yield 'admin de collectivité, utilisateur de sa collectivité' => [2, 5, true];
+        yield 'admin de collectivité, super admin de sa collectivité' => [2, 1, false];
+        yield 'admin de collectivité, admin de groupe de sa collectivité' => [6, 7, false];
+        yield 'admin de groupe, admin de collectivité de son groupe' => [7, 2, true];
+        yield 'admin de groupe, super admin de son groupe' => [7, 1, false];
+        yield 'super admin, admin de groupe' => [1, 7, true];
+    }
+
     public function testGetDn()
     {
         $user = new User();
@@ -137,6 +158,45 @@ class UserTest extends S2lowTestCase
                 [User::ARCH, true ]
                 ]
             ;
+    }
+
+    /**
+     * @dataProvider heliosAccessByAuthority
+     */
+    public function testCanAccessHeliosOf(int $userId, int $authorityId, bool $canAccess): void
+    {
+        $user = new User($userId);
+        $user->init();
+
+        self::assertSame($canAccess, $user->canAccessHeliosOf($authorityId));
+    }
+
+    public function heliosAccessByAuthority(): iterable
+    {
+        yield 'super admin, autre collectivité' => [1, 2, true];
+        yield 'utilisateur, sa collectivité' => [5, 1, true];
+        yield 'utilisateur, autre collectivité' => [5, 2, false];
+        yield 'admin de collectivité, autre collectivité' => [2, 2, false];
+        yield 'admin de groupe, collectivité de son groupe' => [7, 1, true];
+        yield 'admin de groupe, collectivité hors de son groupe' => [10, 1, false];
+    }
+
+    public function testGroupAdminCannotAccessHeliosWhenItIsAdministeredByAnotherGroup(): void
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 1, helios_group_id = NULL WHERE id = 1');
+        $groupAdmin = new User(7);
+        $groupAdmin->init();
+
+        self::assertFalse($groupAdmin->canAccessHeliosOf(1));
+    }
+
+    public function testGroupAdminCanAccessHeliosWhenOnlyHeliosIsAdministeredByItsGroup(): void
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = NULL, helios_group_id = 1 WHERE id = 1');
+        $groupAdmin = new User(7);
+        $groupAdmin->init();
+
+        self::assertTrue($groupAdmin->canAccessHeliosOf(1));
     }
 
     /**

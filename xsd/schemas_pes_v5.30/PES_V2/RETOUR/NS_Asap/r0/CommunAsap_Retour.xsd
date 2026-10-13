@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="TTypBord">
+    <xs:annotation>
+      <xs:documentation>Type de bordereau.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Ordinaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Annulation-réduction</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="06">
+            <xs:annotation>
+              <xs:documentation>Ordres de recette multi créanciers (ORMC)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TTypPce">
+    <xs:annotation>
+      <xs:documentation>Type de pièce</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Titre ordinaire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Titre correctif</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="10">
+            <xs:annotation>
+              <xs:documentation>Titre en plusieurs années</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="15">
+            <xs:annotation>
+              <xs:documentation>Titre ORMC (Ordre de recette multi créanciers)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TEtatPJComplt">
+    <xs:annotation>
+      <xs:documentation>Etat de la PJ complémentaire (cas des titres de recette)</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>PJ complémentaire adjointe à l'ASAP</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>PJ complémentaire n'a pu être adjointe à l'ASAP (soit PJ trop volumineuse, soit PJ faisant dépasser le nombre de pages maximal d'un ASAP)</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>PJ complémentaire non ajointe à l'ASAP car deuxième présentation de la facture à l'éditique suite à réception d'un rejet de l'éditique</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>PJ complémentaire non adjointe à l'ASAP car PJ non typée correctement dans le PES PJ</xs:documentation>
+            </xs:annotation>
+           </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TMotifRejetPostalisation">
+    <xs:annotation>
+      <xs:documentation>Motifs de rejet détectés par la filière éditique de la DGFiP</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>ERR008 - Différence majeure détectée entre les lignes d'adresse renseignées dans l'index et le bloc adresse</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>ERR012 - Anomalie dans le bloc adresse destinataire</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="03">
+            <xs:annotation>
+              <xs:documentation>ERR020 - Erreur de conversion du PDF en AFP</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="04">
+            <xs:annotation>
+              <xs:documentation>ERR021 - Erreur de recto verso</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="05">
+            <xs:annotation>
+              <xs:documentation>ERR022 - Non-respect de la zone de silence de la marge de droite</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="06">
+            <xs:annotation>
+              <xs:documentation>ERR023 - Non-respect de la zone de silence au-dessus du pavé adresse</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="07">
+            <xs:annotation>
+              <xs:documentation>WAR022 - Non-respect de la zone de silence autour du CODE 2D</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="08">
+            <xs:annotation>
+              <xs:documentation>Autre</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="TMotifRejetNotification">
+    <xs:annotation>
+      <xs:documentation>Informations destinées à déterminer les motifs de rejet détectés par le Pilote de Notification par Mail (redevables reconnus ayant opté pour la dématérialisation)</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="V" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="01">
+            <xs:annotation>
+              <xs:documentation>Adresse mail blacklistée</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="02">
+            <xs:annotation>
+              <xs:documentation>Adresse mail erroné</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>
