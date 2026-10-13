@@ -3,7 +3,6 @@
 namespace S2lowLegacy\Model;
 
 use S2low\Enum\AdministeredModule;
-use S2low\Model\AdministeredAuthorities;
 use S2lowLegacy\Lib\SQL;
 use S2lowLegacy\Lib\UnrecoverableException;
 
@@ -76,8 +75,8 @@ class AuthoritySQL extends SQL
         self::ADMINISTERING_GROUPS_JOIN .
         " LEFT JOIN authority_types ON authorities.authority_type_id = authority_types.id " ;
         if ($authority_group_id) {
-            $condition = AdministeredAuthorities::conditionForGroup((int)$authority_group_id);
-            $sql .= " WHERE $condition";
+            $sql .= " WHERE authorities.actes_group_id = ? OR authorities.helios_group_id = ? ORDER BY name";
+            return $this->query($sql, $authority_group_id, $authority_group_id);
         }
         $sql .= " ORDER BY name";
 
@@ -90,9 +89,9 @@ class AuthoritySQL extends SQL
     public function getAllAdministeredBy(int $authorityGroupId): array
     {
         $result = array();
-        $condition = AdministeredAuthorities::conditionForGroup($authorityGroupId);
-        $sql = "SELECT authorities.id, authorities.name FROM authorities WHERE $condition ORDER BY authorities.name ASC";
-        foreach ($this->query($sql) as $line) {
+        $sql = "SELECT authorities.id, authorities.name FROM authorities " .
+            " WHERE authorities.actes_group_id = ? OR authorities.helios_group_id = ? ORDER BY authorities.name ASC";
+        foreach ($this->query($sql, $authorityGroupId, $authorityGroupId) as $line) {
             $result[$line['id']] = $line['name'];
         }
         return $result;
@@ -142,7 +141,9 @@ class AuthoritySQL extends SQL
             $data[] = "%$siret%";
         }
         if ($authority_group_id) {
-            $sql .= " AND " . AdministeredAuthorities::conditionForGroup((int)$authority_group_id);
+            $sql .= " AND (authorities.actes_group_id = ? OR authorities.helios_group_id = ?)";
+            $data[] = $authority_group_id;
+            $data[] = $authority_group_id;
         }
         if ($authority_type_id) {
             $sql .= " AND authority_type_id = ?";
@@ -175,7 +176,9 @@ class AuthoritySQL extends SQL
             $data[] = "%$siret%";
         }
         if ($authority_group_id) {
-            $sql .= " AND " . AdministeredAuthorities::conditionForGroup((int)$authority_group_id);
+            $sql .= " AND (authorities.actes_group_id = ? OR authorities.helios_group_id = ?)";
+            $data[] = $authority_group_id;
+            $data[] = $authority_group_id;
         }
         if ($authority_type_id) {
             $sql .= " AND authority_type_id = ?";
