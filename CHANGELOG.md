@@ -1,10 +1,16 @@
 # Changelog
 
-## 5.1.19 - 2026-10-12
+Ce changelog documente les correctifs de sécurité identifiés lors de la publication. Libriciel ne garantit pas
+l'exhaustivité des correctifs, notamment concernant les vulnérabilités découvertes ultérieurement ou présentes dans les
+dépendances transitives.
+
+## [5.1.19] - 2026-10-12
+
+**Ce patch corrige des failles de sécurité**
 
 ### Évolutions
 
-- Prise en compte de la version 5.30 du schema XSD Pes Aller #1588
+- Prise en compte de la version 5.30 du schéma XSD Pes Aller #1588
 - Mise à jour de clamav #1601
 
 ### Corrections
@@ -26,7 +32,7 @@
 
 ## 5.1.18 - 2026-09-18
 
-### Correction
+### Corrections
 
 - Le tampon des documents PDF n'était plus appliqué que sur la première page (régression introduite en 5.1.17) #1587
 
@@ -89,7 +95,7 @@
 ### Corrections
 
 - Correction du changement de répertoire dans helios-reception lorsque l’étape de récupération des noms de fichiers
-était ignorée #1494
+  était ignorée #1494
 - Le cron certbot pouvait entrer en conflit avec le cron acme-renew #1503
 
 ### Sécurité
@@ -122,7 +128,7 @@
 
 ## 5.1.7 - 2026-01-12
 
-## Ajouts
+### Ajouts
 
 - Ajout de Saint-Pierre-et-Miquelon #1443
 
@@ -136,14 +142,14 @@
 - Correction d'un bug empêchant de télécharger un mailsec quand le nom de fichier n'était pas UTF-8. #1460
 - Correction permettant de supprimer certains mails inutiles pour les comptes techniques. #1465, #1467
 - Correction permettant d'afficher un message d'erreur plutôt qu'une erreur symfony lors d'une tentative de connexion
-via login/password dans le cas ou le password n'est pas paramétré. #1466
+  via login/password dans le cas où le password n'est pas paramétré. #1466
 
 ## 5.1.6 - 2025-12-09
 
 ### Corrections
 
 - Prise en compte de la variable WEBMASTER qui permet maintenant au lien vers Webmaster de la page d'accueil et du
-footer de rediriger correctement. #1422
+  footer de rediriger correctement. #1422
 - Correction permettant maintenant d'assigner une date de publication à un tampon d'acte. #1407
 - Correction d'un script permettant la double lecture d'un mail AR Acte sans le prendre en compte une seconde fois. #1449
 - Correction d'un bug lors de l'exécution du worker helios-menage menant à une exception évitable. #1445
@@ -151,16 +157,16 @@ footer de rediriger correctement. #1422
 
 ### Sécurité
 
-- Suppression d'opérations fichier non nécessaire #1461
+- Suppression d'opérations fichier non nécessaires #1461
 
 ## 5.1.5 - 2025-10-27
 
 ### Corrections
 
 - Correction d'une exception survenant parfois lors de la suppression d'un fichier via helios-menage car le fichier
-n'existait deja plus. #1403
-- Correction d'un bug survenant parfois lors de la recuperation d'un fichier dans le cloud causant une exception
-critique. #1384
+  n'existait déjà plus. #1403
+- Correction d'un bug survenant parfois lors de la récupération d'un fichier dans le cloud causant une exception
+  critique. #1384
 - Correction d'un bug empêchant de télécharger les PES en erreur lorsqu'ils étaient trop volumineux.
 
 ## 5.1.4 - 2025-09-17
@@ -181,9 +187,6 @@ critique. #1384
 - Correction d’un problème d'affichage lors de la suppression d'un mail #1362
 - Augmentation du TTR de `ActesAntivirusWorker` pour éviter des messages d'erreur #1393
 - Permettre la vérification des CRL pour les marchés publics de nature Contrats, conventions et avenants #1382
-- Retire les espaces present dans le champ Helios FTP dans l'interface d'administration Helios. #1344
-- Correction de l'acces à actes_classification_fetch.php #1373
-- Corrige un probleme d'affichage lors de la suppression d'un mail #1362
 
 ## 5.1.2 - 2025-07-23
 
@@ -193,7 +196,7 @@ critique. #1384
 - Utilisation du validca étendu pour vérifier le purpose des certificats #1360
 - Correction de la récupération des paramètres booléens depuis les variables d'environnement #1359
 - [Actes] Modification du timeout pour l'envoi à la DGCL et, après erreur, du délai avant de renvoyer un fichier ainsi
-que de sa priorité #1366  
+  que de sa priorité #1366
 
 ## 5.1.1 - 2025-07-18
 
@@ -208,11 +211,11 @@ que de sa priorité #1366
 
 - Correction de la correspondance simulateur/ftp pour les instances de développement #1240
 - Ajout d'un filtre dans l'interface web pour sélectionner seulement des fichiers `.xml` lors d'import de PES aller
-dans S2low. #1269
+  dans S2low. #1269
 - Correction de la remise à zéro du fichier compteur Helios #1314
 - Continuer d'exporter les actes même lorsque des fichiers ne sont pas disponibles dans le cloud #1345
-- Correction de /admin/authorities/admin_authority_types.php #1340
-- Correction du cron qui lance périodiquement la commande beanstalkd:rebuild-queue #1365
+- Correction de `/admin/authorities/admin_authority_types.php` #1340
+- Correction du cron qui lance périodiquement la commande `beanstalkd:rebuild-queue` #1365
 - Correction de la commande worker:process-failed et suppression de la commande Legacy #1364
 
 ### Sécurité
@@ -224,12 +227,12 @@ dans S2low. #1269
 - La configuration du serveur DGCL n'est pas correctement récupérée depuis les variables d'environnement
 - Utilisation du validca RGS au lieu du validca étendu pour la validation du purpose du certificat
 - Problème d'affichage des mails sécurisés
-- Le cron qui lance périodiquement la commande beanstalkd:rebuild-queue ne fonctionne plus
+- Le cron qui lance périodiquement la commande `beanstalkd:rebuild-queue` ne fonctionne plus
 - [eventlistener:process-failed] ne fonctionne pas
 
 ## 5.1.0 - 2025-02-12
 
-## Dépréciations
+### Dépréciations
 
 - Outil de signature intégré
 - Utilisation des mails sécurisés (remplacés par les mails sécurisés de pastell)
@@ -244,7 +247,8 @@ dans S2low. #1269
 
 ### Corrections
 
-- Supprimer l'exception envoyée par actes-enveloppe-menage en cas de fichier semblable déjà présent dans le répertoire sans transaction #1239
+- Supprimer l'exception envoyée par actes-enveloppe-menage en cas de fichier semblable déjà présent dans le répertoire
+  sans transaction #1239
 
 ## 5.0.46 - 2024-11-18
 
@@ -273,7 +277,7 @@ dans S2low. #1269
 ### Évolutions
 
 - [Actes] Transférer les enveloppes sans transaction dans un répertoire dédié #972
-- Prise en compte de la version 5.24 du schema XSD Pes Aller #1220
+- Prise en compte de la version 5.24 du schéma XSD Pes Aller #1220
 
 ### Corrections
 
@@ -281,7 +285,7 @@ dans S2low. #1269
 - Supprimer les headers en doublon #1221
 - Corriger les redirections #1222
 - Faire apparaitre les dates de début et de fin à la définition des fenêtres Actes et Helios #1196
-- Permettre de renvoyer au SAE un acte au statut "Erreur lors de l'envoi au SAE" #1226a
+- Permettre de renvoyer au SAE un acte au statut "Erreur lors de l'envoi au SAE" #1226
 - Utiliser le format de date ISO 8601 comportant le fuseau horaire dans les exports de transactions #1211
 
 ### Limitations connues
@@ -296,19 +300,21 @@ dans S2low. #1269
 
 ## 5.0.42 - 2024-09-16
 
-### Évolutions
-
-- Permettre de transformer une commande legacy en S2lowLegacyCommandInSymfonyContainer instanciée comme un controlleur par Symfony #1127
-- Création du rôle "Archiviste" #1199
-- Permettre de régler l'agraphage OCSP (OCSP Stapling) par virtual host #1209
-
 ### Ajouts
 
-- Ajout du script script/helios/helios_admin_transac_retour_export.php permettant d'exporter la liste des PES_RETOUR #1210
+- Ajout du script `script/helios/helios_admin_transac_retour_export.php` permettant d'exporter la liste des PES_RETOUR
+  #1210
+
+### Évolutions
+
+- Permettre de transformer une commande legacy en `S2lowLegacyCommandInSymfonyContainer` instanciée comme un controller
+  par Symfony #1127
+- Création du rôle "Archiviste" #1199
+- Permettre de régler l'agrafage OCSP (OCSP Stapling) par virtual host #1209
 
 ### Corrections
 
-- Eviter le message "Erreur : string(36) "Class "S2lowRedirect" does not exist" #1197
+- Éviter le message "Erreur : string(36) "Class "S2lowRedirect" does not exist" #1197
 
 ### Sécurité
 
@@ -318,13 +324,13 @@ dans S2low. #1269
 
 - Problème de redirections qui bloquent en particulier l'identification par login/mdp
 
-## 5.0.41 2024-06-20
+## 5.0.41 - 2024-06-20
 
 ### Corrections
 
 - Permettre de créer une collectivité #1194
 
-## 5.0.40 2024-06-19
+## 5.0.40 - 2024-06-19
 
 ### Corrections
 
@@ -334,21 +340,22 @@ dans S2low. #1269
 
 - Impossible de créer une collectivité
 
-## 5.0.39 2024-06-17
+## 5.0.39 - 2024-06-17
 
 ### Évolutions
 
 - Créer la possibilité de changer d'état d'archivage via l'API et création du droit correspondant #1180
 - mise à jour de pades-valid vers 1.4.10 #1190
-- Prise en compte de la version 5.23 du schema XSD Pes Aller #1186
+- Prise en compte de la version 5.23 du schéma XSD Pes Aller #1186
 - Ajout d'une commande de changement d'état pour les transactions Helios #630
-- Permettre de configurer la valeur par défaut de helios_use_passtrans via la variable d'environnement HELIOS_USE_PASSTRANS_AS_DEFAULT #1192
+- Permettre de configurer la valeur par défaut de helios_use_passtrans via la variable d'environnement
+  `HELIOS_USE_PASSTRANS_AS_DEFAULT` #1192
 
 ### Corrections
 
 - Respecter le temps entre deux lancements de script par CustomizableWorkerRunner même lorsqu'une erreur est rencontrée #1185
 - Ajouter le nom du fichier concerné aux erreurs 'Erreur lors de la réception du fichier : Le fichier semble vide' #1177
-- Eviter un changement de SIREN arbitraire en cas de changement de groupe lors de l'édition d'un collectivité #1158
+- Éviter un changement de SIREN arbitraire en cas de changement de groupe lors de l'édition d'une collectivité #1158
 
 ### Limitations connues
 
@@ -362,22 +369,25 @@ dans S2low. #1269
 
 ### Corrections
 
-- Permettre de convertir les login/mot de passe de l'identification HTTP de l'ISO-8859-1 vers l'UTF-8 en spécifiant CONVERT_API_LOGINS_FROM_ISO #1071
-- Permettre de convertir les login/mot de passe contenus dans le nonce de l'ISO-8859-1 vers l'UTF-8 en spécifiant CONVERT_API_LOGINS_FROM_ISO #1071
-- Continuer la récupération des PES depuis le serveur DGFiP après un erreur de téléchargement #1183
+- Permettre de convertir les login/mot de passe de l'identification HTTP de l'ISO-8859-1 vers l'UTF-8 en spécifiant
+  `CONVERT_API_LOGINS_FROM_ISO` #1071
+- Permettre de convertir les login/mot de passe contenus dans le nonce de l'ISO-8859-1 vers l'UTF-8 en spécifiant
+  `CONVERT_API_LOGINS_FROM_ISO` #1071
+- Continuer la récupération des PES depuis le serveur DGFiP après une erreur de téléchargement #1183
 - Enregistrer les fichiers PES à récupérer depuis le serveur DGFiP dans une file Beanstalkd #1129
 
 ## 5.0.37 - 2024-04-03
 
 ### Évolutions
 
-- Concaténer les messages d'erreur lors de l'envoi de flux helios au SAE si une erreur de suppression succède à une erreur d'envoi vers Pas #1175
+- Concaténer les messages d'erreur lors de l'envoi de flux helios au SAE si une erreur de suppression succède à une
+  erreur d'envoi vers Pastell #1175
 
 ## 5.0.36 - 2024-04-03
 
 ### Évolutions
 
-- Faire apparaître les étapes de connection à Openstack et Pastell dans les logs d'envoi des flux helios au SAE #1175
+- Faire apparaître les étapes de connexion à Openstack et Pastell dans les logs d'envoi des flux helios au SAE #1175
 
 ## 5.0.35 - 2024-04-02
 
@@ -395,7 +405,7 @@ dans S2low. #1269
 
 ### Évolutions
 
-- Permettre de configurer le niveau de log Apache via la variable d'environnement APACHE_LOG_LEVEL #1171
+- Permettre de configurer le niveau de log Apache via la variable d'environnement `APACHE_LOG_LEVEL` #1171
 
 ## 5.0.32 - 2024-03-22
 
@@ -407,7 +417,8 @@ dans S2low. #1269
 
 ### Évolutions
 
-- Création de nouveaux états pour les transactions Actes et Helios dont les fichiers ne sont pas accessibles lors de l'envoi au SAE #1103
+- Création de nouveaux états pour les transactions Actes et Helios dont les fichiers ne sont pas accessibles lors de
+  l'envoi au SAE #1103
 - Ajout du Haut-commissariat de Nouvelle-Calédonie et des arrondissements #1086
 
 ### Corrections
@@ -426,7 +437,8 @@ dans S2low. #1269
 
 ### Évolutions
 
-- Attente avant de récupérer les PES lorsque des PES sont déposés sur le serveur distant et arrêt du script lorsqu'une erreur est rencontrée #1157
+- Attente avant de récupérer les PES lorsque des PES sont déposés sur le serveur distant et arrêt du script lorsqu'une
+  erreur est rencontrée #1157
 
 ## 5.0.28 - 2024-02-26
 
@@ -435,6 +447,10 @@ dans S2low. #1269
 - Mise en conformité du numéro de patch
 
 ## 5.0.27 - 2024-02-21
+
+### Évolutions
+
+- Ajout des étapes code_quality et container_scanning dans la CI #1135
 
 ### Corrections
 
@@ -451,15 +467,12 @@ dans S2low. #1269
 - Correction d'erreurs javascript #1144
 - Correction du formatage des dates du bordereau d’acquittement des actes #1123
 - Permettre de supprimer helios_ftp_dest lors de l'édition d'une collectivité #1150
-- Permettre de supprimer l'adresse électronique métier, l'adresse électronique de diffusion par défaut et l'adresse électronique de diffusion d'informations #937
+- Permettre de supprimer l'adresse électronique métier, l'adresse électronique de diffusion par défaut et l'adresse
+  électronique de diffusion d'informations #937
 - Rendre cohérente la variable d'environnement CONVERT_API_LOGINS_FROM_ISO #1097
-- Correction du script de récupération des autorités de certification du ministère de l'intérieur #1096
+- Correction du script de récupération des autorités de certification du ministère de l'Intérieur #1096
 - Gestion des configurations des connexions DGFiP depuis le container de services #1147
 - Simplification du script migre_postes_comptables.php #1120
-
-### Évolutions
-
-- Ajout des étapes code_quality et container_scanning dans la CI #1135
 
 ### Sécurité
 
@@ -469,13 +482,13 @@ dans S2low. #1269
 
 ### Évolutions
 
-- Différencier les modes d'envois dans le mail des transmis non acquittés #1114
+- Différencier les modes d'envoi dans le mail des transmis non acquittés #1114
 
 ## 5.0.25 - 2023-11-30
 
 ### Évolutions
 
-- Permettre de configurer SSLProtocol par une variable d'environnement #1109
+- Permettre de configurer `SSLProtocol` par une variable d'environnement #1109
 
 ### Corrections
 
@@ -485,7 +498,7 @@ dans S2low. #1269
 
 ### Évolutions
 
-- Permettre de configurer SSLCipherSuite par une variable d'environnement #1098
+- Permettre de configurer `SSLCipherSuite` par une variable d'environnement #1098
 
 ## 5.0.23 - 2023-10-19
 
@@ -499,7 +512,7 @@ dans S2low. #1269
 
 - Permettre d'utiliser letsencrypt pour le domaine mail sécurisé #1090
 - Ajouter la taille et le sha1 du PES Retour à l'export CSV #1091
-- Correction du script actes_admin_transac_export.php #1093
+- Correction du script `actes_admin_transac_export.php` #1093
 
 ## 5.0.21 - 2023-10-03
 
@@ -509,19 +522,19 @@ dans S2low. #1269
 
 ## 5.0.20 - 2023-10-02
 
-### Corrections
-
-- Correction du script permettant de migrer les postes comptables #1069
-- Correction de l'encodage de api-list-login.php #1073
-- Permettre de prendre en compte le département dans le script actes-send-classification-for-all-authorities-php #1070
-- Empêcher une erreur de bloquer un cron #1067
-- Permettre de convertir les login/mot de passe de l'ISO-8859-1 vers l'UTF-8 en spécifiant CONVERT_API_LOGINS_FROM_ISO #1071
-- Correction du script monitoring_actes_pdf-stamp.php #1087
-- Correction de failles de sécurité #1088
-
 ### Évolutions
 
 - Permettre de désactiver helios-reception-passtrans #1068
+
+### Corrections
+
+- Correction du script permettant de migrer les postes comptables #1069
+- Correction de l'encodage de `api-list-login.php` #1073
+- Permettre de prendre en compte le département dans le script `actes-send-classification-for-all-authorities.php` #1070
+- Empêcher une erreur de bloquer un cron #1067
+- Permettre de convertir les login/mot de passe de l'ISO-8859-1 vers l'UTF-8 en spécifiant `CONVERT_API_LOGINS_FROM_ISO` #1071
+- Correction du script `monitoring_actes_pdf-stamp.php` #1087
+- Correction de failles de sécurité #1088
 
 ## 5.0.19 - 2023-09-12
 
@@ -533,13 +546,13 @@ dans S2low. #1269
 
 ### Évolutions
 
-- Ajout de la directive ACTES_IMAP_OPTIONS permettant de modifier les options de connexion à un serveur IMAP #1082
+- Ajout de la directive `ACTES_IMAP_OPTIONS` permettant de modifier les options de connexion à un serveur IMAP #1082
 
 ## 5.0.17 - 2023-08-04
 
 ### Évolutions
 
-- Prise en compte de la version 5.21 du schema XSD Pes Aller modifié par la DGFiP #762
+- Prise en compte de la version 5.21 du schéma XSD Pes Aller modifié par la DGFiP #762
 
 ## 5.0.16 - 2023-07-20
 
@@ -555,7 +568,7 @@ dans S2low. #1269
 
 ### Corrections
 
-- Eviter les messages beanstalkd 'socket timed out' #1046
+- Éviter les messages beanstalkd 'socket timed out' #1046
 
 ## 5.0.14 - 2023-07-18
 
@@ -570,11 +583,7 @@ dans S2low. #1269
 
 - Permettre de régler le nombre de processus helios-envoi et helios-envoi-passtrans #1055
 - Créer un container pour webpack #1053
-- Permettre de distinguer dans la commande stats:monitoring-metier les envois Gateway et Passtrans #1057
-
-### Suppressions
-
-- Suppression de Libersign 1 #1053
+- Permettre de distinguer dans la commande `stats:monitoring-metier` les envois Gateway et Passtrans #1057
 
 ### Corrections
 
@@ -582,7 +591,11 @@ dans S2low. #1269
 - Correction markdownlint dans CHANGELOG
 - Permettre à nouveau à l'administrateur de collectivité de modifier sa collectivité #1044
 - Récupérer le PesAcquit depuis le cloud lors d'un appel de helios_transac_get_status #1045
-- Ajout de LIBERSIGN_INSTALLER dans docker-compose.yml #1015
+- Ajout de `LIBERSIGN_INSTALLER` dans docker-compose.yml #1015
+
+### Suppressions
+
+- Suppression de Libersign 1 #1053
 
 ### Sécurité
 
@@ -617,7 +630,7 @@ dans S2low. #1269
 ### Corrections
 
 - Récupérer les erreurs lancées lors de l'analyse des fichiers à envoyer pour éviter les blocages #1029
-- Remplacement des scripts check-ftp.php et test-helios-connection.php par helios-analyse-fichier-a-envoyer#1035
+- Remplacement des scripts `check-ftp.php` et `test-helios-connection.php` par `helios-analyse-fichier-a-envoyer` #1035
 
 ### Sécurité
 
@@ -634,13 +647,13 @@ dans S2low. #1269
 
 - Intégrer la purge des flux hélios dans supervisor #753
 - Utilisation de timeout pour limiter les blocages des scripts lancés par supervisor #979
-- Prise en compte de la version 5.20 du schema XSD Pes Aller #1025
+- Prise en compte de la version 5.20 du schéma XSD Pes Aller #1025
 - Adaptation du schéma XSD des actes à la réalité de l'envoi par la DGCL #1017
 
 ### Corrections
 
 - Corriger l'encodage utilisé lors de l'envoi vers le SAE #1013
-- Gérer le cas ou le fichier PES Aller n'est pas trouvé #1028
+- Gérer le cas où le fichier PES Aller n'est pas trouvé #1028
 - Allonger à 4 minutes le délai minimum entre deux passages de récupération FTP #1018
 - Spécifier un retour pour cron:helios-envoi #1022
 
@@ -650,14 +663,14 @@ dans S2low. #1269
 
 - Remonter les messages d'erreur d'analyse des fichiers reçus du ministère #1009
 - Mise à jour du schéma XSD des actes #1007
-- Permettre de différencier les notification et le tampons des environnements de test/dev/formation #742
+- Permettre de différencier les notifications et le tampon des environnements de test/dev/formation #742
 
 ### Corrections
 
 - Prendre correctement en compte les accents dans les noms des pièces jointes des mails sécurisés #1008
 - Afficher le temps de chargement des pages #976
 - Homogénéiser le contrôle des espaces pour les siren #691
-- Remplacement de la constante ALWAYS_USE_EXTENDED_VALIDCA par ONLY_USE_VALIDCARGS #1012
+- Remplacement de la constante `ALWAYS_USE_EXTENDED_VALIDCA` par ONLY_USE_VALIDCARGS #1012
 
 ### Suppressions
 
@@ -669,54 +682,55 @@ dans S2low. #1269
 ### Évolutions
 
 - Limiter à 100 le nombre d'envois simultanés de fichiers au SAE d'une même collectivité #575
-- Mise à jour de la bibiliothèque tdt-lib-actes #1003
+- Mise à jour de la bibliothèque tdt-lib-actes #1003
 
 ### Corrections
 
 - Passer par l'antivirus un acte créé avec "signer avant d’envoyer" puis "déposer sans signature" #755
-- Homogénéisation de la valeur par défaut de USE_LEGACY_SECURE_MAIL_FIELDS à false #938
+- Homogénéisation de la valeur par défaut de `USE_LEGACY_SECURE_MAIL_FIELDS` à false #938
 - Ajouter un message d'erreur lorsque le CodCol d'un PES Aller est trop long #821
-- Verifier que les paramètres d'entrée de la classification sur actes_transac_create.php sont des entiers #668
+- Vérifier que les paramètres d'entrée de la classification sur actes_transac_create.php sont des entiers #668
 - Correction et homogénéisation des titres des écrans de visualisation des détails d'un acte et d'un flux helios #928
 
 ### Suppressions
 
-- Suppression de la constante ACTES_TYPE_PAR_NATURE #608
+- Suppression de la constante `ACTES_TYPE_PAR_NATURE` #608
 
 ## 5.0.7 - 2023-02-06
+
+### Évolutions
+
+- Changement d'ordre des virtualhost pour les applications ne supportant pas le SNI #998
 
 ### Corrections
 
 - Correction de l'ordre et de la description du traitement par lots #997
 
-### Évolutions
-
-- Changement d'ordre des virtuahost pour les applications ne supportant pas le SNI #998
-
 ## 5.0.6 - 2023-02-02
 
 ### Évolutions
 
-- Ajout du script pour les statistiques de groupes  #992
+- Ajout du script pour les statistiques de groupes #992
 
 ### Corrections
 
 - Les pièces jointes des actes ajoutées par l'API sont correctement prises en compte #991
-- Permettre de configurer ACTES_COMMON_BROADCAST_EMAILS #994
-- Permettre de préciser l'utilisation de l'API via get pour actes_transac_create.php pour assurer la rétrocompatibilité avec la v4.3 #993
+- Permettre de configurer `ACTES_COMMON_BROADCAST_EMAILS` #994
+- Permettre de préciser l'utilisation de l'API via get pour `actes_transac_create.php` pour assurer la
+  rétrocompatibilité avec la v4.3 #993
 - Prendre en charge l'encodage UTF-8 dans les noms de pièces jointes des mails #995
 
 ## 5.0.5 - 2023-01-30
 
 ### Corrections
 
-- Passage de WEB_HTTPS_PORT dans docker-compose.yaml pour permettre la redirection Apache #987
-- Permettre de charger les ressources js et css depuis S2LOW_WEBSITE_MAIL #988
+- Passage de `WEB_HTTPS_PORT` dans `docker-compose.yaml` pour permettre la redirection Apache #987
+- Permettre de charger les ressources js et css depuis `S2LOW_WEBSITE_MAIL` #988
 
 ### Limitations connues
 
 - Les pièces jointes des actes ajoutées par l'API ne sont pas correctement prises en compte #991
-- Certaines pièces joindes des mails ne s'ouvrent pas #995
+- Certaines pièces jointes des mails ne s'ouvrent pas #995
 
 ## 5.0.4 - 2023-01-27
 
@@ -729,8 +743,8 @@ dans S2low. #1269
 
 ### Limitations connues
 
-- Les mails envoyés avant le passage sur S2LOW_WEBSITE_MAIL ne s'affichent pas correctement
-- Les ressources js et css ne sont pas correctement chargées depuis S2LOW_WEBSITE_MAIL
+- Les mails envoyés avant le passage sur `S2LOW_WEBSITE_MAIL` ne s'affichent pas correctement
+- Les ressources js et css ne sont pas correctement chargées depuis `S2LOW_WEBSITE_MAIL`
 
 ## 5.0.3 - 2023-01-27
 
@@ -739,13 +753,13 @@ dans S2low. #1269
 - Changement de la mémoire allouée au service pdf-stamp #980
 - Modification du répertoire de la configuration Symfony pour les scripts #978
 - Correction de la lecture du DN des certificats #981
-- Si le nom de la collectivité contenait un accent, il était impossible signer les PES directement avec Libersign
+- Si le nom de la collectivité contenait un accent, il était impossible de signer les PES directement avec Libersign
 
 ## 5.0.2 - 2023-01-23
 
 ### Suppressions
 
-- Le protocole TLSv1.3 est désactivé sur Apache2 pour rester compatible avec les certificat RGS**.
+- Le protocole TLSv1.3 est désactivé sur Apache2 pour rester compatible avec les certificats RGS**.
 
 ## 5.0.1 - 2023-01-22
 
@@ -771,30 +785,31 @@ dans S2low. #1269
 - Téléchargement depuis le cloud si un PES retour demandé par API n'est pas présent en local #709
 - Prise en compte de l'erreur de téléchargement depuis le cloud résultant en un fichier vide #819
 - Ajout d'un noindex sur toutes les pages pour éviter l'indexation par les moteurs de recherche #875
-- Permettre de mettre des espaces dans la recherche des collectivité par SIREN #867
-- Prise en compte du délai de 4 heures dans le lien "Actes transmis depuis plus de 4 heures" de la console d'administration #852
+- Permettre de mettre des espaces dans la recherche des collectivités par SIREN #867
+- Prise en compte du délai de 4 heures dans le lien "Actes transmis depuis plus de 4 heures" de la console
+  d'administration #852
 
 ### Suppressions
 
-- les constantes suivantes ont été supprimées, car obsolète : OPENSIGN_WSDL, OPENSIGN_CA, OPENSIGN_CRT,
-OPENSIGN_TIMEOUT, ACTES_TYPE_PJ_IS_MANDATORY, DB_CLIENT_ENCODING, PHP_UNIT_AUTOLOADER, MODE, ETAT_CIVIL_FILES_UPLOAD_ROOT,
-IMAP_LOGIN, IMAP_PASS
-- les constantes suivantes ont été supprimées, car elles étaient dépréciées : VERIFICATION_SIREN
+- les constantes suivantes ont été supprimées, car obsolètes : `OPENSIGN_WSDL`, `OPENSIGN_CA`, `OPENSIGN_CRT`,
+  `OPENSIGN_TIMEOUT`, `ACTES_TYPE_PJ_IS_MANDATORY`, `DB_CLIENT_ENCODING`, `PHP_UNIT_AUTOLOADER`, `MODE`,
+  `ETAT_CIVIL_FILES_UPLOAD_ROOT`, `IMAP_LOGIN`, `IMAP_PASS`
+- les constantes suivantes ont été supprimées, car elles étaient dépréciées : `VERIFICATION_SIREN`
 - les constantes suivantes ont été supprimées, car elles ne sont plus nécessaires du fait du passage en docker :
-XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
-- Desactive le lancement de l'export OCRE par supervisor
+  `XML_STARLET_PATH`, `MODE_BEANSTALKD`, `MODE_REDIS`
+- Désactive le lancement de l'export OCRE par supervisor
 
 ## 4.3.19 - 2022-09-19
-
-### Sécurité
-
-- Correction de failles de sécurité #799
 
 ### Corrections
 
 - Changer le contenu du tampon de "Affiché le" pour "Publié le" #797
 - Corriger la vérification des signatures avec une URI vide #825
 - Correction de l'affichage des options du traitement d'actes par lot #823
+
+### Sécurité
+
+- Correction de failles de sécurité #799
 
 ## 4.3.18 - 2022-06-13
 
@@ -818,7 +833,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 ### Évolutions
 
-- Vérification de la non-corruption du pdf dans ActesAnalyseFichierAEnvoyerWorker #756
+- Vérification de la non-corruption du pdf dans `ActesAnalyseFichierAEnvoyerWorker` #756
 - Création d'un script permettant de modifier le domaine de l'adresse email pour un groupe #693
 
 ### Corrections
@@ -853,7 +868,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 ### Évolutions
 
-- Prise en compte de la version 5.17 du schema XSD Pes Aller #762
+- Prise en compte de la version 5.17 du schéma XSD Pes Aller #762
 
 ## 4.3.13 - 2022-03-08
 
@@ -865,12 +880,12 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 ### Évolutions
 
-- Suppression de l'état "En traitement" pour les transaction Helios pour éviter les blocages #625
+- Suppression de l'état "En traitement" pour les transactions Helios pour éviter les blocages #625
 - Mise à jour du simulateur en 1.1.2 #748
 
 ### Corrections
 
-- Corection d'une erreur sur helios-pes-acquit-menage #293
+- Correction d'une erreur sur helios-pes-acquit-menage #293
 - Correction d'une vulnérabilité #731
 - Correction d'une vulnérabilité #732
 - Correction d'une vulnérabilité #733
@@ -906,7 +921,7 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 ### Évolutions
 
 - Ajout d'une API de statistique actes pour les admins de groupe #610
-- Prise en compte de la version 5.14 du schema XSD Pes Aller #696
+- Prise en compte de la version 5.14 du schéma XSD Pes Aller #696
 - Prise en compte de la date de la signature lors de la validation du certificat associé pour les actes #486
 - Ajout d'une API de statistique actes et les pes aller pour les admins de groupe #610
 - Prise en compte de la date pour la vérification des signatures Xades Pes aller #486
@@ -919,65 +934,66 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 - Le message dans le journal lors de la confirmation de postage était incomplet #694
 - Clarification du message d'erreur lorsque le certificat d'un document signé n'est pas reconnu #624
 
-## 4.3.8 - 2021 04 07
+## 4.3.8 - 2021-04-07
 
 ### Corrections
 
-- corriger l'identification par nounce #690
+- corriger l'identification par nonce #690
 
 ## 4.3.7 - 2021-03-23
 
 **Cette version demande une modification de la base de données**
 
-### Corrections
-
-- les scripts de supervision notifient le mail EMAIL_TECHNIQUE #680
-- permettre de traiter les messages liés à un acte même si le cloud n'est pas accessible #685
-- les actes dont l'archive est en erreur ne bloquent plus actes-notification.php #684
-
-### Evolution
+### Évolutions
 
 - le script de supervision du service pades est compatible avec les codes retour Nagios #680
 - changement d'encodage du mot de passe
+
+### Corrections
+
+- les scripts de supervision notifient le mail `EMAIL_TECHNIQUE` #680
+- permettre de traiter les messages liés à un acte même si le cloud n'est pas accessible #685
+- les actes dont l'archive est en erreur ne bloquent plus `actes-notification.php` #684
 
 ## 4.3.6 - 2021-02-11
 
 **Cette version demande une modification de la base de données**
 
+### Évolutions
+
+- déplacement des PES Aller non liés à une transaction dans le répertoire `HELIOS_PESALLER_SANSTRANSACTION`
+- création d'un groupe supervisor mailsec-menage contenant les scripts cloud des mails #245
+- Intégrer la valeur du codcol dans le mail listant les transactions Helios restées à l'état transmis #675
+
 ### Corrections
 
 - ajout d'index pour accélérer le traitement du ménage des fichiers présents dans le cloud
-- passage du temps minimum d'éxécution des WorkerScript de 1s vers 10s
-
-### Evolution
-
-- déplacement des PES Aller non liés à une transaction dans le répertoire HELIOS_PESALLER_SANSTRANSACTION
-- création d'un groupe supervisor mailsec-menage contenant les scripts cloud des mails #245
-- Intéger la valeur du codcol dans le mail listant les transactions Helios restées à l'état transmis #675
+- passage du temps minimum d'exécution des WorkerScript de 1s vers 10s
 
 ## 4.3.5 - 2020-12-14
 
 **Cette version demande une modification de la base de données**
 
-### Corrections
-
-- refactoring du ménage des actes envoyés sur le cloud
-- correction du ménage des mails sécurisés pour prendre en charge les systèmes très chargé, supression des répertoires de base #666
-- ajout de la colonne pes_retour:not_available afin de faire fonctionner le versement dans le cloud
-- correction lorsqu'un objet est incorrectement marqué comme non disponible sur le disque #665  
-- levée de certaines restrictions sur les certificats des signatures PKCS7 (chaine de confiance, purpose) #667
-- retrait des script IWorkerAlwaysLaunch laissé au contrôle de supervisord
-
-### Evolution
+### Évolutions
 
 - mise à jour de pades-valid vers 1.4.7 #223
 - sauvegarde des mails dont le corps est vide #644
 
+### Corrections
+
+- refactoring du ménage des actes envoyés sur le cloud
+- correction du ménage des mails sécurisés pour prendre en charge les systèmes très chargés, suppression des répertoires
+  de base #666
+- ajout de la colonne pes_retour:not_available afin de faire fonctionner le versement dans le cloud
+- correction lorsqu'un objet est incorrectement marqué comme non disponible sur le disque #665
+- levée de certaines restrictions sur les certificats des signatures PKCS7 (chaîne de confiance, purpose) #667
+- retrait des scripts IWorkerAlwaysLaunch laissés au contrôle de supervisord
+
 ## 4.3.4 - 2020-11-17
 
-### Evolution
+### Évolutions
 
-- mise à jour de la bibiliothèque tdt-lib-actes
+- mise à jour de la bibliothèque tdt-lib-actes
 - permettre les signatures autosignées et non RGS #622
 
 ## 4.3.3 - 2020-11-06
@@ -985,17 +1001,18 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 ### Corrections
 
 - refactoring de la gestion des services pour éviter des failles de sécurité potentielles #657
-- refactoring DataObject pour utilisation de requête préparé afin de combler des failles de sécurité potentielles
+- refactoring DataObject pour utilisation de requêtes préparées afin de combler des failles de sécurité potentielles
 
 ## 4.3.2 - 2020-11-02
 
-### Evolution
+### Ajouts
+
+- Script `bin/console log:timestamp-token-extract-and-delete` qui permet de supprimer les timestamps de la table
+  `logs_historique` après les avoir sauvegardés dans un répertoire
+
+### Évolutions
 
 - limitation de la taille et du nombre des messages d'erreur lors d'une erreur d'envoi sur le cloud #615
-
-### Ajout
-
-- Script bin/console log:timestamp-token-extract-and-delete qui permet de suprimer les timestamps de la table logs_historique après les avoir sauvegardés dans un répertoire
 
 ### Corrections
 
@@ -1005,40 +1022,41 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 ### Corrections
 
-- Correction typo dans le init.php pour la variable helios_sending_mode_demo
+- Correction typo dans le `init.php` pour la variable `helios_sending_mode_demo`
 
 ## 4.3.0 - 2020-09-16
+
+### Évolutions
+
+- Ajout de la variable d'environnement `HELIOS_FTP_CONNECTION_MODE` permettant d'utiliser le protocole PassTrans #623
+- Ajout d'un script qui va passer à l'état erreur des flux PES vieux de plus de tant de jours #619
 
 ### Corrections
 
 - Correction bug particulier pour les purges
 
-### Evolution
-
-- Ajout de la variable d'environnement HELIOS_FTP_CONNECTION_MODE permettant d'utiliser le protocole PassTrans #623
-- Ajout d'un script qui va passer à l'état erreur des flux PES vieux de plus de tant de jour #619
-
 ## 4.2.3 - 2020-07-13
+
+### Ajouts
+
+- Ajout du script `script/postgresql/add-column-not-null-with-default.php` permettant l'ajout de colonne non null à
+  chaud
+
+### Évolutions
+
+- Passage au schéma PES version 5.12
 
 ### Corrections
 
 - Ajouter un rollback du changement d'état de la transaction lorsqu'un fichier PES ne peut être déplacé #631
-- Les versements actes SAE n'était plus assurés (problème sur le bordereau) #639
-
-### Evolution
-
-- Passage au schéma PES version 5.12
-
-### Ajout
-
-- Ajout du script script/postrgrsql/add-column-not-null-with-default.php permettant l'ajout de colonne non null à chaud
+- Les versements actes SAE n'étaient plus assurés (problème sur le bordereau) #639
 
 ## 4.2.2 - 2020-06-11
 
-### Evolution
+### Évolutions
 
 - Amélioration de la construction du docker
-- Possibilité d'utiliser un nouveau modèle de bordereau (Création de la constante USE_LEGACY_BORDEREAU_MODEL) #100
+- Possibilité d'utiliser un nouveau modèle de bordereau (Création de la constante `USE_LEGACY_BORDEREAU_MODEL`) #100
 
 ### Corrections
 
@@ -1046,216 +1064,236 @@ XML_STARLET_PATH, MODE_BEANSTALKD, MODE_REDIS
 
 ## 4.2.1 - 2020-04-14
 
-### Evolution
+### Évolutions
 
 - Openstack : tentative de reconnexion lors d'une erreur #591
 
 ### Corrections
 
-- Un bug empechait l'envoi correcte des transactions actes avec au moins une annexe sur le SAE sur Pastell V3 #516
+- Un bug empêchait l'envoi correct des transactions actes avec au moins une annexe sur le SAE sur Pastell V3 #516
 
 ## 4.2.0 - 2020-03-09
 
 **Cette version nécessite une modification de la base de données**
 
-### Evolution
+### Évolutions
 
 - Mise à jour du schéma XSD PES v2 en version 5.11
-- Amélioration du script de récupération des classification #535
-- Possibilité de dissocier les configuration cloud actes et PES (création de constante `ACTES_OPENSTACK*` et `HELIOS_OPENSTACK*`, rétrocompatible avec l'existant) #534
-- L'envoi des PES et des actes dans le cloud passe maintenant par beanstalked #508
-- Refactoring des file de traitement (ajout de sections critiques synchronisés avec Redis)
-- Ajout des constantes : MODE_REDIS, REDIS_SERVER et REDIS_PORT (gestion du cache Redis utiliser comme gestionnaire de verrou)
-- Refactoring des catch des signaux SIGTERM pour la terminaison propre des files de traitement
+- Amélioration du script de récupération des classifications #535
+- Possibilité de dissocier les configurations cloud actes et PES (création de constante `ACTES_OPENSTACK*` et
+  `HELIOS_OPENSTACK*`, rétrocompatible avec l'existant) #534
+- L'envoi des PES et des actes dans le cloud passe maintenant par beanstalkd #508
+- Refactoring des files de traitement (ajout de sections critiques synchronisées avec Redis)
+- Ajout des constantes : `MODE_REDIS`, `REDIS_SERVER` et `REDIS_PORT` (gestion du cache Redis utilisé comme
+  gestionnaire de verrou)
+- Refactoring des catchs des signaux SIGTERM pour la terminaison propre des files de traitement
 - Refactoring du ménage des fichiers helios (si c'est sur le cloud, on ne garde que 15 jours de fichiers)
-- Les fichiers actes/helios non-disponible ne font plus partie de la boucle d'envoi au cloud
-- Envoi des fichier PES Acquit dans le cloud
-- Renommage des fichiers du certificat d'horodatage de tedetis_timestamp_XXX en s2low_timestamp_XXX  
-- La constante IMAGE_FOR_STAMP a été ajoutée. Elle permet de configurer l'image utilisée pour les tampons. #522
-- Création de groupes supervisor  #524
-- Le mail d'alerte sur le nombre d'actes en "En attente de transmission" n'est désormais envoyé que si aucun acte n'a été transmis dans les 10 dernières minutes. #495
-- Les mails sécurisés peuvent être envoyé dans le cloud #550
-- La constante WORKSPACE_DIRECTORY a été ajoutée. #523
+- Les fichiers actes/helios non disponibles ne font plus partie de la boucle d'envoi au cloud
+- Envoi des fichiers PES Acquit dans le cloud
+- Renommage des fichiers du certificat d'horodatage de tedetis_timestamp_XXX en s2low_timestamp_XXX
+- La constante `IMAGE_FOR_STAMP` a été ajoutée. Elle permet de configurer l'image utilisée pour les tampons. #522
+- Création de groupes supervisor #524
+- Le mail d'alerte sur le nombre d'actes en "En attente de transmission" n'est désormais envoyé que si aucun acte n'a
+  été transmis dans les 10 dernières minutes. #495
+- Les mails sécurisés peuvent être envoyés dans le cloud #550
+- La constante `WORKSPACE_DIRECTORY` a été ajoutée. #523
 - Un message d'erreur empêche d'uploader un PES aller vide #547
-- Le lien vers les documents et la date de réception on été supprimés du mail de notification d'erreur #530
+- Le lien vers les documents et la date de réception ont été supprimés du mail de notification d'erreur #530
 - Ajout d'un script permettant de changer le statut d'une transaction actes
-- OpenStack : Passage de l'Identity API # 2.0 à l'Identity API v3.0.  Toutes les constantes **_OPENSTACK_AUTHENTICATION_URL_V2 sont a remplacer par** _OPENSTACK_AUTHENTICATION_URL_V3 #574
+- OpenStack : Passage de l'Identity API v2.0 à l'Identity API v3.0. Toutes les constantes
+  `_OPENSTACK_AUTHENTICATION_URL_V2` sont à remplacer par `_OPENSTACK_AUTHENTICATION_URL_V3` #574
 
 ### Corrections
 
-- Les noms de fichiers envoyé au SAE ne doivent pas être égaux sans tenir compte des accents
-- L'absence de typage de la réponse au courrier simple entrainait un bug dans l'API de listage des réponses (qui prenait en compte les messages 2-2)
-- Le script d'envoi des PES au SAE se limite au 100 premier PES afin d'éviter que le jeton de cloudwatt n'expire.
-- Envoi de la typologie vers Pastell afin de pouvoir envoyer des actes vers un Pastel V3 #546
-- Dans certains cas très rares, les transactions Helios n'était pas envoyées #551
+- Les noms de fichiers envoyés au SAE ne doivent pas être égaux sans tenir compte des accents
+- L'absence de typage de la réponse au courrier simple entrainait un bug dans l'API de listage des réponses (qui prenait
+  en compte les messages 2-2)
+- Le script d'envoi des PES au SAE se limite aux 100 premiers PES afin d'éviter que le jeton de cloudwatt n'expire.
+- Envoi de la typologie vers Pastell afin de pouvoir envoyer des actes vers un Pastell V3 #546
+- Dans certains cas très rares, les transactions Helios n'étaient pas envoyées #551
 - Suppression d'un warning lors de l'utilisation de admin_user_edit_handler #583
-- Actes :  gestion des cas ou l'enveloppe n'est trouvee ni en local ni dans le cloud #569
+- Actes : gestion des cas où l'enveloppe n'est trouvée ni en local ni dans le cloud #569
 
-### Retrait
+### Suppressions
 
-- la constante HELIOS_VALIDATION_UPSTART_TOUCH_FILE a été retirée
+- la constante `HELIOS_VALIDATION_UPSTART_TOUCH_FILE` a été retirée
 
 ## 4.1.0 - 2019-07-08
 
 **Cette version contient principalement des améliorations sur les versements SAE.**
 
-### Evolution
-
-- Les statistiques d'envois au SAE passent sur une page dédiée
-- Ajout de bouton permettant de modifier l'état des transactions envoyé au SAE en cas d'erreur
-- Les fichiers PES ALLER et actes sont supprimé dès qu'on les a envoyé sur le SAE (s'ils existente sur le cloud)
-
-### Ajout
+### Ajouts
 
 - Ajout de l'arrondissement 9 pour le département 75 (SGAR) #503
-- Ajout de bouton sur les transactions actes et helios permettant d'envoyer et de vérifier les données sur le SAE (pour le superadmin)
+- Ajout de bouton sur les transactions actes et helios permettant d'envoyer et de vérifier les données sur le SAE (pour
+  le superadmin)
 - Ajout de statistiques pour l'envoi au SAE (actes/helios)
+
+### Évolutions
+
+- Les statistiques d'envois au SAE passent sur une page dédiée
+- Ajout de bouton permettant de modifier l'état des transactions envoyées au SAE en cas d'erreur
+- Les fichiers PES ALLER et actes sont supprimés dès qu'on les a envoyés sur le SAE (s'ils existent sur le cloud)
 
 ### Corrections
 
 - Le rebuild-queue n'est plus nécessaire en cas de défaillance des serveurs de la DGCL #501
-- le script de récupération des ar du sae échouait si le message d'erreur du SAE dépassait 512 octets #498
-- Possibilité d'envoyer sans erreur au SAE les actes contenant des fichiers avec des noms identiques
+- le script de récupération des AR du SAE échouait si le message d'erreur du SAE dépassait 512 octets #498
+- Possibilité d'envoyer sans erreurs au SAE les actes contenant des fichiers avec des noms identiques
 
 ## 4.0.3 - 2019-06-03
+
+### Ajouts
+
+- Ajout du nom de la collectivité sur le tableau de résumé d'une transaction actes
+- Ajout du lien vers la collectivité et vers l'utilisateur sur le tableau de résumé d'une transaction actes.
+- Ajout d'une boîte de confirmation lors de la suppression des mails sécurisés. #456
+- Journalisation de la suppression de mail sécurisé #434
+- Ajout du script `script/actes/actes-export.php` permettant d'exporter les enveloppes et leur acquittement
+- Ajout du script `script/helios/helios-export.php` permettant d'exporter les PES Aller et leur PES Acquit
+- Ajout des statistiques d'envoi SAE Actes
+- Automatiser les versements sur le SAE en fonction d'un identifiant de transaction minimum et maximum #499
+
+### Évolutions
+
+- les PES Aller ne contenant ni bordereau de dépense, ni titre de recette, ni PJ, ni marché ne sont pas transmis et
+  génèrent une erreur #496
+- Les SIREN du fichier d'import peuvent maintenant contenir des espaces (n'importe où) #475
+- Possibilité de supprimer la dernière pièce jointe sur le formulaire de création d'un acte #474
+- Lors de la création d'une enveloppe de classification, l'utilisateur est redirigé vers la transaction contenant cette
+  demande #466
+- Affichage d'un message d'erreur lorsqu'on saisit un mauvais mot de passe sur le mail sécurisé #454
+- Légère modification esthétique dans la création d'un mail sécurisé #449
 
 ### Corrections
 
 - Les messages de la DGCL indiquant un retour de multicanal sont supprimés au lieu d'être mis en erreur #490
 - Réintroduction de la possibilité de déclencher manuellement une notification #494
-- Il est possible de télécharger le document tamponné si celui-ci est un effectivement un fichier PDF (was : se termine par .pdf) #485
-- Toutes les enveloppes non-envoyées à cause de la pause d'une fenetre sont remises dans la queue benstalked une fois la fenêtre supprimée. #479
+- Il est possible de télécharger le document tamponné si celui-ci est effectivement un fichier PDF (was : se termine
+  par .pdf) #485
+- Toutes les enveloppes non-envoyées à cause de la pose d'une fenêtre sont remises dans la queue beanstalkd une fois la
+  fenêtre supprimée. #479
 - Suppression du bouton "Annuler" sur la signature étant donné que ce bouton n'a pas de sens dans ce contexte #472
-- Les dates de recherche de mail sécurisé sautait en cas de nouvelle recherche #447
+- Les dates de recherche de mail sécurisé sautaient en cas de nouvelle recherche #447
 - Il n'est plus possible pour un admin de groupe de passer une transaction PES Retour à l'état lu #445
-- Il est possible que la DGFip dépose des fichier PES Retour dont la taille est supérieur à 150Mo, ces fichiers ne sont pas analysables par s2low [HOTFIX]
-
-### Ajout
-
-- Ajout du nom de la collectivité sur le tableau de résumé d'une transaction actes
-- Ajout du lien vers la collectivité et vers l'utilisateur sur le tableau de résumé d'une transaction actes.
-- Ajout d'une boîte de confirmation lors de la supression des mails sécurisés. #456
-- Journalisation de la supression de mail sécurisé #434
-- Ajout du script script/actes/actes-export.php permettant d'exporter les enveloppes et leur acquittement
-- Ajout du script script/helios/helios-export.php permettant d'exporter les PES Aller et leur PES Acquit
-- Ajout des statistiques d'envoi SAE Actes
-- Automatiser les versements sur le SAE en fonction d'un identifiant de transaction minimum et maximum #499
-
-### Evolution
-
-- les PES Aller ne contenant ni bordereau de dépense, ni titre de recette, ni PJ, ni marché ne sont pas transmis et génère une erreur #496
-- Les SIREN du fichier d'import peuvent maintenant contenir des espaces (n'importe où) #475
-- Possibilité de supprimer la dernière pièce jointe sur le formulaire de création d'un acte #474
-- Lors de la création d'une enveloppe de classification, l'utilisateur est redirigé vers la transaction contenant cette demande #466
-- Affichage d'un message d'erreur lorsqu'on saisie un mauvais mot de passe sur le mail sécurisé #454
-- Légère modification esthétique dans la création d'un mail sécurisé #449
-
-### Dépréciation
-
-- La méthode d'authentification avec certificat utilisateur + certificat RGS** est déprécié et il n'est plus possible
-de la sélectionner lors de la création ou de la modification d'un utilisateur. #491
+- Il est possible que la DGFip dépose des fichiers PES Retour dont la taille est supérieure à 150Mo, ces fichiers ne sont
+  pas analysables par s2low [HOTFIX]
 
 ### Suppressions
 
 - Suppression de la classe maison Logger remplacée par S2lowLogger basé sur Monolog
 
+### Dépréciations
+
+- La méthode d'authentification avec certificat utilisateur + certificat RGS** est dépréciée et il n'est plus possible
+  de la sélectionner lors de la création ou de la modification d'un utilisateur. #491
+
 ## 4.0.2 - 2019-04-09
 
 ### Corrections
 
-- HOTFIX : correction du script de migration de base de données sur certain index récalcitrants
-- Oublie du typage des réponses aux réponses des préfectures (Courrier simple, lettre d'observations et demande de pièces complémentaires) #492
+- HOTFIX : correction du script de migration de base de données sur certains index récalcitrants
+- Oubli du typage des réponses aux réponses des préfectures (Courrier simple, lettre d'observations et demande de
+  pièces complémentaires) #492
 
 ## 4.0.1 - 2019-04-02
 
 ### Ajouts
 
-- La constante ACTES_TYPE_PAR_NATURE permet d'utiliser la nouvelle notice de typologie des actes (typologie par nature, plus de filtre par classification, supression de 99_AU)
-- La constante ACTES_TYPE_PJ_IS_MANDATORY évolue pour implémenter la nouvelle notice
+- La constante `ACTES_TYPE_PAR_NATURE` permet d'utiliser la nouvelle notice de typologie des actes (typologie par
+  nature, plus de filtre par classification, suppression de 99_AU)
+- La constante `ACTES_TYPE_PJ_IS_MANDATORY` évolue pour implémenter la nouvelle notice
 
 ### Corrections
 
 - Il était possible d'intégrer des SIREN non numériques. #484
-- Problème de signature si les documents actes ont déjà été envoyé dans le cloud
+- Problème de signature si les documents actes ont déjà été envoyés dans le cloud
 
-### Supression
+### Suppressions
 
-- Supression du Dockerfile PHP 5.5, des tests automatisé sur PHP 5.5 et de fait, supression effective de la compatibilité PHP 5.5
+- Suppression du Dockerfile PHP 5.5, des tests automatisés sur PHP 5.5 et de fait, suppression effective de la
+  compatibilité PHP 5.5
 
 ## 4.0.0 - 2018-02-25
 
-### Evolutions
+### Évolutions
 
 - Le fichier Dockerfile de base est basé sur PHP 7.2
 - Mise à jour de pades-valid en version 1.3.0 (docker-compose)
 
 ### Corrections
 
-- Remplacement de la bibliothèques tedivm/fetch par php-imap/php-imap pour la récupération des réponses actes afin de corriger le problème des mails non récupérér correctement #420
-- Correction de sécurité (XSS possible sur la visualisation de ces propres mail sécurisé) #451
-- Supression de la consultation de la boite au lettre tedetis sur la consultation d'un mail sécurisé #448
+- Remplacement de la bibliothèque `tedivm/fetch` par `php-imap/php-imap` pour la récupération des réponses actes afin
+  de corriger le problème des mails non récupérés correctement #420
+- Correction de sécurité (XSS possible sur la visualisation de ses propres mails sécurisés) #451
+- Suppression de la consultation de la boite aux lettres tedetis sur la consultation d'un mail sécurisé #448
 
 ## 3.0.18 - 2018-12-12
 
 ### Ajouts
 
-- Ajout du contrat de license (fichier LICENSE)
+- Ajout du contrat de licence (fichier LICENSE)
 - Ajout de log plus pertinent sur l'envoi à Pastell ~actes #427
 - Suppression du document sur Pastell en cas d'erreur ~actes #425
 - Modification du statut du document si le document sur Pastell est en erreur ~actes #424
 - Envoi des transactions au SAE dans l'ordre chronologique ~actes #428
 - Ajout d'une case à cocher pour l'envoi automatique au SAE ~actes #429
-- Console d'administration, ajour des état SAE ~actes #431
+- Console d'administration, ajout des états SAE ~actes #431
 - Permettre le postage d'une transaction en mode synchrone ~actes #426
-- Prise en compte des PES acquit non valide et sans codcol
+- Prise en compte des PES acquit non valides et sans codcol
 
 ## 3.0.17 - 2018-11-20
 
-***Cette version nécessite une modification de la base de données**
-
-### Evolutions
-
-- Préparation de la compatibilité avec la version 7.2 de PHP.
-- Mise à jour de la librairie FPDF (génération des bordereaux) (1.53 -> 1.81)
-- Les transactions envoyées au SAE sont considérées en erreur dès le premier envoi et pas au bout de 24 heures d'essai
-- Modification de l'interface de connexion à Pastell #416
-- Les scripts actes-envoi-sae et helios-envoi-sae prennent un argument facultatif avec l'identifiant de la collectivité #403
-- Récupération des PES Acquit qui ne respectent pas le schéma PES v2, mais qu'ont peut raccrocher à un NomFic ~helios #415
-- Modification du lien permettant de récupérer les PES Acquit (en bas du cycle de vie) ~helios
-- Ajout de la constante ACTES_TYPE_PJ_IS_MANDATORY permettant de rendre obligatoire le typage des enveloppes ~actes #313
-- Vérification du code du type des PJ vis à vis de la liste récupéré dans la classification ~actes #419
-- Le script cron/jour.php est remplacé par le script script/actes/actes-send-classification-for-all-authorities.php ~actes #308
-- Si un message métier d'anomalie est reçu alors que la transaction n'est pas à l'état transmis, on ne change pas l'état de la transaction et on met le message dans la banette des erreurs ~actes #305
-- Possibilité de spécifier le type de la pièce principale sur le traitement par lot ~actes #318
-- Refus des PES Aller qui ne sont pas en ISO-8859-1 ~helios #373
-- Possibilité d'envoyer des mails aux membre d'un groupe déterminé #107
-
-### Corrections
-
-- Correction d'un bug sur la signature local via un certificat contenant un caractère non-ANSI
-- Correction d'un bug sur la signature local par lot pour les PES ~helios #414
-- Correction du pespolicyhash sur la signature incorrect ~helios #417
-- Correction de problème d'envoi en double de transaction en mode beanstalked dans les cas de reconstruction de la job queue #408
-- Dans le traitement par lot, les caractère accentué sur les noms des fichiers sont remplacé par des - ~actes #353
-- Toutes les adresses emails lors de l'édition d'une collectivité sont maintenant validé #57
-- La signature de certaines transactions ne se faisait pas sur le bon document ~actes #323
-- Correction d'un problème sur la réception des message de type déféré TA ~actes
-- La typologie des pièces par défaut pour les contrat convention et avenant passe de 99_CO à 99_DC et 99_AT à 99_AR ~actes #423
+**Cette version nécessite une modification de la base de données**
 
 ### Ajouts
 
 - Ajout d'un lien vers <http://dss.nowina.lu> pour validation de signature #385
-- Validation des fichiers XML et des signatures PADES des actes pour le super admin ~helios  
-- Export de la liste des collectvités pour le super admin ou l'admin de groupe #300
-- Possibilité de tester les certificats (PEM) pour valider s'ils sont RGS et/ou utilisé sur la plateforme #366
+- Validation des fichiers XML et des signatures PADES des actes pour le super admin ~helios
+- Export de la liste des collectivités pour le super admin ou l'admin de groupe #300
+- Possibilité de tester les certificats (PEM) pour valider s'ils sont RGS et/ou utilisés sur la plateforme #366
 - Ajout d'un bouton permettant de poster l'acte sans le signer s'il est en attente de signature #374
-- Possibilité de bloquer des numéro SIRET afin d'éviter les erreurs d'acheminement des PES Retour ~helios #372
-- Création du script script/actes/actes-close-old-transactions-transmises.php permettant de clore les transactions transmises depuis plus de 30 jours #344
+- Possibilité de bloquer des numéros SIRET afin d'éviter les erreurs d'acheminement des PES Retour ~helios #372
+- Création du script `script/actes/actes-close-old-transactions-transmises.php` permettant de clore les transactions
+  transmises depuis plus de 30 jours #344
 
-### Retraits
+### Évolutions
 
-- Retraits de DBUnit qui était top lent pour la suite de test de s2low
-- Supression du répertoire tools devenu obsolète
+- Préparation de la compatibilité avec la version 7.2 de PHP.
+- Mise à jour de la librairie FPDF (génération des bordereaux) (1.53 -> 1.81)
+- Les transactions envoyées au SAE sont considérées en erreur dès le premier envoi et pas au bout de 24 heures d'essais
+- Modification de l'interface de connexion à Pastell #416
+- Les scripts `actes-envoi-sae` et `helios-envoi-sae` prennent un argument facultatif avec l'identifiant de la
+  collectivité #403
+- Récupération des PES Acquit qui ne respectent pas le schéma PES v2, mais qu'on peut raccrocher à un NomFic ~helios #415
+- Modification du lien permettant de récupérer les PES Acquit (en bas du cycle de vie) ~helios
+- Ajout de la constante `ACTES_TYPE_PJ_IS_MANDATORY` permettant de rendre obligatoire le typage des enveloppes ~actes #313
+- Vérification du code du type des PJ vis-à-vis de la liste récupérée dans la classification ~actes #419
+- Le script `cron/jour.php` est remplacé par le script
+  `script/actes/actes-send-classification-for-all-authorities.php` ~actes #308
+- Si un message métier d'anomalie est reçu alors que la transaction n'est pas à l'état transmis, on ne change pas l'état
+  de la transaction et on met le message dans la bannette des erreurs ~actes #305
+- Possibilité de spécifier le type de la pièce principale sur le traitement par lot ~actes #318
+- Refus des PES Aller qui ne sont pas en ISO-8859-1 ~helios #373
+- Possibilité d'envoyer des mails aux membres d'un groupe déterminé #107
+
+### Corrections
+
+- Correction d'un bug sur la signature locale via un certificat contenant un caractère non-ANSI
+- Correction d'un bug sur la signature locale par lot pour les PES ~helios #414
+- Correction du pespolicyhash sur la signature incorrecte ~helios #417
+- Correction de problème d'envoi en double de transaction en mode beanstalked dans les cas de reconstruction de la job
+  queue #408
+- Dans le traitement par lot, les caractères accentués sur les noms des fichiers sont remplacés par des - ~actes #353
+- Toutes les adresses emails lors de l'édition d'une collectivité sont maintenant validées #57
+- La signature de certaines transactions ne se faisait pas sur le bon document ~actes #323
+- Correction d'un problème sur la réception des messages de type déféré TA ~actes
+- La typologie des pièces par défaut pour les contrats convention et avenant passe de 99_CO à 99_DC et 99_AT à 99_AR ~actes #423
+
+### Suppressions
+
+- Retrait de DBUnit qui était trop lent pour la suite de test de s2low
+- Suppression du répertoire tools devenu obsolète
 - Suppression de ce qui est lié au tampon PDF en PHP avec Zend (remplacé par PDFStamp)
 - Suppression du fichier build.xml pour Jenkins
 
@@ -1268,47 +1306,53 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 
 ### Corrections
 
-- la taille du login est désormais limité à 128 caractères sur le formulaire #410
+- la taille du login est désormais limitée à 128 caractères sur le formulaire #410
 
 ## 3.0.15 - 2018-09-18
 
-***Cette version nécessite une modification de la base de données**
+**Cette version nécessite une modification de la base de données**
 
-### Evolution
+### Ajouts
+
+- Ajout des fonctions de l'API `list_document_prefecture.php` et `document_prefecture_mark_as_read.php` #379
+- Ajout d'une page (cachée) de pré-requis générique pour les navigateurs #360
+- Ajout de la constante de configuration `ACTES_DONT_VALID_SIGNING_CERTIFICATE` permettant de ne jamais valider les
+  certificats de signature des actes ~actes
+
+### Évolutions
 
 - Passage de la signature Libersign de sha1 à sha256 #170
 - Script de changement des arrondissements de la Moselle (script/migration/nouveau-arrondissement-moselle-57.php)
-- Le super admin peut passer un transaction à "Posté" ou "En attente de transmission" au lieu du "Revenir en arrière" peu clair ~actes
+- Le super admin peut passer une transaction à "Posté" ou "En attente de transmission" au lieu du "Revenir en arrière"
+  peu clair ~actes
 - Les utilisateurs peuvent visualiser les ARActes. ~actes #383
 - Vérification de l'identifiant de l'application (quadrigramme) avec EACT par défaut ~actes #397
-- On ne vérifie pas la chaine de certification des signatures de pièces de marchés publics (nature 4, classification 1.1) ~actes #400  
+- On ne vérifie pas la chaîne de certification des signatures de pièces de marchés publics (nature 4, classification
+  1.1) ~actes #400
 - Les versements SAE se font par ordre chronologique et plus aléatoirement #402
 
 ### Corrections
 
-- Les mails sécurisés ne pouvaient pas être supprimé. #388
+- Les mails sécurisés ne pouvaient pas être supprimés. #388
 - Correction de lien vers le bandeau dans le mail sécurisé
-- Si on arrive pas à sauvegarder un attachment (fichier accentué par exemple), on ignore le fichier ~actes #392  
+- Si on n'arrive pas à sauvegarder un attachment (fichier accentué par exemple), on ignore le fichier ~actes #392
 - Le numéro des actes peut avoir un seul caractère. On se base sur le XSD @ctes ~actes #380
 - Si une signature PADES est invalide, on l'indique désormais dans le message d'erreur ~actes #384
-- On enregistre le mail original de la DGCL sur les retours prefecture (message 2-1, 3-1, 4-1, 5-1) ~actes #347
-- On ne calcule plus le nombre de page de logs pour le super admin (trop gourmand)
-- On peut récupérer la liste des documents d'un actes via l'API sauf si ceux-ci sont dans l'état 1, 2 ou 3 (was : 4 uniquement)
-- Possibilité de filtrer les réponses d'hélios par collectivité pour les administrateurs de groupe #60
-- Correction d'un bug empechant le filtrage des pes_aller par collectivité pour les administrateurs de groupe
-- On ne se fait plus ejecter du traitement par lot si on ouvre une annexe qu'on ne rempli pas #203
-- Dans la création d'une collectivité, on affiche juste les SIREN qui ne sont pas encore utilisé #362 pour le groupe selectionné #382
-- Le type de la pièce principal n'était pas enregistré correctement ~actes
-- Ajout de la typologie 99_SE **Fichier de signature électronique** quelque soit la matière et la nature de l'acte ~actes #393
-- on vérifie que l'emetteur n'est pas vide ~actes #399
-- on vérifier que le nombre d'annexe indiqué est identique au nombre trouvé ~actes #398  
-- vérification des noms de fichiers attaché à un message métier ~actes #404 #405
-
-### Ajouts
-
-- Ajout des fonctions de l'API list_document_prefecture.php et document_prefecture_mark_as_read.php #379
-- Ajout d'une page (caché) de pré-requis générique pour les navigateurs #360
-- Ajout de la constante de configuration ACTES_DONT_VALID_SIGNING_CERTIFICATE permettant de ne jamais valider les certificat de signature des actes ~actes
+- On enregistre le mail original de la DGCL sur les retours préfecture (message 2-1, 3-1, 4-1, 5-1) ~actes #347
+- On ne calcule plus le nombre de pages de logs pour le super admin (trop gourmand)
+- On peut récupérer la liste des documents d'un acte via l'API sauf si ceux-ci sont dans l'état 1, 2 ou 3 (was : 4
+  uniquement)
+- Possibilité de filtrer les réponses d'Helios par collectivité pour les administrateurs de groupe #60
+- Correction d'un bug empêchant le filtrage des pes_aller par collectivité pour les administrateurs de groupe
+- On ne se fait plus éjecter du traitement par lot si on ouvre une annexe qu'on ne remplit pas #203
+- Dans la création d'une collectivité, on affiche juste les SIREN qui ne sont pas encore utilisés #362 pour le groupe
+  sélectionné #382
+- Le type de la pièce principale n'était pas enregistré correctement ~actes
+- Ajout de la typologie 99_SE **Fichier de signature électronique** quelles que soient la matière et la nature de
+  l'acte ~actes #393
+- on vérifie que l'émetteur n'est pas vide ~actes #399
+- on vérifie que le nombre d'annexes indiqué est identique au nombre trouvé ~actes #398
+- vérification des noms de fichiers attachés à un message métier ~actes #404 #405
 
 ## 3.0.14 - 2018-07-12
 
@@ -1316,107 +1360,114 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 
 - Le mode document papier complémentaire ne retournait pas la bonne valeur. #386
 - Lorsqu'un worker échoue, on ne sort plus du script
-- Lorsque PADES-Valid envoi un code d'erreur, on passe le document en erreur
+- Lorsque PADES-Valid envoie un code d'erreur, on passe le document en erreur
 
 ## 3.0.13 - 2018-06-28
+
+### Évolutions
+
+- actes-analyse-fichier-a-envoyer en mode beanstalked
+- ajout des fonctions de l'API : `admin/services/add-service-user.php`, `admin/services/list-service.php`,
+  `admin/users/add-user-to-service.php` #350
 
 ### Corrections
 
 - Lorsque le service pades-valid est down, on ne passe plus la transaction en erreur ~actes
-- Le mode beanstalked ne prenait pas en compte les transactions en attente d'être posté.
+- Le mode beanstalked ne prenait pas en compte les transactions en attente d'être postées.
 - Correction d'un changement subtil dans l'api mailsec (detail-mail : renvoi 1/0 au lieu de t/f)
-
-### Evolution
-
-- actes-analyse-fichier-a-envoyer en mode beanstalked
-- ajout des fonction de l'API : admin/services/add-service-user.php, admin/services/list-service.php, admin/users/add-user-to-service.php  #350
 
 ## 3.0.12 - 2018-06-05
 
-### Corrections
-
-- Erreur d'échapement provoquant le non fonctionnement de actes_transac_get_status.php
-
 ### Ajouts
 
-- Ajout d'index pour la requete de récupération d'id à partir de l'uniqid
+- Ajout d'index pour la requête de récupération d'id à partir de l'uniqid
+
+### Corrections
+
+- Erreur d'échappement provoquant le non fonctionnement de `actes_transac_get_status.php`
 
 ## 3.0.11 - 2018-06-04
 
 ### Évolutions
 
-- le nombre de page des transactions helios n'est plus calculé pour le super admin (trop de ressources)
-- Ajout du MODE_BEANSTALKD : test de la gestion de la tache actes-antivirus via un message broker
+- le nombre de pages des transactions helios n'est plus calculé pour le super admin (trop de ressources)
+- Ajout du `MODE_BEANSTALKD` : test de la gestion de la tâche actes-antivirus via un message broker
 
-### Retrait
+### Suppressions
 
-- retrait de la constante ANTIVIRUS_UPSTART_TOUCH_FILE devenue inutile
-- retrait de la constante ANTIVIRUS_TMP_PATH devenue inutile
+- retrait de la constante `ANTIVIRUS_UPSTART_TOUCH_FILE` devenue inutile
+- retrait de la constante `ANTIVIRUS_TMP_PATH` devenue inutile
 
 ## 3.0.10 - 2018-05-24
 
-### Corrections
+### Ajouts
 
-- Sélection de la méthode login/mot de passe lors de la création d'un nouvel utilisateur à partir d'un utilisateur existant #290
-- Correction d'un warning lorsqu'un certificat contenait un champs multivalue (par exemple l'OU) #340
-- Ajout d'un message d'erreur lorsque l'on tente d'importer un certificat en masse et qu'il y a une erreur #270
-- Suppression des boutons "Annuler", "Validé" et "Refusé" pour le super admin et l'admin de groupe qui ne pouvait de toute manière pas les utiliser #279
-- Problème sur le filtre des mail sécurisé non-paginé #74
-- les antislash n'était pas récupéré correctement dans certain cas
-- possibilité de filtrer avec des caractère \_ #67
-- Problème de sécurité (niveau moyen) sur l'utilisation de l'API de changement de status des PES Retour (pas de controle de droit) #161
-- On ne peux plus valider plusieurs fois la même transaction #64
-- Ajout d'un filtre SIREN sur la liste des collectivités #59
-- Possibilité pour le super admin d'archiver les transactions en traitement par lot #154
-- Recupération correcte de la date des courriers des préfectures, corrigeant le problème de mauvaise date dans les réponses #364 ~Actes
+- Méthode `/api/info-connexion.php` permettant de récupérer les informations sur l'utilisateur et la collectivité de la
+  connexion #239
+- Ajout du passage manuel en erreur dans le journal des événements #81
+- Ajout script rapport sur l'historique d'une collectivité
 
 ### Évolutions
 
-- Le lien vers les logs est présent quelque soit le statut ~actes #281
-- Le changement du nombre d'éléments affiché par page ramène à la page 1 #75
-- La colonne fax est remplacé par la colonne SIREN sur la liste des collectivités
+- Le lien vers les logs est présent quel que soit le statut ~actes #281
+- Le changement du nombre d'éléments affichés par page ramène à la page 1 #75
+- La colonne fax est remplacée par la colonne SIREN sur la liste des collectivités
 - Modification du message de suppression d'un lot quand il reste des fichiers #78
-- Utilisation unique de PDO afin de diminuer le nombre de connexions simultané à la base #377
+- Utilisation unique de PDO afin de diminuer le nombre de connexions simultanées à la base #377
 - Ajout de redis pour la gestion des sessions PHP (docker)
 
-### Ajouts
+### Corrections
 
-- Méthode /api/info-connexion.php permettant de récupérer les informations sur l'utilisateur et la collectivité de la connexion #239
-- Ajout du passage manuel en erreur dans le journal des évenements #81
-- Ajout script rapport sur l'historique d'une collectivité
+- Sélection de la méthode login/mot de passe lors de la création d'un nouvel utilisateur à partir d'un utilisateur
+  existant #290
+- Correction d'un warning lorsqu'un certificat contenait un champ multivalue (par exemple l'OU) #340
+- Ajout d'un message d'erreur lorsque l'on tente d'importer un certificat en masse et qu'il y a une erreur #270
+- Suppression des boutons "Annuler", "Validé" et "Refusé" pour le super admin et l'admin de groupe qui ne pouvaient de
+  toute manière pas les utiliser #279
+- Problème sur le filtre des mails sécurisés non-paginé #74
+- les antislashs n'étaient pas récupérés correctement dans certains cas
+- possibilité de filtrer avec des caractères \_ #67
+- Problème de sécurité (niveau moyen) sur l'utilisation de l'API de changement de status des PES Retour (pas de contrôle
+  de droit) #161
+- On ne peut plus valider plusieurs fois la même transaction #64
+- Ajout d'un filtre SIREN sur la liste des collectivités #59
+- Possibilité pour le super admin d'archiver les transactions en traitement par lot #154
+- Récupération correcte de la date des courriers des préfectures, corrigeant le problème de mauvaise date dans les
+  réponses #364 ~Actes
 
 ## 3.0.9 - 2018-05-04
 
-### Corrections
-
-- erreur SQL si la nature de l'acte n'est pas envoyé sous la forme d'un entier
-- Suppression d'un warning dans la reception des mail sans attachemnt.
-- Bloquage de la file actes en cas d'erreur trop longue ~actes #370 #369
-- On accepte les pièces jointes en XML pour n'importe quel type d'actes et sans limitations (mode formulaire) ~actes #333
-
 ### Évolutions
 
-- les messages d'erreurs de la mise en cloud actes passe de critical à error (trop de faux positifs)
+- les messages d'erreurs de la mise en cloud actes passent de critical à error (trop de faux positifs)
 
-### Retraits
+### Corrections
 
-- Suppression de helios_ftp_login et helios_ftp_password qui ne servent à rien (on prend les login/pass dans la macro) ~helios #159
-- Suppression de ext_siret, inutile depuis le nouveau traitement des PES Retour ~helios
+- erreur SQL si la nature de l'acte n'est pas envoyée sous la forme d'un entier
+- Suppression d'un warning dans la réception des mails sans attachment.
+- Blocage de la file actes en cas d'erreur trop longue ~actes #370 #369
+- On accepte les pièces jointes en XML pour n'importe quel type d'actes et sans limitations (mode formulaire) ~actes #333
+
+### Suppressions
+
+- Suppression de `helios_ftp_login` et `helios_ftp_password` qui ne servent à rien (on prend les login/pass dans la
+  macro) ~helios #159
+- Suppression de `ext_siret`, inutile depuis le nouveau traitement des PES Retour ~helios
 
 ## 3.0.8 - 2018-04-18
 
 **Cette version nécessite une modification de la base de données**
 
-### Corrections
-
-- backport d'un hotfix corrigeant des lancement d'erreurs inaproprié dans la sauvegarde cloud
-- Correction d'un problème d'intégration d'actes arrivant en 0ko car l'analyse arrivent avant la fin du download du mail
-- La DGCL envoi des fichiers métier et des enveloppes métier avec plus de 4 chiffres sur le compteur journalier
-
 ### Ajouts
 
 - Ajout d'un index sha1 sur la table helios_transactions.
-- HELIOS PES_RETOUR : création d'un rapport indiquant les SIRET appartenant à plusieurs collectivité
+- `HELIOS PES_RETOUR` : création d'un rapport indiquant les SIRET appartenant à plusieurs collectivités
+
+### Corrections
+
+- backport d'un hotfix corrigeant des lancements d'erreurs inappropriés dans la sauvegarde cloud
+- Correction d'un problème d'intégration d'actes arrivant en 0ko car l'analyse arrivait avant la fin du download du mail
+- La DGCL envoie des fichiers métier et des enveloppes métier avec plus de 4 chiffres sur le compteur journalier
 
 ## 3.0.7 - 2018-04-10
 
@@ -1426,10 +1477,18 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 
 ## 3.0.6 - 2018-04-10
 
+### Ajouts
+
+- Constante `EMAIL_ADMIN_TECHNIQUE` permettant d'envoyer les erreurs critiques
+- Surveillance des échecs de lancement des process par supervisord
+- Ajout d'un lien vers la liste des utilisateurs de la collectivité sur la page d'une collectivité #349
+- Affichage de l'intitulé de la classification dans le bordereau acquittement ~actes #42
+- Ajout du script de rapport des versements des actes et helios
+
 ### Évolutions
 
 - Journalisation de la suppression d'une transaction super admin ~actes ~helios #83
-- Dans la création d'une collectivité, on affiche juste les SIREN qui ne sont pas encore utilisé #362
+- Dans la création d'une collectivité, on affiche juste les SIREN qui ne sont pas encore utilisés #362
 - Redémarrage systématique du tunnel ipsec s'il y en a un pour la communication avec Helios
 - On ne vérifie pas les transferts SAE vieux de plus de 60 jours automatiquement
 - Versement des flux PESv2 ayant plus de 15 jours
@@ -1437,79 +1496,58 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 
 ### Corrections
 
-- Docker : oublie de la configuration de l'emplacement des résultats de requêtes dans le journal
-- Certain PES apparaissait avec 0Ko, peut-etre car ils étaient analysés avant d'être entièrement récupérés ~Helios #341
-- Ajout du HOMEDIR dans les script lancé par supervisord #327
+- Docker : oubli de la configuration de l'emplacement des résultats de requêtes dans le journal
+- Certains PES apparaissaient avec 0Ko, peut-être, car ils étaient analysés avant d'être entièrement récupérés ~Helios #341
+- Ajout du HOMEDIR dans les scripts lancés par supervisord #327
 - typo (mail et état de l'annulation acquitéE) #354
-- actes_transac_show, entrée insuffisamment filtré provoquant des erreurs SQL (pas de faille) #314
-- Suppression du nombre maximum de caractère dans la recherche pas NomFic #153
+- actes_transac_show, entrée insuffisamment filtrée provoquant des erreurs SQL (pas de faille) #314
+- Suppression du nombre maximum de caractères dans la recherche par NomFic #153
 - Remplacement de Phar par tar pour la génération des notifications #361
 - Ajout d'un message d'erreur si on tente de supprimer un groupe avec des utilisateurs dedans ~mailsec #62
 - Problème lors de la connexion à Pastell si on ne récupère pas du JSON #365
 
-### Ajouts
+### Suppressions
 
-- Constante EMAIL_ADMIN_TECHNIQUE permettant d'envoyer les erreurs critique
-- Surveillance des échecs de lancement des process par supervisord
-- Ajout d'un lien vers la liste des utilisateurs de la collectivité sur la page d'une collectivité #349
-- Affichage de l'intitulé de la classification dans le bordereau acquittement ~actes #42
-- Ajout du script de rapport des versement des actes et helios
-
-### Retrait
-
-- supression de workspace/helios/response_backup lors de la création de la structure du workspace
+- suppression de workspace/helios/response_backup lors de la création de la structure du workspace
 
 ## 3.0.5 - 2018-03-06
 
 **Cette version nécessite une modification de la base de données**
 
-### Corrections
-
-- Docker : les certificats TIME_STAMP appartiennent à www-data
-- Docker : corrections minimes de syntaxes dans le bootstrap (Pastell remplacé par S2LOW, Demou par Demos)
-- Docker : le lien symbolique letsencrypt était écrit en dur sur s2low.test.libriciel.fr au lieu de prendre l'URL en paramètre
-- Docker : la variable IMAP_LOGIN n'était pas prise en compte dans la génération du fichier DockerSettings.php
-
 ### Ajouts
 
-- Docker : ajout d'un fichier compose par defaut
+- Docker : ajout d'un fichier compose par défaut
 - Les URL de Libersign sont renseignées par défaut
 - Utilisation d'un stockage objet pour les ~Actes #345
-- Constante EMAIL_ADMIN_TECHNIQUE permettant d'envoyer les erreurs critique
+- Constante `EMAIL_ADMIN_TECHNIQUE` permettant d'envoyer les erreurs critiques
 - Surveillance des échecs de lancement des process par supervisord
 
 ### Évolutions
 
-- Docker : la base de données de tests n'est créée uniquement lorsque la variable POSTGRES_DATABASE_TEST est présente
-- Docker : contrôle d'accès à la base de données dans le entrypoint
+- Docker : la base de données de tests n'est créée que lorsque la variable `POSTGRES_DATABASE_TEST` est présente
+- Docker : contrôle d'accès à la base de données dans l'entrypoint
 - Docker : dans le bootstrap, on vérifie la présence d'un utilisateur avec le rôle SADM
 - Docker : il n'y a plus qu'une seule variable d'environnement pour définir l'URL (sans le http(s))
-- Log : ajout de Monolog pour la gestion des journaux. Ajout des constantes LOG_FILE et LOG_LEVEL
+- Log : ajout de Monolog pour la gestion des journaux. Ajout des constantes `LOG_FILE` et `LOG_LEVEL`
 - Docker : le fichier de config.php est adapté à l'utilisation par défaut dans un Docker
 - Ménage dans le fichier config.php
-- Docker : le fichier de config.php est adapté à l'utilisation par défaut dans un Docker
 - Docker : docker-compose.defaut.yml passe en version 3.5
-- Docker : utilisation des network, de la notion dependance et des volumes par défaut
+- Docker : utilisation des network, de la notion de dépendance et des volumes par défaut
 
-### Retrait
+### Corrections
+
+- Docker : les certificats TIME_STAMP appartiennent à www-data
+- Docker : corrections minimes de syntaxe dans le bootstrap (Pastell remplacé par S2LOW, Demou par Demos)
+- Docker : le lien symbolique letsencrypt était écrit en dur sur s2low.test.libriciel.fr au lieu de prendre l'URL en
+  paramètre
+- Docker : la variable `IMAP_LOGIN` n'était pas prise en compte dans la génération du fichier DockerSettings.php
+
+### Suppressions
 
 - Docker : suppression des paquets pdfsam et pdftk
 - Suppression du fichier LocalSettings.php devenu inutile
 
 ## 3.0.4 - 2018-02-21
-
-### Corrections
-
-- Correction d'un problème de vérification du certificat dans PADES valid.
-- les & ne passait pas dans le nom des utilisateurs lors de la génération d'un acte ~Actes #346
-- rétablissement de l'export des fichiers OCRE dans le docker
-- Problème majeur en cas de bug sur l'antivirus : toutes les transactions passe à erreur : on préfère donc tuer le script ~Helios
-- Correction d'une erreur de syntaxe dans la requete SQL dans le script archive_all_transaction.php pour les actes
-- Correction dans la requete SQL dans le script archive_all_transaction.php pour les actes sur le délais avant versement
-- Harmonisation des noms des programmes dans supervisord
-- Certain chemin d'execution laissait des fichier s2low_xades dans /tmp/ ~Helios #348
-- Certain PES apparaissait avec 0Ko, peut-etre car ils étaient analysé avant d'être entièrement récupéré ~Helios #341 (correction invalide, reprise de la correction en version 3.0.6)
-- Correction d'un problème de sécurité
 
 ### Ajouts
 
@@ -1521,15 +1559,29 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 ### Évolutions
 
 - préparation de s2low pour le versement des @ctes dans un stockage objet
-- un utilisateur peut a nouveau "refusé" une transaction "en attente d'être signé" sur la liste des transactions
+- un utilisateur peut à nouveau "refuser" une transaction "en attente d'être signée" sur la liste des transactions
 
-## 3.0.3
+### Corrections
+
+- Correction d'un problème de vérification du certificat dans PADES valid.
+- les & ne passaient pas dans le nom des utilisateurs lors de la génération d'un acte ~Actes #346
+- rétablissement de l'export des fichiers OCRE dans le docker
+- Problème majeur en cas de bug sur l'antivirus : toutes les transactions passent à erreur : on préfère donc tuer le script ~Helios
+- Correction d'une erreur de syntaxe dans la requête SQL dans le script archive_all_transaction.php pour les actes
+- Correction dans la requête SQL dans le script archive_all_transaction.php pour les actes sur le délai avant versement
+- Harmonisation des noms des programmes dans supervisord
+- Certains chemins d'exécution laissaient des fichiers s2low_xades dans /tmp/ ~Helios #348
+- Certains PES apparaissaient avec 0Ko, peut-être, car ils étaient analysés avant d'être entièrement récupérés ~Helios #341
+  (correction invalide, reprise de la correction en version 3.0.6)
+- Correction d'un problème de sécurité
+
+## 3.0.3 - 2018-01-17
 
 ### Évolutions
 
 - Modification de la position du tampon ~Actes
 
-## 3.0.2
+## 3.0.2 - 2018-01-16
 
 ### Évolutions
 
@@ -1539,25 +1591,28 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 ### Corrections
 
 - Typo actes-reception-fichier (Début -> Fin) ~Actes #338
-- Reception des actes ; Expunge de la boite à la fin du processus pour éviter les locks ~Actes #337
-- Correction d'une anomalie majeure sur la validation de la signature PADES (impossible de valider plusieurs actes sur le même appel) ~Actes #331
+- Réception des actes ; Expunge de la boîte à la fin du processus pour éviter les locks ~Actes #337
+- Correction d'une anomalie majeure sur la validation de la signature PADES (impossible de valider plusieurs actes sur
+  le même appel) ~Actes #331
 - Correction d'une anomalie majeure : on analyse que la première transaction des enveloppes ~Actes #336
-- Les enveloppes d'anomalie ne sont jamais supprimé ~Actes #336
+- Les enveloppes d'anomalie ne sont jamais supprimées ~Actes #336
 - Typo dans le nom d'un script supervisor ~Actes #328
-- La signature par lot dans @ctes n'était plus fonctionnel ~Actes #334
-- Modification script supervisor pour éviter les warning #327
+- La signature par lot dans @ctes n'était plus fonctionnelle ~Actes #334
+- Modification script supervisor pour éviter les warnings #327
 - Correction d'un problème dans le tamponnage des actes sur les notifications ~Actes
 
 ## 3.0.1 - 2017-12-26
 
 ### Corrections
 
-- problème de nommage de fichier avec pas assez d'entropie et pouvant envoyer de mauvaise information lors de la création des PES via l'APIs
-- Augmentation de la longueur du type de fichier inclu dans actes de 64 à 512 car les réponses de la préfecture peuvent inclure des fichier avec des types très long #320 ~Actes
+- problème de nommage de fichier avec pas assez d'entropie et pouvant envoyer de mauvaises informations lors de la
+  création des PES via l'API
+- Augmentation de la longueur du type de fichier inclus dans actes de 64 à 512, car les réponses de la préfecture
+  peuvent inclure des fichiers avec des types très longs #320 ~Actes
 - vérification de la balise de scellement sur les annexes (tdt-lib-actes) #319 ~Actes
-- problème si les fichiers recu sur Helios sont plusieurs fois en erreur #321 ~Helios
-- correction d'un problème sur l'api admin_user_edit_handler #317  
-- nettoyage de fichier temporaire (analyse fihcier actes)
+- problème si les fichiers reçus sur Helios sont plusieurs fois en erreur #321 ~Helios
+- correction d'un problème sur l'api admin_user_edit_handler #317
+- nettoyage de fichier temporaire (analyse fichier actes)
 
 ## 3.0.0 - 2017-12-15
 
@@ -1568,32 +1623,33 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 
 ## 3.0.0-rc4 - 2017-11-24
 
-### Corrections
-
-- une erreur SQL apparaissait quand on tentais de supprimer un utilisateur de l'annuaire et que celui-ci
-    était encore dans un groupe #295
-- Le typage disparraissait après avoir posté un actes provoquant une erreur (doublon) #296
-- Connexion impossible après modification en masse de certificat partagé #293
-- Ajout des type possible en fonction de la matiere2 0 dans le code ~Actes #292
-- Typage par défaut des pièces ~Actes #298
-- Suppression d'un warning lorsqu'on clique sur suppression d'un utilisateur d'un service sans avoir choisi l'utilisateur #301
-- Ajout de libersign v1 dans le docker (rétro-compatibilité IE11)  
-- La fenêtre de classification reste ouverte sous IE 11 #299
-- Typo #257
-- Suppression de la possibilité de valider une transaction avant le délai de 2 mois par lot #303  
-- Suppression de la possibilité de valider une transaction dans l'état 'en attente de signature' #307
-- Suppression de warning (mail récapitulatif helios en erreur)
-
 ### Évolutions
 
 - Vérification du content-type du fichier contenant les SIREN #265
-- Les scripts géré par supervisord peuvent être tuer (SIGTERM) de manière élégante #302
+- Les scripts gérés par supervisord peuvent être tués (SIGTERM) de manière élégante #302
 - Mise à jour du schéma XSD des PES en version 5.5 (applicable dès fin novembre 2017)
 - Console admin Helios: ajout d'infos dans le mail des transactions à l'état transmis ~Helios #306
 
-### Retrait
+### Corrections
 
-- Suppression de la possibilité de soumettre des signatures sur la console (cohérence avec l'envoi d'actes) #183  
+- une erreur SQL apparaissait quand on tentait de supprimer un utilisateur de l'annuaire et que celui-ci
+  était encore dans un groupe #295
+- Le typage disparaissait après avoir posté un acte provoquant une erreur (doublon) #296
+- Connexion impossible après modification en masse de certificat partagé #293
+- Ajout des types possibles en fonction de la matière 2 0 dans le code ~Actes #292
+- Typage par défaut des pièces ~Actes #298
+- Suppression d'un warning lorsqu'on clique sur suppression d'un utilisateur d'un service sans avoir choisi
+  l'utilisateur #301
+- Ajout de libersign v1 dans le docker (rétro-compatibilité IE11)
+- La fenêtre de classification reste ouverte sous IE 11 #299
+- Typo #257
+- Suppression de la possibilité de valider une transaction avant le délai de 2 mois par lot #303
+- Suppression de la possibilité de valider une transaction dans l'état 'en attente de signature' #307
+- Suppression de warning (mail récapitulatif helios en erreur)
+
+### Suppressions
+
+- Suppression de la possibilité de soumettre des signatures sur la console (cohérence avec l'envoi d'actes) #183
 
 ## 3.0.0-rc3 - 2017-11-15
 
@@ -1603,85 +1659,86 @@ de la sélectionner lors de la création ou de la modification d'un utilisateur.
 - Libellé des champs certificat plus explicite (on précise qu'il s'agit de la partie publique)
 - Normalisation des noms des scripts cron (actes-*, helios-*,...)
 - Utilisation de supervisord en remplacement de upstart
-- Ajout du typage du fichier principal de l'actes (mauvaise interpretation initiale de l'exigence) ~Actes #291
+- Ajout du typage du fichier principal de l'acte (mauvaise interprétation initiale de l'exigence) ~Actes #291
 - Restriction des types de pièces en fonction de la classification (mauvaise interprétation de la notice) ~Actes #292
 
 ### Corrections
 
 - suppression d'un lien mort ~Actes #273
 - possibilité de désactiver un utilisateur #271
-- controle minimum du SIREN même si VERIFICATION_SIREN est désactivé #266
+- contrôle minimum du SIREN même si `VERIFICATION_SIREN` est désactivé #266
 - VERIFICATION_SIREN est maintenant true par défaut
-- Correction du problème du retour de la fonction actes_transac_get_files_list.php ne retournant pas les fichiers avec
-    des caractères accentués ~Actes #278
+- Correction du problème du retour de la fonction `actes_transac_get_files_list.php` ne retournant pas les fichiers avec
+  des caractères accentués ~Actes #278
 - Correction du titre en cas de création d'un nouvel utilisateur partageant un certificat #289
 - On accepte que des documents PDF pour la convention ~Actes #287
-- Le filtre helios sur la date d'acquittement ne fonctionnait plus depuis que les fichiers étaient en information disponible ~Helios #283
+- Le filtre helios sur la date d'acquittement ne fonctionnait plus depuis que les fichiers étaient en information
+  disponible ~Helios #283
 - L'import des SIREN ne fonctionnait qu'avec des fichiers Unix, ajout du support Windows et Mac OS #265
 
-### Élements dépréciés
+### Dépréciations
 
-- VERIFICATION_SIREN est déprécié et sera supprimé dans une prochaine version mineure du produit
+- `VERIFICATION_SIREN` est déprécié et sera supprimé dans une prochaine version mineure du produit
 
-## 3.0.0-rc2
+## 3.0.0-rc2 - 2017-10-18
 
 ### Corrections
 
 - Liste des PES Retour, filtre par défaut à *tous les états* à la place de *non lu*. ~Helios #253
 - Typo #241
-- Modification libéllé réponse au message ministère ~Actes #194
+- Modification libellé réponse au message ministère ~Actes #194
 - Seul l'admin de groupe et le super admin peuvent uploader une convention @ctes ~Actes #147
 - Correction d'un warning lors du post d'un acte hors 7-1 avec un fichier XML et une annexe XML ~Actes #251
 - Typo #250, #247, #255, #246, #245, #242, #248
-- MIOCT est remplacé par la constante ACTES_MINISTERE_ACRONYME
+- MIOCT est remplacé par la constante `ACTES_MINISTERE_ACRONYME`
 
 ## 3.0.0-rc1 - 2017-09-18
 
 ### Ajouts
 
-- Création du script cron/actes-analyse-fichier-a-envoyer.php qui vise à remplacer la partie Tomcat #190 ~Actes
-- Création du script cron/acte-envoi-fichier.php pour remplacer la partie Tomcat #192 ~Actes
-- Création du script cron/acte-reception-fichier.php pour remplacer la partie Tomcat #195 ~Actes
-- Création du script cron/acte-analyse-ficier-recu.php pour remplacer la partie Tomcat #197 ~Actes
+- Création du script `cron/actes-analyse-fichier-a-envoyer.php` qui vise à remplacer la partie Tomcat #190 ~Actes
+- Création du script `cron/acte-envoi-fichier.php` pour remplacer la partie Tomcat #192 ~Actes
+- Création du script `cron/acte-reception-fichier.php` pour remplacer la partie Tomcat #195 ~Actes
+- Création du script `cron/acte-analyse-fichier-recu.php` pour remplacer la partie Tomcat #197 ~Actes
 - Visualisation rapide de l'état des transactions Actes #90 ~Actes
-- Le super admin peut envoyer des demandes de classification via la console (sur la page de modification d'une collectivité) ~Administration ~Actes
+- Le super admin peut envoyer des demandes de classification via la console (sur la page de modification d'une
+  collectivité) ~Administration ~Actes
 - Le super admin peut envoyer une demande de classification forcée à vide (pas de date de classification) ~Administration ~Actes
 - Exporter les informations sur les Actes au format *FONCT-05* CSV #180 ~Actes ~ACTES2.2
-- Les transactions de type envoi de la préfecture sont affichés pour tout le monde  #223 ~Actes
-- le fichier contenant l'AR Actes est maintenant inclu systématiquement dans les notification d'aquittement  ~Actes
-- Notification des AR d'envoies de piece complémentaire et de réponse à des lettre d'observation #224 ~Actes
-- Notification généralisé des transmissions reçu depuis @ctes. #181 ~Actes
-- Horodatage systématique des mails de notification  #181 ~Actes
-- Constante OPERATEUR_DE_TELETRANSMISSION permettant de saisir le nom utilisé par exemple dans les bordereau d'acquittement #225
+- Les transactions de type envoi de la préfecture sont affichées pour tout le monde #223 ~Actes
+- le fichier contenant l'AR Actes est maintenant inclus systématiquement dans les notifications d'acquittement ~Actes
+- Notification des AR d'envoi de pièce complémentaire et de réponse à des lettres d'observation #224 ~Actes
+- Notification généralisée des transmissions reçues depuis @ctes. #181 ~Actes
+- Horodatage systématique des mails de notification #181 ~Actes
+- Constante `OPERATEUR_DE_TELETRANSMISSION` permettant de saisir le nom utilisé par exemple dans les bordereaux
+  d'acquittement #225
 - Ajout d'une infobulle pour indiquer que le certificat de l'utilisateur connecté expire bientôt #93
 - Ajout de cette information dans la liste des utilisateurs (certificat expiré ou dans moins de 30 jours) #93
 - Validation de la signature PADES des ~Actes #176
-- Possibilité d'ajouter la conventions ~Actes lors de l'édition d'une collectivité #147
-
-### Corrections de sécurités
-
-- Correction d'une faille de sécurité sur les modules ~Administration
+- Possibilité d'ajouter la convention ~Actes lors de l'édition d'une collectivité #147
 
 ### Évolutions
 
 - La validation de la signature des PES Aller n'affiche plus une erreur si le fichier n'est pas signé #188 ~Administration
-- Les admin sont autorisés à récupérer les PES Retour via l'API #164 ~Helios
+- Les admins sont autorisés à récupérer les PES Retour via l'API #164 ~Helios
 - modification du libellé des natures d'actes dans le filtre de recherche #163 ~Actes
-- Sur la visualtion d'une transaction, le lien de téléchargement des archives transmisses passent du titre (Fichiers contenus dans l'archive transmise) en bas
-du tableau des fichiers contenus dans l'archive ~Actes
-- Il est maintenant possible de télécharger l'archive transmisse dans le cas des messages 7-1 (demande de classification) ~Actes
-- Les messages de classification passent en acquittement recu. Ce mécanisme n'est fiable que dans les cas où il n'y a qu'une enveloppe en cours. ~Actes
+- Sur la visualisation d'une transaction, le lien de téléchargement des archives transmises passe du titre (Fichiers
+  contenus dans l'archive transmise) en bas du tableau des fichiers contenus dans l'archive ~Actes
+- Il est maintenant possible de télécharger l'archive transmise dans le cas des messages 7-1 (demande de classification) ~Actes
+- Les messages de classification passent en acquittement reçu. Ce mécanisme n'est fiable que dans les cas où il n'y a
+  qu'une enveloppe en cours. ~Actes
 - Il est possible de récupérer le fichier de classification directement sur la console ~Actes ~Administration
 - Par défaut, le filtre de la liste des actes est mis à "tous les états" à la place de "en cours" #101 ~Actes
-- La fonction de l'API helios_transac_get_status.php complete le champs message afin d'y mettre le message d'erreur
-ou le message de passage dans l'état #110 ~Helios  
+- La fonction de l'API helios_transac_get_status.php complète le champ message afin d'y mettre le message d'erreur
+  ou le message de passage dans l'état #110 ~Helios
 - La liste des utilisateurs partageant un même certificat n'est plus sur la même page que le formulaire de modification
-d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Administration
-- Le message d'horodatage est aggrémenter des champs présent dans l'exigence *ARCH-01* #21 ~Actes ~ACTES2.2
-- Le nom du fichier contenant l'AR Actes (message 2-1) envoyé dans les notification s'appelle
-`<num_unique_acte>-<type transaction>-<identifiant s2low>-reponse.xml` à la place de retour.xml ~Actes
-- Mise en place du nouveau schéma Actes # 2.2 #177 ~Actes
-- Gestion du multi-canal : transmission complémentaire au format papier (ajout d'une case à cocher dans le formulaire de création d'un actes) #184 ~Actes
+  d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Administration
+- Le message d'horodatage est agrémenté des champs présents dans l'exigence *ARCH-01* #21 ~Actes ~ACTES2.2
+- Le nom du fichier contenant l'AR Actes (message 2-1) envoyé dans les notifications s'appelle
+  `<num_unique_acte>-<type transaction>-<identifiant s2low>-reponse.xml` à la place de retour.xml ~Actes
+- Mise en place du nouveau schéma Actes 2.2 #177 ~Actes
+- Gestion du multi-canal : transmission complémentaire au format papier (ajout d'une case à cocher dans le formulaire de
+  création d'un acte) #184 ~Actes
 - Gestion multi-canal : information reprise dans la description de l'acte et dans le bordereau d'acquittement #184 ~Actes
 - Gestion de la typologie des pièces jointes #179 ~Actes
 - Modification en masse des certificats partagés #31 ~Administration
@@ -1691,24 +1748,28 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 ### Corrections
 
 - Correction d'une lettre f qui apparaissait sur l'édition d'une collectivité #187 ~Administration
-- Le status de l'archivage des actes est considéré à tort comme refusé pour les bordereau SEDA 1.0 #146 ~Actes  
+- Le status de l'archivage des actes est considéré à tort comme refusé pour les bordereaux SEDA 1.0 #146 ~Actes
 - La date d'acquittement du tampon est prise dans l'ARActe #173 ~Actes
-- Mise à jour du libellé du status 11 - Aquittement de document reçu -> Acquittement de document reçu #158 ~Actes
+- Mise à jour du libellé du status 11 - Acquittement de document reçu -> Acquittement de document reçu #158 ~Actes
 - Bug sur l'attribution des PES Acquit (mode NomFic non unique) #196 ~Helios
 - Correction de l'orthographe des notes de mise à jour de version #89
 - Possibilité d'accéder à un message d'urgence dont le titre est vide #200 ~Administration
 - La tentative de création d'un groupe vide ne provoque plus d'erreur #198 ~Mailsec
-- Ne pas pouvoir traiter les fichier d'un lot déjà traité #201 ~Actes
-- Les jetons d'horodatage utilise le format ISO 8601 pour le message horodaté
+- Ne pas pouvoir traiter les fichiers d'un lot déjà traité #201 ~Actes
+- Les jetons d'horodatage utilisent le format ISO 8601 pour le message horodaté
 - Remplacement complet du système de tampon des actes #202 ~Actes
 - Correction d'un problème d'encodage dans le traitement par lot #211 ~Actes
 
-### Retraits
+### Suppressions
 
-- L'ancienne bannière et la constante NEW_BANNER remplacée définitivement par la nouvelle bannière
+- L'ancienne bannière et la constante `NEW_BANNER` remplacée définitivement par la nouvelle bannière
 - Suppression du check de l'archive lors de son postage (check fait à l'étape de validation) ~Actes
-- Suppression de la constante ACTES_CHECK_ARCHIVE_SERVLET ~Actes
-- Suppression de la constante ACTES_ANTIVIRUS_COMMAND, utilisation de ANTIVIRUS_COMMAND à la place #220
+- Suppression de la constante `ACTES_CHECK_ARCHIVE_SERVLET` ~Actes
+- Suppression de la constante `ACTES_ANTIVIRUS_COMMAND`, utilisation de `ANTIVIRUS_COMMAND` à la place #220
+
+### Sécurité
+
+- Correction d'une faille de sécurité sur les modules ~Administration
 
 ## 2.6.6 - 2017-10-02
 
@@ -1726,15 +1787,15 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 
 - Correction d'un bug provoquant une erreur si deux mails sécurisés étaient envoyés à la même seconde. ~mailsec
 - Suppression de l'autocomplete sur les mots de passe de la création d'utilisateur (bug Firefox)
-- Suppression d'un bug potentiel dans la liste des actes sur les actes à l'état 21 (document recu (pas d'AR)) ~Actes
-- Message d'erreur sur un upload de fichier PES Aller qui se serait mal passer ou qui est vide ~Helios
-- Correction de fautes d'orthographes
+- Suppression d'un bug potentiel dans la liste des actes sur les actes à l'état 21 (document reçu (pas d'AR)) ~Actes
+- Message d'erreur sur un upload de fichier PES Aller qui se serait mal passé ou qui est vide ~Helios
+- Correction de fautes d'orthographe
 
 ## 2.6.4 - 2017-06-14
 
 ### Corrections
 
-- Correction d'un bug d'affichage empechant de répondre au message de type courrier simple ~Actes
+- Correction d'un bug d'affichage empêchant de répondre au message de type courrier simple ~Actes
 
 ## 2.6.3 - 2017-06-09
 
@@ -1748,10 +1809,10 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 
 - script de monitoring des fichiers Actes et Helios restés trop longtemps dans un certain état ~Actes ~Helios
 
-### Evolutions
+### Évolutions
 
 - création d'un pipeline d'intégration continue
-- les fichiers version.txt et revision.txt sont remplacé par manifest.txt géré automatiquement par gitlab
+- les fichiers version.txt et revision.txt sont remplacés par manifest.txt géré automatiquement par gitlab
 - la nouvelle bannière introduite en version 2.5.0 devient la bannière par défaut
 - modification du système de mise à jour de la base de données.
 
@@ -1765,67 +1826,53 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 
 - le super-admin peut ajouter et publier un message d'information sur le back-office visible pour tous les utilisateurs ~Administration
 
-### Evolutions
+### Évolutions
 
 - migration du code source vers git
 
 ## 2.6.0 - 2017-04-13
 
-### Evolutions
+### Évolutions
 
 - Vérification de l'unicité des PES ALLER, la vérification de l'unicité des PES ALLER se fait désormais sur
-(NomFic, CodCol) et plus uniquemnet sur (NomFic). ~Helios
-- Le script de migration (script/migration/# 2.5-to-# 2.6.php) permet  de mettre à jour la base de données.
-
-## 2.6.3 - 2017-06-09
-
-- Mise à jour du schéma PES en version 5.3.
-
-## 2.6.2 - 2017-06-08
-
-- Version n'apportant pas d'évolution fonctionnelle.
-
-## 2.6.1 - 2017-05-23
-
-- Administration : permettre l'ajout d'un message d'information pour les utilisateurs ;
-
-## 2.6.0 - 2016-10-27
-
-- Module ACTES : ajout d'une API pour déclencher la télétransmission d'un acte via RGS** partagé avec un couple identifiant/mot de passe ;
-- Module ACTES : une date doit toujours être indiquée dans le demande de classification ;
+  (NomFic, CodCol) et plus uniquement sur (NomFic). ~Helios
+- Le script de migration (script/migration/2.5-to-2.6.php) permet de mettre à jour la base de données.
+- Module ACTES : ajout d'une API pour déclencher la télétransmission d'un acte via RGS** partagé avec un couple
+  identifiant/mot de passe ;
+- Module ACTES : une date doit toujours être indiquée dans la demande de classification ;
 - Administration : affichage de l'identifiant de l'utilisateur dans la partie "Gestion des utilisateurs".
 
 ## 2.5.1 - 2016-10-27
 
-- Administration : ajout du département de la Mayotte.
+- Administration : ajout du département de Mayotte.
 
 ## 2.5.0 - 2016-10-01
 
-- Modules ACTES : prise en compte des nouveaux mails d'acquittement du MI ;
-- Modules ACTES : possibilité d'ajouter la date d'affichage dans le tampon apposé par S²LOW ;
-- Modules ACTES : le système de notification par défaut, introduit en version 1.3.2, est désormais le seul utilisable ;
-- Modules ACTES : enregistrement de l'intitulé de la classification au moment de la création de la transaction ;
-- Modules ACTES : API : en cas d'erreur le retour -1 est complété par la raison de l'erreur ;
-- Modules HELIOS : contrôle du bon paramétrage du module pour autoriser à télétransmettre ;
+- Module ACTES : prise en compte des nouveaux mails d'acquittement du MI ;
+- Module ACTES : possibilité d'ajouter la date d'affichage dans le tampon apposé par S²LOW ;
+- Module ACTES : le système de notification par défaut, introduit en version 1.3.2, est désormais le seul utilisable ;
+- Module ACTES : enregistrement de l'intitulé de la classification au moment de la création de la transaction ;
+- Module ACTES : API : en cas d'erreur le retour -1 est complété par la raison de l'erreur ;
+- Module HELIOS : contrôle du bon paramétrage du module pour autoriser à télétransmettre ;
 - Administration : optimisation de l'accès au journal des événements ;
 - Administration : ajout d'une page d'administration des transactions HELIOS ;
 - Administration : contrôle renforcé sur les adresses mails.
 
 ## 2.4.1 - 2016-05-24
 
-- Modules HELIOS : correction sur certains fichiers acquitement rejetés à tort ;
-- Modules HELIOS : surveillance des fichiers d'acquittement non-intégrés et acquittement non-reçus ;
-- Modules HELIOS : correction liste sur FTP différent en fonction du serveur.
+- Module HELIOS : correction sur certains fichiers acquittement rejetés à tort ;
+- Module HELIOS : surveillance des fichiers d'acquittement non intégrés et acquittements non reçus ;
+- Module HELIOS : correction liste sur FTP différent en fonction du serveur.
 
 ## 2.4.0 - 2016-05-16
 
 - Module ACTES/HELIOS : système de versement global des transactions sur une période donnée par collectivité ;
 - Module ACTES : partie JAVA - interdiction des numéros de moins de deux caractères ;
-- Module ACTES: correction de l'expression régulière chargée de vérifier les numéros d actes ;
-- Module ACTES : interdiction de finir un numéro d actes autrement que par 0-9A-Z ;
+- Module ACTES : correction de l'expression régulière chargée de vérifier les numéros d'acte ;
+- Module ACTES : interdiction de finir un numéro d'acte autrement que par 0-9A-Z ;
 - Module HELIOS : amélioration du système de canonisation des fichiers XML ;
 - Module ACTES/HELIOS : système de versement passé en mode asynchrone ;
-- Administration : ajout de l'API permettant de tester si le certificat d'authentifiation est de niveau RGS ;
+- Administration : ajout de l'API permettant de tester si le certificat d'authentification est de niveau RGS ;
 - Récupération de fichier OCRE (orchestrateur uniquement) ;
 - Optimisation de la consultation du journal des événements.
 
@@ -1838,7 +1885,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - HELIOS : page de validation des PES_ALLER pour visualiser les éventuelles erreurs ;
 - HELIOS : on ne vérifie plus les schémas XSD ;
 - ADMINISTRATION : amélioration technique du processus de vérification des certificats lors de l'authentification ;
-- HELIOS : améloriation du script chargé de récupérer les SIRET des PES_ALLER.
+- HELIOS : amélioration du script chargé de récupérer les SIRET des PES_ALLER.
 
 ## 2.3 - 2015-12-05
 
@@ -1846,12 +1893,12 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Optimisation du journal des événements ;
 - Administration : les personnes partageant un certificat sont affichées par ordre alphabétique ;
 - Administration : amélioration du filtre de recherche sur la collectivité ;
-- Administration : dans la fiche utilisateur on informe si la partie publique du certificat est issue d'une AC accréditée ;
+- Administration : sur la fiche utilisateur, on informe si la partie publique du certificat est issue d'une AC accréditée ;
 - La liste des modules est fixe dans les menus ;
 - Nouveau mécanisme de contrôle des certificats basé sur l'empreinte SHA1 ;
 - Module ACTES/HELIOS : on ne peut plus télétransmettre si le certificat n'est pas un RGS ;
 - Module ACTES : authentification par RGS* associée à un RGS** ;
-- Module ACTES : nouvelle présentation du système d'authentification dans la fiche utilisateur ;
+- Module ACTES : nouvelle présentation du système d'authentification sur la fiche utilisateur ;
 - Module ACTES : possibilité de verser par lot les actes à l'état validé ;
 - Module ACTES : le trigramme et le quadrigramme sont désormais vérifiés par la partie PHP ;
 - Module ACTES : l'administrateur de groupe ne voit plus les boutons Créer, Importer et Traitement par lot ;
@@ -1878,26 +1925,30 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Administration : l'authentification par certificat RGS* peut être couplée avec un RGS** ;
 - Administration : il ne peut plus y avoir d'espace dans l'adresse mail d'un utilisateur ;
 - Module HELIOS : le système d'analyse et de télétransmission des flux PES a été scindé en deux parties ;
-- Module HELIOS : les schémas PESv2 ont été mis à jour et récupéré sur Xemelios ;
-- Modules ACTES et HELIOS : le menu de sélection de la collectivité a été remplacé pour etre plus intuitif ;
+- Module HELIOS : les schémas PESv2 ont été mis à jour et récupérés sur Xemelios ;
+- Modules ACTES et HELIOS : le menu de sélection de la collectivité a été remplacé pour être plus intuitif ;
 - Module HELIOS : les PES récupérés erronés sont déplacés dans un dossier spécifique ;
-- Module ACTES : mise en place de la macro ACTES_MAIL_BACKUP ;
-- Module ACTES : correction bug : si l'antivirus n'était pas lancé, les flux ne pouvaient pas être analysés et ils passaient en erreur ;
+- Module ACTES : mise en place de la macro `ACTES_MAIL_BACKUP` ;
+- Module ACTES : correction bug : si l'antivirus n'était pas lancé, les flux ne pouvaient pas être analysés et ils
+  passaient en erreur ;
 
 ## 2.1.01 - 2015-06-23
 
 - Module HELIOS : correction bug : la signature HELIOS introduisait un ID dans les bordereaux ;
-- Module ACTES : correction bug : les signatures des transactions n'étaient plus incluses dans le cadre de la soumission d'une enveloppe complète ;
-- Module ACTES : correction bug : l'administrateur de collectivité ne pouvait pas modifier les paramètres de sa collectivité ;
-- Administration : correction bug : affichage de la date expiration du certificat ;
+- Module ACTES : correction bug : les signatures des transactions n'étaient plus incluses dans le cadre de la soumission
+  d'une enveloppe complète ;
+- Module ACTES : correction bug : l'administrateur de collectivité ne pouvait pas modifier les paramètres de sa
+  collectivité ;
+- Administration : correction bug : affichage de la date d'expiration du certificat ;
 - Module HELIOS : ajout de la macro HELIOS_FTP_PASSIVE_MODE ;
-- Module HELIOS : pour la signature en local, les PES sont signés au niveau bordereaux si ils ont des ID ;
+- Module HELIOS : pour la signature en local, les PES sont signés au niveau bordereaux s'ils ont des ID ;
 
 ## 2.1 - 2015-06-08
 
 - Module HELIOS : correction bug : erreur d'import des fichiers dont les noms comportaient des caractères spéciaux ;
 - Module ACTES : correction bug : horodatage du nom de la personne déclenchant la télétransmission ;
-- Module ACTES : correction bug : l'administrateur de collectivité ne pouvait pas modifier les paramètres de sa collectivité ;
+- Module ACTES : correction bug : l'administrateur de collectivité ne pouvait pas modifier les paramètres de sa
+  collectivité ;
 - Module HELIOS : changement du message pour l'état Posté ;
 - Module ACTES : optimisation du mécanisme de vérification des fichiers par l'antivirus ;
 - Optimisation de la base de données ;
@@ -1908,7 +1959,7 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Module ACTES : correction bug : vérification que le fichier PDFTK existe ;
 - Module ACTES : correction bug : amélioration vérification des signatures lors de l'import des enveloppes ;
 - Module ACTES : correction bug : remise en place du versement par lot ;
-- Administration : correction bug : vérification du département et de l'arrodissement via les API ;
+- Administration : correction bug : vérification du département et de l'arrondissement via les API ;
 - Administration : correction bug : seul le superadmin peut modifier le paramétrage SAE ;
 - Module ACTES : traitement par lot changement du bouton Envoyer par Créer le lot ;
 - Module ACTES : ajout de l'identifiant unique dans le tampon ajouté par S²LOW ;
@@ -1920,31 +1971,33 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Passage sous Openssl 1.0 ;
 - Passage sous PHP5.5 ;
 
-## 15.01 2014-12-17
+## 15.01 - 2014-12-17
 
-- Module MAILS : correction bug : si un destinataire est en double dans un même champ on obtient une page blanche ;
+- Module MAILS : correction bug : si un destinataire est en double dans un même champ, on obtient une page blanche ;
 - Module MAILS : correction bug : lors de l'ajout d'un contact, le champ description n'était pas pris en compte ;
 - Module MAILS : correction bug : le champ CCI n'était pas autocomplété ;
 - Module HELIOS : correction bug : les commandes SITE n'étaient pas correctement envoyées ;
-- Correction bug : suppression des \n dans les boites de dialogues ;
+- Correction bug : suppression des \n dans les boîtes de dialogue ;
 - Correction de fautes d'orthographe ;
-- Correction bug : prise en compte du droit choississez dans l'affichage des modules autorisés ;
+- Correction bug : prise en compte du droit choisissez dans l'affichage des modules autorisés ;
 - Module ACTES : agrémentation des informations envoyées à Pastell dans le cadre du versement SEDA ;
 - Module ACTES : ajout de l'identifiant unique dans le tampon ;
 - Module HELIOS : sécurisation de l'API de mise à disposition des PES_ACQUIT/ACK/NACK ;
 - Module HELIOS : amélioration de la regexp d'analyse des retours des commandes FTP ;
-- Module HELIOS : ajout de la vérification de la taille du PES lors de l'import via API plus contrôle par l'antivirus avant d'accepter le dépot ;
+- Module HELIOS : ajout de la vérification de la taille du PES lors de l'import via API plus contrôle par l'antivirus
+  avant d'accepter le dépôt ;
 - Module ACTES : nouvelle API permettant la télétransmission en préfecture via redirection d'URL ;
 - Module MAILS : les commandes console sont commentées pour garder une compatibilité avec IE ;
 - Mise en place d'un fichier de configuration générique ;
 
 ## 15 - 2014-08-05
 
-- Refonte globale de l'interface web pour être aux normes d'accessibilités ;
+- Refonte globale de l'interface web pour être aux normes d'accessibilité ;
 - Passage sous Bootstrap v3 de l'interface web ;
 - Module ACTES : ajout de la signature électronique de l'acte (au format PDF) ;
 - Module ACTES : possibilité d'envoyer un PDF joint à un XML (acte budgétaire) ;
-- Module ACTES : lors d'une annulation,l'acte principal passe à l'état annulé et la transaction d'annulation passe à l'état acquitement reçu ;
+- Module ACTES : lors d'une annulation, l'acte principal passe à l'état annulé et la transaction d'annulation passe à
+  l'état acquittement reçu ;
 - Module HELIOS : optimisation du module ;
 - Module HELIOS : refonte du système d'envoi des flux PES pour passer de JAVA à PHP ;
 - Module HELIOS : ajout de la signature électronique du flux PES_ALLER;
@@ -1958,131 +2011,154 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Module MAIL : correction bug : problème d'encodage des API ;
 - Administration : versement au SAE via Pastell;
 - Module ACTES : versement par lot au SAE ;
-- Module ACTES : ajout du nouvel état d'attente via les API pour que les actes puissent être validés par l'agent télétransmetteur ;
-- Module ACTES : ajout d'un statut permettant de temporiser l'envoi d'un acte après sont dépôt sur le TdT;
+- Module ACTES : ajout du nouvel état d'attente via les API pour que les actes puissent être validés par l'agent
+  télétransmetteur ;
+- Module ACTES : ajout d'un statut permettant de temporiser l'envoi d'un acte après son dépôt sur le TdT;
 - Module HELIOS : versement au SAE ;
 - Module DIA : ajout du module ;
 
 ## 13.2 - 2013-05-06
 
-- Module ACTES : nouveau système de notification d'acquittement pour les agents télétransmetteur
+- Module ACTES : nouveau système de notification d'acquittement pour les agents télétransmetteurs
 
 ## 13.1 - 2013-01-15
 
-- Module ACTES : correction bug : la variable pdfgenerate n'était pas correctement réinitialisée. Cela entrainait une erreur sur le PDF joint aux notifications automatiques ;
+- Module ACTES : correction bug : la variable pdfgenerate n'était pas correctement réinitialisée. Cela entrainait une
+  erreur sur le PDF joint aux notifications automatiques ;
 - Module ACTES : correction bug : il est possible de filtrer les actes sur l'état "Refus d'envoi" ;
-- Module ACTES : correction bug : l'état "en cours" prend en compte les transactions aux états "Document reçu" et "Acquittement envoyé";
+- Module ACTES : correction bug : l'état "en cours" prend en compte les transactions aux états "Document reçu" et
+  "Acquittement envoyé";
 - Module HELIOS : correction bug : l'émission des flux PESv2 est beaucoup plus rapide et la servlet ne se bloque plus ;
-- Module HELIOS : correction bug : les administrateurs de groupes ne peuvent plus lister les transactions des collectivités n'appartenant pas à leur groupe ;
-- Module HELIOS : correction bug : la gestion des droits sur ce module a été revue pour ne plus dépendre du module ACTES ;
+- Module HELIOS : correction bug : les administrateurs de groupes ne peuvent plus lister les transactions des
+  collectivités n'appartenant pas à leur groupe ;
+- Module HELIOS : correction bug : la gestion des droits sur ce module a été revue pour ne plus dépendre du module
+  ACTES ;
 - Module MAIL: correction bug : protection renforcée sur l'insertion de code dans les champs Nom et adresse mail ;
-- Module ACTES : utilisation du logiciel pdfsam-console pour rendre les actes au format PDF tamponnables lorsque pdftk ne peut être utilisé ;
-- Module HELIOS : amélioration de la récupération des PES ACK/NACK en utilisant un script PHP en lieu et place d'une servlet JAVA car cette dernière se bloquait ;
-- Module MAIL : le navigateur web Mozilla Firefox ne remplit plus automatiquement le formulaire avec les login/mot de passe de l'agent ;
-- Administration : modification de l'API "Liste des collectivités". Il est possible de filtrer sur tout ou partie du SIREN ;
+- Module ACTES : utilisation du logiciel pdfsam-console pour rendre les actes au format PDF tamponnables lorsque pdftk
+  ne peut être utilisé ;
+- Module HELIOS : amélioration de la récupération des PES ACK/NACK en utilisant un script PHP en lieu et place d'une
+  servlet JAVA, car cette dernière se bloquait ;
+- Module MAIL : le navigateur web Mozilla Firefox ne remplit plus automatiquement le formulaire avec les login/mot de
+  passe de l'agent ;
+- Administration : modification de l'API "Liste des collectivités". Il est possible de filtrer sur tout ou partie du
+  SIREN ;
 
 ## 13 - 2012-10-31
 
-- Module ACTES : correction bug : les PDFs optimisés sont pris en compte pour apposer le cartouche/tampon dans les mails de notifications ;
-- Module ACTES : correction bug : la supression des dossiers temporaires unzip doit être faite après avoir changé de répertoire courant pour éviter un NOTICE ;
+- Module ACTES : correction bug : les PDFs optimisés sont pris en compte pour apposer le cartouche/tampon dans les mails
+  de notifications ;
+- Module ACTES : correction bug : la suppression des dossiers temporaires unzip doit être faite après avoir changé de
+  répertoire courant pour éviter une NOTICE ;
 - Module ACTES : correction bug : les fichiers avec l'extension .PDF sont tamponnés ;
 - Module ACTES : correction bug : la position du cartouche est fixe sur les documents ;
 - Module ACTES : correction bug : l'orthographe du mot envoi a été corrigée sur différentes pages ;
 - Module ACTES : correction bug : le caractère : est en trop sur certaines pages ;
 - Module HELIOS : correction bug : la colonne suivi indique toujours le même nom ;
-- Module ACTES : le versement au SAE intègre les courriers Ministèriel lié à l'acte versé ;
+- Module ACTES : le versement au SAE intègre les courriers ministériels liés à l'acte versé ;
 - Module ACTES : Le traitement par lot a été totalement revu et abandonne JAVA ;
-- Module ACTES : Les mails de notification de reception d'un courrier Ministèriel sont plus explicites ;
-- Module ACTES : Dans les détails d'une transaction, l'identifiant de transafert au SAE est indiqué ;
-- Module ACTES : correction bug : la validation ou le refus d'un acte n'est plus possible si une demande d'annulation est en cours;
+- Module ACTES : Les mails de notification de réception d'un courrier Ministériel sont plus explicites ;
+- Module ACTES : Dans les détails d'une transaction, l'identifiant de transfert au SAE est indiqué ;
+- Module ACTES : correction bug : la validation ou le refus d'un acte n'est plus possible si une demande d'annulation
+  est en cours;
 - Module HELIOS : Les API "graphique" ne sont plus présentes dans la page d'import ;
-- Module MAIL : Le corps du mail de notification envoyé aux destinataires a été reformulé suite aux demandes des collectivités ;
-- Module MAIL : Le nombre de carcatères autorisés dans le carnet d adresses pour les noms des contacts est passé à 100 ;
+- Module MAIL : Le corps du mail de notification envoyé aux destinataires a été reformulé suite aux demandes des
+  collectivités ;
+- Module MAIL : Le nombre de caractères autorisés dans le carnet d'adresses pour les noms des contacts est passé à 100 ;
 - Module MAIL : Les champs "Nom" et "Adresse mail" sont protégés contre l'insertion de code ;
-- Admnistration : Le nombre de caractères autorisés dans le champ adresse électronique de diffusion d information est passé à 2000 ;
+- Administration : Le nombre de caractères autorisés dans le champ adresse électronique de diffusion d'information est
+  passé à 2000 ;
 - Administration : Modification de l'interface de paramétrage du connecteur SAE ;
 - Administration : De nouvelles API permettent la gestion des collectivités, des utilisateurs, des groupes ;
 
 ## 12.2 - 2012-06-01
 
-- Module ACTES : les PDFs optimisés sont pris en comptes pour apposer le cartouche/tampon
+- Module ACTES : les PDFs optimisés sont pris en compte pour apposer le cartouche/tampon
 - Module ACTES : les adresses mails par défaut ne sont plus décochables
 - Module ACTES : le bouton versement SEDA s'affiche uniquement lorsque la collectivité est paramétrée
 - Module ACTES : augmentation du niveau de logs pour les mails de notification envoyés automatiquement
 - Module MAIL : la limite du nombre de caractères pour les adresses mails du carnet d'adresses est passée de 50 à 100.
 - Module ACTES : correction bug : la suppression des fichiers temporaires entrainait un warning dans les logs
-- Module ACTES : correction bug : lors de la réception d'un courrier Ministèriel, celui est désormais rattaché au propriétaire de l'acte concerné
+- Module ACTES : correction bug : lors de la réception d'un courrier Ministériel, celui-ci est désormais rattaché au
+  propriétaire de l'acte concerné
 - Module MAIL : correction bug : les sujets des mails dépassant 74 caractères subissaient un problème d'encodage
 - Module HELIOS : correction bug : le mot list est remplacé par liste
 
 ## 12.1 - 2012-03-20
 
 - Module ACTES et MAIL : correction bug : modification des entêtes des mails envoyés pour ne plus avoir de BAD HEADER
-- Module HELIOS : correction bug : en cas d erreur lors de la transmis d un flux, un message indiquant le problème est fourni
+- Module HELIOS : correction bug : en cas d'erreur lors de la transmission d'un flux, un message indiquant le problème
+  est fourni
 - Module MAIL : correction bug : modification du code HTML pour ne plus être détecté à tort comme du SPAM
-- Administration : correction bug : les siren sont vérifiés lorsqu ils sont ajoutés via le formulaire
-- Administration : correction bug : problème d authentification avec des certificats dont les noms des AC comportent des accents
+- Administration : correction bug : les siren sont vérifiés lorsqu'ils sont ajoutés via le formulaire
+- Administration : correction bug : problème d'authentification avec des certificats dont les noms des AC comportent des
+  accents
 - Module ACTES : prise en compte des retours du MIOCT dont la partie numéro dépasse 4 caractères
 - Module ACTES : ajout du statut classification mise à jour
 - Module ACTES : suppression des dossiers et fichiers temporaires
 - Module ACTES : les administrateurs de collectivités peuvent visualiser le détail des transactions
-- Module HELIOS : prise en compte des nouveaux PES ACK délivrés par le DGFiP
+- Module HELIOS : prise en compte des nouveaux PES ACK délivrés par la DGFiP
 - Module HELIOS : nouvelle méthode de récupération des flux mis à disposition par la DGFiP
-- Module HELIOS : prise en compte des fichiers vide présents sur les serveurs de la DGFiP
-- Module HELIOS : l administrateur de groupe peut lister les transactions par collectivité
+- Module HELIOS : prise en compte des fichiers vides présents sur les serveurs de la DGFiP
+- Module HELIOS : l'administrateur de groupe peut lister les transactions par collectivité
 - Administration : modification des intitulés des champs SAE dans les paramètres des collectivités
 
 ## 12 - 2011-11-16
 
-- Module ACTES : Correction bug : Informations complémentaires sur les réponses aux flux 3 et4
+- Module ACTES : Correction bug : Informations complémentaires sur les réponses aux flux 3 et 4
 - Module ACTES : Correction bug : Notifications à ne pas envoyer aux utilisateurs désactivés
-- Module ACTES : Correction bug : Notification automatiques bloquées
-- Module ACTES : Correction bug : Messages d erreurs eronnés lors de la création des actes
+- Module ACTES : Correction bug : Notifications automatiques bloquées
+- Module ACTES : Correction bug : Messages d'erreurs erronés lors de la création des actes
 - Module ACTES : Correction bug : Mails de notifications envoyés en double
 - Module ACTES : Correction bug : Les caractères Microsoft Word sont acceptés
-- Module ACTES : Correction bug : La limite du nombre d annexes dans les transactions est augmentée et peut être modifiée simplement
-- Module ACTES : Correction bug : L agent télétransmetteur est desormais notifié automatiquement
-- Module ACTES : Correction bug : Tous les caractères sont acceptés dans l objet
-- Module ACTES : Correction bug : La limite du nombre de fichiers dans le traitement par lot est augmentée et peut être modifiée simplement
-- Module ACTES : Correction bug : Dans le tampon l orthographe a été corrigée
-- Module MAIL : Correction bug : Les destinataires sont affichés par ordre alphabétique pour comparer plusieurs messages sur les mêmes listes
+- Module ACTES : Correction bug : La limite du nombre d'annexes dans les transactions est augmentée et peut être
+  modifiée simplement
+- Module ACTES : Correction bug : L'agent télétransmetteur est désormais notifié automatiquement
+- Module ACTES : Correction bug : Tous les caractères sont acceptés dans l'objet
+- Module ACTES : Correction bug : La limite du nombre de fichiers dans le traitement par lot est augmentée et peut être
+  modifiée simplement
+- Module ACTES : Correction bug : Dans le tampon l'orthographe a été corrigée
+- Module MAIL : Correction bug : Les destinataires sont affichés par ordre alphabétique pour comparer plusieurs messages
+  sur les mêmes listes
 - Module MAIL : Correction bug : Saisie des adresses avec la souris sur Microsoft Internet Explorer
 - Module MAIL : Correction bug : La macro TEXT est utilisée
-- Administration : Correction bug : Login unique pour l ensemble de la plateforme
+- Administration : Correction bug : Login unique pour l'ensemble de la plateforme
 - Administration : Correction bug : Les certificats avec accents ne pouvaient pas être utilisés avec un login
 - Module ACTES : Intégration des ACTES BUDGETAIRES
 - Module ACTES : Connexion avec le SAE AS@LAE
-- Module ACTES : Création d une API pour récupérer l ACTES avec le tampon
+- Module ACTES : Création d'une API pour récupérer l'ACTE avec le tampon
 - Module ACTES : Amélioration des requêtes SQL
 - Module ACTES : Le nom de la collectivité est indiqué dans les mails de notifications
-- Module ACTES : Il est possible d effectuer des recherches sur l objet
-- Module HELIOS: La collectivité émétrice est indiquée dans le détail de la transaction et dans la liste des transactions
-- Module HELIOS: Le propriétaire de la transaction est indiqué dans le détail de celle-ci et dans la liste des transactions
+- Module ACTES : Il est possible d'effectuer des recherches sur l'objet
+- Module HELIOS : La collectivité émettrice est indiquée dans le détail de la transaction et dans la liste des
+  transactions
+- Module HELIOS : Le propriétaire de la transaction est indiqué dans le détail de celle-ci et dans la liste des
+  transactions
 - Module MAIL : Il est possible de modifier un contact
 - Module MAIL : Le texte du mail reçu a été modifié pour ne plus être équivoque
-- Module MAIL : Via les API il est possible d envoyer un mail sécurisé sans le/les destinataires soient présents dans le carnet d adresses
-- Administration: La date d expiration du certificat de l utilisateur est indiquée
-- Administration: Les SIREN sont affichés par ordre croissant
-- Administration: Il possible d ajouter directement un SIREN dans un groupe
-- Administration: Les utilisateurs sont triés par ordre alphabétiques
+- Module MAIL : Via les API, il est possible d'envoyer un mail sécurisé sans que le/les destinataires soient présents dans
+  le carnet d'adresses
+- Administration : La date d'expiration du certificat de l'utilisateur est indiquée
+- Administration : Les SIREN sont affichés par ordre croissant
+- Administration : Il est possible d'ajouter directement un SIREN dans un groupe
+- Administration : Les utilisateurs sont triés par ordre alphabétique
 
 ## 11 - 2012-11-16
 
 - Module ACTES : Intégration des flux ACTES 1.4
 - Module ACTES : Traitement par lot : les actes peuvent se situer dans des dossiers différents
-- Module ACTES : Les actes sont disponibles avec tampon indiquant la date d'envoi à la prefecture et de réception par celle-ci
-- Module ACTES : Le mail de notification d'accusé de réception inclu le bordereau d'acquitement
+- Module ACTES : Les actes sont disponibles avec tampon indiquant la date d'envoi à la préfecture et de réception par celle-ci
+- Module ACTES : Le mail de notification d'accusé de réception inclut le bordereau d'acquittement
 - Module ACTES : La classification est mise à jour automatiquement
 - Module ACTES : Intégration des groupes/services
-- Module ACTES : Le bouton valider apparait au bout de 2 mois après l'acquitement
+- Module ACTES : Le bouton valider apparait au bout de 2 mois après l'acquittement
 - Module ACTES : Les recherches ne sont plus sensibles à la casse
 - Module ACTES : Les collectivités et groupes sont listés par ordre alphabétique
 - Module ACTES : Un même certificat peut être utilisé par plusieurs utilisateurs via un login/mot de passe
-- Module ACTES : Le descriptif du certificat apparait dans la fiche de l'utilisateur
+- Module ACTES : Le descriptif du certificat apparait sur la fiche de l'utilisateur
 - Module ACTES : Les dates de décisions ne peuvent plus être dans le futur
 - Correction bug : les espaces entre les destinataires ne sont plus supprimés
 - Module MAIL : Correction bug : les espaces dans les noms des fichiers ne sont plus tronqués
-- Module MAIL : Correction bug : le nombre de destinataire n'est plus limité
+- Module MAIL : Correction bug : le nombre de destinataires n'est plus limité
 - Module MAIL : Les statuts des messages sont plus détaillés
 - Module MAIL : Chaque élément récupéré par un destinataire est horodaté
 - Module MAIL : Le jour et l'heure où un destinataire a pris connaissance du message sont indiqués et horodatés
@@ -2093,10 +2169,10 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 - Module MAIL : Le mot de passe n'est plus indiqué par défaut dans le mail de notification
 - Module MAIL : Il est possible de stipuler l'adresse mail émettrice pour l'ensemble des utilisateurs de la collectivité
 - Module MAIL : Dans le sujet des mails expédiés apparaît entre crochets le nom de la collectivité
-- Module MAIL : Suppression des menus déroulant au profit d'une saisie semi-automatique
+- Module MAIL : Suppression des menus déroulants au profit d'une saisie semi-automatique
 - Module MAIL : Des « : » ont été ajoutés après « objet », « message » et « envoyé le »
 - Module MAIL : La taille de l'ensemble du mail est indiquée
-- Module MAIL : L'ensemble des pièces jointes n'est plus indiquée par « mail.zip » mais par « Tous les fichiers »
+- Module MAIL : L'ensemble des pièces jointes n'est plus indiqué par « mail.zip » mais par « Tous les fichiers »
 - Module MAIL : Mise à jour de la documentation API
 
 ## 10.8.3.7 - 2009-08-26
@@ -2107,17 +2183,18 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 
 - Hélios : rajout du SHA1 dans l'export CSV de fichiers reçus
 
-## 10.8.3.5 2009-06-25
+## 10.8.3.5 - 2009-06-25
 
-- correction sur la verification de la taille de l'archive pour Actes
+- correction sur la vérification de la taille de l'archive pour Actes
 - amélioration 297 : on affiche le numéro d'actes dans la liste des transactions en cours
-- amélioration 300 : verification de la validité du numéro SIREN
+- amélioration 300 : vérification de la validité du numéro SIREN
 
 ## 10.8.3.3 - 2009-06-23
 
-- correction des bugs sur ACTES liés à une mauvaise configuration du serveur du MIOCT pour les collectivites Corses. (Bug 308)
-- correction sur Hélios de la methode de rappatriement du PES de rejet (Bug 302)
-- correction sur Hélios sur le PES ACK. On interrogeait pas le bon tag dans le XML. (Bug 301)
+- correction des bugs sur ACTES liés à une mauvaise configuration du serveur du MIOCT pour les collectivités Corses.
+  (Bug 308)
+- correction sur Hélios de la méthode de rapatriement du PES de rejet (Bug 302)
+- correction sur Hélios sur le PES ACK. On n'interrogeait pas le bon tag dans le XML. (Bug 301)
 
 ## 10.8.3.2 - 2009-06-15
 
@@ -2146,12 +2223,12 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 
 ## 10.8.0 - 2008-12-22
 
-- Module Helios  : Ajout du module Helios
-- Module ACTES : Mise à jour du module Acte et de son simulateur vers Acte 1.4(en test)
+- Module Helios : Ajout du module Helios
+- Module ACTES : Mise à jour du module Acte et de son simulateur vers Acte 1.4 (en test)
 
 ## 10.7.1 - 2008-06-03
 
-- Module Mail  : Ajout du Module Mail
+- Module Mail : Ajout du Module Mail
 - Module Admin : Corrigé des bugs Admin;(bug ID:209,196,146)
 - Module ACTES : Corrigé des bugs du module Actes;(bug ID:187,214, 218, 211, 194, 199,197, (219->190))
 
@@ -2159,25 +2236,30 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 
 - Module Actes - Les noms de fichiers transmis ne peuvent contenir de caractères '.
 - Module Actes - L'objet ne peut pas contenir le caractère spécial &.
-- Module Actes - Un administrateur de groupe ne peut modifier son profil. Il ne peut créer que des utilisateurs de sa collectivité.
+- Module Actes - Un administrateur de groupe ne peut modifier son profil. Il ne peut créer que des utilisateurs de sa
+  collectivité.
 
 ## 10.4 - 2007-12-13
 
 - Module ACTES : Fin de la suppression des archives dont toutes les enveloppes sont acquittées.
-- Module ACTES : Ajout de la possibilité d'associer des pièces jointes lors de la création d'une transaction à partir d'un lot
+- Module ACTES : Ajout de la possibilité d'associer des pièces jointes lors de la création d'une transaction à partir
+  d'un lot
 - Module ACTES : Gestion évoluée des mails de notification d'acquittement
 
 ## 10.2 - 2007-02-16
 
 - Implémentation administration 3 niveaux, ajout d'un nouveau rôle « Administrateur de groupe »
 - Ajout d'une adresse de messagerie pour diffusion d'informations dans les collectivités
-- Module ACTES : ajout possibilité de télécharger les fichiers des transactions (archive totale ou fichiers indépendants) pendant la durée de vie de la transaction
+- Module ACTES : ajout possibilité de télécharger les fichiers des transactions (archive totale ou fichiers
+  indépendants) pendant la durée de vie de la transaction
 - Module ACTES : ajout validation/refus par lot des transactions
 - Module ACTES : ajout d'un attribut URL d'archivage pour les transactions de transmission d'acte
 - Module ACTES : ajout traitement par lot des transmissions d'actes
-- Module ACTES : ajout filtre sur dates de postage et d'accusé réception dans la liste des transactions
-- Module ACTES : correction import incorrect des classifications, affichage désordonné et bug javascript lors de la présence de guillemet double
-- Module ACTES : ajout possibilité de désactiver dans la configuration la limitation de une seule demande de classification par jour
+- Module ACTES : ajout filtre sur dates de postage et d'accusé de réception dans la liste des transactions
+- Module ACTES : correction import incorrect des classifications, affichage désordonné et bug javascript lors de la
+  présence de guillemet double
+- Module ACTES : ajout possibilité de désactiver dans la configuration la limitation d'une seule demande de
+  classification par jour
 
 ## 10.1 - 2006-10-27
 
@@ -2189,9 +2271,3 @@ d'un utilisateur. L'affichage de cette nouvelle page a été optimisé. #18 ~Adm
 
 - Publication initiale
 - Support complet protocole Actes
-
-## Notes
-
-Toutes les modifications apportées au projet seront documentées dans ce fichier.
-
-Le format est basé sur le modèle [Keep a Changelog](http://keepachangelog.com/) et adhère aux principes du [Semantic Versioning](http://semver.org/).
