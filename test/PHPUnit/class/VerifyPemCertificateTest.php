@@ -88,16 +88,15 @@ class VerifyPemCertificateTest extends S2lowTestCase
         );
     }
 
-    # Le certificat est révoqué dans la CRL de revokedFromAC avec
+    # The certificate is revoked in the revokedFromAC CRL with
     # Revocation Date: Jan 26 15:36:08 2021 GMT
 
     public function testVerifyARevokedCertificateSignedBeforeRevocation()
     {
-        $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR . "/dateOk/revokedFromAC/");
-
         $this->assertTrue(
-            $verificator->checkCertificateWithOpenSSL(
+            $this->verifyPemCertificate->checkCertificateWithOpenSSL(
                 self::BASE_CERTIFICATES_DIR . "/dateOk/fullchain.pem",
+                self::BASE_CERTIFICATES_DIR . "/dateOk/revokedFromAC/",
                 [],
                 (new DateTime('Jan 26 15:36:07 2021', new DateTimeZone('GMT')))->getTimestamp()
             )
@@ -106,12 +105,11 @@ class VerifyPemCertificateTest extends S2lowTestCase
 
     public function testVerifyARevokedCertificateSignedAfterRevocation()
     {
-        $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR . "/dateOk/revokedFromAC/");
-
         $this->expectException(Exception::class);
         $this->expectExceptionMessageMatches("/Certificat révoqué/");
-        $verificator->checkCertificateWithOpenSSL(
+        $this->verifyPemCertificate->checkCertificateWithOpenSSL(
             self::BASE_CERTIFICATES_DIR . "/dateOk/fullchain.pem",
+            self::BASE_CERTIFICATES_DIR . "/dateOk/revokedFromAC/",
             [],
             (new DateTime('Jan 26 15:36:09 2021', new DateTimeZone('GMT')))->getTimestamp()
         );
@@ -126,17 +124,16 @@ class VerifyPemCertificateTest extends S2lowTestCase
     }
 
     /**
-     * Comme pour openssl verify, un timestamp vide vaut la date courante (et non le 01/01/1970)
+     * Like openssl verify, an empty timestamp means the current date (not 01/01/1970)
      * @dataProvider getEmptyTimestamps
      */
     public function testVerifyARevokedCertificateWithEmptyTimestamp(string $timestamp)
     {
-        $verificator = $this->verifyPemCertificateFactory->get(self::BASE_CERTIFICATES_DIR . "/dateOk/revokedFromAC/");
-
         $this->expectException(Exception::class);
         $this->expectExceptionMessageMatches("/Certificat révoqué/");
-        $verificator->checkCertificateWithOpenSSL(
+        $this->verifyPemCertificate->checkCertificateWithOpenSSL(
             self::BASE_CERTIFICATES_DIR . "/dateOk/fullchain.pem",
+            self::BASE_CERTIFICATES_DIR . "/dateOk/revokedFromAC/",
             [],
             $timestamp
         );
