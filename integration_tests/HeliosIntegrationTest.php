@@ -273,9 +273,9 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
         $transaction_id = $this->createTransaction();
 
         $_GET['id'] = $transaction_id;
-        $this->expectError();           //Le ParsedPes Aller n'est pas set
+        // The PES aller file is missing: file_get_contents() throws a ValueError, rendered as a 500 by the kernel
         $client->request('GET', 'modules/helios/helios_transac_validate_pes_aller.php');
-        static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
+        static::assertResponseStatusCodeSame(500);
     }
 
     /**
