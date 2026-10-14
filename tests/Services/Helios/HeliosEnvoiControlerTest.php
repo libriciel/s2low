@@ -20,7 +20,9 @@ use S2lowLegacy\Class\helios\HeliosStatusSQL;
 use S2lowLegacy\Class\helios\HeliosTransmissionWindowsSQL;
 use S2lowLegacy\Class\helios\PesAllerRetriever;
 use Psr\Log\LoggerInterface;
+use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\TmpFolder;
+use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Controller\HeliosController;
@@ -286,6 +288,42 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
         static::assertMatchesRegularExpression('#La signature du fichier est invalide#', $info_transaction['message']);
     }
 
+    public function testDejaSigneVerificationInterrompue(): void
+    {
+        $this->workerScript->expects(static::never())->method('putJobByQueueName');
+        $envoiControler = $this->getHeliosEnvoiController(
+            $this->getVerifyPemCertificateFactoryInterrompue()
+        );
+        $id_transaction = $this->getImportFile('/../../lib/fixtures/HELIOS_SIMU_ALR2_bad_signature.xml');
+
+        $exception = null;
+        ob_start();
+        try {
+            $envoiControler->validateOneTransaction($id_transaction);
+        } catch (RecoverableException $recoverableException) {
+            $exception = $recoverableException;
+        }
+        ob_end_clean();
+
+        static::assertInstanceOf(RecoverableException::class, $exception);
+        $info_transaction = $this->transactionsSQL->getInfo($id_transaction);
+        static::assertSame(HeliosTransactionsSQL::POSTE, (int)$info_transaction['last_status_id']);
+    }
+
+    private function getVerifyPemCertificateFactoryInterrompue(): VerifyPemCertificateFactory
+    {
+        $verifyPemCertificate = $this->createMock(VerifyPemCertificate::class);
+        $verifyPemCertificate->method('checkCertificateWithOpenSSL')
+            ->willThrowException(new RecoverableException(
+                'S2low\Services\ProcessCommand\CommandLauncher : The process has been signaled with signal "15".'
+            ));
+
+        $verifyPemCertificateFactory = $this->createMock(VerifyPemCertificateFactory::class);
+        $verifyPemCertificateFactory->method('get')->willReturn($verifyPemCertificate);
+
+        return $verifyPemCertificateFactory;
+    }
+
     /**
      * @throws Exception
      */
@@ -547,8 +585,9 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
         );
     }
 
-    private function getHeliosEnvoiController()
-    {
+    private function getHeliosEnvoiController(
+        VerifyPemCertificateFactory $verifyPemCertificateFactory = new VerifyPemCertificateFactory()
+    ) {
         $pesAllerRetriever = new PesAllerRetriever(
             $this->testStreamUrl . '/helios/',
             self::getContainer()->get(OpenStackSwiftWrapper::class),
@@ -593,7 +632,7 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
             static::getContainer()->get(LoggerInterface::class),
             new PesAllerReader(),
             new HeliosNamesGenerator(),
-            new VerifyPemCertificateFactory()
+            $verifyPemCertificateFactory
         );
     }
 }

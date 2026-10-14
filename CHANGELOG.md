@@ -4,6 +4,13 @@ Ce changelog documente les correctifs de sécurité identifiés lors de la publi
 l'exhaustivité des correctifs, notamment concernant les vulnérabilités découvertes ultérieurement ou présentes dans les
 dépendances transitives.
 
+## 5.1.20
+
+### Corrections
+
+- Une vérification de signature interrompue ne passe plus la transaction Helios en erreur « La signature du fichier
+  est invalide » : la transaction est rejouée. #1602
+
 ## [5.1.19] - 2026-10-12
 
 **Ce patch corrige des failles de sécurité**
