@@ -134,7 +134,7 @@
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "6.4",
-            "ref": "a91c965766ad3ff2ae15981801643330eb42b6a5"
+            "ref": "27e6ec400ee3394b4bd57cf361f27700a13af1d7"
         },
         "files": [
             "config/packages/cache.yaml",
@@ -153,7 +153,7 @@
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "4.3",
-            "ref": "09051cfde49476e3c12cd3a0e44289ace1c75a4f"
+            "ref": "710cae90ab3e5d3f4a747e9ce6ae33299d7ae83b"
         },
         "files": [
             "config/packages/mailer.yaml"

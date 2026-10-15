@@ -22,8 +22,10 @@ class LegacyController extends AbstractController
             require $legacyScript;
         } catch (Exception $e) {
             var_dump(htmlspecialchars($e->getMessage()));
+        } finally {
+            // Always close the buffer opened above, even when an \Error escapes the legacy script
+            $content = (string)ob_get_clean();
         }
-        $content = (string)ob_get_clean();
 
         $headers = [];
         foreach (headers_list() as $header) {
