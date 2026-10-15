@@ -204,6 +204,31 @@ class AdminControllerTest extends S2lowIntegrationTestCase
         $this->assertSame('second groupe', $authority['helios_group_name']);
     }
 
+    public function testAuthoritiesActionHidesFromAGroupAdminTheGroupAdministeringTheOtherModule()
+    {
+        $this->givenAuthority2IsAdministeredBy(1, 2);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $adminController = self::getContainer()->get(AdminController::class);
+
+        $adminController->authoritiesAction();
+
+        $authority = $this->authorityFromList($adminController->authorities, 2);
+        $this->assertSame('Groupe de test', $authority['actes_group_name']);
+        $this->assertSame('*****', $authority['helios_group_name']);
+    }
+
+    public function testAuthoritiesActionTellsAGroupAdminThatNoGroupAdministersTheOtherModule()
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 1, helios_group_id = NULL WHERE id = 2');
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $adminController = self::getContainer()->get(AdminController::class);
+
+        $adminController->authoritiesAction();
+
+        $authority = $this->authorityFromList($adminController->authorities, 2);
+        $this->assertNull($authority['helios_group_name']);
+    }
+
     public function testAuthoritiesActionIsRefusedToAnAuthorityAdmin()
     {
         $this->setUserWithRole(UserRole::AdministrateurCollectivite);
