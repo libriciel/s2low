@@ -7,7 +7,6 @@ use S2low\Enum\Module;
 use S2low\Enum\UserRole;
 use S2low\Security\SecurityUser;
 use S2lowLegacy\Model\ModuleSQL;
-use S2lowLegacy\Model\UserSQL;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -15,7 +14,6 @@ class ModuleExtension extends AbstractExtension
 {
     public function __construct(
         private readonly ModuleSQL $moduleSQL,
-        private readonly UserSQL $userSQL,
     ) {
     }
 
@@ -29,9 +27,13 @@ class ModuleExtension extends AbstractExtension
 
     public function getModuleMenu(SecurityUser $user): ModuleMenu
     {
-        $userInfo = $this->userSQL->getInfo($user->getId());
+        $accessibleModules = $this->moduleSQL->getModulesForUser([
+            'id' => $user->getId(),
+            'role' => $user->getRole(),
+            'authority_id' => $user->getAuthorityId(),
+        ]);
 
-        return new ModuleMenu(UserRole::from($userInfo['role']), $this->moduleSQL->getModulesForUser($userInfo));
+        return new ModuleMenu(UserRole::from($user->getRole()), $accessibleModules);
     }
 
     public function getUserPermOnModule(string $moduleName, int $userId): string

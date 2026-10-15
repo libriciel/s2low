@@ -44,10 +44,7 @@ class ModuleExtensionTest extends S2lowTestCase
 
     private function extension(): ModuleExtension
     {
-        return new ModuleExtension(
-            self::getContainer()->get(ModuleSQL::class),
-            self::getContainer()->get(UserSQL::class),
-        );
+        return new ModuleExtension(self::getContainer()->get(ModuleSQL::class));
     }
 
     private function user(int $userId): SecurityUser
