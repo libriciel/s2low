@@ -16,23 +16,38 @@ final readonly class ModuleMenu
 
     public function __construct(UserRole $role, array $accessibleModules)
     {
-        $knownModules = array_values(array_filter(array_map(
-            static fn(array $module): ?Module => Module::fromId((int)$module['id']),
-            $accessibleModules
-        )));
+        $isAnyAdmin = $role->isAnyAdmin();
+        $isSuperAdmin = $role->isSuperAdmin();
 
-        $this->transactions = $accessibleModules;
-        $this->statistics = self::having($knownModules, static fn(Module $module): bool => $module->hasStatisticsPage());
-        $this->exports = $role->isAnyAdmin()
-            ? self::having($knownModules, static fn(Module $module): bool => $module->hasExportPage())
-            : [];
-        $this->administrations = $role->isSuperAdmin()
-            ? self::having($knownModules, static fn(Module $module): bool => $module->hasAdministrationPage())
-            : [];
-    }
+        $transactions = [];
+        $statistics = [];
+        $exports = [];
+        $administrations = [];
 
-    private static function having(array $modules, callable $hasPage): array
-    {
-        return array_values(array_filter($modules, $hasPage));
+        foreach ($accessibleModules as $accessibleModule) {
+            $transactions[] = new ModuleMenuEntry(
+                (string)$accessibleModule['name'],
+                (string)$accessibleModule['menu_entry'],
+            );
+
+            $module = Module::fromId((int)$accessibleModule['id']);
+            if ($module === null) {
+                continue;
+            }
+            if ($module->hasStatisticsPage()) {
+                $statistics[] = ModuleMenuEntry::fromModule($module);
+            }
+            if ($isAnyAdmin && $module->hasExportPage()) {
+                $exports[] = ModuleMenuEntry::fromModule($module);
+            }
+            if ($isSuperAdmin && $module->hasAdministrationPage()) {
+                $administrations[] = ModuleMenuEntry::fromModule($module);
+            }
+        }
+
+        $this->transactions = $transactions;
+        $this->statistics = $statistics;
+        $this->exports = $exports;
+        $this->administrations = $administrations;
     }
 }

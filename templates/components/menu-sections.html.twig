@@ -23,12 +23,12 @@
         <li><a href="/admin/utilities/index.php">Utilitaires système</a></li>
     {% endif %}
     {% for module in module_menu.administrations %}
-        <li><a href="/modules/{{ module.name() }}/admin/index.php">Utilitaires module {{ module.name() }}</a></li>
+        <li><a href="/modules/{{ module.name }}/admin/index.php">Utilitaires module {{ module.label }}</a></li>
     {% endfor %}
 
     <li class="menu-list-title">Modules</li>
     {% for module in module_menu.transactions %}
-        <li><a href="/modules/{{ module.name }}/index.php">{{ module.menu_entry }}</a></li>
+        <li><a href="/modules/{{ module.name }}/index.php">{{ module.label }}</a></li>
     {% else %}
         <li>Aucun module accessible</li>
     {% endfor %}
@@ -36,14 +36,14 @@
     {% if module_menu.exports is not empty %}
         <li class="menu-list-title">Export des informations</li>
         {% for module in module_menu.exports %}
-            <li><a href="/modules/{{ module.name() }}/{{ module.name() }}_export.php">Exports module {{ module.name() }}</a></li>
+            <li><a href="/modules/{{ module.name }}/{{ module.name }}_export.php">Exports module {{ module.label }}</a></li>
         {% endfor %}
     {% endif %}
 
     <li class="menu-list-title">Suivi{% if app.user.isAnyAdmin %} du site{% endif %}</li>
     <li><a href="/common/logs_view.php">Journal des événements</a></li>
     {% for module in module_menu.statistics %}
-        <li><a href="/modules/{{ module.name() }}/{{ module.name() }}_stats.php">Statistiques
-                module {{ module.name() }}</a></li>
+        <li><a href="/modules/{{ module.name }}/{{ module.name }}_stats.php">Statistiques
+                module {{ module.label }}</a></li>
     {% endfor %}
 </ul>

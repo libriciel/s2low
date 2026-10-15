@@ -6,7 +6,7 @@ namespace S2low\Tests\DTO;
 
 use PHPUnit\Framework\TestCase;
 use S2low\DTO\ModuleMenu;
-use S2low\Enum\Module;
+use S2low\DTO\ModuleMenuEntry;
 use S2low\Enum\UserRole;
 
 class ModuleMenuTest extends TestCase
@@ -20,7 +20,33 @@ class ModuleMenuTest extends TestCase
     {
         $menu = new ModuleMenu(UserRole::Utilisateur, [self::HELIOS, self::MAIL]);
 
-        self::assertSame([self::HELIOS, self::MAIL], $menu->transactions);
+        self::assertSame(['helios', 'mail'], self::names($menu->transactions));
+    }
+
+    public function testLabelsTransactionsWithTheMenuEntryOfTheDatabase(): void
+    {
+        $menu = new ModuleMenu(UserRole::Utilisateur, [self::HELIOS]);
+
+        self::assertSame(['Transactions Helios'], self::labels($menu->transactions));
+    }
+
+    public function testLabelsModulePagesWithTheModuleName(): void
+    {
+        $menu = new ModuleMenu(UserRole::SuperAdministrateur, [self::ACTES]);
+
+        self::assertSame(['actes'], self::labels($menu->statistics));
+        self::assertSame(['actes'], self::labels($menu->exports));
+        self::assertSame(['actes'], self::labels($menu->administrations));
+    }
+
+    public function testEverySectionHoldsTheSameKindOfEntry(): void
+    {
+        $menu = new ModuleMenu(UserRole::SuperAdministrateur, [self::ACTES]);
+
+        $sections = [$menu->transactions, $menu->statistics, $menu->exports, $menu->administrations];
+        foreach ($sections as $section) {
+            self::assertContainsOnlyInstancesOf(ModuleMenuEntry::class, $section);
+        }
     }
 
     public function testUserWithoutModuleGetsAnEmptyMenu(): void
@@ -37,7 +63,7 @@ class ModuleMenuTest extends TestCase
     {
         $menu = new ModuleMenu(UserRole::Utilisateur, [self::HELIOS, self::MAIL]);
 
-        self::assertSame([Module::HELIOS], $menu->statistics);
+        self::assertSame(['helios'], self::names($menu->statistics));
     }
 
     public function testUserGetsNeitherExportNorAdministration(): void
@@ -52,7 +78,7 @@ class ModuleMenuTest extends TestCase
     {
         $menu = new ModuleMenu(UserRole::AdministrateurCollectivite, [self::ACTES, self::HELIOS]);
 
-        self::assertSame([Module::ACTES], $menu->exports);
+        self::assertSame(['actes'], self::names($menu->exports));
     }
 
     public function testAuthorityAdminWithoutActesHasNoExport(): void
@@ -73,16 +99,26 @@ class ModuleMenuTest extends TestCase
     {
         $menu = new ModuleMenu(UserRole::SuperAdministrateur, [self::ACTES, self::HELIOS, self::MAIL]);
 
-        self::assertSame([Module::ACTES, Module::HELIOS], $menu->administrations);
+        self::assertSame(['actes', 'helios'], self::names($menu->administrations));
     }
 
     public function testUnknownModuleIsOnlyListedAsTransactions(): void
     {
         $menu = new ModuleMenu(UserRole::SuperAdministrateur, [self::UNKNOWN]);
 
-        self::assertSame([self::UNKNOWN], $menu->transactions);
+        self::assertSame(['inconnu'], self::names($menu->transactions));
         self::assertSame([], $menu->statistics);
         self::assertSame([], $menu->exports);
         self::assertSame([], $menu->administrations);
+    }
+
+    private static function names(array $entries): array
+    {
+        return array_column($entries, 'name');
+    }
+
+    private static function labels(array $entries): array
+    {
+        return array_column($entries, 'label');
     }
 }

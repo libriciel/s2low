@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Test\PHPUnit\Twig\Extensions;
 
-use S2low\Enum\Module;
 use S2low\Security\SecurityUser;
 use S2low\Twig\Extensions\ModuleExtension;
 use S2lowLegacy\Model\ModuleSQL;
@@ -30,8 +29,8 @@ class ModuleExtensionTest extends S2lowTestCase
         $menu = $this->extension()->getModuleMenu($this->user(self::USER_GRANTED_ON_HELIOS_ONLY));
 
         static::assertSame(['helios'], array_column($menu->transactions, 'name'));
-        static::assertSame(['Transactions Helios'], array_column($menu->transactions, 'menu_entry'));
-        static::assertSame([Module::HELIOS], $menu->statistics);
+        static::assertSame(['Transactions Helios'], array_column($menu->transactions, 'label'));
+        static::assertSame(['helios'], array_column($menu->statistics, 'name'));
     }
 
     public function testSuperAdminGetsEveryActiveModule(): void
@@ -39,7 +38,7 @@ class ModuleExtensionTest extends S2lowTestCase
         $menu = $this->extension()->getModuleMenu($this->user(self::SUPER_ADMIN));
 
         static::assertSame(['actes', 'helios', 'mail'], array_column($menu->transactions, 'name'));
-        static::assertSame([Module::ACTES, Module::HELIOS], $menu->administrations);
+        static::assertSame(['actes', 'helios'], array_column($menu->administrations, 'name'));
     }
 
     private function extension(): ModuleExtension

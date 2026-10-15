@@ -97,7 +97,7 @@ class MenuHTML
                 <li><a href="<?php echo Helpers::getLink("/admin/utilities/index.php");?>">Utilitaires système</a></li>
              <?php endif;?>
             <?php foreach ($moduleMenu->administrations as $module) : ?>
-                <li><a href="<?php echo Helpers::getLink("/modules/" . $module->name() . "/admin/index.php");?>">Utilitaires module <?php echo $module->name() ?></a></li>
+                <li><a href="<?php echo Helpers::getLink("/modules/" . $module->name . "/admin/index.php");?>">Utilitaires module <?php echo $module->label ?></a></li>
             <?php endforeach;?>
 
 
@@ -107,13 +107,13 @@ class MenuHTML
                 <li>Aucun module accessible</li>
             <?php endif;?>
             <?php foreach ($moduleMenu->transactions as $module) : ?>
-                <li><a href="<?php echo  Helpers::getLink("/modules/" . $module["name"] . "/index.php"); ?>"><?php echo $module["menu_entry"] ?></a></li>
+                <li><a href="<?php echo  Helpers::getLink("/modules/" . $module->name . "/index.php"); ?>"><?php echo $module->label ?></a></li>
             <?php endforeach; ?>
 
             <?php if ($moduleMenu->exports) : ?>
                 <li class="menu-list-title">Export des informations</li>
                 <?php foreach ($moduleMenu->exports as $module) : ?>
-                    <li><a href="<?php echo Helpers::getLink("/modules/" . $module->name() . "/" . $module->name() . "_export.php");?>">Exports module <?php echo $module->name() ?></a></li>
+                    <li><a href="<?php echo Helpers::getLink("/modules/" . $module->name . "/" . $module->name . "_export.php");?>">Exports module <?php echo $module->label ?></a></li>
                 <?php endforeach;?>
             <?php endif; ?>
 
@@ -121,7 +121,7 @@ class MenuHTML
             <li class="menu-list-title">Suivi <?php echo ! in_array($userInfo['role'], [User::USER,User::ARCH]) ? "du site" : ""?></li>
             <li><a href="<?php echo Helpers::getLink("/common/logs_view.php");?>">Journal des événements</a></li>
             <?php foreach ($moduleMenu->statistics as $module) : ?>
-                <li><a href="<?php echo Helpers::getLink("/modules/" . $module->name() . "/" . $module->name() . "_stats.php");?>">Statistiques module <?php echo $module->name() ?></a></li>
+                <li><a href="<?php echo Helpers::getLink("/modules/" . $module->name . "/" . $module->name . "_stats.php");?>">Statistiques module <?php echo $module->label ?></a></li>
             <?php endforeach;?>
 
 
