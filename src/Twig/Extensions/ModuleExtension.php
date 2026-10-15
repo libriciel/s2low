@@ -2,7 +2,10 @@
 
 namespace S2low\Twig\Extensions;
 
+use S2low\DTO\ModuleMenu;
 use S2low\Enum\Module;
+use S2low\Enum\UserRole;
+use S2low\Security\SecurityUser;
 use S2lowLegacy\Model\ModuleSQL;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -17,36 +20,20 @@ class ModuleExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('getModules', [$this, 'getModules']),
-            new TwigFunction('getModulesWithAdminPage', [$this, 'getModulesWithAdminPage']),
-            new TwigFunction('getModulesWithStatus', [$this, 'getModulesWithStatus']),
+            new TwigFunction('getModuleMenu', [$this, 'getModuleMenu']),
             new TwigFunction('getUserPermOnModule', [$this, 'getUserPermOnModule']),
         ];
     }
 
-    public function getModules(): array
+    public function getModuleMenu(SecurityUser $user): ModuleMenu
     {
-        return [
-            ['name' => 'actes', 'menu_entry' => 'Transactions Actes'],
-            ['name' => 'helios', 'menu_entry' => 'Transactions Helios'],
-            ['name' => 'mail', 'menu_entry' => 'Transactions Mail'],
-        ];
-    }
+        $accessibleModules = $this->moduleSQL->getModulesForUser([
+            'id' => $user->getId(),
+            'role' => $user->getRole(),
+            'authority_id' => $user->getAuthorityId(),
+        ]);
 
-    public function getModulesWithAdminPage(): array
-    {
-        return [
-            ['name' => 'actes', 'menu_entry' => 'Transactions Actes'],
-            ['name' => 'helios', 'menu_entry' => 'Transactions Helios'],
-        ];
-    }
-
-    public function getModulesWithStatus(): array
-    {
-        return [
-            ['name' => 'actes'],
-            ['name' => 'helios'],
-        ];
+        return new ModuleMenu(UserRole::from($user->getRole()), $accessibleModules);
     }
 
     public function getUserPermOnModule(string $moduleName, int $userId): string
