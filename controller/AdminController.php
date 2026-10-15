@@ -3,6 +3,8 @@
 namespace S2lowLegacy\Controller;
 
 use Exception;
+use S2low\DTO\AdministeringGroups;
+use S2low\Enum\AdministeredModule;
 use S2lowLegacy\Class\PagerHTML;
 use S2lowLegacy\Lib\FancyDate;
 use S2lowLegacy\Lib\JSONoutput;
@@ -19,6 +21,8 @@ use S2lowLegacy\Model\UserSQL;
 
 class AdminController extends Controller
 {
+    private const string MASKED_GROUP_NAME = '*****';
+
     public array|false $authority_info;
     public string $authority_id;
     protected array $siret_list;
@@ -203,6 +207,10 @@ class AdminController extends Controller
         $authoritySQL = new AuthoritySQL($this->getSQLQuery());
         $this->authorities = $authoritySQL->getList($this->fgroup, $this->ftype, $this->fname, $this->fsiren, $this->fsiret, ($this->page_number - 1) * $this->taille_page, $this->taille_page);
 
+        if ($this->me->isGroupAdmin()) {
+            $this->authorities = $this->withoutOtherGroupNames($this->authorities, (int)$user_authority_group_id);
+        }
+
         $nb_authorities = $authoritySQL->getNb($this->fgroup, $this->ftype, $this->fname, $this->fsiren, $this->fsiret);
 
         if ($this->api) {
@@ -226,6 +234,27 @@ class AdminController extends Controller
             $groupeSQL = new GroupSQL($this->getSQLQuery());
             $this->groupe_list = $groupeSQL->getAll();
         }
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $authorities
+     * @return array<int, array<string, mixed>>
+     */
+    private function withoutOtherGroupNames(array $authorities, int $myGroupId): array
+    {
+        foreach ($authorities as &$authority) {
+            $administeringGroups = AdministeringGroups::fromAuthorityInfo($authority);
+            foreach (AdministeredModule::cases() as $module) {
+                if (
+                    $administeringGroups->isDesignatedFor($module)
+                    && ! $administeringGroups->administers($module, $myGroupId)
+                ) {
+                    $authority[$module->groupNameColumn()] = self::MASKED_GROUP_NAME;
+                }
+            }
+        }
+
+        return $authorities;
     }
 
 
