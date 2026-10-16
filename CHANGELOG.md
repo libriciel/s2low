@@ -10,6 +10,9 @@ dépendances transitives.
 
 - Une vérification de signature interrompue ne passe plus la transaction Helios en erreur « La signature du fichier
   est invalide » : la transaction est rejouée. #1602
+- La date de la classification utilisée est celle de la dernière classification récupérée et non la plus récente
+  jamais reçue : une collectivité dont la préfecture a publié une classification antérieure peut de nouveau la
+  mettre à jour. #1603
 
 ## [5.1.19] - 2026-10-12
 

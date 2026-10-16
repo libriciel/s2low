@@ -163,10 +163,11 @@ class ActesClassification extends DataObject
     public static function getLastRevisionDate($authority_id, $return_ansi = true)
     {
         if (is_numeric($authority_id)) {
-            // TODO : voir s'il ne vaut mieux pas ordonner par ID et prendre la date de la dernière requête
-            $sql = "SELECT MAX(version_date) AS max_date FROM actes_classification_requests"
+            $sql = "SELECT version_date FROM actes_classification_requests"
                 . " LEFT JOIN users ON actes_classification_requests.requested_by=users.id"
-                . " WHERE users.authority_id=" . $authority_id;
+                . " WHERE users.authority_id=" . $authority_id
+                . " AND actes_classification_requests.xml_data IS NOT NULL"
+                . " ORDER BY actes_classification_requests.id DESC LIMIT 1";
 
             $db = DatabasePool::getInstance();
 
@@ -175,9 +176,9 @@ class ActesClassification extends DataObject
             if (!$result->isError() && $result->num_row() > 0) {
                 $row = $result->get_next_row();
                 if ($return_ansi) {
-                    return Helpers::getANSIDateFromBDDDate($row["max_date"]);
+                    return Helpers::getANSIDateFromBDDDate($row["version_date"]);
                 } else {
-                    return $row["max_date"];
+                    return $row["version_date"];
                 }
             }
         }
