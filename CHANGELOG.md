@@ -37,7 +37,7 @@
 - Un SIREN déjà porté par une collectivité n'est plus proposé pour en créer une autre, ni accepté à l'enregistrement, y
   compris lorsqu'il est réservé à plusieurs groupes. #1576
 
-### Suppression
+### Suppressions
 
 - Suppression de l'outil de signature intégré #1113
 - Suppression des jetons d'horodatage #1118
@@ -49,6 +49,7 @@
 - Suppression de `Log::canView()`. #1533
 - Suppression de `Droit::isAdmin()`, remplacé par `Droit::isAnyAdmin()`. #1533
 - Suppression de `User::isAdmin()`, remplacé par `User::isAnyAdmin()`. #1533
+- Variable d'environnement `PDF_STAMP_URL` : l'URL de pdf-stamp est désormais fixe
 
 ### Dépréciation
 

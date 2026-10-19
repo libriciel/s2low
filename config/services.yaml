@@ -32,7 +32,7 @@ parameters:
   app.mail.use_legacy_secure_mail: '%env(bool:default:app.mail.use_legacy_secure_mail.default:USE_LEGACY_SECURE_MAIL_FIELDS)%'
   app.only_use_validcargs: '%env(bool:default:app.only_use_validcargs.default:ONLY_USE_VALIDCARGS)%'
   app.openstack_enable: '%env(bool:default:app.openstack_enable.default:OPENSTACK_ENABLE)'
-  app.pdf_stamp_url: '%env(default:app.pdf_stamp_url.default:PDF_STAMP_URL)%'
+  app.pdf_stamp_url: 'http://pdf-stamp:8080/'
   app.redis_port: '%env(default:app.redis_port.default:REDIS_PORT)%'
   app.redis_server: '%env(default:app.redis_server.default:REDIS_SERVER)%'
   app.use_legacy_bordereau_model: '%env(bool:default:app.use_legacy_bordereau_model.default:USE_LEGACY_BORDEREAU_MODEL)%'
@@ -75,7 +75,6 @@ parameters:
   app.mail.use_legacy_secure_mail.default: false
   app.only_use_validcargs.default: false
   app.openstack_enable.default: false
-  app.pdf_stamp_url.default: 'http://pdf-stamp:8080/pdf-stamp/'
   app.redis_port.default: 6379
   app.redis_server.default: 'redis'
   app.use_legacy_bordereau_model.default: true
