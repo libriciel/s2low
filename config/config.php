@@ -641,10 +641,6 @@ if (! defined("PADES_VALID_URL")) {
     define("PADES_VALID_URL", "http://pades-valid:8080");
 }
 
-if (! defined("PDF_STAMP_URL")) {
-    define("PDF_STAMP_URL", "http://pdf-stamp:8080/pdf-stamp/");
-}
-
 # Macro permettant de définir le nombre de jours de rétention des actes
 # lors de l'utilisation du script purge-transactions.php
 if (! defined("ACTES_RETENTION_FICHIERS_NB_JOURS")) {

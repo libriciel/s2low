@@ -52,7 +52,6 @@ services:
       MAIL_MESSAGE: ${MAIL_MESSAGE:-}
       MAIL_TEXT: ${MAIL_TEXT:-}
       ONLY_USE_VALIDCARGS: ${ONLY_USE_VALIDCARGS:-false}
-      PDF_STAMP_URL: ${PDF_STAMP_URL:-http://pdf-stamp:8080/pdf-stamp/}
 
       OPENSTACK_ENABLE: ${OPENSTACK_ENABLE:-false}
       ACTES_OPENSTACK_AUTHENTICATION_URL_V3: ${ACTES_OPENSTACK_AUTHENTICATION_URL_V3:-}
@@ -212,7 +211,7 @@ services:
       - /data:mode=750,rw,noexec,nosuid,nodev
 
   clamav:
-    image: hubdocker.libriciel.fr/clamav/clamav:1.5.2-35@sha256:898c176d1cfec61d4585f71d1e2e8515b3cc8d5f83cd9fc2f6748e8b20de82a2
+    image: hubdocker.libriciel.fr/clamav/clamav:1.5.4
     restart: unless-stopped
     read_only: true
     cap_drop:
@@ -237,9 +236,13 @@ services:
     mem_limit: 768M
 
   pdf-stamp:
-    image: registry.libriciel.fr/public/signature/pdf-stamp:2.7.15@sha256:e111a2b77e67415270b0e9c149d4c7b5460aa464d379b390e15d27292576e261
+    image: registry.libriciel.fr/public/signature/pdf-stamp:4.1.9@sha256:a4a5c3eb6c538533d3b4e23d4950f9e9965f9b87b99608310cbe49fdab795d7a
     restart: unless-stopped
-    mem_limit: 2G
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
 
 volumes:
   app_workspace:
