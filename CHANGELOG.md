@@ -4,7 +4,7 @@ Ce changelog documente les correctifs de sécurité identifiés lors de la publi
 l'exhaustivité des correctifs, notamment concernant les vulnérabilités découvertes ultérieurement ou présentes dans les
 dépendances transitives.
 
-## 5.1.20
+## [5.1.20] - 2026-10-21
 
 ### Corrections
 
@@ -13,6 +13,13 @@ dépendances transitives.
 - La date de la classification utilisée est celle de la dernière classification récupérée et non la plus récente
   jamais reçue : une collectivité dont la préfecture a publié une classification antérieure peut de nouveau la
   mettre à jour. #1603
+
+### Sécurité
+
+- [CVE-2026-109618](https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w) (criticité CRITIQUE)
+  RCE via OOM corruption #1609
+- [CVE-2026-109619](https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp) (criticité CRITIQUE)
+  RCE via stale global state #1609
 
 ## [5.1.19] - 2026-10-12
 
