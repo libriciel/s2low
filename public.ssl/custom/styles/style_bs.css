@@ -878,14 +878,26 @@ form select {
 
 /* select2 injecte sa feuille après celle-ci : à spécificité égale elle l'emporte, d'où les !important. */
 .select2-container--default .select2-selection--single {
+    height: calc(1.5em + 0.75rem + 2px) !important;
     border-color: #cbd5e1 !important;
     border-radius: 0.375rem !important;
 }
 
 .select2-container--default .select2-selection--single .select2-selection__rendered {
-    font-size: 0.8333rem;
-    line-height: 26px;
+    padding: 0.375rem 2.25rem 0.375rem 0.75rem !important;
+    line-height: 1.5 !important;
     color: #212529;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 100% !important;
+    right: 0.75rem !important;
+    width: 16px !important;
+    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23444444' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") no-repeat center / 16px 12px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    display: none;
 }
 
 .select2-container--default.select2-container--focus .select2-selection--single,
