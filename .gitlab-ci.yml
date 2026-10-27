@@ -103,7 +103,7 @@ unit_test:
       - name: registry.libriciel.fr/public/outils/postgres:14.5@sha256:a0c6930be56082d2b6f747630ab6e5799c566c7ec45c49033e8b647ca2e50bee
         alias: postgres
         command: [ "postgres","-c", "max_connections=200" ]
-      - name: registry.libriciel.fr/public/signature/pdf-stamp:4.1.9@sha256:a4a5c3eb6c538533d3b4e23d4950f9e9965f9b87b99608310cbe49fdab795d7a
+      - name: registry.libriciel.fr/public/signature/pdf-stamp:4.1.11@sha256:455372b9be110391ba007c0abda837be40d710a640aae4e3bb2031871323ff48
         alias: pdf-stamp
     script:
         - cd /app
@@ -125,7 +125,7 @@ quality:
   only:
     - master
   image:
-    name: hubdocker.libriciel.fr/sonarsource/sonar-scanner-cli:12.2@sha256:a3f4215076706c95a17a68c19322ee916e40a3acd081a8c1a1e839e0194afa57
+    name: hubdocker.libriciel.fr/sonarsource/sonar-scanner-cli:12.3@sha256:47956b669bf486bdad919e1cbd0533223515aa0b6d1d31763e5a3754942df6d7
     entrypoint: [ "/bin/sh", "-c" ]
   script:
     - sonar-scanner -Dsonar.token=$SONAR_LOGIN -Dsonar.host.url=$SONAR_HOST_URL
@@ -134,7 +134,7 @@ quality:
 .security_scan_base:
   stage: test
   image:
-    name: hubdocker.libriciel.fr/aquasec/trivy:0.76.0@sha256:2416d1f74045b57274df1a340eee6b510cacd73c66a6ccb8da092b117eb7d222
+    name: hubdocker.libriciel.fr/aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c
     entrypoint: [""]
   services:
     - docker:dind@sha256:9e79b879b177fbd72c34376a3dd3d91747da5db49e1f560f76aea59561471977
