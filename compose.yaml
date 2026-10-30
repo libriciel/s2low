@@ -236,7 +236,7 @@ services:
     mem_limit: 768M
 
   pdf-stamp:
-    image: registry.libriciel.fr/public/signature/pdf-stamp:4.1.11@sha256:455372b9be110391ba007c0abda837be40d710a640aae4e3bb2031871323ff48
+    image: registry.libriciel.fr/public/signature/pdf-stamp:4.1.12@sha256:45aca0a4ac5385d51c713d69cd6dc66c49b1cc0a2336c3faa6c7d5a4e37089bf
     restart: unless-stopped
     read_only: true
     cap_drop:
