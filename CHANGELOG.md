@@ -31,9 +31,9 @@
 - Un groupe désigné pour administrer un module d'une collectivité n'est plus supprimable. #1584
 - La liste des collectivités, leur export, la liste des utilisateurs et les journaux présentent à un administrateur de groupe toutes
 les collectivités dont son groupe administre au moins un module. #1585
-- La liste des collectivités nomme le groupe administrateur du module Actes et celui du module Helios, en deux colonnes.
-  Un administrateur de groupe n'y lit que le nom du sien : le groupe qui administre l'autre module est masqué par
-  des étoiles. #1585
+- La liste des collectivités et son export nomment le groupe administrateur du module Actes et celui du module Helios,
+  en deux colonnes. Un administrateur de groupe n'y lit que le nom du sien : le groupe qui administre l'autre module est
+  masqué par des étoiles. #1585
 - La liste des transactions Helios ne se filtre plus que sur les collectivités dont l'utilisateur administre le module Helios. #1585
 
 ### Corrections

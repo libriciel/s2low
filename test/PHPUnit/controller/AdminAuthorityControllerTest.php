@@ -182,6 +182,22 @@ class AdminAuthorityControllerTest extends S2lowIntegrationTestCase
     /**
      * @throws RedirectException
      */
+    public function testExportListActionHidesFromAGroupAdminTheGroupAdministeringTheOtherModule()
+    {
+        self::getContainer()->get(SQLQuery::class)->query(
+            'UPDATE authorities SET actes_group_id = 1, helios_group_id = 2 WHERE id = 2'
+        );
+        $this->givenTheConnectedUserIs(UserRole::AdministrateurGroupe);
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('exit() called');
+        $this->expectOutputRegex('#"Saint-Andre de Corcy",.*,1,"Groupe de test",\*{5},#');
+        $this->getAdminAuthorityController()->exportListAction();
+    }
+
+    /**
+     * @throws RedirectException
+     */
     public function testExportListActionUser()
     {
         $this->givenTheConnectedUserIs(UserRole::AdministrateurCollectivite);

@@ -71,7 +71,7 @@ class AuthoritySQL extends SQL
     {
         $fields = implode(',', array_keys($this->getColonneNameForExport()));
 
-        $sql = "SELECT $fields FROM authorities " .
+        $sql = "SELECT $fields, authorities.actes_group_id, authorities.helios_group_id FROM authorities " .
         self::ADMINISTERING_GROUPS_JOIN .
         " LEFT JOIN authority_types ON authorities.authority_type_id = authority_types.id " ;
         if ($authority_group_id) {
