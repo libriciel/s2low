@@ -92,6 +92,28 @@ class ActesEnvelopeSQLTest extends S2lowTestCase
         $this->createAndList(false, 1);
     }
 
+    public function testListEnveloppeOfTheGroupAdministeringActes()
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 1 WHERE id = 1');
+
+        $this->createAndList(false, 2);
+    }
+
+    public function testListEnveloppeIgnoresTheGroupAdministeringOnlyHelios()
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 1 WHERE id = 1');
+        $this->getActesEnvelopeSQL()->create(13, "000000000/20170721D/abc-EACT--210703385--20170612-2.tar.gz");
+
+        $info = $this->getActesEnvelopeSQL()->listEnveloppe(
+            date("Y-m-d", strtotime("-1 month")),
+            date("Y-m-d 23:59:59"),
+            false,
+            1
+        );
+
+        $this->assertSame([], $info);
+    }
+
     public function testGetAllTransactionToSendInCloud()
     {
         $filename = "000000000/20170721D/abc-EACT--210703385--20170612-2.tar.gz";

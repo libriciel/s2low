@@ -5,8 +5,10 @@ use PHPUnit\ActesUtilitiesTestTrait;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Class\actes\ActesTransactionsSQL;
 use S2lowLegacy\Class\Database;
+use S2lowLegacy\Controller\ActesExportController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\FrontController;
+use S2lowLegacy\Lib\RedirectException;
 
 class ActesExportControllerTest extends S2lowIntegrationTestCase
 {
@@ -62,6 +64,21 @@ class ActesExportControllerTest extends S2lowIntegrationTestCase
         $this->expectExceptionMessage("exit() called");
         $this->expectOutputRegex("#$envelopeId,#");
         $frontController->go("ActesExport", "handler");
+    }
+
+    public function testHandlerRefusesTheGroupAdministeringOnlyHelios()
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 1 WHERE id = 1');
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $environnement = self::getContainer()->get(Environnement::class);
+        $environnement->get()->set('date_debut', date("Y-m-d", strtotime("-1 month")));
+        $environnement->get()->set('date_fin', date("Y-m-d 23:59:59"));
+        $environnement->get()->set('authority_id', 1);
+        $actesExportController = self::getContainer()->get(ActesExportController::class);
+
+        $this->expectException(RedirectException::class);
+        $this->expectExceptionMessage('Accès refusé');
+        $actesExportController->handlerAction();
     }
 
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
