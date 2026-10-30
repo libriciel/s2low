@@ -177,6 +177,8 @@ class AuthoritySQLTest extends S2lowTestCase
                         'actes_group_name' => 'Groupe de test',
                         'helios_group_name' => 'Groupe de test',
                         'description' => 'Région',
+                        'actes_group_id' => 1,
+                        'helios_group_id' => 1,
                     ],
                 1 =>
                     [
@@ -194,6 +196,8 @@ class AuthoritySQLTest extends S2lowTestCase
                         'actes_group_name' => 'Groupe de test',
                         'helios_group_name' => 'Groupe de test',
                         'description' => null,
+                        'actes_group_id' => 1,
+                        'helios_group_id' => 1,
                     ],
                 2 =>
                     [
@@ -211,6 +215,8 @@ class AuthoritySQLTest extends S2lowTestCase
                         "actes_group_name" => "Groupe de test",
                         "helios_group_name" => "Groupe de test",
                         "description" => null,
+                        "actes_group_id" => 1,
+                        "helios_group_id" => 1,
                     ],
             ],
             $info
