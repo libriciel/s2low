@@ -1,5 +1,6 @@
 <?php
 
+use S2low\Enum\AdministeredModule;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\PastellProperties;
 
@@ -91,6 +92,22 @@ class AuthoritySQLTest extends S2lowTestCase
     public function testGetAllAdministeredByAGroupWithoutDesignation()
     {
         $this->assertSame([], $this->authoritySQL->getAllAdministeredBy(2));
+    }
+
+    public function testGetAllAdministeredForModuleBy()
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 1 WHERE id = 2');
+
+        $result = $this->authoritySQL->getAllAdministeredForModuleBy(AdministeredModule::ACTES, 2);
+
+        $this->assertSame([2 => 'Saint-Andre de Corcy'], $result);
+    }
+
+    public function testGetAllAdministeredForModuleByIgnoresTheOtherModule()
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 2');
+
+        $this->assertSame([], $this->authoritySQL->getAllAdministeredForModuleBy(AdministeredModule::HELIOS, 1));
     }
 
     public function testGetListKeepsAnAuthorityAdministeredForASingleModule()

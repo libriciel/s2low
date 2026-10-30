@@ -43,7 +43,7 @@ class ActesEnvelopeSQL extends SQL implements FileDataProvider
         return $this->queryOne($sql);
     }
 
-    public function listEnveloppe($date_begin, $date_end, $authority_id = false, $authority_group_id = false)
+    public function listEnveloppe($date_begin, $date_end, $authority_id = false, $actes_group_id = false)
     {
         $sql = "SELECT actes_envelopes.* FROM actes_envelopes " .
                 " JOIN users ON actes_envelopes.user_id = users.id " .
@@ -54,9 +54,9 @@ class ActesEnvelopeSQL extends SQL implements FileDataProvider
             $sql .= " AND users.authority_id = ? ";
             $data[] = $authority_id;
         }
-        if ($authority_group_id) {
-            $sql .= " AND authorities.authority_group_id = ? ";
-            $data[] = $authority_group_id;
+        if ($actes_group_id) {
+            $sql .= " AND authorities.actes_group_id = ? ";
+            $data[] = $actes_group_id;
         }
 
         return $this->query($sql, $data);

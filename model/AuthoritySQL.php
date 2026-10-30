@@ -97,6 +97,19 @@ class AuthoritySQL extends SQL
         return $result;
     }
 
+    /**
+     * @return array<int, string>
+     */
+    public function getAllAdministeredForModuleBy(AdministeredModule $module, int $authorityGroupId): array
+    {
+        $result = [];
+        $sql = "SELECT id, name FROM authorities WHERE {$module->groupColumn()} = ? ORDER BY name ASC";
+        foreach ($this->query($sql, $authorityGroupId) as $line) {
+            $result[$line['id']] = $line['name'];
+        }
+        return $result;
+    }
+
     public function updateSAE($authority_id, PastellProperties $pastellProperties)
     {
         $sql = "UPDATE authorities SET pastell_url=?,pastell_login=?,pastell_id_e=? " .
