@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Controller;
 
+use S2low\Enum\AdministeredModule;
 use S2low\Security\Authorization\ActesConventionAccess;
 use S2lowLegacy\Class\actes\ActesConventions;
 use S2lowLegacy\Class\CSVOutput;
@@ -67,8 +68,14 @@ class AdminAuthorityController extends Controller
 
         $result[] = array_values($colonne_name);
 
-        foreach ($authoritySQL->getAllForExport($authority_group_id) as $line) {
-            $result[] = $line;
+        foreach ($authoritySQL->getAllForExport($authority_group_id) as $authority) {
+            if ($this->me->isGroupAdmin()) {
+                $authority = $this->withoutOtherGroupNames($authority, (int)$authority_group_id);
+            }
+            foreach (AdministeredModule::cases() as $module) {
+                unset($authority[$module->groupColumn()]);
+            }
+            $result[] = $authority;
         }
 
         $csvOutput = $this->getObjectInstancier()->get(CSVOutput::class);

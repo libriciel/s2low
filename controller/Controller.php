@@ -4,6 +4,7 @@ namespace S2lowLegacy\Controller;
 
 use Exception;
 use S2low\DTO\AdministeringGroups;
+use S2low\Enum\AdministeredModule;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\Log;
 use S2lowLegacy\Class\User;
@@ -17,6 +18,8 @@ use S2lowLegacy\Model\MessageAdminSQL;
 
 class Controller
 {
+    private const string MASKED_GROUP_NAME = '*****';
+
     /**
      * @var User
      */
@@ -227,6 +230,25 @@ class Controller
         if (! $this->me->isGroupAdminOrSuper()) {
             $this->displayErrorAndExit("Accès refusé", "");
         } // @codeCoverageIgnore
+    }
+
+    /**
+     * @param array<string, mixed> $authority
+     * @return array<string, mixed>
+     */
+    protected function withoutOtherGroupNames(array $authority, int $myGroupId): array
+    {
+        $administeringGroups = AdministeringGroups::fromAuthorityInfo($authority);
+        foreach (AdministeredModule::cases() as $module) {
+            if (
+                $administeringGroups->isDesignatedFor($module)
+                && ! $administeringGroups->administers($module, $myGroupId)
+            ) {
+                $authority[$module->groupNameColumn()] = self::MASKED_GROUP_NAME;
+            }
+        }
+
+        return $authority;
     }
 
 
