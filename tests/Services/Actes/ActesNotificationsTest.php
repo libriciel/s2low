@@ -60,7 +60,38 @@ class ActesNotificationsTest extends S2lowTestCase
         $actesNotification->sendAutomaticNotification();
     }
 
-    private function createTransaction(): int
+    /**
+     * @throws Exception
+     */
+    public function testNotifyDoesNotRunCommandFromArchiveName(): void
+    {
+        $this->mailer->method('sendMailWithHtml')->willReturn(true);
+        $this->mailerFactory->method('getInstance')->willReturn($this->mailer);
+
+        // A file name cannot hold a "/": the injected command writes relative to the working directory
+        $archiveName = 'abc-TACT-x;touch pwned;.tar.gz';
+        $archivePath = self::getContainer()->getParameter('app.actes.files_upload_root') . "/$archiveName";
+        copy(
+            __DIR__ . '/../../../test/PHPUnit/class/actes/fixtures/abc-TACT--000000000--20170803-16.tar.gz',
+            $archivePath,
+        );
+        $marker = $this->tmpFolderPath . '/pwned';
+        $previousDir = getcwd();
+        chdir($this->tmpFolderPath);
+
+        try {
+            $this->createTransaction($archiveName);
+            $actesNotification = $this->createActesNotification($this->mailerFactory);
+            $actesNotification->sendAutomaticNotification();
+
+            static::assertFileDoesNotExist($marker);
+        } finally {
+            chdir($previousDir);
+            unlink($archivePath);
+        }
+    }
+
+    private function createTransaction(string $archiveName = "abc-TACT--000000000--20170803-16.tar.gz"): int
     {
         $status = 4;
         $userId = 13;
@@ -71,7 +102,7 @@ class ActesNotificationsTest extends S2lowTestCase
             $sql,
             $userId,
             'eric@sigmalis.com',
-            "abc-TACT--000000000--20170803-16.tar.gz"
+            $archiveName
         );
         $sql = "INSERT INTO actes_transactions(envelope_id,last_status_id,user_id,authority_id,decision_date,number,nature_code,auto_broadcasted,type,broadcast_emails,broadcast_send_sources) VALUES (?,?,?,?,?,?,?,?,?,?,1) returning ID;";
         $transaction_id = $this->getSQLQuery()->queryOne(

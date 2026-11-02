@@ -84,7 +84,7 @@ class ActesSignature
 
         $old_cvd = getcwd();
         chdir($tmp_dir);
-        $cmd = "tar cf - * | gzip -9 > $archivePath ";
+        $cmd = "tar cf - * | gzip -9 > " . escapeshellarg($archivePath);
 
         system($cmd, $ret);
         chdir($old_cvd);

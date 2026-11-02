@@ -4,6 +4,13 @@ Ce changelog documente les correctifs de sécurité identifiés lors de la publi
 l'exhaustivité des correctifs, notamment concernant les vulnérabilités découvertes ultérieurement ou présentes dans les
 dépendances transitives.
 
+## [5.1.21] - 2026-11-09
+
+### Sécurité
+
+- Faille d'injection de commande
+  (CVSS 8.8 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H) #1610
+
 ## [5.1.20] - 2026-10-21
 
 ### Corrections
