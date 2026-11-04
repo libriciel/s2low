@@ -5,7 +5,7 @@ namespace S2lowLegacy\Class\actes;
 use S2lowLegacy\Class\TGZExtractor;
 use S2lowLegacy\Class\TmpFolder;
 use Exception;
-use S2lowLegacy\Lib\SQLQuery;
+use Symfony\Component\Process\Process;
 
 class ActesSignature
 {
@@ -82,12 +82,19 @@ class ActesSignature
 
         $xml->asXML($tmp_dir . "/" . $xml_file);
 
+        // The file names come from the depositor's archive, so they must never reach a
+        // shell: a file named "--checkpoint-action=exec=..." would be read by tar as an
+        // option and run a command. We list the files in PHP and run tar directly, with
+        // "--" so each name stays a file name.
         $old_cvd = getcwd();
         chdir($tmp_dir);
-        $cmd = "tar cf - * | gzip -9 > " . escapeshellarg($archivePath);
-
-        system($cmd, $ret);
+        $files = glob('*') ?: [];
+        $process = new Process(['tar', 'czf', $archivePath, '--', ...$files]);
+        $process->run();
         chdir($old_cvd);
+        if (! $process->isSuccessful()) {
+            throw new Exception("Erreur lors de la création de l'archive signée : " . $process->getErrorOutput());
+        }
         $this->actesIncludedFileSQL->setSignature($transaction_id, $actes_included_file_id, $signature);
         $this->actesTransactionSQL->updateStatus(
             $transaction_id,

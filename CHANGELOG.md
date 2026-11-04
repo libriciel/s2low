@@ -9,7 +9,7 @@ dépendances transitives.
 ### Sécurité
 
 - Faille d'injection de commande
-  (CVSS 8.8 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H) #1610
+  (CVSS 8.8 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H) #1610 #1611
 
 ## [5.1.20] - 2026-10-21
 

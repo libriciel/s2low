@@ -393,28 +393,28 @@ class ActesEnvelope extends DataObject
                     $this->errorMsg = "Erreur système de fichiers.";
                     return false;
                 } else {
-                    $cmd = 'tar cf - ';
+                    $archivePath = $this->rootDir . '/' . $this->file_path;
 
+                    // The file names come from the depositor's archive, so they must never
+                    // reach a shell: a file named "--checkpoint-action=exec=..." would be read
+                    // by tar as an option and run a command. We list the files in PHP and run
+                    // tar directly, with "--" so each name stays a file name.
                     if (empty($this->tmpDir)) {
-                        foreach ($this->fileList as $file) {
-                              $cmd .= " " . $file["name"];
-                        }
+                        $files = array_column($this->fileList, 'name');
                     } else {
-                      // Mode import, on prend tous les fichiers du répertoire
-                        $cmd .= " * ";
+                        // Import mode: every file extracted from the uploaded archive
+                        $files = glob('*') ?: [];
                     }
 
-                    $cmd .= ' |gzip -9 > ' . escapeshellarg($this->rootDir . "/" . $this->file_path);
+                    $process = new \Symfony\Component\Process\Process(['tar', 'czf', $archivePath, '--', ...$files]);
+                    $process->run();
 
-
-                    $status = system($cmd, $ret);
-
-                    if ($status === false || $ret != 0) {
-                        $this->errorMsg = "Erreur de création de l'archive. Retour " . $ret;
+                    if (! $process->isSuccessful()) {
+                        $this->errorMsg = "Erreur de création de l'archive. Retour " . $process->getExitCode();
                         return false;
                     }
 
-                    Helpers::fixPerms($this->rootDir . "/" . $this->file_path);
+                    Helpers::fixPerms($archivePath);
                 }
             } else {
                 $this->errorMsg = "Pas de message dans l'enveloppe.";

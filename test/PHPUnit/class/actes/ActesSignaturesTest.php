@@ -57,6 +57,68 @@ class ActesSignaturesTest extends S2lowTestCase
         $tmpFolder->delete($result_dir);
     }
 
+    /**
+     * @throws Exception
+     */
+    public function testSetSignatureDoesNotRunCommandFromArchiveMember(): void
+    {
+        $tmpFolder = new TmpFolder();
+        $marker = sys_get_temp_dir() . '/s2low_audit037_' . bin2hex(random_bytes(6));
+        @unlink($marker);
+
+        // Build an archive that carries, next to the business files, the three files
+        // that turn "tar cf - *" into arbitrary command execution.
+        $build_dir = $tmpFolder->create();
+        $extract = new \Symfony\Component\Process\Process(
+            ['tar', 'xzf', __DIR__ . '/fixtures/abc-TACT--000000000--20170803-16.tar.gz', '-C', $build_dir]
+        );
+        $extract->mustRun();
+        file_put_contents($build_dir . '/pwn.sh', 'touch ' . escapeshellarg($marker) . "\n");
+        touch($build_dir . '/--checkpoint=1');
+        touch($build_dir . '/--checkpoint-action=exec=sh pwn.sh');
+
+        $malicious_archive = $tmpFolder->create() . '/abc-TACT--000000000--20170803-66.tar.gz';
+        $members = array_values(array_diff(scandir($build_dir), ['.', '..']));
+        $pack = new \Symfony\Component\Process\Process(
+            array_merge(['tar', 'czf', $malicious_archive, '-C', $build_dir, '--'], $members)
+        );
+        $pack->mustRun();
+
+        $tmp_dir = $tmpFolder->create();
+        $actesCreator = new ActesCreator(
+            self::getContainer()->get(ActesTransactionsSQL::class),
+            self::getContainer()->get(ActesEnvelopeSQL::class),
+        );
+        $transaction_id = $actesCreator->createTransaction(
+            ActesStatusSQL::STATUS_EN_ATTENTE_D_ETRE_SIGNEE,
+            $malicious_archive,
+            $tmp_dir
+        );
+
+        $actesTransactionSQL = self::getContainer()->get(ActesTransactionsSQL::class);
+        $transction_info = $actesTransactionSQL->getInfo($transaction_id);
+
+        $actesIncludedFileSQL = self::getContainer()->get(ActesIncludedFileSQL::class);
+        $included_file_id = $actesIncludedFileSQL->addIncludedFile(
+            $transction_info['envelope_id'],
+            $transaction_id,
+            'application/pdf',
+            42,
+            '034-000000000-20170801-20170803E-AI-1-1_0.xml'
+        );
+
+        try {
+            self::getContainer()->get(ActesSignature::class)->setSignature($included_file_id, 'ma signature');
+
+            static::assertFileDoesNotExist($marker, 'The archive member name was executed as a command');
+        } finally {
+            @unlink($marker);
+            $tmpFolder->delete($build_dir);
+            $tmpFolder->delete($tmp_dir);
+            @unlink($malicious_archive);
+        }
+    }
+
     public function getActesTransactionsSQL(): ActesTransactionsSQL
     {
         return $this->getObjectInstancier()->get(ActesTransactionsSQL::class);
