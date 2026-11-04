@@ -9,7 +9,7 @@ dépendances transitives.
 ### Sécurité
 
 - Faille d'injection de commande
-  (CVSS 8.8 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H) #1610 #1611
+  (CVSS 8.8 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H) #1610 #1611 #1612
 - Faille de traversée de chemin
   (CVSS 8.1 - criticité HAUTE - CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H) #1618
 - Faille IDOR sur la notification des actes
