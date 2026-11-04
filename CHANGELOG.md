@@ -16,6 +16,8 @@ dépendances transitives.
   (CVSS 7.1 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:L/A:N) #1617
 - Failles XSS
   (CVSS 7.3 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:H/I:H/A:N) #1614
+- Faille de traversée de chemin
+  (CVSS 7.1 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:L) #1613
 
 ## [5.1.20] - 2026-10-21
 
