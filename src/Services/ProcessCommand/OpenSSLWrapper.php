@@ -94,12 +94,16 @@ class OpenSSLWrapper
      */
     public function checkFileContentCorrespondsToSignature($signature_file, $file_path): string
     {
-        # On ne va pas vérifier le certificat (option -noverify)
-        # Au niveau du purpose, smime est trop restrictif par rapport à notre besoin
-        # Au niveau de la date et de la chaine de certification, on va se reposer sur
-        # la fonction précédente
-        return $this->commandLauncher->launchFromString(
-            "openssl smime -in $signature_file -inform PEM -verify -noverify -content $file_path -CApath {$this->authorized_ca_path}",
+        // On ne va pas vérifier le certificat (option -noverify)
+        // Au niveau du purpose, smime est trop restrictif par rapport à notre besoin
+        // Au niveau de la date et de la chaine de certification, on va se reposer sur
+        // la fonction précédente
+        // $file_path comes from the envelope: never let a shell interpret it
+        return $this->commandLauncher->launch(
+            [
+                'openssl', 'smime', '-in', $signature_file, '-inform', 'PEM',
+                '-verify', '-noverify', '-content', $file_path, '-CApath', $this->authorized_ca_path,
+            ],
             new FileContentCorrespondsToSignatureChecker()
         );
     }

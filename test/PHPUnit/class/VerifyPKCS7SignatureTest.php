@@ -1,5 +1,7 @@
 <?php
 
+use S2low\Services\ProcessCommand\CommandLauncher;
+use S2low\Services\ProcessCommand\OpenSSLWrapper;
 use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\VerifyPemCertificateFactory;
 use S2lowLegacy\Class\VerifyPKCS7Signature;
@@ -20,9 +22,9 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
             __DIR__ . "/fixtures/signaturesPKCS7/ac",
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory(),
-            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
+            new OpenSSLWrapper(
                 __DIR__ . "/fixtures/signaturesPKCS7/ac",
-                new \S2low\Services\ProcessCommand\CommandLauncher()
+                new CommandLauncher()
             )
         );
 
@@ -42,9 +44,9 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
             __DIR__ . "/fixtures/signaturesPKCS7/ac",
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory(),
-            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
+            new OpenSSLWrapper(
                 __DIR__ . "/fixtures/signaturesPKCS7/ac",
-                new \S2low\Services\ProcessCommand\CommandLauncher()
+                new CommandLauncher()
             )
         );
 
@@ -64,9 +66,9 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
             __DIR__ . "/",
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory(),
-            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
+            new OpenSSLWrapper(
                 __DIR__ . "/",
-                new \S2low\Services\ProcessCommand\CommandLauncher()
+                new CommandLauncher()
             )
         );
 
@@ -78,6 +80,47 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
             __DIR__ . "/fixtures/signaturesPKCS7/test_pdf.pdf",
             new DateTime('01-01-2025')
         );
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testFileNameIsNotInterpretedByShell(): void
+    {
+        $tmpDir = sys_get_temp_dir() . '/pkcs7_' . bin2hex(random_bytes(8));
+        mkdir($tmpDir);
+        $marker = "$tmpDir/pwned";
+        // A file name cannot hold a "/": the injected command writes relative to the working directory
+        $filePath = "$tmpDir/test_pdf.pdf;touch pwned;#";
+        copy(__DIR__ . '/fixtures/signaturesPKCS7/test_pdf.pdf', $filePath);
+        $previousDir = getcwd();
+        chdir($tmpDir);
+
+        $verifyPKCS7Signature = new VerifyPKCS7Signature(
+            __DIR__ . '/fixtures/signaturesPKCS7/ac',
+            new VerifyPemCertificateFactory(),
+            new PemCertificateFactory(),
+            new OpenSSLWrapper(
+                __DIR__ . '/fixtures/signaturesPKCS7/ac',
+                new CommandLauncher()
+            )
+        );
+
+        try {
+            $result = $verifyPKCS7Signature->verifySignature(
+                file_get_contents(__DIR__ . '/fixtures/signaturesPKCS7/test_pdf.pdf.p7s'),
+                [],
+                $filePath,
+                new DateTime('01-01-2025')
+            );
+            static::assertFileDoesNotExist($marker);
+            static::assertTrue($result);
+        } finally {
+            chdir($previousDir);
+            @unlink($marker);
+            unlink($filePath);
+            rmdir($tmpDir);
+        }
     }
 
     // Test des dates du certificat
@@ -102,9 +145,9 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
             __DIR__ . "/fixtures/signaturesPKCS7/ac",
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory(),
-            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
+            new OpenSSLWrapper(
                 __DIR__ . "/fixtures/signaturesPKCS7/ac",
-                new \S2low\Services\ProcessCommand\CommandLauncher()
+                new CommandLauncher()
             )
         );
 
@@ -146,9 +189,9 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
             __DIR__ . "/fixtures/signaturesPKCS7/ac",
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory(),
-            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
+            new OpenSSLWrapper(
                 __DIR__ . "/fixtures/signaturesPKCS7/ac",
-                new \S2low\Services\ProcessCommand\CommandLauncher()
+                new CommandLauncher()
             )
         );
 
@@ -183,9 +226,9 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
             "$baseSignatureDir/ac/",
             new VerifyPemCertificateFactory(),
             new PemCertificateFactory(),
-            new \S2low\Services\ProcessCommand\OpenSSLWrapper(
+            new OpenSSLWrapper(
                 "$baseSignatureDir/ac/",
-                new \S2low\Services\ProcessCommand\CommandLauncher()
+                new CommandLauncher()
             )
         );
 
