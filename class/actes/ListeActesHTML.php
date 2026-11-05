@@ -381,8 +381,8 @@ class ListeActesHTML
                                                             <img src="<?php echo Helpers::getLink('/custom/images/erreur.png'); ?>"
                                                                             alt="image_modif" title="Afficher le détail" />
                                                     </a>
-                                                    <?php if ($envelope['archive_url']) : ?>
-                                                                <a href="<?php echo $envelope['archive_url'] ?>"
+                                                    <?php if ($envelope['archive_url'] && preg_match('#^https?://#i', $envelope['archive_url'])) : ?>
+                                                                <a href="<?php hecho($envelope['archive_url']); ?>"
                                                                     class="icon">
                                                                     <img src="<?php echo Helpers::getLink('/custom/images/icone_archivage.png'); ?>"
                                                                                     alt="image_archivage" title="Accéder à  l'archivage de cette transaction" />
