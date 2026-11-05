@@ -12,6 +12,8 @@ dépendances transitives.
   (CVSS 8.8 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H) #1610 #1611
 - Faille de traversée de chemin
   (CVSS 8.1 - criticité HAUTE - CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H) #1618
+- Faille IDOR sur la notification des actes
+  (CVSS 7.1 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:L/A:N) #1617
 
 ## [5.1.20] - 2026-10-21
 
