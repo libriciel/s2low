@@ -41,7 +41,8 @@ class MenuHTML
         $logoutRoute = LegacyObjectsManager::getLegacyObjectInstancier()->get('router')->generate('app_logout');
 
 
-        $moduleMenu = new ModuleMenu(UserRole::from($userInfo['role']), $modulesInfo);
+        $userRole = UserRole::from($userInfo['role']);
+        $moduleMenu = new ModuleMenu($userRole, $modulesInfo);
 
         $nb_days_before_certificate_expires = $this->getNbDaysBeforeCertificatExpire($userInfo);
 
@@ -68,7 +69,7 @@ class MenuHTML
                             <span class="menu-identity-initials" aria-hidden="true"><?php hecho($initials) ?></span>
                             <span class="menu-identity-civility">
                                 <span class="menu-identity-name"><?php hecho($userInfo['givenname'] . ' ' . $userInfo['name']) ?></span>
-                                <span class="menu-identity-role"><?php echo $userInfo['role_str'] ?></span>
+                                <span class="menu-identity-role"><?php hecho($userRole->getLabel()) ?></span>
                             </span>
                         </div>
                         <?php if ($affiliationName !== null) : ?>
