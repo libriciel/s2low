@@ -362,7 +362,7 @@ ob_start();
                             <td headers="filename">
                                 <?php hecho($envelope["filename"]); ?>
                                 <?php if ($envelope['xml_nomfic']) : ?>
-                                    <br/><small> NomFic : <?php echo $envelope['xml_nomfic'] ?></small>
+                                    <br/><small> NomFic : <?php hecho($envelope['xml_nomfic']); ?></small>
                                 <?php endif; ?>
                             </td>
                             <td headers="date">

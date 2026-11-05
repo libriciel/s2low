@@ -77,9 +77,12 @@ ob_start();
         foreach ($transactions_list as $transaction) :
             ?>
             <tr>
-                <td><a href="/modules/helios/helios_transac_show.php?id=<?php echo $transaction['id'] ?>"><?php echo $transaction['filename'] ?></a>
+                <td>
+                    <a href="/modules/helios/helios_transac_show.php?id=<?php echo $transaction['id']; ?>">
+                        <?php hecho($transaction['filename']); ?>
+                    </a>
                     <br/>
-                    Nomfic : <?php echo $transaction['xml_nomfic'] ?>
+                    Nomfic : <?php hecho($transaction['xml_nomfic']); ?>
                 </td>
                 <td><?php echo $transaction['submission_date'] ?></td>
                 <td><?php echo $transaction['helios_ftp_dest'] ?></td>
