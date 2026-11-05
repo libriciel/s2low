@@ -3,11 +3,8 @@
 namespace PHPUnit\class;
 
 use Exception;
-use Monolog\Handler\TestHandler;
 use Monolog\Level;
-use Monolog\Logger;
 use PhpImap;
-use Psr\Log\LoggerInterface;
 use S2lowTestCase;
 use stdClass;
 use S2lowLegacy\Class\actes\ActesImapProperties;
@@ -104,10 +101,39 @@ class ActesImapRetrieveTest extends S2lowTestCase
         return $tmp;
     }
 
-    private function getImapMailBoxFactory($mailHtmlText = "mon texte html")
+    /**
+     * @throws Exception
+     */
+    public function testRetrieveAttachmentNameCannotEscapeDirectory(): void
     {
-        $attachments = new StdClass();
-        $attachments->name = "foo-école.pdf";
+        $escapedName = 's2low_audit_' . bin2hex(random_bytes(8)) . '.php';
+        $escapedPath = sys_get_temp_dir() . "/$escapedName";
+
+        $actesImapRetrieve = new ActesImapRetrieve(
+            $this->getImapProperties(),
+            $this->getVFS(),
+            $this->getImapMailBoxFactory('mon texte html', "../$escapedName"),
+            $this->logger,
+            SigTermHandler::getInstance(),
+            $this->getWorkerScript()
+        );
+
+        try {
+            $actesImapRetrieve->retrieve();
+            static::assertFileDoesNotExist($escapedPath);
+            static::assertTrue($this->testHandler->hasInfoThatContains('Sauvegarde de'));
+            static::assertFalse($this->testHandler->hasInfoThatContains('../'));
+        } finally {
+            @unlink($escapedPath);
+        }
+    }
+
+    private function getImapMailBoxFactory(
+        string $mailHtmlText = 'mon texte html',
+        string $attachmentName = 'foo-école.pdf',
+    ): ImapMailBoxFactory {
+        $attachments = new stdClass();
+        $attachments->name = $attachmentName;
         $attachments->filePath = __FILE__;
 
         $incomingMail = $this->getMockBuilder(PhpImap\IncomingMail::class)->disableOriginalConstructor()->getMock();
