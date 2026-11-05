@@ -117,8 +117,13 @@ class ActesImapRetrieve
             }
         }
 
-        foreach ($incomingMail->getAttachments() as $attachment) {
-            $attachment_path = $tmp_dir . '/' . $attachment->name;
+        foreach ($incomingMail->getAttachments() as $index => $attachment) {
+            // The name comes from the mail: keep only its last component so it stays inside $tmp_dir
+            $attachment_name = basename(str_replace('\\', '/', (string) $attachment->name));
+            if (\in_array($attachment_name, ['', '.', '..'], true)) {
+                $attachment_name = "attachment_$index";
+            }
+            $attachment_path = $tmp_dir . '/' . $attachment_name;
             $this->logger->info("Sauvegarde de $attachment_path");
 
             if (! copy($attachment->filePath, $attachment_path)) {
