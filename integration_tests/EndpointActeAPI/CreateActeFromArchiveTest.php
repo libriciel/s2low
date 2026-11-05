@@ -173,4 +173,86 @@ class CreateActeFromArchiveTest extends S2lowIntegrationTestCase
             (new Filesystem())->remove($build_dir);
         }
     }
+
+    public function testImportRefusesActeFileOutsideTheArchive(): void
+    {
+        $canary = sys_get_temp_dir() . '/' . uniqid('foo-', true) . '.pdf';
+        copy(__DIR__ . '/../../test/PHPUnit/fixtures/vide.pdf', $canary);
+        $outside = str_repeat('../', 20) . ltrim($canary, '/');
+
+        try {
+            $response = $this->importTamperedArchive(function (string $dir) use ($outside) {
+                $this->replaceInFile(
+                    "$dir/034-123456789-20250306-43636243-AI-1-1_0.xml",
+                    '99_AI-034-123456789-20250306-43636243-AI-1-1_1.pdf',
+                    $outside
+                );
+            });
+
+            static::assertFileExists($canary);
+            static::assertStringNotContainsString('Importation fichier archive réussie.', $response);
+            static::assertSame(0, $this->countTransactions());
+        } finally {
+            @unlink($canary);
+        }
+    }
+
+    public function testImportRefusesMessageFileThroughSymbolicLink(): void
+    {
+        $outsideMessage = sys_get_temp_dir() . '/' . uniqid('foo-', true) . '.xml';
+        $response = $this->importTamperedArchive(function (string $dir) use ($outsideMessage) {
+            rename("$dir/034-123456789-20250306-43636243-AI-1-1_0.xml", $outsideMessage);
+            symlink($outsideMessage, "$dir/034-123456789-20250306-43636243-AI-1-1_0.xml");
+        });
+        @unlink($outsideMessage);
+
+        static::assertStringNotContainsString('Importation fichier archive réussie.', $response);
+        static::assertSame(0, $this->countTransactions());
+    }
+
+    private function importTamperedArchive(callable $tamper): string
+    {
+        $this->setUserWithRole(UserRole::Utilisateur);
+        $archiveName = 'abc-TACT--123456789--20250313-1.tar.gz';
+        $archivePath = sys_get_temp_dir() . '/' . $archiveName;
+        $dir = sys_get_temp_dir() . '/' . uniqid('foo-', true);
+        mkdir($dir);
+
+        try {
+            exec(
+                'tar xzf ' . escapeshellarg(__DIR__ . '/../fixtures/abc-TACT--123456789--20250313-0.tar.gz')
+                . ' -C ' . escapeshellarg($dir),
+                $output,
+                $ret
+            );
+            static::assertSame(0, $ret);
+            $tamper($dir);
+            exec('tar czf ' . escapeshellarg($archivePath) . ' -C ' . escapeshellarg($dir) . ' .', $output, $ret);
+            static::assertSame(0, $ret);
+
+            $_FILES['enveloppe'] = [
+                'name' => $archiveName,
+                'type' => 'application/gzip',
+                'tmp_name' => $archivePath,
+                'error' => UPLOAD_ERR_OK,
+                'size' => filesize($archivePath),
+            ];
+            $_POST['api'] = 1;
+            $this->client->request('POST', '/modules/actes/actes_transac_submit.php', ['api' => 1]);
+            return $this->client->getResponse()->getContent();
+        } finally {
+            exec('rm -rf ' . escapeshellarg($dir));
+            @unlink($archivePath);
+        }
+    }
+
+    private function replaceInFile(string $path, string $search, string $replace): void
+    {
+        file_put_contents($path, str_replace($search, $replace, file_get_contents($path)));
+    }
+
+    private function countTransactions(): int
+    {
+        return (int) $this->sqlQuery->queryOne('SELECT count(*) FROM actes_transactions;');
+    }
 }
