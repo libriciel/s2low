@@ -878,7 +878,10 @@ class ActesTransaction extends DataObject
 
 
               // Fichier de l'acte
-                $actePath = dirname($xmlFile) . "/" . Helpers :: getFromXMLElt($actesItems->Document->NomFichier);
+                $actePath = $this->getImportedFilePath($xmlFile, $actesItems->Document->NomFichier);
+                if ($actePath === false) {
+                    return false;
+                }
 
                 if (count($actesItems->Document->NomFichier) != 1) {
                     $this->errorMsg = "Impossible de traiter plusieurs document actes";
@@ -918,9 +921,9 @@ class ActesTransaction extends DataObject
             // Fichiers pièces jointes
                 if (isset($actesItems->Annexes)) {
                     foreach ($actesItems->Annexes->Annexe as $annexe) {
-                        $attachmentPath = dirname($xmlFile) . "/" . Helpers :: getFromXMLElt($annexe->NomFichier);
+                        $attachmentPath = $this->getImportedFilePath($xmlFile, $annexe->NomFichier);
 
-                        if (!$this->addAttachmentFile($attachmentPath, $attachmentPath)) {
+                        if ($attachmentPath === false || !$this->addAttachmentFile($attachmentPath, $attachmentPath)) {
                             return false;
                         }
 
@@ -1169,6 +1172,25 @@ class ActesTransaction extends DataObject
         return true;
     }
 
+    /**
+     * Path of a file named in an imported envelope, or false when the name is not a plain file name of the
+     * extraction directory: these files are read, then deleted once the archive is rebuilt
+     */
+    private function getImportedFilePath(string $xmlFile, ?SimpleXMLElement $fileName): string|false
+    {
+        $name = Helpers::getFromXMLElt($fileName);
+        $path = dirname($xmlFile) . '/' . $name;
+        if (
+            in_array($name, ['', '.', '..'], true)
+            || basename($name) !== $name
+            || is_link($this->rootDir . '/' . $path)
+        ) {
+            $this->errorMsg = "Nom de fichier invalide dans l'enveloppe.";
+            return false;
+        }
+        return $path;
+    }
+
     private function setDataFromCourrier(TypeTransaction $type, $xmlFile, $isRefus = false)
     {
 
@@ -1199,15 +1221,15 @@ class ActesTransaction extends DataObject
 
         if ($type == TypeTransaction::DemandePieceComplementaire && !$isRefus) {
             foreach ($actesItems->Documents->Document as $fichiers) {
-                $actePath = dirname($xmlFile) . "/" . Helpers :: getFromXMLElt($fichiers->NomFichier);
-                if (!$this->addActeFile($actePath, $actePath)) {
+                $actePath = $this->getImportedFilePath($xmlFile, $fichiers->NomFichier);
+                if ($actePath === false || !$this->addActeFile($actePath, $actePath)) {
                      return false;
                 }
             }
         } else {
-            $actePath = dirname($xmlFile) . "/" . Helpers :: getFromXMLElt($actesItems->Document->NomFichier);
+            $actePath = $this->getImportedFilePath($xmlFile, $actesItems->Document->NomFichier);
 
-            if (!$this->addActeFile($actePath, $actePath)) {
+            if ($actePath === false || !$this->addActeFile($actePath, $actePath)) {
                  return false;
             }
 

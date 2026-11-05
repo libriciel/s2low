@@ -704,7 +704,18 @@ class ActesEnvelope extends DataObject
         $messages = $actesItems->FormulairesEnvoyes;
 
         foreach ($messages->Formulaire as $message) {
-            $xmlFiles[] = $this->destDir . "/" . $this->tmpDir . "/" . sprintf("%s", $message->NomFichier);
+            $name = sprintf('%s', $message->NomFichier);
+            $xmlFile = $this->destDir . '/' . $this->tmpDir . '/' . $name;
+            // The message file is read then deleted: it must be a plain file name of the extraction directory
+            if (
+                in_array($name, ['', '.', '..'], true)
+                || basename($name) !== $name
+                || is_link($this->rootDir . '/' . $xmlFile,)
+            ) {
+                $this->errorMsg = "Nom de fichier invalide dans l'enveloppe.";
+                return false;
+            }
+            $xmlFiles[] = $xmlFile;
         }
 
         return $xmlFiles;
