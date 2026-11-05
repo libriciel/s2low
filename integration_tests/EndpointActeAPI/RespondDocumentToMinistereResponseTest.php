@@ -124,6 +124,48 @@ class RespondDocumentToMinistereResponseTest extends S2lowIntegrationTestCase
         static::assertStringContainsString($data['stringInResponse'], $response->getContent());
     }
 
+    public function testRefusesTypeEnvoieWithPath(): void
+    {
+        $escapedDir = sys_get_temp_dir() . '/s2low_audit_' . bin2hex(random_bytes(8));
+        $transactionId = $this->createTransactionOfType(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU, 3);
+        $filePath = __DIR__ . '/../fixtures/PDFTest.pdf';
+        $postedData = [
+            'api' => 1,
+            'id' => $transactionId,
+            'type_envoie' => '/' . str_repeat('../', 20) . ltrim($escapedDir, '/') . '/x',
+            'type_acte' => '99_AU',
+            'type_pj' => '',
+            'nature_code' => '3',
+        ];
+        $_POST = $postedData;
+        $_FILES['acte_pdf_file'] = [
+            'name' => 'PDFTest.pdf',
+            'type' => 'application/pdf',
+            'tmp_name' => $filePath,
+            'error' => UPLOAD_ERR_OK,
+            'size' => null,
+        ];
+        $this->setUserWithRole(UserRole::Utilisateur);
+
+        try {
+            $this->client->request(
+                'POST',
+                '/modules/actes/actes_transac_reponse_create.php',
+                $postedData,
+                ['acte_pdf_file' => new UploadedFile($filePath, 'PDFTest.pdf', 'application/pdf', UPLOAD_ERR_OK, true)],
+            );
+
+            static::assertDirectoryDoesNotExist($escapedDir);
+            static::assertStringContainsString(
+                mb_convert_encoding('Type de réponse invalide', 'ISO-8859-1', 'UTF-8'),
+                $this->client->getResponse()->getContent()
+            );
+        } finally {
+            array_map('unlink', glob($escapedDir . '/*') ?: []);
+            @rmdir($escapedDir);
+        }
+    }
+
     public function testRefusesToRespondToDocumentOfAnotherAuthority(): void
     {
         $userOfAnotherAuthority = 51;

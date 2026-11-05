@@ -92,6 +92,10 @@ if (empty($type_acte)) {
 
 $type_transaction = $related_trans->get("type");
 $type_envoie = Helpers:: getVarFromPost("type_envoie", true);
+// type_envoie ends up in the stored file name: only a response type number is allowed
+if (!empty($type_envoie) && !ctype_digit((string) $type_envoie)) {
+    sortir_atrc('Type de réponse invalide', $api);
+}
 
 $actePDFFile = $_FILES["acte_pdf_file"];
 if (isset($_FILES["acte_pdf_file_sign"])) {
