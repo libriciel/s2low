@@ -15,7 +15,7 @@ dépendances transitives.
 - Faille IDOR sur la notification des actes
   (CVSS 7.1 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:L/A:N) #1617
 - Failles XSS
-  (CVSS 7.3 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:H/I:H/A:N) #1614
+  (CVSS 7.3 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:H/I:H/A:N) #1614 #1615
 - Faille de traversée de chemin
   (CVSS 7.1 - criticité HAUTE - CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:L) #1613
 - Faille de traversée de chemin
