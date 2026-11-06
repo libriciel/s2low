@@ -11,9 +11,14 @@
                     <span class="menu-identity-role">{{ app.user.role|labeliseRole }}</span>
                 </span>
             </div>
-            {% if this.affiliationName is not null %}
-                <div class="menu-affiliation menu-affiliation-{{ this.affiliationType }}">{{ this.affiliationName }}</div>
-            {% endif %}
+            {% for group in this.groups %}
+                <div class="menu-affiliation">
+                    <span class="menu-affiliation-text">
+                        <span class="menu-affiliation-caption">{{ group.caption }}</span>
+                        <span class="menu-affiliation-name">{{ group.groupName }}</span>
+                    </span>
+                </div>
+            {% endfor %}
         </div>
         {% include 'components/certificat_expiration_warning.html.twig' with {'nb_day_before_certificate_expire': app.user.certExpirationDate|days_ago} %}
         {% if this.messageAdminTitle is not null %}
