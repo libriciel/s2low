@@ -24,6 +24,17 @@ class AdminUsersTest extends S2lowIntegrationTestCase
         $this->givenAnAuthorityAdministeredOnlyThroughModuleGroups(self::AUTHORITY_OF_ANOTHER_GROUP, self::OTHER_GROUP_ID, self::OTHER_GROUP_ID);
     }
 
+    public function testAGroupAdminFiltersUsersOnAnAuthorityAdministeredForASingleModule(): void
+    {
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+
+        $_GET = [];
+        $page = $this->client->request('GET', '/admin/users/admin_users.php');
+
+        static::assertTrue($this->offersAuthority($page, 'authority', self::AUTHORITY_ADMINISTERED_FOR_HELIOS_ONLY));
+        static::assertFalse($this->offersAuthority($page, 'authority', self::AUTHORITY_OF_ANOTHER_GROUP));
+    }
+
     public function testAGroupAdminEditsAUserOfAnAuthorityAdministeredForASingleModule(): void
     {
         $this->setUserWithRole(UserRole::AdministrateurGroupe);
@@ -47,6 +58,17 @@ class AdminUsersTest extends S2lowIntegrationTestCase
 
         static::assertTrue($this->offersAuthority($page, 'authority_id', self::AUTHORITY_ADMINISTERED_FOR_HELIOS_ONLY));
         static::assertFalse($this->offersAuthority($page, 'authority_id', self::AUTHORITY_OF_ANOTHER_GROUP));
+    }
+
+    public function testASuperAdminFilteringOnAGroupSeesUsersOfAnAuthorityAdministeredForASingleModule(): void
+    {
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+
+        $_GET = ['status' => '', 'group' => (string)self::GROUP_ID];
+        $page = $this->client->request('GET', '/admin/users/admin_users.php');
+
+        $userId = self::USER_OF_AUTHORITY_ADMINISTERED_FOR_HELIOS_ONLY;
+        static::assertCount(1, $page->filterXPath("//a[contains(@href, 'admin_user_edit.php?id=$userId')]"));
     }
 
     private function givenAnAuthorityAdministeredOnlyThroughModuleGroups(int $authorityId, int $actesGroupId, int $heliosGroupId): void
