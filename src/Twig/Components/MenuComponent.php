@@ -2,6 +2,7 @@
 
 namespace S2low\Twig\Components;
 
+use S2low\DTO\GroupAffiliation;
 use S2low\Helpers\UserIdentityHelper;
 use S2low\Security\LegacyAuthenticationBridge;
 use S2low\Services\UserAffiliation;
@@ -30,21 +31,17 @@ class MenuComponent
         return UserIdentityHelper::getInitials($user->getGivenname(), $user->getName());
     }
 
-    public function getAffiliationType(): ?string
-    {
-        $user = $this->authenticationBridge->getAuthenticatedUser();
-
-        return $user ? $this->userAffiliation->getType($user->getRole()) : null;
-    }
-
-    public function getAffiliationName(): ?string
+    /**
+     * @return list<GroupAffiliation>
+     */
+    public function getGroups(): array
     {
         $user = $this->authenticationBridge->getAuthenticatedUser();
         if (! $user) {
-            return null;
+            return [];
         }
 
-        return $this->userAffiliation->getName(
+        return $this->userAffiliation->getGroups(
             $user->getRole(),
             $user->getAuthorityId(),
             $user->getAuthorityGroupId()

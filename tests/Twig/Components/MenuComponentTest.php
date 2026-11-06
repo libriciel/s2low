@@ -6,6 +6,7 @@ namespace S2low\Tests\Twig\Components;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use S2low\DTO\GroupAffiliation;
 use S2low\Security\LegacyAuthenticationBridge;
 use S2low\Security\SecurityUser;
 use S2low\Services\UserAffiliation;
@@ -51,54 +52,25 @@ class MenuComponentTest extends TestCase
         static::assertSame('', $this->menuComponent->getInitials());
     }
 
-    public function testSuperAdminHasNoAffiliation(): void
-    {
-        $this->authenticationBridge->method('getAuthenticatedUser')
-            ->willReturn($this->aUser(['role' => 'SADM']));
-
-        $this->userAffiliation->method('getType')->with('SADM')->willReturn(null);
-        $this->userAffiliation->method('getName')->willReturn(null);
-
-        static::assertNull($this->menuComponent->getAffiliationType());
-        static::assertNull($this->menuComponent->getAffiliationName());
-    }
-
-    public function testGroupAdminIsAffiliatedToItsGroup(): void
+    public function testGroupsAreResolvedFromTheConnectedUser(): void
     {
         $this->authenticationBridge->method('getAuthenticatedUser')
             ->willReturn($this->aUser(['role' => 'GADM', 'authority_id' => 42, 'authority_group_id' => 7]));
 
-        $this->userAffiliation->method('getType')->with('GADM')->willReturn(UserAffiliation::TYPE_GROUP);
-        $this->userAffiliation->method('getName')->with('GADM', 42, 7)->willReturn('Groupement du Limousin');
+        $groups = [new GroupAffiliation('Groupement du Limousin', [])];
+        $this->userAffiliation->method('getGroups')
+            ->with('GADM', 42, 7)
+            ->willReturn($groups);
 
-        static::assertSame(UserAffiliation::TYPE_GROUP, $this->menuComponent->getAffiliationType());
-        static::assertSame('Groupement du Limousin', $this->menuComponent->getAffiliationName());
+        static::assertSame($groups, $this->menuComponent->getGroups());
     }
 
-    public function testAffiliationIsResolvedFromTheConnectedUser(): void
-    {
-        $this->authenticationBridge->method('getAuthenticatedUser')
-            ->willReturn($this->aUser(['role' => 'ADM', 'authority_id' => 42, 'authority_group_id' => 7]));
-
-        $this->userAffiliation->method('getName')
-            ->with('ADM', 42, 7)
-            ->willReturn('Mairie de Saint-Just-le-Martel');
-        $this->userAffiliation->method('getType')
-            ->with('ADM')
-            ->willReturn(UserAffiliation::TYPE_AUTHORITY);
-
-        static::assertSame('Mairie de Saint-Just-le-Martel', $this->menuComponent->getAffiliationName());
-        static::assertSame(UserAffiliation::TYPE_AUTHORITY, $this->menuComponent->getAffiliationType());
-    }
-
-    public function testAffiliationIsNullWhenNoUser(): void
+    public function testNoGroupWhenNoUser(): void
     {
         $this->authenticationBridge->method('getAuthenticatedUser')->willReturn(null);
-        $this->userAffiliation->expects(static::never())->method('getName');
-        $this->userAffiliation->expects(static::never())->method('getType');
+        $this->userAffiliation->expects(static::never())->method('getGroups');
 
-        static::assertNull($this->menuComponent->getAffiliationName());
-        static::assertNull($this->menuComponent->getAffiliationType());
+        static::assertSame([], $this->menuComponent->getGroups());
     }
 
     public function testCertificateIsNotSharedWhenNoUser(): void

@@ -49,8 +49,7 @@ class MenuHTML
         $objectInstancier  = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
         /** @var UserAffiliation $userAffiliation */
         $userAffiliation = $objectInstancier->get(UserAffiliation::class);
-        $affiliationType = $userAffiliation->getType($userInfo['role']);
-        $affiliationName = $userAffiliation->getName(
+        $groups = $userAffiliation->getGroups(
             $userInfo['role'],
             $userInfo['authority_id'] ?? null,
             $userInfo['authority_group_id'] ?? null
@@ -72,9 +71,14 @@ class MenuHTML
                                 <span class="menu-identity-role"><?php hecho($userRole->getLabel()) ?></span>
                             </span>
                         </div>
-                        <?php if ($affiliationName !== null) : ?>
-                            <div class="menu-affiliation menu-affiliation-<?php hecho($affiliationType) ?>"><?php hecho($affiliationName) ?></div>
-                        <?php endif; ?>
+                        <?php foreach ($groups as $group) : ?>
+                            <div class="menu-affiliation">
+                                <span class="menu-affiliation-text">
+                                    <span class="menu-affiliation-caption"><?php hecho($group->getCaption()) ?></span>
+                                    <span class="menu-affiliation-name"><?php hecho($group->groupName) ?></span>
+                                </span>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
 
                     <?php if ($nb_days_before_certificate_expires < self::NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_DANGER) :?>

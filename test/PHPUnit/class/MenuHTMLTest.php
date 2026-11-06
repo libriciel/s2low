@@ -12,6 +12,10 @@ use S2lowTestCase;
 
 class MenuHTMLTest extends S2lowTestCase
 {
+    private const int AUTHORITY_ID = 1;
+    private const string AUTHORITY_NAME = 'Bourg-en-Bresse';
+    private const string GROUP_NAME = 'Groupe de test';
+
     public static function roleProvider(): Generator
     {
         foreach (UserRole::cases() as $role) {
@@ -24,22 +28,53 @@ class MenuHTMLTest extends S2lowTestCase
      */
     public function testShowsTheSameRoleLabelAsTheTwigMenu(UserRole $role): void
     {
-        $userInfo = [
-            'role' => $role->value,
-            'role_str' => User::ROLES_DESCR[$role->value],
-            'givenname' => 'Ada',
-            'name' => 'Lovelace',
-            'authority_id' => null,
-            'authority_group_id' => null,
-            'nb_user_with_my_certificate' => 1,
-            'certificate' => (string) file_get_contents(__DIR__ . '/../lib/fixtures/user1.pem'),
-        ];
-
-        $menu = (new MenuHTML())->getMenuContent($userInfo, []);
+        $menu = (new MenuHTML())->getMenuContent($this->userInfo($role, null), []);
 
         static::assertStringContainsString(
             '<span class="menu-identity-role">' . $role->getLabel() . '</span>',
             $menu
         );
+    }
+
+    /**
+     * @dataProvider authorityRoleProvider
+     */
+    public function testShowsOnlyTheGroupsAdministeringTheAuthority(UserRole $role): void
+    {
+        $menu = (new MenuHTML())->getMenuContent($this->userInfo($role, self::AUTHORITY_ID), []);
+
+        static::assertStringContainsString(
+            '<span class="menu-affiliation-caption">Groupe Actes / Helios</span>',
+            $menu
+        );
+        static::assertStringContainsString(
+            '<span class="menu-affiliation-name">' . self::GROUP_NAME . '</span>',
+            $menu
+        );
+        static::assertStringNotContainsString(self::AUTHORITY_NAME, $menu);
+    }
+
+    public static function authorityRoleProvider(): Generator
+    {
+        yield 'administrateur de collectivité' => [UserRole::AdministrateurCollectivite];
+        yield 'utilisateur' => [UserRole::Utilisateur];
+        yield 'archiviste' => [UserRole::Archiviste];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function userInfo(UserRole $role, ?int $authorityId): array
+    {
+        return [
+            'role' => $role->value,
+            'role_str' => User::ROLES_DESCR[$role->value],
+            'givenname' => 'Ada',
+            'name' => 'Lovelace',
+            'authority_id' => $authorityId,
+            'authority_group_id' => null,
+            'nb_user_with_my_certificate' => 1,
+            'certificate' => (string) file_get_contents(__DIR__ . '/../lib/fixtures/user1.pem'),
+        ];
     }
 }

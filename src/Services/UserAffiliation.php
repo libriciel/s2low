@@ -2,48 +2,74 @@
 
 namespace S2low\Services;
 
+use S2low\DTO\AdministeringGroups;
+use S2low\DTO\GroupAffiliation;
+use S2low\Enum\AdministeredModule;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\GroupSQL;
 
-/**
- * Périmètre sur lequel un utilisateur agit, tel qu'il est affiché dans le menu.
- *
- * Partagé par le composant Twig et le menu historique (S2lowLegacy\Class\MenuHTML).
- */
 class UserAffiliation
 {
-    public const TYPE_AUTHORITY = 'authority';
-    public const TYPE_GROUP = 'group';
-
     public function __construct(
         private readonly AuthoritySQL $authoritySQL,
         private readonly GroupSQL $groupSQL
     ) {
     }
 
-    public function getType(?string $role): ?string
+    /**
+     * @return list<GroupAffiliation>
+     */
+    public function getGroups(?string $role, ?int $authorityId, ?int $authorityGroupId): array
     {
         $userRole = UserRole::fromRole($role);
         if ($userRole === null || $userRole->isSuperAdmin()) {
-            return null;
+            return [];
         }
 
-        return $userRole->isGroupAdmin() ? self::TYPE_GROUP : self::TYPE_AUTHORITY;
+        if ($userRole->isGroupAdmin()) {
+            return $this->affiliate([(int) $authorityGroupId => []]);
+        }
+
+        return $this->affiliate($this->modulesByAdministeringGroup($authorityId));
     }
 
-    public function getName(?string $role, ?int $authorityId, ?int $authorityGroupId): ?string
+    /**
+     * @return array<int, list<AdministeredModule>>
+     */
+    private function modulesByAdministeringGroup(?int $authorityId): array
     {
-        $type = $this->getType($role);
-        if ($type === null) {
-            return null;
+        if (! $authorityId) {
+            return [];
         }
 
-        if ($type === self::TYPE_GROUP) {
-            return $authorityGroupId ? $this->readName($this->groupSQL->getInfo($authorityGroupId)) : null;
+        $administeringGroups = AdministeringGroups::fromAuthorityInfo($this->authoritySQL->getInfo($authorityId) ?: []);
+
+        $modulesByGroupId = [];
+        foreach (AdministeredModule::cases() as $module) {
+            if ($administeringGroups->isDesignatedFor($module)) {
+                $modulesByGroupId[$administeringGroups->groupIdFor($module)][] = $module;
+            }
         }
 
-        return $authorityId ? $this->readName($this->authoritySQL->getInfo($authorityId)) : null;
+        return $modulesByGroupId;
+    }
+
+    /**
+     * @param array<int, list<AdministeredModule>> $modulesByGroupId
+     * @return list<GroupAffiliation>
+     */
+    private function affiliate(array $modulesByGroupId): array
+    {
+        $affiliations = [];
+        foreach ($modulesByGroupId as $groupId => $modules) {
+            $groupName = $groupId ? $this->readName($this->groupSQL->getInfo($groupId)) : null;
+            if ($groupName !== null) {
+                $affiliations[] = new GroupAffiliation($groupName, $modules);
+            }
+        }
+
+        return $affiliations;
     }
 
     /** @param mixed $info */
