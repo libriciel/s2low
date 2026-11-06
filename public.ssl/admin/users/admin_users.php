@@ -54,7 +54,8 @@ if ($me->isSuper()) { // Le super utilisateur voit toutes les collectivités et 
             $filter[] = "users.authority_id=" . $connection->quote($fauthority);
         }
     }
-    $filter[] = "authorities.authority_group_id='" . $me->get('authority_group_id') . "'";
+    $groupId = $connection->quote($me->get('authority_group_id'));
+    $filter[] = "(authorities.actes_group_id=$groupId OR authorities.helios_group_id=$groupId)";
 } elseif ($me->isAuthorityAdmin()) {
     //Un admin d'une collectivité ne voit forcément que les utilisateurs de sa collectivité
     $filter[] = "users.authority_id='" . $me->get('authority_id') . "'";

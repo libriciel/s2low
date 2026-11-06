@@ -20,6 +20,14 @@ enum AdministeredModule: int
         };
     }
 
+    public function groupNameColumn(): string
+    {
+        return match ($this) {
+            self::ACTES => 'actes_group_name',
+            self::HELIOS => 'helios_group_name',
+        };
+    }
+
     public function label(): string
     {
         return match ($this) {

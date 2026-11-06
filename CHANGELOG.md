@@ -29,6 +29,14 @@
   sa fiche, ses numéros SIRET et ses services lui sont ouverts, et il peut éditer ses utilisateurs. #1584
 - Les statistiques Actes et Helios ne sont servies qu'au groupe de l'administrateur qui les demande. #1584
 - Un groupe désigné pour administrer un module d'une collectivité n'est plus supprimable. #1584
+- La liste des collectivités, leur export, la liste des utilisateurs et les journaux présentent à un administrateur de groupe toutes
+les collectivités dont son groupe administre au moins un module. #1585
+- La liste des collectivités et son export nomment le groupe administrateur du module Actes et celui du module Helios,
+  en deux colonnes. Un administrateur de groupe n'y lit que le nom du sien : le groupe qui administre l'autre module est
+  masqué par des étoiles. #1585
+- La liste des transactions Helios ne se filtre plus que sur les collectivités dont l'utilisateur administre le module Helios. #1585
+- L'export Actes n'est plus servi à un administrateur de groupe que pour les collectivités dont son groupe administre le
+  module Actes. #1585
 
 ### Corrections
 
@@ -36,6 +44,11 @@
 - Un échec d'enregistrement d'une collectivité s'affiche sans son balisage. #1576
 - Un SIREN déjà porté par une collectivité n'est plus proposé pour en créer une autre, ni accepté à l'enregistrement, y
   compris lorsqu'il est réservé à plusieurs groupes. #1576
+
+### Sécurité
+
+- La page de gestion des collectivités et son API, qui servaient toutes les collectivités à un administrateur de collectivité,
+lui sont désormais refusées. #1585
 
 ### Suppressions
 

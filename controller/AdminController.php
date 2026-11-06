@@ -177,7 +177,9 @@ class AdminController extends Controller
 
     public function authoritiesAction()
     {
-        $this->verifAdmin();
+        // La liste porte sur toutes les collectivités d'un groupe : elle n'est pas du ressort de
+        // l'administrateur d'une seule, que le menu n'y conduit d'ailleurs pas.
+        $this->verifGroupOrSuperAdmin();
         $pagerHTML  = new PagerHTML();
         $this->setViewParameter('title', "Gestion des collectivités | S²low");
         $recuperateur = $this->getRecuperateurGet();
@@ -200,6 +202,13 @@ class AdminController extends Controller
 
         $authoritySQL = new AuthoritySQL($this->getSQLQuery());
         $this->authorities = $authoritySQL->getList($this->fgroup, $this->ftype, $this->fname, $this->fsiren, $this->fsiret, ($this->page_number - 1) * $this->taille_page, $this->taille_page);
+
+        if ($this->me->isGroupAdmin()) {
+            $this->authorities = array_map(
+                fn(array $authority): array => $this->withoutOtherGroupNames($authority, (int)$user_authority_group_id),
+                $this->authorities
+            );
+        }
 
         $nb_authorities = $authoritySQL->getNb($this->fgroup, $this->ftype, $this->fname, $this->fsiren, $this->fsiret);
 

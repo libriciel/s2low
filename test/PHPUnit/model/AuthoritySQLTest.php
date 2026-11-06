@@ -1,5 +1,6 @@
 <?php
 
+use S2low\Enum\AdministeredModule;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\PastellProperties;
 
@@ -73,10 +74,78 @@ class AuthoritySQLTest extends S2lowTestCase
         $this->assertEquals(0, $this->authoritySQL->getNb(1, 1, 'toto', '123', "1234"));
     }
 
-    public function testGetAllGroup()
+    public function testGetAllAdministeredBy()
     {
-        $result = $this->authoritySQL->getAllGroup(1);
-        $this->assertEquals('Saint-Andre de Corcy', $result[2]);
+        $result = $this->authoritySQL->getAllAdministeredBy(1);
+        $this->assertSame('Saint-Andre de Corcy', $result[2]);
+    }
+
+    public function testGetAllAdministeredByOnASingleModule()
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = NULL WHERE id = 2');
+
+        $result = $this->authoritySQL->getAllAdministeredBy(2);
+
+        $this->assertSame('Saint-Andre de Corcy', $result[2]);
+    }
+
+    public function testGetAllAdministeredByAGroupWithoutDesignation()
+    {
+        $this->assertSame([], $this->authoritySQL->getAllAdministeredBy(2));
+    }
+
+    public function testGetAllAdministeredForModuleBy()
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 1 WHERE id = 2');
+
+        $result = $this->authoritySQL->getAllAdministeredForModuleBy(AdministeredModule::ACTES, 2);
+
+        $this->assertSame([2 => 'Saint-Andre de Corcy'], $result);
+    }
+
+    public function testGetAllAdministeredForModuleByIgnoresTheOtherModule()
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 2');
+
+        $this->assertSame([], $this->authoritySQL->getAllAdministeredForModuleBy(AdministeredModule::HELIOS, 1));
+    }
+
+    public function testGetListKeepsAnAuthorityAdministeredForASingleModule()
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 1 WHERE id = 2');
+
+        $result = $this->authoritySQL->getList(2, false, false, false, false, 0, 10);
+
+        $this->assertSame([2], array_map('intval', array_column($result, 'id')));
+    }
+
+    public function testGetListNamesBothAdministeringGroups()
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 1, helios_group_id = 2 WHERE id = 2');
+
+        $result = $this->authoritySQL->getList(false, false, 'Saint-Andre', false, false, 0, 10);
+
+        $this->assertSame('Groupe de test', $result[0]['actes_group_name']);
+        $this->assertSame('second groupe', $result[0]['helios_group_name']);
+    }
+
+    public function testGetNbCountsAuthoritiesAdministeredByTheGroup()
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 2 WHERE id = 2');
+
+        $this->assertSame(2, (int)$this->authoritySQL->getNb(1, false, false, false, false));
+        $this->assertSame(1, (int)$this->authoritySQL->getNb(2, false, false, false, false));
+    }
+
+    public function testGetAllForExportNamesBothAdministeringGroups()
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 1, helios_group_id = 2 WHERE id = 2');
+
+        $result = $this->authoritySQL->getAllForExport(2);
+
+        $this->assertCount(1, $result);
+        $this->assertSame('Groupe de test', $result[0]['actes_group_name']);
+        $this->assertSame('second groupe', $result[0]['helios_group_name']);
     }
 
     public function testGetListInsensitive()
@@ -122,8 +191,11 @@ class AuthoritySQLTest extends S2lowTestCase
                         'department' => '001',
                         'district' => '1',
                         'status' => 1,
-                        'group_name' => 'Groupe de test',
+                        'actes_group_name' => 'Groupe de test',
+                        'helios_group_name' => 'Groupe de test',
                         'description' => 'Région',
+                        'actes_group_id' => 1,
+                        'helios_group_id' => 1,
                     ],
                 1 =>
                     [
@@ -138,8 +210,11 @@ class AuthoritySQLTest extends S2lowTestCase
                         'department' => null,
                         'district' => null,
                         'status' => 1,
-                        'group_name' => 'Groupe de test',
+                        'actes_group_name' => 'Groupe de test',
+                        'helios_group_name' => 'Groupe de test',
                         'description' => null,
+                        'actes_group_id' => 1,
+                        'helios_group_id' => 1,
                     ],
                 2 =>
                     [
@@ -154,8 +229,11 @@ class AuthoritySQLTest extends S2lowTestCase
                         "department" => null,
                         "district" => null,
                         "status" => 1,
-                        "group_name" => "Groupe de test",
+                        "actes_group_name" => "Groupe de test",
+                        "helios_group_name" => "Groupe de test",
                         "description" => null,
+                        "actes_group_id" => 1,
+                        "helios_group_id" => 1,
                     ],
             ],
             $info

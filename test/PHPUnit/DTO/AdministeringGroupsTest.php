@@ -6,6 +6,7 @@ namespace Test\PHPUnit\DTO;
 
 use PHPUnit\Framework\TestCase;
 use S2low\DTO\AdministeringGroups;
+use S2low\Enum\AdministeredModule;
 
 class AdministeringGroupsTest extends TestCase
 {
@@ -58,5 +59,23 @@ class AdministeringGroupsTest extends TestCase
 
         $this->assertFalse($groups->isAdministeredBy(self::GROUP));
         $this->assertFalse($groups->isAdministeredBy(0));
+    }
+
+    public function testAGroupAdministersTheModuleItIsDesignatedFor(): void
+    {
+        $groups = AdministeringGroups::fromAuthorityInfo([
+            'actes_group_id' => self::GROUP,
+            'helios_group_id' => self::OTHER_GROUP,
+        ]);
+
+        $this->assertTrue($groups->administers(AdministeredModule::ACTES, self::GROUP));
+        $this->assertFalse($groups->administers(AdministeredModule::HELIOS, self::GROUP));
+    }
+
+    public function testNoGroupAdministersAModuleLeftUndesignated(): void
+    {
+        $groups = AdministeringGroups::fromAuthorityInfo(['actes_group_id' => self::GROUP]);
+
+        $this->assertFalse($groups->administers(AdministeredModule::HELIOS, 0));
     }
 }

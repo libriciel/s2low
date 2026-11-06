@@ -154,7 +154,7 @@ class ChangeMailDomainCommand extends Command
      */
     protected function getAuthoritiesTomodify(int $group_id): array
     {
-        $authorities = $this->authoritySQL->getAllGroup($group_id);
+        $authorities = $this->authoritySQL->getAllAdministeredBy($group_id);
 
         if (count($authorities) === 0) {
             throw new Exception("Aucune autorité liée au groupe $group_id, ou le groupe n'existe pas");
@@ -172,7 +172,8 @@ class ChangeMailDomainCommand extends Command
     protected function getUsersTomodify(int $group_id, $existingMailDomain): array
     {
         $usersToModify = $this->user->getUsersList(
-            "WHERE authorities.authority_group_id= $group_id AND users.email LIKE '%@$existingMailDomain'"
+            "WHERE (authorities.actes_group_id = $group_id OR authorities.helios_group_id = $group_id)" .
+            " AND users.email LIKE '%@$existingMailDomain'"
         );
 
         if ($usersToModify === false) {
