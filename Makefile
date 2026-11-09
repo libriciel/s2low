@@ -1,6 +1,4 @@
 DOCKER=docker
-PASTELL_PATH=/var/www/pastell
-EXEC_NODE=$(DOCKER) run --rm --volume ${PWD}:$(PASTELL_PATH) -it node:14-slim
 EXEC_COMPOSER=$(DOCKER) run --rm --volume ${PWD}:/app --volume ${HOME}/.composer:/tmp -it composer:2
 DOCKER_COMPOSE=docker compose -f docker-compose.yml -f docker-compose.test.yml -f docker-compose.dev.yml
 DOCKER_COMPOSE_EXEC=$(DOCKER_COMPOSE) exec web
@@ -59,7 +57,7 @@ phpcbf: docker-compose-up ## Fix all code style errors
 	$(DOCKER_COMPOSE_EXEC) phpcbf
 
 npm-install: docker-compose-up ## Install npm modules
-	$(DOCKER_COMPOSE) run -it webpack npm install
+	$(DOCKER_COMPOSE) run -it webpack npm update
 
 webpack: docker-compose-up ## Compile webpack assets
 	$(DOCKER_COMPOSE) run -it webpack npx webpack --config webpack.config.js

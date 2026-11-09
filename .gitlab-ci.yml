@@ -12,7 +12,7 @@ include:
   #    inputs:
   #      mode: "changed"
   - component: $LIBRICIEL_CATALOG_PATH/project-standards/check-libriciel-standards@3.1.0
-  - component: $LIBRICIEL_CATALOG_PATH/software-release/publish-compose@3.3.0
+  - component: $LIBRICIEL_CATALOG_PATH/software-release/publish-compose@3.4.0
   - component: $LIBRICIEL_CATALOG_PATH/sbom-manager/build@2.0.0
     inputs:
       compose_file: "docker-compose.yml"
@@ -133,7 +133,7 @@ security-check:
   stage: test
   allow_failure: true
   image:
-    name: hubdocker.libriciel.fr/aquasec/trivy:0.75.0
+    name: hubdocker.libriciel.fr/aquasec/trivy:0.76.2
     entrypoint: [ "" ]
   services:
     - docker:dind
