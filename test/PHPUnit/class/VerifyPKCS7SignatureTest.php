@@ -35,6 +35,38 @@ class VerifyPKCS7SignatureTest extends S2lowTestCase
         );
     }
 
+    /**
+     * @throws Exception
+     */
+    public function testFileNameIsNotInterpretedByShell(): void
+    {
+        $tmpDir = sys_get_temp_dir() . '/pkcs7_' . bin2hex(random_bytes(8));
+        mkdir($tmpDir);
+        $marker = "$tmpDir/pwned";
+        // A file name cannot hold a "/": the injected command writes relative to the working directory
+        $filePath = "$tmpDir/test_pdf.pdf;touch pwned;#";
+        copy(__DIR__ . '/fixtures/signaturesPKCS7/test_pdf.pdf', $filePath);
+        $previousDir = getcwd();
+        chdir($tmpDir);
+
+        try {
+            $result = $this->verifyPKCS7Signature->verifySignature(
+                file_get_contents(__DIR__ . '/fixtures/signaturesPKCS7/test_pdf.pdf.p7s'),
+                self::AC,
+                [],
+                $filePath,
+                new DateTime('01-01-2025')
+            );
+            static::assertFileDoesNotExist($marker);
+            static::assertTrue($result);
+        } finally {
+            chdir($previousDir);
+            @unlink($marker);
+            unlink($filePath);
+            rmdir($tmpDir);
+        }
+    }
+
     public function testWrongFileWithSignature()
     {
         $this->expectException(Exception::class);

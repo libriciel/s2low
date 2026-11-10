@@ -23,7 +23,6 @@ use Psr\Log\LoggerInterface;
 use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\TmpFolder;
 use S2lowLegacy\Class\VerifyPemCertificate;
-use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Controller\HeliosController;
 use S2lowLegacy\Lib\HeliosNamesGenerator;
@@ -295,7 +294,7 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
     {
         $this->workerScript->expects(static::never())->method('putJobByQueueName');
         $envoiControler = $this->getHeliosEnvoiController(
-            $this->getVerifyPemCertificateFactoryInterrompue()
+            $this->getVerifyPemCertificateInterrompue()
         );
         $id_transaction = $this->getImportFile('/../../lib/fixtures/HELIOS_SIMU_ALR2_bad_signature.xml');
 
@@ -313,7 +312,7 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
         static::assertSame(HeliosTransactionsSQL::POSTE, (int)$info_transaction['last_status_id']);
     }
 
-    private function getVerifyPemCertificateFactoryInterrompue(): VerifyPemCertificateFactory
+    private function getVerifyPemCertificateInterrompue(): VerifyPemCertificate
     {
         $verifyPemCertificate = $this->createMock(VerifyPemCertificate::class);
         $verifyPemCertificate->method('checkCertificateWithOpenSSL')
@@ -321,10 +320,7 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
                 'S2low\Services\ProcessCommand\CommandLauncher : The process has been signaled with signal "15".'
             ));
 
-        $verifyPemCertificateFactory = $this->createMock(VerifyPemCertificateFactory::class);
-        $verifyPemCertificateFactory->method('get')->willReturn($verifyPemCertificate);
-
-        return $verifyPemCertificateFactory;
+        return $verifyPemCertificate;
     }
 
     /**
@@ -588,9 +584,8 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
         );
     }
 
-    private function getHeliosEnvoiController(
-        VerifyPemCertificateFactory $verifyPemCertificateFactory = new VerifyPemCertificateFactory()
-    ) {
+    private function getHeliosEnvoiController(?VerifyPemCertificate $verifyPemCertificate = null)
+    {
         return new HeliosEnvoiControler(
             static::getContainer()->get(AuthoritySiretSQL::class),
             static::getContainer()->get(HeliosTransactionsSQL::class),
@@ -630,7 +625,7 @@ class HeliosEnvoiControlerTest extends S2lowIntegrationTestCase
             static::getContainer()->get(LoggerInterface::class),
             new PesAllerReader(),
             new HeliosNamesGenerator(),
-            $verifyPemCertificateFactory
+            $verifyPemCertificate ?? static::getContainer()->get(VerifyPemCertificate::class)
         );
     }
 

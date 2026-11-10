@@ -6,8 +6,11 @@ use ActesTransaction;
 use Exception;
 use S2lowLegacy\Class\actes\ActesNotification;
 use S2lowLegacy\Class\actes\TypeTransaction;
+use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\ModulePermission;
+use S2lowLegacy\Class\ServiceUser;
 use S2lowLegacy\Class\User;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -81,7 +84,8 @@ class ActesNotificationController extends \Symfony\Bundle\FrameworkBundle\Contro
             }
 
             // Vérification des permissions
-            if (!($me->isAnyAdmin() && $me->get("authority_id") == $owner->get("authority_id")) && !($me->canEdit($module->get("name")))) {
+            $permission = new ModulePermission(new ServiceUser(DatabasePool::getInstance()), $module->get('name'));
+            if (!$permission->canWrite($me, $owner)) {
                 Helpers :: returnAndExit(1, "Accès refusé.", Helpers::getLink("/modules/actes/index.php"));
             }
 
