@@ -6,7 +6,7 @@ COPY webpack.config.js ./
 COPY src_js/ ./src_js/
 RUN npx webpack --config webpack.config.js
 
-FROM hubdocker.libriciel.fr/httpd:2.4.69-alpine3.24@sha256:070da7661f0be8a05430b2c125c0cde9e53176b4048c813024021969a0e3893c
+FROM hubdocker.libriciel.fr/httpd:2.4.69-alpine3.24@sha256:698a0f59374eeb59c2c3ae6385c5f346edd2c70c2b63f7b552fb3d64dbc3cf66
 
 RUN apk update && apk upgrade --no-cache && \
     apk add --no-cache \
