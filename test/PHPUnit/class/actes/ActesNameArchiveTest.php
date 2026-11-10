@@ -30,6 +30,13 @@ class ActesNameArchiveTest extends PHPUnit_Framework_TestCase
         $this->actesNameArchive->verifNameOK("foo");
     }
 
+    public function testVerifNameRejectsShellCharacters(): void
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Le nom de l\'archive n\'est pas correct');
+        $this->actesNameArchive->verifNameOK('abc-TACT-x;touch /tmp/pwned;.tar.gz');
+    }
+
     public function testVerifNameBadTrigramme()
     {
         $this->setExpectedException("Exception", "Le trigramme trouvé (def) ne correspond pas au trigramme attendu (abc)");

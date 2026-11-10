@@ -43,12 +43,12 @@ class Antivirus
         $tmpFolder->delete($tmp_dir);
 
         if ($ret === 1) {
-            $this->last_error = "L'archive est infectée par un virus. Retour de l'antivirus&nbsp;:<br />\n";
+            $this->last_error = "L'archive est infectée par un virus. Retour de l'antivirus :\n";
             // Format de ligne : /Nom/de/fichier: Nom virus
             foreach (explode("\n", $output) as $line) {
                 if (preg_match('/^\/.*: .* FOUND$/', $line)) {
                     $line = explode(":", $line);
-                    $this->last_error .= basename($line[0]) . " : " . $line[1] . "<br />\n";
+                    $this->last_error .= basename($line[0]) . ' : ' . $line[1] . "\n";
                 }
             }
             return false;

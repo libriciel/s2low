@@ -164,8 +164,11 @@ switch ($trans->getType()) {
 
         $arch_url = $trans->get("archive_url");
 
-        if (!empty($arch_url)) {
-            $url = "<a href=\"" . $trans->get("archive_url") . "\">" . get_hecho($trans->get("archive_url")) . "</a>";
+        if (!empty($arch_url) && preg_match('#^https?://#i', $arch_url)) {
+            // archive_url comes from Pastell: only a web URL may become a link
+            $url = "<a href=\"" . get_hecho($arch_url) . "\">" . get_hecho($arch_url) . "</a>";
+        } elseif (!empty($arch_url)) {
+            $url = get_hecho($arch_url);
         } else {
             $url = "Non définie";
         }
@@ -177,7 +180,7 @@ switch ($trans->getType()) {
         }
 
         if ($trans->get("broadcasted") == 't') {
-            $notification = "Notifiée à " . $trans->get("broadcast_emails");
+            $notification = 'Notifiée à ' . get_hecho($trans->get('broadcast_emails'));
         } else {
             $notification = "Non notifiée";
         }
@@ -199,7 +202,7 @@ switch ($trans->getType()) {
             foreach ($files as $file) {
                 $html .= $doc->getHTMLArrayline(
                     "Document reçu   ",
-                    "<a href=\"" . Helpers::getLink("/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\">" . $file["posted_filename"] . "</a>")
+                    "<a href=\"" . Helpers::getLink('/modules/actes/actes_download_file.php?file=' . $file['id'] . "\" title=\"Télécharger le fichier\">" . get_hecho($file['posted_filename']) . "</a>")
                 );
             }
 
@@ -275,9 +278,9 @@ if (is_array($files)) {
             $html .= "<dd>";
 
             if ($archiveDeleted) {
-                $html .=  $file["posted_filename"];
+                $html .= get_hecho($file['posted_filename']);
             } else {
-                $html .= $file["posted_filename"] . "<br/><a href=\"" . Helpers::getLink("/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\"> [Télécharger le fichier original]</a>") ;
+                $html .= get_hecho($file['posted_filename']) . "<br/><a href=\"" . Helpers::getLink('/modules/actes/actes_download_file.php?file=' . $file['id'] . "\" title=\"Télécharger le fichier\"> [Télécharger le fichier original]</a>") ;
                 $html .= "&nbsp;&nbsp;";
 
                 $transactionAEteAcquit = in_array(4, array_column($workflow, 'status_id'));
@@ -317,9 +320,9 @@ if (is_array($files)) {
         $html .= "<dd>";
 
         if (mb_strlen($file["posted_filename"]) <= 0 && !$archiveDeleted) {
-            $html .= $file["name"] . "<br/><a href=\"" . Helpers::getLink("/modules/actes/actes_download_file.php?file=" . $file["id"] . "\" title=\"Télécharger le fichier\">[Télécharger]</a>");
+            $html .= get_hecho($file['name']) . "<br/><a href=\"" . Helpers::getLink('/modules/actes/actes_download_file.php?file=' . $file['id'] . "\" title=\"Télécharger le fichier\">[Télécharger]</a>");
         } else {
-            $html .= $file["name"];
+            $html .= get_hecho($file['name']);
         }
 
         $html .= "</dd>";
@@ -331,7 +334,7 @@ if (is_array($files)) {
         }
 
         $html .= "</td>\n";
-        $html .= "  <td headers=\"type\" >" . $file["mimetype"] . "</td>\n";
+        $html .= "  <td headers=\"type\" >" . get_hecho($file['mimetype']) . "</td>\n";
         $html .= "  <td headers=\"size\" >" . $file["size"] . " octets</td>\n";
         $html .= " </tr>\n";
     }
@@ -384,7 +387,7 @@ if (count($workflow) > 0) {
       //---------end
 
         $html .= "  <td headers=\"date\">" . Helpers :: getDateFromBDDDate($stage["date"], true) . "</td>\n";
-        $html .= "  <td headers=\"message\" class=\"long_field\">" . nl2br($stage["message"]) . "</td>\n";
+        $html .= "  <td headers=\"message\" class=\"long_field\">" . nl2br(get_hecho($stage["message"])) . "</td>\n";
         $html .= " </tr>\n";
     }
     $html .= " </tbody>\n";
