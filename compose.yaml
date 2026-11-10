@@ -200,7 +200,7 @@ services:
       - "${HTTPS_PORT:-443}:443"
 
   redis:
-    image: hubdocker.libriciel.fr/redis:8.10.3-alpine3.23@sha256:21090af93f8324db2f0f0f4f38a7c60369d47d917e000c3423d89d2ae2883537
+    image: hubdocker.libriciel.fr/redis:8.10.3-alpine3.23@sha256:71885d8cc6e42f2bc0aa2eb853bfc4be200b5108a46ac50e117ae1df0531fb80
     restart: unless-stopped
     read_only: true
     cap_drop:
@@ -236,7 +236,7 @@ services:
     mem_limit: 768M
 
   pdf-stamp:
-    image: registry.libriciel.fr/public/signature/pdf-stamp:4.1.12@sha256:45aca0a4ac5385d51c713d69cd6dc66c49b1cc0a2336c3faa6c7d5a4e37089bf
+    image: registry.libriciel.fr/public/signature/pdf-stamp:4.1.14@sha256:1cd48a5532966588216d8b5134022f9fcb47c67620b3e2b53e93926cee89b698
     restart: unless-stopped
     read_only: true
     cap_drop:

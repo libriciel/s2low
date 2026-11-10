@@ -9,7 +9,7 @@ include:
   #    inputs:
   #      mode: "changed"
   - component: $LIBRICIEL_CATALOG_PATH/project-standards/check-libriciel-standards@3.3.0
-  - component: $LIBRICIEL_CATALOG_PATH/renovate-runner/runner@1.6.1
+  - component: $LIBRICIEL_CATALOG_PATH/renovate-runner/runner@1.7.0
   - component: $LIBRICIEL_CATALOG_PATH/software-release/publish-compose@3.3.0
   - component: $LIBRICIEL_CATALOG_PATH/sbom-manager/build@2.0.0
     inputs:
@@ -103,7 +103,7 @@ unit_test:
       - name: registry.libriciel.fr/public/outils/postgres:14.5@sha256:a0c6930be56082d2b6f747630ab6e5799c566c7ec45c49033e8b647ca2e50bee
         alias: postgres
         command: [ "postgres","-c", "max_connections=200" ]
-      - name: registry.libriciel.fr/public/signature/pdf-stamp:4.1.12@sha256:45aca0a4ac5385d51c713d69cd6dc66c49b1cc0a2336c3faa6c7d5a4e37089bf
+      - name: registry.libriciel.fr/public/signature/pdf-stamp:4.1.14@sha256:1cd48a5532966588216d8b5134022f9fcb47c67620b3e2b53e93926cee89b698
         alias: pdf-stamp
     script:
         - cd /app
@@ -134,7 +134,7 @@ quality:
 .security_scan_base:
   stage: test
   image:
-    name: hubdocker.libriciel.fr/aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c
+    name: hubdocker.libriciel.fr/aquasec/trivy:0.76.2@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb
     entrypoint: [""]
   services:
     - docker:dind@sha256:08a98015fce594af7c382883bea080ea206de74402a95da9dc52b6428c8cd121
