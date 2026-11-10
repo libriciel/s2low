@@ -151,12 +151,12 @@ ob_start();
 <?php elseif ($verify_sign) : ?>
     <div class="alert alert-success">La signature du fichier est valide !</div>
 <?php else : ?>
-    <div class="alert alert-danger">La signature du fichier n'est pas valide : <?php echo $verify_sign_message?></div>
+    <div class="alert alert-danger">La signature du fichier n'est pas valide : <?php hecho($verify_sign_message); ?></div>
 <?php endif;?>
 
 <div>
     <p>
-        <?php echo $xades_output ?>
+        <?php echo nl2br(get_hecho($xades_output)); ?>
     </p>
 
 </div>

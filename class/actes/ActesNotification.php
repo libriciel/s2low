@@ -13,6 +13,7 @@ use Exception;
 use S2lowLegacy\Lib\SigTermHandler;
 use S2lowLegacy\Model\AuthoritySQL;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Process\Process;
 use Twig\Environment;
 
 class ActesNotification
@@ -253,12 +254,15 @@ class ActesNotification
      */
     private function tamponnerTGZ($filePath, $transactionInfo, $tmp_folder): array
     {
-
-        $command = "tar xzf $filePath --directory $tmp_folder 2>&1";
-        $this->logger->debug("Executing comand : $command");
-        exec($command, $output, $return_var);
-        if ($return_var != 0) {
-            throw new Exception("Erreur ($return_var) lors de la décompression de l'archive $filePath : " . implode("\n", $output));
+        // The archive name was chosen by the depositor: never let a shell interpret it
+        $process = new Process(['tar', 'xzf', $filePath, '--directory', $tmp_folder]);
+        $this->logger->debug('Executing comand : ' . $process->getCommandLine());
+        $process->run();
+        if (!$process->isSuccessful()) {
+            throw new Exception(
+                "Erreur ({$process->getExitCode()}) lors de la décompression de l'archive $filePath : "
+                . $process->getOutput() . $process->getErrorOutput()
+            );
         }
 
         $result = array();

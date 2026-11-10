@@ -326,6 +326,52 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
     }
 
     /**
+     * @throws Exception
+     */
+    public function testActesTransacNotifyAcceptsOwnTransaction(): void
+    {
+        $transactionId = $this->createTransaction(
+            ActesStatusSQL::STATUS_ACQUITTEMENT_RECU,
+            __DIR__ . '/../fixtures/abc-TACT--123456789--20250313-0.tar.gz'
+        );
+        $this->setUserWithRole(UserRole::Utilisateur);
+        $_POST['id'] = $transactionId;
+        $_POST['broadcast_email'] = ['collegue@example.invalid'];
+
+        $this->client->request('POST', 'modules/actes/actes_transac_notify.php');
+
+        static::assertSame(
+            'collegue@example.invalid',
+            $this->sqlQuery->queryOne('SELECT broadcast_emails FROM actes_transactions WHERE id = ?;', $transactionId)
+        );
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testActesTransacNotifyRefusesTransactionOfAnotherAuthority(): void
+    {
+        $userOfAnotherAuthority = 51;
+        $transactionId = $this->createTransaction(
+            ActesStatusSQL::STATUS_ACQUITTEMENT_RECU,
+            __DIR__ . '/../fixtures/abc-TACT--123456789--20250313-0.tar.gz',
+            '2017-07-01',
+            '2017-07-01',
+            $userOfAnotherAuthority
+        );
+        $this->setUserWithRole(UserRole::Utilisateur);
+        $_POST['id'] = $transactionId;
+        $_POST['broadcast_email'] = ['attaquant@example.invalid'];
+
+        $this->client->request('POST', 'modules/actes/actes_transac_notify.php');
+
+        static::assertSame('Accès refusé.', $_SESSION['error']);
+        static::assertNull(
+            $this->sqlQuery->queryOne('SELECT broadcast_emails FROM actes_transactions WHERE id = ?;', $transactionId)
+        );
+    }
+
+    /**
      * @param string $enveloppeName
      * @return void
      */

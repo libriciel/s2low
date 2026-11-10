@@ -120,15 +120,15 @@ $html = "<p id=\"back-transaction-btn\"><a href=\"" . Helpers::getLink("/modules
 $html .= "<h2>Détails de la transaction</h2>\n";
 $html .= "<div class=\"data_table\">\n";
 $html .= "<table class=\"data table table-bordered\">\n";
-$html .= $doc->getHTMLArrayline("Fichier", $trans->getFilenameForID($id));
+$html .= $doc->getHTMLArrayline("Fichier", get_hecho($trans->getFilenameForID($id)));
 if ($trans->get('xml_nomfic')) {
-    $html .= $doc->getHTMLArrayline("Nom du fichier posté (balise NomFic)", $trans->get('xml_nomfic'));
-    $html .= $doc->getHTMLArrayline("Code collectivité (codcol)", $trans->get('xml_cod_col'));
-    $html .= $doc->getHTMLArrayline("Code budget (codbud)", $trans->get('xml_cod_bud'));
-    $html .= $doc->getHTMLArrayline("Identifiant du poste comptable (idPost)", $trans->get('xml_id_post'));
+    $html .= $doc->getHTMLArrayline('Nom du fichier posté (balise NomFic)', get_hecho($trans->get('xml_nomfic')));
+    $html .= $doc->getHTMLArrayline('Code collectivité (codcol)', get_hecho($trans->get('xml_cod_col')));
+    $html .= $doc->getHTMLArrayline('Code budget (codbud)', get_hecho($trans->get('xml_cod_bud')));
+    $html .= $doc->getHTMLArrayline('Identifiant du poste comptable (idPost)', get_hecho($trans->get('xml_id_post')));
 }
 $html .= $doc->getHTMLArrayline("Date de postage", Helpers :: getDateFromBDDDate(HeliosTransactionWorkflow::getDatePoste($id), true));
-$html .= $doc->getHTMLArrayline("État actuel", $currentStatus);
+$html .= $doc->getHTMLArrayline('État actuel', get_hecho($currentStatus));
 $html .= $doc->getHTMLArrayline("Taille (octets)", $trans->get("file_size"));
 $html .= $doc->getHTMLArrayline("Empreinte SHA1", $trans->get("sha1"));
 $html .= $doc->getHTMLArrayline("Suivie par", $user_td);
@@ -154,7 +154,7 @@ $html .= "</div>\n";
 
 
 $html .= "<h2>Récuperation du fichier posté ";
-$html .= "<a href=\"" . Helpers::getLink("/modules/helios/helios_download_file.php?id=" . $id) . "\" title=\"Télécharger le fichier\">" . $trans->getFilenameForID($id) . "</a> </h2>";
+$html .= "<a href=\"" . Helpers::getLink("/modules/helios/helios_download_file.php?id=" . $id) . "\" title=\"Télécharger le fichier\">" . get_hecho($trans->getFilenameForID($id)) . "</a> </h2>";
 
 
 if ($me->isSuper()) {
@@ -184,7 +184,7 @@ if (count($workflow) > 0) {
         $html .= "  <td headers=\"status\">" . $status[$stage["status_id"]] ;
         $html .= "</td>\n";
         $html .= "  <td headers=\"date\">" . Helpers::getDateFromBDDDate($stage["date"], true) . "</td>\n";
-        $html .= "  <td headers=\"message\" class=\"long_field\">" . nl2br($stage["message"]) . "</td>\n";
+        $html .= "  <td headers=\"message\" class=\"long_field\">" . nl2br(get_hecho($stage["message"])) . "</td>\n";
         $html .= " </tr>\n";
     }
     $html .= " </tbody>\n";

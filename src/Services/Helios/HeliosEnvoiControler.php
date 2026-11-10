@@ -12,6 +12,7 @@ use S2lowLegacy\Class\Antivirus;
 use S2lowLegacy\Class\helios\FichierCompteur;
 use S2lowLegacy\Class\helios\HeliosTransmissionWindowsSQL;
 use S2lowLegacy\Class\Log;
+use S2lowLegacy\Class\RecoverableException;
 use S2lowLegacy\Class\VerifyPemCertificate;
 use S2lowLegacy\Class\WorkerScript;
 use S2lowLegacy\Lib\HeliosNamesGenerator;
@@ -151,6 +152,8 @@ class HeliosEnvoiControler
         if ($this->xadesSignature->isSigned($file_path)) {
             try {
                 $this->xadesSignature->verify($file_path);
+            } catch (RecoverableException $recoverableException) {
+                throw $recoverableException;    // Vérification interrompue : la transaction sera rejouée
             } catch (Exception $exception) {
                 $this->updateStatus(
                     $transaction_id,
