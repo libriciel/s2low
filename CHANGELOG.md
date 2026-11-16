@@ -47,6 +47,7 @@ dépendances transitives.
   administre pour la collectivité ; les droits de l'autre module sont conservés à l'enregistrement. #1621
 - À la création d'un utilisateur, les droits proposés suivent la collectivité choisie. #1621
 - La recherche des collectivités du super administrateur filtre séparément sur le groupe Actes et sur le groupe Helios. #1621
+- Le détail d'une collectivité ne donne l'adresse FTP Helios et l'état d'un module qu'à l'administrateur de ce module. #1621
 
 ### Corrections
 
@@ -57,6 +58,7 @@ dépendances transitives.
 - La gestion des utilisateurs propose à l'administrateur de groupe, pour filtrer la liste comme pour rattacher un utilisateur,
   toutes les collectivités dont son groupe administre Actes ou Helios ; le filtre « Groupe » du super administrateur les retient aussi. #1597
 - Une collectivité dont plusieurs SIRET répondent au filtre n'apparaît plus qu'une fois dans la recherche, et le total est juste. #1621
+- Le détail d'une collectivité demandé avec un identifiant qui n'est pas un nombre renvoie un message clair au lieu d'une erreur SQL. #1621
 
 ### Sécurité
 
