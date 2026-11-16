@@ -5,6 +5,8 @@ use S2lowLegacy\Model\LogsSQL;
 
 class LogsSQLTest extends S2lowTestCase
 {
+    private const int GROUP_2_ADMINISTRATOR_ID = 10;
+
     /**
      * @var LogsSQL
      */
@@ -103,5 +105,30 @@ class LogsSQLTest extends S2lowTestCase
         );
         $min_date = $this->logsSQL->getMinDate();
         $this->assertNotNull($min_date);
+    }
+
+    public function testGetNbLogOfAGroupKeepsLogsOfAnAuthorityItAdministersForASingleModule(): void
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 1, helios_group_id = 2 WHERE id = 1');
+
+        $this->assertSame(1, (int)$this->countLogsOfGroup(2));
+    }
+
+    public function testGetNbLogOfAGroupLeavesOutLogsOfAnAuthorityItDoesNotAdminister(): void
+    {
+        $this->assertSame(0, (int)$this->countLogsOfGroup(2));
+    }
+
+    public function testGetNbLogOfAGroupKeepsActionsOfItsAdministratorOnAnAuthorityItDoesNotAdminister(): void
+    {
+        $this->getSQLQuery()->query('DELETE FROM logs');
+        Log::newEntry('test', 'action du groupe 2', 1, false, 'GADM', 'actes', false, self::GROUP_2_ADMINISTRATOR_ID);
+
+        $this->assertSame(1, (int)$this->countLogsOfGroup(2));
+    }
+
+    private function countLogsOfGroup(int $groupId): int|string
+    {
+        return $this->logsSQL->getNbLog($groupId, false, false, false, false, -1, false, false, false, false);
     }
 }

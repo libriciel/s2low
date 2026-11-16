@@ -1,6 +1,7 @@
 <?php
 
 use S2low\Enum\AdministeredModule;
+use S2low\DTO\GroupAuthorityCount;
 use S2lowLegacy\Class\Database;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\GroupSQL;
@@ -137,6 +138,38 @@ class GroupSQLTest extends S2lowTestCase
 
         $this->assertTrue($this->groupeSQL->isActive(1));
         $this->assertFalse($this->groupeSQL->isActive(2));
+    }
+
+    public function testCountAuthoritiesPerGroupCountsOnceAnAuthorityAdministeredByTheSameGroupForBothModules(): void
+    {
+        $this->assertEquals(
+            [
+                new GroupAuthorityCount(1, self::GROUPE_1_NAME, 3),
+                new GroupAuthorityCount(2, self::GROUPE_2_FIXTURE_NAME, 0),
+            ],
+            $this->groupeSQL->countAuthoritiesPerGroup()
+        );
+    }
+
+    public function testCountAuthoritiesPerGroupCountsAnAuthorityInItsActesGroupAndInItsHeliosGroup(): void
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 1 WHERE id = 2');
+
+        $this->assertEquals(
+            [
+                new GroupAuthorityCount(1, self::GROUPE_1_NAME, 3),
+                new GroupAuthorityCount(2, self::GROUPE_2_FIXTURE_NAME, 1),
+            ],
+            $this->groupeSQL->countAuthoritiesPerGroup()
+        );
+    }
+
+    public function testCountAuthoritiesWithoutGroupKeepsOnlyAuthoritiesWithNeitherActesNorHeliosGroup(): void
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = NULL, helios_group_id = NULL WHERE id = 2');
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = NULL, helios_group_id = 1 WHERE id = 3');
+
+        $this->assertSame(1, $this->groupeSQL->countAuthoritiesWithoutGroup());
     }
 
     private function deactivateGroup(int $groupId): void

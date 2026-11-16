@@ -194,4 +194,53 @@ class WebIntegrationTest extends S2lowIntegrationTestCase
         );
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
+
+    /**
+     * @throws Exception
+     */
+    public function testListGroupsCountsAnAuthorityInItsActesGroupAndInItsHeliosGroup(): void
+    {
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 1 WHERE id = 1');
+
+        $crawler = $this->client->request('GET', '/admin/groups/list_groups.php');
+
+        static::assertResponseIsSuccessful();
+        static::assertSame(
+            [['Groupe de test', '3'], ['second groupe', '1']],
+            $crawler->filterXPath('//table//tr[td]')->each(
+                static fn($row): array => $row->filterXPath('.//td')->each(static fn($cell): string => trim($cell->text()))
+            )
+        );
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testAncienSystemeNotifShowsTheActesGroup(): void
+    {
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 1 WHERE id = 1');
+
+        $crawler = $this->client->request('GET', 'admin/ancien_systeme_notif.php');
+
+        static::assertResponseIsSuccessful();
+        static::assertStringContainsString('second groupe', $crawler->filterXPath('//table')->text());
+        static::assertStringNotContainsString('Groupe de test', $crawler->filterXPath('//table')->text());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testPasDeSAEShowsTheActesGroup(): void
+    {
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 1 WHERE id = 1');
+
+        $crawler = $this->client->request('GET', 'admin/pas-de-sae.php');
+
+        static::assertResponseIsSuccessful();
+        static::assertStringContainsString('second groupe', $crawler->filterXPath('//table')->text());
+        static::assertStringNotContainsString('Groupe de test', $crawler->filterXPath('//table')->text());
+    }
 }

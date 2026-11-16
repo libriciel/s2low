@@ -3,7 +3,6 @@
 namespace S2lowLegacy\Class;
 
 use S2lowLegacy\Lib\SQLQuery;
-use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\UserSQL;
 
 class Log extends DataObject
@@ -101,12 +100,6 @@ class Log extends DataObject
             $info = $userSQL->getInfo($userid);
             if ($info) {
                 $authority_id = $info['authority_id'];
-            }
-        }
-        if ($authority_id) {
-            $authoritySQL = new AuthoritySQL($sqlQuery);
-            $info = $authoritySQL->getInfo($authority_id);
-            if ($info) {
                 $authority_group_id = $info['authority_group_id'];
             }
         }
