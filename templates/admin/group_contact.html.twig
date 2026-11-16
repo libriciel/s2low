@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+{% block title %}Assistance aux utilisateurs du groupe « {{ group_name }} »{% endblock %}
+{% block h1 %}Assistance aux utilisateurs du groupe « {{ group_name }} »{% endblock %}
+{% block body %}
+    {% set inputs = {
+        phone: {type: 'tel', placeholder: '05 55 12 34 56', hint: '10 chiffres.'},
+        email: {type: 'email', placeholder: 'support@exemple.invalid', hint: '255 caractères au plus.'},
+        hours: {type: 'text', placeholder: 'Lun-ven 9h-12h / 14h-17h', hint: '80 caractères au plus.'},
+        message: {type: 'textarea', placeholder: 'Information complémentaire pour vos utilisateurs', hint: '1 000 caractères au plus. Le menu en affiche 2 lignes, puis « Voir plus ».'}
+    } %}
+    {% if error is not null %}
+        <div class="alert alert-danger" role="alert">{{ error }} Aucune modification n'a été enregistrée.</div>
+    {% endif %}
+
+    <form class="form form-horizontal group-contact" method="post" action="{{ path('admin_group_contact') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token(csrf_token_id) }}">
+        <p class="group-contact-hint col-md-offset-4 col-md-6">Chaque champ peut être masqué sans être effacé : il reste enregistré mais n'apparaît plus dans le menu. Un champ vide n'est jamais affiché.</p>
+        {% for field in fields %}
+            {% set input = inputs[field.value] %}
+            {% set control_class = 'form-control' ~ (invalid_field is not null and invalid_field == field ? ' is-invalid' : '') %}
+            <div class="form-group group-contact-field">
+                <label for="{{ field.column }}" class="col-md-4 control-label">{{ field.label }} :</label>
+                <div class="col-md-6">
+                    <div class="group-contact-control">
+                        {% if input.type == 'textarea' %}
+                            <textarea id="{{ field.column }}" class="{{ control_class }}" name="{{ field.column }}" rows="5" placeholder="{{ input.placeholder }}">{{ values[field.column] }}</textarea>
+                        {% else %}
+                            <input id="{{ field.column }}" class="{{ control_class }}" type="{{ input.type }}" name="{{ field.column }}" value="{{ values[field.column] }}" placeholder="{{ input.placeholder }}">
+                        {% endif %}
+                        <label class="group-contact-switch" title="Afficher dans le menu">
+                            <input type="checkbox" name="{{ field.shownColumn }}" value="1"{% if values[field.shownColumn] == '1' %} checked{% endif %} aria-label="Afficher le champ {{ field.label|lower }} dans le menu">
+                            <span class="group-contact-slider" aria-hidden="true"></span>
+                        </label>
+                    </div>
+                    <small class="group-contact-field-hint">{{ input.hint }}</small>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="form-group">
+            <button type="submit" class="col-md-offset-4 col-md-6 btn btn-default">Valider les modifications</button>
+        </div>
+    </form>
+{% endblock %}

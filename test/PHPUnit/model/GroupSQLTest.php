@@ -165,4 +165,16 @@ class GroupSQLTest extends S2lowTestCase
 
         static::assertSame([], $this->groupeSQL->getAdministeredModules(2));
     }
+
+    public function testNewGroupHasEmptyContactShownByDefault(): void
+    {
+        $groupId = $this->groupeSQL->edit(0, self::GROUPE_2_NAME, 1);
+
+        $info = $this->groupeSQL->getInfo($groupId);
+
+        foreach (['phone', 'email', 'hours', 'message'] as $field) {
+            static::assertSame('', $info['contact_' . $field]);
+            static::assertTrue($info['contact_' . $field . '_shown']);
+        }
+    }
 }
