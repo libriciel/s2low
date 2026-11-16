@@ -28,7 +28,7 @@ if ($droit->isSuperAdmin($initData->userInfo)) {
     if (! $groupSQL->administers($groupId, AdministeredModule::ACTES)) {
         $s2lowRedirect->redirect('/', 'Accès refusé');
     }
-    $title .= 'pour le groupe ' . $initData->groupeInfo['name'];
+    $title .= 'pour le groupe ' . $groupSQL->getInfo($groupId)['name'];
     $actesStatistiques->setGroup($groupId);
 } elseif ($droit->isAuthorityAdmin($initData->userInfo)) {
     $title .= ' pour la collectivité ' . $initData->authorityInfo['name'];

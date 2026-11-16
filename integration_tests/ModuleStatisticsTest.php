@@ -67,6 +67,15 @@ final class ModuleStatisticsTest extends S2lowIntegrationTestCase
         static::assertStringNotContainsString("Nombre d'enveloppes postées", $this->client->getResponse()->getContent());
     }
 
+    public function testActesStatisticsAreTitledWithTheGroupOfTheAdminWhenItsAuthorityHasNoGroup(): void
+    {
+        $this->sqlQuery->query('UPDATE authorities SET authority_group_id = NULL WHERE id = 1');
+
+        $this->client->request('GET', '/modules/actes/actes_stats.php');
+
+        static::assertStringContainsString('pour le groupe Groupe de test', $this->client->getResponse()->getContent());
+    }
+
     public function testHeliosStatisticsAreRefusedToAGroupThatAdministersHeliosNowhere(): void
     {
         $this->sqlQuery->query('UPDATE authorities SET helios_group_id = ?', [self::OTHER_GROUP]);
