@@ -49,7 +49,7 @@ class ConnexionTardiveSQL
         $date_end = date('Y-m-d 06:00:00', $time);
 
         $sql = "SELECT '$date' as date,'$module' as module,req1.name as authority_name,req1.email as authority_email, authority_groups.name as authority_groups,COUNT(*) as nb FROM ( " .
-                "SELECT authorities.name,authorities.authority_group_id, users.email " .
+                "SELECT authorities.name,authorities.{$module}_group_id AS authority_group_id, users.email " .
                 " FROM {$module}_transactions_workflow " .
                 " JOIN {$module}_transactions ON {$module}_transactions_workflow.transaction_id={$module}_transactions.id " .
                 " JOIN authorities ON  {$module}_transactions.authority_id=authorities.id " .

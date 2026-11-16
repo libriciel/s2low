@@ -35,6 +35,8 @@ dépendances transitives.
 - Un groupe désigné pour administrer un module d'une collectivité n'est plus supprimable. #1584
 - Ajout d'un groupe Actes et d'un groupe Helios par collectivité : chaque groupe n'administre que son module. #1585 #1599 #1621 #1622 #1623 #1625
 - Refonte du menu et ajout des informations importantes selon le statut de l'utilisateur connecté. #1556
+- Le script `change-groupe.php` réaffecte le groupe Actes, le groupe Helios ou les deux ; les scripts de statistiques et de
+  rapport par groupe comptent chaque module pour le groupe qui l'administre. #1625
 
 ### Corrections
 

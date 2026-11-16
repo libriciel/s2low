@@ -13,11 +13,18 @@ $sortie = fopen("php://stdout", "w");
 
 $fr = fopen("php://stdin", "r");
 
-$sql = "SELECT users.id,users.email,givenname,users.name as user_name,authorities.id as authority_id,authorities.name as authority_name,authority_groups.id as group_id,authority_groups.name as group_name FROM users " .
-
-    " JOIN authorities ON users.authority_id=authorities.id " .
-    " JOIN authority_groups ON authorities.authority_group_id=authority_groups.id " .
-    " WHERE users.id=?";
+$sql = <<<SQL
+SELECT users.id, users.email, givenname, users.name AS user_name,
+       authorities.id AS authority_id, authorities.name AS authority_name,
+       actes_group.id AS actes_group_id, actes_group.name AS actes_group_name,
+       helios_group.id AS helios_group_id, helios_group.name AS helios_group_name
+FROM users
+JOIN authorities ON users.authority_id = authorities.id
+LEFT JOIN authority_groups actes_group ON authorities.actes_group_id = actes_group.id
+LEFT JOIN authority_groups helios_group ON authorities.helios_group_id = helios_group.id
+WHERE users.id = ?
+  AND (authorities.actes_group_id IS NOT NULL OR authorities.helios_group_id IS NOT NULL)
+SQL;
 
 while ($input = fgets($fr, 1024)) {
     $line = trim($input);

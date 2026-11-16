@@ -7,9 +7,15 @@ require_once(__DIR__ . "/../../init/init.php");
 $sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
 
 
-$sql = "SELECT authorities.id,authorities.name,authorities.siren,department,authority_groups.name as group_name FROM authorities" .
-    " JOIN authority_groups ON  authority_groups.id=authorities.authority_group_id" .
-    " ORDER BY name";
+$sql = <<<SQL
+SELECT authorities.id, authorities.name, authorities.siren, department,
+       actes_group.name AS actes_group_name, helios_group.name AS helios_group_name
+FROM authorities
+LEFT JOIN authority_groups actes_group ON authorities.actes_group_id = actes_group.id
+LEFT JOIN authority_groups helios_group ON authorities.helios_group_id = helios_group.id
+WHERE authorities.actes_group_id IS NOT NULL OR authorities.helios_group_id IS NOT NULL
+ORDER BY name
+SQL;
 
 $all = $sqlQuery->query($sql);
 $nb_col = count($all);
@@ -32,6 +38,6 @@ foreach ($all as $nb_line => $line) {
 
 
 echo "*****\n";
-echo "nom,siren,departement,groupe,min(actes),max(actes),min(helios),max(helios)\n";
+echo "id,nom,siren,departement,groupe actes,groupe helios,min(actes),max(actes),min(helios),max(helios)\n";
 $csvOutput = new CSVOutput();
 $csvOutput->display($all);
