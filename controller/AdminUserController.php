@@ -3,6 +3,7 @@
 namespace S2lowLegacy\Controller;
 
 use Exception;
+use S2low\Security\Authorization\ModuleAdministration;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Log;
@@ -308,9 +309,20 @@ class AdminUserController extends Controller
         // Récupération des modules authorisés pour la collectivité
         $authModules = Module::getModulesForAuthority($him->get("authority_id"));
 
-        $him->resetPerms();
+        $moduleAdministration = $this->getObjectInstancier()->get(ModuleAdministration::class);
+        $reservedModuleIds = [];
+        foreach ($modules as $module) {
+            if ($moduleAdministration->isModuleReservedToAnotherGroup((int)$module["id"], (int)$him->get("authority_id"))) {
+                $reservedModuleIds[] = (int)$module["id"];
+            }
+        }
+
+        $him->resetPermsExcept($reservedModuleIds);
 
         foreach ($modules as $module) {
+            if (in_array((int)$module["id"], $reservedModuleIds, true)) {
+                continue;
+            }
             if (isset($authModules[$module["id"]]) && ($authModules[$module["id"]] || $him->isGroupAdmin())) {
                 if ($me->isSuper()) {
                     $module['specific_perms']['GRANT'] = 'Concession';

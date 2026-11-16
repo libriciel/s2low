@@ -32,6 +32,18 @@ final readonly class ModuleAdministration
         return $this->administers(AdministeredModule::HELIOS, $authorityId);
     }
 
+    public function isModuleReservedToAnotherGroup(int $moduleId, int $authorityId): bool
+    {
+        $module = AdministeredModule::tryFrom($moduleId);
+        $user = $this->security->getUser();
+
+        if ($module === null || ! $user instanceof SecurityUser || ! $user->isGroupAdmin()) {
+            return false;
+        }
+
+        return ! $this->administers($module, $authorityId);
+    }
+
     private function administers(AdministeredModule $module, int $authorityId): bool
     {
         $user = $this->security->getUser();
