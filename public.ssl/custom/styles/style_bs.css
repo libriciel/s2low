@@ -1016,6 +1016,83 @@ form select {
     color: #64748b;
 }
 
+/* ==========================================================================
+   Assistance aux utilisateurs du groupe
+   ========================================================================== */
+
+.group-contact-hint,
+.group-contact-field-hint {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.group-contact-field-hint {
+    display: block;
+    margin-top: 3px;
+}
+
+.group-contact-control {
+    position: relative;
+}
+
+/* L'interrupteur sort à droite du champ pour lui laisser la largeur des autres formulaires. */
+.group-contact-switch {
+    position: absolute;
+    top: 9px;
+    left: calc(100% + 12px);
+    display: inline-flex;
+    margin: 0;
+    cursor: pointer;
+}
+
+.group-contact-switch input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.group-contact-slider {
+    position: relative;
+    width: 34px;
+    height: 20px;
+    border-radius: 999px;
+    background-color: #cbd5e1;
+    transition: background-color 0.15s;
+}
+
+.group-contact-slider::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    transition: transform 0.15s;
+}
+
+.group-contact-switch input:checked + .group-contact-slider {
+    background-color: #0d6efd;
+}
+
+.group-contact-switch input:checked + .group-contact-slider::after {
+    transform: translateX(14px);
+}
+
+.group-contact-switch input:focus-visible + .group-contact-slider {
+    outline: 2px solid #86b7fe;
+    outline-offset: 2px;
+}
+
+.group-contact-field:has(.group-contact-switch input:not(:checked)) .form-control {
+    background-color: #f1f5f9;
+    color: #94a3b8;
+}
+
 .sidebar-nav .alert {
     padding: 0.5rem 0.625rem;
     margin-bottom: 0.75rem;

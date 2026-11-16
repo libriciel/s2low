@@ -43,6 +43,8 @@ dépendances transitives.
   module Actes. #1585
 - La base de données refuse la suppression d'un groupe encore désigné pour administrer le module Actes ou Helios d'une collectivité. #1599
 - Refonte du menu et ajout des informations importantes selon le statut de l'utilisateur connecté. #1556
+- L'administrateur de groupe renseigne l'assistance aux utilisateurs de son groupe (téléphone, e-mail, horaires,
+  message), chaque champ pouvant être masqué sans être effacé. #1475
 
 ### Corrections
 

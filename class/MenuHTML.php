@@ -109,6 +109,9 @@ class MenuHTML
             <?php if (in_array($userInfo['role'], array('SADM','GADM'))) : ?>
                 <li><a href="<?php echo Helpers::getLink('/admin/authorities/admin_authorities.php')?>">Gestion des collectivités</a></li>
             <?php endif?>
+            <?php if ($userRole->isGroupAdmin() && ! empty($userInfo['authority_group_id'])) : ?>
+                <li><a href="<?php echo Helpers::getLink('/admin/mon-groupe/contact') ?>">Assistance utilisateurs</a></li>
+            <?php endif ?>
             <?php if ($userInfo['role'] == 'ADM') : ?>
                 <li><a href="<?php echo Helpers::getLink('/modules/mail/index.php?command=annuaire');?>">Carnet d'adresses de la collectivité</a></li>
                 <li><a href="<?php echo Helpers::getLink("/admin/authorities/admin_authority_edit.php?id=" . $userInfo["authority_id"]); ?>">Paramètres collectivité</a></li>

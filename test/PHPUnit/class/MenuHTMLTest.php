@@ -15,6 +15,7 @@ class MenuHTMLTest extends S2lowTestCase
     private const int AUTHORITY_ID = 1;
     private const string AUTHORITY_NAME = 'Bourg-en-Bresse';
     private const string GROUP_NAME = 'Groupe de test';
+    private const int GROUP_ID = 1;
 
     public static function roleProvider(): Generator
     {
@@ -59,6 +60,37 @@ class MenuHTMLTest extends S2lowTestCase
         yield 'administrateur de collectivité' => [UserRole::AdministrateurCollectivite];
         yield 'utilisateur' => [UserRole::Utilisateur];
         yield 'archiviste' => [UserRole::Archiviste];
+    }
+
+    public function testGroupAdminSeesLinkToItsGroupContact(): void
+    {
+        $userInfo = ['authority_group_id' => self::GROUP_ID] + $this->userInfo(UserRole::AdministrateurGroupe, self::AUTHORITY_ID);
+
+        $menu = (new MenuHTML())->getMenuContent($userInfo, []);
+
+        static::assertMatchesRegularExpression(
+            '#href="[^"]*/admin/mon-groupe/contact">Assistance utilisateurs</a>#',
+            $menu
+        );
+    }
+
+    public static function roleWithoutGroupContactLinkProvider(): Generator
+    {
+        yield 'super administrateur' => [UserRole::SuperAdministrateur];
+        yield 'administrateur de collectivité' => [UserRole::AdministrateurCollectivite];
+        yield 'utilisateur' => [UserRole::Utilisateur];
+    }
+
+    /**
+     * @dataProvider roleWithoutGroupContactLinkProvider
+     */
+    public function testOtherRolesHaveNoGroupContactLink(UserRole $role): void
+    {
+        $userInfo = ['authority_group_id' => self::GROUP_ID] + $this->userInfo($role, self::AUTHORITY_ID);
+
+        $menu = (new MenuHTML())->getMenuContent($userInfo, []);
+
+        static::assertStringNotContainsString('Assistance utilisateurs', $menu);
     }
 
     /**
