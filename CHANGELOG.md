@@ -35,10 +35,6 @@ dépendances transitives.
 - Un groupe désigné pour administrer un module d'une collectivité n'est plus supprimable. #1584
 - Ajout d'un groupe Actes et d'un groupe Helios par collectivité : chaque groupe n'administre que son module. #1585 #1599 #1621 #1622 #1623 #1625
 - Refonte du menu et ajout des informations importantes selon le statut de l'utilisateur connecté. #1556
-- La liste des groupes compte une collectivité dans son groupe Actes et dans son groupe Helios, une seule fois quand c'est
-  le même ; les pages « collectivités sans SAE » et « ancien système de notification » nomment son groupe Actes. #1623
-- Le journal enregistre le groupe de l'utilisateur qui agit, et l'administrateur de groupe y retrouve les actions sur toutes
-  les collectivités dont son groupe administre au moins un module. #1623
 
 ### Corrections
 
