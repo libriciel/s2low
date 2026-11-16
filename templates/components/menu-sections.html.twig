@@ -10,6 +10,9 @@
     {% if app.user.isGroupOrSuperAdmin %}
         <li><a href="/admin/authorities/admin_authorities.php">Gestion des collectivités</a></li>
     {% endif %}
+    {% if app.user.isGroupAdmin and app.user.authorityGroupId %}
+        <li><a href="{{ path('admin_group_contact') }}">Assistance utilisateurs</a></li>
+    {% endif %}
     {% if app.user.isAuthorityAdmin %}
         <li><a href="/modules/mail/index.php?command=annuaire">Carnet d'adresses de la collectivité</a></li>
         <li><a href="/admin/authorities/admin_authority_edit.php?id={{ app.user.authorityId }}">Paramètres

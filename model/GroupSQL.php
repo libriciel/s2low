@@ -3,6 +3,7 @@
 namespace S2lowLegacy\Model;
 
 use Doctrine\DBAL\ArrayParameterType;
+use S2low\DTO\GroupContact;
 use S2low\Enum\AdministeredModule;
 use S2low\DTO\GroupAuthorityCount;
 use S2lowLegacy\Lib\SQL;
@@ -31,6 +32,36 @@ class GroupSQL extends SQL
             $id = $this->queryOne($sql, $name, $status);
         }
         return $id;
+    }
+
+    public function updateContact(int $groupId, GroupContact $contact): void
+    {
+        $sql = <<<SQL
+            UPDATE authority_groups
+            SET contact_phone = ?, contact_phone_shown = ?,
+                contact_email = ?, contact_email_shown = ?,
+                contact_hours = ?, contact_hours_shown = ?,
+                contact_message = ?, contact_message_shown = ?
+            WHERE id = ?
+            SQL;
+
+        $this->query(
+            $sql,
+            $contact->phone()->value,
+            $this->toSqlBoolean($contact->phone()->isShown),
+            $contact->email()->value,
+            $this->toSqlBoolean($contact->email()->isShown),
+            $contact->hours()->value,
+            $this->toSqlBoolean($contact->hours()->isShown),
+            $contact->message()->value,
+            $this->toSqlBoolean($contact->message()->isShown),
+            $groupId
+        );
+    }
+
+    private function toSqlBoolean(bool $value): string
+    {
+        return $value ? 't' : 'f';
     }
 
     public function groupNameAlreadyExists($id, $name)
