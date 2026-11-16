@@ -1,0 +1,52 @@
+{% set groupsToContact = groups|filter(group => group.contact.hasFieldToDisplay) %}
+{% if groupsToContact is not empty %}
+    <details class="menu-help"{% if not helpCollapsed %} open{% endif %}>
+        <summary class="menu-help-title">
+            <span class="menu-help-label">Besoin d'aide ?</span>
+            <span class="menu-help-toggle" title="Masquer ou afficher l'aide"></span>
+        </summary>
+        {% for group in groupsToContact %}
+            {% set contact = group.contact %}
+            <div class="menu-help-group">
+                <div class="menu-help-group-name">
+                    {{ group.groupName }}
+                    {% if group.modulesLabel %}<span class="menu-help-modules">· {{ group.modulesLabel }}</span>{% endif %}
+                </div>
+                {% if contact.phone.displayed %}
+                    <div class="menu-help-field menu-help-phone"><a href="tel:{{ contact.phone.value }}">{{ contact.formattedPhone }}</a></div>
+                {% endif %}
+                {% if contact.email.displayed %}
+                    <div class="menu-help-field menu-help-email"><a href="mailto:{{ contact.email.value }}">{{ contact.email.value }}</a></div>
+                {% endif %}
+                {% if contact.hours.displayed %}
+                    <div class="menu-help-field menu-help-hours">{{ contact.hours.value }}</div>
+                {% endif %}
+                {% if contact.message.displayed %}
+                    <div class="menu-help-field menu-help-message">
+                        <div class="menu-help-message-body">
+                            <span class="menu-help-message-text">{{ contact.message.value }}</span>
+                            <details class="menu-help-more" hidden><summary>Voir plus</summary></details>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </details>
+    <script>
+        (function () {
+            const help = document.currentScript.previousElementSibling;
+            const cookieName = '{{ constant('S2low\\Twig\\SharedMenuRenderer::HELP_HIDDEN_COOKIE')|e('js') }}';
+            const secure = location.protocol === 'https:' ? '; Secure' : '';
+            const revealSeeMoreOfLongMessages = function () {
+                help.querySelectorAll('.menu-help-message-text').forEach(function (text) {
+                    text.nextElementSibling.hidden = text.scrollHeight <= text.clientHeight;
+                });
+            };
+            help.addEventListener('toggle', function () {
+                document.cookie = cookieName + (help.open ? '=; Max-Age=0' : '=1') + '; Path=/; SameSite=Lax' + secure;
+                revealSeeMoreOfLongMessages();
+            });
+            revealSeeMoreOfLongMessages();
+        })();
+    </script>
+{% endif %}

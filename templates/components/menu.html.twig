@@ -11,19 +11,16 @@
                     <span class="menu-identity-role">{{ app.user.role|labeliseRole }}</span>
                 </span>
             </div>
-            {% for group in this.groups %}
-                <div class="menu-affiliation">
-                    <span class="menu-affiliation-text">
-                        <span class="menu-affiliation-caption">{{ group.caption }}</span>
-                        <span class="menu-affiliation-name">{{ group.groupName }}</span>
-                    </span>
-                </div>
-            {% endfor %}
+            {% include 'components/menu-groups.html.twig' with {groups: this.groups} only %}
         </div>
         {% include 'components/certificat_expiration_warning.html.twig' with {'nb_day_before_certificate_expire': app.user.certExpirationDate|days_ago} %}
         {% if this.messageAdminTitle is not null %}
             <a class="label label-{{ this.getCssLevel|toCssClass }} menu-message-admin" href="/">{{ this.messageAdminTitle }}</a>
         {% endif %}
+        {% include 'components/menu-help.html.twig' with {
+            groups: this.groups,
+            helpCollapsed: app.request.cookies.get(constant('S2low\\Twig\\SharedMenuRenderer::HELP_HIDDEN_COOKIE')) == '1'
+        } only %}
     {% else %}
         <div id="menu-header">
             <a href="{{ url_index_ssl }}">Accéder au site</a><br/>

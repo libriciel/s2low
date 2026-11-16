@@ -93,6 +93,19 @@ class MenuHTMLTest extends S2lowTestCase
         static::assertStringNotContainsString('Assistance utilisateurs', $menu);
     }
 
+    public function testLegacyMenuRendersTheSharedHelpBlock(): void
+    {
+        $this->getSQLQuery()->query(
+            "UPDATE authority_groups SET contact_phone = '0555123456', contact_phone_shown = true WHERE id = ?",
+            self::GROUP_ID
+        );
+
+        $menu = (new MenuHTML())->getMenuContent($this->userInfo(UserRole::Utilisateur, self::AUTHORITY_ID), []);
+
+        static::assertStringContainsString('class="menu-help"', $menu);
+        static::assertStringContainsString('href="tel:0555123456"', $menu);
+    }
+
     /**
      * @return array<string, mixed>
      */

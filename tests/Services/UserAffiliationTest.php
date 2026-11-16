@@ -7,6 +7,7 @@ namespace S2low\Tests\Services;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use S2low\DTO\GroupAffiliation;
+use S2low\DTO\GroupContact;
 use S2low\Enum\AdministeredModule;
 use S2low\Services\UserAffiliation;
 use S2lowLegacy\Model\AuthoritySQL;
@@ -57,8 +58,8 @@ class UserAffiliationTest extends TestCase
 
         static::assertEquals(
             [
-                new GroupAffiliation(self::ACTES_GROUP_NAME, [AdministeredModule::ACTES]),
-                new GroupAffiliation(self::HELIOS_GROUP_NAME, [AdministeredModule::HELIOS]),
+                new GroupAffiliation(self::ACTES_GROUP_NAME, [AdministeredModule::ACTES], GroupContact::empty()),
+                new GroupAffiliation(self::HELIOS_GROUP_NAME, [AdministeredModule::HELIOS], GroupContact::empty()),
             ],
             $this->userAffiliation->getGroups($role, self::AUTHORITY_ID, null)
         );
@@ -69,7 +70,7 @@ class UserAffiliationTest extends TestCase
         $this->authorityDesignates(self::ACTES_GROUP_ID, self::ACTES_GROUP_ID);
 
         static::assertEquals(
-            [new GroupAffiliation(self::ACTES_GROUP_NAME, [AdministeredModule::ACTES, AdministeredModule::HELIOS])],
+            [new GroupAffiliation(self::ACTES_GROUP_NAME, [AdministeredModule::ACTES, AdministeredModule::HELIOS], GroupContact::empty())],
             $this->userAffiliation->getGroups('USER', self::AUTHORITY_ID, null)
         );
     }
@@ -79,7 +80,7 @@ class UserAffiliationTest extends TestCase
         $this->authorityDesignates(null, self::HELIOS_GROUP_ID);
 
         static::assertEquals(
-            [new GroupAffiliation(self::HELIOS_GROUP_NAME, [AdministeredModule::HELIOS])],
+            [new GroupAffiliation(self::HELIOS_GROUP_NAME, [AdministeredModule::HELIOS], GroupContact::empty())],
             $this->userAffiliation->getGroups('USER', self::AUTHORITY_ID, null)
         );
     }
@@ -110,7 +111,7 @@ class UserAffiliationTest extends TestCase
         $this->authorityDesignates(self::ACTES_GROUP_ID, 999);
 
         static::assertEquals(
-            [new GroupAffiliation(self::ACTES_GROUP_NAME, [AdministeredModule::ACTES])],
+            [new GroupAffiliation(self::ACTES_GROUP_NAME, [AdministeredModule::ACTES], GroupContact::empty())],
             $this->userAffiliation->getGroups('USER', self::AUTHORITY_ID, null)
         );
     }
@@ -120,7 +121,7 @@ class UserAffiliationTest extends TestCase
         $this->authoritySQL->expects(static::never())->method('getInfo');
 
         static::assertEquals(
-            [new GroupAffiliation(self::ACTES_GROUP_NAME, [])],
+            [new GroupAffiliation(self::ACTES_GROUP_NAME, [], GroupContact::empty())],
             $this->userAffiliation->getGroups('GADM', self::AUTHORITY_ID, self::ACTES_GROUP_ID)
         );
     }
@@ -150,6 +151,22 @@ class UserAffiliationTest extends TestCase
         $this->authoritySQL->expects(static::never())->method('getInfo');
 
         static::assertSame([], $this->userAffiliation->getGroups($role, self::AUTHORITY_ID, self::ACTES_GROUP_ID));
+    }
+
+    public function testGroupAffiliationCarriesTheGroupContact(): void
+    {
+        $groupSQL = $this->createMock(GroupSQL::class);
+        $groupSQL->method('getInfo')->with(self::ACTES_GROUP_ID)->willReturn([
+            'id' => self::ACTES_GROUP_ID,
+            'name' => self::ACTES_GROUP_NAME,
+            'contact_phone' => '0555123456',
+            'contact_phone_shown' => true,
+        ]);
+        $userAffiliation = new UserAffiliation($this->authoritySQL, $groupSQL);
+
+        $groups = $userAffiliation->getGroups('GADM', self::AUTHORITY_ID, self::ACTES_GROUP_ID);
+
+        static::assertSame('0555123456', $groups[0]->contact->phone()->value);
     }
 
     private function authorityDesignates(?int $actesGroupId, ?int $heliosGroupId): void

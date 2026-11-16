@@ -4,6 +4,7 @@ namespace S2low\Services;
 
 use S2low\DTO\AdministeringGroups;
 use S2low\DTO\GroupAffiliation;
+use S2low\DTO\GroupContact;
 use S2low\Enum\AdministeredModule;
 use S2low\Enum\UserRole;
 use S2lowLegacy\Model\AuthoritySQL;
@@ -63,9 +64,10 @@ class UserAffiliation
     {
         $affiliations = [];
         foreach ($modulesByGroupId as $groupId => $modules) {
-            $groupName = $groupId ? $this->readName($this->groupSQL->getInfo($groupId)) : null;
+            $groupInfo = $groupId ? $this->groupSQL->getInfo($groupId) : false;
+            $groupName = $this->readName($groupInfo);
             if ($groupName !== null) {
-                $affiliations[] = new GroupAffiliation($groupName, $modules);
+                $affiliations[] = new GroupAffiliation($groupName, $modules, GroupContact::fromGroupInfo($groupInfo));
             }
         }
 

@@ -7,6 +7,7 @@ namespace S2low\Tests\Twig\Components;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use S2low\DTO\GroupAffiliation;
+use S2low\DTO\GroupContact;
 use S2low\Security\LegacyAuthenticationBridge;
 use S2low\Security\SecurityUser;
 use S2low\Services\UserAffiliation;
@@ -57,7 +58,7 @@ class MenuComponentTest extends TestCase
         $this->authenticationBridge->method('getAuthenticatedUser')
             ->willReturn($this->aUser(['role' => 'GADM', 'authority_id' => 42, 'authority_group_id' => 7]));
 
-        $groups = [new GroupAffiliation('Groupement du Limousin', [])];
+        $groups = [new GroupAffiliation('Groupement du Limousin', [], GroupContact::empty())];
         $this->userAffiliation->method('getGroups')
             ->with('GADM', 42, 7)
             ->willReturn($groups);

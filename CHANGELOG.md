@@ -45,6 +45,7 @@ dépendances transitives.
 - Refonte du menu et ajout des informations importantes selon le statut de l'utilisateur connecté. #1556
 - L'administrateur de groupe renseigne l'assistance aux utilisateurs de son groupe (téléphone, e-mail, horaires,
   message), chaque champ pouvant être masqué sans être effacé. #1475
+- Le menu affiche un bloc « Besoin d'aide ? » avec l'assistance des groupes Actes et Helios de l'utilisateur. #1475
 
 ### Corrections
 

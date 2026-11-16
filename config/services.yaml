@@ -195,6 +195,10 @@ services:
   S2low\Services\UserAffiliation:
     public: true
 
+  # Public car le menu historique (MenuHTML) le récupère via l'ObjectInstancier
+  S2low\Twig\SharedMenuRenderer:
+    public: true
+
   S2low\Services\Helios\FTPHeliosReceiverFactory:
     public: true
     arguments:

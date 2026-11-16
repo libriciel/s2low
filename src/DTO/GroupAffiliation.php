@@ -13,18 +13,20 @@ final readonly class GroupAffiliation
      */
     public function __construct(
         public string $groupName,
-        public array $modules
+        public array $modules,
+        public GroupContact $contact
     ) {
     }
 
     public function getCaption(): string
     {
-        if ($this->modules === []) {
-            return 'Groupe';
-        }
+        return trim('Groupe ' . $this->getModulesLabel());
+    }
 
+    public function getModulesLabel(): string
+    {
         $labels = array_map(static fn(AdministeredModule $module): string => $module->label(), $this->modules);
 
-        return 'Groupe ' . implode(' / ', $labels);
+        return implode(' / ', $labels);
     }
 }

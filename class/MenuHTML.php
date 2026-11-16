@@ -6,6 +6,7 @@ use S2low\DTO\ModuleMenu;
 use S2low\Enum\UserRole;
 use S2low\Helpers\UserIdentityHelper;
 use S2low\Services\UserAffiliation;
+use S2low\Twig\SharedMenuRenderer;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Model\MessageAdminSQL;
 
@@ -54,6 +55,7 @@ class MenuHTML
             $userInfo['authority_id'] ?? null,
             $userInfo['authority_group_id'] ?? null
         );
+        $sharedMenuRenderer = $objectInstancier->get(SharedMenuRenderer::class);
         $initials = UserIdentityHelper::getInitials(
             $userInfo['givenname'] ?? null,
             $userInfo['name'] ?? null
@@ -71,14 +73,7 @@ class MenuHTML
                                 <span class="menu-identity-role"><?php hecho($userRole->getLabel()) ?></span>
                             </span>
                         </div>
-                        <?php foreach ($groups as $group) : ?>
-                            <div class="menu-affiliation">
-                                <span class="menu-affiliation-text">
-                                    <span class="menu-affiliation-caption"><?php hecho($group->getCaption()) ?></span>
-                                    <span class="menu-affiliation-name"><?php hecho($group->groupName) ?></span>
-                                </span>
-                            </div>
-                        <?php endforeach; ?>
+                        <?php echo $sharedMenuRenderer->renderGroups($groups) ?>
                     </div>
 
                     <?php if ($nb_days_before_certificate_expires < self::NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_DANGER) :?>
@@ -97,6 +92,7 @@ class MenuHTML
                     $messageAdmin = $messageAdminSQL->getPublishedMessage();
                     $messageAdmin->displayTitre();
                     ?>
+                    <?php echo $sharedMenuRenderer->renderHelp($groups, SharedMenuRenderer::isHelpHiddenIn($_COOKIE)) ?>
                     <ul class="text-menu nav">
             <?php if (in_array($userInfo['role'], array('SADM','GADM','ADM'))) : ?>
             <li class="menu-list-title">Administration</li>
