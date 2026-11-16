@@ -200,7 +200,7 @@ services:
       - "${HTTPS_PORT:-443}:443"
 
   redis:
-    image: hubdocker.libriciel.fr/redis:8.10.3-alpine3.23@sha256:71885d8cc6e42f2bc0aa2eb853bfc4be200b5108a46ac50e117ae1df0531fb80
+    image: hubdocker.libriciel.fr/redis:8.10.3-alpine3.23@sha256:7958cfbb9d152f87dadfbc89f1b0b15938f0b81ff8982feb327476f4911935c3
     restart: unless-stopped
     read_only: true
     cap_drop:
@@ -211,7 +211,7 @@ services:
       - /data:mode=750,rw,noexec,nosuid,nodev
 
   clamav:
-    image: hubdocker.libriciel.fr/clamav/clamav:1.5.4@sha256:45fe5149fbee5a46509c9848ef20d0c354b7b2323c9369f285939a37cf33422a
+    image: hubdocker.libriciel.fr/clamav/clamav:1.5.4@sha256:7054e3f34308c384ea43cd786ea17abf899bd44af40af9f1b099853d7a5c214e
     restart: unless-stopped
     read_only: true
     cap_drop:
