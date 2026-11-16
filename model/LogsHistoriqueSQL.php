@@ -51,10 +51,18 @@ class LogsHistoriqueSQL extends SQL
 
     private function requestOnTable(LogsRequestData $logsRequestData, $table, $file_handle)
     {
+        $where = [];
+        $data = [];
 
         if ($logsRequestData->authority_group_id) {
-            $where[] = " $table.authority_group_id = ? ";
-            $data[] = $logsRequestData->authority_group_id;
+            $where[] = " ($table.authority_group_id = ? OR $table.authority_id IN (" .
+                " SELECT id FROM authorities WHERE actes_group_id = ? OR helios_group_id = ?)) ";
+            array_push(
+                $data,
+                $logsRequestData->authority_group_id,
+                $logsRequestData->authority_group_id,
+                $logsRequestData->authority_group_id
+            );
         }
 
         if ($logsRequestData->authority_id) {

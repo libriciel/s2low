@@ -29,7 +29,7 @@ $sql = ' SELECT DISTINCT users.email,authorities.name,authority_groups.name as g
     " JOIN modules ON users_perms.module_id=modules.id AND modules.name='actes' " .
     "AND (users_perms.perm='RO' OR users_perms.perm='RW')" .
     ' JOIN authorities ON authorities.id=users.authority_id ' .
-    ' JOIN authority_groups ON authorities.authority_group_id = authority_groups.id ' .
+    ' JOIN authority_groups ON authorities.actes_group_id = authority_groups.id ' .
     ' JOIN modules_authorities ON authorities.id=modules_authorities.authority_id ' .
     " JOIN modules m2 ON modules_authorities.module_id=m2.id AND m2.name='actes'" .
     ' WHERE users.status = 1 ' .

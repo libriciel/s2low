@@ -4,6 +4,7 @@ namespace S2lowLegacy\Model;
 
 use Doctrine\DBAL\ArrayParameterType;
 use S2low\Enum\AdministeredModule;
+use S2low\DTO\GroupAuthorityCount;
 use S2lowLegacy\Lib\SQL;
 
 class GroupSQL extends SQL
@@ -121,5 +122,41 @@ SQL;
     public function administers(int $groupId, AdministeredModule $module): bool
     {
         return in_array($module, $this->getAdministeredModules($groupId), true);
+    }
+
+    /**
+     * @return list<GroupAuthorityCount>
+     */
+    public function countAuthoritiesPerGroup(): array
+    {
+        $sql = <<<SQL
+SELECT authority_groups.id, authority_groups.name, COUNT(authorities.id) AS authority_count
+FROM authority_groups
+LEFT JOIN authorities
+    ON authority_groups.id IN (authorities.actes_group_id, authorities.helios_group_id)
+GROUP BY authority_groups.id, authority_groups.name
+ORDER BY authority_groups.name ASC
+SQL;
+
+        return array_map(
+            static fn(array $line): GroupAuthorityCount => new GroupAuthorityCount(
+                (int)$line['id'],
+                $line['name'],
+                (int)$line['authority_count']
+            ),
+            $this->getConnection()->fetchAllAssociative($sql)
+        );
+    }
+
+    public function countAuthoritiesWithoutGroup(): int
+    {
+        $sql = <<<SQL
+SELECT COUNT(*)
+FROM authorities
+WHERE actes_group_id IS NULL
+  AND helios_group_id IS NULL
+SQL;
+
+        return (int)$this->getConnection()->fetchOne($sql);
     }
 }

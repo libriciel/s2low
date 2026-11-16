@@ -7,6 +7,7 @@ use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
 use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\GroupSQL;
 
 /** @var Initialisation $initialisation */
 /** @var SQLQuery $sqlQuery */
@@ -30,11 +31,9 @@ if (! $me->isSuper()) {
 }
 
 
-$sql = 'select count(authorities.id) as count,authority_group_id as id,authority_groups.name FROM authorities ' .
-    'FULL JOIN authority_groups ON authorities.authority_group_id = authority_groups.id ' .
-    'GROUP BY authority_group_id,authority_groups.name  ORDER BY authority_groups.name ;';
-
-$groups_list = $sqlQuery->query($sql);
+$groupSQL = new GroupSQL($sqlQuery);
+$authorityCountPerGroup = $groupSQL->countAuthoritiesPerGroup();
+$authorityCountWithoutGroup = $groupSQL->countAuthoritiesWithoutGroup();
 
 
 $menuHTML = new MenuHTML();
@@ -61,25 +60,26 @@ ob_start();
             <th scope="col">Nombre de collectivités</th>
 
         </tr>
-        <?php foreach ($groups_list as $i => $group) : ?>
+        <?php foreach ($authorityCountPerGroup as $groupCount) : ?>
             <tr>
-                <?php  if (is_null($group['name'])) :?>
-                    <td>
-                            <?php hecho('Collectivité(s) sans groupe attaché')  ?>
-                    </td>
-                    <td>
-                        <?php echo $group['count'] ?>
-                    </td>
-                <?php  else :?>
-                    <td><a href="/admin/groups/admin_group_edit.php?id=<?php echo $group['id'] ?>">
-                            <?php hecho($group['name'])  ?></a>
-                    </td>
-                    <td>
-                        <?php echo $group['count'] ?>
-                    </td>
-                <?php endif; ?>
+                <td><a href="/admin/groups/admin_group_edit.php?id=<?php echo $groupCount->groupId ?>">
+                        <?php hecho($groupCount->groupName)  ?></a>
+                </td>
+                <td>
+                    <?php echo $groupCount->authorityCount ?>
+                </td>
             </tr>
         <?php endforeach ?>
+        <?php if ($authorityCountWithoutGroup > 0) : ?>
+            <tr>
+                <td>
+                    <?php hecho('Collectivité(s) sans groupe attaché')  ?>
+                </td>
+                <td>
+                    <?php echo $authorityCountWithoutGroup ?>
+                </td>
+            </tr>
+        <?php endif; ?>
 
     </table>
 <?php
