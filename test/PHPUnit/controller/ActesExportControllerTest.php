@@ -81,6 +81,31 @@ class ActesExportControllerTest extends S2lowIntegrationTestCase
         $actesExportController->handlerAction();
     }
 
+    public function testIndexIsRefusedToAGroupThatAdministersActesNowhere(): void
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2');
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $actesExportController = self::getContainer()->get(ActesExportController::class);
+
+        $this->expectException(RedirectException::class);
+        $this->expectExceptionMessage('Accès refusé');
+        $actesExportController->indexAction();
+    }
+
+    public function testHandlerIsRefusedToAGroupThatAdministersActesNowhere(): void
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2');
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $environnement = self::getContainer()->get(Environnement::class);
+        $environnement->get()->set('date_debut', date("Y-m-d", strtotime("-1 month")));
+        $environnement->get()->set('date_fin', date("Y-m-d 23:59:59"));
+        $actesExportController = self::getContainer()->get(ActesExportController::class);
+
+        $this->expectException(RedirectException::class);
+        $this->expectExceptionMessage('Accès refusé');
+        $actesExportController->handlerAction();
+    }
+
     protected function getActesTransactionsSQL(): ActesTransactionsSQL
     {
         return self::getContainer()->get(ActesTransactionsSQL::class);

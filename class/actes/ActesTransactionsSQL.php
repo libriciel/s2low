@@ -570,7 +570,7 @@ WHERE
     ): array {
         $result = [];
         $sql = "SELECT authorities.id,authorities.name FROM authorities " .
-            " WHERE authority_group_id=? ORDER BY authorities.name";
+            " WHERE actes_group_id=? ORDER BY authorities.name";
         $authorities_list = $this->query($sql, $authority_group_id);
 
         foreach ($authorities_list as $authority_info) {
@@ -584,7 +584,7 @@ WHERE
         $sql = "SELECT authorities.id, authorities.name, COUNT(actes_transactions) AS nb_transactions 
         FROM authorities 
         INNER JOIN actes_transactions ON actes_transactions.authority_id = authorities.id 
-        WHERE authorities.authority_group_id = ? 
+        WHERE authorities.actes_group_id = ? 
         AND actes_transactions.decision_date >= ?
         AND actes_transactions.decision_date <= ?
         GROUP BY authorities.id, authorities.name 

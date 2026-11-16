@@ -1,17 +1,20 @@
 <?php
 
+use S2low\Enum\AdministeredModule;
 use S2lowLegacy\Class\actes\ActesStatistiques;
 use S2lowLegacy\Class\Droit;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\Initialisation;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\MenuHTML;
+use S2lowLegacy\Class\S2lowRedirect;
+use S2lowLegacy\Model\GroupSQL;
 
 /** @var Initialisation $initialisation */
 /** @var ActesStatistiques $actesStatistiques */
 /** @var Droit $droit */
-[$initialisation,$actesStatistiques,$droit ] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class,ActesStatistiques::class, Droit::class]);
+[$initialisation,$actesStatistiques,$droit,$groupSQL,$s2lowRedirect] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class,ActesStatistiques::class, Droit::class, GroupSQL::class, S2lowRedirect::class]);
 
 $initData = $initialisation->doInit();
 $moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEACTES, Initialisation::DROITSACTES);
@@ -21,8 +24,12 @@ $title = 'Statistiques de transmission des enveloppes ';
 if ($droit->isSuperAdmin($initData->userInfo)) {
     $title .= " pour l'ensemble des collectivités";
 } elseif ($droit->isGroupAdmin($initData->userInfo)) {
+    $groupId = (int)$initData->userInfo['authority_group_id'];
+    if (! $groupSQL->administers($groupId, AdministeredModule::ACTES)) {
+        $s2lowRedirect->redirect('/', 'Accès refusé');
+    }
     $title .= 'pour le groupe ' . $initData->groupeInfo['name'];
-    $actesStatistiques->setGroup($initData->userInfo['authority_group_id']);
+    $actesStatistiques->setGroup($groupId);
 } elseif ($droit->isAuthorityAdmin($initData->userInfo)) {
     $title .= ' pour la collectivité ' . $initData->authorityInfo['name'];
     $actesStatistiques->setAuthority($initData->userInfo['authority_id']);

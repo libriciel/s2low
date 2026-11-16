@@ -7,6 +7,7 @@ use S2low\Enum\UserRole;
 use S2low\Helpers\UserIdentityHelper;
 use S2low\Services\UserAffiliation;
 use S2lowLegacy\Lib\X509Certificate;
+use S2lowLegacy\Model\GroupSQL;
 use S2lowLegacy\Model\MessageAdminSQL;
 
 class MenuHTML
@@ -42,7 +43,10 @@ class MenuHTML
 
 
         $userRole = UserRole::from($userInfo['role']);
-        $moduleMenu = new ModuleMenu($userRole, $modulesInfo);
+        $modulesAdministeredByGroup = $userRole->isGroupAdmin()
+            ? LegacyObjectsManager::getLegacyObjectInstancier()->get(GroupSQL::class)->getAdministeredModules((int)$userInfo['authority_group_id'])
+            : [];
+        $moduleMenu = new ModuleMenu($userRole, $modulesInfo, $modulesAdministeredByGroup);
 
         $nb_days_before_certificate_expires = $this->getNbDaysBeforeCertificatExpire($userInfo);
 

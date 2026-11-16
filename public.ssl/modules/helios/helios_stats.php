@@ -1,17 +1,22 @@
 <?php
 
 // Instanciation du module courant
+use S2low\Enum\AdministeredModule;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Group;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\HTMLLayout;
 use S2lowLegacy\Class\LegacyObjectsManager;
 use S2lowLegacy\Class\Module;
+use S2lowLegacy\Class\S2lowRedirect;
 use S2lowLegacy\Class\User;
+use S2lowLegacy\Model\GroupSQL;
 use S2lowLegacy\Model\HeliosTransactionsSQL;
 
 /** @var HeliosTransactionsSQL $heliosTransactionsSQL */
 $heliosTransactionsSQL = LegacyObjectsManager::getObject(HeliosTransactionsSQL::class);
+$groupSQL = LegacyObjectsManager::getObject(GroupSQL::class);
+$s2lowRedirect = LegacyObjectsManager::getObject(S2lowRedirect::class);
 
 $module = new Module();
 if (! $module->initByName("helios")) {
@@ -42,7 +47,11 @@ $author_filter = "";
 if ($me->isAuthorityAdmin()) {
     $author_filter = "users.authority_id=" . $me->get("authority_id");
 } elseif ($me->isGroupAdmin()) {
-    $author_filter = "authorities.authority_group_id=" . $me->get("authority_group_id");
+    $groupId = (int)$me->get("authority_group_id");
+    if (! $groupSQL->administers($groupId, AdministeredModule::HELIOS)) {
+        $s2lowRedirect->redirect('/', 'Accès refusé');
+    }
+    $author_filter = "authorities.helios_group_id=" . $groupId;
 } elseif (! $me->isAnyAdmin()) {
     $author_filter = "users.id=" . $me->getId();
 }

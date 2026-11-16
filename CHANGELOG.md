@@ -35,6 +35,12 @@ dépendances transitives.
 - Un groupe désigné pour administrer un module d'une collectivité n'est plus supprimable. #1584
 - Ajout d'un groupe Actes et d'un groupe Helios par collectivité : chaque groupe n'administre que son module. #1585 #1599 #1621 #1622 #1623 #1625
 - Refonte du menu et ajout des informations importantes selon le statut de l'utilisateur connecté. #1556
+- Le menu d'un administrateur de groupe ne propose les statistiques et l'export d'un module que si son groupe administre ce
+  module pour au moins une collectivité ; ces pages lui sont refusées sinon. #1622
+- Les statistiques Helios et le décompte des transactions par groupe de l'API retiennent les collectivités dont le groupe
+  administre le module concerné. #1622
+- Le téléchargement d'une réponse Helios est réservé, parmi les administrateurs de groupe, à celui du groupe Helios de la
+  collectivité. #1622
 
 ### Corrections
 
@@ -44,6 +50,8 @@ dépendances transitives.
   compris lorsqu'il est réservé à plusieurs groupes. #1576
 - La gestion des utilisateurs propose à l'administrateur de groupe, pour filtrer la liste comme pour rattacher un utilisateur,
   toutes les collectivités dont son groupe administre Actes ou Helios ; le filtre « Groupe » du super administrateur les retient aussi. #1597
+- Les statistiques Actes d'un administrateur de groupe comptaient les enveloppes déposées par les utilisateurs de son
+  groupe au lieu de celles des collectivités dont son groupe administre Actes. #1622
 
 ### Sécurité
 

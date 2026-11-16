@@ -8,6 +8,7 @@ use S2lowLegacy\Class\actes\ActesEnvelopeSQL;
 use S2lowLegacy\Class\actes\ActesIncludedFileSQL;
 use S2lowLegacy\Class\CSVOutput;
 use S2lowLegacy\Model\AuthoritySQL;
+use S2lowLegacy\Model\GroupSQL;
 
 class ActesExportController extends Controller
 {
@@ -30,6 +31,7 @@ class ActesExportController extends Controller
         if ($this->me->isSuper()) {
             $this->authority_id_list = $authoritySQL->getAll();
         } elseif ($this->me->isGroupAdmin()) {
+            $this->verifGroupAdministersActes();
             $this->authority_id_list = $authoritySQL->getAllAdministeredForModuleBy(
                 AdministeredModule::ACTES,
                 (int)$this->me->get('authority_group_id')
@@ -61,6 +63,7 @@ class ActesExportController extends Controller
         $authority_group_id = false;
 
         if ($this->me->isGroupAdmin()) {
+            $this->verifGroupAdministersActes();
             if ($authority_id) {
                 $this->verifAdministersActes($authority_id);
             } else {
@@ -96,6 +99,14 @@ class ActesExportController extends Controller
         $csvOutput->sendAttachment("actes.csv", $result);
 
         $this->controller_exit();
+    }
+
+    private function verifGroupAdministersActes(): void
+    {
+        $groupId = (int)$this->me->get('authority_group_id');
+        if (! $this->getObjectInstancier()->get(GroupSQL::class)->administers($groupId, AdministeredModule::ACTES)) {
+            $this->displayErrorAndExit("Accès refusé", "");
+        } // @codeCoverageIgnore
     }
 
     private function verifAdministersActes(string $authority_id): void

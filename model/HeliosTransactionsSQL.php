@@ -547,7 +547,7 @@ class HeliosTransactionsSQL extends SQL implements FileDataProvider
     ): array {
         $result = [];
         $sql = "SELECT authorities.id,authorities.name FROM authorities " .
-            " WHERE authority_group_id=? ORDER BY authorities.name";
+            " WHERE helios_group_id=? ORDER BY authorities.name";
         $authorities_list = $this->query($sql, $authority_group_id);
         foreach ($authorities_list as $authority_info) {
             $result[$authority_info['id']] = [
@@ -559,7 +559,7 @@ class HeliosTransactionsSQL extends SQL implements FileDataProvider
 
         $sql = "SELECT authorities.id,authorities.name, COUNT(helios_transactions) AS nb_transactions FROM authorities " .
             " INNER JOIN helios_transactions ON helios_transactions.authority_id = authorities.id " .
-            " WHERE  authorities.authority_group_id =  ? " .
+            " WHERE  authorities.helios_group_id =  ? " .
             " AND helios_transactions.submission_date >= ? " .
             " AND helios_transactions.submission_date <= ? " .
             " GROUP BY authorities.id,authorities.name " .

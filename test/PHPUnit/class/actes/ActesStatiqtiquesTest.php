@@ -228,4 +228,40 @@ class ActesStatiqtiquesTest extends S2lowTestCase
             $expected
         );
     }
+
+    public function testGroupStatisticsCountTheEnvelopesOfAnAuthorityWhoseActesGroupItIs(): void
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2 WHERE id = 1');
+        $this->createTransmittedTransactionOnAuthority1();
+        $actesStatistiques = $this->getObjectInstancier()->get(ActesStatistiques::class);
+        $actesStatistiques->setGroup(2);
+
+        $infos = $actesStatistiques->getInfo();
+
+        static::assertSame(1, $infos['1970-01-01']['nb_envelope']);
+        static::assertSame(1, $infos['1970-01-01']['nb_envelope_poste']);
+    }
+
+    public function testGroupStatisticsIgnoreAnAuthorityWhoseActesGroupIsAnother(): void
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2 WHERE id = 1');
+        $this->createTransmittedTransactionOnAuthority1();
+        $actesStatistiques = $this->getObjectInstancier()->get(ActesStatistiques::class);
+        $actesStatistiques->setGroup(1);
+
+        $infos = $actesStatistiques->getInfo();
+
+        static::assertSame(0, $infos['1970-01-01']['nb_envelope']);
+        static::assertSame(0, $infos['1970-01-01']['nb_envelope_poste']);
+    }
+
+    private function createTransmittedTransactionOnAuthority1(): void
+    {
+        $actesCreator = new ActesCreator(
+            self::getContainer()->get(ActesTransactionsSQL::class),
+            self::getContainer()->get(ActesEnvelopeSQL::class),
+        );
+        $transactionId = $actesCreator->createTransaction(ActesStatusSQL::STATUS_POSTE, null, "");
+        self::getContainer()->get(ActesTransactionsSQL::class)->updateStatus($transactionId, ActesStatusSQL::STATUS_TRANSMIS, "");
+    }
 }
