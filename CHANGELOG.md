@@ -16,6 +16,7 @@ dépendances transitives.
 - Ajoute la possibilité de filtrer par type d'actes dans modules/actes/api/list_actes.php #1235
 - Ajoute la possibilité de passer les PES_RETOUR en lu / non-lu en lot #730
 - Passage de SimpleXML à XMLReader pour limiter l'empreinte mémoire de l'analyse des XML reçus #497
+- Le menu est refondu : il affiche les groupes Actes et Helios de l'utilisateur et l'assistance de ces groupes. #1556 #1475
 - Le champ HELIOS ftp Dest et le module Helios d'une collectivité ne sont plus visibles que par l'administrateur de son
   groupe Helios. #1558
 - À la création d'une collectivité par un administrateur de groupe, les modules activés désignent son groupe comme
@@ -42,10 +43,6 @@ dépendances transitives.
 - L'export Actes n'est plus servi à un administrateur de groupe que pour les collectivités dont son groupe administre le
   module Actes. #1585
 - La base de données refuse la suppression d'un groupe encore désigné pour administrer le module Actes ou Helios d'une collectivité. #1599
-- Refonte du menu et ajout des informations importantes selon le statut de l'utilisateur connecté. #1556
-- L'administrateur de groupe renseigne l'assistance aux utilisateurs de son groupe (téléphone, e-mail, horaires,
-  message), chaque champ pouvant être masqué sans être effacé. #1475
-- Le menu affiche un bloc « Besoin d'aide ? » avec l'assistance des groupes Actes et Helios de l'utilisateur. #1475
 
 ### Corrections
 
