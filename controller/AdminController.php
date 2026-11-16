@@ -3,6 +3,7 @@
 namespace S2lowLegacy\Controller;
 
 use Exception;
+use S2low\DTO\AuthoritySearch;
 use S2lowLegacy\Class\PagerHTML;
 use S2lowLegacy\Lib\FancyDate;
 use S2lowLegacy\Lib\JSONoutput;
@@ -27,6 +28,8 @@ class AdminController extends Controller
     protected string $ftype;
     protected string $fname;
     protected string $fgroup;
+    protected int $factesGroup;
+    protected int $fheliosGroup;
     protected string $api;
     protected string $fsiret;
     protected int $count;
@@ -187,6 +190,8 @@ class AdminController extends Controller
         $this->ftype =  $recuperateur->get("type");
         $this->fname = $recuperateur->get("name");
         $this->fgroup = $recuperateur->get("group");
+        $this->factesGroup = $recuperateur->getInt("actes_group");
+        $this->fheliosGroup = $recuperateur->getInt("helios_group");
         $this->api = $recuperateur->get("api");
         $this->fsiren = $this->getSirenFactory()->get($recuperateur->get("siren"))->getValue();
         $this->fsiret = $recuperateur->get("siret");
@@ -200,8 +205,18 @@ class AdminController extends Controller
             $this->fgroup = $user_authority_group_id;
         }
 
+        $search = new AuthoritySearch(
+            authorityTypeId: (int)$this->ftype,
+            name: (string)$this->fname,
+            siren: (string)$this->fsiren,
+            siret: (string)$this->fsiret,
+            administeringGroupId: (int)$this->fgroup,
+            actesGroupId: $this->factesGroup,
+            heliosGroupId: $this->fheliosGroup,
+        );
+
         $authoritySQL = new AuthoritySQL($this->getSQLQuery());
-        $this->authorities = $authoritySQL->getList($this->fgroup, $this->ftype, $this->fname, $this->fsiren, $this->fsiret, ($this->page_number - 1) * $this->taille_page, $this->taille_page);
+        $this->authorities = $authoritySQL->search($search, ($this->page_number - 1) * $this->taille_page, $this->taille_page);
 
         if ($this->me->isGroupAdmin()) {
             $this->authorities = array_map(
@@ -210,7 +225,7 @@ class AdminController extends Controller
             );
         }
 
-        $nb_authorities = $authoritySQL->getNb($this->fgroup, $this->ftype, $this->fname, $this->fsiren, $this->fsiret);
+        $nb_authorities = $authoritySQL->count($search);
 
         if ($this->api) {
             $jsonOutput = new JSONoutput();

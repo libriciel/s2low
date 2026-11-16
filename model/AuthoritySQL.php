@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Model;
 
+use S2low\DTO\AuthoritySearch;
 use S2low\Enum\AdministeredModule;
 use S2lowLegacy\Lib\SQL;
 use S2lowLegacy\Lib\UnrecoverableException;
@@ -137,75 +138,66 @@ class AuthoritySQL extends SQL
         return count($result);
     }
 
-    public function getList($authority_group_id, $authority_type_id, $name, $siren, $siret, $offset, $limit)
+    public function search(AuthoritySearch $search, int $offset, int $limit): array
     {
-        $sql = "SELECT authorities.*, authority_types.description as type_name,
-                    actes_groups.name as actes_group_name, helios_groups.name as helios_group_name
-                    FROM authorities " .
-                    self::ADMINISTERING_GROUPS_JOIN .
-                    " LEFT JOIN authority_types ON authorities.authority_type_id = authority_types.id ";
-        $data = array();
-        if ($siret) {
-            $sql .= " JOIN authority_siret ON authorities.id=authority_siret.authority_id";
-        }
-        $sql .= " WHERE 1=1 ";
-        if ($siret) {
-            $sql .= " AND authority_siret.siret LIKE ? ";
-            $data[] = "%$siret%";
-        }
-        if ($authority_group_id) {
-            $sql .= " AND (authorities.actes_group_id = ? OR authorities.helios_group_id = ?)";
-            $data[] = $authority_group_id;
-            $data[] = $authority_group_id;
-        }
-        if ($authority_type_id) {
-            $sql .= " AND authority_type_id = ?";
-            $data[] = $authority_type_id;
-        }
-        if ($name) {
-            $sql .=  " AND authorities.name ILIKE ? ";
-            $data[] = "%$name%";
-        }
-        if ($siren) {
-            $sql .=  " AND siren LIKE ? ";
-            $data[] = "%$siren%";
-        }
-        $offset = intval($offset);
-        $limit = intval($limit);
-        $sql .= " ORDER BY name LIMIT $limit OFFSET $offset";
-        return $this->query($sql, $data);
+        $administeringGroupsJoin = self::ADMINISTERING_GROUPS_JOIN;
+        $sql = <<<SQL
+            SELECT authorities.*, authority_types.description AS type_name,
+                actes_groups.name AS actes_group_name, helios_groups.name AS helios_group_name
+            FROM authorities
+            $administeringGroupsJoin
+            LEFT JOIN authority_types ON authority_types.id = authorities.authority_type_id
+            WHERE {$this->searchConditions()}
+            ORDER BY authorities.name
+            LIMIT :limit OFFSET :offset
+            SQL;
+
+        return $this->query($sql, [...$this->searchParameters($search), 'limit' => $limit, 'offset' => $offset]);
     }
 
-    public function getNb($authority_group_id, $authority_type_id, $name, $siren, $siret)
+    public function count(AuthoritySearch $search): int
     {
-        $sql = "SELECT count(*) FROM authorities ";
-        $data = array();
-        if ($siret) {
-            $sql .= " JOIN authority_siret ON authorities.id=authority_siret.authority_id";
-        }
-        $sql .= " WHERE 1=1 ";
-        if ($siret) {
-            $sql .= " AND authority_siret.siret LIKE ? ";
-            $data[] = "%$siret%";
-        }
-        if ($authority_group_id) {
-            $sql .= " AND (authorities.actes_group_id = ? OR authorities.helios_group_id = ?)";
-            $data[] = $authority_group_id;
-            $data[] = $authority_group_id;
-        }
-        if ($authority_type_id) {
-            $sql .= " AND authority_type_id = ?";
-            $data[] = $authority_type_id;
-        }
-        if ($name) {
-            $sql .= " AND name ILIKE ? ";
-            $data[] = "%$name%";
-        }
-        if ($siren) {
-            $sql .=  " AND siren LIKE ? ";
-            $data[] = "%$siren%";
-        }
-        return $this->queryOne($sql, $data);
+        $sql = <<<SQL
+            SELECT count(*)
+            FROM authorities
+            WHERE {$this->searchConditions()}
+            SQL;
+
+        return (int)$this->queryOne($sql, $this->searchParameters($search));
+    }
+
+    private function searchConditions(): string
+    {
+        return <<<SQL
+            (:authorityTypeId = 0 OR authorities.authority_type_id = :authorityTypeId)
+            AND (:name = '' OR authorities.name ILIKE :namePattern)
+            AND (:siren = '' OR authorities.siren LIKE :sirenPattern)
+            AND (:siret = '' OR EXISTS (
+                SELECT 1 FROM authority_siret
+                WHERE authority_siret.authority_id = authorities.id AND authority_siret.siret LIKE :siretPattern
+            ))
+            AND (:administeringGroupId = 0
+                OR authorities.actes_group_id = :administeringGroupId
+                OR authorities.helios_group_id = :administeringGroupId)
+            AND (:actesGroupId = 0 OR authorities.actes_group_id = :actesGroupId)
+            AND (:heliosGroupId = 0 OR authorities.helios_group_id = :heliosGroupId)
+            SQL;
+    }
+
+    private function searchParameters(AuthoritySearch $search): array
+    {
+        return [
+            'authorityTypeId' => $search->authorityTypeId,
+            'name' => $search->name,
+            'namePattern' => "%$search->name%",
+            'siren' => $search->siren,
+            'sirenPattern' => "%$search->siren%",
+            'siret' => $search->siret,
+            'siretPattern' => "%$search->siret%",
+            'administeringGroupId' => $search->administeringGroupId,
+            'actesGroupId' => $search->actesGroupId,
+            'heliosGroupId' => $search->heliosGroupId,
+        ];
     }
 
     /**

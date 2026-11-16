@@ -43,6 +43,7 @@ dépendances transitives.
   module Actes. #1585
 - La base de données refuse la suppression d'un groupe encore désigné pour administrer le module Actes ou Helios d'une collectivité. #1599
 - Refonte du menu et ajout des informations importantes selon le statut de l'utilisateur connecté. #1556
+- La recherche des collectivités du super administrateur filtre séparément sur le groupe Actes et sur le groupe Helios. #1621
 
 ### Corrections
 
@@ -52,6 +53,7 @@ dépendances transitives.
   compris lorsqu'il est réservé à plusieurs groupes. #1576
 - La gestion des utilisateurs propose à l'administrateur de groupe, pour filtrer la liste comme pour rattacher un utilisateur,
   toutes les collectivités dont son groupe administre Actes ou Helios ; le filtre « Groupe » du super administrateur les retient aussi. #1597
+- Une collectivité dont plusieurs SIRET répondent au filtre n'apparaît plus qu'une fois dans la recherche, et le total est juste. #1621
 
 ### Sécurité
 

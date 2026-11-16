@@ -1,5 +1,6 @@
 <?php
 
+use S2low\DTO\AuthoritySearch;
 use S2low\Enum\AdministeredModule;
 use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\PastellProperties;
@@ -66,12 +67,12 @@ class AuthoritySQLTest extends S2lowTestCase
 
     public function testGetList()
     {
-        $this->assertEmpty($this->authoritySQL->getList(1, 1, 'toto', '123', '1234', 0, 10));
+        $this->assertEmpty($this->authoritySQL->search(new AuthoritySearch(authorityTypeId: 1, name: 'toto', siren: '123', siret: '1234', administeringGroupId: 1), 0, 10));
     }
 
     public function testGetNb()
     {
-        $this->assertEquals(0, $this->authoritySQL->getNb(1, 1, 'toto', '123', "1234"));
+        $this->assertEquals(0, $this->authoritySQL->count(new AuthoritySearch(authorityTypeId: 1, name: 'toto', siren: '123', siret: '1234', administeringGroupId: 1)));
     }
 
     public function testGetAllAdministeredBy()
@@ -114,7 +115,7 @@ class AuthoritySQLTest extends S2lowTestCase
     {
         $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 1 WHERE id = 2');
 
-        $result = $this->authoritySQL->getList(2, false, false, false, false, 0, 10);
+        $result = $this->authoritySQL->search(new AuthoritySearch(administeringGroupId: 2), 0, 10);
 
         $this->assertSame([2], array_map('intval', array_column($result, 'id')));
     }
@@ -123,7 +124,7 @@ class AuthoritySQLTest extends S2lowTestCase
     {
         $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 1, helios_group_id = 2 WHERE id = 2');
 
-        $result = $this->authoritySQL->getList(false, false, 'Saint-Andre', false, false, 0, 10);
+        $result = $this->authoritySQL->search(new AuthoritySearch(name: 'Saint-Andre'), 0, 10);
 
         $this->assertSame('Groupe de test', $result[0]['actes_group_name']);
         $this->assertSame('second groupe', $result[0]['helios_group_name']);
@@ -133,8 +134,8 @@ class AuthoritySQLTest extends S2lowTestCase
     {
         $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 2 WHERE id = 2');
 
-        $this->assertSame(2, (int)$this->authoritySQL->getNb(1, false, false, false, false));
-        $this->assertSame(1, (int)$this->authoritySQL->getNb(2, false, false, false, false));
+        $this->assertSame(2, $this->authoritySQL->count(new AuthoritySearch(administeringGroupId: 1)));
+        $this->assertSame(1, $this->authoritySQL->count(new AuthoritySearch(administeringGroupId: 2)));
     }
 
     public function testGetAllForExportNamesBothAdministeringGroups()
@@ -150,12 +151,12 @@ class AuthoritySQLTest extends S2lowTestCase
 
     public function testGetListInsensitive()
     {
-        $this->assertEquals(1, count($this->authoritySQL->getList(false, false, "BOURG", false, false, 0, 10)));
+        $this->assertEquals(1, count($this->authoritySQL->search(new AuthoritySearch(name: 'BOURG'), 0, 10)));
     }
 
     public function testGetNbInsensitive()
     {
-        $this->assertEquals(1, $this->authoritySQL->getNb(false, false, "BOURG", false, false));
+        $this->assertEquals(1, $this->authoritySQL->count(new AuthoritySearch(name: 'BOURG')));
     }
 
     public function testUpdateVerifNomFic()
@@ -244,5 +245,99 @@ class AuthoritySQLTest extends S2lowTestCase
     {
         $info = $this->authoritySQL->getAllForExport(2);
         $this->assertEquals([], $info);
+    }
+
+    public function testSearchKeepsTheAuthoritiesOfTheActesGroup(): void
+    {
+        $this->givenAuthoritiesAdministeredBy([1 => [1, 1], 2 => [2, 1], 3 => [1, 2]]);
+
+        $result = $this->authoritySQL->search(new AuthoritySearch(actesGroupId: 2), 0, 10);
+
+        $this->assertSame([2], $this->idsOf($result));
+    }
+
+    public function testSearchKeepsTheAuthoritiesOfTheHeliosGroup(): void
+    {
+        $this->givenAuthoritiesAdministeredBy([1 => [1, 1], 2 => [2, 1], 3 => [1, 2]]);
+
+        $result = $this->authoritySQL->search(new AuthoritySearch(heliosGroupId: 2), 0, 10);
+
+        $this->assertSame([3], $this->idsOf($result));
+    }
+
+    public function testSearchCombinesTheActesAndHeliosGroups(): void
+    {
+        $this->givenAuthoritiesAdministeredBy([1 => [1, 1], 2 => [2, 1], 3 => [2, 2]]);
+
+        $result = $this->authoritySQL->search(new AuthoritySearch(actesGroupId: 2, heliosGroupId: 1), 0, 10);
+
+        $this->assertSame([2], $this->idsOf($result));
+    }
+
+    public function testSearchListsOnceAnAuthorityWhoseGroupIsBothActesAndHelios(): void
+    {
+        $this->givenAuthoritiesAdministeredBy([1 => [2, 2], 2 => [1, 1], 3 => [1, 1]]);
+
+        $search = new AuthoritySearch(actesGroupId: 2, heliosGroupId: 2);
+
+        $this->assertSame([1], $this->idsOf($this->authoritySQL->search($search, 0, 10)));
+        $this->assertSame(1, $this->authoritySQL->count($search));
+    }
+
+    public function testSearchOnAGroupKeepsTheAuthoritiesItAdministersForEitherModule(): void
+    {
+        $this->givenAuthoritiesAdministeredBy([1 => [2, 1], 2 => [1, 2], 3 => [1, 1]]);
+
+        $result = $this->authoritySQL->search(new AuthoritySearch(administeringGroupId: 2), 0, 10);
+
+        $this->assertSame([1, 2], $this->idsOf($result));
+    }
+
+    public function testSearchListsOnceAnAuthorityWithSeveralMatchingSirets(): void
+    {
+        $this->givenASecondSiretForAuthority1();
+
+        $result = $this->authoritySQL->search(new AuthoritySearch(siret: '123456789'), 0, 10);
+
+        $this->assertSame([1], $this->idsOf($result));
+    }
+
+    public function testCountMatchesTheSearchWithSeveralMatchingSirets(): void
+    {
+        $this->givenASecondSiretForAuthority1();
+
+        $this->assertSame(1, $this->authoritySQL->count(new AuthoritySearch(siret: '123456789')));
+    }
+
+    public function testSearchWithoutCriteriaListsEveryAuthority(): void
+    {
+        $result = $this->authoritySQL->search(new AuthoritySearch(), 0, 10);
+
+        $this->assertSame([1, 2, 3], $this->idsOf($result));
+        $this->assertSame(3, $this->authoritySQL->count(new AuthoritySearch()));
+    }
+
+    private function givenAuthoritiesAdministeredBy(array $groupIdsByAuthorityId): void
+    {
+        foreach ($groupIdsByAuthorityId as $authorityId => [$actesGroupId, $heliosGroupId]) {
+            $this->getSQLQuery()->query(
+                'UPDATE authorities SET actes_group_id = ?, helios_group_id = ? WHERE id = ?',
+                [$actesGroupId, $heliosGroupId, $authorityId]
+            );
+        }
+    }
+
+    private function givenASecondSiretForAuthority1(): void
+    {
+        $this->getSQLQuery()->query(
+            "INSERT INTO authority_siret (authority_id, siret, date, is_blocked) VALUES (1, '12345678900017', now(), false)"
+        );
+    }
+
+    private function idsOf(array $authorities): array
+    {
+        $ids = array_map('intval', array_column($authorities, 'id'));
+        sort($ids);
+        return $ids;
     }
 }

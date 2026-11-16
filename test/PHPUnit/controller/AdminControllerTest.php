@@ -239,6 +239,30 @@ class AdminControllerTest extends S2lowIntegrationTestCase
         $adminController->authoritiesAction();
     }
 
+    public function testAuthoritiesActionFiltersOnTheActesGroupChosenByTheSuperAdmin(): void
+    {
+        $this->givenAuthority2IsAdministeredBy(2, 1);
+        self::getContainer()->get(Environnement::class)->get()->set('actes_group', 2);
+        $adminController = self::getContainer()->get(AdminController::class);
+
+        $adminController->authoritiesAction();
+
+        $this->assertSame([2], array_map('intval', array_column($adminController->authorities, 'id')));
+    }
+
+    public function testAuthoritiesActionKeepsAGroupAdminOnItsAuthoritiesWhateverTheFilters(): void
+    {
+        $this->givenAuthority2IsAdministeredBy(2, 2);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        self::getContainer()->get(Environnement::class)->get()->set('group', 2);
+        self::getContainer()->get(Environnement::class)->get()->set('actes_group', 2);
+        $adminController = self::getContainer()->get(AdminController::class);
+
+        $adminController->authoritiesAction();
+
+        $this->assertSame([], $adminController->authorities);
+    }
+
     private function givenAuthority2IsAdministeredBy(int $actesGroupId, int $heliosGroupId): void
     {
         $this->getSQLQuery()->query(
