@@ -4,6 +4,8 @@ namespace S2lowLegacy\Class;
 
 use S2low\DTO\ModuleMenu;
 use S2low\Enum\UserRole;
+use S2low\Helpers\UserIdentityHelper;
+use S2low\Services\UserAffiliation;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Model\MessageAdminSQL;
 
@@ -39,37 +41,62 @@ class MenuHTML
         $logoutRoute = LegacyObjectsManager::getLegacyObjectInstancier()->get('router')->generate('app_logout');
 
 
-        $moduleMenu = new ModuleMenu(UserRole::from($userInfo['role']), $modulesInfo);
+        $userRole = UserRole::from($userInfo['role']);
+        $moduleMenu = new ModuleMenu($userRole, $modulesInfo);
 
-        $nb_days_before_certificate_expires = $this->getNbDaysBeforeCertificatExpire($userInfo); ?>
+        $nb_days_before_certificate_expires = $this->getNbDaysBeforeCertificatExpire($userInfo);
+
+        $objectInstancier  = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
+        /** @var UserAffiliation $userAffiliation */
+        $userAffiliation = $objectInstancier->get(UserAffiliation::class);
+        $groups = $userAffiliation->getGroups(
+            $userInfo['role'],
+            $userInfo['authority_id'] ?? null,
+            $userInfo['authority_group_id'] ?? null
+        );
+        $initials = UserIdentityHelper::getInitials(
+            $userInfo['givenname'] ?? null,
+            $userInfo['name'] ?? null
+        ); ?>
 
 
                     <div id="menu-header">
-                        Bienvenue <?php hecho($userInfo['pretty_name']) ?><br />
-
-                        <?php if ($nb_days_before_certificate_expires < self::NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_DANGER) :?>
-                            <div class="alert alert-danger message-admin">
-                                <strong>Votre certificat expire dans <?php echo $nb_days_before_certificate_expires ?> jours !</strong>
+                        <?php if ($userInfo['nb_user_with_my_certificate'] > 1) : ?>
+                            <a class="menu-logout" href="<?php echo $logoutRoute ?>" title="Se déconnecter"><span>Se déconnecter</span></a>
+                        <?php endif;?>
+                        <div class="menu-identity">
+                            <span class="menu-identity-initials" aria-hidden="true"><?php hecho($initials) ?></span>
+                            <span class="menu-identity-civility">
+                                <span class="menu-identity-name"><?php hecho($userInfo['givenname'] . ' ' . $userInfo['name']) ?></span>
+                                <span class="menu-identity-role"><?php hecho($userRole->getLabel()) ?></span>
+                            </span>
+                        </div>
+                        <?php foreach ($groups as $group) : ?>
+                            <div class="menu-affiliation">
+                                <span class="menu-affiliation-text">
+                                    <span class="menu-affiliation-caption"><?php hecho($group->getCaption()) ?></span>
+                                    <span class="menu-affiliation-name"><?php hecho($group->groupName) ?></span>
+                                </span>
                             </div>
-                        <?php elseif ($nb_days_before_certificate_expires < self::NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_WARNING) :?>
-                            <div class="alert alert-warning message-admin">
-                                <strong>Votre certificat expire dans <?php echo $nb_days_before_certificate_expires ?> jours !</strong>
-                            </div>
-                        <?php endif; ?>
-
-                        <?php
-                        $objectInstancier  = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier();
-                    /** @var MessageAdminSQL $messageAdminSQL */
-                        $messageAdminSQL = $objectInstancier->get(MessageAdminSQL::class);
-                        $messageAdmin = $messageAdminSQL->getPublishedMessage();
-                        $messageAdmin->displayTitre();
-
-                        ?>
-                        Rôle <?php  echo $userInfo['role_str'] ?>
-            <?php if ($userInfo['nb_user_with_my_certificate'] > 1) : ?>
-            <br/><a href='<?php echo $logoutRoute ?>'>déconnexion</a>
-            <?php endif;?>
+                        <?php endforeach; ?>
                     </div>
+
+                    <?php if ($nb_days_before_certificate_expires < self::NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_DANGER) :?>
+                        <div class="alert alert-danger message-admin">
+                            <strong>Votre certificat expire dans <?php echo $nb_days_before_certificate_expires ?> jours !</strong>
+                        </div>
+                    <?php elseif ($nb_days_before_certificate_expires < self::NB_DAYS_BEFORE_CERTIFICATE_EXPIRE_WARNING) :?>
+                        <div class="alert alert-warning message-admin">
+                            <strong>Votre certificat expire dans <?php echo $nb_days_before_certificate_expires ?> jours !</strong>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php
+                    /** @var MessageAdminSQL $messageAdminSQL */
+                    $messageAdminSQL = $objectInstancier->get(MessageAdminSQL::class);
+                    $messageAdmin = $messageAdminSQL->getPublishedMessage();
+                    $messageAdmin->displayTitre();
+                    ?>
                     <ul class="text-menu nav">
             <?php if (in_array($userInfo['role'], array('SADM','GADM','ADM'))) : ?>
             <li class="menu-list-title">Administration</li>

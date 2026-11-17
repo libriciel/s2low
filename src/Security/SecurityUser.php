@@ -20,7 +20,6 @@ class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
     private string $name;
     private string $givenname;
     private \DateTimeImmutable $certExpirationDate;
-    private bool $sharedCertificate;
 
     /**
      * @param array<string, mixed> $userData
@@ -36,7 +35,6 @@ class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
         $this->authorityGroupId = isset($userData['authority_group_id']) ? (int) $userData['authority_group_id'] : null;
         $this->status = (int) ($userData['status'] ?? 0);
         $this->certificateHash = $userData['certificate_hash'] ?? '';
-        $this->sharedCertificate = $userData['login'] != null;
         try {
             $certDate = $userData['cert_not_after'] ?? '9999-12-31 23:59:59';
             $this->certExpirationDate = new DateTimeImmutable($certDate);
@@ -166,10 +164,5 @@ class SecurityUser implements UserInterface, PasswordAuthenticatedUserInterface
     public function isActive(): bool
     {
         return $this->status === 1;
-    }
-
-    public function isSharedCertificate(): bool
-    {
-        return $this->sharedCertificate;
     }
 }
