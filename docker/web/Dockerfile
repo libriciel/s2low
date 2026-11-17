@@ -1,4 +1,4 @@
-FROM hubdocker.libriciel.fr/node:26.13.0-alpine3.24@sha256:c6ad9e9c1d80f6eb607c26b4b0a132ff7a2344fad1c78ea3baa2a7d4c8de6d94 AS node_modules
+FROM hubdocker.libriciel.fr/node:26.13.1-alpine3.24@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5 AS node_modules
 WORKDIR /app/
 COPY package*.json ./
 RUN npm install
@@ -6,7 +6,7 @@ COPY webpack.config.js ./
 COPY src_js/ ./src_js/
 RUN npx webpack --config webpack.config.js
 
-FROM hubdocker.libriciel.fr/httpd:2.4.69-alpine3.24@sha256:698a0f59374eeb59c2c3ae6385c5f346edd2c70c2b63f7b552fb3d64dbc3cf66
+FROM hubdocker.libriciel.fr/httpd:2.4.71-alpine3.24@sha256:32bd0639bcc4917ef1fd9363a1d9dd2dd9c498565118b062a10d51e43a5c3a24
 
 RUN apk update && apk upgrade --no-cache && \
     apk add --no-cache \

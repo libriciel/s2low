@@ -1,4 +1,4 @@
-FROM hubdocker.libriciel.fr/node:26.13.0-alpine3.24@sha256:c6ad9e9c1d80f6eb607c26b4b0a132ff7a2344fad1c78ea3baa2a7d4c8de6d94 AS node_modules
+FROM hubdocker.libriciel.fr/node:26.13.1-alpine3.24@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5 AS node_modules
 WORKDIR /app/
 COPY package*.json ./
 RUN npm install
@@ -99,7 +99,7 @@ RUN bash -c "mkdir -p /data/{certificates,config,log,run,tdt-workspace}" \
  && chown "$UID":"$GID" -R /data/
 
 COPY --from=node_modules /app/node_modules/ /app/node_modules/
-COPY --from=hubdocker.libriciel.fr/composer:2.11.1@sha256:8de2184c6de224f4689e8f80ed5f5edaf0030b6b8b7839a22a2bcb6722ac87d0 /usr/bin/composer /usr/local/bin/composer
+COPY --from=hubdocker.libriciel.fr/composer:2.11.2@sha256:0c8e663f14c94d07b3c45b175c51f5a14718508f21fe4dd7e54f09488dd0ed71 /usr/bin/composer /usr/local/bin/composer
 COPY ./composer.* /app/
 
 RUN composer install --no-ansi --no-dev --no-interaction --no-progress --no-scripts --no-autoloader
@@ -122,7 +122,7 @@ FROM base AS dev
 
 USER "root"
 
-COPY --from=hubdocker.libriciel.fr/composer:2.11.1@sha256:8de2184c6de224f4689e8f80ed5f5edaf0030b6b8b7839a22a2bcb6722ac87d0 /usr/bin/composer /usr/local/bin/composer
+COPY --from=hubdocker.libriciel.fr/composer:2.11.2@sha256:0c8e663f14c94d07b3c45b175c51f5a14718508f21fe4dd7e54f09488dd0ed71 /usr/bin/composer /usr/local/bin/composer
 
 RUN --mount=type=bind,from=ghcr.io/php/pie:1.5.5-bin@sha256:3fca03c16df842d02b654dc382db3756058d9c128064f57cace14f8728779ce9,source=/pie,target=/usr/local/bin/pie \
     apk add --no-cache --virtual .dev-build-deps \
