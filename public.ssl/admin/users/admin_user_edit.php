@@ -147,14 +147,10 @@ $groups_list = Group::getGroupsIdName();
 // Récupération des modules actifs globalement
 $modules = Module::getActiveModulesList();
 
-$permissionModulesByAuthority = [];
-foreach (array_keys($authorities_list ?? []) as $authorityId) {
-    foreach ($modules as $module) {
-        if (! $moduleAdministration->isModuleReservedToAnotherGroup((int)$module["id"], (int)$authorityId)) {
-            $permissionModulesByAuthority[$authorityId][] = (int)$module["id"];
-        }
-    }
-}
+$permissionModulesByAuthority = $moduleAdministration->getGrantableModulesByAuthority(
+    array_map('intval', array_keys($authorities_list ?? [])),
+    array_map(fn(array $module): int => (int)$module["id"], $modules)
+);
 
 // Récupération des modules authorisés pour la collectivité
 $authModules = array();

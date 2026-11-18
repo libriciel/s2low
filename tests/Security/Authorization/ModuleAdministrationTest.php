@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace S2low\Tests\Security\Authorization;
 
+use S2low\Enum\AdministeredModule;
+use S2low\Enum\Module;
 use S2low\Security\Authorization\ModuleAdministration;
 use S2low\Security\SecurityUser;
 use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\UserSQL;
 use S2lowTestCase;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class ModuleAdministrationTest extends S2lowTestCase
@@ -113,6 +117,53 @@ class ModuleAdministrationTest extends S2lowTestCase
 
         static::assertTrue($this->moduleAdministration()->isHeliosAdmin(self::AUTHORITY));
         static::assertFalse($this->moduleAdministration()->isActesAdmin(self::AUTHORITY));
+    }
+
+    public function testTheGroupAdminIsGrantedOnEachAuthorityOnlyTheModulesItsGroupAdministers(): void
+    {
+        $this->designateActesGroup(self::OTHER_GROUP);
+        $this->designateHeliosGroup(self::HELIOS_GROUP);
+        $this->connectAs(self::HELIOS_GROUP_ADMIN);
+
+        $grantableModules = $this->moduleAdministration()->getGrantableModulesByAuthority(
+            [self::AUTHORITY],
+            [Module::ACTES->value, Module::HELIOS->value, Module::MAIL->value]
+        );
+
+        static::assertSame([self::AUTHORITY => [Module::HELIOS->value, Module::MAIL->value]], $grantableModules);
+    }
+
+    public function testTheSuperAdminIsGrantedEveryModuleOnEachAuthority(): void
+    {
+        $this->designateActesGroup(self::OTHER_GROUP);
+        $this->designateHeliosGroup(self::HELIOS_GROUP);
+        $this->connectAs(self::SUPER_ADMIN);
+
+        $grantableModules = $this->moduleAdministration()->getGrantableModulesByAuthority(
+            [self::AUTHORITY],
+            [Module::ACTES->value, Module::HELIOS->value, Module::MAIL->value]
+        );
+
+        static::assertSame(
+            [self::AUTHORITY => [Module::ACTES->value, Module::HELIOS->value, Module::MAIL->value]],
+            $grantableModules
+        );
+    }
+
+    public function testTheGrantableModulesOfManyAuthoritiesCostOneQueryPerAdministeredModule(): void
+    {
+        $this->connectAs(self::HELIOS_GROUP_ADMIN);
+        $authoritySQL = $this->createMock(AuthoritySQL::class);
+        $authoritySQL->expects(static::never())->method('getInfo');
+        $authoritySQL->expects(static::exactly(count(AdministeredModule::cases())))
+            ->method('getAllAdministeredForModuleBy')
+            ->willReturn([]);
+        $moduleAdministration = new ModuleAdministration($authoritySQL, self::getContainer()->get(Security::class));
+
+        $moduleAdministration->getGrantableModulesByAuthority(
+            [1, 2, 3, 4, 5],
+            [Module::ACTES->value, Module::HELIOS->value, Module::MAIL->value]
+        );
     }
 
     private function connectAs(int $userId): void
