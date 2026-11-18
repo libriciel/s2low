@@ -260,7 +260,31 @@ class AdminControllerTest extends S2lowIntegrationTestCase
 
         $adminController->authoritiesAction();
 
-        $this->assertSame([], $adminController->authorities);
+        $this->assertNotContains(2, array_map('intval', array_column($adminController->authorities, 'id')));
+    }
+
+    public function testAuthoritiesActionIgnoresTheActesGroupFilterOfAGroupAdmin(): void
+    {
+        $this->givenAuthority2IsAdministeredBy(2, 1);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        self::getContainer()->get(Environnement::class)->get()->set('actes_group', 3);
+        $adminController = self::getContainer()->get(AdminController::class);
+
+        $adminController->authoritiesAction();
+
+        $this->assertContains(2, array_map('intval', array_column($adminController->authorities, 'id')));
+    }
+
+    public function testAuthoritiesActionIgnoresTheHeliosGroupFilterOfAGroupAdmin(): void
+    {
+        $this->givenAuthority2IsAdministeredBy(1, 2);
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        self::getContainer()->get(Environnement::class)->get()->set('helios_group', 3);
+        $adminController = self::getContainer()->get(AdminController::class);
+
+        $adminController->authoritiesAction();
+
+        $this->assertContains(2, array_map('intval', array_column($adminController->authorities, 'id')));
     }
 
     private function givenAuthority2IsAdministeredBy(int $actesGroupId, int $heliosGroupId): void

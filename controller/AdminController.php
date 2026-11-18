@@ -203,6 +203,8 @@ class AdminController extends Controller
         $user_authority_group_id = $this->me->get('authority_group_id');
         if ($this->me->isGroupAdmin()) {
             $this->fgroup = $user_authority_group_id;
+            $this->factesGroup = 0;
+            $this->fheliosGroup = 0;
         }
 
         $search = new AuthoritySearch(
