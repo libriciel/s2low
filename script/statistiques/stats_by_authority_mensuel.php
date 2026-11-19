@@ -3,13 +3,16 @@
 # Script permettant de récupérer le nombre de transactions actes et helios par groupe
 
 use Psr\Log\LoggerInterface;
+use S2low\Enum\AdministeredModule;
 use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\AuthoritySQL;
 
 require_once(__DIR__ . "/../../init/init.php");
 list($s2LowLogger,$sqlQuery) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
         [LoggerInterface::class,SQLQuery::class]
     );
+$authoritySQL = new AuthoritySQL($sqlQuery);
 
 $date = date("Y-m-d");
 $fileName = 'etatmensuel-' . $date . '.csv';
@@ -39,13 +42,13 @@ foreach ($result as $group_info) {
     $group_helios_size = 0;
     $group_actes_size = 0;
 
-    $sql = "SELECT name,id FROM authorities WHERE authority_group_id=?";
-    $authority_list = $sqlQuery->query($sql, $group_info['id']);
-    foreach ($authority_list as $authority_info) {
-        $helios_size = $sqlQuery->queryOne($sql_helios, $authority_info['id']);
-        $group_helios_size += $helios_size;
-        $actes_size = $sqlQuery->queryOne($sql_actes, $authority_info['id']);
-        $group_actes_size += $actes_size;
+    $administered = $authoritySQL->getAllAdministeredForModuleBy(AdministeredModule::HELIOS, (int)$group_info['id']);
+    foreach (array_keys($administered) as $authority_id) {
+        $group_helios_size += $sqlQuery->queryOne($sql_helios, $authority_id);
+    }
+    $administered = $authoritySQL->getAllAdministeredForModuleBy(AdministeredModule::ACTES, (int)$group_info['id']);
+    foreach (array_keys($administered) as $authority_id) {
+        $group_actes_size += $sqlQuery->queryOne($sql_actes, $authority_id);
     }
 
     fwrite($file, "{$group_info['id']}|{$group_info['name']}|$group_helios_size|$group_actes_size\n");

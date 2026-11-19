@@ -2,10 +2,13 @@
 
 //Script utilisÃ© pour la compta
 // Il compte pour actes et helios
+use S2low\Enum\AdministeredModule;
 use S2lowLegacy\Lib\SQLQuery;
+use S2lowLegacy\Model\AuthoritySQL;
 
 require_once(__DIR__ . "/../../init/init.php");
 $sqlQuery = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(SQLQuery::class);
+$authoritySQL = new AuthoritySQL($sqlQuery);
 
 
 $sql = "select authority_groups.name,authority_group_id as id FROM users " .
@@ -29,16 +32,13 @@ foreach ($result as $group_info) {
     $group_helios_size = 0;
     $group_actes_size = 0;
     //echo "\nGROUPE {$group_info['name']} : \n";
-    $sql = "SELECT name,id FROM authorities WHERE authority_group_id=?";
-    $authority_list = $sqlQuery->query($sql, $group_info['id']);
-    foreach ($authority_list as $authority_info) {
-        //echo "\tCOLLECTIVITE {$authority_info['name']}\n";
-        $helios_size = $sqlQuery->queryOne($sql_helios, $authority_info['id']);
-        //echo "\t\tHelios: $helios_size\n";
-        $group_helios_size += $helios_size;
-        $actes_size = $sqlQuery->queryOne($sql_actes, $authority_info['id']);
-        //echo "\t\tActes: $actes_size\n";
-        $group_actes_size += $actes_size;
+    $administered = $authoritySQL->getAllAdministeredForModuleBy(AdministeredModule::HELIOS, (int)$group_info['id']);
+    foreach (array_keys($administered) as $authority_id) {
+        $group_helios_size += $sqlQuery->queryOne($sql_helios, $authority_id);
+    }
+    $administered = $authoritySQL->getAllAdministeredForModuleBy(AdministeredModule::ACTES, (int)$group_info['id']);
+    foreach (array_keys($administered) as $authority_id) {
+        $group_actes_size += $sqlQuery->queryOne($sql_actes, $authority_id);
     }
     //echo "\tgroupe {$group_info['name']} (helios) : $group_helios_size\n";
     //echo "\tgroupe {$group_info['name']} (actes) : $group_actes_size\n";

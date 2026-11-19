@@ -230,6 +230,12 @@ class AuthoritySQL extends SQL
         $this->query($sql, $authorityId);
     }
 
+    public function designateAdministeringGroup(int $authorityId, AdministeredModule $module, int $groupId): void
+    {
+        $sql = "UPDATE authorities SET {$module->groupColumn()} = ? WHERE id = ?";
+        $this->query($sql, $groupId, $authorityId);
+    }
+
     public function create($name, $siren)
     {
         $sql = "INSERT INTO authorities (name,siren) VALUES (?,?) RETURNING id";

@@ -111,6 +111,15 @@ class AuthoritySQLTest extends S2lowTestCase
         $this->assertSame([], $this->authoritySQL->getAllAdministeredForModuleBy(AdministeredModule::HELIOS, 1));
     }
 
+    public function testDesignateAdministeringGroupChangesOnlyTheGroupOfThatModule(): void
+    {
+        $this->authoritySQL->designateAdministeringGroup(1, AdministeredModule::HELIOS, 2);
+
+        $info = $this->authoritySQL->getInfo(1);
+        $this->assertSame(1, $info['actes_group_id']);
+        $this->assertSame(2, $info['helios_group_id']);
+    }
+
     public function testGetListKeepsAnAuthorityAdministeredForASingleModule()
     {
         $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 1 WHERE id = 2');
