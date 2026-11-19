@@ -2,6 +2,7 @@
 
 use IntegrationTests\S2lowIntegrationTestCase;
 use S2low\Enum\UserRole;
+use S2lowLegacy\Class\Module;
 use S2lowLegacy\Controller\AdminUserController;
 use S2lowLegacy\Lib\Environnement;
 use S2lowLegacy\Lib\FrontController;
@@ -11,6 +12,8 @@ use S2lowLegacy\Model\UserSQL;
 
 class AdminUserControllerTest extends S2lowIntegrationTestCase
 {
+    private const int USER_OF_THE_AUTHORITY = 8;
+
     /**
      * @var AdminUserController
      */
@@ -457,5 +460,101 @@ class AdminUserControllerTest extends S2lowIntegrationTestCase
         );
 
         $this->assertTrue(password_verify("password", $results4[0]["password"]));
+    }
+
+    public function testSavingAUserKeepsThePermissionOfAModuleTheAdminDoesNotAdminister(): void
+    {
+        $this->givenTheActesGroupAdminOfAnAuthorityWhoseHeliosIsAdministeredElsewhere();
+        $this->givenThePostedPermission(Module::ACTES, 'RW');
+
+        $this->adminUserController->doEditAction();
+
+        $this->assertSame('RW', $this->savedPermission(Module::HELIOS));
+    }
+
+    public function testAPermissionPostedForAModuleTheAdminDoesNotAdministerIsIgnored(): void
+    {
+        $this->givenTheActesGroupAdminOfAnAuthorityWhoseHeliosIsAdministeredElsewhere();
+        $this->givenThePostedPermission(Module::HELIOS, 'NONE');
+
+        $this->adminUserController->doEditAction();
+
+        $this->assertSame('RW', $this->savedPermission(Module::HELIOS));
+    }
+
+    public function testCreatingAUserIgnoresThePermissionOfAModuleTheGroupDoesNotAdministerThere(): void
+    {
+        $this->setOnlyDataOk();
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 1 WHERE id = 1');
+        $this->givenTheGroupAdminOfGroup1();
+        $this->givenThePostedPermission(Module::ACTES, 'RW');
+        $this->givenThePostedPermission(Module::HELIOS, 'RW');
+
+        $this->adminUserController->doEditAction();
+
+        $createdUserId = (int)$this->getSQLQuery()->queryOne("SELECT max(id) FROM users");
+        $this->assertSame(['RW'], $this->getSQLQuery()->queryOneCol(
+            'SELECT perm FROM users_perms WHERE user_id = ? AND module_id = ?',
+            [$createdUserId, Module::HELIOS]
+        ));
+        $this->assertNotSame(['RW'], $this->getSQLQuery()->queryOneCol(
+            'SELECT perm FROM users_perms WHERE user_id = ? AND module_id = ?',
+            [$createdUserId, Module::ACTES]
+        ));
+    }
+
+    public function testTheAdminChangesThePermissionOfTheModuleItAdministers(): void
+    {
+        $this->givenTheActesGroupAdminOfAnAuthorityWhoseHeliosIsAdministeredElsewhere();
+        $this->givenThePostedPermission(Module::ACTES, 'RO');
+
+        $this->adminUserController->doEditAction();
+
+        $this->assertSame('RO', $this->savedPermission(Module::ACTES));
+    }
+
+    public function testTheAdminOfASingleModuleDeactivatesAUserOfTheAuthority(): void
+    {
+        $this->givenTheActesGroupAdminOfAnAuthorityWhoseHeliosIsAdministeredElsewhere();
+        self::getContainer()->get(Environnement::class)->post()->set('status', UserSQL::STATUS_DESACTIVE);
+
+        $this->adminUserController->doEditAction();
+
+        $this->assertSame(
+            UserSQL::STATUS_DESACTIVE,
+            (int)$this->getSQLQuery()->queryOne('SELECT status FROM users WHERE id = ?', self::USER_OF_THE_AUTHORITY)
+        );
+    }
+
+    private function givenTheActesGroupAdminOfAnAuthorityWhoseHeliosIsAdministeredElsewhere(): void
+    {
+        $this->setOnlyDataOk();
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 1, helios_group_id = 2 WHERE id = 1');
+        $this->givenTheGroupAdminOfGroup1();
+        self::getContainer()->get(Environnement::class)->post()->set('id', (string)self::USER_OF_THE_AUTHORITY);
+        self::getContainer()->get(Environnement::class)->post()->set('login', 'bob');
+        self::getContainer()->get(Environnement::class)->post()->set('password', 'eey3fo4A');
+        self::getContainer()->get(Environnement::class)->post()->set('password2', 'eey3fo4A');
+    }
+
+    private function givenTheGroupAdminOfGroup1(): void
+    {
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->authenticateUserInSecurityContext(13);
+    }
+
+    private function givenThePostedPermission(int $moduleId, string $permission): void
+    {
+        $_POST["perm_$moduleId"] = $permission;
+        self::getContainer()->get(Environnement::class)->post()->set("perm_$moduleId", $permission);
+    }
+
+    private function savedPermission(int $moduleId): string
+    {
+        return (string)$this->getSQLQuery()->queryOne(
+            'SELECT perm FROM users_perms WHERE user_id = ? AND module_id = ?',
+            self::USER_OF_THE_AUTHORITY,
+            $moduleId
+        );
     }
 }

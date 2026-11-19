@@ -1,5 +1,6 @@
 <?php
 
+use S2low\Security\Authorization\ModuleAdministration;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Module;
@@ -7,8 +8,8 @@ use S2lowLegacy\Class\User;
 use S2lowLegacy\Lib\JSONoutput;
 use S2lowLegacy\Model\AuthoritySQL;
 
-list($jsonOutput,$authoritySQL ) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([JSONoutput::class, AuthoritySQL::class]);
+list($jsonOutput, $authoritySQL, $moduleAdministration) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([JSONoutput::class, AuthoritySQL::class, ModuleAdministration::class]);
 
 $me = new User();
 
@@ -21,6 +22,10 @@ if (! $me->isAnyAdmin()) {
 }
 
 $id = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getVarFromGet("id");
+
+if (! ctype_digit((string)$id)) {
+    $jsonOutput->displayErrorAndExit("L'identifiant de collectivité « $id » n'est pas un nombre");
+}
 
 $authority = new Authority();
 $authority->setId($id);
@@ -41,7 +46,11 @@ $info_to_display = array_merge($info_to_display, $saePropertiesWithoutPassword);
 
 
 if ($me->isGroupAdminOrSuper()) {
-    $info_to_display = array_merge($info_to_display, array("authority_group_id","helios_ftp_dest"));
+    $info_to_display[] = "authority_group_id";
+}
+
+if ($moduleAdministration->isHeliosAdmin((int)$id)) {
+    $info_to_display[] = "helios_ftp_dest";
 }
 
 $info = $authoritySQL->getInfo($id);
@@ -53,6 +62,9 @@ foreach ($info_to_display as $i) {
 if ($me->isGroupAdminOrSuper()) {
     $modules = Module::getActiveModulesList();
     foreach ($modules as $module) {
+        if ($moduleAdministration->isModuleReservedToAnotherGroup((int)$module["id"], (int)$id)) {
+            continue;
+        }
         $result['module'][$module["id"]] =  $authority->getModulePerm($module["id"]);
     }
 }

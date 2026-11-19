@@ -32,6 +32,58 @@ final readonly class ModuleAdministration
         return $this->administers(AdministeredModule::HELIOS, $authorityId);
     }
 
+    public function isModuleReservedToAnotherGroup(int $moduleId, int $authorityId): bool
+    {
+        $module = AdministeredModule::tryFrom($moduleId);
+        $user = $this->security->getUser();
+
+        if ($module === null || ! $user instanceof SecurityUser || ! $user->isGroupAdmin()) {
+            return false;
+        }
+
+        return ! $this->administers($module, $authorityId);
+    }
+
+    /**
+     * @param list<int> $authorityIds
+     * @param list<int> $moduleIds
+     * @return array<int, list<int>>
+     */
+    public function getGrantableModulesByAuthority(array $authorityIds, array $moduleIds): array
+    {
+        $administeredAuthorityIds = $this->getAdministeredAuthorityIdsByModule();
+        $grantableModules = [];
+        foreach ($authorityIds as $authorityId) {
+            $grantableModules[$authorityId] = array_values(array_filter(
+                $moduleIds,
+                fn(int $moduleId): bool => ! isset($administeredAuthorityIds[$moduleId])
+                    || isset($administeredAuthorityIds[$moduleId][$authorityId])
+            ));
+        }
+        return $grantableModules;
+    }
+
+    /**
+     * @return array<int, array<int, string>>
+     */
+    private function getAdministeredAuthorityIdsByModule(): array
+    {
+        $user = $this->security->getUser();
+
+        if (! $user instanceof SecurityUser || ! $user->isGroupAdmin()) {
+            return [];
+        }
+
+        $administeredAuthorityIds = [];
+        foreach (AdministeredModule::cases() as $module) {
+            $administeredAuthorityIds[$module->value] = $this->authoritySQL->getAllAdministeredForModuleBy(
+                $module,
+                $user->getAuthorityGroupId()
+            );
+        }
+        return $administeredAuthorityIds;
+    }
+
     private function administers(AdministeredModule $module, int $authorityId): bool
     {
         $user = $this->security->getUser();

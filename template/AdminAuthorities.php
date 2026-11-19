@@ -45,25 +45,41 @@ use S2lowLegacy\Class\Helpers;
                 />
             </div>
         </div>
-            <div class="form-group">
-                <?php if ($this->groupe_list) : ?>
-                <label for="group" class="col-md-3 control-label">Groupe administrateur</label>
-                <div class="col-md-3">
-                    <select name="group" class="form-control">
-                        <option value="">Choisissez</option>
-                        <?php foreach ($this->groupe_list as $groupe_info) : ?>
-                            <option
-                                <?php echo $this->fgroup == $groupe_info['id'] ? "selected='selected'" : '' ?>
-                                    value="<?php hecho($groupe_info['id']) ?>"
-                            >
-                                <?php hecho($groupe_info['name']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <?php endif; ?>
+        <?php if ($this->groupe_list) : ?>
+        <div class="form-group">
+            <label for="actes_group" class="col-md-3 control-label">Groupe Actes</label>
+            <div class="col-md-3">
+                <select id="actes_group" name="actes_group" class="form-control">
+                    <option value="">Choisissez</option>
+                    <?php foreach ($this->groupe_list as $groupe_info) : ?>
+                        <option
+                            <?php echo $this->factesGroup === (int)$groupe_info['id'] ? "selected='selected'" : '' ?>
+                                value="<?php hecho($groupe_info['id']) ?>"
+                        >
+                            <?php hecho($groupe_info['name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <label for="helios_group" class="col-md-3 control-label">Groupe Helios</label>
+            <div class="col-md-3">
+                <select id="helios_group" name="helios_group" class="form-control">
+                    <option value="">Choisissez</option>
+                    <?php foreach ($this->groupe_list as $groupe_info) : ?>
+                        <option
+                            <?php echo $this->fheliosGroup === (int)$groupe_info['id'] ? "selected='selected'" : '' ?>
+                                value="<?php hecho($groupe_info['id']) ?>"
+                        >
+                            <?php hecho($groupe_info['name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <?php endif; ?>
 
-            <label for="name-contain" class="col-md-3 control-label">Un SIRET contient</label>
+        <div class="form-group">
+            <label for="siret-contain" class="col-md-3 control-label">Un SIRET contient</label>
             <div class="col-md-3">
                 <input
                         id="siret-contain"
@@ -75,10 +91,7 @@ use S2lowLegacy\Class\Helpers;
                         value="<?php hecho($this->fsiret) ?>"
                 />
             </div>
-            </div>
-
-        <div class="form-group">
-            <label for="name-contain" class="col-md-3 control-label">SIREN</label>
+            <label for="siren" class="col-md-3 control-label">SIREN</label>
             <div class="col-md-3">
                 <input
                         id="siren"

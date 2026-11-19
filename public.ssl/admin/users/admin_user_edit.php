@@ -1,5 +1,6 @@
 <?php
 
+use S2low\Security\Authorization\ModuleAdministration;
 use S2lowLegacy\Class\Authority;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\Group;
@@ -17,9 +18,9 @@ use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Lib\X509Certificate;
 use S2lowLegacy\Model\UserSQL;
 
-list($objectInstancier, $jsonOutput,$sqlQuery, $frontController,$pathToValidCa) = LegacyObjectsManager::getLegacyObjectInstancier()
+list($objectInstancier, $jsonOutput,$sqlQuery, $frontController,$pathToValidCa, $moduleAdministration) = LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [ObjectInstancier::class, JSONoutput::class, SQLQuery::class, FrontController::class,'app.path_to_rgs_valid_ca']
+        [ObjectInstancier::class, JSONoutput::class, SQLQuery::class, FrontController::class,'app.path_to_rgs_valid_ca', ModuleAdministration::class]
     );
 
 $html = '';
@@ -146,25 +147,29 @@ $groups_list = Group::getGroupsIdName();
 // Récupération des modules actifs globalement
 $modules = Module::getActiveModulesList();
 
+$permissionModulesByAuthority = $moduleAdministration->getGrantableModulesByAuthority(
+    array_map('intval', array_keys($authorities_list ?? [])),
+    array_map(fn(array $module): int => (int)$module["id"], $modules)
+);
+
 // Récupération des modules authorisés pour la collectivité
 $authModules = array();
 if ($mod) {
     $authModules = Module::getModulesForAuthority($him->get("authority_id"));
-} else {
-    if ($me->isGroupAdminOrSuper()) {
-        // On ne sait pas à l'avance à quelle collectivité appartiendra l'utilisateur
-        foreach ($modules as $module) {
-            if ($me->isGroupAdmin()) {
-                if ($me->canGrantModule($module["name"])) {
-                    $authModules[$module["id"]] = true;
-                }
-            } else {
-                $authModules[$module["id"]] = true;
-            }
+    foreach (array_keys($authModules) as $moduleId) {
+        if ($moduleAdministration->isModuleReservedToAnotherGroup((int)$moduleId, (int)$him->get("authority_id"))) {
+            unset($authModules[$moduleId]);
         }
-    } else {
-        $authModules = $myAuthority->getAuthorizedModules();
     }
+} elseif ($me->isGroupAdminOrSuper()) {
+    // La collectivité n'est pas encore choisie : le formulaire montre les droits de chacune à sa sélection.
+    foreach ($permissionModulesByAuthority as $moduleIds) {
+        foreach ($moduleIds as $moduleId) {
+            $authModules[$moduleId] = true;
+        }
+    }
+} else {
+    $authModules = $myAuthority->getAuthorizedModules();
 }
 
 
@@ -193,6 +198,7 @@ $doc->addHeader("<script src=\"" . \S2lowLegacy\Class\LegacyObjectsManager::getL
 $doc->addHeader('<script type="text/javascript" src="' . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/jsmodules/jquery.js") . '"></script>');
 $doc->addHeader('<script type="text/javascript" src="' . \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()->get(\S2low\Helpers\RequeteHelper::class)->getLink("/jsmodules/select2.js") . '"></script>');
 $doc->addHeader('<script type="text/javascript" src="/javascript/zselect_s2low.js"></script>');
+$doc->addHeader('<script type="text/javascript" src="/javascript/permissionsByAuthority.js"></script>');
 
 
 $doc->setTitle("$title | Tedetis");
@@ -371,7 +377,9 @@ ob_start();
                     <option value="">Toutes</option>
                     <?php foreach ($authorities_list as $key => $val) : ?>
                         <option
-                            value="<?php hecho($key) ?>" <?php echo (strcmp($key, $him_authorities) == 0) ? " selected='selected'" : ""; ?>>
+                            value="<?php hecho($key) ?>"
+                            data-permission-modules="<?php hecho(implode(',', $permissionModulesByAuthority[$key] ?? [])) ?>"
+                            <?php echo (strcmp($key, $him_authorities) == 0) ? " selected='selected'" : ""; ?>>
                             <?php hecho($val) ?>
                         </option>
                     <?php endforeach; ?>
@@ -409,7 +417,7 @@ ob_start();
             $class = " class=\"inactive\"";
         }
         ?>
-        <div class="form-group">
+        <div class="form-group" data-permission-module="<?php echo (int)$module["id"] ?>">
             <label class="control-label col-md-4 <?php echo $class ?>"><?php echo $module["description"] ?> :</label>
             <div class="col-md-6  <?php echo $class ?>">
                  <?php echo $doc->getHTMLSelect("perm_" . $module["id"], $me->getPermTypes($module['specific_perms']), $him->getPerm($module["name"])) ?>

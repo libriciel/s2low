@@ -33,15 +33,7 @@ dépendances transitives.
   sa fiche, ses numéros SIRET et ses services lui sont ouverts, et il peut éditer ses utilisateurs. #1584
 - Les statistiques Actes et Helios ne sont servies qu'au groupe de l'administrateur qui les demande. #1584
 - Un groupe désigné pour administrer un module d'une collectivité n'est plus supprimable. #1584
-- La liste des collectivités, leur export, la liste des utilisateurs et les journaux présentent à un administrateur de groupe toutes
-  les collectivités dont son groupe administre au moins un module. #1585
-- La liste des collectivités et son export nomment le groupe administrateur du module Actes et celui du module Helios,
-  en deux colonnes. Un administrateur de groupe n'y lit que le nom du sien : le groupe qui administre l'autre module est
-  masqué par des étoiles. #1585
-- La liste des transactions Helios ne se filtre plus que sur les collectivités dont l'utilisateur administre le module Helios. #1585
-- L'export Actes n'est plus servi à un administrateur de groupe que pour les collectivités dont son groupe administre le
-  module Actes. #1585
-- La base de données refuse la suppression d'un groupe encore désigné pour administrer le module Actes ou Helios d'une collectivité. #1599
+- Ajout d'un groupe Actes et d'un groupe Helios par collectivité : chaque groupe n'administre que son module. #1585 #1599 #1621 #1622 #1623 #1625
 - Refonte du menu et ajout des informations importantes selon le statut de l'utilisateur connecté. #1556
 
 ### Corrections

@@ -176,6 +176,14 @@ class User extends DataObject
         $this->perms = array();
     }
 
+    public function resetPermsExcept(array $keptModuleIds): void
+    {
+        $this->perms = array_filter(
+            $this->perms ?? [],
+            fn(array $perm): bool => in_array((int)$perm['module_id'], $keptModuleIds, true)
+        );
+    }
+
   /**
    * \brief Méthode qui détermine si l'utilisateur est un administrateur de groupe ou un super administrateur
    * \return true si l'utilisateur est administrateur de groupe ou super administrateur, false sinon
