@@ -5,8 +5,6 @@ use S2lowLegacy\Model\LogsSQL;
 
 class LogsSQLTest extends S2lowTestCase
 {
-    private const int GROUP_2_ADMINISTRATOR_ID = 10;
-
     /**
      * @var LogsSQL
      */
@@ -117,14 +115,6 @@ class LogsSQLTest extends S2lowTestCase
     public function testGetNbLogOfAGroupLeavesOutLogsOfAnAuthorityItDoesNotAdminister(): void
     {
         $this->assertSame(0, (int)$this->countLogsOfGroup(2));
-    }
-
-    public function testGetNbLogOfAGroupKeepsActionsOfItsAdministratorOnAnAuthorityItDoesNotAdminister(): void
-    {
-        $this->getSQLQuery()->query('DELETE FROM logs');
-        Log::newEntry('test', 'action du groupe 2', 1, false, 'GADM', 'actes', false, self::GROUP_2_ADMINISTRATOR_ID);
-
-        $this->assertSame(1, (int)$this->countLogsOfGroup(2));
     }
 
     private function countLogsOfGroup(int $groupId): int|string

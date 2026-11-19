@@ -94,18 +94,15 @@ class Log extends DataObject
         $sqlQuery = \S2lowLegacy\Lib\ObjectInstancierFactory::getObjetInstancier()->get(SQLQuery::class);
 
         $authority_id = false;
-        $authority_group_id = false;
         if ($userid) {
             $userSQL = new UserSQL($sqlQuery);
             $info = $userSQL->getInfo($userid);
             if ($info) {
                 $authority_id = $info['authority_id'];
-                $authority_group_id = $info['authority_group_id'];
             }
         }
 
         $logEntry->set("authority_id", $authority_id);
-        $logEntry->set("authority_group_id", $authority_group_id);
 
       // Enregistrement de l'entrée pour déterminer son id
         if (! $logEntry->save()) {

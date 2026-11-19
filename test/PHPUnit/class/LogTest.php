@@ -6,7 +6,6 @@ use S2lowLegacy\Model\LogsSQL;
 class LogTest extends S2lowTestCase
 {
     private const int GROUP_1_ADMINISTRATOR_ID = 7;
-    private const int USER_WITHOUT_GROUP_ID = 5;
 
     public function testNewEntry()
     {
@@ -19,18 +18,9 @@ class LogTest extends S2lowTestCase
         $this->assertEquals("message", $last_log['message']);
     }
 
-    public function testNewEntryTracesTheGroupOfTheActingUser(): void
+    public function testNewEntryLeavesTheGroupEmptyEvenForAGroupAdministrator(): void
     {
-        $this->getSQLQuery()->query('UPDATE authorities SET authority_group_id = 2, actes_group_id = 2, helios_group_id = 2 WHERE id = 2');
-
         Log::newEntry('TOTO', 'message', 1, false, 'GADM', 'actes', false, self::GROUP_1_ADMINISTRATOR_ID);
-
-        $this->assertSame(1, $this->getLastLogGroupId());
-    }
-
-    public function testNewEntryTracesNoGroupForAUserWithoutGroup(): void
-    {
-        Log::newEntry('TOTO', 'message', 1, false, 'USER', 'actes', false, self::USER_WITHOUT_GROUP_ID);
 
         $this->assertNull($this->getLastLogGroupId());
     }
