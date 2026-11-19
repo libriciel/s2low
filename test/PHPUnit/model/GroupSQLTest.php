@@ -1,5 +1,6 @@
 <?php
 
+use S2low\Enum\AdministeredModule;
 use S2lowLegacy\Class\Database;
 use S2lowLegacy\Lib\SQLQuery;
 use S2lowLegacy\Model\GroupSQL;
@@ -149,5 +150,19 @@ class GroupSQLTest extends S2lowTestCase
             'INSERT INTO authority_group_siren (authority_group_id, siren) VALUES (?, ?)',
             [$groupId, $siren]
         );
+    }
+
+    public function testGetModulesAdministeredByAGroupDesignatedForActesOnly(): void
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 1, helios_group_id = 2');
+
+        static::assertSame([AdministeredModule::ACTES], $this->groupeSQL->getAdministeredModules(1));
+    }
+
+    public function testGetModulesAdministeredByAGroupDesignatedNowhere(): void
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 1, helios_group_id = 1');
+
+        static::assertSame([], $this->groupeSQL->getAdministeredModules(2));
     }
 }

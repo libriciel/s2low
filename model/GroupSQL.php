@@ -3,6 +3,7 @@
 namespace S2lowLegacy\Model;
 
 use Doctrine\DBAL\ArrayParameterType;
+use S2low\Enum\AdministeredModule;
 use S2lowLegacy\Lib\SQL;
 
 class GroupSQL extends SQL
@@ -92,5 +93,33 @@ SQL;
     public function isActive(int $groupId): bool
     {
         return (int)$this->queryOne("SELECT status FROM authority_groups WHERE id = ?", [$groupId]) === 1;
+    }
+
+    /**
+     * @return list<AdministeredModule>
+     */
+    public function getAdministeredModules(int $groupId): array
+    {
+        $sql = <<<SQL
+SELECT
+    bool_or(actes_group_id = :groupId) AS administers_actes,
+    bool_or(helios_group_id = :groupId) AS administers_helios
+FROM authorities
+SQL;
+        $designations = $this->getConnection()->fetchAssociative($sql, ['groupId' => $groupId]);
+
+        $administeredModules = [];
+        if ($designations['administers_actes'] === true) {
+            $administeredModules[] = AdministeredModule::ACTES;
+        }
+        if ($designations['administers_helios'] === true) {
+            $administeredModules[] = AdministeredModule::HELIOS;
+        }
+        return $administeredModules;
+    }
+
+    public function administers(int $groupId, AdministeredModule $module): bool
+    {
+        return in_array($module, $this->getAdministeredModules($groupId), true);
     }
 }

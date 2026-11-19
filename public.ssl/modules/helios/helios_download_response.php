@@ -7,14 +7,13 @@ use S2lowLegacy\Class\helios\PESRetourCloudStorage;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\Module;
 use S2lowLegacy\Class\User;
-use S2lowLegacy\Model\AuthoritySQL;
 use S2lowLegacy\Model\HeliosRetourSQL;
 
 /** @var CloudFileStorageInterface $storePesRetourService */
 /** @var LocalFileResolver $pesAllerPathResolver */
-list($heliosRetourSQL,$authoritySQL,$storePesRetourService, $pesAllerPathResolver) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
+list($heliosRetourSQL,$storePesRetourService, $pesAllerPathResolver) = \S2lowLegacy\Class\LegacyObjectsManager::getLegacyObjectInstancier()
     ->getArray(
-        [HeliosRetourSQL::class, AuthoritySQL::class, 'app.store.file.pes_retour', 'app.localFileResolver.pes_retour']
+        [HeliosRetourSQL::class, 'app.store.file.pes_retour', 'app.localFileResolver.pes_retour']
     );
 
 // Instanciation du module courant
@@ -44,15 +43,10 @@ $retourId = Helpers :: getVarFromGet("id");
 // Vérification des permissions
 $info = $heliosRetourSQL->getInfo($retourId);
 
-$authtority_info = $authoritySQL->getInfo($info['authority_id']);
 
-if (! $me->isSuper()) {
-    if ($me->get("authority_id") != $info['authority_id']) {
-        if (! ($me->isGroupAdmin() && $me->get("authority_group_id") == $authtority_info['authority_group_id'])) {
-            echo "KO\nAccès refusé";
-            exit();
-        }
-    }
+if (! $me->canAccessHeliosOf((int)$info['authority_id'])) {
+    echo "KO\nAccès refusé";
+    exit_wrapper();
 }
 
 

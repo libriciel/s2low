@@ -7,6 +7,7 @@ namespace S2low\Tests\DTO;
 use PHPUnit\Framework\TestCase;
 use S2low\DTO\ModuleMenu;
 use S2low\DTO\ModuleMenuEntry;
+use S2low\Enum\AdministeredModule;
 use S2low\Enum\UserRole;
 
 class ModuleMenuTest extends TestCase
@@ -110,6 +111,39 @@ class ModuleMenuTest extends TestCase
         self::assertSame([], $menu->statistics);
         self::assertSame([], $menu->exports);
         self::assertSame([], $menu->administrations);
+    }
+
+    public function testGroupAdminGetsStatisticsAndExportOnlyForModulesItsGroupAdministers(): void
+    {
+        $menu = new ModuleMenu(UserRole::AdministrateurGroupe, [self::ACTES, self::HELIOS, self::MAIL], [AdministeredModule::HELIOS]);
+
+        self::assertSame(['helios'], self::names($menu->statistics));
+        self::assertSame([], $menu->exports);
+    }
+
+    public function testGroupAdminWhoseGroupAdministersNothingGetsNeitherStatisticsNorExport(): void
+    {
+        $menu = new ModuleMenu(UserRole::AdministrateurGroupe, [self::ACTES, self::HELIOS], []);
+
+        self::assertSame([], $menu->statistics);
+        self::assertSame([], $menu->exports);
+    }
+
+    public function testGroupAdminGetsTheStatisticsOfAModuleItsGroupAdministersEvenIfItsOwnAuthorityLacksIt(): void
+    {
+        $menu = new ModuleMenu(UserRole::AdministrateurGroupe, [self::HELIOS], [AdministeredModule::ACTES]);
+
+        self::assertSame(['actes'], self::names($menu->statistics));
+        self::assertSame(['actes'], self::names($menu->exports));
+        self::assertSame(['helios'], self::names($menu->transactions));
+    }
+
+    public function testAuthorityAdminMenuIgnoresGroupAdministration(): void
+    {
+        $menu = new ModuleMenu(UserRole::AdministrateurCollectivite, [self::ACTES, self::HELIOS], [AdministeredModule::HELIOS]);
+
+        self::assertSame(['actes', 'helios'], self::names($menu->statistics));
+        self::assertSame(['actes'], self::names($menu->exports));
     }
 
     private static function names(array $entries): array

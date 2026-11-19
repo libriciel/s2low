@@ -324,6 +324,46 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
         static::assertSame('Accès refusé', $_SESSION['error']);
     }
 
+    public function testTheHeliosGroupAdminDownloadsAResponseOfTheAuthority(): void
+    {
+        $this->sqlQuery->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 1 WHERE id = 2');
+        $responseId = $this->givenAHeliosResponseOfAuthority2();
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $_GET['id'] = $responseId;
+
+        $this->client->request('GET', 'modules/helios/helios_download_response.php', ['id' => $responseId]);
+
+        unlink($this->heliosResponsePath());
+        static::assertStringContainsString('<element>Contenu</element>', $this->client->getResponse()->getContent());
+    }
+
+    public function testTheAdminOfTheActesGroupOnlyIsRefusedAResponseOfTheAuthority(): void
+    {
+        $this->sqlQuery->query('UPDATE authorities SET actes_group_id = 1, helios_group_id = 2 WHERE id = 2');
+        $responseId = $this->givenAHeliosResponseOfAuthority2();
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $_GET['id'] = $responseId;
+
+        $this->client->request('GET', 'modules/helios/helios_download_response.php', ['id' => $responseId]);
+
+        unlink($this->heliosResponsePath());
+        $content = $this->client->getResponse()->getContent();
+        static::assertStringContainsString("KO\nAccès refusé", $content);
+        static::assertStringNotContainsString('<element>Contenu</element>', $content);
+    }
+
+    private function givenAHeliosResponseOfAuthority2(): int
+    {
+        copy(__DIR__ . '/fixtures/XMLTest.xml', $this->heliosResponsePath());
+
+        return (int)$this->addPESRetourToCollectivite(2, 'XMLTest.xml');
+    }
+
+    private function heliosResponsePath(): string
+    {
+        return self::getContainer()->getParameter('app.helios_responses_root') . '/XMLTest.xml';
+    }
+
     private function getLastStatusId(int $transactionId): int
     {
         return $this->heliosTransactionsSQL->getInfo($transactionId)['last_status_id'];

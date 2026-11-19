@@ -30,7 +30,7 @@ class ActesStatistiques
 
     public function setGroup($group_id)
     {
-        $this->filter[] = "authority_group_id=?";
+        $this->filter[] = "authorities.actes_group_id=?";
         $this->value[] = $group_id;
     }
 
@@ -53,6 +53,7 @@ class ActesStatistiques
         $sql = "SELECT count(actes_envelopes.id) FROM actes_envelopes"
                     . " JOIN users ON actes_envelopes.user_id=users.id"
                 . " JOIN actes_transactions ON actes_transactions.envelope_id=actes_envelopes.id"
+                . " JOIN authorities ON authorities.id=actes_transactions.authority_id"
                 . " JOIN actes_transactions_workflow " .
                 " ON actes_transactions_workflow.transaction_id=actes_transactions.id";
 
@@ -68,6 +69,7 @@ class ActesStatistiques
         $sql = "SELECT SUM(actes_envelopes.file_size) AS sum FROM actes_envelopes actes_envelopes"
           . " LEFT JOIN users ON actes_envelopes.user_id=users.id"
           . " LEFT JOIN actes_transactions ON actes_transactions.envelope_id=actes_envelopes.id"
+          . " LEFT JOIN authorities ON authorities.id=actes_transactions.authority_id"
           . " JOIN actes_transactions_workflow ON actes_transactions_workflow.transaction_id=actes_transactions.id";
 
         $this->value[0] = $status;
