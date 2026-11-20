@@ -66,14 +66,21 @@ class LogsHistoriqueSQLTest extends S2lowTestCase
         $this->logsHistoriqueSQL->request($logsRequestData, $output);
     }
 
-    public function testRequestOfAGroupKeepsLogsOfAnAuthorityItAdministersForASingleModule(): void
+    public function testRequestOfAGroupKeepsLogsOfTheModuleItAdministers(): void
     {
-        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 1, helios_group_id = 2 WHERE id = 1');
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 1 WHERE id = 1');
 
         $export = $this->exportLogsOfGroup(2);
 
         $this->assertStringContainsString('message test 1', $export);
         $this->assertStringContainsString('message test 2', $export);
+    }
+
+    public function testRequestOfAGroupLeavesOutLogsOfTheModuleItDoesNotAdminister(): void
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 1, helios_group_id = 2 WHERE id = 1');
+
+        $this->assertSame('', $this->exportLogsOfGroup(2));
     }
 
     public function testRequestOfAGroupLeavesOutLogsOfAnAuthorityItDoesNotAdminister(): void

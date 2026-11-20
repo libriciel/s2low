@@ -2,6 +2,7 @@
 
 use IntegrationTests\S2lowIntegrationTestCase;
 use S2low\Enum\UserRole;
+use S2lowLegacy\Class\Log;
 use S2lowLegacy\Controller\LogsController;
 
 class LogsControllerTest extends S2lowIntegrationTestCase
@@ -24,6 +25,30 @@ class LogsControllerTest extends S2lowIntegrationTestCase
         $logsController->viewAction();
         $h1_title_expected = "Journal d'évènements du groupe «&nbsp;Groupe de test&nbsp;»";
         $this->assertEquals($h1_title_expected, $logsController->h1_title);
+    }
+
+    public function testModuleFilterOfAGroupAdminLeavesOutTheModuleItDoesNotAdminister(): void
+    {
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 1');
+        $logsController = self::getContainer()->get(LogsController::class);
+
+        $logsController->viewAction();
+
+        $this->assertSame(['helios', 'mail'], array_column($logsController->module_list, 'name'));
+    }
+
+    public function testGroupAdminForcingTheModuleItDoesNotAdministerGetsNoLog(): void
+    {
+        $this->setUserWithRole(UserRole::AdministrateurGroupe);
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 1');
+        Log::newEntry('test', 'message actes', 1, false, 'USER', 'actes', false, 1);
+        $logsController = self::getContainer()->get(LogsController::class);
+        $logsController->getRecuperateurGet()->set('module', 'actes');
+
+        $logsController->viewAction();
+
+        $this->assertSame([], $logsController->logs_list);
     }
 
     public function testTitleAdminCol()
