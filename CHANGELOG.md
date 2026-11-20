@@ -4,6 +4,13 @@ Ce changelog documente les correctifs de sécurité identifiés lors de la publi
 l'exhaustivité des correctifs, notamment concernant les vulnérabilités découvertes ultérieurement ou présentes dans les
 dépendances transitives.
 
+## 5.1.22
+
+### Corrections
+
+- La liste des actes triée par date d'envoi affiche les transactions dans l'ordre de leur date d'envoi et ne bloque
+  plus la base de données. #1627
+
 ## [5.1.21] - 2026-11-09
 
 ### Sécurité
