@@ -55,10 +55,22 @@ class LogsHistoriqueSQL extends SQL
         $data = [];
 
         if ($logsRequestData->authority_group_id) {
-            $where[] = " ($table.authority_group_id = ? OR $table.authority_id IN (" .
-                " SELECT id FROM authorities WHERE actes_group_id = ? OR helios_group_id = ?)) ";
+            $where[] = <<<SQL
+($table.authority_group_id = ?
+    OR ($table.module = 'actes' AND $table.authority_id IN (
+        SELECT id FROM authorities WHERE actes_group_id = ?
+    ))
+    OR ($table.module = 'helios' AND $table.authority_id IN (
+        SELECT id FROM authorities WHERE helios_group_id = ?
+    ))
+    OR (COALESCE($table.module, '') NOT IN ('actes', 'helios') AND $table.authority_id IN (
+        SELECT id FROM authorities WHERE ? IN (actes_group_id, helios_group_id)
+    ))
+)
+SQL;
             array_push(
                 $data,
+                $logsRequestData->authority_group_id,
                 $logsRequestData->authority_group_id,
                 $logsRequestData->authority_group_id,
                 $logsRequestData->authority_group_id

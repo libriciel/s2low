@@ -2,6 +2,7 @@
 
 namespace S2lowLegacy\Controller;
 
+use S2low\Enum\AdministeredModule;
 use S2lowLegacy\Class\Helpers;
 use S2lowLegacy\Class\PagerHTML;
 use S2lowLegacy\Lib\FancyDate;
@@ -128,6 +129,9 @@ class LogsController extends Controller
             $groupSQL = new GroupSQL($this->getSQLQuery());
             $groupe_info = $groupSQL->getInfo($this->me->get("authority_group_id"));
             $h1_title .= " du groupe «&nbsp;{$groupe_info['name']}&nbsp;»";
+            $this->module_list = $this->removeModulesAdministeredByAnotherGroup(
+                $groupSQL->getAdministeredModules((int)$this->me->get("authority_group_id"))
+            );
             $this->authorities_list = $authoritySQL->getAllAdministeredBy((int)$this->me->get("authority_group_id"));
             $authority_group_id = $this->me->get("authority_group_id");
             $authority_id = $this->fauthority;
@@ -162,6 +166,20 @@ class LogsController extends Controller
 
         $pagerHTML  = new PagerHTML();
         $this->setViewParameter('side_bar', $pagerHTML->getHTML($this->page_number, $nb_logs, $this->taille_page));
+    }
+
+    /**
+     * @param list<AdministeredModule> $administeredModules
+     */
+    private function removeModulesAdministeredByAnotherGroup(array $administeredModules): array
+    {
+        return array_values(array_filter(
+            $this->module_list,
+            static function (array $module) use ($administeredModules): bool {
+                $administeredModule = AdministeredModule::tryFrom((int)$module['id']);
+                return $administeredModule === null || in_array($administeredModule, $administeredModules, true);
+            }
+        ));
     }
 
 
