@@ -51,7 +51,8 @@ class TransactionSQL
         18 => "En attente d'être signée",
         19 => "En attente de transmission au SAE",
         20 => "Erreur lors de l'envoi au SAE",
-        21 => "Document reçu (pas d'AR)"
+        21 => "Document reçu (pas d'AR)",
+        22 => "Impossible d'envoyer au SAE (documents indisponibles)",
     );
 
     private static $etat_en_cours = array(1,2,3,4,7,8,17,18);
