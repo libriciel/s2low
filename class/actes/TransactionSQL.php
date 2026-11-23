@@ -283,12 +283,8 @@ class TransactionSQL
         return $result;
     }
 
-    public function getNbTransaction()
+    public function getNbTransaction(): int
     {
-        $where = "";
-        if ($this->filter) {
-            $where = "WHERE " . implode(" AND ", $this->filter);
-        }
         $sql = "SELECT count(id)   " .
                 " FROM actes_transactions  " .
                 $this->getWhere() ;

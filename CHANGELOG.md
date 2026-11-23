@@ -4,6 +4,12 @@ Ce changelog documente les correctifs de sécurité identifiés lors de la publi
 l'exhaustivité des correctifs, notamment concernant les vulnérabilités découvertes ultérieurement ou présentes dans les
 dépendances transitives.
 
+## 5.1.22
+
+### Corrections
+
+- Les listes de transactions Actes et Helios affichent le nombre de pages correspondant aux transactions filtrées. #1628
+
 ## [5.1.21] - 2026-11-09
 
 ### Sécurité

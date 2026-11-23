@@ -47,4 +47,15 @@ class HeliosTransactionsListeTest extends S2lowTestCase
             $this->heliosTransactionListe()->getAll()
         );
     }
+
+    public function testGetNbTransactionCountsOnlyFilteredTransactions(): void
+    {
+        $this->createTransaction(1, HeliosTransactionsSQL::ACQUITTE);
+        $this->createTransaction(1, HeliosTransactionsSQL::ACQUITTE);
+        $this->createTransaction(1, HeliosTransactionsSQL::TRANSMIS);
+        $this->heliosTransactionListe()->setStatus(HeliosTransactionsSQL::ACQUITTE);
+        $this->heliosTransactionListe()->setAuthority(1);
+
+        static::assertSame(2, $this->heliosTransactionListe()->getNbTransaction());
+    }
 }

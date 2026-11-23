@@ -22,6 +22,7 @@ use S2lowLegacy\Model\NounceSQL;
 use S2lowLegacy\Model\UserSQL;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class S2lowIntegrationTestCase extends WebTestCase
@@ -209,6 +210,12 @@ class S2lowIntegrationTestCase extends WebTestCase
     protected function setAuthorityGroupUserAs(int $authorityGroupId, int $userId = 13): void
     {
         self::getContainer()->get(SQLQuery::class)->query('UPDATE users SET authority_group_id = ? WHERE id = ?', [$authorityGroupId, $userId]);
+    }
+
+    protected function getPagerPageNumbers(Crawler $crawler): array
+    {
+        return $crawler->filterXPath('//div[@id="pages"]//a[translate(normalize-space(.), "0123456789", "") = ""]')
+            ->each(static fn (Crawler $link): string => trim($link->text()));
     }
 
     protected function getAuthentication(

@@ -85,13 +85,7 @@ $heliosTransactionsListe->setStatus($fstatus);
 $heliosTransactionsListe->setObjet($fnum);
 $heliosTransactionsListe->setNomFic($fnomFic);
 
-
-//if ($droit->isSuperAdmin($userInfo)) {
-//On empeche le comptage des transactions pour tout le monde (c'est trop long)
-    $nb_transactions = ($page_number + 10) * $taille_page;
-/*} else {
-    $nb_transactions = $heliosTransactionsListe->getNbTransaction();
-}*/
+$nb_transactions = $heliosTransactionsListe->getNbTransaction();
 
 
 

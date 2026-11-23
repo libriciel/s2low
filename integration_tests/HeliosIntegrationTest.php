@@ -331,6 +331,22 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
 
+    public function testHeliosIndexPaginatesOverFilteredTransactions(): void
+    {
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        for ($i = 0; $i < 11; $i++) {
+            $this->createTransaction(1, HeliosTransactionsSQL::ACQUITTE);
+        }
+        for ($i = 0; $i < 10; $i++) {
+            $this->createTransaction(1, HeliosTransactionsSQL::TRANSMIS);
+        }
+        $_GET['status'] = (string) HeliosTransactionsSQL::ACQUITTE;
+
+        $crawler = $this->client->request('GET', 'modules/helios/index.php');
+
+        static::assertSame(['1', '2'], $this->getPagerPageNumbers($crawler));
+    }
+
     public function testHeliosTransacSubmitPostsOwnTransaction(): void
     {
         $transactionId = $this->createTransaction(1, HeliosTransactionsSQL::ATTENTE_POSTEE);

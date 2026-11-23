@@ -289,6 +289,22 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
 
+    public function testActesIndexPaginatesOverFilteredTransactions(): void
+    {
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        for ($i = 0; $i < 11; $i++) {
+            $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+        }
+        for ($i = 0; $i < 10; $i++) {
+            $this->createTransaction(ActesStatusSQL::STATUS_TRANSMIS);
+        }
+        $_GET['status'] = (string) ActesStatusSQL::STATUS_ACQUITTEMENT_RECU;
+
+        $crawler = $this->client->request('GET', 'modules/actes/index.php');
+
+        static::assertSame(['1', '2'], $this->getPagerPageNumbers($crawler));
+    }
+
     /**
      * @throws Exception
      */

@@ -151,15 +151,8 @@ class HeliosTransactionsListe
         return "WHERE " . implode(" AND ", $this->filter);
     }
 
-    /**
-     * @deprecated 5.0.42, unused, no alternative
-     */
-    public function getNbTransaction()
+    public function getNbTransaction(): int
     {
-        $where = "";
-        if ($this->filter) {
-            $where = "WHERE " . implode(" AND ", $this->filter);
-        }
         $sql = "SELECT count(id)   " .
                 " FROM helios_transactions  " .
         $this->getWhere() ;
