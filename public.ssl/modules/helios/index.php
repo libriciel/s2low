@@ -1,5 +1,9 @@
 <?php
 
+use S2low\DTO\TransactionList\HeliosTransactionTable;
+use S2low\DTO\TransactionList\TransactionTableSorting;
+use S2low\Services\TransactionList\HeliosTransactionRowFactory;
+use S2low\Services\TransactionList\TransactionTableRenderer;
 use S2lowLegacy\Class\DatabasePool;
 use S2lowLegacy\Class\DatePicker;
 use S2lowLegacy\Class\Droit;
@@ -20,9 +24,11 @@ use S2lowLegacy\Model\AuthoritySQL;
 /** @var Droit $droit */
 /** @var HeliosTransactionsListe $heliosTransactionsListe */
 /** @var AuthoritySQL $authoritySQL */
+/** @var HeliosTransactionRowFactory $heliosTransactionRowFactory */
+/** @var TransactionTableRenderer $transactionTableRenderer */
 
-[$initialisation, $droit,$heliosTransactionsListe,$authoritySQL] = LegacyObjectsManager::getLegacyObjectInstancier()
-    ->getArray([Initialisation::class, Droit::class, HeliosTransactionsListe::class,AuthoritySQL::class]);
+[$initialisation, $droit,$heliosTransactionsListe,$authoritySQL, $heliosTransactionRowFactory, $transactionTableRenderer] = LegacyObjectsManager::getLegacyObjectInstancier()
+    ->getArray([Initialisation::class, Droit::class, HeliosTransactionsListe::class,AuthoritySQL::class, HeliosTransactionRowFactory::class, TransactionTableRenderer::class]);
 
 $initData = $initialisation->doInit();
 $moduleData = $initialisation->initModule($initData, Initialisation::MODULENAMEHELIOS);
@@ -204,6 +210,7 @@ $doc->addHeader($js);
 $doc->addHeader("<script src=\"" . Helpers::getLink('/jsmodules/jquery.js') . "\" type=\"text/javascript\"></script>\n");
 $doc->addHeader("<script type=\"text/javascript\" src=\"" . Helpers::getLink('/jsmodules/jqueryui.js') . "\"></script>");
 $doc->setTitle('Tedetis : module helios');
+$doc->addCSS(Helpers::getLink('/custom/styles/transaction_list.css'));
 
 $doc->openContainer();
 
@@ -217,7 +224,8 @@ $doc->closeSideBar();
 $doc->openContent();
 
 
-$status = HeliosTransaction :: getStatusList();
+$statusLabels = HeliosTransaction::getStatusList();
+$status = $statusLabels;
 $status['999'] = 'En cours';
 $status['all'] = 'Tous les états';
 
@@ -227,7 +235,15 @@ if ($envelopes) {
 }
 
 $sortWay = (isset($_GET['sortway']) && ($_GET['sortway'] == 'asc')) ? 'desc' : 'asc';
-$sel_ok = [];
+
+$heliosTable = new HeliosTransactionTable(
+    array_map(
+        static fn(array $line) => $heliosTransactionRowFactory->fromListLine($line, $statusLabels),
+        $envelopes
+    ),
+    TransactionTableSorting::fromQuery(Helpers::getLink('/modules/helios/index.php'), $_GET),
+    $me->isGroupAdminOrSuper()
+);
 
 
 ob_start();
@@ -325,61 +341,7 @@ ob_start();
     Pas de transaction trouvée correspondant aux critères de filtrage.
 <?php else : ?>
     <form id="div_chck" onsubmit="return afficheWarning();" action="<?php echo Helpers::getLink("/modules/helios/helios_transac_close.php"); ?>" method="post">
-        <table class="transactions_list" role="presentation">
-            <table id="transaction-list" class="data-table table table-striped" >
-                <caption>Liste des fichiers Helios postés en fonction des choix de filtrage</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">Sél.</th>
-                        <th id="filename">Nom de fichier</th>
-                        <th id="date">Date de postage</th>
-                        <th id="status">Etat actuel</th>
-                        <th id="authority-name">Suivie par</th>
-                        <?php if ($me->isGroupAdminOrSuper()) : ?>
-                            <th scope="col">Collectivité</th>
-                        <?php endif; ?>
-                        <th id="action">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php  foreach ($envelopes as $envelope) : ?>
-                        <tr>
-                            <td>
-                            <?php if (in_array($envelope['last_status_id'], array(4,8,11,20))) : ?>
-                                <input type="checkbox" name="liste_id[]" value="<?php hecho($envelope['id']) ?>" id="checkbox<?php echo $envelope['id'] ?>" />
-                                <?php $sel_ok[$envelope['last_status_id']] = true ?>
-                            <?php else : ?>
-                                &nbsp;
-                            <?php endif; ?>
-                            </td>
-                            <td headers="filename">
-                                <?php hecho($envelope["filename"]); ?>
-                                <?php if ($envelope['xml_nomfic']) : ?>
-                                    <br/><small> NomFic : <?php hecho($envelope['xml_nomfic']); ?></small>
-                                <?php endif; ?>
-                            </td>
-                            <td headers="date">
-                                <?php echo Helpers::getDateFromBDDDate($envelope['submission_date'], true) ?>
-                            </td>
-                            <td headers="status">
-                                <?php hecho($envelope['message']) ?>
-                            </td>
-                            <td headers="authority-name">
-                                <?php hecho($envelope['givenname'] . " " . $envelope['name'])?>
-                            </td>
-                            <?php if ($me->isGroupAdminOrSuper()) : ?>
-                                <td><?php hecho($envelope['authority_name']) ?></td>
-                            <?php endif; ?>
-                            <td headers="action">
-                                <a href="<?php echo Helpers::getLink("/modules/helios/helios_transac_show.php?id=" . $envelope["id"]) ?>" class="icon">
-                                    <img src="<?php echo Helpers::getLink("/custom/images/erreur.png"); ?>" alt="image_modif" title="Afficher le détail" />
-                                </a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-            </div>
+        <?php echo $transactionTableRenderer->renderHelios($heliosTable) ?>
         <br/><br/>
         <div id="selection-actions">
             <a href="#tedetis" onclick="GereChkbox('div_chck','1');" title="Tout sélectionner" class="btn btn-default">Tout sélectionner</a>
@@ -388,7 +350,7 @@ ob_start();
         </div>
         <br/>
 
-        <?php if (isset($sel_ok[4]) || isset($sel_ok[8]) ||  isset($sel_ok[11]) || isset($sel_ok[20])) : ?>
+        <?php if ($heliosTable->hasSelectableRow()) : ?>
             <input type='submit' class='btn btn-default' value='Envoyer la sélection au SAE'/>
         <?php endif; ?>
     </form>

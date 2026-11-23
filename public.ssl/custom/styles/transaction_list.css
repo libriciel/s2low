@@ -93,6 +93,10 @@ a.transaction-table__title:hover {
     text-decoration: none !important;
 }
 
+.transaction-table__filename {
+    overflow-wrap: break-word;
+}
+
 .transaction-table__number {
     display: block;
     overflow-wrap: anywhere;

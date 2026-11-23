@@ -11,6 +11,8 @@ use Masterminds\HTML5;
 use S2low\DTO\TransactionList\ActesFollowUp;
 use S2low\DTO\TransactionList\ActesTransactionRow;
 use S2low\DTO\TransactionList\ActesTransactionTable;
+use S2low\DTO\TransactionList\HeliosTransactionRow;
+use S2low\DTO\TransactionList\HeliosTransactionTable;
 use S2low\DTO\TransactionList\StatusBadge;
 use S2low\DTO\TransactionList\TransactionTableSorting;
 use S2low\Enum\StatusTone;
@@ -170,11 +172,48 @@ class TransactionTableRendererTest extends KernelTestCase
         static::assertStringContainsString('17:37', $page->document->textContent);
     }
 
-    public function testATransactionWithoutSubmissionDateShowsADash(): void
+    public function testAnActesTransactionWithoutSubmissionDateShowsADash(): void
     {
         $page = $this->renderActes([$this->anActesRow(submittedAt: null)]);
 
         static::assertSame('—', trim($page->query('//tbody/tr/td')->item(4)->textContent));
+    }
+
+    public function testTheHeliosFilenameLinksToTheTransactionAndCanWrap(): void
+    {
+        $page = $this->renderHelios([$this->aHeliosRow()]);
+
+        $rowLink = $this->single($page, '//a[contains(@class, "transaction-table__row-link")]');
+        static::assertSame('https://s2low.test/modules/helios/helios_transac_show.php?id=32', $rowLink->getAttribute('href'));
+        static::assertSame('PES_<b>_x.xml', $rowLink->textContent);
+        static::assertSame(3, $rowLink->getElementsByTagName('wbr')->length);
+        static::assertSame(0, $rowLink->getElementsByTagName('b')->length);
+    }
+
+    public function testTheHeliosRowShowsNomFicAndAuthority(): void
+    {
+        $html = $this->renderHelios([$this->aHeliosRow()], showsAuthority: true)->document->textContent;
+
+        static::assertStringContainsString('NomFic : Paie novembre', $html);
+        static::assertStringContainsString('Commune de Test', $html);
+        static::assertStringNotContainsString('n° 32', $html);
+    }
+
+    public function testTheHeliosTransactionIdHasItsOwnSortableColumn(): void
+    {
+        $page = $this->renderHelios([$this->aHeliosRow()]);
+
+        static::assertSame(['Sélection', 'N°', 'Fichier'], array_slice($this->headerLabels($page), 0, 3));
+        static::assertSame('32', trim($page->query('//tbody/tr/td')->item(1)->textContent));
+        static::assertStringContainsString('order=id', $this->single($page, '//th[@aria-sort]/a')->getAttribute('href'));
+        static::assertSame(0, $page->query('//thead//th[3]//a')->length);
+    }
+
+    public function testAHeliosTransactionWithoutSubmissionDateShowsADash(): void
+    {
+        $page = $this->renderHelios([$this->aHeliosRow(submittedAt: null)]);
+
+        static::assertSame('—', trim($page->query('//tbody/tr/td')->item(3)->textContent));
     }
 
     private function renderActes(array $rows, bool $showsAuthority = false): DOMXPath
@@ -182,6 +221,13 @@ class TransactionTableRendererTest extends KernelTestCase
         $table = new ActesTransactionTable($rows, TransactionTableSorting::fromQuery(self::LIST_URL, []), $showsAuthority);
 
         return $this->parse($this->renderer()->renderActes($table));
+    }
+
+    private function renderHelios(array $rows, bool $showsAuthority = false): DOMXPath
+    {
+        $table = new HeliosTransactionTable($rows, TransactionTableSorting::fromQuery(self::LIST_URL, []), $showsAuthority);
+
+        return $this->parse($this->renderer()->renderHelios($table));
     }
 
     private function renderer(): TransactionTableRenderer
@@ -239,6 +285,21 @@ class TransactionTableRendererTest extends KernelTestCase
             isSelectable: $isSelectable,
             archiveUrl: $archiveUrl,
             followUps: $followUps,
+        );
+    }
+
+    private function aHeliosRow(?DateTimeImmutable $submittedAt = new DateTimeImmutable('2026-11-21 14:33:00')): HeliosTransactionRow
+    {
+        return new HeliosTransactionRow(
+            id: 32,
+            showUrl: 'https://s2low.test/modules/helios/helios_transac_show.php?id=32',
+            filename: 'PES_<b>_x.xml',
+            nomFic: 'Paie novembre',
+            authorityName: 'Commune de Test',
+            submittedAt: $submittedAt,
+            status: StatusBadge::fromHelios(8, 'Information disponible', ''),
+            followerName: 'Utilisateur Test',
+            isSelectable: true,
         );
     }
 }

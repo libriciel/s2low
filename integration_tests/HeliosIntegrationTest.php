@@ -299,6 +299,26 @@ class HeliosIntegrationTest extends S2lowIntegrationTestCase
         static::assertResponseIsSuccessful();       // Aucune erreur lors de la requête
     }
 
+    /**
+     * @throws Exception
+     */
+    public function testHeliosIndexShowsEachTransactionAsAClickableRowWithItsStatus(): void
+    {
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $transactionId = $this->createTransaction(1, HeliosTransactionsSQL::ATTENTE_POSTEE);
+
+        $crawler = $this->client->request('GET', 'modules/helios/index.php');
+
+        $row = $crawler->filterXPath('//table[contains(@class, "transaction-table")]/tbody/tr');
+        static::assertCount(1, $row);
+        static::assertStringEndsWith(
+            "/modules/helios/helios_transac_show.php?id=$transactionId",
+            $row->filterXPath('//a[contains(@class, "transaction-table__row-link")]')->attr('href')
+        );
+        static::assertSame("En attente d'être postée", trim($row->filterXPath('//span[contains(@class, "transaction-status--waiting")]/span[@class="transaction-status__text"]')->text()));
+        static::assertCount(0, $row->filterXPath('//input[@type="checkbox"]'));
+    }
+
     public function testHeliosTransacSubmitPostsOwnTransaction(): void
     {
         $transactionId = $this->createTransaction(1, HeliosTransactionsSQL::ATTENTE_POSTEE);
