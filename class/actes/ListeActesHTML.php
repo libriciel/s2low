@@ -25,7 +25,6 @@ class ListeActesHTML
     private $fnum;
     private $objet;
     private FancyDate $fancyDate;
-    private string $sortWay = 'desc';
 
     /**
      * @param $allCollectivite
@@ -91,41 +90,21 @@ class ListeActesHTML
         $this->objet = $objet;
     }
 
-    /**
-     * @param $enveloppe
-     * @return void
-     */
-    public function display($enveloppe): void
+    public function display(string $transactionTable): void
     {
         $this->displayForm();
         ?>
         <script type="text/javascript" src="<?php echo Helpers::getLink('/jsmodules/jquery.js')?>"></script>
         <script type="text/javascript" src="<?php echo Helpers::getLink('/jsmodules/select2.js')?>"></script>
         <script type="text/javascript" src="/javascript/zselect_s2low.js"></script>
-        
-        <h2>
-                    Liste des enveloppes de transactions
-        <?php
-        if ($enveloppe) {
-            ?>
-                    <button id="expand-all" onclick="javascript:show_all();" class="toggle-action">Tout déplier<span class="hidden-info">les enveloppes de transactions</span></button>
-                    <button id="collapse-all" onclick="javascript:hide_all()" class="toggle-action">Tout replier<span class="hidden-info">les enveloppes de transactions</span></button>
-                </h2>
-                    <?php $this->displayList($enveloppe);
-        } else {
-            ?>
-                     </h2>       Pas de transaction trouvée correspondant aux critères de filtrage
-                    <?php
-        }
-    }
 
-    /**
-     * @param string $sortWay
-     * @return void
-     */
-    public function setSortWay(string $sortWay): void
-    {
-        $this->sortWay = $sortWay;
+        <h2>Liste des transactions</h2>
+        <?php
+        if ($transactionTable === '') {
+            echo 'Pas de transaction trouvée correspondant aux critères de filtrage';
+            return;
+        }
+        $this->displayList($transactionTable);
     }
 
     /**
@@ -251,22 +230,14 @@ class ListeActesHTML
         echo $datePicker->show();
     }
 
-    /**
-     * @param $envelopes
-     * @return void
-     */
-    public function displayList($envelopes): void
+    private function displayList(string $transactionTable): void
     {
         ?>
 
                 <div id="enveloppe-area">
                     <form id="div_chck" onsubmit="return afficheWarning()" action="<?php echo Helpers::getLink('/modules/actes/actes_transac_close.php'); ?>" method="post">
                         <div class="form-group">
-                            <dl class="envelopes_list">
-                            <?php foreach ($envelopes as $i => $envelope) : ?>
-                                    <?php $this->displayEnvelope($envelope, $i);?>
-                            <?php endforeach;?>
-                            </dl>
+                            <?php echo $transactionTable ?>
                             <div id="selection-actions">
                                     <a href="#tedetis" onclick="GereChkbox('div_chck','1');" title="Tout sélectionner" class="btn btn-default">Tout sélectionner</a>
                                     <a href="#tedetis" onclick="GereChkbox('div_chck','0');" title="Tout désélectionner" class="btn btn-default">Tout desélectionner</a>
@@ -288,93 +259,4 @@ class ListeActesHTML
                 </div>
         <?php
     }
-
-    /**
-     * @param $envelope
-     * @param $i
-     * @return void
-     */
-    public function displayEnvelope($envelope, $i): void
-    {
-        ?>
-            <dl><dt>
-                <a href="#tedetis" onclick="toggle_envelope_content(<?php echo $i ?>);" id="expander_<?php echo $i?>" class="expander btn btn-default btn-xs">-</a>
-                1 transaction de l'enveloppe n°<a href="<?php echo Helpers::getURLWithParam(['order' => 'id', 'sortway' => $this->sortWay == 'asc' ? 'desc' : 'asc']) ?>"
-                                title="Trier par identifiant"><?php echo $envelope['envelope_id'] ?></a>
-                déposée le <a href="<?php echo Helpers::getURLWithParam(['order' => 'submission_date', 'sortway' => $this->sortWay == 'asc' ? 'desc' : 'asc']) ?>"
-                                title="Trier par date de dépôt"><?php echo Helpers :: getDateFromBDDDate($envelope['submission_date'], true) ?></a>
-                <?php if ($this->allCollectivite) : ?>
-                    de la collectivité <?php hecho($envelope['authority_name']) ?>
-                <?php endif;?>
-                </dt></dl>
-            <dd id="envelope_content_<?php echo $i ?>" class="envelope_content" style="display: block">
-                <table id="transactions-list" class="data-table table table-bordered">
-                                    <caption>Liste des transactions en fonction des choix de filtrage</caption>
-                                    <thead>
-                    <tr class="active">
-                                            <th id="selection">Sél.</th>
-                                            <th id="transaction-type">Type de transaction</th>
-                                            <th id="act-number">Numéro de l'acte</th>
-                                            <th id="act-internal-number">Numéro Interne de l'acte</th>
-                                            <th id="object">Objet</th>
-                                            <th id="nature">Nature</th>
-                                            <th id="status">Etat</th>
-                                            <th id="mail">courrier ministère</th>
-                                            <th id="follower">Suivie par</th>
-                                            <th id="actions">Actions</th>
-                    </tr>
-                                    </thead>
-                                    <tbody>
-                    <tr>
-                                            <td headers="selection">
-                                                <?php if ($envelope['type'] == 1 && (in_array($envelope['current_status'], [4,5,14,18,20]))) : ?>
-                                                    <input type="checkbox" 
-                                                                    name="liste_id[]" 
-                                                                    value="<?php hecho($envelope['transaction_id']) ;?>" 
-                                                                    id="checkbox<?php hecho($envelope['transaction_id']) ;?>" />
-                                                <?php else : ?>
-                                                    &nbsp;
-                                                <?php endif; ?>
-                                            </td>
-                                            <td headers="transaction-type"><?php echo $envelope['type_str'] ?></td>
-                                            <td headers="act-number"><?php echo $envelope['transaction_id'] ?></td>
-                                            <td headers="act-internal-number"><?php hecho($envelope['number']) ?></td>
-                                            <td headers="object" class="long_field"><?php echo nl2br(get_hecho(Helpers :: truncateString($envelope['subject']))) ?></td>
-                                            <td headers="nature"><?php echo $envelope['nature_descr'] ?></td>
-                                            <td headers="status"><?php echo $envelope['current_status_name'] ?></td>
-                                            <td headers="mail">
-                                                    <?php
-                                                    foreach ($envelope['courrier_info'] as $id => $info) : ?>
-                                                            <a href="<?php echo Helpers::getLink("/modules/actes/actes_transac_show.php?id=$id"); ?>">
-                                                                    <?php echo $info['type_str'] ?>
-                                                                    (<?php echo isset($info['sens']) ? $info['sens'] : 'envoyé' ?>)
-                                                            </a>
-                                                            <br/>
-                                                    <?php endforeach; ?>
-                                            </td>
-                                            <td headers="follower">
-                                                <?php hecho($envelope['givenname'] . ' ' . $envelope['name']); ?>
-                                            </td>
-                                            <td headers="actions">
-                                                    <a href="<?php echo Helpers::getLink('/modules/actes/actes_transac_show.php?id=' . $envelope['transaction_id']);?>"
-                                                                    class="icon">
-                                                            <img src="<?php echo Helpers::getLink('/custom/images/erreur.png'); ?>"
-                                                                            alt="image_modif" title="Afficher le détail" />
-                                                    </a>
-                                                    <?php if ($envelope['archive_url'] && preg_match('#^https?://#i', $envelope['archive_url'])) : ?>
-                                                                <a href="<?php hecho($envelope['archive_url']); ?>"
-                                                                    class="icon">
-                                                                    <img src="<?php echo Helpers::getLink('/custom/images/icone_archivage.png'); ?>"
-                                                                                    alt="image_archivage" title="Accéder à  l'archivage de cette transaction" />
-                                                                </a>
-                                                    <?php endif;?>
-                                            </td>
-                    </tr>
-                                    </tbody>
-                </table>
-            </dd>
-        <?php
-    }
 }
-
-

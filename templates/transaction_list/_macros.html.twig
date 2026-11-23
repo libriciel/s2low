@@ -1,0 +1,67 @@
+{% macro sortable_header(label, columnSort) %}
+    <th scope="col"{% if columnSort.isActive %} aria-sort="{{ columnSort.activeDirection.ariaSort }}"{% endif %}>
+        <a class="transaction-table__sort" href="{{ columnSort.url }}" title="Trier par {{ label|lower }}">
+            {{- label -}}
+            <svg class="transaction-table__sort-icon" viewBox="0 0 8 12" aria-hidden="true">
+                <path class="transaction-table__sort-up" d="M4 1 7.5 5h-7z"/>
+                <path class="transaction-table__sort-down" d="M4 11 .5 7h7z"/>
+            </svg>
+        </a>
+    </th>
+{% endmacro %}
+
+{% macro status(badge) %}
+    {% if badge.isRecognized %}
+        <span class="transaction-status transaction-status--{{ badge.tone.value }}" title="{{ badge.title }}">
+            <svg class="transaction-status__icon" viewBox="0 0 16 16" aria-hidden="true">
+                <circle cx="8" cy="8" r="6.5"/>
+                <path d="{{ badge.tone.iconPath }}"/>
+            </svg>
+            <span class="transaction-status__text">{{ badge.text }}</span>
+        </span>
+    {% else %}
+        <span class="transaction-status-raw" title="{{ badge.title }}">{{ badge.text }}</span>
+    {% endif %}
+{% endmacro %}
+
+{% macro submission_date(date) %}
+    {% if date is null %}
+        <span class="transaction-table__detail">—</span>
+    {% else %}
+        <span class="text-nowrap">{{ date|date('d/m/Y') }}</span>
+        <div class="transaction-table__detail">{{ date|date('H:i') }}</div>
+    {% endif %}
+{% endmacro %}
+
+{% macro follower(name) %}
+    <span class="transaction-table__two-lines" title="{{ name }}">{{ name }}</span>
+{% endmacro %}
+
+{% macro selection(row) %}
+    {% if row.isSelectable %}
+        <input type="checkbox" class="transaction-table__above-link" name="liste_id[]" value="{{ row.id }}" id="checkbox{{ row.id }}"
+               aria-label="Sélectionner la transaction n°{{ row.id }}"/>
+    {% endif %}
+{% endmacro %}
+
+{% macro action_link(url, label, iconPath) %}
+    <a href="{{ url }}" class="transaction-table__action transaction-table__above-link" aria-label="{{ label }}" title="{{ label }}">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="{{ iconPath }}"/></svg>
+    </a>
+{% endmacro %}
+
+{% macro detail_link(row) %}
+    <a href="{{ row.showUrl }}" class="transaction-table__action transaction-table__above-link" title="Afficher le détail">
+        <img src="{{ asset('/custom/images/erreur.png') }}" alt="Afficher le détail"/>
+    </a>
+{% endmacro %}
+
+{% macro archive_link(url) %}
+    {{ _self.action_link(url, "Accéder à l'archivage de cette transaction", 'M2 3h12v3.5H2zM3 6.5V13h10V6.5M6.5 9h3') }}
+{% endmacro %}
+
+{% macro document_icon() %}
+    <svg class="transaction-table__follow-up-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+        <path d="M4 1.5A1.5 1.5 0 0 0 2.5 3v10A1.5 1.5 0 0 0 4 14.5h8a1.5 1.5 0 0 0 1.5-1.5V5.7L9.3 1.5H4Zm5 .9L12.6 6H10a1 1 0 0 1-1-1V2.4ZM4 2.5h4V5a2 2 0 0 0 2 2h2.5v6a.5.5 0 0 1-.5.5H4a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5Zm1.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5Zm0 2a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5Z"/>
+    </svg>
+{% endmacro %}

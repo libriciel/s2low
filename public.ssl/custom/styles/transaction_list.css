@@ -1,0 +1,218 @@
+.transaction-table {
+    table-layout: fixed;
+    width: 100%;
+    font-size: .9em;
+}
+
+.transaction-table th,
+.transaction-table td {
+    padding: .5rem .5rem;
+    vertical-align: middle;
+    overflow-wrap: break-word;
+}
+
+.transaction-table th:first-child,
+.transaction-table td:first-child {
+    padding-left: .25rem;
+}
+
+.transaction-table__col-selection { width: 2.2em; }
+.transaction-table__col-id { width: 3.4em; }
+.transaction-table__col-reference { width: 9.2em; }
+.transaction-table__col-date { width: 6.4em; }
+.transaction-table__col-status { width: 12.4em; }
+.transaction-table__col-follower { width: 6.4em; }
+.transaction-table__col-actions { width: 2em; }
+
+.transaction-table thead th {
+    vertical-align: bottom;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+a.transaction-table__sort,
+a.transaction-table__sort:hover {
+    display: inline-flex;
+    align-items: center;
+    gap: .35em;
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
+.transaction-table__sort-icon {
+    flex: none;
+    width: .5em;
+    height: .75em;
+    fill: #6c757d;
+}
+
+a.transaction-table__sort:hover .transaction-table__sort-icon {
+    fill: currentColor;
+}
+
+th[aria-sort="ascending"] .transaction-table__sort-down,
+th[aria-sort="descending"] .transaction-table__sort-up {
+    visibility: hidden;
+}
+
+.transaction-table__id {
+    color: #6c757d;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Toute la ligne est cliquable : le lien de l'objet s'étend sur la ligne entière. */
+.transaction-table tbody tr {
+    position: relative;
+}
+
+.transaction-table__row-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+}
+
+.transaction-table tbody tr:has(.transaction-table__row-link:focus-visible) {
+    outline: 2px solid var(--bs-link-color);
+    outline-offset: -2px;
+}
+
+.transaction-table__row-link:focus-visible {
+    outline: none;
+}
+
+.transaction-table__above-link {
+    position: relative;
+    z-index: 1;
+}
+
+/* L'objet n'a pas l'apparence d'un lien : c'est la ligne entière qui est cliquable. */
+a.transaction-table__title,
+a.transaction-table__title:hover {
+    color: inherit !important;
+    font-weight: 500;
+    text-decoration: none !important;
+}
+
+.transaction-table__number {
+    display: block;
+    overflow-wrap: anywhere;
+    font-size: .85em;
+    font-variant-numeric: tabular-nums;
+}
+
+.transaction-table__detail {
+    color: #6c757d;
+    font-size: .85em;
+    line-height: 1.3;
+}
+
+.transaction-table__one-line,
+.transaction-table__two-lines {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.transaction-table__one-line { -webkit-line-clamp: 1; }
+.transaction-table__two-lines { -webkit-line-clamp: 2; }
+
+.transaction-table td.transaction-table__actions {
+    padding-inline: 0 .25rem;
+}
+
+
+a.transaction-table__action {
+    display: flex;
+    width: fit-content;
+    margin-left: auto;
+    padding: .2rem;
+    border-radius: .25rem;
+    color: #6c757d !important;
+}
+
+a.transaction-table__action:hover {
+    background: #e9ecef;
+    color: var(--bs-link-color) !important;
+}
+
+.transaction-table__action img {
+    width: 1.1em;
+    height: 1.1em;
+}
+
+.transaction-table__action svg {
+    width: 1.1em;
+    height: 1.1em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+a.transaction-table__follow-up,
+a.transaction-table__follow-up:hover,
+a.transaction-table__follow-up:focus {
+    display: inline-flex;
+    align-items: center;
+    gap: .35em;
+    margin: 2px 3px 0 0;
+    padding: .1em .55em;
+    border: 1px solid #ced4da;
+    border-radius: .3rem;
+    background: #fff;
+    color: #0066cc !important;
+    font-size: .8em;
+    text-decoration: none !important;
+    white-space: nowrap;
+    transition: background-color .15s, border-color .15s;
+}
+
+a.transaction-table__follow-up:hover {
+    border-color: var(--bs-link-color);
+    background: #eef4ff;
+}
+
+.transaction-table tbody tr:has(.transaction-table__follow-up:hover) > * {
+    --bs-table-bg-state: transparent;
+}
+
+.transaction-table__follow-up-icon {
+    flex: none;
+    width: .95em;
+    height: .95em;
+}
+
+.transaction-status {
+    --status-color: #868e96;
+
+    display: inline-flex;
+    align-items: center;
+    gap: .4em;
+    max-width: 100%;
+    font-size: .9em;
+    line-height: 1.25;
+    white-space: nowrap;
+}
+
+.transaction-status--done { --status-color: #198754; }
+.transaction-status--in-progress { --status-color: #0d6efd; }
+.transaction-status--waiting { --status-color: #c77700; }
+.transaction-status--failed { --status-color: #dc3545; }
+.transaction-status--inactive { --status-color: #868e96; }
+
+.transaction-status__icon {
+    flex: none;
+    width: 1.15em;
+    height: 1.15em;
+    fill: none;
+    stroke: var(--status-color);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.transaction-status__text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

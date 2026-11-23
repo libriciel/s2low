@@ -1,0 +1,68 @@
+{% import 'transaction_list/_macros.html.twig' as list %}
+<table id="transactions-list" class="table table-sm table-hover transaction-table">
+    <caption class="visually-hidden">Liste des transactions en fonction des choix de filtrage</caption>
+    <colgroup>
+        <col class="transaction-table__col-selection">
+        <col class="transaction-table__col-id">
+        <col class="transaction-table__col-reference">
+        <col>
+        <col class="transaction-table__col-date">
+        <col class="transaction-table__col-status">
+        <col class="transaction-table__col-follower">
+        <col class="transaction-table__col-actions">
+    </colgroup>
+    <thead class="table-light">
+    <tr>
+        <th scope="col"><span class="visually-hidden">Sélection</span></th>
+        {{ list.sortable_header('N°', table.sorting.byId) }}
+        <th scope="col">Acte</th>
+        <th scope="col">Objet</th>
+        {{ list.sortable_header('Déposé le', table.sorting.bySubmissionDate) }}
+        <th scope="col">État</th>
+        <th scope="col">Suivi par</th>
+        <th scope="col"><span class="visually-hidden">Actions</span></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for row in table.rows %}
+        {% set details = [row.nature, table.showsAuthority ? row.authorityName : '']|filter(detail => detail is not empty)|join(' · ') %}
+        <tr>
+            <td>{{ list.selection(row) }}</td>
+            <td class="transaction-table__id">{{ row.id }}</td>
+            <td>
+                <span class="transaction-table__number">{{ row.internalNumber ?: '—' }}</span>
+                {% if not row.isActTransmission %}
+                    <div class="transaction-table__detail">{{ row.typeLabel }}</div>
+                {% endif %}
+            </td>
+            <td>
+                <a class="transaction-table__row-link transaction-table__title transaction-table__two-lines" href="{{ row.showUrl }}" title="{{ row.subject }}">
+                    {{- row.subject ?: '(sans objet)' -}}
+                </a>
+                {% if details is not empty %}
+                    <div class="transaction-table__detail transaction-table__one-line" title="{{ details }}">{{ details }}</div>
+                {% endif %}
+                {% if row.followUps is not empty %}
+                    <div class="transaction-table__follow-ups">
+                        {% for followUp in row.followUps %}
+                            <a class="transaction-table__follow-up transaction-table__above-link" href="{{ followUp.url }}" title="Ouvrir : {{ followUp.label }}">
+                                {{- list.document_icon() -}}
+                                <span>{{ followUp.label }}</span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </td>
+            <td>{{ list.submission_date(row.submittedAt) }}</td>
+            <td>{{ list.status(row.status) }}</td>
+            <td>{{ list.follower(row.followerName) }}</td>
+            <td class="transaction-table__actions">
+                {{ list.detail_link(row) }}
+                {% if row.archiveUrl %}
+                    {{ list.archive_link(row.archiveUrl) }}
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

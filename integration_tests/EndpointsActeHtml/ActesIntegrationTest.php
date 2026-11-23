@@ -275,6 +275,26 @@ class ActesIntegrationTest extends S2lowIntegrationTestCase
     /**
      * @throws Exception
      */
+    public function testActesIndexShowsEachTransactionAsAClickableRowWithItsStatus(): void
+    {
+        $this->setUserWithRole(UserRole::SuperAdministrateur);
+        $transactionId = $this->createTransaction(ActesStatusSQL::STATUS_ACQUITTEMENT_RECU);
+
+        $crawler = $this->client->request('GET', 'modules/actes/index.php');
+
+        $row = $crawler->filterXPath('//table[contains(@class, "transaction-table")]/tbody/tr');
+        static::assertCount(1, $row);
+        static::assertStringEndsWith(
+            "/modules/actes/actes_transac_show.php?id=$transactionId",
+            $row->filterXPath('//a[contains(@class, "transaction-table__row-link")]')->attr('href')
+        );
+        static::assertSame('Acquittement reçu', trim($row->filterXPath('//span[contains(@class, "transaction-status--done")]/span[@class="transaction-status__text"]')->text()));
+        static::assertSame($transactionId, (int) $row->filterXPath('//input[@name="liste_id[]"]')->attr('value'));
+    }
+
+    /**
+     * @throws Exception
+     */
     public function testActesTransacClose(): void
     {
         $client = $this->client;
