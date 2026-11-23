@@ -2,38 +2,39 @@
 
 namespace S2lowLegacy\Class\actes;
 
+use S2low\Enum\ActesStatus;
 use S2lowLegacy\Lib\SQLQuery;
 
 class ActesStatusSQL
 {
-    public const STATUS_EN_ERREUR = -1;
-    public const STATUS_ANNULER = 0;
+    public const int STATUS_EN_ERREUR = ActesStatus::ERREUR->value;
+    public const int STATUS_ANNULER = ActesStatus::ANNULE->value;
 
-    public const STATUS_POSTE = 1;
-    public const STATUS_EN_ATTENTE_DE_TRANSMISSION = 2;
-    public const STATUS_TRANSMIS = 3;
-    public const STATUS_ACQUITTEMENT_RECU = 4;
+    public const int STATUS_POSTE = ActesStatus::POSTE->value;
+    public const int STATUS_EN_ATTENTE_DE_TRANSMISSION = ActesStatus::EN_ATTENTE_DE_TRANSMISSION->value;
+    public const int STATUS_TRANSMIS = ActesStatus::TRANSMIS->value;
+    public const int STATUS_ACQUITTEMENT_RECU = ActesStatus::ACQUITTEMENT_RECU->value;
 
-    public const STATUS_VALIDE = 5;
+    public const int STATUS_VALIDE = ActesStatus::VALIDE->value;
 
-    public const STATUS_DOCUMENT_RECU = 7;
-    public const STATUS_ACQUITTEMENT_ENVOYE = 8;
+    public const int STATUS_DOCUMENT_RECU = ActesStatus::DOCUMENT_RECU->value;
+    public const int STATUS_ACQUITTEMENT_ENVOYE = ActesStatus::ACQUITTEMENT_ENVOYE->value;
 
-    public const STATUS_EN_ATTENTE_TRANMISSION_SAE = 19;
+    public const int STATUS_EN_ATTENTE_TRANMISSION_SAE = ActesStatus::EN_ATTENTE_DE_TRANSMISSION_AU_SAE->value;
 
-    public const STATUS_ERREUR_LORS_DE_L_ENVOI_SAE = 20;
+    public const int STATUS_ERREUR_LORS_DE_L_ENVOI_SAE = ActesStatus::ERREUR_LORS_DE_L_ENVOI_AU_SAE->value;
 
-    public const STATUS_ERREUR_SAE_DOC_INDISPONIBLES = 22;
+    public const int STATUS_ERREUR_SAE_DOC_INDISPONIBLES = ActesStatus::ERREUR_SAE_DOCUMENTS_INDISPONIBLES->value;
 
-    public const STATUS_DOCUMENT_RECU_PAS_DAR = 21;
+    public const int STATUS_DOCUMENT_RECU_PAS_DAR = ActesStatus::DOCUMENT_RECU_PAS_D_AR->value;
 
-    public const STATUS_ENVOYE_AU_SAE = 12;
-    public const STATUS_ARCHIVE_PAR_LE_SAE = 13;
+    public const int STATUS_ENVOYE_AU_SAE = ActesStatus::ENVOYE_AU_SAE->value;
+    public const int STATUS_ARCHIVE_PAR_LE_SAE = ActesStatus::ARCHIVE_PAR_LE_SAE->value;
 
-    public const STATUS_ERREUR_LORS_DE_L_ARCHIVAGE = 14;
-    public const STATUS_EN_ATTENTE_D_ETRE_SIGNEE = 18;
-    public const STATUS_EN_ATTENTE_D_ETRE_POSTE = 17;
-    public const STATUS_DETRUITE = 16;
+    public const int STATUS_ERREUR_LORS_DE_L_ARCHIVAGE = ActesStatus::ERREUR_LORS_DE_L_ARCHIVAGE->value;
+    public const int STATUS_EN_ATTENTE_D_ETRE_SIGNEE = ActesStatus::EN_ATTENTE_D_ETRE_SIGNEE->value;
+    public const int STATUS_EN_ATTENTE_D_ETRE_POSTE = ActesStatus::EN_ATTENTE_D_ETRE_POSTEE->value;
+    public const int STATUS_DETRUITE = ActesStatus::DETRUITE->value;
 
     public function __construct(private readonly SQLQuery $sqlQuery)
     {
