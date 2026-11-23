@@ -259,6 +259,10 @@ services:
     autoconfigure: true
     public: true
 
+  S2low\Services\TransactionList\:
+    resource: '%kernel.project_dir%/src/Services/TransactionList/*'
+    public: true
+
   S2lowLegacy\Class\actes\IActesPdf:
     public: true
     factory: ['@S2low\Factory\ActesPdfFactory','create']

@@ -1,0 +1,43 @@
+{% import 'transaction_list/_macros.html.twig' as list %}
+<table id="transaction-list" class="table table-sm table-hover transaction-table">
+    <caption class="visually-hidden">Liste des fichiers Helios postés en fonction des choix de filtrage</caption>
+    <colgroup>
+        <col class="transaction-table__col-selection">
+        <col>
+        <col class="transaction-table__col-date">
+        <col class="transaction-table__col-status">
+        <col class="transaction-table__col-follower">
+        <col class="transaction-table__col-actions">
+    </colgroup>
+    <thead class="table-light">
+    <tr>
+        <th scope="col"><span class="visually-hidden">Sélection</span></th>
+        <th scope="col">{{ list.sort_link('Fichier', table.sorting.byId) }}</th>
+        <th scope="col">{{ list.sort_link('Déposé le', table.sorting.bySubmissionDate) }}</th>
+        <th scope="col">État</th>
+        <th scope="col">Suivi par</th>
+        <th scope="col"><span class="visually-hidden">Actions</span></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for row in table.rows %}
+        {% set reference = ['n° ' ~ row.id, table.showsAuthority ? row.authorityName : '']|filter(part => part is not empty)|join(' · ') %}
+        <tr>
+            <td>{{ list.selection(row) }}</td>
+            <td>
+                <a class="transaction-table__row-link transaction-table__title transaction-table__two-lines transaction-table__filename" href="{{ row.showUrl }}" title="{{ row.filename }}">
+                    {{- row.filename|e|replace({'_': '_<wbr>', '-': '-<wbr>', '.': '<wbr>.'})|raw -}}
+                </a>
+                {% if row.nomFic is not empty %}
+                    <div class="transaction-table__detail transaction-table__one-line" title="NomFic : {{ row.nomFic }}">NomFic : {{ row.nomFic }}</div>
+                {% endif %}
+                <div class="transaction-table__detail transaction-table__one-line" title="{{ reference }}">{{ reference }}</div>
+            </td>
+            <td>{{ list.submission_date(row.submittedAt) }}</td>
+            <td>{{ list.status(row.status) }}</td>
+            <td>{{ list.follower(row.followerName) }}</td>
+            <td class="transaction-table__actions">{{ list.detail_link(row) }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
