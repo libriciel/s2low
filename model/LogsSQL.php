@@ -48,8 +48,20 @@ class LogsSQL extends SQL
 
 
         if ($authority_group_id) {
-            $where[] = " logs.authority_group_id = ? ";
-            $data[] = $authority_group_id;
+            $where[] = <<<SQL
+(logs.authority_group_id = ?
+    OR (logs.module = 'actes' AND logs.authority_id IN (
+        SELECT id FROM authorities WHERE actes_group_id = ?
+    ))
+    OR (logs.module = 'helios' AND logs.authority_id IN (
+        SELECT id FROM authorities WHERE helios_group_id = ?
+    ))
+    OR (COALESCE(logs.module, '') NOT IN ('actes', 'helios') AND logs.authority_id IN (
+        SELECT id FROM authorities WHERE ? IN (actes_group_id, helios_group_id)
+    ))
+)
+SQL;
+            array_push($data, $authority_group_id, $authority_group_id, $authority_group_id, $authority_group_id);
         }
 
         if ($authority_id) {

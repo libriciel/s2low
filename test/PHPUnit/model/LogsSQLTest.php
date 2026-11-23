@@ -104,4 +104,47 @@ class LogsSQLTest extends S2lowTestCase
         $min_date = $this->logsSQL->getMinDate();
         $this->assertNotNull($min_date);
     }
+
+    public function testGetNbLogOfAGroupKeepsLogsOfTheModuleItAdministers(): void
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 2, helios_group_id = 1 WHERE id = 1');
+
+        $this->assertSame(1, (int)$this->countLogsOfGroup(2));
+    }
+
+    public function testGetNbLogOfAGroupLeavesOutLogsOfTheModuleItDoesNotAdminister(): void
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 1, helios_group_id = 2 WHERE id = 1');
+        Log::newEntry('test', 'message helios', 1, false, 'USER', 'helios', false, 1);
+
+        $this->assertSame(1, (int)$this->countLogsOfGroup(2));
+        $this->assertSame(1, (int)$this->countLogsOfGroup(1));
+    }
+
+    public function testGetNbLogOfAGroupKeepsLogsWithoutModuleOfAnAuthorityItAdministersForASingleModule(): void
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 1, helios_group_id = 2 WHERE id = 1');
+        Log::newEntry('test', 'message sans module', 1, false, 'USER', false, false, 1);
+
+        $this->assertSame(1, (int)$this->countLogsOfGroup(2));
+    }
+
+    public function testGetNbLogShowsMailLogsToTheActesGroupAndToTheHeliosGroup(): void
+    {
+        $this->getSQLQuery()->query('UPDATE authorities SET actes_group_id = 1, helios_group_id = 2 WHERE id = 1');
+        Log::newEntry('test', 'message mail', 1, false, 'USER', 'mail', false, 1);
+
+        $this->assertSame(1, (int)$this->countLogsOfGroup(1, 'mail'));
+        $this->assertSame(1, (int)$this->countLogsOfGroup(2, 'mail'));
+    }
+
+    public function testGetNbLogOfAGroupLeavesOutLogsOfAnAuthorityItDoesNotAdminister(): void
+    {
+        $this->assertSame(0, (int)$this->countLogsOfGroup(2));
+    }
+
+    private function countLogsOfGroup(int $groupId, string|false $module = false): int|string
+    {
+        return $this->logsSQL->getNbLog($groupId, false, false, false, $module, -1, false, false, false, false);
+    }
 }
