@@ -237,8 +237,9 @@ class TransactionSQL
                 " JOIN users ON actes_envelopes.user_id=users.id " .
                 " JOIN authorities ON users.authority_id=authorities.id " .
                 " WHERE actes_transactions.id IN ( " .
-                    "SELECT id " .
+                    "SELECT actes_transactions.id " .
                     " FROM actes_transactions " .
+                    " JOIN actes_envelopes ON actes_transactions.envelope_id = actes_envelopes.id " .
                     $this->getWhere() .
                     " ORDER BY $this->order $this->sortWay " .
                     " LIMIT $this->limit OFFSET $this->offset ) ORDER BY $this->order $this->sortWay";

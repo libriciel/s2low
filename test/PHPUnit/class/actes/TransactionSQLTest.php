@@ -39,6 +39,17 @@ class TransactionSQLTest extends S2lowTestCase
         static::assertSame($this->transaction_id, $all[0]['transaction_id']);
     }
 
+    public function testGetAllSortsBySubmissionDate(): void
+    {
+        $oldestTransactionId = $this->createTransaction(4, submissionDate: '2016-01-01');
+        $this->transactionSQL->setOrder('submission_date', 'asc');
+        $this->transactionSQL->setPageNumber(1, 1);
+
+        $all = $this->transactionSQL->getAll();
+
+        static::assertSame([$oldestTransactionId], array_column($all, 'transaction_id'));
+    }
+
     public static function setAuthorityAndStatusProvider(): \Generator
     {
         yield [1, 3, 0];
