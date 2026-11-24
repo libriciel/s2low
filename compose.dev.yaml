@@ -66,7 +66,7 @@ services:
     command: ["postgres", "-c", "fsync=off", "-c", "synchronous_commit=off", "-c", "full_page_writes=off"]
 
   simulateur:
-    image: registry.libriciel.fr/public/plateforme/s2low-simulateur-helios:1.1.3@sha256:12ce257cdd0871caf7b033139475c6fe553dbbf77593631a0c5ad09338995217
+    image: registry.libriciel.fr/public/plateforme/s2low-simulateur-helios:1.1.5@sha256:f445fc55d8ba3ec936cf9f83b463939b7ef0577150e9a8b796db7f6dbf64fc04
     restart: unless-stopped
     depends_on:
       - ftp
@@ -91,7 +91,7 @@ services:
       - ${SIMULATEUR_WORKSPACE_DIRECTORY:-ftp_datadir}:/data/${HELIOS_FTP_LOGIN:-helios}/
 
   simulateur_passtrans:
-    image: registry.libriciel.fr/public/plateforme/s2low-simulateur-helios:1.1.3@sha256:12ce257cdd0871caf7b033139475c6fe553dbbf77593631a0c5ad09338995217
+    image: registry.libriciel.fr/public/plateforme/s2low-simulateur-helios:1.1.5@sha256:f445fc55d8ba3ec936cf9f83b463939b7ef0577150e9a8b796db7f6dbf64fc04
     restart: unless-stopped
     depends_on:
       - ftp_passtrans
