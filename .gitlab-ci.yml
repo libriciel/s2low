@@ -103,7 +103,7 @@ unit_test:
       - name: registry.libriciel.fr/public/outils/postgres:14.5@sha256:a0c6930be56082d2b6f747630ab6e5799c566c7ec45c49033e8b647ca2e50bee
         alias: postgres
         command: [ "postgres","-c", "max_connections=200" ]
-      - name: registry.libriciel.fr/public/signature/pdf-stamp:4.1.16@sha256:af35db3a191e4b85e204528a3a8de357008af11c9dce7dd846e5f4768005706a
+      - name: registry.libriciel.fr/public/signature/pdf-stamp:4.1.17@sha256:5f0595cbc0eb756a1b309b191bb510286af7a183a9612053b49d43860845cd90
         alias: pdf-stamp
     script:
         - cd /app
