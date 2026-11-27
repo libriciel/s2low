@@ -10,6 +10,8 @@ dépendances transitives.
 
 - La liste des actes triée par date d'envoi affiche les transactions dans l'ordre de leur date d'envoi et ne bloque
   plus la base de données. #1627
+- Le processus `helios-menage-pes-retour` supprime aussi du disque les PES Retour stockés dans le cloud dont le nom ne
+  commence pas par PES2R, comme ceux préfixés par Passtrans. #1630
 
 ## [5.1.21] - 2026-11-09
 
