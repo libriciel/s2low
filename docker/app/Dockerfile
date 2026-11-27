@@ -124,7 +124,7 @@ USER "root"
 
 COPY --from=hubdocker.libriciel.fr/composer:2.11.2@sha256:cd3a90dc5624c59a2f9ddf80dad08569f06416db31de519024f249d63bca554b /usr/bin/composer /usr/local/bin/composer
 
-RUN --mount=type=bind,from=ghcr.io/php/pie:1.6.0-bin@sha256:f49c15dbb88a7aec373fdb15ab9004bf08958772db3b476c42364e10a8ea416f,source=/pie,target=/usr/local/bin/pie \
+RUN --mount=type=bind,from=ghcr.io/php/pie:1.6.1-bin@sha256:2ca18ec63249ff2d8b9936afeea88ab2e9225041980c16b7ad99ce0fccb014a6,source=/pie,target=/usr/local/bin/pie \
     apk add --no-cache --virtual .dev-build-deps \
     $PHPIZE_DEPS \
     linux-headers \
